@@ -27,8 +27,8 @@ const correctedBeacons = beacons.map(beacon => ({
 
 
  
-// const points = correctedBeacons.map(beacon => [beacon.x, beacon.y]);
-const points = [[0, 0], [0, 1], [1, 0], [1, 1]];
+const points = correctedBeacons.map(beacon => [beacon.x, beacon.y]);
+// const points = [[0, 0], [0, 1], [1, 0], [1, 1]];
 const delaunay = Delaunay.from(points);
 const voronoi = delaunay.voronoi([0, 0, SVG_WIDTH, SVG_HEIGHT]);
 
@@ -36,3 +36,5 @@ for(let polygon of voronoi.cellPolygons()) {
     // alert(value); // 1, затем 2
     console.log(polygon);
 }
+
+console.log(voronoi.circumcenters);

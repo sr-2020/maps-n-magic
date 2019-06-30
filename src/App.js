@@ -41,6 +41,15 @@ for(let polygon of voronoi.cellPolygons()) {
   polygons.push(polygon);
   // console.log(polygon);
 }
+// const circumcenters = voronoi.circumcenters.reduce((acc, el, i) => {
+//   if(i%2 === 0) {
+//     acc[i/2] = {x: el};
+//   } else {
+//     acc[(i-1)/2].y = el;
+//   }
+//   return acc;
+// }, []);
+// console.log(circumcenters);
 
 export default class App extends Component {
   state = {
@@ -171,24 +180,49 @@ export default class App extends Component {
 
     return (
       <div className="App">
-          <svg width={SVG_WIDTH} height={SVG_HEIGHT} xmlns="http://www.w3.org/2000/svg">
-            {
-              beacons.map(beacon => (
-                <Fragment>
-                  <circle r="2" cx={beacon.x} cy={beacon.y} fill="grey"/>
-                  {/* <circle r={sound.soundR} cx={sound.x} cy={sound.y} fill={sound.color} opacity="0.2"/> */}
-                </Fragment>
-              ))
-            }
+          <svg class="root-image" width={SVG_WIDTH} height={SVG_HEIGHT} xmlns="http://www.w3.org/2000/svg">
             {
               polygons.map(polygon => (
                 <Fragment>
                   <polyline fill="none" stroke="red" stroke-width="2" points={polygon.map(pt => pt.join(',')).join(' ')}/>
-                  {/* <circle r="2" cx={beacon.x} cy={beacon.y} fill="grey"/> */}
+                  {/* <circle r="2" cx={polygon.map()x} cy={beacon.y} fill="green"/> */}
                   {/* <circle r={sound.soundR} cx={sound.x} cy={sound.y} fill={sound.color} opacity="0.2"/> */}
                 </Fragment>
               ))
             }
+            {
+              beacons.map(beacon => (
+                <Fragment>
+                  <circle r="2" cx={beacon.x} cy={beacon.y} fill="grey"/>
+                  <g transform={`translate(${beacon.x-40/4},${beacon.y-70/2}) scale(0.5)`}>
+                    <svg version="1.1"
+                      baseProfile="full"
+                      width="40" height="70"
+                      viewBox="0 0 40 70"
+                      xmlns="http://www.w3.org/2000/svg">
+
+                    <circle cx="20" cy="20" r="18.75" fill="none" stroke-width="2.5" stroke="black" fill="white"/>
+                    
+                    <text x="20" y="25" font-size="15" text-anchor="middle" fill="black">SVG</text>
+
+                    <path d="M 1.75 28 L 20 70 L 38.25 28 A 20 20 0 0 1 1.75 28"  />
+                    
+                  </svg>
+
+                  </g>
+
+                  {/* <circle r={sound.soundR} cx={sound.x} cy={sound.y} fill={sound.color} opacity="0.2"/> */}
+                </Fragment>
+              ))
+            }
+            {/* {
+              circumcenters.map(beacon => (
+                <Fragment>
+                  <circle r="2" cx={beacon.x} cy={beacon.y} fill="green"/>
+                </Fragment>
+              ))
+            } */}
+            
           {/* <circle r="10" cx={player.x} cy={player.y} fill="blue"/> */}
         </svg><br/>
           <svg width={SVG_WIDTH} height={SVG_HEIGHT} xmlns="http://www.w3.org/2000/svg">

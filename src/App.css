@@ -32,6 +32,10 @@
   }
 }
 
-svg {
+svg.root-image {
   outline: 1px solid blueviolet;
+}
+
+.App text {
+  user-select: none;
 }
