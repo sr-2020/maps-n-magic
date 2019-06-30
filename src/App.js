@@ -32,22 +32,35 @@ const correctedBeacons = beacons.map((beacon,i) => ({
   ...beacon,
   x: beacon.x + imageCenter.x-beaconCenter.x,
   y: beacon.y + imageCenter.y-beaconCenter.y,
-  color: ['']
+  color: ['red', 'green', 'blue'][i%4]
 }));
 
-const points = correctedBeacons.map(beacon => [beacon.x, beacon.y]);
-const delaunay = Delaunay.from(points);
-const voronoi = delaunay.voronoi([0, 0, SVG_WIDTH, SVG_HEIGHT]);
-
-const polygons = [];
-for(let polygon of voronoi.cellPolygons()) {
-  polygons.push(polygon);
-  // console.log(polygon);
+function getPolygons(beacons) {
+  const points = beacons.map(beacon => [beacon.x, beacon.y]);
+  const delaunay = Delaunay.from(points);
+  const voronoi = delaunay.voronoi([0, 0, SVG_WIDTH, SVG_HEIGHT]);
+  
+  const polygons = [];
+  for(let polygon of voronoi.cellPolygons()) {
+    polygons.push(polygon);
+    // console.log(polygon);
+  }
+  return {
+    polygons,
+    beaconIds: beacons.map(R.prop('id')),
+    polygonCenters: polygons.map(getSolidMassCenter).map( (data, i) => ({
+      ...data,
+      id: beacons[i].id
+    }))
+  }
 }
+
+const sortBeacons = R.pipe(R.sortBy(R.prop('x')),R.sortBy( R.prop('y')));
 
 export default class App extends Component {
   state = {
-    beacons:correctedBeacons,
+    beacons: sortBeacons(correctedBeacons),
+    polygonData: getPolygons(correctedBeacons),
     sounds : [
       {
        x: 50,
@@ -76,7 +89,9 @@ export default class App extends Component {
     },
     playing: false,
     movePlayer: false,
-    soundsLoaded: false
+    soundsLoaded: false,
+    movableId: null,
+    showBeaconMarkers: false
   };
 
   componentDidMount() {
@@ -167,29 +182,84 @@ export default class App extends Component {
     // console.log(event.target.value);
   }
 
+  listenStub = (type) => (event) => console.log(type, event);
 
+  toggleBeaconMarker = () => {
+    this.setState(state => ({
+      showBeaconMarkers: !state.showBeaconMarkers
+    }));
+  }
+  setMovable = (id) => (event) => {
+    event.stopPropagation();
+    console.log('setMovable', id);
+    this.setState(state => {
+      console.log(state.movableId == null, (state.movableId == null ? null : id));
+      return ({
+        movableId: (state.movableId == null ? id : null )
+      })
+    })
+  };
+  clearMovable = (id) => (event) => {
+    console.log('clearMovable', id);
+    this.setState({
+      movableId: null
+    })
+  };
+  moveMovable = (event) => {
+    const rect = document.querySelector('svg.root-image').getBoundingClientRect();
+    // const rect = event.target.getBoundingClientRect();
+    // console.log(event.location);
+    const eX = event.clientX;
+    const eY = event.clientY;
+    const movable = {
+      x: eX - rect.left,
+      y: eY - rect.top
+    };
+    this.setState(state => {
+      if(state.movableId == null) return null;
+      
+      console.log(state.movableId);
+      const beacons = state.beacons.map( beacon => {
+        if(beacon.id !== state.movableId) return beacon;
+        return {
+          ...beacon,
+          ...movable
+        }
+      });
+      
+      return {
+        movable,
+        beacons,
+        polygonData: getPolygons(beacons)
+      };
+    });
+  }
+  // listenStub = (type) => (event) => console.log(type, event);
   
   render() {
-    const { sounds, player, playing, soundsLoaded, beacons } = this.state;
+    const { sounds, player, playing, soundsLoaded, beacons, polygonData, movable, showBeaconMarkers } = this.state;
 
     return (
       <div className="App">
-          <svg className="root-image" width={SVG_WIDTH} height={SVG_HEIGHT} xmlns="http://www.w3.org/2000/svg">
+        <input id="showBeaconMarkersInput" type="checkbox" onChange={this.toggleBeaconMarker} value={showBeaconMarkers}/>
+        <label for="showBeaconMarkersInput">Show beacon markers</label>
+        <br/>
+          <svg className="root-image" width={SVG_WIDTH} height={SVG_HEIGHT} xmlns="http://www.w3.org/2000/svg"
+           onMouseMove={this.moveMovable} onClick={this.setMovable(null)}>
+            {/* onMouseMove={this.listenStub('onMouseMove')} */}
             {
-              polygons.map(polygon => (
+              polygonData.polygons.map(polygon => (
                 <Fragment>
-                  <polyline fill="none" stroke="red" stroke-width="2" points={polygon.map(pt => pt.join(',')).join(' ')}/>
+                  <polyline fill="none" stroke="grey" stroke-width="2" opacity="0.5" points={polygon.map(pt => pt.join(',')).join(' ')}/>
                   {/* <circle r="2" cx={polygon.map()x} cy={beacon.y} fill="green"/> */}
                   {/* <circle r={sound.soundR} cx={sound.x} cy={sound.y} fill={sound.color} opacity="0.2"/> */}
                 </Fragment>
               ))
             }
-            {
+            {/* {
               polygons.map(getPointMassCenter).map(center => (
                 <Fragment>
-                  {/* <polyline fill="none" stroke="red" stroke-width="2" points={polygon.map(pt => pt.join(',')).join(' ')}/> */}
                   <circle r="2" cx={center.x} cy={center.y} fill="green"/>
-                  {/* <circle r={sound.soundR} cx={sound.x} cy={sound.y} fill={sound.color} opacity="0.2"/> */}
                 </Fragment>
               ))
             }
@@ -199,45 +269,58 @@ export default class App extends Component {
                   <circle r="2" cx={center.x} cy={center.y} fill="red"/>
                 </Fragment>
               ))
-            }
+            } */}
             {
-              polygons.map(getSolidMassCenter).map(center => (
+              polygonData.polygonCenters.map((center, i) => (
                 <Fragment>
-                  <circle r="2" cx={center.x} cy={center.y} fill="black"/>
+                  {/* <circle r="2" cx={center.x} cy={center.y} fill="black"/> */}
+                  <text x={center.x} y={center.y+5} font-size="15" textAnchor="middle" fill="black">{center.id}</text>
                 </Fragment>
               ))
             }
             {
-              R.pipe(R.sortBy(R.prop('x')),R.sortBy( R.prop('y')))(beacons).map(beacon => (
+              beacons.map(beacon => (
                 <Fragment>
                   <circle r="2" cx={beacon.x} cy={beacon.y} fill="grey"/>
-                  <g transform={`translate(${beacon.x-40/4},${beacon.y-70/2}) scale(0.5)`}>
+
+
+                  {showBeaconMarkers && <g transform={`translate(${beacon.x-40/4},${beacon.y-70/2}) scale(0.5)`} 
+                    onClick={this.setMovable(beacon.id)}>
+                    {/* onMouseDown={this.setMovable(beacon.id)}
+                    onMouseUp={this.clearMovable}  */}
                     <svg version="1.1"
                       baseProfile="full"
                       width="40" height="70"
                       viewBox="0 0 40 70"
                       xmlns="http://www.w3.org/2000/svg">
 
-                    <circle cx="20" cy="20" r="18.75" fill="none" stroke-width="2.5" stroke="black" fill="white"/>
+                    <circle 
+                    cx="20" cy="20" r="18.75" fill="none" stroke-width="2.5" stroke={beacon.color || 'black'} fill="white"/>
                     
                     <text x="20" y="25" font-size="15" textAnchor="middle" fill="black">{beacon.id}</text>
 
-                    <path d="M 1.75 28 L 20 70 L 38.25 28 A 20 20 0 0 1 1.75 28"  />
+                    <path d="M 1.75 28 L 20 70 L 38.25 28 A 20 20 0 0 1 1.75 28" fill={beacon.color} />
                     
                   </svg>
 
-                  </g>
+                  </g>}
 
                   {/* <circle r={sound.soundR} cx={sound.x} cy={sound.y} fill={sound.color} opacity="0.2"/> */}
                 </Fragment>
               ))
             }
+
+            <circle r="10" cx={player.x} cy={player.y} fill="blue"/>
+            
             {/* {
               circumcenters.map(beacon => (
                 <Fragment>
                   <circle r="2" cx={beacon.x} cy={beacon.y} fill="green"/>
                 </Fragment>
               ))
+            } */}
+            {/* {
+                movable && <circle r="2" cx={movable.x} cy={movable.y} fill="green"/>
             } */}
             
           {/* <circle r="10" cx={player.x} cy={player.y} fill="blue"/> */}
