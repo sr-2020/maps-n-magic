@@ -9,6 +9,7 @@ import beacons from './beacons.json';
 import { animate, Timing } from "./animation";
 import { createSource, initSound } from "./audioUtils";
 import { startSounds, stopSounds, applyVolumes, computeVolumesByDistance } from "./audio";
+import { getPointMassCenter, getPerimeterMassCenter, getSolidMassCenter } from "./polygonUtils";
 
 const SVG_WIDTH = 500;
 const SVG_HEIGHT = 400;
@@ -27,9 +28,11 @@ const beaconCenter = beacons.reduce( (acc, beacon) => {
 beaconCenter.x /= beacons.length;
 beaconCenter.y /= beacons.length;
 
-const correctedBeacons = beacons.map(beacon => ({
+const correctedBeacons = beacons.map((beacon,i) => ({
+  ...beacon,
   x: beacon.x + imageCenter.x-beaconCenter.x,
-  y: beacon.y + imageCenter.y-beaconCenter.y
+  y: beacon.y + imageCenter.y-beaconCenter.y,
+  color: ['']
 }));
 
 const points = correctedBeacons.map(beacon => [beacon.x, beacon.y]);
@@ -41,15 +44,6 @@ for(let polygon of voronoi.cellPolygons()) {
   polygons.push(polygon);
   // console.log(polygon);
 }
-// const circumcenters = voronoi.circumcenters.reduce((acc, el, i) => {
-//   if(i%2 === 0) {
-//     acc[i/2] = {x: el};
-//   } else {
-//     acc[(i-1)/2].y = el;
-//   }
-//   return acc;
-// }, []);
-// console.log(circumcenters);
 
 export default class App extends Component {
   state = {
@@ -81,7 +75,7 @@ export default class App extends Component {
       y: 100
     },
     playing: false,
-    movePlayer: true,
+    movePlayer: false,
     soundsLoaded: false
   };
 
@@ -180,7 +174,7 @@ export default class App extends Component {
 
     return (
       <div className="App">
-          <svg class="root-image" width={SVG_WIDTH} height={SVG_HEIGHT} xmlns="http://www.w3.org/2000/svg">
+          <svg className="root-image" width={SVG_WIDTH} height={SVG_HEIGHT} xmlns="http://www.w3.org/2000/svg">
             {
               polygons.map(polygon => (
                 <Fragment>
@@ -191,7 +185,30 @@ export default class App extends Component {
               ))
             }
             {
-              beacons.map(beacon => (
+              polygons.map(getPointMassCenter).map(center => (
+                <Fragment>
+                  {/* <polyline fill="none" stroke="red" stroke-width="2" points={polygon.map(pt => pt.join(',')).join(' ')}/> */}
+                  <circle r="2" cx={center.x} cy={center.y} fill="green"/>
+                  {/* <circle r={sound.soundR} cx={sound.x} cy={sound.y} fill={sound.color} opacity="0.2"/> */}
+                </Fragment>
+              ))
+            }
+            {
+              polygons.map(getPerimeterMassCenter).map(center => (
+                <Fragment>
+                  <circle r="2" cx={center.x} cy={center.y} fill="red"/>
+                </Fragment>
+              ))
+            }
+            {
+              polygons.map(getSolidMassCenter).map(center => (
+                <Fragment>
+                  <circle r="2" cx={center.x} cy={center.y} fill="black"/>
+                </Fragment>
+              ))
+            }
+            {
+              R.pipe(R.sortBy(R.prop('x')),R.sortBy( R.prop('y')))(beacons).map(beacon => (
                 <Fragment>
                   <circle r="2" cx={beacon.x} cy={beacon.y} fill="grey"/>
                   <g transform={`translate(${beacon.x-40/4},${beacon.y-70/2}) scale(0.5)`}>
@@ -203,7 +220,7 @@ export default class App extends Component {
 
                     <circle cx="20" cy="20" r="18.75" fill="none" stroke-width="2.5" stroke="black" fill="white"/>
                     
-                    <text x="20" y="25" font-size="15" text-anchor="middle" fill="black">SVG</text>
+                    <text x="20" y="25" font-size="15" textAnchor="middle" fill="black">{beacon.id}</text>
 
                     <path d="M 1.75 28 L 20 70 L 38.25 28 A 20 20 0 0 1 1.75 28"  />
                     
