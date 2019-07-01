@@ -1,0 +1,22 @@
+[{
+    "x": 200,
+    "y": 150,
+    "startX": 200,
+    "startY": 150,
+    "id": "Max",
+    "color":"blue"
+},{
+    "x": 0,
+    "y": 0,
+    "startX": 100,
+    "startY": 200,
+    "id": "Bob",
+    "color":"green"
+},{
+    "x": 0,
+    "y": 0,
+    "startX": 300,
+    "startY": 150,
+    "id": "Sue",
+    "color":"red"
+}]

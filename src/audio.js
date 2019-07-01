@@ -32,27 +32,28 @@ function applyVolumes(volumes) {
 
 
 function computeVolumesByDistance(state) {
-  const { player, sounds } = state;
+    return [];
+//   const { player, sounds } = state;
 
-  return sounds.map(sound => {
-    const dist = Math.sqrt((player.x - sound.x) * (player.x - sound.x) + (player.y - sound.y) * (player.y - sound.y));
-    // console.log(dist);
-    let gain;
-    if(dist < sound.soundR) {
-      gain = 1 - dist/sound.soundR;
-      gain *= gain;
-      // gain = Math.cos(gain * 0.5 * Math.PI);;
-    // } else if(dist> 10 && dist < 50) {
-    //   gain = dist/50;
-    } else {
-      gain = 0;
-    }
+//   return sounds.map(sound => {
+//     const dist = Math.sqrt((player.x - sound.x) * (player.x - sound.x) + (player.y - sound.y) * (player.y - sound.y));
+//     // console.log(dist);
+//     let gain;
+//     if(dist < sound.soundR) {
+//       gain = 1 - dist/sound.soundR;
+//       gain *= gain;
+//       // gain = Math.cos(gain * 0.5 * Math.PI);;
+//     // } else if(dist> 10 && dist < 50) {
+//     //   gain = dist/50;
+//     } else {
+//       gain = 0;
+//     }
 
-    return {
-      name: sound.name,
-      gain
-    };
-  });
+//     return {
+//       name: sound.name,
+//       gain
+//     };
+//   });
 }
 
 export {startSounds, stopSounds, applyVolumes, computeVolumesByDistance};
