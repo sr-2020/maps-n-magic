@@ -4,13 +4,13 @@ import './App.css';
 import * as R from "ramda";
 import  {Delaunay} from "d3-delaunay";
 
-import beacons from './beacons.json';
-import players from './players.json';
+import beacons from '../../data/beacons.json';
+import players from '../../data/players.json';
 
-import { animate, Timing } from "./animation";
-import { createSource, initSound } from "./audioUtils";
-import { startSounds, stopSounds, applyVolumes, computeVolumesByDistance } from "./audio";
-import { getPointMassCenter, getPerimeterMassCenter, getSolidMassCenter } from "./polygonUtils";
+import { animate, Timing } from "../../utils/animation";
+import { initSound } from "../../utils/audioDataUtils";
+import { startSounds, stopSounds, applyVolumes, computeVolumesByDistance } from "../../utils/audioPlaybackUtils";
+import { getPointMassCenter, getPerimeterMassCenter, getSolidMassCenter } from "../../utils/polygonUtils";
 
 const SVG_WIDTH = 500;
 const SVG_HEIGHT = 400;
