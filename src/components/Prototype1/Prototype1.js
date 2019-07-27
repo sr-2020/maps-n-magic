@@ -2,7 +2,7 @@ import React, { Component, Fragment } from 'react';
 // import logo from './logo.svg';
 import './Prototype1.css';
 import * as R from 'ramda';
-import { Delaunay } from 'd3-delaunay';
+
 
 import beacons from '../../data/beacons.json';
 import players from '../../data/players.json';
@@ -12,7 +12,11 @@ import { initSound } from '../../utils/audioDataUtils';
 import {
   startSounds, stopSounds, applyVolumes, computeVolumesByDistance
 } from '../../utils/audioPlaybackUtils';
-import { getPointMassCenter, getPerimeterMassCenter, getSolidMassCenter } from '../../utils/polygonUtils';
+
+import getPolygons from '../../utils/polygonGenerator';
+
+import MapMarker from '../MapMarker';
+import MapPoint from '../MapPoint';
 
 const SVG_WIDTH = 500;
 const SVG_HEIGHT = 400;
@@ -38,34 +42,12 @@ const correctedBeacons = beacons.map((beacon, i) => ({
   color: ['red', 'green', 'blue'][i % 4]
 }));
 
-function getPolygons(beacons) {
-  const points = beacons.map(beacon => [beacon.x, beacon.y]);
-  const delaunay = Delaunay.from(points);
-  const voronoi = delaunay.voronoi([0, 0, SVG_WIDTH, SVG_HEIGHT]);
-
-  const polygons = [];
-  for (const polygon of voronoi.cellPolygons()) {
-    polygons.push(polygon);
-    // console.log(polygon);
-  }
-  return {
-    delaunay,
-    polygons,
-    beaconIds: beacons.map(R.prop('id')),
-    beaconColors: beacons.map(R.prop('color')),
-    polygonCenters: polygons.map(getSolidMassCenter).map((data, i) => ({
-      ...data,
-      id: beacons[i].id
-    }))
-  };
-}
-
 const sortBeacons = R.pipe(R.sortBy(R.prop('x')), R.sortBy(R.prop('y')));
 
 export default class App extends Component {
   state = {
     beacons: sortBeacons(correctedBeacons),
-    polygonData: getPolygons(correctedBeacons),
+    polygonData: getPolygons(correctedBeacons, SVG_WIDTH, SVG_HEIGHT),
     sounds: [
       {
         x: 50,
@@ -261,7 +243,7 @@ export default class App extends Component {
       return {
         movable,
         beacons,
-        polygonData: getPolygons(beacons)
+        polygonData: getPolygons(beacons, SVG_WIDTH, SVG_HEIGHT)
       };
     });
   }
@@ -302,7 +284,6 @@ export default class App extends Component {
         </select>
         <div>
           {!soundsLoaded ? 'loading sounds...' : 'sounds loaded'}
-          {' '}
         </div>
         <br />
         <svg
@@ -335,43 +316,19 @@ export default class App extends Component {
           {
             beacons.map(beacon => (
               <Fragment>
-                <circle r="2" cx={beacon.x} cy={beacon.y} fill="grey" />
+                <MapPoint x={beacon.x} y={beacon.y} fill="grey" />
 
                 {
                   showBeaconMarkers
                     && (
-                      <g
-                        transform={`translate(${beacon.x - 40 / 4},${beacon.y - 70 / 2}) scale(0.5)`}
+
+                      <MapMarker
+                        x={beacon.x}
+                        y={beacon.y}
+                        id={beacon.id}
+                        color={beacon.color}
                         onClick={this.setMovable(beacon.id)}
-                      >
-                        {/* onMouseDown={this.setMovable(beacon.id)}
-                      onMouseUp={this.clearMovable}  */}
-                        <svg
-                          version="1.1"
-                          baseProfile="full"
-                          width="40"
-                          height="70"
-                          viewBox="0 0 40 70"
-                          xmlns="http://www.w3.org/2000/svg"
-                        >
-
-                          <circle
-                            cx="20"
-                            cy="20"
-                            r="18.75"
-                            fill="none"
-                            strokeWidth="2.5"
-                            stroke={beacon.color || 'black'}
-                            fill="white"
-                          />
-
-                          <text x="20" y="25" fontSize="15" textAnchor="middle" fill="black">{beacon.id}</text>
-
-                          <path d="M 1.75 28 L 20 70 L 38.25 28 A 20 20 0 0 1 1.75 28" fill={beacon.color} />
-
-                        </svg>
-
-                      </g>
+                      />
                     )
                 }
 

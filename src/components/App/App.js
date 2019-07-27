@@ -8,12 +8,19 @@ import {
 import Prototype1 from '../Prototype1';
 import MapEditor from '../MapEditor';
 import MusicEditor from '../MusicEditor';
+import Beacons from '../Beacons';
 
 import 'bootstrap/dist/css/bootstrap.min.css';
 
 
 export default class App extends Component {
   state = {
+    svgWidth: 800,
+    svgHeight: 581,
+    imagePositionX: 50,
+    imagePositionY: 68,
+    imageOpacity: 80,
+    imageScale: 800
     // beacons: sortBeacons(correctedBeacons),
     // polygonData: getPolygons(correctedBeacons),
     // sounds : [
@@ -57,12 +64,16 @@ export default class App extends Component {
   }
 
   onStateChange = prop => (e) => {
+    // console.log('prop');
     this.setState({
       [prop]: e.target.value
     });
   }
 
   render() {
+    const {
+      imagePositionX, imagePositionY, imageOpacity, imageScale, svgWidth, svgHeight
+    } = this.state;
     // const { sounds, players, playing, soundsLoaded, beacons, polygonData, movable, showBeaconMarkers, movePlayers, listenPlayer } = this.state;
 
     return (
@@ -73,6 +84,9 @@ export default class App extends Component {
               <ul>
                 <li>
                   <NavLink to="/mapEditor">Map Editor</NavLink>
+                </li>
+                <li>
+                  <NavLink to="/beacons">Beacons</NavLink>
                 </li>
                 <li>
                   <NavLink to="/soundManager">Sound Manager</NavLink>
@@ -88,7 +102,25 @@ export default class App extends Component {
 
             <Switch>
               <Route path="/mapEditor">
-                <MapEditor />
+                <MapEditor
+                  imagePositionX={imagePositionX}
+                  imagePositionY={imagePositionY}
+                  imageOpacity={imageOpacity}
+                  imageScale={imageScale}
+                  svgWidth={svgWidth}
+                  svgHeight={svgHeight}
+                  onPropChange={this.onStateChange}
+                />
+              </Route>
+              <Route path="/beacons">
+                <Beacons
+                  imagePositionX={imagePositionX}
+                  imagePositionY={imagePositionY}
+                  imageOpacity={imageOpacity}
+                  imageScale={imageScale}
+                  svgWidth={svgWidth}
+                  svgHeight={svgHeight}
+                />
               </Route>
               <Route path="/soundManager">
                 <MusicEditor />

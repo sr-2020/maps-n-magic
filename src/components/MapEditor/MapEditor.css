@@ -1,21 +1,30 @@
 .MapEditor {
   /* text-align: center; */
   /* margin: 0 auto; */
-  justify-content: center;
+  /* justify-content: center; */
 }
 
 .MapEditor svg,
 .MapEditor form {
   /* margin-top: 2rem; */
   /* background: url(/images/backgroundImage.jpg); */
-  margin: 2rem;
+  /* margin: 2rem; */
   
   /* background: linear-gradient(to bottom, rgba(255,255,255,0.0) 0%,rgba(255,255,255,1.0) 100%), url(/images/backgroundImage.jpg) no-repeat;
   background-size: 78% auto;
   background-position: 50% 50%; */
 }
 
+.margin-2rem {
+  margin: 2rem;
+}
+
 .flex-row {
   display: flex;
   flex-direction: row;
+}
+
+
+.justify-content-center {
+  justify-content: center;
 }

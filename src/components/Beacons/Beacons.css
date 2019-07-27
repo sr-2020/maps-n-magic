@@ -1,0 +1,3 @@
+.beaconTable tr:hover {
+  outline: 1px solid blue;
+}

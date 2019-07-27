@@ -8,6 +8,8 @@ import Form from 'react-bootstrap/Form';
 import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
 
+import Map from '../Map';
+
 // const SVG_WIDTH = 500;
 // const SVG_HEIGHT = 400;
 
@@ -18,7 +20,7 @@ export default class MapEditor extends Component {
     imagePositionX: 50,
     imagePositionY: 68,
     imageOpacity: 70,
-    imageScale: 103
+    imageScale: 800
   };
 
   componentDidMount = () => {
@@ -34,11 +36,11 @@ export default class MapEditor extends Component {
     console.log('MapEditor will unmount');
   }
 
-  onStateChange = prop => (e) => {
-    this.setState({
-      [prop]: e.target.value
-    });
-  }
+  // onStateChange = prop => (e) => {
+  //   this.setState({
+  //     [prop]: e.target.value
+  //   });
+  // }
 
   // getStateInfo = () => {
   //   const { dbms } = this.props;
@@ -54,22 +56,25 @@ export default class MapEditor extends Component {
 
   render() {
     const {
-      imagePositionX, imagePositionY, imageOpacity, imageScale, svgWidth, svgHeight
-    } = this.state;
-    //const { t } = this.props;
+      imagePositionX, imagePositionY, imageOpacity, imageScale, svgWidth, svgHeight, onPropChange
+    } = this.props;
+    // // const {
+    // //   imagePositionX, imagePositionY, imageOpacity, imageScale, svgWidth, svgHeight
+    // // } = this.state;
+    // //const { t } = this.props;
 
-    // if (!something) {
-    //   return <div> MapEditor stub </div>;
-    //   // return null;
-    // }
-    const imageStyle = {
-      background: `linear-gradient(to bottom, 
-                    rgba(255,255,255,${imageOpacity / 100}) 0%,
-                    rgba(255,255,255,${imageOpacity / 100}) 100%), 
-                    url(/images/backgroundImage.jpg) no-repeat ${imagePositionX}% ${imagePositionY}% / ${imageScale}% auto`,
-      // backgroundSize: `${imageScale}% auto`,
-      // backgroundPosition: `${imagePositionX}% ${imagePositionY}%`
-    };
+    // // if (!something) {
+    // //   return <div> MapEditor stub </div>;
+    // //   // return null;
+    // // }
+    // const imageStyle = {
+    //   background: `linear-gradient(to bottom,
+    //                 rgba(255,255,255,${imageOpacity / 100}) 0%,
+    //                 rgba(255,255,255,${imageOpacity / 100}) 100%),
+    //                 url(/images/backgroundImage.jpg) no-repeat ${imagePositionX}% ${imagePositionY}% / ${imageScale}px auto`,
+    //   // backgroundSize: `${imageScale}% auto`,
+    //   // backgroundPosition: `${imagePositionX}% ${imagePositionY}%`
+    // };
     // const imageStyle = {
     //   background: `linear-gradient(to bottom, rgba(255,255,255,${imageOpacity / 100}) 0%,rgba(255,255,255,${imageOpacity / 100}) 100%), url(/images/backgroundImage.jpg) no-repeat`,
     //   backgroundSize: `${imageScale}% auto`,
@@ -77,17 +82,17 @@ export default class MapEditor extends Component {
     // };
 
     return (
-      <div className="MapEditor flex-row">
+      <div className="MapEditor flex-row justify-content-center">
         {/* onMouseMove={this.moveMovable}
         onClick={this.setMovable(null)} */}
-        <Form>
+        <Form className="margin-2rem">
           <h3>Canvas parameters</h3>
           <Row>
             <Form.Group as={Col}>
-              <Form.Label>svgWidth</Form.Label>
+              <Form.Label>svgWidth, px</Form.Label>
               <Form.Control
                 type="number"
-                onChange={this.onStateChange('svgWidth')}
+                onChange={onPropChange('svgWidth')}
                 placeholder="svgWidth"
                 value={svgWidth}
               />
@@ -95,10 +100,10 @@ export default class MapEditor extends Component {
           </Row>
           <Row>
             <Form.Group as={Col}>
-              <Form.Label>svgHeight</Form.Label>
+              <Form.Label>svgHeight, px</Form.Label>
               <Form.Control
                 type="number"
-                onChange={this.onStateChange('svgHeight')}
+                onChange={onPropChange('svgHeight')}
                 placeholder="svgHeight"
                 value={svgHeight}
               />
@@ -107,10 +112,10 @@ export default class MapEditor extends Component {
           <h3>Background parameters</h3>
           <Row>
             <Form.Group as={Col}>
-              <Form.Label>imagePositionX</Form.Label>
+              <Form.Label>imagePositionX, %</Form.Label>
               <Form.Control
                 type="number"
-                onChange={this.onStateChange('imagePositionX')}
+                onChange={onPropChange('imagePositionX')}
                 placeholder="imagePositionX"
                 value={imagePositionX}
               />
@@ -118,10 +123,10 @@ export default class MapEditor extends Component {
           </Row>
           <Row>
             <Form.Group as={Col}>
-              <Form.Label>imagePositionY</Form.Label>
+              <Form.Label>imagePositionY, %</Form.Label>
               <Form.Control
                 type="number"
-                onChange={this.onStateChange('imagePositionY')}
+                onChange={onPropChange('imagePositionY')}
                 placeholder="imagePositionY"
                 value={imagePositionY}
               />
@@ -129,10 +134,10 @@ export default class MapEditor extends Component {
           </Row>
           <Row>
             <Form.Group as={Col}>
-              <Form.Label>imageScale</Form.Label>
+              <Form.Label>imageWidth, px</Form.Label>
               <Form.Control
                 type="number"
-                onChange={this.onStateChange('imageScale')}
+                onChange={onPropChange('imageScale')}
                 placeholder="imageScale"
                 value={imageScale}
               />
@@ -140,22 +145,31 @@ export default class MapEditor extends Component {
           </Row>
           <Row>
             <Form.Group as={Col}>
-              <Form.Label>imageOpacity</Form.Label>
+              <Form.Label>imageOpacity, %</Form.Label>
               <Form.Control
                 type="number"
-                onChange={this.onStateChange('imageOpacity')}
+                onChange={onPropChange('imageOpacity')}
                 placeholder="imageOpacity"
                 value={imageOpacity}
               />
             </Form.Group>
           </Row>
         </Form>
-        <svg
+        {/* <svg
           className="root-image"
           width={svgWidth}
           height={svgHeight}
           xmlns="http://www.w3.org/2000/svg"
           style={imageStyle}
+        /> */}
+        <Map
+          className="margin-2rem"
+          imagePositionX={imagePositionX}
+          imagePositionY={imagePositionY}
+          imageOpacity={imageOpacity}
+          imageScale={imageScale}
+          svgWidth={svgWidth}
+          svgHeight={svgHeight}
         />
       </div>
     );
