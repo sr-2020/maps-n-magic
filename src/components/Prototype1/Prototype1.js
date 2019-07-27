@@ -18,36 +18,37 @@ import getPolygons from '../../utils/polygonGenerator';
 import MapMarker from '../MapMarker';
 import MapPoint from '../MapPoint';
 
-const SVG_WIDTH = 500;
-const SVG_HEIGHT = 400;
+// const SVG_WIDTH = 500;
+// const SVG_HEIGHT = 400;
 
-const imageCenter = {
-  x: SVG_WIDTH / 2,
-  y: SVG_HEIGHT / 2,
-};
+// const imageCenter = {
+//   x: SVG_WIDTH / 2,
+//   y: SVG_HEIGHT / 2,
+// };
 
-const beaconCenter = beacons.reduce((acc, beacon) => {
-  acc.x += beacon.x;
-  acc.y += beacon.y;
-  return acc;
-}, { x: 0, y: 0 });
+// const beaconCenter = beacons.reduce((acc, beacon) => {
+//   acc.x += beacon.x;
+//   acc.y += beacon.y;
+//   return acc;
+// }, { x: 0, y: 0 });
 
-beaconCenter.x /= beacons.length;
-beaconCenter.y /= beacons.length;
+// beaconCenter.x /= beacons.length;
+// beaconCenter.y /= beacons.length;
 
-const correctedBeacons = beacons.map((beacon, i) => ({
-  ...beacon,
-  x: beacon.x + imageCenter.x - beaconCenter.x,
-  y: beacon.y + imageCenter.y - beaconCenter.y,
-  color: ['red', 'green', 'blue'][i % 4]
-}));
+// const correctedBeacons = beacons.map((beacon, i) => ({
+//   ...beacon,
+//   x: beacon.x + imageCenter.x - beaconCenter.x,
+//   y: beacon.y + imageCenter.y - beaconCenter.y,
+//   color: ['red', 'green', 'blue'][i % 4]
+// }));
 
-const sortBeacons = R.pipe(R.sortBy(R.prop('x')), R.sortBy(R.prop('y')));
+// const sortBeacons = R.pipe(R.sortBy(R.prop('x')), R.sortBy(R.prop('y')));
 
 export default class App extends Component {
   state = {
-    beacons: sortBeacons(correctedBeacons),
-    polygonData: getPolygons(correctedBeacons, SVG_WIDTH, SVG_HEIGHT),
+    // beacons: sortBeacons(correctedBeacons),
+    polygonData: {},
+    // polygonData: getPolygons(correctedBeacons, SVG_WIDTH, SVG_HEIGHT),
     sounds: [
       {
         x: 50,
@@ -80,6 +81,11 @@ export default class App extends Component {
   };
 
   componentDidMount() {
+    const { beacons, svgWidth, svgHeight } = this.props;
+    // this.setState(({ beacons }) => ({
+    this.setState(({
+      polygonData: getPolygons(beacons, svgWidth, svgHeight),
+    }));
     initSound(() => {
       this.setState({
         soundsLoaded: true
@@ -141,8 +147,25 @@ export default class App extends Component {
     this.crossfade(this.state);
   }
 
+  componentWillUnmount = () => {
+    stopSounds();
+  }
+
   stop = () => {
     stopSounds();
+  }
+
+  getBeaconColor = (index) => {
+    switch (index % 4) {
+    case 0:
+      return 'blue';
+    case 1:
+      return 'red';
+    case 2:
+      return 'green';
+    default:
+      return 'none';
+    }
   }
 
   crossfade = (state) => {
@@ -152,13 +175,18 @@ export default class App extends Component {
     const id = state.polygonData.beaconIds[arrId];
     // console.log(id);
 
-    const beacon = state.beacons.find(beacon => beacon.id === id);
+    const { beacons } = this.props;
+    // const beacon = state.beacons.find(beacon => beacon.id === id);
+    const beaconIndex = beacons.findIndex(beacon => beacon.id === id);
+    // const beacon = beacons[beaconIndex];
     // console.log(beacon);
 
+    // const { color } = beacon;
+    const color = this.getBeaconColor(beaconIndex);
     const volumes = state.sounds.map((sound) => {
-      if ((sound.name === 'drums' && beacon.color === 'blue')
-      || (sound.name === 'techno' && beacon.color === 'red')
-      || (sound.name === 'organ' && beacon.color === 'green')
+      if ((sound.name === 'drums' && color === 'blue')
+      || (sound.name === 'techno' && color === 'red')
+      || (sound.name === 'organ' && color === 'green')
       ) {
         return {
           name: sound.name,
@@ -203,13 +231,13 @@ export default class App extends Component {
   }
 
   setMovable = id => (event) => {
-    event.stopPropagation();
-    // console.log('setMovable', id);
-    this.setState(state =>
-      // console.log(state.movableId == null, (state.movableId == null ? null : id));
-      ({
-        movableId: (state.movableId == null ? id : null)
-      }));
+    // event.stopPropagation();
+    // // console.log('setMovable', id);
+    // this.setState(state =>
+    //   // console.log(state.movableId == null, (state.movableId == null ? null : id));
+    //   ({
+    //     movableId: (state.movableId == null ? id : null)
+    //   }));
   };
 
   // clearMovable = (id) => (event) => {
@@ -219,33 +247,33 @@ export default class App extends Component {
   //   })
   // };
   moveMovable = (event) => {
-    const rect = document.querySelector('svg.root-image').getBoundingClientRect();
-    // const rect = event.target.getBoundingClientRect();
-    // console.log(event.location);
-    const eX = event.clientX;
-    const eY = event.clientY;
-    const movable = {
-      x: eX - rect.left,
-      y: eY - rect.top
-    };
-    this.setState((state) => {
-      if (state.movableId == null) return null;
+    // const rect = document.querySelector('svg.root-image').getBoundingClientRect();
+    // // const rect = event.target.getBoundingClientRect();
+    // // console.log(event.location);
+    // const eX = event.clientX;
+    // const eY = event.clientY;
+    // const movable = {
+    //   x: eX - rect.left,
+    //   y: eY - rect.top
+    // };
+    // this.setState((state) => {
+    //   if (state.movableId == null) return null;
 
-      // console.log(state.movableId);
-      const beacons = state.beacons.map((beacon) => {
-        if (beacon.id !== state.movableId) return beacon;
-        return {
-          ...beacon,
-          ...movable
-        };
-      });
+    //   // console.log(state.movableId);
+    //   const beacons = state.beacons.map((beacon) => {
+    //     if (beacon.id !== state.movableId) return beacon;
+    //     return {
+    //       ...beacon,
+    //       ...movable
+    //     };
+    //   });
 
-      return {
-        movable,
-        beacons,
-        polygonData: getPolygons(beacons, SVG_WIDTH, SVG_HEIGHT)
-      };
-    });
+    //   return {
+    //     movable,
+    //     beacons,
+    //     polygonData: getPolygons(beacons, SVG_WIDTH, SVG_HEIGHT)
+    //   };
+    // });
   }
 
   onStateChange = prop => (e) => {
@@ -257,8 +285,11 @@ export default class App extends Component {
 
   render() {
     const {
-      sounds, players, playing, soundsLoaded, beacons, polygonData, movable, showBeaconMarkers, movePlayers, listenPlayer
+      sounds, players, playing, soundsLoaded, polygonData, movable, showBeaconMarkers, movePlayers, listenPlayer
     } = this.state;
+    const {
+      beacons, svgWidth, svgHeight
+    } = this.props;
 
     return (
       <div className="Prototype1">
@@ -288,17 +319,18 @@ export default class App extends Component {
         <br />
         <svg
           className="root-image"
-          width={SVG_WIDTH}
-          height={SVG_HEIGHT}
+          width={svgWidth}
+          height={svgHeight}
           xmlns="http://www.w3.org/2000/svg"
           onMouseMove={this.moveMovable}
           onClick={this.setMovable(null)}
         >
           {/* onMouseMove={this.listenStub('onMouseMove')} */}
           {
-            polygonData.polygons.map((polygon, i) => (
+            polygonData.polygons && polygonData.polygons.map((polygon, i) => (
               <Fragment>
-                <polyline fill={polygonData.beaconColors[i] || 'none'} stroke="grey" strokeWidth="2" opacity="0.5" points={polygon.map(pt => pt.join(',')).join(' ')} />
+                {/* <polyline fill={polygonData.beaconColors[i] || 'none'} stroke="grey" strokeWidth="2" opacity="0.5" points={polygon.map(pt => pt.join(',')).join(' ')} /> */}
+                <polyline fill={this.getBeaconColor(i)} stroke="grey" strokeWidth="2" opacity="0.5" points={polygon.map(pt => pt.join(',')).join(' ')} />
                 <polyline fill="none" stroke="grey" strokeWidth="2" opacity="0.5" points={polygon.map(pt => pt.join(',')).join(' ')} />
                 {/* <circle r="2" cx={polygon.map()x} cy={beacon.y} fill="green"/> */}
                 {/* <circle r={sound.soundR} cx={sound.x} cy={sound.y} fill={sound.color} opacity="0.2"/> */}
@@ -306,7 +338,7 @@ export default class App extends Component {
             ))
           }
           {
-            polygonData.polygonCenters.map((center, i) => (
+            polygonData.polygonCenters && polygonData.polygonCenters.map((center, i) => (
               <Fragment>
                 {/* <circle r="2" cx={center.x} cy={center.y} fill="black"/> */}
                 <text x={center.x} y={center.y + 5} fontSize="15" textAnchor="middle" fill="black">{center.id}</text>

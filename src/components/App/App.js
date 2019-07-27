@@ -1,6 +1,7 @@
 import React, { Component, Fragment } from 'react';
 import './App.css';
 import * as R from 'ramda';
+import shortid from 'shortid';
 
 import {
   BrowserRouter as Router, Switch, Route, Redirect, Link, NavLink
@@ -12,15 +13,31 @@ import Beacons from '../Beacons';
 
 import 'bootstrap/dist/css/bootstrap.min.css';
 
+const STORAGE_KEY = 'AR_POC';
 
-export default class App extends Component {
-  state = {
+let initialState;
+const stateData = localStorage.getItem(STORAGE_KEY);
+if (stateData) {
+  initialState = JSON.parse(stateData);
+} else {
+  initialState = {
     svgWidth: 800,
     svgHeight: 581,
     imagePositionX: 50,
     imagePositionY: 68,
     imageOpacity: 80,
-    imageScale: 800
+    imageScale: 800,
+    beacons: [{
+      id: shortid.generate(),
+      x: 100,
+      y: 100
+    }],
+  };
+}
+
+export default class App extends Component {
+  state = {
+    ...initialState
     // beacons: sortBeacons(correctedBeacons),
     // polygonData: getPolygons(correctedBeacons),
     // sounds : [
@@ -61,6 +78,10 @@ export default class App extends Component {
     //   });
     // });
     // this.animatePlayer();
+    setTimeout(() => {
+      console.log('saving backup');
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(this.state));
+    }, 10000);
   }
 
   onStateChange = prop => (e) => {
@@ -70,9 +91,17 @@ export default class App extends Component {
     });
   }
 
+  setBeacons = (beacons) => {
+    // console.log('prop');
+    this.setState({
+      beacons
+    });
+  }
+
+
   render() {
     const {
-      imagePositionX, imagePositionY, imageOpacity, imageScale, svgWidth, svgHeight
+      imagePositionX, imagePositionY, imageOpacity, imageScale, svgWidth, svgHeight, beacons
     } = this.state;
     // const { sounds, players, playing, soundsLoaded, beacons, polygonData, movable, showBeaconMarkers, movePlayers, listenPlayer } = this.state;
 
@@ -120,13 +149,19 @@ export default class App extends Component {
                   imageScale={imageScale}
                   svgWidth={svgWidth}
                   svgHeight={svgHeight}
+                  beacons={beacons}
+                  setBeacons={this.setBeacons}
                 />
               </Route>
               <Route path="/soundManager">
                 <MusicEditor />
               </Route>
               <Route path="/demo">
-                <Prototype1 />
+                <Prototype1
+                  svgWidth={svgWidth}
+                  svgHeight={svgHeight}
+                  beacons={beacons}
+                />
               </Route>
 
               <Route render={() => <Redirect to="/mapEditor" />} />

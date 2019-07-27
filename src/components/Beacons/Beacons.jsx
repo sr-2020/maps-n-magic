@@ -11,11 +11,11 @@ import getPolygons from '../../utils/polygonGenerator';
 
 export default class Beacons extends Component {
   state = {
-    beacons: [{
-      id: shortid.generate(),
-      x: 100,
-      y: 100
-    }],
+    // beacons: [{
+    //   id: shortid.generate(),
+    //   x: 100,
+    //   y: 100
+    // }],
     // polygonData: {},
     showBeaconMarkers: true,
     showPolygonLabels: true,
@@ -62,43 +62,52 @@ export default class Beacons extends Component {
     // const { svgWidth, svgHeight } = this.props;
     // svgWidth: 800,
     // svgHeight: 581,
-    this.setState((state) => {
-      const newBeacons = [...state.beacons, newBeacon];
-      return ({
-        // movable,
-        beacons: newBeacons,
-        // polygonData: getPolygons(newBeacons, svgWidth, svgHeight)
-      });
-    });
+
+    const { beacons, setBeacons } = this.props;
+
+    setBeacons([...beacons, newBeacon]);
+    // this.setState((state) => {
+    //   const newBeacons = [...state.beacons, newBeacon];
+    //   return ({
+    //     // movable,
+    //     beacons: newBeacons,
+    //     // polygonData: getPolygons(newBeacons, svgWidth, svgHeight)
+    //   });
+    // });
   }
 
   onBeaconChange = (id, prop) => (e) => {
     const { value } = e.target;
     // const { svgWidth, svgHeight } = this.props;
-    this.setState(({ beacons }) => {
-      // console.log(prop);
-      const index = beacons.findIndex(beacon => beacon.id === id);
-      const beacons2 = [...beacons];
-      beacons2[index] = {
-        ...beacons2[index],
-        [prop]: value
-      };
-      return {
-        beacons: beacons2,
-        // polygonData: getPolygons(beacons2, svgWidth, svgHeight)
-      };
-    });
+    // this.setState(({ beacons }) => {
+    // console.log(prop);
+    const { beacons, setBeacons } = this.props;
+    const index = beacons.findIndex(beacon => beacon.id === id);
+    const beacons2 = [...beacons];
+    beacons2[index] = {
+      ...beacons2[index],
+      [prop]: value
+    };
+    setBeacons(beacons2);
+    //   return {
+    //     beacons: beacons2,
+    //     // polygonData: getPolygons(beacons2, svgWidth, svgHeight)
+    //   };
+    // });
   }
 
   onBeaconRemove = id => (e) => {
     // const { svgWidth, svgHeight } = this.props;
-    this.setState(({ beacons }) => {
-      const beacons2 = beacons.filter(beacon => beacon.id !== id);
-      return {
-        beacons: beacons2,
-        // polygonData: getPolygons(beacons2, svgWidth, svgHeight)
-      };
-    });
+    const { beacons, setBeacons } = this.props;
+    const beacons2 = beacons.filter(beacon => beacon.id !== id);
+    setBeacons(beacons2);
+    // this.setState(({ beacons }) => {
+    //   const beacons2 = beacons.filter(beacon => beacon.id !== id);
+    //   return {
+    //     beacons: beacons2,
+    //     // polygonData: getPolygons(beacons2, svgWidth, svgHeight)
+    //   };
+    // });
   }
 
   // this.onTableHover(beacon.id)
@@ -132,8 +141,10 @@ export default class Beacons extends Component {
     this.setState((state) => {
       if (state.movableId == null) return null;
 
+      const { beacons, setBeacons } = this.props;
+
       // console.log(state.movableId);
-      const beacons = state.beacons.map((beacon) => {
+      const beacons2 = beacons.map((beacon) => {
         if (beacon.id !== state.movableId) return beacon;
         return {
           ...beacon,
@@ -141,9 +152,11 @@ export default class Beacons extends Component {
         };
       });
 
+      setBeacons(beacons2);
+
       return {
         movable,
-        beacons,
+        // beacons: beacons2,
         // polygonData: getPolygons(beacons, svgWidth, svgHeight)
       };
     });
@@ -157,9 +170,10 @@ export default class Beacons extends Component {
 
   render() {
     const {
-      beacons, showBeaconMarkers, showPolygonLabels, showPolygonBoundaries, hoveredBeacon
+      // beacons,
+      showBeaconMarkers, showPolygonLabels, showPolygonBoundaries, hoveredBeacon
     } = this.state;
-    console.log(beacons);
+
     // //const { t } = this.props;
 
     // if (!something) {
@@ -167,8 +181,9 @@ export default class Beacons extends Component {
     //   // return null;
     // }
     const {
-      imagePositionX, imagePositionY, imageOpacity, imageScale, svgWidth, svgHeight, onPropChange
+      imagePositionX, imagePositionY, imageOpacity, imageScale, svgWidth, svgHeight, onPropChange, beacons
     } = this.props;
+    console.log(beacons);
     let polygonData;
     if (showPolygonLabels || showPolygonBoundaries) {
       polygonData = getPolygons(beacons, svgWidth, svgHeight);
