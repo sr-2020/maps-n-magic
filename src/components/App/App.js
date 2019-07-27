@@ -5,10 +5,13 @@ import '@fortawesome/fontawesome-free/css/all.css';
 import * as R from 'ramda';
 import shortid from 'shortid';
 
-
 import {
   BrowserRouter as Router, Switch, Route, Redirect, Link, NavLink
 } from 'react-router-dom';
+
+import getBeacons from '../../utils/gpxExperiment';
+
+
 import Prototype1 from '../Prototype1';
 import MapEditor from '../MapEditor';
 import MusicEditor from '../MusicEditor';
@@ -18,12 +21,15 @@ import { json2File, makeFileName, readJsonFile } from '../../utils/fileUtils';
 
 import 'bootstrap/dist/css/bootstrap.min.css';
 
+console.log(getBeacons(100, 100, 600, 500));
+
 const STORAGE_KEY = 'AR_POC';
 
 let initialState;
 const stateData = localStorage.getItem(STORAGE_KEY);
 if (stateData) {
   initialState = JSON.parse(stateData);
+  initialState.beacons = getBeacons(100, 100, initialState.svgWidth - 200, initialState.svgHeight - 200);
 } else {
   initialState = {
     svgWidth: 800,
@@ -83,7 +89,7 @@ export default class App extends Component {
     //   });
     // });
     // this.animatePlayer();
-    setTimeout(() => {
+    setInterval(() => {
       console.log('saving backup');
       localStorage.setItem(STORAGE_KEY, JSON.stringify(this.state));
     }, 10000);

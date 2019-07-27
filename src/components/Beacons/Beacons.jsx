@@ -200,6 +200,13 @@ export default class Beacons extends Component {
           onClick={this.addBeacon}
           onMouseMove={this.moveMovable}
         >
+          <defs>
+            <radialGradient id="RadialGradient1">
+              <stop offset="0%" stopColor="red" />
+              <stop offset="100%" stopColor="white" />
+            </radialGradient>
+          </defs>
+
           {/* onClick={this.setMovable(null)} */}
           {
             showPolygonBoundaries && polygonData.polygons && polygonData.polygons.map((polygon, i) => (
@@ -219,6 +226,11 @@ export default class Beacons extends Component {
           {
             beacons.map(beacon => (
               <MapPoint x={beacon.x} y={beacon.y} />
+            ))
+          }
+          {
+            beacons.map(beacon => (
+              <circle r="40" cx={beacon.x} cy={beacon.y} opacity="0.5" fill="url(#RadialGradient1)" />
             ))
           }
           {

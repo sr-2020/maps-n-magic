@@ -59,14 +59,14 @@ function getTriangleCentroid(triangle) {
 function getSolidMassCenter(polygon) {
   const pt1 = polygon[0];
   const triangles = R.aperture(2, R.tail(polygon)).map(R.concat([pt1]));
-  console.log(polygon);
-  console.log(triangles);
+  // console.log(polygon);
+  // console.log(triangles);
   // triangle = [[3,0],[0,0],[0,5]];
   const intermediate = triangles.map((triangle, i) => ({
     ...getPointMassCenter(triangle),
     volume: getTriangleArea(triangle)
   }));
-  console.log(intermediate);
+  // console.log(intermediate);
 
   const area = R.sum(intermediate.map(R.prop('volume')));
   const sums = intermediate.reduce((acc, point) => {
