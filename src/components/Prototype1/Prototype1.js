@@ -96,7 +96,7 @@ export default class App extends Component {
 
   animatePlayer = (duration) => {
     const that = this;
-    animate({
+    this.animation = animate({
       duration: 20000,
       timing: Timing.makeEaseInOut(Timing.linear),
       draw(progress) {
@@ -149,6 +149,7 @@ export default class App extends Component {
 
   componentWillUnmount = () => {
     stopSounds();
+    this.animation.enable = false;
   }
 
   stop = () => {
