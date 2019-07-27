@@ -1,7 +1,10 @@
 import React, { Component, Fragment } from 'react';
 import './App.css';
+// import './Icons.css';
+import '@fortawesome/fontawesome-free/css/all.css';
 import * as R from 'ramda';
 import shortid from 'shortid';
+
 
 import {
   BrowserRouter as Router, Switch, Route, Redirect, Link, NavLink
@@ -10,6 +13,8 @@ import Prototype1 from '../Prototype1';
 import MapEditor from '../MapEditor';
 import MusicEditor from '../MusicEditor';
 import Beacons from '../Beacons';
+
+import { json2File, makeFileName, readJsonFile } from '../../utils/fileUtils';
 
 import 'bootstrap/dist/css/bootstrap.min.css';
 
@@ -98,6 +103,24 @@ export default class App extends Component {
     });
   }
 
+  downloadDatabaseAsFile = () => {
+    // this.state.dbms.getDatabase().then((database) => {
+    json2File(this.state, makeFileName('SR_acoustic_poc', 'json', new Date()));
+    // }).catch(UI.handleError);
+  };
+
+  uploadDatabaseFile = (evt) => {
+    const input = evt.target.querySelector('input');
+    if (input) {
+      input.value = '';
+      input.click();
+    }
+  };
+
+  onFileSelected = (evt) => {
+    readJsonFile(evt).then(database => this.setState(database));
+  };
+
 
   render() {
     const {
@@ -122,6 +145,34 @@ export default class App extends Component {
                 </li>
                 <li>
                   <NavLink to="/demo">Demo</NavLink>
+                </li>
+              </ul>
+
+              <ul>
+                <li>
+                  <button
+                    type="button"
+                    className="dataLoadButton icon-button action-button mainNavButton"
+                    data-original-title=""
+                    title="Upload database"
+                    onClick={this.uploadDatabaseFile}
+                  >
+                    <input
+                      type="file"
+                      className="display-none"
+                      tabIndex="-1"
+                      onChange={this.onFileSelected}
+                    />
+                  </button>
+                </li>
+                <li>
+                  <button
+                    type="button"
+                    className="dataSaveButton icon-button action-button mainNavButton"
+                    data-original-title=""
+                    onClick={this.downloadDatabaseAsFile}
+                    title="Download database"
+                  />
                 </li>
               </ul>
             </nav>

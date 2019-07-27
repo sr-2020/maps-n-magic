@@ -49,3 +49,43 @@
 .view-switch > ul > li:not(:last-of-type) {
   margin-right: 2px;
 } 
+
+.display-none {
+  display: none;
+}
+
+.icon-button {
+  background-color: #ddd;
+  width: 44px;
+  background-size: 28px;
+  font-size: 23px;
+  line-height: 100%;
+}
+.mainNavButton {
+  background-color: #ddd!important;
+  width: 44px;
+  background-size: 28px;
+}
+.action-button {
+  flex-grow: 0;
+  width: 48px;
+  border: none;
+}
+.icon-button {
+  padding: 0;
+  height: 100%;
+  font-family: Font Awesome\ 5 Free;
+  font-weight: 900;
+}
+.dataLoadButton:before {
+  content: "\f093";
+}
+.refreshButton:before {
+  content: "\f2f1";
+}
+.newBaseButton:before {
+  content: "\f067";
+}
+.dataSaveButton:before {
+  content: "\f019";
+}
