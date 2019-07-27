@@ -371,7 +371,7 @@ export default class App extends Component {
           {
             players.map(player => (
               <Fragment>
-                {/* <circle r="10" cx={player.x} cy={player.y} fill={player.color}/> */}
+                <circle r="10" cx={player.x} cy={player.y} fill={player.color} />
                 <g transform={`translate(${player.x - 25},${player.y - 20}) scale(0.1)`}>
                   <svg
                     version="1.1"

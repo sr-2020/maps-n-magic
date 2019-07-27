@@ -7,6 +7,8 @@ import {
   initSound, createSource, createContext, loadBuffers
 } from '../../utils/audioDataUtils';
 
+import { startSound, stopSound } from '../../utils/audioPlaybackUtils';
+
 const BUFFERS_TO_LOAD = {
   // kick: 'sounds/kick.wav',
   // snare: 'sounds/snare.wav',
@@ -61,6 +63,40 @@ export default class MusicEditor extends Component {
   //   });
   // }
 
+  readBinaryFile = evt => new Promise((resolve, reject) => {
+    // Retrieve the first (and only!) File from the FileList object
+    const f = evt.target.files[0];
+
+    if (f) {
+      const r = new FileReader();
+      r.onload = (e) => {
+        const contents = e.target.result;
+        resolve({
+          name: f.name,
+          buffer: contents
+        });
+      };
+      r.readAsArrayBuffer(f);
+    } else {
+      // UI.alert(L10n.getValue('utils-base-file-loading-error'));
+      reject(new Error('utils-base-file-loading-error'));
+    }
+  });
+
+  onSoundSelected = (evt) => {
+    this.readBinaryFile(evt).then((result) => {
+      console.log('file is here', result);
+      context.decodeAudioData(result.buffer, (buffer) => {
+        this.setState(({ buffers }) => ({
+          buffers: [...buffers, {
+            name: result.name,
+            buffer
+          }]
+        }));
+      });
+    });
+  };
+
   render() {
     const { buffers, loading } = this.state;
     // //const { t } = this.props;
@@ -86,9 +122,10 @@ export default class MusicEditor extends Component {
                 buffers.map(bufferInfo => (
                   <tr>
                     <td>
-                      <input
+                      {/* <input
                         value={bufferInfo.name}
-                      />
+                      /> */}
+                      <span>{bufferInfo.name}</span>
                       {/* onChange={this.onBeaconChange(beacon.id, 'id')} */}
                     </td>
                     {/* <td>
@@ -102,6 +139,16 @@ export default class MusicEditor extends Component {
                         type="button"
                       >Remove
                       </button>
+                      <button
+                        type="button"
+                        onClick={() => startSound(bufferInfo.buffer, context)(bufferInfo.name)}
+                      >Play
+                      </button>
+                      <button
+                        type="button"
+                        onClick={() => stopSound(bufferInfo.name)}
+                      >Stop
+                      </button>
                       {/* onClick={this.onBeaconRemove(beacon.id)} */}
                     </td>
                   </tr>
@@ -110,6 +157,7 @@ export default class MusicEditor extends Component {
             </tbody>
           </table>
         }
+        <input type="file" onChange={this.onSoundSelected} />
       </div>
     );
   }

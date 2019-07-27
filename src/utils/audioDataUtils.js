@@ -95,7 +95,7 @@ function loadBuffers(buffersToLoad, buffers, context, cb) {
   bufferLoader.load();
 }
 
-let context;
+let localContext;
 // window.addEventListener('load', init, false);
 
 function createContext() {
@@ -109,12 +109,17 @@ function createContext() {
 }
 
 function initSound(cb) {
-  context = createContext();
-  loadBuffers(BUFFERS_TO_LOAD, BUFFERS, context, cb);
+  localContext = createContext();
+  loadBuffers(BUFFERS_TO_LOAD, [], localContext, cb);
 }
 
-function createSource(soundName) {
-  const buffer = BUFFERS[soundName];
+function createSource(soundName, buffer, context) {
+  if (!buffer) {
+    buffer = BUFFERS[soundName];
+  }
+  if (!context) {
+    context = localContext;
+  }
   const source = context.createBufferSource();
   const gainNode = context.createGain ? context.createGain() : context.createGainNode();
   source.buffer = buffer;
@@ -142,20 +147,20 @@ function createSource(soundName) {
 //   this.ctl2.gainNode.gain.value = gain2;
 // };
 
-function ab2str(buf) {
-  // return String.fromCharCode.apply(null, new Uint16Array(buf));
-  return String.fromCharCode.apply(null, new Uint8Array(buf));
-}
-function str2ab(str) {
-  // const buf = new ArrayBuffer(str.length * 2); // 2 bytes for each char
-  const buf = new ArrayBuffer(str.length); // 2 bytes for each char
-  // const bufView = new Uint16Array(buf);
-  const bufView = new Uint8Array(buf);
-  for (let i = 0, strLen = str.length; i < strLen; i++) {
-    bufView[i] = str.charCodeAt(i);
-  }
-  return buf;
-}
+// function ab2str(buf) {
+//   // return String.fromCharCode.apply(null, new Uint16Array(buf));
+//   return String.fromCharCode.apply(null, new Uint8Array(buf));
+// }
+// function str2ab(str) {
+//   // const buf = new ArrayBuffer(str.length * 2); // 2 bytes for each char
+//   const buf = new ArrayBuffer(str.length); // 2 bytes for each char
+//   // const bufView = new Uint16Array(buf);
+//   const bufView = new Uint8Array(buf);
+//   for (let i = 0, strLen = str.length; i < strLen; i++) {
+//     bufView[i] = str.charCodeAt(i);
+//   }
+//   return buf;
+// }
 
 function ab2b64(buf) {
   return btoa(
