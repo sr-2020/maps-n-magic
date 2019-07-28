@@ -42,6 +42,26 @@ const readJsonFile = evt => new Promise((resolve, reject) => {
   }
 });
 
+const readBinaryFile = evt => new Promise((resolve, reject) => {
+  // Retrieve the first (and only!) File from the FileList object
+  const f = evt.target.files[0];
+
+  if (f) {
+    const r = new FileReader();
+    r.onload = (e) => {
+      const contents = e.target.result;
+      resolve({
+        name: f.name,
+        buffer: contents
+      });
+    };
+    r.readAsArrayBuffer(f);
+  } else {
+    // UI.alert(L10n.getValue('utils-base-file-loading-error'));
+    reject(new Error('utils-base-file-loading-error'));
+  }
+});
+
 // eslint-disable-next-line no-useless-escape
 const illegalRe = /[\/\?<>\\:\*\|":]/g;
 // eslint-disable-next-line no-control-regex
@@ -80,7 +100,9 @@ function str2File(str, fileName) {
   saveAs(blob, fileName);
 }
 
-export { json2File, makeFileName, readJsonFile };
+export {
+  json2File, makeFileName, readJsonFile, readBinaryFile
+};
 
 // function preprocessCsvStr(str) {
 //   if (!(typeof str === 'string' || str instanceof String)) {

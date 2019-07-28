@@ -3,44 +3,24 @@ import PropTypes from 'prop-types';
 import './MusicEditor.css';
 import * as R from 'ramda';
 
-import {
-  initSound, createSource, createContext, loadBuffers
-} from '../../utils/audioDataUtils';
+import AudioService from '../../services/audioService';
 
-import { startSound, stopSound } from '../../utils/audioPlaybackUtils';
-
-const BUFFERS_TO_LOAD = {
-  // kick: 'sounds/kick.wav',
-  // snare: 'sounds/snare.wav',
-  // hihat: 'sounds/hihat.wav',
-  // jam: 'sounds/br-jam-loop.wav',
-  // crowd: 'sounds/clapping-crowd.wav',
-  drums: 'sounds/stargazer.mp3',
-  organ: 'sounds/nightwalker.mp3',
-  techno: 'sounds/BoxCat_Games_-_10_-_Epic_Song.mp3'
-  // drums: 'sounds/blueyellow.wav',
-  // organ: 'sounds/organ-echo-chords.wav',
-  // techno: 'sounds/techno.wav'
-};
-
-const context = createContext();
+import { readBinaryFile } from '../../utils/fileUtils';
 
 export default class MusicEditor extends Component {
   state = {
-    buffers: [],
+    bufferNames: [],
     loading: true
   };
 
+  audioService = new AudioService();
+
   componentDidMount = () => {
     console.log('MusicEditor mounted');
-    // this.getStateInfo();
-    const buffers = [];
-    loadBuffers(BUFFERS_TO_LOAD, buffers, context, () => {
-      this.setState({
-        buffers,
-        loading: false
-      });
-    });
+    this.audioService.isLoaded.then(() => this.setState({
+      loading: false,
+      bufferNames: this.audioService.getBuffers().map(R.prop('name'))
+    }));
   }
 
   componentDidUpdate = () => {
@@ -51,60 +31,19 @@ export default class MusicEditor extends Component {
     console.log('MusicEditor will unmount');
   }
 
-  // getStateInfo = () => {
-  //   const { dbms } = this.props;
-  //   Promise.all([
-  //     dbms.getSomething(),
-  //   ]).then((results) => {
-  //     const [something] = results;
-  //     this.setState({
-  //       something
-  //     });
-  //   });
-  // }
-
-  readBinaryFile = evt => new Promise((resolve, reject) => {
-    // Retrieve the first (and only!) File from the FileList object
-    const f = evt.target.files[0];
-
-    if (f) {
-      const r = new FileReader();
-      r.onload = (e) => {
-        const contents = e.target.result;
-        resolve({
-          name: f.name,
-          buffer: contents
-        });
-      };
-      r.readAsArrayBuffer(f);
-    } else {
-      // UI.alert(L10n.getValue('utils-base-file-loading-error'));
-      reject(new Error('utils-base-file-loading-error'));
-    }
+  updateBufferNames = () => this.setState({
+    bufferNames: this.audioService.getBuffers().map(R.prop('name'))
   });
 
   onSoundSelected = (evt) => {
-    this.readBinaryFile(evt).then((result) => {
-      console.log('file is here', result);
-      context.decodeAudioData(result.buffer, (buffer) => {
-        this.setState(({ buffers }) => ({
-          buffers: [...buffers, {
-            name: result.name,
-            buffer
-          }]
-        }));
-      });
+    readBinaryFile(evt).then((result) => {
+      this.audioService.addAudioFile(result).then(this.updateBufferNames);
     });
   };
 
   render() {
-    const { buffers, loading } = this.state;
-    // //const { t } = this.props;
+    const { loading, bufferNames } = this.state;
 
-    // if (!something) {
-    //   return <div> MusicEditor stub </div>;
-    //   // return null;
-    // }
     return (
       <div className="MusicEditor">
         {
@@ -119,37 +58,34 @@ export default class MusicEditor extends Component {
             </thead>
             <tbody>
               {
-                buffers.map(bufferInfo => (
+                bufferNames.map(bufferName => (
                   <tr>
                     <td>
                       {/* <input
                         value={bufferInfo.name}
                       /> */}
-                      <span>{bufferInfo.name}</span>
+                      <span>{bufferName}</span>
                       {/* onChange={this.onBeaconChange(beacon.id, 'id')} */}
                     </td>
-                    {/* <td>
-                      <input value={beacon.x} type="number" onChange={this.onBeaconChange(beacon.id, 'x')} />
-                    </td>
-                    <td>
-                      <input value={beacon.y} type="number" onChange={this.onBeaconChange(beacon.id, 'y')} />
-                    </td> */}
                     <td>
                       <button
                         type="button"
+                        onClick={() => {
+                          this.audioService.removeSound(bufferName);
+                          this.updateBufferNames();
+                        }}
                       >Remove
                       </button>
                       <button
                         type="button"
-                        onClick={() => startSound(bufferInfo.buffer, context)(bufferInfo.name)}
+                        onClick={() => this.audioService.startSound(bufferName)}
                       >Play
                       </button>
                       <button
                         type="button"
-                        onClick={() => stopSound(bufferInfo.name)}
+                        onClick={() => this.audioService.stopSound(bufferName)}
                       >Stop
                       </button>
-                      {/* onClick={this.onBeaconRemove(beacon.id)} */}
                     </td>
                   </tr>
                 ))

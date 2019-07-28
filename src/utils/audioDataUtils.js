@@ -180,5 +180,5 @@ function b642ab(base64) {
 }
 
 export {
-  initSound, createSource, createContext, loadBuffers
+  initSound, createSource, createContext, loadBuffers, BufferLoader
 };
