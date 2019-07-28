@@ -157,18 +157,18 @@ export default class App extends Component {
     audioService.stopSounds();
   }
 
-  getBeaconColor = (index) => {
-    switch (index % 4) {
-    case 0:
-      return 'blue';
-    case 1:
-      return 'red';
-    case 2:
-      return 'green';
-    default:
-      return 'none';
-    }
-  }
+  // getBeaconColor = (index) => {
+  //   switch (index % 4) {
+  //   case 0:
+  //     return 'blue';
+  //   case 1:
+  //     return 'red';
+  //   case 2:
+  //     return 'green';
+  //   default:
+  //     return 'none';
+  //   }
+  // }
 
   crossfade = (state) => {
     const player = state.players.find(player2 => player2.id === state.listenPlayer);
@@ -180,30 +180,37 @@ export default class App extends Component {
     const { beacons } = this.props;
     // const beacon = state.beacons.find(beacon => beacon.id === id);
     const beaconIndex = beacons.findIndex(beacon => beacon.id === id);
-    // const beacon = beacons[beaconIndex];
+    const beacon = beacons[beaconIndex];
     // console.log(beacon);
 
     // const { color } = beacon;
-    const color = this.getBeaconColor(beaconIndex);
-    const volumes = state.sounds.map((sound) => {
-      if ((sound.name === 'drums' && color === 'blue')
-      || (sound.name === 'techno' && color === 'red')
-      || (sound.name === 'organ' && color === 'green')
-      ) {
-        return {
-          name: sound.name,
-          gain: 1
-        };
-      }
-      return {
-        name: sound.name,
-        gain: 0
-      };
-    });
+    // const color = this.getBeaconColor(beaconIndex);
+
+    const { sound } = beacon.props;
+    // const volumes = state.sounds.map((sound) => {
+    //   if ((sound.name === 'drums' && color === 'blue')
+    //   || (sound.name === 'techno' && color === 'red')
+    //   || (sound.name === 'organ' && color === 'green')
+    //   ) {
+    //     return {
+    //       name: sound.name,
+    //       gain: 1
+    //     };
+    //   }
+    //   return {
+    //     name: sound.name,
+    //     gain: 0
+    //   };
+    // });
 
     // const volumes = computeVolumesByDistance(state);
     // applyVolumes(volumes);
     const { audioService } = this.props;
+    const volumes = audioService.getSoundNames().map(soundName => ({
+      name: soundName,
+      gain: soundName === sound ? 1 : 0
+    }));
+
     audioService.applyVolumes(volumes);
   };
 
@@ -292,37 +299,14 @@ export default class App extends Component {
       sounds, players, playing, soundsLoaded, polygonData, movable, showBeaconMarkers, movePlayers, listenPlayer
     } = this.state;
     const {
-      beacons, svgWidth, svgHeight
+      beacons, svgWidth, svgHeight, audioService
     } = this.props;
 
     return (
-      <div className="Prototype1">
-        <input id="showBeaconMarkersInput" type="checkbox" onChange={this.toggleBeaconMarker} checked={showBeaconMarkers} />
-        <label htmlFor="showBeaconMarkersInput">Show beacon markers</label>
-        <br />
+      <div className="Prototype1  flex-row justify-content-center">
 
-        {/* <button onClick={this.onPlayerMove}>Move/Stop Players</button> */}
-        <input id="movePlayersInput" type="checkbox" onChange={this.onPlayerMove} checked={movePlayers} />
-        <label htmlFor="movePlayersInput">Move players</label>
-        <br />
-
-        <input id="enableMusicInput" type="checkbox" onChange={this.onMusic} checked={playing} disabled={!soundsLoaded} />
-        <label htmlFor="enableMusicInput">Enable music</label>
-        <br />
-        <label>Listen player</label>
-        <select
-          onChange={this.onStateChange('listenPlayer')}
-          value={listenPlayer}
-        >
-          {/* <option value="">No value</option> */}
-          {players.map((el, i) => <option value={el.id}>{`${el.id}(${el.color})`}</option>)}
-        </select>
-        <div>
-          {!soundsLoaded ? 'loading sounds...' : 'sounds loaded'}
-        </div>
-        <br />
         <svg
-          className="root-image"
+          className="root-image margin-2rem"
           width={svgWidth}
           height={svgHeight}
           xmlns="http://www.w3.org/2000/svg"
@@ -334,8 +318,20 @@ export default class App extends Component {
             polygonData.polygons && polygonData.polygons.map((polygon, i) => (
               <Fragment>
                 {/* <polyline fill={polygonData.beaconColors[i] || 'none'} stroke="grey" strokeWidth="2" opacity="0.5" points={polygon.map(pt => pt.join(',')).join(' ')} /> */}
-                <polyline fill={this.getBeaconColor(i)} stroke="grey" strokeWidth="2" opacity="0.5" points={polygon.map(pt => pt.join(',')).join(' ')} />
-                <polyline fill="none" stroke="grey" strokeWidth="2" opacity="0.5" points={polygon.map(pt => pt.join(',')).join(' ')} />
+                <polyline
+                  fill={audioService.getSoundProps(beacons[i].props.sound).color || 'none'}
+                  stroke="grey"
+                  strokeWidth="2"
+                  opacity="0.5"
+                  points={polygon.map(pt => pt.join(',')).join(' ')}
+                />
+                <polyline
+                  fill="none"
+                  stroke="grey"
+                  strokeWidth="2"
+                  opacity="0.5"
+                  points={polygon.map(pt => pt.join(',')).join(' ')}
+                />
                 {/* <circle r="2" cx={polygon.map()x} cy={beacon.y} fill="green"/> */}
                 {/* <circle r={sound.soundR} cx={sound.x} cy={sound.y} fill={sound.color} opacity="0.2"/> */}
               </Fragment>
@@ -452,6 +448,32 @@ export default class App extends Component {
               ))
             }
          </div> */}
+        <div className="margin-2rem">
+          <input id="showBeaconMarkersInput" type="checkbox" onChange={this.toggleBeaconMarker} checked={showBeaconMarkers} />
+          <label htmlFor="showBeaconMarkersInput">Show beacon markers</label>
+          <br />
+
+          {/* <button onClick={this.onPlayerMove}>Move/Stop Players</button> */}
+          <input id="movePlayersInput" type="checkbox" onChange={this.onPlayerMove} checked={movePlayers} />
+          <label htmlFor="movePlayersInput">Move players</label>
+          <br />
+
+          <input id="enableMusicInput" type="checkbox" onChange={this.onMusic} checked={playing} disabled={!soundsLoaded} />
+          <label htmlFor="enableMusicInput">Enable music</label>
+          <br />
+          <label>Listen player</label>
+          <select
+            onChange={this.onStateChange('listenPlayer')}
+            value={listenPlayer}
+          >
+            {/* <option value="">No value</option> */}
+            {players.map((el, i) => <option value={el.id}>{`${el.id}(${el.color})`}</option>)}
+          </select>
+          <div>
+            {!soundsLoaded ? 'loading sounds...' : 'sounds loaded'}
+          </div>
+          <br />
+        </div>
       </div>
     );
   }

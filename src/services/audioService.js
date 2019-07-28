@@ -87,6 +87,8 @@ export default class AudioService {
 
   getBuffers = () => this.buffers;
 
+  getSoundNames = () => this.buffers.map(R.prop('name'));
+
   startSounds(soundList) {
     soundList.forEach(this.startSound);
   }
@@ -150,6 +152,12 @@ export default class AudioService {
   }
 
   applyVolumes = (volumes) => {
+    volumes.forEach((volumeData) => {
+      const source = (this.soundSources[volumeData.name]);
+      if (!source) {
+        this.startSound(volumeData.name);
+      }
+    });
     volumes.forEach(volumeData => (this.soundSources[volumeData.name].gainNode.gain.value = volumeData.gain));
   }
 
@@ -168,6 +176,14 @@ export default class AudioService {
     }));
   }
 
+  getSoundProps = (soundName) => {
+    const buffer = this.buffers.find(bufferInfo2 => bufferInfo2.name === soundName);
+    if (buffer) {
+      // console.log(soundName, 'buffer.props', buffer.props);
+      return buffer.props;
+    }
+    return {};
+  }
 
   ab2b64(buf) {
     return btoa(

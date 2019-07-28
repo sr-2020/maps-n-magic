@@ -94,18 +94,18 @@ export default class Beacons extends Component {
   }
 
   onBeaconPropChange = (id, prop) => (e) => {
-    // const { value } = e.target;
-    // const { beacons, setBeacons } = this.props;
-    // const index = beacons.findIndex(beacon => beacon.id === id);
-    // const beacons2 = [...beacons];
-    // beacons2[index] = {
-    //   ...beacons2[index],
-    //   props: {
-    //     ...beacons2[index].props,
-    //     [prop]: value
-    //   }
-    // };
-    // setBeacons(beacons2);
+    const { value } = e.target;
+    const { beacons, setBeacons } = this.props;
+    const index = beacons.findIndex(beacon => beacon.id === id);
+    const beacons2 = [...beacons];
+    beacons2[index] = {
+      ...beacons2[index],
+      props: {
+        ...beacons2[index].props,
+        [prop]: value
+      }
+    };
+    setBeacons(beacons2);
   }
 
   onBeaconRemove = id => (e) => {
@@ -311,7 +311,7 @@ export default class Beacons extends Component {
                       <input className="coordInput" value={beacon.y} type="number" onChange={this.onBeaconChange(beacon.id, 'y')} />
                     </td>
                     <td>
-                      <select value={beacon.props.sound} onChange={this.onBeaconPropChange(beacon.id, 'color')}>
+                      <select value={beacon.props.sound} onChange={this.onBeaconPropChange(beacon.id, 'sound')}>
                         {
                           ['none'].concat(audioService.getBuffers().map(R.prop('name'))).map(soundName => <option value={soundName}>{soundName}</option>)
                         }

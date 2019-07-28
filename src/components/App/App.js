@@ -36,12 +36,12 @@ if (database) {
   initialState = parsedDb.appState;
   // audioData = database.audioData;
   // console.log('audioData', audioData);
-  initialState.beacons = getBeacons(100, 100, initialState.svgWidth - 200, initialState.svgHeight - 200).map(beacon => ({
-    ...beacon,
-    props: {
-      sound: 'none'
-    }
-  }));
+  // initialState.beacons = getBeacons(100, 100, initialState.svgWidth - 200, initialState.svgHeight - 200).map(beacon => ({
+  //   ...beacon,
+  //   props: {
+  //     sound: 'none'
+  //   }
+  // }));
 } else {
   initialState = {
     svgWidth: 800,
@@ -74,16 +74,16 @@ export default class App extends Component {
     // this.animatePlayer();
     setInterval(() => {
       console.log('saving backup');
-      localStorage.setItem(STORAGE_KEY, this.prepareJson());
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(this.prepareDataForJson()));
     }, 10000);
   }
 
-  prepareJson = () => {
-    console.log('sdfs');
+  prepareDataForJson = () => {
+    // console.log('sdfs');
     const data = this.audioService.toJson();
     // console.log()
     this.audioService.fromJson(data);
-    return JSON.stringify({
+    return ({
       appState: this.state,
       audioData: data
     });
@@ -104,7 +104,7 @@ export default class App extends Component {
   }
 
   downloadDatabaseAsFile = () => {
-    json2File(this.prepareJson(), makeFileName('SR_acoustic_poc', 'json', new Date()));
+    json2File(this.prepareDataForJson(), makeFileName('SR_acoustic_poc', 'json', new Date()));
   };
 
   uploadDatabaseFile = (evt) => {
@@ -116,7 +116,10 @@ export default class App extends Component {
   };
 
   onFileSelected = (evt) => {
-    readJsonFile(evt).then(database2 => this.setState(database2));
+    readJsonFile(evt).then((database2) => {
+      console.log(database2.appState);
+      this.setState(database2.appState);
+    });
   };
 
 

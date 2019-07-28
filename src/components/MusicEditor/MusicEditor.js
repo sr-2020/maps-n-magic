@@ -47,7 +47,7 @@ export default class MusicEditor extends Component {
     const { audioService } = this.props;
 
     return (
-      <div className="MusicEditor">
+      <div className="MusicEditor  margin-2rem">
         {
           loading && 'loading'
         }
