@@ -29,10 +29,19 @@ console.log(getBeacons(100, 100, 600, 500));
 const STORAGE_KEY = 'AR_POC';
 
 let initialState;
-const stateData = localStorage.getItem(STORAGE_KEY);
-if (stateData) {
-  initialState = JSON.parse(stateData);
-  initialState.beacons = getBeacons(100, 100, initialState.svgWidth - 200, initialState.svgHeight - 200);
+// let audioData = [];
+const database = localStorage.getItem(STORAGE_KEY);
+if (database) {
+  const parsedDb = JSON.parse(database);
+  initialState = parsedDb.appState;
+  // audioData = database.audioData;
+  // console.log('audioData', audioData);
+  initialState.beacons = getBeacons(100, 100, initialState.svgWidth - 200, initialState.svgHeight - 200).map(beacon => ({
+    ...beacon,
+    props: {
+      sound: 'none'
+    }
+  }));
 } else {
   initialState = {
     svgWidth: 800,
@@ -65,8 +74,19 @@ export default class App extends Component {
     // this.animatePlayer();
     setInterval(() => {
       console.log('saving backup');
-      localStorage.setItem(STORAGE_KEY, JSON.stringify(this.state));
+      localStorage.setItem(STORAGE_KEY, this.prepareJson());
     }, 10000);
+  }
+
+  prepareJson = () => {
+    console.log('sdfs');
+    const data = this.audioService.toJson();
+    // console.log()
+    this.audioService.fromJson(data);
+    return JSON.stringify({
+      appState: this.state,
+      audioData: data
+    });
   }
 
   onStateChange = prop => (e) => {
@@ -84,9 +104,7 @@ export default class App extends Component {
   }
 
   downloadDatabaseAsFile = () => {
-    // this.state.dbms.getDatabase().then((database) => {
-    json2File(this.state, makeFileName('SR_acoustic_poc', 'json', new Date()));
-    // }).catch(UI.handleError);
+    json2File(this.prepareJson(), makeFileName('SR_acoustic_poc', 'json', new Date()));
   };
 
   uploadDatabaseFile = (evt) => {
@@ -98,7 +116,7 @@ export default class App extends Component {
   };
 
   onFileSelected = (evt) => {
-    readJsonFile(evt).then(database => this.setState(database));
+    readJsonFile(evt).then(database2 => this.setState(database2));
   };
 
 
@@ -106,7 +124,6 @@ export default class App extends Component {
     const {
       imagePositionX, imagePositionY, imageOpacity, imageScale, svgWidth, svgHeight, beacons
     } = this.state;
-    // const { sounds, players, playing, soundsLoaded, beacons, polygonData, movable, showBeaconMarkers, movePlayers, listenPlayer } = this.state;
 
     return (
       <Router>
@@ -182,6 +199,7 @@ export default class App extends Component {
                   svgHeight={svgHeight}
                   beacons={beacons}
                   setBeacons={this.setBeacons}
+                  audioService={this.audioService}
                 />
               </Route>
               <Route path="/soundManager">

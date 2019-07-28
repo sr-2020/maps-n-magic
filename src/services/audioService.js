@@ -1,6 +1,8 @@
+/* eslint-disable class-methods-use-this */
 import * as R from 'ramda';
 
 import { BufferLoader } from '../utils/audioDataUtils';
+import ColorPalette from '../utils/colorPalette';
 
 const BUFFERS_TO_LOAD = {
   // kick: 'sounds/kick.wav',
@@ -23,9 +25,10 @@ export default class AudioService {
 
   buffers = [];
 
-  constructor(buffersToLoad = BUFFERS_TO_LOAD) {
+  constructor(buffersToLoad = BUFFERS_TO_LOAD, oldColors = {}) {
     this.context = this.createContext();
     this.isLoaded = this.loadBuffers(buffersToLoad).then();
+    this.oldColors = oldColors;
   }
 
   isLoaded = () => this.isLoaded;
@@ -57,7 +60,10 @@ export default class AudioService {
           const name = names[i];
           this.buffers.push({
             name,
-            buffer
+            buffer,
+            props: {
+              color: this.oldColors[name] || ColorPalette[i].color.background
+            }
           });
         }
         resolve();
@@ -70,7 +76,10 @@ export default class AudioService {
     this.context.decodeAudioData(fileData.buffer, (buffer) => {
       this.buffers.push({
         name: fileData.name,
-        buffer
+        buffer,
+        props: {
+          color: this.oldColors[fileData.name] || ColorPalette[this.buffers.length].color.background
+        }
       });
       resolve();
     });
@@ -142,5 +151,38 @@ export default class AudioService {
 
   applyVolumes = (volumes) => {
     volumes.forEach(volumeData => (this.soundSources[volumeData.name].gainNode.gain.value = volumeData.gain));
+  }
+
+  toJson = () => this.buffers.map(bufferInfo => ({
+    name: bufferInfo.name,
+    props: bufferInfo.props
+    // ...bufferInfo,
+    // buffer: this.ab2b64(bufferInfo.buffer)
+  }))
+
+  fromJson = (data) => {
+    console.log('555');
+    data.map(bufferInfo => ({
+      name: bufferInfo.name,
+      props: bufferInfo.props
+    }));
+  }
+
+
+  ab2b64(buf) {
+    return btoa(
+      new Uint8Array(buf)
+        .reduce((data, byte) => data + String.fromCharCode(byte), '')
+    );
+  }
+
+  b642ab(base64) {
+    const binaryString = window.atob(base64);
+    const len = binaryString.length;
+    const bytes = new Uint8Array(len);
+    for (let i = 0; i < len; i++) {
+      bytes[i] = binaryString.charCodeAt(i);
+    }
+    return bytes.buffer;
   }
 }

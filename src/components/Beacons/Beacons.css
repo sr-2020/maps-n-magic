@@ -1,3 +1,7 @@
 .beaconTable tr:hover {
   outline: 1px solid blue;
 }
+
+.coordInput {
+  width: 4rem;
+}

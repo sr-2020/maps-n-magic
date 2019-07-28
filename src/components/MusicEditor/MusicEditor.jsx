@@ -9,7 +9,7 @@ import { readBinaryFile } from '../../utils/fileUtils';
 
 export default class MusicEditor extends Component {
   state = {
-    bufferNames: [],
+    buffers: [],
     loading: true
   };
 
@@ -18,7 +18,7 @@ export default class MusicEditor extends Component {
     const { audioService } = this.props;
     audioService.isLoaded.then(() => this.setState({
       loading: false,
-      bufferNames: audioService.getBuffers().map(R.prop('name'))
+      buffers: this.getBuffers()
     }));
   }
 
@@ -30,8 +30,10 @@ export default class MusicEditor extends Component {
     console.log('MusicEditor will unmount');
   }
 
+  getBuffers = () => this.props.audioService.getBuffers().map(R.pick(['name', 'props']));
+
   updateBufferNames = () => this.setState({
-    bufferNames: this.props.audioService.getBuffers().map(R.prop('name'))
+    buffers: this.getBuffers()
   });
 
   onSoundSelected = (evt) => {
@@ -41,7 +43,7 @@ export default class MusicEditor extends Component {
   };
 
   render() {
-    const { loading, bufferNames } = this.state;
+    const { loading, buffers } = this.state;
     const { audioService } = this.props;
 
     return (
@@ -58,34 +60,39 @@ export default class MusicEditor extends Component {
             </thead>
             <tbody>
               {
-                bufferNames.map(bufferName => (
+                buffers.map(buffer => (
                   <tr>
                     <td>
                       {/* <input
                         value={bufferInfo.name}
                       /> */}
-                      <span>{bufferName}</span>
+                      <span>{buffer.name}</span>
                       {/* onChange={this.onBeaconChange(beacon.id, 'id')} */}
                     </td>
                     <td>
                       <button
                         type="button"
                         onClick={() => {
-                          audioService.removeSound(bufferName);
+                          audioService.removeSound(buffer.name);
                           this.updateBufferNames();
                         }}
                       >Remove
                       </button>
                       <button
                         type="button"
-                        onClick={() => audioService.startSound(bufferName)}
+                        onClick={() => audioService.startSound(buffer.name)}
                       >Play
                       </button>
                       <button
                         type="button"
-                        onClick={() => audioService.stopSound(bufferName)}
+                        onClick={() => audioService.stopSound(buffer.name)}
                       >Stop
                       </button>
+                      <input
+                        type="color"
+                        value={buffer.props.color}
+                      />
+                      {/* // onClick={() => audioService.stopSound(bufferName)} */}
                     </td>
                   </tr>
                 ))

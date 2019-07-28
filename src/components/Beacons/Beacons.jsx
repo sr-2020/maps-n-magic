@@ -1,8 +1,10 @@
+/* eslint-disable react/prop-types */
 /* eslint-disable jsx-a11y/label-has-associated-control */
 import React, { Component, Fragment } from 'react';
 import PropTypes from 'prop-types';
 import './Beacons.css';
 import shortid from 'shortid';
+import * as R from 'ramda';
 
 import Map from '../Map';
 import MapMarker from '../MapMarker';
@@ -57,7 +59,10 @@ export default class Beacons extends Component {
     const newBeacon = {
       x: eX - rect.left,
       y: eY - rect.top,
-      id: shortid.generate()
+      id: shortid.generate(),
+      props: {
+        sound: 'none'
+      }
     };
     // const { svgWidth, svgHeight } = this.props;
     // svgWidth: 800,
@@ -78,9 +83,6 @@ export default class Beacons extends Component {
 
   onBeaconChange = (id, prop) => (e) => {
     const { value } = e.target;
-    // const { svgWidth, svgHeight } = this.props;
-    // this.setState(({ beacons }) => {
-    // console.log(prop);
     const { beacons, setBeacons } = this.props;
     const index = beacons.findIndex(beacon => beacon.id === id);
     const beacons2 = [...beacons];
@@ -89,11 +91,21 @@ export default class Beacons extends Component {
       [prop]: value
     };
     setBeacons(beacons2);
-    //   return {
-    //     beacons: beacons2,
-    //     // polygonData: getPolygons(beacons2, svgWidth, svgHeight)
-    //   };
-    // });
+  }
+
+  onBeaconPropChange = (id, prop) => (e) => {
+    // const { value } = e.target;
+    // const { beacons, setBeacons } = this.props;
+    // const index = beacons.findIndex(beacon => beacon.id === id);
+    // const beacons2 = [...beacons];
+    // beacons2[index] = {
+    //   ...beacons2[index],
+    //   props: {
+    //     ...beacons2[index].props,
+    //     [prop]: value
+    //   }
+    // };
+    // setBeacons(beacons2);
   }
 
   onBeaconRemove = id => (e) => {
@@ -181,7 +193,7 @@ export default class Beacons extends Component {
     //   // return null;
     // }
     const {
-      imagePositionX, imagePositionY, imageOpacity, imageScale, svgWidth, svgHeight, onPropChange, beacons
+      imagePositionX, imagePositionY, imageOpacity, imageScale, svgWidth, svgHeight, onPropChange, beacons, audioService
     } = this.props;
     console.log(beacons);
     let polygonData;
@@ -293,10 +305,18 @@ export default class Beacons extends Component {
                       <input value={beacon.id} onChange={this.onBeaconChange(beacon.id, 'id')} />
                     </td>
                     <td>
-                      <input value={beacon.x} type="number" onChange={this.onBeaconChange(beacon.id, 'x')} />
+                      <input className="coordInput" value={beacon.x} type="number" onChange={this.onBeaconChange(beacon.id, 'x')} />
                     </td>
                     <td>
-                      <input value={beacon.y} type="number" onChange={this.onBeaconChange(beacon.id, 'y')} />
+                      <input className="coordInput" value={beacon.y} type="number" onChange={this.onBeaconChange(beacon.id, 'y')} />
+                    </td>
+                    <td>
+                      <select value={beacon.props.sound} onChange={this.onBeaconPropChange(beacon.id, 'color')}>
+                        {
+                          ['none'].concat(audioService.getBuffers().map(R.prop('name'))).map(soundName => <option value={soundName}>{soundName}</option>)
+                        }
+                      </select>
+                      {/* onChange={this.onBeaconChange(beacon.id, 'y')}  */}
                     </td>
                     <td>
                       <button type="button" onClick={this.onBeaconRemove(beacon.id)}>Remove</button>
