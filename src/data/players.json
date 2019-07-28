@@ -1,15 +1,34 @@
 [{
-    "x": 200,
-    "y": 150,
-    "startX": 200,
-    "startY": 150,
-    "id": "Max",
-    "color":"blue"
+  "x": 200,
+  "y": 150,
+  "startX": 300,
+  "startY": 350,
+  "rx": 100,
+  "ry": 100,
+  "moveDirection": 1,
+  "speed": 1,
+  "id": "Max",
+  "color":"blue"
+},{
+  "x": 200,
+  "y": 150,
+  "startX": 300,
+  "startY": 350,
+  "rx": 200,
+  "ry": 100,
+  "moveDirection": 1,
+  "speed": 1,
+  "id": "Ghost",
+  "color":"grey"
 },{
     "x": 0,
     "y": 0,
-    "startX": 100,
-    "startY": 200,
+    "startX": 500,
+    "startY": 400,
+    "rx": 125,
+    "ry": 75,
+    "speed": 2,
+    "moveDirection": -1,
     "id": "Bob",
     "color":"green"
 },{
@@ -17,6 +36,10 @@
     "y": 0,
     "startX": 300,
     "startY": 150,
+    "rx": 50,
+    "ry": 150,
+    "moveDirection": 1,
+    "speed": 3,
     "id": "Sue",
     "color":"red"
 }]

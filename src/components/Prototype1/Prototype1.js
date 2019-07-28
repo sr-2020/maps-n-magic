@@ -43,33 +43,13 @@ import MapPoint from '../MapPoint';
 
 export default class App extends Component {
   state = {
-    // beacons: sortBeacons(correctedBeacons),
     polygonData: {},
-    // polygonData: getPolygons(correctedBeacons, SVG_WIDTH, SVG_HEIGHT),
     sounds: [
-      {
-        x: 50,
-        y: 100,
-        soundR: 200,
-        color: 'crimson',
-        name: 'drums'
-      },
-      {
-        x: 250,
-        y: 300,
-        soundR: 150,
-        color: 'grey',
-        name: 'techno'
-      },
-      {
-        x: 450,
-        y: 100,
-        soundR: 250,
-        color: 'green',
-        name: 'organ'
-      }],
+    ],
     players: initialPlayers,
     playing: false,
+    playGhostSound: true,
+    playAreaSound: true,
     movePlayers: true,
     soundsLoaded: false,
     movableId: null,
@@ -104,8 +84,8 @@ export default class App extends Component {
             ...state,
             players: state.players.map((player, i) => ({
               ...player,
-              x: player.startX + Math.cos(progress * 2 * Math.PI) * (100 + i * 25),
-              y: player.startY + Math.sin(progress * 2 * Math.PI) * (i % 2 === 0 ? 1 : -1) * (100 - i * 25)
+              x: player.startX + Math.cos(progress * player.speed * 2 * Math.PI) * player.rx,
+              y: player.startY + Math.sin(progress * player.speed * 2 * Math.PI) * player.ry * player.moveDirection
             })),
             // players: [{
             //   x: 200 + Math.cos(progress*2 * Math.PI) * 100,
@@ -171,10 +151,19 @@ export default class App extends Component {
   // }
 
   crossfade = (state) => {
-    const player = state.players.find(player2 => player2.id === state.listenPlayer);
+    const {
+      playAreaSound, playGhostSound, players, polygonData, listenPlayer
+    } = state;
+    const player = players.find(player2 => player2.id === listenPlayer);
 
-    const arrId = state.polygonData.delaunay.find(player.x, player.y);
-    const id = state.polygonData.beaconIds[arrId];
+    const arrId = polygonData.delaunay.find(player.x, player.y);
+    const id = polygonData.beaconIds[arrId];
+
+    const ghost = players.find(player2 => player2.id === 'Ghost');
+    // if (polygonData && polygonData.delaunay) {
+    const ghostIndex = polygonData.delaunay.find(ghost.x, ghost.y);
+    const ghostIsHere = arrId === ghostIndex;
+    // const ghostPolygonId = state.polygonData.beaconIds[ghostIndex];
     // console.log(id);
 
     const { beacons } = this.props;
@@ -186,7 +175,7 @@ export default class App extends Component {
     // const { color } = beacon;
     // const color = this.getBeaconColor(beaconIndex);
 
-    const { sound } = beacon.props;
+    const { sound: curBeaconSound } = beacon.props;
     // const volumes = state.sounds.map((sound) => {
     //   if ((sound.name === 'drums' && color === 'blue')
     //   || (sound.name === 'techno' && color === 'red')
@@ -206,10 +195,17 @@ export default class App extends Component {
     // const volumes = computeVolumesByDistance(state);
     // applyVolumes(volumes);
     const { audioService } = this.props;
-    const volumes = audioService.getSoundNames().map(soundName => ({
+    let volumes = audioService.getSoundNames().map(soundName => ({
       name: soundName,
-      gain: soundName === sound ? 1 : 0
+      // gain: (soundName === curBeaconSound || (ghostIsHere && soundName === 'ghost')) ? 1 : 0
+      gain: playAreaSound && (soundName === curBeaconSound) ? 1 : 0
     }));
+    if (playGhostSound && ghostIsHere) {
+      volumes = volumes.map(sound => ({
+        ...sound,
+        gain: (sound.name === 'ghost') ? 1 : sound.gain
+      }));
+    }
 
     audioService.applyVolumes(volumes);
   };
@@ -292,15 +288,29 @@ export default class App extends Component {
       [prop]: e.target.value
     });
   }
+
+  onCheckboxChange = prop => (e) => {
+    this.setState({
+      [prop]: e.target.checked
+    });
+  }
   // listenStub = (type) => (event) => console.log(type, event);
 
   render() {
     const {
-      sounds, players, playing, soundsLoaded, polygonData, movable, showBeaconMarkers, movePlayers, listenPlayer
+      sounds, players, playing, soundsLoaded, polygonData, movable, showBeaconMarkers, movePlayers, listenPlayer,
+      playGhostSound, playAreaSound
     } = this.state;
     const {
       beacons, svgWidth, svgHeight, audioService
     } = this.props;
+
+    let ghostPolygonId;
+    const player = players.find(player2 => player2.id === 'Ghost');
+    if (polygonData && polygonData.delaunay) {
+      const arrId = polygonData.delaunay.find(player.x, player.y);
+      ghostPolygonId = polygonData.beaconIds[arrId];
+    }
 
     return (
       <div className="Prototype1  flex-row justify-content-center">
@@ -313,6 +323,45 @@ export default class App extends Component {
           onMouseMove={this.moveMovable}
           onClick={this.setMovable(null)}
         >
+          <defs>
+
+            <pattern
+              id="diagonal1"
+              x="0"
+              y="0"
+              width="20"
+              height="20"
+              patternUnits="userSpaceOnUse"
+              patternTransform="rotate(45)"
+            >
+              <g fill="#85D2FF" fillOpacity="0.7">
+                <rect x="0" y="0" width="10" height="10" />
+                <rect x="0" y="10" width="10" height="10" />
+              </g>
+            </pattern>
+            <mask id="diagonalMask1" x="0" y="0" width="1" height="1">
+              <rect x="0" y="0" width="1000" height="1000" fill="url(#diagonal1)" />
+            </mask>
+            <pattern
+              id="diagonal2"
+              x="0"
+              y="0"
+              width="20"
+              height="20"
+              patternUnits="userSpaceOnUse"
+              patternTransform="rotate(-45)"
+            >
+
+              <g fill="#8500FF" fillOpacity="0.7">
+                <rect x="10" y="0" width="10" height="10" />
+                <rect x="10" y="10" width="10" height="10" />
+              </g>
+            </pattern>
+
+            <mask id="diagonalMask2" x="0" y="0" width="1" height="1">
+              <rect x="0" y="0" width="1000" height="1000" fill="url(#diagonal2)" />
+            </mask>
+          </defs>
           {/* onMouseMove={this.listenStub('onMouseMove')} */}
           {
             polygonData.polygons && polygonData.polygons.map((polygon, i) => (
@@ -320,11 +369,24 @@ export default class App extends Component {
                 {/* <polyline fill={polygonData.beaconColors[i] || 'none'} stroke="grey" strokeWidth="2" opacity="0.5" points={polygon.map(pt => pt.join(',')).join(' ')} /> */}
                 <polyline
                   fill={audioService.getSoundProps(beacons[i].props.sound).color || 'none'}
+                  mask="url(#diagonalMask1)"
                   stroke="grey"
                   strokeWidth="2"
                   opacity="0.5"
                   points={polygon.map(pt => pt.join(',')).join(' ')}
                 />
+
+                {(beacons[i].id === ghostPolygonId) && (
+                  <polyline
+                    fill="black"
+                    mask="url(#diagonalMask2)"
+                    stroke="grey"
+                    strokeWidth="2"
+
+                    points={polygon.map(pt => pt.join(',')).join(' ')}
+                  />
+                )}
+
                 <polyline
                   fill="none"
                   stroke="grey"
@@ -370,7 +432,18 @@ export default class App extends Component {
           {
             players.map(player => (
               <Fragment>
-                <circle r="10" cx={player.x} cy={player.y} fill={player.color} />
+                <ellipse
+                  cx={player.startX}
+                  cy={player.startY}
+                  rx={player.rx}
+                  ry={player.ry}
+                  fill="none"
+                  stroke="grey"
+                  strokeWidth="2"
+                  opacity="0.5"
+                  strokeDasharray="15"
+                />
+                <circle r="5" cx={player.x} cy={player.y} fill={player.color} />
                 <g transform={`translate(${player.x - 25},${player.y - 20}) scale(0.1)`}>
                   <svg
                     version="1.1"
@@ -460,6 +533,12 @@ export default class App extends Component {
 
           <input id="enableMusicInput" type="checkbox" onChange={this.onMusic} checked={playing} disabled={!soundsLoaded} />
           <label htmlFor="enableMusicInput">Enable music</label>
+          <br />
+          <input id="enableGhostSoundInput" type="checkbox" onChange={this.onCheckboxChange('playGhostSound')} checked={playGhostSound} disabled={!soundsLoaded} />
+          <label htmlFor="enableGhostSoundInput">Enable ghost sound</label>
+          <br />
+          <input id="enableAreaSoundInput" type="checkbox" onChange={this.onCheckboxChange('playAreaSound')} checked={playAreaSound} disabled={!soundsLoaded} />
+          <label htmlFor="enableAreaSoundInput">Enable area sound</label>
           <br />
           <label>Listen player</label>
           <select

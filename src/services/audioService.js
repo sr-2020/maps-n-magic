@@ -12,10 +12,10 @@ const BUFFERS_TO_LOAD = {
   // crowd: 'sounds/clapping-crowd.wav',
   drums: 'sounds/stargazer.mp3',
   organ: 'sounds/nightwalker.mp3',
-  techno: 'sounds/BoxCat_Games_-_10_-_Epic_Song.mp3'
+  techno: 'sounds/BoxCat_Games_-_10_-_Epic_Song.mp3',
   // drums: 'sounds/blueyellow.wav',
   // organ: 'sounds/organ-echo-chords.wav',
-  // techno: 'sounds/techno.wav'
+  ghost: 'sounds/techno.wav'
 };
 
 export default class AudioService {
