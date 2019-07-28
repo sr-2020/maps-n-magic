@@ -1,20 +1,20 @@
 import * as R from 'ramda';
 
-const BUFFERS = {};
+// const BUFFERS = {};
 
-const BUFFERS_TO_LOAD = {
-  // kick: 'sounds/kick.wav',
-  // snare: 'sounds/snare.wav',
-  // hihat: 'sounds/hihat.wav',
-  // jam: 'sounds/br-jam-loop.wav',
-  // crowd: 'sounds/clapping-crowd.wav',
-  drums: 'sounds/stargazer.mp3',
-  organ: 'sounds/nightwalker.mp3',
-  techno: 'sounds/BoxCat_Games_-_10_-_Epic_Song.mp3'
-  // drums: 'sounds/blueyellow.wav',
-  // organ: 'sounds/organ-echo-chords.wav',
-  // techno: 'sounds/techno.wav'
-};
+// const BUFFERS_TO_LOAD = {
+//   // kick: 'sounds/kick.wav',
+//   // snare: 'sounds/snare.wav',
+//   // hihat: 'sounds/hihat.wav',
+//   // jam: 'sounds/br-jam-loop.wav',
+//   // crowd: 'sounds/clapping-crowd.wav',
+//   drums: 'sounds/stargazer.mp3',
+//   organ: 'sounds/nightwalker.mp3',
+//   techno: 'sounds/BoxCat_Games_-_10_-_Epic_Song.mp3'
+//   // drums: 'sounds/blueyellow.wav',
+//   // organ: 'sounds/organ-echo-chords.wav',
+//   // techno: 'sounds/techno.wav'
+// };
 
 function BufferLoader(context, urlList, callback) {
   this.context = context;
@@ -69,72 +69,72 @@ BufferLoader.prototype.load = function () {
 };
 
 
-// Loads all sound samples into the buffers object.
-function loadBuffers(buffersToLoad, buffers, context, cb) {
-  // Array-ify
-  const names = [];
-  const paths = [];
+// // Loads all sound samples into the buffers object.
+// function loadBuffers(buffersToLoad, buffers, context, cb) {
+//   // Array-ify
+//   const names = [];
+//   const paths = [];
 
-  R.keys(buffersToLoad).forEach((name) => {
-    const path = buffersToLoad[name];
-    names.push(name);
-    paths.push(path);
-  });
-  const bufferLoader = new BufferLoader(context, paths, ((bufferList) => {
-    for (let i = 0; i < bufferList.length; i++) {
-      const buffer = bufferList[i];
-      const name = names[i];
-      buffers.push({
-        name,
-        buffer
-      });
-      BUFFERS[name] = buffer;
-    }
-    cb();
-  }));
-  bufferLoader.load();
-}
+//   R.keys(buffersToLoad).forEach((name) => {
+//     const path = buffersToLoad[name];
+//     names.push(name);
+//     paths.push(path);
+//   });
+//   const bufferLoader = new BufferLoader(context, paths, ((bufferList) => {
+//     for (let i = 0; i < bufferList.length; i++) {
+//       const buffer = bufferList[i];
+//       const name = names[i];
+//       buffers.push({
+//         name,
+//         buffer
+//       });
+//       BUFFERS[name] = buffer;
+//     }
+//     cb();
+//   }));
+//   bufferLoader.load();
+// }
 
-let localContext;
-// window.addEventListener('load', init, false);
+// let localContext;
+// // window.addEventListener('load', init, false);
 
-function createContext() {
-  try {
-    // Fix up for prefixing
-    window.AudioContext = window.AudioContext || window.webkitAudioContext;
-    return new AudioContext();
-  } catch (e) {
-    throw new Error('Web Audio API is not supported in this browser');
-  }
-}
+// function createContext() {
+//   try {
+//     // Fix up for prefixing
+//     window.AudioContext = window.AudioContext || window.webkitAudioContext;
+//     return new AudioContext();
+//   } catch (e) {
+//     throw new Error('Web Audio API is not supported in this browser');
+//   }
+// }
 
-function initSound(cb) {
-  localContext = createContext();
-  loadBuffers(BUFFERS_TO_LOAD, [], localContext, cb);
-}
+// function initSound(cb) {
+//   localContext = createContext();
+//   loadBuffers(BUFFERS_TO_LOAD, [], localContext, cb);
+// }
 
-function createSource(soundName, buffer, context) {
-  if (!buffer) {
-    buffer = BUFFERS[soundName];
-  }
-  if (!context) {
-    context = localContext;
-  }
-  const source = context.createBufferSource();
-  const gainNode = context.createGain ? context.createGain() : context.createGainNode();
-  source.buffer = buffer;
-  // Turn on looping
-  source.loop = true;
-  // Connect source to gain.
-  source.connect(gainNode);
-  // Connect gain to destination.
-  gainNode.connect(context.destination);
+// function createSource(soundName, buffer, context) {
+//   if (!buffer) {
+//     buffer = BUFFERS[soundName];
+//   }
+//   if (!context) {
+//     context = localContext;
+//   }
+//   const source = context.createBufferSource();
+//   const gainNode = context.createGain ? context.createGain() : context.createGainNode();
+//   source.buffer = buffer;
+//   // Turn on looping
+//   source.loop = true;
+//   // Connect source to gain.
+//   source.connect(gainNode);
+//   // Connect gain to destination.
+//   gainNode.connect(context.destination);
 
-  return {
-    source,
-    gainNode
-  };
-}
+//   return {
+//     source,
+//     gainNode
+//   };
+// }
 
 // // Fades between 0 (all source 1) and 1 (all source 2)
 // // CrossfadeSample.crossfade = function(element) {
@@ -179,6 +179,7 @@ function b642ab(base64) {
   return bytes.buffer;
 }
 
+// initSound, createSource, createContext, loadBuffers,
 export {
-  initSound, createSource, createContext, loadBuffers, BufferLoader
+  BufferLoader, ab2b64, b642ab
 };

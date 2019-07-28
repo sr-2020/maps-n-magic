@@ -1,9 +1,9 @@
+/* eslint-disable react/destructuring-assignment */
+/* eslint-disable react/prop-types */
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import './MusicEditor.css';
 import * as R from 'ramda';
-
-import AudioService from '../../services/audioService';
 
 import { readBinaryFile } from '../../utils/fileUtils';
 
@@ -13,13 +13,12 @@ export default class MusicEditor extends Component {
     loading: true
   };
 
-  audioService = new AudioService();
-
   componentDidMount = () => {
     console.log('MusicEditor mounted');
-    this.audioService.isLoaded.then(() => this.setState({
+    const { audioService } = this.props;
+    audioService.isLoaded.then(() => this.setState({
       loading: false,
-      bufferNames: this.audioService.getBuffers().map(R.prop('name'))
+      bufferNames: audioService.getBuffers().map(R.prop('name'))
     }));
   }
 
@@ -32,17 +31,18 @@ export default class MusicEditor extends Component {
   }
 
   updateBufferNames = () => this.setState({
-    bufferNames: this.audioService.getBuffers().map(R.prop('name'))
+    bufferNames: this.props.audioService.getBuffers().map(R.prop('name'))
   });
 
   onSoundSelected = (evt) => {
     readBinaryFile(evt).then((result) => {
-      this.audioService.addAudioFile(result).then(this.updateBufferNames);
+      this.props.audioService.addAudioFile(result).then(this.updateBufferNames);
     });
   };
 
   render() {
     const { loading, bufferNames } = this.state;
+    const { audioService } = this.props;
 
     return (
       <div className="MusicEditor">
@@ -71,19 +71,19 @@ export default class MusicEditor extends Component {
                       <button
                         type="button"
                         onClick={() => {
-                          this.audioService.removeSound(bufferName);
+                          audioService.removeSound(bufferName);
                           this.updateBufferNames();
                         }}
                       >Remove
                       </button>
                       <button
                         type="button"
-                        onClick={() => this.audioService.startSound(bufferName)}
+                        onClick={() => audioService.startSound(bufferName)}
                       >Play
                       </button>
                       <button
                         type="button"
-                        onClick={() => this.audioService.stopSound(bufferName)}
+                        onClick={() => audioService.stopSound(bufferName)}
                       >Stop
                       </button>
                     </td>

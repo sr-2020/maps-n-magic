@@ -9,6 +9,9 @@ import {
   BrowserRouter as Router, Switch, Route, Redirect, Link, NavLink
 } from 'react-router-dom';
 
+import AudioService from '../../services/audioService';
+
+
 import getBeacons from '../../utils/gpxExperiment';
 
 
@@ -49,38 +52,9 @@ if (stateData) {
 export default class App extends Component {
   state = {
     ...initialState
-    // beacons: sortBeacons(correctedBeacons),
-    // polygonData: getPolygons(correctedBeacons),
-    // sounds : [
-    //   {
-    //    x: 50,
-    //    y: 100,
-    //    soundR: 200,
-    //    color: "crimson",
-    //    name: 'drums'
-    //  },
-    //   {
-    //    x: 250,
-    //    y: 300,
-    //    soundR: 150,
-    //    color: "grey",
-    //    name: 'techno'
-    //  },
-    //  {
-    //    x: 450,
-    //    y: 100,
-    //    soundR: 250,
-    //    color: "green",
-    //    name: 'organ'
-    // }],
-    // players ,
-    // playing: false,
-    // movePlayers: true,
-    // soundsLoaded: false,
-    // movableId: null,
-    // showBeaconMarkers: false,
-    // listenPlayer: players[0].id
   };
+
+  audioService = new AudioService();
 
   componentDidMount() {
     // initSound(() => {
@@ -211,13 +185,14 @@ export default class App extends Component {
                 />
               </Route>
               <Route path="/soundManager">
-                <MusicEditor />
+                <MusicEditor audioService={this.audioService} />
               </Route>
               <Route path="/demo">
                 <Prototype1
                   svgWidth={svgWidth}
                   svgHeight={svgHeight}
                   beacons={beacons}
+                  audioService={this.audioService}
                 />
               </Route>
 

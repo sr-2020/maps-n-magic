@@ -1,17 +1,14 @@
+/* eslint-disable jsx-a11y/label-has-associated-control */
+/* eslint-disable react/prop-types */
 import React, { Component, Fragment } from 'react';
 // import logo from './logo.svg';
 import './Prototype1.css';
 import * as R from 'ramda';
 
-
-import beacons from '../../data/beacons.json';
-import players from '../../data/players.json';
+// import beacons from '../../data/beacons.json';
+import initialPlayers from '../../data/players.json';
 
 import { animate, Timing } from '../../utils/animation';
-import { initSound } from '../../utils/audioDataUtils';
-import {
-  startSounds, stopSounds, applyVolumes, computeVolumesByDistance
-} from '../../utils/audioPlaybackUtils';
 
 import getPolygons from '../../utils/polygonGenerator';
 
@@ -71,13 +68,13 @@ export default class App extends Component {
         color: 'green',
         name: 'organ'
       }],
-    players,
+    players: initialPlayers,
     playing: false,
     movePlayers: true,
     soundsLoaded: false,
     movableId: null,
     showBeaconMarkers: false,
-    listenPlayer: players[0].id
+    listenPlayer: initialPlayers[0].id
   };
 
   componentDidMount() {
@@ -86,11 +83,10 @@ export default class App extends Component {
     this.setState(({
       polygonData: getPolygons(beacons, svgWidth, svgHeight),
     }));
-    initSound(() => {
-      this.setState({
-        soundsLoaded: true
-      });
-    });
+    const { audioService } = this.props;
+    audioService.isLoaded.then(() => this.setState({
+      soundsLoaded: true,
+    }));
     this.animatePlayer();
   }
 
@@ -109,7 +105,7 @@ export default class App extends Component {
             players: state.players.map((player, i) => ({
               ...player,
               x: player.startX + Math.cos(progress * 2 * Math.PI) * (100 + i * 25),
-              y: player.startY + Math.sin(progress * 2 * Math.PI) * (i % 2 == 0 ? 1 : -1) * (100 - i * 25)
+              y: player.startY + Math.sin(progress * 2 * Math.PI) * (i % 2 === 0 ? 1 : -1) * (100 - i * 25)
             })),
             // players: [{
             //   x: 200 + Math.cos(progress*2 * Math.PI) * 100,
@@ -129,6 +125,7 @@ export default class App extends Component {
 
   toggleMusic = () => {
     this.setState((state) => {
+      // eslint-disable-next-line no-unused-expressions
       state.playing ? this.stop() : this.play();
       return {
         playing: !state.playing
@@ -143,17 +140,21 @@ export default class App extends Component {
   };
 
   play = () => {
-    startSounds(this.state.sounds.map(R.prop('name')));
+    const { sounds } = this.state;
+    const { audioService } = this.props;
+    audioService.startSounds(sounds.map(R.prop('name')));
     this.crossfade(this.state);
   }
 
   componentWillUnmount = () => {
-    stopSounds();
+    const { audioService } = this.props;
+    audioService.stopSounds();
     this.animation.enable = false;
   }
 
   stop = () => {
-    stopSounds();
+    const { audioService } = this.props;
+    audioService.stopSounds();
   }
 
   getBeaconColor = (index) => {
@@ -170,7 +171,7 @@ export default class App extends Component {
   }
 
   crossfade = (state) => {
-    const player = state.players.find(player => player.id === state.listenPlayer);
+    const player = state.players.find(player2 => player2.id === state.listenPlayer);
 
     const arrId = state.polygonData.delaunay.find(player.x, player.y);
     const id = state.polygonData.beaconIds[arrId];
@@ -201,7 +202,9 @@ export default class App extends Component {
     });
 
     // const volumes = computeVolumesByDistance(state);
-    applyVolumes(volumes);
+    // applyVolumes(volumes);
+    const { audioService } = this.props;
+    audioService.applyVolumes(volumes);
   };
 
   onMusic = () => {

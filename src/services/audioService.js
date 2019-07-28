@@ -139,4 +139,8 @@ export default class AudioService {
   stopSounds = () => {
     R.keys(this.soundSources).forEach(this.stopSound);
   }
+
+  applyVolumes = (volumes) => {
+    volumes.forEach(volumeData => (this.soundSources[volumeData.name].gainNode.gain.value = volumeData.gain));
+  }
 }
