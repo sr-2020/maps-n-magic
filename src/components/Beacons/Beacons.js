@@ -12,6 +12,10 @@ import MapMarker from '../MapMarker';
 import MapPoint from '../MapPoint';
 import getPolygons from '../../utils/polygonGenerator';
 
+import ColorPalette from '../../utils/colorPalette';
+
+let tracks = [];
+
 export default class Beacons extends Component {
   state = {
     // beacons: [{
@@ -21,12 +25,16 @@ export default class Beacons extends Component {
     // }],
     // polygonData: {},
     showBeaconMarkers: true,
-    showPolygonLabels: true,
+    showPolygonLabels: false,
     showPolygonBoundaries: true,
+    showBeaconSignalArea: false,
+    showMassCenters: true,
+    enableAutoIteration: false,
     // addBeacon, editPolygon
     mode: 'addBeacon',
     editingPolygon: false,
-    mainPolygon: [[324.375, 80], [128.375, 370], [543.375, 560], [610.375, 454], [459.375, 414], [458.375, 302], [428.375, 301], [423.375, 135], [348.375, 79], [324.375, 80]]
+    mainPolygon: [[324.375, 80], [128.375, 370], [543.375, 560], [610.375, 454], [459.375, 414], [458.375, 302], [428.375, 301], [423.375, 135], [348.375, 79], [324.375, 80]],
+    // tracks: []
   };
 
   componentDidMount = () => {
@@ -163,6 +171,21 @@ export default class Beacons extends Component {
     setBeacons(beacons2);
   }
 
+  onBeaconPropCheckboxChange = (id, prop) => (e) => {
+    const { checked } = e.target;
+    const { beacons, setBeacons } = this.props;
+    const index = beacons.findIndex(beacon => beacon.id === id);
+    const beacons2 = [...beacons];
+    beacons2[index] = {
+      ...beacons2[index],
+      props: {
+        ...beacons2[index].props,
+        [prop]: checked
+      }
+    };
+    setBeacons(beacons2);
+  }
+
   onBeaconRemove = id => (e) => {
     // const { svgWidth, svgHeight } = this.props;
     const { beacons, setBeacons } = this.props;
@@ -236,16 +259,9 @@ export default class Beacons extends Component {
   }
 
   setModeState = mode => () => {
-    // if (mode === 'addBeacon') {
     this.setState(({
       mode
     }));
-    // } else {
-    //   this.setState(({
-    //     mode,
-    //     mainPolygon: []
-    //   }));
-    // }
   }
 
   clearPolygon = (mode) => {
@@ -254,12 +270,67 @@ export default class Beacons extends Component {
     }));
   }
 
-  polygon2polyline = polygon => polygon.map(pt => pt.join(',')).join(' ');
+  clearTracks = (mode) => {
+    tracks = [];
+    // this.setState(({
+    //   tracks: []
+    // }));
+  }
+
+  polygon2polyline = polygon => (polygon ? polygon.map(pt => pt.join(',')).join(' ') : '');
+
+  autoIteration = (start) => {
+    if (start) {
+      setTimeout(() => this.nextIteration(), 200);
+    }
+    // const {enableAuto}
+  }
+
+  nextIteration = () => {
+    const {
+      svgWidth, svgHeight, beacons, setBeacons
+    } = this.props;
+    const {
+      mainPolygon
+    } = this.state;
+
+    const polygonData = getPolygons(beacons, svgWidth, svgHeight, mainPolygon);
+    console.log('beacons', beacons);
+    console.log('polygonData.clippedCenters', polygonData.clippedCenters);
+
+    const { clippedCenters } = polygonData;
+
+    // tracks.push(R.clone(clippedCenters));
+
+    const newBeacons = beacons.map((beacon) => {
+      const center = clippedCenters.find(center2 => center2.id === beacon.id);
+      return {
+        ...beacon,
+        x: beacon.props.positionFixed ? beacon.x : center.x,
+        y: beacon.props.positionFixed ? beacon.y : center.y,
+      };
+    });
+
+    tracks.push(R.clone(newBeacons));
+    setBeacons(newBeacons);
+  }
+
+  tracks2Polylines = () => {
+    // const {
+    //   tracks
+    // } = this.state;
+    if (tracks.length === 0) return [];
+    const arr = tracks[0];
+
+    return arr.map((pt, i) => tracks.map(trackArr => trackArr[i]).map(obj => [obj.x, obj.y])).map(this.polygon2polyline);
+    // .map(obj => [obj.x, obj.y]));
+    // this.polygon2polyline()
+  }
 
   render() {
     const {
-      // beacons,
-      showBeaconMarkers, showPolygonLabels, showPolygonBoundaries, hoveredBeacon, mode, mainPolygon
+      showBeaconMarkers, showPolygonLabels, showPolygonBoundaries,
+      hoveredBeacon, mode, mainPolygon, showBeaconSignalArea, showMassCenters, enableAutoIteration
     } = this.state;
 
     // //const { t } = this.props;
@@ -273,9 +344,12 @@ export default class Beacons extends Component {
     } = this.props;
     console.log(beacons);
     let polygonData;
+    this.autoIteration(enableAutoIteration);
     if (showPolygonLabels || showPolygonBoundaries) {
-      polygonData = getPolygons(beacons, svgWidth, svgHeight);
+      polygonData = getPolygons(beacons, svgWidth, svgHeight, mainPolygon);
     }
+    const trackLines = this.tracks2Polylines();
+    console.log('trackLines', trackLines);
     return (
       <div className="Beacons flex-row justify-content-center">
         <Map
@@ -300,16 +374,16 @@ export default class Beacons extends Component {
             <polyline
               fill="none"
               stroke="red"
-              strokeWidth="2"
+              strokeWidth="4"
               opacity="0.5"
               points={this.polygon2polyline(mainPolygon)}
             />
           }
           {
-            showPolygonBoundaries && polygonData.polygons && polygonData.polygons.map((polygon, i) => (
+            showPolygonBoundaries && polygonData.clippedPolygons && polygonData.clippedPolygons.map((polygon, i) => (
               <Fragment>
                 <polyline
-                  fill={polygonData.beaconColors[i] || 'none'}
+                  fill={polygonData.beaconColors[i] || ColorPalette[i % ColorPalette.length].color.background || 'none'}
                   stroke="grey"
                   strokeWidth="2"
                   opacity="0.5"
@@ -326,6 +400,17 @@ export default class Beacons extends Component {
             ))
           }
           {
+            trackLines.map(trackLine => (
+              <polyline
+                fill="none"
+                stroke="black"
+                strokeWidth="1"
+                opacity="0.5"
+                points={trackLine}
+              />
+            ))
+          }
+          {
             showPolygonLabels && polygonData.polygonCenters && polygonData.polygonCenters.map((center, i) => (
               <Fragment>
                 <text x={center.x} y={center.y + 5} fontSize="15" textAnchor="middle" fill="black">{center.id}</text>
@@ -338,7 +423,12 @@ export default class Beacons extends Component {
             ))
           }
           {
-            beacons.map(beacon => (
+            showMassCenters && polygonData.clippedCenters && polygonData.clippedCenters.map((center, i) => (
+              <MapPoint x={center.x} y={center.y} fill="black" />
+            ))
+          }
+          {
+            showBeaconSignalArea && beacons.map(beacon => (
               <circle r="40" cx={beacon.x} cy={beacon.y} opacity="0.5" fill="url(#RadialGradient1)" />
             ))
           }
@@ -386,6 +476,32 @@ export default class Beacons extends Component {
           />
           <label htmlFor="showPolygonBoundariesInput">Show polygon boundaries</label>
           <br />
+          <input
+            id="showBeaconSignalAreaInput"
+            type="checkbox"
+            onChange={this.toggleCheckbox('showBeaconSignalArea')}
+            checked={showBeaconSignalArea}
+          />
+          <label htmlFor="showBeaconSignalAreaInput">Show beacon signal area</label>
+          <br />
+          <input
+            id="showMassCentersInput"
+            type="checkbox"
+            onChange={this.toggleCheckbox('showMassCenters')}
+            checked={showMassCenters}
+          />
+          <label htmlFor="showMassCentersInput">Show mass centers</label>
+          <br />
+          <input
+            id="enableAutoIterationInput"
+            type="checkbox"
+            onChange={this.toggleCheckbox('enableAutoIteration')}
+            checked={enableAutoIteration}
+          />
+          <label htmlFor="enableAutoIterationInput">Enable auto iteration</label>
+          <br />
+
+
           <Button
             variant={mode === 'addBeacon' ? 'primary' : 'light'}
             onClick={this.setModeState('addBeacon')}
@@ -401,13 +517,26 @@ export default class Beacons extends Component {
           <Button
             variant="primary"
             onClick={this.clearPolygon}
+            className="margin-right-1rem"
           >Clear main polygon
+          </Button>
+          <Button
+            variant="primary"
+            onClick={this.clearTracks}
+            className="margin-right-1rem"
+          >Clear tracks
+          </Button>
+          <Button
+            variant="primary"
+            onClick={this.nextIteration}
+          >Next iteration
           </Button>
 
           {mode === 'editPolygon' && (
             <table className="beaconTable">
               <thead>
                 <tr>
+                  <th>№</th>
                   <th>x</th>
                   <th>y</th>
                 </tr>
@@ -416,6 +545,7 @@ export default class Beacons extends Component {
                 {
                   mainPolygon.map((point, i) => (
                     <tr>
+                      <td>{i + 1}</td>
                       <td>
                         <input className="coordInput" value={point[0]} type="number" onChange={this.onPointChange(i, 0)} />
                       </td>
@@ -434,15 +564,18 @@ export default class Beacons extends Component {
             <table className="beaconTable">
               <thead>
                 <tr>
+                  <th>№</th>
                   <th>id</th>
                   <th>x</th>
                   <th>y</th>
+                  <th>sound</th>
                 </tr>
               </thead>
               <tbody>
                 {
-                  beacons.map(beacon => (
+                  beacons.map((beacon, i) => (
                     <tr onMouseOver={this.onTableHover(beacon.id)}>
+                      <td>{i + 1}</td>
                       <td>
                         <input value={beacon.id} onChange={this.onBeaconChange(beacon.id, 'id')} />
                       </td>
@@ -452,6 +585,7 @@ export default class Beacons extends Component {
                       <td>
                         <input className="coordInput" value={beacon.y} type="number" onChange={this.onBeaconChange(beacon.id, 'y')} />
                       </td>
+
                       <td>
                         <select value={beacon.props.sound} onChange={this.onBeaconPropChange(beacon.id, 'sound')}>
                           {
@@ -459,6 +593,13 @@ export default class Beacons extends Component {
                           }
                         </select>
                         {/* onChange={this.onBeaconChange(beacon.id, 'y')}  */}
+                      </td>
+                      <td>
+                        <input
+                          type="checkbox"
+                          onChange={this.onBeaconPropCheckboxChange(beacon.id, 'positionFixed')}
+                          checked={beacon.props.positionFixed}
+                        />
                       </td>
                       <td>
                         <button type="button" onClick={this.onBeaconRemove(beacon.id)}>Remove</button>

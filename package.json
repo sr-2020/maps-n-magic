@@ -17,6 +17,7 @@
     "eslint-plugin-jsx-a11y": "^6.2.3",
     "eslint-plugin-react": "^7.14.3",
     "file-saver": "^2.0.2",
+    "polygon-clipping": "^0.14.2",
     "prop-types": "^15.7.2",
     "ramda": "^0.26.1",
     "react": "^16.8.6",

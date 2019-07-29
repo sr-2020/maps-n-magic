@@ -1,8 +1,12 @@
+/* eslint-disable no-restricted-syntax */
 import { Delaunay } from 'd3-delaunay';
 import * as R from 'ramda';
+import clippingUtils from 'polygon-clipping';
 import { getPointMassCenter, getPerimeterMassCenter, getSolidMassCenter } from './polygonUtils';
 
-function getPolygons(beacons, SVG_WIDTH, SVG_HEIGHT) {
+const clipPolygon = (first, second) => clippingUtils.intersection([first], [second])[0][0];
+
+function getPolygons(beacons, SVG_WIDTH, SVG_HEIGHT, mainPolygon) {
   const points = beacons.map(beacon => [beacon.x, beacon.y]);
   const delaunay = Delaunay.from(points);
   const voronoi = delaunay.voronoi([0, 0, SVG_WIDTH, SVG_HEIGHT]);
@@ -12,7 +16,8 @@ function getPolygons(beacons, SVG_WIDTH, SVG_HEIGHT) {
     polygons.push(polygon);
     // console.log(polygon);
   }
-  return {
+
+  const result = {
     delaunay,
     polygons,
     beaconIds: beacons.map(R.prop('id')),
@@ -22,6 +27,17 @@ function getPolygons(beacons, SVG_WIDTH, SVG_HEIGHT) {
       id: beacons[i].id
     }))
   };
+  if (mainPolygon) {
+    result.clippedPolygons = polygons.map((polygon, i) => clipPolygon(polygon, mainPolygon));
+    result.clippedCenters = result.clippedPolygons.map(getSolidMassCenter).map((data, i) => ({
+      ...data,
+      id: beacons[i].id
+    }));
+  } else {
+    result.clippedPolygons = result.polygons;
+    result.clippedCenters = result.polygonCenters;
+  }
+  return result;
 }
 
 export default getPolygons;
