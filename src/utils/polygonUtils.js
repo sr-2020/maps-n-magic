@@ -57,8 +57,17 @@ function getTriangleCentroid(triangle) {
 }
 
 function getSolidMassCenter(polygon) {
-  const pt1 = polygon[0];
-  const triangles = R.aperture(2, R.tail(polygon)).map(R.concat([pt1]));
+  // first version - take one polygon point as triangle basis
+  // const pt1 = polygon[0];
+  // const triangles = R.aperture(2, R.tail(polygon)).map(R.concat([pt1]));
+
+  // second version - take some simple mass center as triangle basis
+  // const massCenter = getPointMassCenter(polygon);
+  const massCenter = getPerimeterMassCenter(polygon);
+  const pt1 = [massCenter.x, massCenter.y];
+  const triangles = R.aperture(2, polygon).map(R.concat([pt1]));
+
+
   // console.log(polygon);
   // console.log(triangles);
   // triangle = [[3,0],[0,0],[0,5]];

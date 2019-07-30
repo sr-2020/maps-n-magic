@@ -27,7 +27,7 @@ function getPolygons(beacons, SVG_WIDTH, SVG_HEIGHT, mainPolygon) {
       id: beacons[i].id
     }))
   };
-  if (mainPolygon) {
+  if (mainPolygon && mainPolygon.length > 1) {
     result.clippedPolygons = polygons.map((polygon, i) => clipPolygon(polygon, mainPolygon));
     result.clippedCenters = result.clippedPolygons.map(getSolidMassCenter).map((data, i) => ({
       ...data,

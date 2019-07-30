@@ -30,6 +30,8 @@ export default class Beacons extends Component {
     showBeaconSignalArea: false,
     showMassCenters: true,
     enableAutoIteration: false,
+    maxDelta: 1,
+    signalRadius: 40,
     // addBeacon, editPolygon
     mode: 'addBeacon',
     editingPolygon: false,
@@ -85,6 +87,8 @@ export default class Beacons extends Component {
       // svgHeight: 581,
 
       const { beacons, setBeacons } = this.props;
+
+      tracks = [];
 
       setBeacons([...beacons, newBeacon]);
       // this.setState((state) => {
@@ -190,6 +194,7 @@ export default class Beacons extends Component {
     // const { svgWidth, svgHeight } = this.props;
     const { beacons, setBeacons } = this.props;
     const beacons2 = beacons.filter(beacon => beacon.id !== id);
+    tracks = [];
     setBeacons(beacons2);
     // this.setState(({ beacons }) => {
     //   const beacons2 = beacons.filter(beacon => beacon.id !== id);
@@ -270,6 +275,13 @@ export default class Beacons extends Component {
     }));
   }
 
+  clearBeacons = (mode) => {
+    this.props.setBeacons([]);
+    // this.setState(({
+    //   mainPolygon: []
+    // }));
+  }
+
   clearTracks = (mode) => {
     tracks = [];
     // this.setState(({
@@ -291,7 +303,7 @@ export default class Beacons extends Component {
       svgWidth, svgHeight, beacons, setBeacons
     } = this.props;
     const {
-      mainPolygon
+      mainPolygon, maxDelta
     } = this.state;
 
     const polygonData = getPolygons(beacons, svgWidth, svgHeight, mainPolygon);
@@ -311,8 +323,29 @@ export default class Beacons extends Component {
       };
     });
 
-    tracks.push(R.clone(newBeacons));
-    setBeacons(newBeacons);
+
+    const delta = beacons.reduce((delta2, beacon, i) => {
+      const { x: x1, y: y1 } = beacon;
+      const { x: x2, y: y2 } = newBeacons[i];
+
+      delta2 += Math.sqrt((x1 - x2) * (x1 - x2) + (y1 - y2) * (y1 - y2));
+      return delta2;
+    }, 0);
+    if (delta < maxDelta) {
+      this.setState({
+        enableAutoIteration: false
+      });
+    } else {
+      tracks.push(R.clone(newBeacons));
+      setBeacons(newBeacons);
+    }
+  }
+
+  onStateChange = prop => (e) => {
+    // console.log('prop');
+    this.setState({
+      [prop]: e.target.value
+    });
   }
 
   tracks2Polylines = () => {
@@ -330,7 +363,7 @@ export default class Beacons extends Component {
   render() {
     const {
       showBeaconMarkers, showPolygonLabels, showPolygonBoundaries,
-      hoveredBeacon, mode, mainPolygon, showBeaconSignalArea, showMassCenters, enableAutoIteration
+      hoveredBeacon, mode, mainPolygon, showBeaconSignalArea, showMassCenters, enableAutoIteration, maxDelta, signalRadius
     } = this.state;
 
     // //const { t } = this.props;
@@ -423,13 +456,13 @@ export default class Beacons extends Component {
             ))
           }
           {
-            showMassCenters && polygonData.clippedCenters && polygonData.clippedCenters.map((center, i) => (
+            showMassCenters && polygonData && polygonData.clippedCenters && polygonData.clippedCenters.map((center, i) => (
               <MapPoint x={center.x} y={center.y} fill="black" />
             ))
           }
           {
             showBeaconSignalArea && beacons.map(beacon => (
-              <circle r="40" cx={beacon.x} cy={beacon.y} opacity="0.5" fill="url(#RadialGradient1)" />
+              <circle r={signalRadius} cx={beacon.x} cy={beacon.y} opacity="0.5" fill="url(#RadialGradient1)" />
             ))
           }
           {
@@ -452,85 +485,118 @@ export default class Beacons extends Component {
           }
         </Map>
         <div>
-          <input
-            id="showBeaconMarkersInput"
-            type="checkbox"
-            onChange={this.toggleCheckbox('showBeaconMarkers')}
-            checked={showBeaconMarkers}
-          />
-          <label htmlFor="showBeaconMarkersInput">Show beacon markers</label>
-          <br />
-          <input
-            id="showPolygonLabelsInput"
-            type="checkbox"
-            onChange={this.toggleCheckbox('showPolygonLabels')}
-            checked={showPolygonLabels}
-          />
-          <label htmlFor="showPolygonLabelsInput">Show polygon labels</label>
-          <br />
-          <input
-            id="showPolygonBoundariesInput"
-            type="checkbox"
-            onChange={this.toggleCheckbox('showPolygonBoundaries')}
-            checked={showPolygonBoundaries}
-          />
-          <label htmlFor="showPolygonBoundariesInput">Show polygon boundaries</label>
-          <br />
-          <input
-            id="showBeaconSignalAreaInput"
-            type="checkbox"
-            onChange={this.toggleCheckbox('showBeaconSignalArea')}
-            checked={showBeaconSignalArea}
-          />
-          <label htmlFor="showBeaconSignalAreaInput">Show beacon signal area</label>
-          <br />
-          <input
-            id="showMassCentersInput"
-            type="checkbox"
-            onChange={this.toggleCheckbox('showMassCenters')}
-            checked={showMassCenters}
-          />
-          <label htmlFor="showMassCentersInput">Show mass centers</label>
-          <br />
-          <input
-            id="enableAutoIterationInput"
-            type="checkbox"
-            onChange={this.toggleCheckbox('enableAutoIteration')}
-            checked={enableAutoIteration}
-          />
-          <label htmlFor="enableAutoIterationInput">Enable auto iteration</label>
-          <br />
+          <div className="flex-row">
+
+            <div className="margin-1rem">
+
+              <input
+                id="showBeaconMarkersInput"
+                type="checkbox"
+                onChange={this.toggleCheckbox('showBeaconMarkers')}
+                checked={showBeaconMarkers}
+              />
+              <label htmlFor="showBeaconMarkersInput">Show beacon markers</label>
+              <br />
+              <input
+                id="showPolygonLabelsInput"
+                type="checkbox"
+                onChange={this.toggleCheckbox('showPolygonLabels')}
+                checked={showPolygonLabels}
+              />
+              <label htmlFor="showPolygonLabelsInput">Show polygon labels</label>
+              <br />
+              <input
+                id="showPolygonBoundariesInput"
+                type="checkbox"
+                onChange={this.toggleCheckbox('showPolygonBoundaries')}
+                checked={showPolygonBoundaries}
+              />
+              <label htmlFor="showPolygonBoundariesInput">Show polygon boundaries</label>
+              <br />
+
+              <input
+                id="showMassCentersInput"
+                type="checkbox"
+                onChange={this.toggleCheckbox('showMassCenters')}
+                checked={showMassCenters}
+              />
+              <label htmlFor="showMassCentersInput">Show mass centers</label>
+              <br />
+
+              <input
+                id="showBeaconSignalAreaInput"
+                type="checkbox"
+                onChange={this.toggleCheckbox('showBeaconSignalArea')}
+                checked={showBeaconSignalArea}
+              />
+              <label htmlFor="showBeaconSignalAreaInput">Show beacon signal area</label>
+              <br />
+              <div>
+                <label>Signal radius</label><br />
+                <input type="number" value={signalRadius} onChange={this.onStateChange('signalRadius')} />
+              </div>
+
+            </div>
+            <div className="margin-1rem">
+              <input
+                id="enableAutoIterationInput"
+                type="checkbox"
+                onChange={this.toggleCheckbox('enableAutoIteration')}
+                checked={enableAutoIteration}
+              />
+              <label htmlFor="enableAutoIterationInput">Enable auto iteration</label>
+              <br />
+              <Button
+                variant="primary"
+                onClick={this.nextIteration}
+              >Next iteration
+              </Button>
+
+              <div>
+                <label>Delta (stop condition)</label><br />
+                <input type="number" value={maxDelta} onChange={this.onStateChange('maxDelta')} />
+              </div>
+            </div>
+            <div className="margin-1rem">
+              <Button
+                variant="primary"
+                onClick={this.clearPolygon}
+                className="margin-right-1rem margin-bottom-1rem"
+              >Clear main polygon
+              </Button>
+              <br />
+              <Button
+                variant="primary"
+                onClick={this.clearBeacons}
+                className="margin-right-1rem margin-bottom-1rem"
+              >Clear beacons
+              </Button>
+              <br />
+              <Button
+                variant="primary"
+                onClick={this.clearTracks}
+                className="margin-right-1rem margin-bottom-1rem"
+              >Clear tracks
+              </Button>
+              <br />
 
 
+            </div>
+          </div>
           <Button
             variant={mode === 'addBeacon' ? 'primary' : 'light'}
             onClick={this.setModeState('addBeacon')}
-            className="margin-right-1rem"
-          >Add beacon
+            className="margin-right-1rem margin-bottom-1rem"
+          >Add beacon mode
           </Button>
+
           <Button
             variant={mode === 'editPolygon' ? 'primary' : 'light'}
             onClick={this.setModeState('editPolygon')}
-            className="margin-right-1rem"
-          >Edit main polygon
+            className="margin-right-1rem margin-bottom-1rem"
+          >Edit main polygon mode
           </Button>
-          <Button
-            variant="primary"
-            onClick={this.clearPolygon}
-            className="margin-right-1rem"
-          >Clear main polygon
-          </Button>
-          <Button
-            variant="primary"
-            onClick={this.clearTracks}
-            className="margin-right-1rem"
-          >Clear tracks
-          </Button>
-          <Button
-            variant="primary"
-            onClick={this.nextIteration}
-          >Next iteration
-          </Button>
+          <br />
 
           {mode === 'editPolygon' && (
             <table className="beaconTable">
@@ -569,6 +635,7 @@ export default class Beacons extends Component {
                   <th>x</th>
                   <th>y</th>
                   <th>sound</th>
+                  <th>fix position</th>
                 </tr>
               </thead>
               <tbody>

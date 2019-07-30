@@ -50,11 +50,7 @@ if (database) {
     imagePositionY: 68,
     imageOpacity: 80,
     imageScale: 800,
-    beacons: [{
-      id: shortid.generate(),
-      x: 100,
-      y: 100
-    }],
+    beacons: [],
   };
 }
 
