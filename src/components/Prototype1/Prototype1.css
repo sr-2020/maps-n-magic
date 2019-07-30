@@ -34,6 +34,7 @@
 
 svg.root-image {
   outline: 1px solid blueviolet;
+  flex-shrink: 0;
 }
 
 .Prototype1 text {
