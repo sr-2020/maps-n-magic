@@ -19,6 +19,7 @@ import Prototype1 from '../Prototype1';
 import MapEditor from '../MapEditor';
 import MusicEditor from '../MusicEditor';
 import Beacons from '../Beacons';
+import ErrorBoundry from '../ErrorBoundry';
 
 import { json2File, makeFileName, readJsonFile } from '../../utils/fileUtils';
 
@@ -125,99 +126,103 @@ export default class App extends Component {
     } = this.state;
 
     return (
-      <Router>
-        <div className="App">
-          <header>
-            <nav className="view-switch">
-              <ul>
-                <li>
-                  <NavLink to="/mapEditor">Map Editor</NavLink>
-                </li>
-                <li>
-                  <NavLink to="/beacons">Beacons</NavLink>
-                </li>
-                <li>
-                  <NavLink to="/soundManager">Sound Manager</NavLink>
-                </li>
-                <li>
-                  <NavLink to="/demo">Demo</NavLink>
-                </li>
-              </ul>
+      <ErrorBoundry>
 
-              <ul>
-                <li>
-                  <button
-                    type="button"
-                    className="dataLoadButton icon-button action-button mainNavButton"
-                    data-original-title=""
-                    title="Upload database"
-                    onClick={this.uploadDatabaseFile}
-                  >
-                    <input
-                      type="file"
-                      className="display-none"
-                      tabIndex="-1"
-                      onChange={this.onFileSelected}
+        <Router>
+          <div className="App">
+            <header>
+              <nav className="view-switch">
+                <ul>
+                  <li>
+                    <NavLink to="/mapEditor">Map Editor</NavLink>
+                  </li>
+                  <li>
+                    <NavLink to="/beacons">Beacons</NavLink>
+                  </li>
+                  <li>
+                    <NavLink to="/soundManager">Sound Manager</NavLink>
+                  </li>
+                  <li>
+                    <NavLink to="/demo">Demo</NavLink>
+                  </li>
+                </ul>
+
+                <ul>
+                  <li>
+                    <button
+                      type="button"
+                      className="dataLoadButton icon-button action-button mainNavButton"
+                      data-original-title=""
+                      title="Upload database"
+                      onClick={this.uploadDatabaseFile}
+                    >
+                      <input
+                        type="file"
+                        className="display-none"
+                        tabIndex="-1"
+                        onChange={this.onFileSelected}
+                      />
+                    </button>
+                  </li>
+                  <li>
+                    <button
+                      type="button"
+                      className="dataSaveButton icon-button action-button mainNavButton"
+                      data-original-title=""
+                      onClick={this.downloadDatabaseAsFile}
+                      title="Download database"
                     />
-                  </button>
-                </li>
-                <li>
-                  <button
-                    type="button"
-                    className="dataSaveButton icon-button action-button mainNavButton"
-                    data-original-title=""
-                    onClick={this.downloadDatabaseAsFile}
-                    title="Download database"
+                  </li>
+                </ul>
+              </nav>
+            </header>
+
+            <main>
+
+              <Switch>
+                <Route path="/mapEditor">
+                  <MapEditor
+                    imagePositionX={imagePositionX}
+                    imagePositionY={imagePositionY}
+                    imageOpacity={imageOpacity}
+                    imageScale={imageScale}
+                    svgWidth={svgWidth}
+                    svgHeight={svgHeight}
+                    onPropChange={this.onStateChange}
                   />
-                </li>
-              </ul>
-            </nav>
-          </header>
+                </Route>
+                <Route path="/beacons">
+                  <Beacons
+                    imagePositionX={imagePositionX}
+                    imagePositionY={imagePositionY}
+                    imageOpacity={imageOpacity}
+                    imageScale={imageScale}
+                    svgWidth={svgWidth}
+                    svgHeight={svgHeight}
+                    beacons={beacons}
+                    setBeacons={this.setBeacons}
+                    audioService={this.audioService}
+                  />
+                </Route>
+                <Route path="/soundManager">
+                  <MusicEditor audioService={this.audioService} />
+                </Route>
+                <Route path="/demo">
+                  <Prototype1
+                    svgWidth={svgWidth}
+                    svgHeight={svgHeight}
+                    beacons={beacons}
+                    audioService={this.audioService}
+                  />
+                </Route>
 
-          <main>
+                <Route render={() => <Redirect to="/mapEditor" />} />
+              </Switch>
+            </main>
+          </div>
+        </Router>
+      </ErrorBoundry>
 
-            <Switch>
-              <Route path="/mapEditor">
-                <MapEditor
-                  imagePositionX={imagePositionX}
-                  imagePositionY={imagePositionY}
-                  imageOpacity={imageOpacity}
-                  imageScale={imageScale}
-                  svgWidth={svgWidth}
-                  svgHeight={svgHeight}
-                  onPropChange={this.onStateChange}
-                />
-              </Route>
-              <Route path="/beacons">
-                <Beacons
-                  imagePositionX={imagePositionX}
-                  imagePositionY={imagePositionY}
-                  imageOpacity={imageOpacity}
-                  imageScale={imageScale}
-                  svgWidth={svgWidth}
-                  svgHeight={svgHeight}
-                  beacons={beacons}
-                  setBeacons={this.setBeacons}
-                  audioService={this.audioService}
-                />
-              </Route>
-              <Route path="/soundManager">
-                <MusicEditor audioService={this.audioService} />
-              </Route>
-              <Route path="/demo">
-                <Prototype1
-                  svgWidth={svgWidth}
-                  svgHeight={svgHeight}
-                  beacons={beacons}
-                  audioService={this.audioService}
-                />
-              </Route>
-
-              <Route render={() => <Redirect to="/mapEditor" />} />
-            </Switch>
-          </main>
-        </div>
-      </Router>
     );
   }
 }
