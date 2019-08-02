@@ -6,39 +6,7 @@ export default class Map extends Component {
   state = {
   };
 
-  componentDidMount = () => {
-    console.log('Map mounted');
-    // this.getStateInfo();
-  }
-
-  componentDidUpdate = () => {
-    console.log('Map did update');
-  }
-
-  componentWillUnmount = () => {
-    console.log('Map will unmount');
-  }
-
-  // getStateInfo = () => {
-  //   const { dbms } = this.props;
-  //   Promise.all([
-  //     dbms.getSomething(),
-  //   ]).then((results) => {
-  //     const [something] = results;
-  //     this.setState({
-  //       something
-  //     });
-  //   });
-  // }
-
   render() {
-  //   const { something } = this.state;
-    // //const { t } = this.props;
-
-    //   if (!something) {
-    //     return <div> Map stub </div> ;
-    //   // return null;
-    //   }
     const {
       imagePositionX,
       imagePositionY, imageOpacity, imageScale, svgWidth, svgHeight, onPropChange,
@@ -46,13 +14,14 @@ export default class Map extends Component {
     } = this.props;
 
     const imageStyle = {
-      background: `linear-gradient(to bottom, 
+      background: `linear-gradient(to bottom,
                     rgba(255,255,255,${imageOpacity / 100}) 0%,
-                    rgba(255,255,255,${imageOpacity / 100}) 100%), 
+                    rgba(255,255,255,${imageOpacity / 100}) 100%),
                     url(/images/backgroundImage.jpg) no-repeat ${imagePositionX}% ${imagePositionY}% / ${imageScale}px auto`,
       // backgroundSize: `${imageScale}% auto`,
       // backgroundPosition: `${imagePositionX}% ${imagePositionY}%`
     };
+    // {...this.props}
     return (
       <svg
         className="root-image margin-2rem"

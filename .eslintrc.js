@@ -70,10 +70,10 @@ module.exports = {
             "error",
             "always"
         ],
-        "react/jsx-indent": ["on", 2],
-        "react/jsx-indent-props": ["on", 2],
+        "react/jsx-indent": ["error", 2],
+        "react/jsx-indent-props": ["error", 2],
         "import/extensions": [
-            "on",
+            "error",
             "never",
             {
               "jsx": "always"

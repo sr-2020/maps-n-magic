@@ -89,4 +89,8 @@ function getSolidMassCenter(polygon) {
   };
 }
 
-export { getPointMassCenter, getPerimeterMassCenter, getSolidMassCenter };
+const polygon2polyline = polygon => (polygon ? polygon.map(pt => pt.join(',')).join(' ') : '');
+
+export {
+  getPointMassCenter, getPerimeterMassCenter, getSolidMassCenter, polygon2polyline
+};
