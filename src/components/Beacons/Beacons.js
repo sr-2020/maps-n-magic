@@ -6,6 +6,7 @@ import shortid from 'shortid';
 import * as R from 'ramda';
 
 import Button from 'react-bootstrap/Button';
+import Form from 'react-bootstrap/Form';
 import Map from '../Map';
 import MapMarker from '../MapMarker';
 import MapPoint from '../MapPoint';
@@ -29,6 +30,7 @@ export default class Beacons extends Component {
     showPolygonBoundaries: true,
     showBeaconSignalArea: false,
     showMassCenters: true,
+    showTracks: true,
     enableAutoIteration: false,
     maxDelta: 1,
     signalRadius: 40,
@@ -71,12 +73,24 @@ export default class Beacons extends Component {
     let newPoint = [x, y];
     if (mainPolygon.length > 0) {
       const [x1, y1] = mainPolygon[0];
+
       const dist = euDist({ x, y }, { x: x1, y: y1 });
       if (dist < 20) {
         newPoint = [x1, y1];
       }
+      // if (x1[0] === x[0] && y1[1] === y[1]) {
+      //   return;
+      // }
     }
-    setMainPolygon([...mainPolygon, newPoint]);
+    let polygon = mainPolygon;
+    if (mainPolygon.length > 1) {
+      const first = mainPolygon[0];
+      const last = mainPolygon[mainPolygon.length - 1];
+      if (first[0] === last[0] && first[1] === last[1]) {
+        polygon = [];
+      }
+    }
+    setMainPolygon([...polygon, newPoint]);
   }
 
   onBeaconChange = (id, prop) => (e) => {
@@ -278,7 +292,7 @@ export default class Beacons extends Component {
     const {
       showBeaconMarkers, showPolygonLabels, showPolygonBoundaries,
       hoveredBeacon, mode, showBeaconSignalArea, showMassCenters,
-      enableAutoIteration, maxDelta, signalRadius
+      enableAutoIteration, maxDelta, signalRadius, showTracks
     } = this.state;
 
     const {
@@ -335,7 +349,7 @@ export default class Beacons extends Component {
             ))
           }
           {
-            trackLines.map(trackLine => (
+            showTracks && trackLines.map(trackLine => (
               <polyline
                 fill="none"
                 stroke="black"
@@ -386,6 +400,7 @@ export default class Beacons extends Component {
             showPolygonBoundaries={showPolygonBoundaries}
             showMassCenters={showMassCenters}
             showBeaconSignalArea={showBeaconSignalArea}
+            showTracks={showTracks}
             signalRadius={signalRadius}
             enableAutoIteration={enableAutoIteration}
             maxDelta={maxDelta}
@@ -398,19 +413,25 @@ export default class Beacons extends Component {
             clearTracks={this.clearTracks}
           />
 
-          <Button
-            variant={mode === 'addBeacon' ? 'primary' : 'light'}
+          <Form.Check
+            type="radio"
+            id="addBeaconRadio"
+            label="Add beacon mode"
+            value="addBeacon"
+            name="mode-radio"
+            checked={mode === 'addBeacon'}
             onClick={this.setModeState('addBeacon')}
-            className="margin-right-1rem margin-bottom-1rem"
-          >Add beacon mode
-          </Button>
+          />
 
-          <Button
-            variant={mode === 'editPolygon' ? 'primary' : 'light'}
+          <Form.Check
+            type="radio"
+            id="editPolygonRadio"
+            value="editPolygon"
+            name="mode-radio"
+            label="Edit main polygon mode"
+            checked={mode !== 'addBeacon'}
             onClick={this.setModeState('editPolygon')}
-            className="margin-right-1rem margin-bottom-1rem"
-          >Edit main polygon mode
-          </Button>
+          />
           <br />
 
           {mode === 'editPolygon' && (

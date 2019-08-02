@@ -1,7 +1,7 @@
 import React, { Component, Fragment } from 'react';
 import './App.css';
 // import './Icons.css';
-import '@fortawesome/fontawesome-free/css/all.css';
+// import '@fortawesome/fontawesome-free/css/all.css';
 import * as R from 'ramda';
 import shortid from 'shortid';
 
@@ -52,7 +52,7 @@ if (database) {
     imageOpacity: 80,
     imageScale: 800,
     beacons: [],
-    mainPolygon: [[324.375, 80], [128.375, 370], [543.375, 560], [610.375, 454], [459.375, 414], [458.375, 302], [428.375, 301], [423.375, 135], [348.375, 79], [324.375, 80]],
+    mainPolygon: [[324, 80], [128, 370], [543, 560], [610, 454], [459, 414], [458, 302], [428, 301], [423, 135], [348, 79], [324, 80]],
   };
 }
 
@@ -157,9 +157,9 @@ export default class App extends Component {
 
                 <ul>
                   <li>
+                    {/* className="dataLoadButton icon-button action-button mainNavButton" */}
                     <button
                       type="button"
-                      className="dataLoadButton icon-button action-button mainNavButton"
                       data-original-title=""
                       title="Upload database"
                       onClick={this.uploadDatabaseFile}
@@ -170,16 +170,18 @@ export default class App extends Component {
                         tabIndex="-1"
                         onChange={this.onFileSelected}
                       />
+                      Upload database
                     </button>
                   </li>
                   <li>
+                    {/* className="dataSaveButton icon-button action-button mainNavButton" */}
                     <button
                       type="button"
-                      className="dataSaveButton icon-button action-button mainNavButton"
                       data-original-title=""
                       onClick={this.downloadDatabaseAsFile}
                       title="Download database"
-                    />
+                    >Download database
+                    </button>
                   </li>
                 </ul>
               </nav>

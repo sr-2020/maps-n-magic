@@ -11,7 +11,7 @@ export default class SettingsForm extends Component {
   render() {
     const {
       showBeaconMarkers, showPolygonLabels, showPolygonBoundaries, showMassCenters, showBeaconSignalArea, signalRadius,
-      enableAutoIteration, maxDelta
+      enableAutoIteration, maxDelta, showTracks
     } = this.props;
     const {
       toggleCheckbox, onStateChange, nextIteration, clearPolygon, clearBeacons, clearTracks
@@ -54,6 +54,15 @@ export default class SettingsForm extends Component {
             checked={showMassCenters}
           />
           <label htmlFor="showMassCentersInput">Show mass centers</label>
+          <br />
+
+          <input
+            id="showTracksInput"
+            type="checkbox"
+            onChange={toggleCheckbox('showTracks')}
+            checked={showTracks}
+          />
+          <label htmlFor="showTracksInput">Show tracks</label>
           <br />
 
           <input
