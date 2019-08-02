@@ -52,6 +52,7 @@ if (database) {
     imageOpacity: 80,
     imageScale: 800,
     beacons: [],
+    mainPolygon: [[324.375, 80], [128.375, 370], [543.375, 560], [610.375, 454], [459.375, 414], [458.375, 302], [428.375, 301], [423.375, 135], [348.375, 79], [324.375, 80]],
   };
 }
 
@@ -100,6 +101,13 @@ export default class App extends Component {
     });
   }
 
+  setMainPolygon = (mainPolygon) => {
+    // console.log('prop');
+    this.setState({
+      mainPolygon
+    });
+  }
+
   downloadDatabaseAsFile = () => {
     json2File(this.prepareDataForJson(), makeFileName('SR_acoustic_poc', 'json', new Date()));
   };
@@ -122,7 +130,7 @@ export default class App extends Component {
 
   render() {
     const {
-      imagePositionX, imagePositionY, imageOpacity, imageScale, svgWidth, svgHeight, beacons
+      imagePositionX, imagePositionY, imageOpacity, imageScale, svgWidth, svgHeight, beacons, mainPolygon
     } = this.state;
 
     return (
@@ -189,6 +197,7 @@ export default class App extends Component {
                     svgWidth={svgWidth}
                     svgHeight={svgHeight}
                     onPropChange={this.onStateChange}
+                    mainPolygon={mainPolygon}
                   />
                 </Route>
                 <Route path="/beacons">
@@ -201,6 +210,8 @@ export default class App extends Component {
                     svgHeight={svgHeight}
                     beacons={beacons}
                     setBeacons={this.setBeacons}
+                    mainPolygon={mainPolygon}
+                    setMainPolygon={this.setMainPolygon}
                     audioService={this.audioService}
                   />
                 </Route>

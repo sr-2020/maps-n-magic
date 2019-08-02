@@ -14,11 +14,11 @@ import getPolygons from '../../utils/polygonGenerator';
 import BeaconTable from './BeaconTable';
 import PolygonTable from './PolygonTable';
 import SettingsForm from './SettingsForm';
-import MainPolygon from './MainPolygon';
+import MainPolygon from '../MainPolygon';
 
 import ColorPalette from '../../utils/colorPalette';
 
-import { polygon2polyline } from '../../utils/polygonUtils';
+import { polygon2polyline, euDist } from '../../utils/polygonUtils';
 
 let tracks = [];
 
@@ -35,7 +35,7 @@ export default class Beacons extends Component {
     // addBeacon, editPolygon
     mode: 'addBeacon',
     // editingPolygon: false,
-    mainPolygon: [[324.375, 80], [128.375, 370], [543.375, 560], [610.375, 454], [459.375, 414], [458.375, 302], [428.375, 301], [423.375, 135], [348.375, 79], [324.375, 80]],
+    // mainPolygon: [[324.375, 80], [128.375, 370], [543.375, 560], [610.375, 454], [459.375, 414], [458.375, 302], [428.375, 301], [423.375, 135], [348.375, 79], [324.375, 80]],
     // tracks: []
   };
 
@@ -51,8 +51,6 @@ export default class Beacons extends Component {
   addBeacon = (event) => {
     const { x, y } = this.getClickCoords(event);
 
-    // const { mode } = this.state;
-    // if (mode === 'addBeacon') {
     const newBeacon = {
       x,
       y,
@@ -63,37 +61,22 @@ export default class Beacons extends Component {
     };
 
     const { beacons, setBeacons } = this.props;
-
     tracks = [];
-
     setBeacons([...beacons, newBeacon]);
-    // }
   }
 
   addMainPolygonPoint = (event) => {
     const { x, y } = this.getClickCoords(event);
-    this.setState((state) => {
-      const { mainPolygon } = state;
-      let newPolygon;
-      if (mainPolygon.length === 0) {
-        newPolygon = [[x, y]];
-      } else {
-        const [x1, y1] = mainPolygon[0];
-        const dist = Math.sqrt((x - x1) * (x - x1) + (y - y1) * (y - y1));
-        if (dist < 20) {
-          newPolygon = [...mainPolygon, [x1, y1]];
-        } else {
-          newPolygon = [...mainPolygon, [x, y]];
-        }
+    const { mainPolygon, setMainPolygon } = this.props;
+    let newPoint = [x, y];
+    if (mainPolygon.length > 0) {
+      const [x1, y1] = mainPolygon[0];
+      const dist = euDist({ x, y }, { x: x1, y: y1 });
+      if (dist < 20) {
+        newPoint = [x1, y1];
       }
-
-      //  = [...state.mainPolygon, newBeacon];
-      return ({
-        // movable,
-        mainPolygon: newPolygon,
-        // polygonData: getPolygons(newBeacons, svgWidth, svgHeight)
-      });
-    });
+    }
+    setMainPolygon([...mainPolygon, newPoint]);
   }
 
   onBeaconChange = (id, prop) => (e) => {
@@ -108,17 +91,15 @@ export default class Beacons extends Component {
     setBeacons(beacons2);
   }
 
-  onPointChange = (index, coord) => (e) => {
+  onMainPolygonPointChange = (index, coord) => (e) => {
     const { value } = e.target;
-    const { mainPolygon } = this.state;
+    const { mainPolygon, setMainPolygon } = this.props;
     const newPoint = [...mainPolygon[index]];
     newPoint[coord] = Number(value);
     const newPolygon = [...mainPolygon];
     newPolygon[index] = newPoint;
 
-    this.setState({
-      mainPolygon: newPolygon
-    });
+    setMainPolygon(newPolygon);
   }
 
   onBeaconPropChange = (id, prop) => (e) => {
@@ -220,10 +201,9 @@ export default class Beacons extends Component {
     }));
   }
 
-  clearPolygon = (mode) => {
-    this.setState(({
-      mainPolygon: []
-    }));
+  clearMainPolygon = (mode) => {
+    // eslint-disable-next-line react/destructuring-assignment
+    this.props.setMainPolygon([]);
   }
 
   clearBeacons = (mode) => {
@@ -243,10 +223,10 @@ export default class Beacons extends Component {
 
   nextIteration = () => {
     const {
-      svgWidth, svgHeight, beacons, setBeacons
+      svgWidth, svgHeight, beacons, setBeacons, mainPolygon
     } = this.props;
     const {
-      mainPolygon, maxDelta
+      maxDelta
     } = this.state;
 
     const polygonData = getPolygons(beacons, svgWidth, svgHeight, mainPolygon);
@@ -291,18 +271,19 @@ export default class Beacons extends Component {
   tracks2Polylines = () => {
     if (tracks.length === 0) return [];
     const arr = tracks[0];
-    return arr.map((pt, i) => tracks.map(trackArr => trackArr[i]).map(obj => [obj.x, obj.y])).map(this.polygon2polyline);
+    return arr.map((pt, i) => tracks.map(trackArr => trackArr[i]).map(obj => [obj.x, obj.y])).map(polygon2polyline);
   }
 
   render() {
     const {
       showBeaconMarkers, showPolygonLabels, showPolygonBoundaries,
-      hoveredBeacon, mode, mainPolygon, showBeaconSignalArea, showMassCenters,
+      hoveredBeacon, mode, showBeaconSignalArea, showMassCenters,
       enableAutoIteration, maxDelta, signalRadius
     } = this.state;
 
     const {
-      imagePositionX, imagePositionY, imageOpacity, imageScale, svgWidth, svgHeight, onPropChange, beacons, audioService
+      imagePositionX, imagePositionY, imageOpacity, imageScale,
+      svgWidth, svgHeight, onPropChange, beacons, audioService, mainPolygon
     } = this.props;
     // console.log(beacons);
     let polygonData;
@@ -412,7 +393,7 @@ export default class Beacons extends Component {
             toggleCheckbox={this.toggleCheckbox}
             onStateChange={this.onStateChange}
             nextIteration={this.nextIteration}
-            clearPolygon={this.clearPolygon}
+            clearPolygon={this.clearMainPolygon}
             clearBeacons={this.clearBeacons}
             clearTracks={this.clearTracks}
           />
@@ -435,7 +416,7 @@ export default class Beacons extends Component {
           {mode === 'editPolygon' && (
             <PolygonTable
               mainPolygon={mainPolygon}
-              onPointChange={this.onPointChange}
+              onPointChange={this.onMainPolygonPointChange}
             />
           )}
 

@@ -1,7 +1,7 @@
 import React, { Component, Fragment } from 'react';
 import './MainPolygon.css';
-import { polygon2polyline } from '../../../utils/polygonUtils';
-import MapPoint from '../../MapPoint';
+import { polygon2polyline } from '../../utils/polygonUtils';
+import MapPoint from '../MapPoint';
 
 export default class MainPolygon extends Component {
   state = {

@@ -91,6 +91,8 @@ function getSolidMassCenter(polygon) {
 
 const polygon2polyline = polygon => (polygon ? polygon.map(pt => pt.join(',')).join(' ') : '');
 
+const euDist = ({ x: x1, y: y1 }, { x: x2, y: y2 }) => Math.sqrt((x2 - x1) * (x2 - x1) + (y2 - y1) * (y2 - y1));
+
 export {
-  getPointMassCenter, getPerimeterMassCenter, getSolidMassCenter, polygon2polyline
+  getPointMassCenter, getPerimeterMassCenter, getSolidMassCenter, polygon2polyline, euDist
 };
