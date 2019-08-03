@@ -253,8 +253,8 @@ export default class Beacons extends Component {
       const center = clippedCenters.find(center2 => center2.id === beacon.id);
       return {
         ...beacon,
-        x: beacon.props.positionFixed || isNaN(center.x) ? beacon.x : center.x,
-        y: beacon.props.positionFixed || isNaN(center.y) ? beacon.y : center.y,
+        x: beacon.props.positionFixed || !center || isNaN(center.x) ? beacon.x : center.x,
+        y: beacon.props.positionFixed || !center || isNaN(center.y) ? beacon.y : center.y,
       };
     });
 
