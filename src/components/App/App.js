@@ -29,6 +29,8 @@ console.log(getBeacons(100, 100, 600, 500));
 
 const STORAGE_KEY = 'AR_POC';
 
+const defaultImgUrl = '/images/backgroundImage.jpg';
+
 let initialState;
 // let audioData = [];
 const database = localStorage.getItem(STORAGE_KEY);
@@ -53,6 +55,7 @@ if (database) {
     imageScale: 800,
     beacons: [],
     mainPolygon: [[324, 80], [128, 370], [543, 560], [610, 454], [459, 414], [458, 302], [428, 301], [423, 135], [348, 79], [324, 80]],
+    imageUrl: defaultImgUrl
   };
 }
 
@@ -108,6 +111,15 @@ export default class App extends Component {
     });
   }
 
+  setImageUrl = (imageUrl) => {
+    // console.log('prop');
+    this.setState({
+      imageUrl
+    });
+  }
+
+  toDefaultImageUrl = () => this.setImageUrl(defaultImgUrl);
+
   downloadDatabaseAsFile = () => {
     json2File(this.prepareDataForJson(), makeFileName('SR_acoustic_poc', 'json', new Date()));
   };
@@ -130,7 +142,7 @@ export default class App extends Component {
 
   render() {
     const {
-      imagePositionX, imagePositionY, imageOpacity, imageScale, svgWidth, svgHeight, beacons, mainPolygon
+      imagePositionX, imagePositionY, imageOpacity, imageScale, svgWidth, svgHeight, beacons, mainPolygon, imageUrl
     } = this.state;
 
     return (
@@ -200,6 +212,9 @@ export default class App extends Component {
                     svgHeight={svgHeight}
                     onPropChange={this.onStateChange}
                     mainPolygon={mainPolygon}
+                    imageUrl={imageUrl}
+                    setImageUrl={this.setImageUrl}
+                    toDefaultImageUrl={this.toDefaultImageUrl}
                   />
                 </Route>
                 <Route path="/beacons">
@@ -215,6 +230,7 @@ export default class App extends Component {
                     mainPolygon={mainPolygon}
                     setMainPolygon={this.setMainPolygon}
                     audioService={this.audioService}
+                    imageUrl={imageUrl}
                   />
                 </Route>
                 <Route path="/soundManager">

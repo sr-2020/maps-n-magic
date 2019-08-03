@@ -19,9 +19,37 @@ export default class MapEditor extends Component {
   state = {
   };
 
+  onFileUpload = (evt) => {
+    const {
+      setImageUrl
+    } = this.props;
+    console.log(evt);
+    const f = evt.target.files[0];
+
+    if (f) {
+      const r = new FileReader();
+      r.onload = (e) => {
+        const contents = e.target.result;
+        // console.log(contents);
+        setImageUrl(contents);
+        // try {
+        //   const object = JSON.parse(contents);
+        //   // resolve(object);
+        // } catch (err) {
+        //   // reject(err);
+        // }
+      };
+      r.readAsDataURL(f);
+    } else {
+      // UI.alert(L10n.getValue('utils-base-file-loading-error'));
+      // reject(new Error('utils-base-file-loading-error'));
+    }
+  }
+
   render() {
     const {
-      imagePositionX, imagePositionY, imageOpacity, imageScale, svgWidth, svgHeight, onPropChange, mainPolygon
+      imagePositionX, imagePositionY, imageOpacity, imageScale, svgWidth, svgHeight, onPropChange, mainPolygon,
+      imageUrl, toDefaultImageUrl
     } = this.props;
 
     return (
@@ -51,6 +79,19 @@ export default class MapEditor extends Component {
             </Form.Group>
           </Row>
           <h3>Background parameters</h3>
+          <Row>
+            <Form.Group as={Col}>
+              <Form.Label>image</Form.Label>
+              <Form.Control
+                type="file"
+                accept="image/*"
+                onChange={this.onFileUpload}
+                // onChange={onPropChange('imageOpacity')}
+                // placeholder="imageOpacity"
+                // value={imageOpacity}
+              />
+            </Form.Group>
+          </Row>
           <Row>
             <Form.Group as={Col}>
               <Form.Label>imagePositionX, %</Form.Label>
@@ -95,6 +136,8 @@ export default class MapEditor extends Component {
               />
             </Form.Group>
           </Row>
+          <Button onClick={toDefaultImageUrl}>Set default image</Button>
+
         </Form>
         {/* <svg
           className="root-image"
@@ -111,6 +154,7 @@ export default class MapEditor extends Component {
           imageScale={imageScale}
           svgWidth={svgWidth}
           svgHeight={svgHeight}
+          imageUrl={imageUrl}
         >
           <MainPolygon mainPolygon={mainPolygon} />
         </Map>

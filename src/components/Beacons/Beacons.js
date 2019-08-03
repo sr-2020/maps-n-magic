@@ -297,7 +297,7 @@ export default class Beacons extends Component {
 
     const {
       imagePositionX, imagePositionY, imageOpacity, imageScale,
-      svgWidth, svgHeight, onPropChange, beacons, audioService, mainPolygon
+      svgWidth, svgHeight, onPropChange, beacons, audioService, mainPolygon, imageUrl
     } = this.props;
     // console.log(beacons);
     let polygonData;
@@ -316,6 +316,7 @@ export default class Beacons extends Component {
           imageScale={imageScale}
           svgWidth={svgWidth}
           svgHeight={svgHeight}
+          imageUrl={imageUrl}
           onClick={mode === 'addBeacon' ? this.addBeacon : this.addMainPolygonPoint}
           onMouseMove={this.moveMovable}
         >
@@ -329,24 +330,25 @@ export default class Beacons extends Component {
           <MainPolygon mainPolygon={mainPolygon} />
 
           {
-            showPolygonBoundaries && polygonData.clippedPolygons && polygonData.clippedPolygons.map((polygon, i) => (
-              <Fragment>
-                <polyline
-                  fill={polygonData.beaconColors[i] || ColorPalette[i % ColorPalette.length].color.background || 'none'}
-                  stroke="grey"
-                  strokeWidth="2"
-                  opacity="0.5"
-                  points={polygon2polyline(polygon)}
-                />
-                <polyline
-                  fill="none"
-                  stroke="grey"
-                  strokeWidth="2"
-                  opacity="0.5"
-                  points={polygon2polyline(polygon)}
-                />
-              </Fragment>
-            ))
+            showPolygonBoundaries && polygonData.clippedPolygons
+              && polygonData.clippedPolygons.map((polygons, i) => polygons.map(polygon => (
+                <Fragment>
+                  <polyline
+                    fill={polygonData.beaconColors[i] || ColorPalette[i % ColorPalette.length].color.background || 'none'}
+                    stroke="grey"
+                    strokeWidth="2"
+                    opacity="0.5"
+                    points={polygon2polyline(polygon)}
+                  />
+                  <polyline
+                    fill="none"
+                    stroke="grey"
+                    strokeWidth="2"
+                    opacity="0.5"
+                    points={polygon2polyline(polygon)}
+                  />
+                </Fragment>
+              )))
           }
           {
             showTracks && trackLines.map(trackLine => (

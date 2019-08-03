@@ -1,5 +1,6 @@
 //http://e-maxx.ru/algo/gravity_center
 import * as R from 'ramda';
+import * as gpu from '@thi.ng/geom-poly-utils';
 
 // by points
 function getPointMassCenter(polygon) {
@@ -56,36 +57,65 @@ function getTriangleCentroid(triangle) {
   };
 }
 
+function getMultiPolygonSolidMassCenter(multiPolygon) {
+  const intermediate = R.flatten(multiPolygon.map(polygon => polygon.map(ring => ({
+    ...getSolidMassCenter(ring),
+  }))));
+  // const intermediate = polygons.map((polygon, i) => ({
+  //   ...getSolidMassCenter(polygon),
+  //   // volume: getTriangleArea(triangle)
+  // }));
+  return intermediate2massCenter(intermediate);
+}
+
 function getSolidMassCenter(polygon) {
-  // first version - take one polygon point as triangle basis
-  // const pt1 = polygon[0];
-  // const triangles = R.aperture(2, R.tail(polygon)).map(R.concat([pt1]));
+  // // first version - take one polygon point as triangle basis
+  // // const pt1 = polygon[0];
+  // // const triangles = R.aperture(2, R.tail(polygon)).map(R.concat([pt1]));
 
-  // second version - take some simple mass center as triangle basis
-  // const massCenter = getPointMassCenter(polygon);
-  const massCenter = getPerimeterMassCenter(polygon);
-  const pt1 = [massCenter.x, massCenter.y];
-  const triangles = R.aperture(2, polygon).map(R.concat([pt1]));
+  // // second version - take some simple mass center as triangle basis
+  // // const massCenter = getPointMassCenter(polygon);
+  // const massCenter = getPerimeterMassCenter(polygon);
+  // const pt1 = [massCenter.x, massCenter.y];
+  // const triangles = R.aperture(2, polygon).map(R.concat([pt1]));
 
 
-  // console.log(polygon);
-  // console.log(triangles);
-  // triangle = [[3,0],[0,0],[0,5]];
-  const intermediate = triangles.map((triangle, i) => ({
-    ...getPointMassCenter(triangle),
-    volume: getTriangleArea(triangle)
-  }));
-  // console.log(intermediate);
+  // // console.log(polygon);
+  // // console.log(triangles);
+  // // triangle = [[3,0],[0,0],[0,5]];
+  // const intermediate = triangles.map((triangle, i) => ({
+  //   ...getPointMassCenter(triangle),
+  //   volume: getTriangleArea(triangle)
+  // }));
+  // const area1 = R.sum(intermediate.map(R.prop('volume')));
+  const area2 = gpu.polyArea2(polygon);
+  const weightCenter = gpu.centerOfWeight2(polygon);
+  // // gpu
+  // // console.log(area1, area2);
+  // console.log('gpu', area2, weightCenter);
+  // // console.log(intermediate);
+  // // return
+  // const tmp = intermediate2massCenter(intermediate);
+  // console.log('old result', tmp);
+  // // return tmp;
+  return {
+    x: weightCenter[0],
+    y: weightCenter[1],
+    volume: area2
+  };
+}
 
-  const area = R.sum(intermediate.map(R.prop('volume')));
+function intermediate2massCenter(intermediate) {
+  const volume = R.sum(intermediate.map(R.prop('volume')));
   const sums = intermediate.reduce((acc, point) => {
     acc[0] += point.x * point.volume;
     acc[1] += point.y * point.volume;
     return acc;
   }, [0, 0]);
   return {
-    x: sums[0] / area,
-    y: sums[1] / area,
+    x: sums[0] / volume,
+    y: sums[1] / volume,
+    volume
   };
 }
 
@@ -94,5 +124,5 @@ const polygon2polyline = polygon => (polygon ? polygon.map(pt => pt.join(',')).j
 const euDist = ({ x: x1, y: y1 }, { x: x2, y: y2 }) => Math.sqrt((x2 - x1) * (x2 - x1) + (y2 - y1) * (y2 - y1));
 
 export {
-  getPointMassCenter, getPerimeterMassCenter, getSolidMassCenter, polygon2polyline, euDist
+  getPointMassCenter, getPerimeterMassCenter, getSolidMassCenter, polygon2polyline, euDist, getMultiPolygonSolidMassCenter
 };

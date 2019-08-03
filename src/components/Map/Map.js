@@ -10,14 +10,14 @@ export default class Map extends Component {
     const {
       imagePositionX,
       imagePositionY, imageOpacity, imageScale, svgWidth, svgHeight, onPropChange,
-      children, onClick
+      children, onClick, imageUrl
     } = this.props;
 
     const imageStyle = {
       background: `linear-gradient(to bottom,
                     rgba(255,255,255,${imageOpacity / 100}) 0%,
                     rgba(255,255,255,${imageOpacity / 100}) 100%),
-                    url(/images/backgroundImage.jpg) no-repeat ${imagePositionX}% ${imagePositionY}% / ${imageScale}px auto`,
+                    url(${imageUrl}) no-repeat ${imagePositionX}% ${imagePositionY}% / ${imageScale}px auto`,
       // backgroundSize: `${imageScale}% auto`,
       // backgroundPosition: `${imagePositionX}% ${imagePositionY}%`
     };
