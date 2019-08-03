@@ -9,7 +9,8 @@ export default class BeaconTable extends Component {
   render() {
     const {
       audioService, beacons, onTableHover, onBeaconChange, onBeaconPropChange, onBeaconPropCheckboxChange,
-      onBeaconRemove } = this.props;
+      onBeaconRemove
+    } = this.props;
     return (
       <table className="beaconTable">
         <thead>
@@ -18,7 +19,7 @@ export default class BeaconTable extends Component {
             <th>id</th>
             <th>x</th>
             <th>y</th>
-            <th>sound</th>
+            {/* <th>sound</th> */}
             <th>fix position</th>
           </tr>
         </thead>
@@ -37,14 +38,13 @@ export default class BeaconTable extends Component {
                   <input className="coordInput" value={beacon.y} type="number" onChange={onBeaconChange(beacon.id, 'y')} />
                 </td>
 
-                <td>
+                {/* <td>
                   <select value={beacon.props.sound} onChange={onBeaconPropChange(beacon.id, 'sound')}>
                     {
                       ['none'].concat(audioService.getBuffers().map(R.prop('name'))).map(soundName => <option value={soundName}>{soundName}</option>)
                     }
                   </select>
-                  {/* onChange={this.onBeaconChange(beacon.id, 'y')}  */}
-                </td>
+                </td> */}
                 <td>
                   <input
                     type="checkbox"
