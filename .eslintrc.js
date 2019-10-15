@@ -82,6 +82,8 @@ module.exports = {
         // this rule is deprecated https://github.com/evcohen/eslint-plugin-jsx-a11y/blob/master/docs/rules/label-has-for.md
         'jsx-a11y/label-has-for': 'off',
         'react/jsx-filename-extension': 'off',
-        'react/jsx-one-expression-per-line':'off'
+        'react/jsx-one-expression-per-line':'off',
+        'react/state-in-constructor': 'off',
+        'arrow-parens': 'as-needed',
     }
 };

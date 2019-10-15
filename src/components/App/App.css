@@ -100,3 +100,11 @@
 .margin-bottom-1rem {
   margin-bottom: 1rem;
 }
+
+.flex-1-1-auto {
+  flex: 1 1 auto;
+}
+
+.flex-0-0-auto {
+  flex: 0 0 auto;
+}

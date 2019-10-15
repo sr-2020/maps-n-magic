@@ -1,5 +1,6 @@
 import React, { Component, Fragment } from 'react';
 import './App.css';
+import '../../css/tailwind.css';
 // import './Icons.css';
 // import '@fortawesome/fontawesome-free/css/all.css';
 import * as R from 'ramda';
@@ -12,20 +13,21 @@ import {
 import AudioService from '../../services/audioService';
 
 
-import getBeacons from '../../utils/gpxExperiment';
+// import getBeacons from '../../utils/gpxExperiment';
 
 
 import Prototype1 from '../Prototype1';
 import MapEditor from '../MapEditor';
 import MusicEditor from '../MusicEditor';
 import Beacons from '../Beacons';
+import Map2 from '../Map2';
 import ErrorBoundry from '../ErrorBoundry';
 
 import { json2File, makeFileName, readJsonFile } from '../../utils/fileUtils';
 
 import 'bootstrap/dist/css/bootstrap.min.css';
 
-console.log(getBeacons(100, 100, 600, 500));
+// console.log(getBeacons(100, 100, 600, 500));
 
 const STORAGE_KEY = 'AR_POC';
 
@@ -149,8 +151,8 @@ export default class App extends Component {
       <ErrorBoundry>
 
         <Router>
-          <div className="App">
-            <header>
+          <div className="App flex flex-col h-screen">
+            <header className="flex-0-0-auto">
               <nav className="view-switch">
                 <ul>
                   <li>
@@ -164,6 +166,9 @@ export default class App extends Component {
                   </li>
                   <li>
                     <NavLink to="/demo">Demo</NavLink>
+                  </li>
+                  <li>
+                    <NavLink to="/map2">Map2</NavLink>
                   </li>
                 </ul>
 
@@ -199,7 +204,7 @@ export default class App extends Component {
               </nav>
             </header>
 
-            <main>
+            <main className="flex-1-1-auto">
 
               <Switch>
                 <Route path="/mapEditor">
@@ -243,6 +248,9 @@ export default class App extends Component {
                     beacons={beacons}
                     audioService={this.audioService}
                   />
+                </Route>
+                <Route path="/map2">
+                  <Map2/>
                 </Route>
 
                 <Route render={() => <Redirect to="/mapEditor" />} />
