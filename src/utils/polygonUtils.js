@@ -123,6 +123,40 @@ const polygon2polyline = polygon => (polygon ? polygon.map(pt => pt.join(',')).j
 
 const euDist = ({ x: x1, y: y1 }, { x: x2, y: y2 }) => Math.sqrt((x2 - x1) * (x2 - x1) + (y2 - y1) * (y2 - y1));
 
+const getBoundingRect = (polygon) => {
+  return polygon.reduce((acc, point) => {
+    const [y, x] = point;
+    acc.left = acc.left > x ? x : acc.left;
+    acc.right = acc.right < x ? x : acc.right;
+    acc.top = acc.top < y ? y : acc.top;
+    acc.bottom = acc.bottom > y ? y : acc.bottom;
+    return acc;
+  }, {
+    top: Number.MIN_VALUE,
+    bottom: Number.MAX_VALUE,
+    left: Number.MAX_VALUE,
+    right: Number.MIN_VALUE,
+  });
+};
+
+const scaleRect = (rect, scale) => {
+  const xCenter = (rect.right + rect.left) / 2;
+  const yCenter = (rect.top + rect.bottom) / 2;
+  return {
+    top: (rect.top - yCenter) * scale + yCenter,
+    bottom: (rect.bottom - yCenter) * scale + yCenter,
+    left: (rect.left - xCenter) * scale + xCenter,
+    right: (rect.right - xCenter) * scale + xCenter,
+  }
+};
+
 export {
-  getPointMassCenter, getPerimeterMassCenter, getSolidMassCenter, polygon2polyline, euDist, getMultiPolygonSolidMassCenter
+  getPointMassCenter,
+  getPerimeterMassCenter,
+  getSolidMassCenter,
+  polygon2polyline,
+  euDist,
+  getMultiPolygonSolidMassCenter,
+  getBoundingRect,
+  scaleRect
 };

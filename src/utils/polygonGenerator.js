@@ -10,9 +10,13 @@ import {
 const clipPolygon = (first, second) => clippingUtils.intersection([first], [second]);
 
 function getPolygons(beacons, SVG_WIDTH, SVG_HEIGHT, mainPolygon) {
+  return getPolygons2(beacons, [0, 0, SVG_WIDTH, SVG_HEIGHT], mainPolygon);
+};
+
+function getPolygons2(beacons, boundingBox, mainPolygon) {
   const points = beacons.map(beacon => [beacon.x, beacon.y]);
   const delaunay = Delaunay.from(points);
-  const voronoi = delaunay.voronoi([0, 0, SVG_WIDTH, SVG_HEIGHT]);
+  const voronoi = delaunay.voronoi(boundingBox);
 
   const polygons = [];
   for (const polygon of voronoi.cellPolygons()) {
@@ -46,3 +50,4 @@ function getPolygons(beacons, SVG_WIDTH, SVG_HEIGHT, mainPolygon) {
 }
 
 export default getPolygons;
+export { getPolygons, getPolygons2 };
