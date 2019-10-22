@@ -84,6 +84,15 @@ module.exports = {
         'react/jsx-filename-extension': 'off',
         'react/jsx-one-expression-per-line':'off',
         'react/state-in-constructor': 'off',
-        'arrow-parens': 'as-needed',
+        // 'arrow-parens': 'as-needed',
+        'complexity': ['error', {max: 1}],
+        'max-lines-per-function': [
+            "error", {
+              max: 50,
+              skipBlankLines: true,
+              skipComments: true
+            }
+        ],
+        'max-depth': ['error', 3]
     }
 };
