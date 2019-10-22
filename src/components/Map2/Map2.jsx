@@ -26,7 +26,8 @@ console.log(L);
 L.Icon.Default.imagePath = './images/leafletImages/';
 
 
-const beacons = getBeacons();
+const getGeoProps = layer => layer.feature.properties;
+// const getGeoProps = layer => layer.pm._layers[0].feature.properties;
 
 //
 // const minZoom = 14;
@@ -38,7 +39,19 @@ const geojsonFeature = ({ lng, lat }) => ({
   properties: {
     name: 'Coors Field',
     amenity: 'Baseball Stadium',
-    popupContent: 'This is where the Rockies play!'
+    popupContent: 'This is where the Rockies play!',
+    complexData: {
+      type: 'Feature',
+      properties: {
+        name: 'Coors Field',
+        amenity: 'Baseball Stadium',
+        popupContent: 'This is where the Rockies play!'
+      },
+      geometry: {
+        type: 'Point',
+        coordinates: [lng, lat]
+      }
+    }
   },
   geometry: {
     type: 'Point',
@@ -129,13 +142,14 @@ export default class Map2 extends Component {
   state = {
     lat: 54.928743,
     lng: 36.871746,
-    // zoom: 17,
-    zoom: 16,
+    zoom: 17,
+    // zoom: 16,
   }
 
   componentDidMount = () => {
     console.log('Map2 mounted');
     const { lat, lng, zoom } = this.state;
+    this.geojsonFeature = geojsonFeature(this.state);
     this.map = L.map(this.mapEl, {
       center: [lat, lng],
       zoom,
@@ -143,106 +157,203 @@ export default class Map2 extends Component {
     });
     // .setView([lat, lng], zoom);
 
-    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-      attribution: '&amp;copy <a href="http://osm.org/copyright">OpenStreetMap</a> contributors',
-      maxZoom,
-      id: 'mapbox.streets',
-      accessToken: 'your.mapbox.access.token'
-    }).addTo(this.map);
+    // L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+    //   attribution: '&amp;copy <a href="http://osm.org/copyright">OpenStreetMap</a> contributors',
+    //   maxZoom,
+    //   // id: 'mapbox.streets',
+    //   // accessToken: 'your.mapbox.access.token'
+    // }).addTo(this.map);
 
-    this.fillMap();
+    L.tileLayer('http://{s}.google.com/vt/lyrs=s&x={x}&y={y}&z={z}', {
+      maxZoom,
+      opacity: 0.4,
+      subdomains: ['mt0', 'mt1', 'mt2', 'mt3']
+    }).addTo(this.map);
 
     this.map.pm.addControls({
       position: 'topleft',
       drawCircleMarker: false,
       drawPolyline: false,
-      cutPolygon: false
-      // drawCircle: false,
+      cutPolygon: false,
+      drawCircle: false,
+      drawRectangle: false
     });
 
-    this.map.on('pm:create', (...args) => {
-      console.log(args);
-      // workingLayer.on('pm:vertexadded', e => {
-      //   console.log(e);
-      // });
+    this.fillMap();
+
+    this.map.on('pm:create', event => {
+      if (event.layer instanceof L.Marker) {
+        this.markerGroup.addLayer(event.layer);
+        event.layer.on('pm:edit', () => this.onMarkerEdit());
+        this.onMarkersChange();
+        // this.updateSignalRadiuses();
+        // this.updatePolygons();
+      } else {
+        this.locationsGroup.addLayer(event.layer);
+        event.layer.on('pm:edit', () => this.saveLocations());
+        this.saveLocations();
+      }
     });
 
+    this.map.on('pm:remove', event => {
+      if (event.layer instanceof L.Marker) {
+        this.markerGroup.removeLayer(event.layer);
+        this.onMarkersChange();
+        // this.updateSignalRadiuses();
+        // this.updatePolygons();
+      } else {
+        this.locationsGroup.removeLayer(event.layer);
+        this.saveLocations();
+        // this.locationsGroup.addLayer(event.layer);
+      }
+      // console.log('pm:remove');
+    });
+
+    this.map.pm.toggleGlobalDragMode();
     // this.getStateInfo();
   }
 
 
   fillMap = () => {
-    // var marker = L.marker([lat, lng]).addTo(this.map);
-    // var marker = L.marker([lat, lng]);
-    // marker.addTo(this.map);
+    const baseLine = L.polyline(baseLLs, {
+      color: 'green',
+      pmIgnore: true
+    });
+    const baseClosedLine = L.polyline(baseClosedLLs, {
+      color: 'red',
+      pmIgnore: true
+    });
 
-    const baseLine = L.polyline(baseLLs, { color: 'green' });
+    const beacons = this.loadMarkers();
 
-    const baseClosedLine = L.polyline(baseClosedLLs, { color: 'red' });
+    const markers = beacons.map(beacon => L.geoJSON(beacon).getLayers()[0]);
+    markers.forEach(marker => {
+      const text = JSON.stringify(getGeoProps(marker), null, '  ');
+      marker.bindPopup(text);
+      marker.on('pm:edit', () => this.onMarkerEdit());
+    });
+
+    const locationsData = this.loadLocations();
+
+    const locations = locationsData.map(loc => L.geoJSON(loc).getLayers()[0]);
+    locations.forEach((loc, i) => {
+      // const polygons = polygonData.clippedPolygons.map((polygon, i) => L.polygon(polygon, {
+      //   pmIgnore: true
+      // }));
+      const text = JSON.stringify(getGeoProps(loc), null, '  ');
+      loc.bindPopup(text);
+      loc.setStyle({
+        fillColor: ColorPalette[i % ColorPalette.length].color.background,
+        fillOpacity: 0.5,
+      });
+      loc.on('pm:edit', () => this.saveLocations());
+    });
+
     const baseContourGroup = L.layerGroup([baseLine, baseClosedLine]);
+    this.polygonsGroup = L.layerGroup([]);
+    this.massCentersGroup = L.layerGroup([]);
+    this.signalRadiusesGroup = L.layerGroup([]);
+    this.markerGroup = L.layerGroup(markers);
+    this.locationsGroup = L.layerGroup(locations);
 
-    // baseLine.addTo(this.map);
-    // baseClosedLine.addTo(this.map);
+    baseContourGroup.addTo(this.map);
+    // polygonsGroup.addTo(this.map);
+    // massCentersGroup.addTo(this.map);
+    // this.signalRadiusesGroup.addTo(this.map);
+    this.markerGroup.addTo(this.map);
+    this.locationsGroup.addTo(this.map);
 
-    const markers = beacons.map((beacon) => L.geoJSON(beacon));
-    const markerGroup = L.layerGroup(markers);
+    const overlayMaps = {
+      'Base contour': baseContourGroup,
+      Markers: this.markerGroup,
+      'Mass centers': this.massCentersGroup,
+      'Voronoi polygons': this.polygonsGroup,
+      'Signal radiuses': this.signalRadiusesGroup,
+      Locations: this.locationsGroup
+    };
 
+    L.control.layers(null, overlayMaps).addTo(this.map);
+
+    this.updateSignalRadiuses();
+    this.updatePolygons();
+    // this.onMarkersChange();
+  }
+
+  onMarkersChange = () => {
+    this.updateSignalRadiuses();
+    this.updatePolygons();
+    this.saveMarkers();
+  }
+
+  onMarkerEdit = () => {
+    this.onMarkersChange();
+    console.log('pm:edit');
+  };
+
+  saveMarkers = () => {
+    localStorage.setItem('markers', JSON.stringify(this.markerGroup.toGeoJSON().features));
+    // console.log(this.markerGroup.toGeoJSON().features);
+    // console.log('beacons', getBeacons());
+  }
+
+  loadMarkers = () => {
+    const markers = localStorage.getItem('markers');
+    return markers ? JSON.parse(markers) : getBeacons();
+  }
+
+  saveLocations = () => {
+    localStorage.setItem('locations', JSON.stringify(this.locationsGroup.toGeoJSON().features));
+  }
+
+  loadLocations = () => {
+    const locations = localStorage.getItem('locations');
+    return locations ? JSON.parse(locations) : [];
+  }
+
+  updatePolygons = () => {
+    this.massCentersGroup.clearLayers();
+    this.polygonsGroup.clearLayers();
     const bRect1 = (getBoundingRect(baseCommonLLs));
     const bRect = scaleRect(bRect1, 1.1);
-    console.log('baseCommonLLs', baseCommonLLs, bRect1, bRect);
+    // console.log('baseCommonLLs', baseCommonLLs, bRect1, bRect);
 
     const boundingPolyline = L.polyline(this.boundingRect2Polyline(bRect), { color: 'blue' });
-    // boundingPolyline.addTo(this.map);
 
-    const plainPoints = beacons.map((beacon) => ({
-      x: beacon.geometry.coordinates[1],
-      y: beacon.geometry.coordinates[0]
+    const plainPoints = this.markerGroup.getLayers().map(layer => ({
+      x: layer.getLatLng().lat,
+      y: layer.getLatLng().lng
     }));
-    console.log('plainPoints', plainPoints);
+    // console.log('plainPoints', plainPoints);
     const polygonData = getPolygons2(plainPoints,
       [bRect.bottom, bRect.left, bRect.top, bRect.right],
       // , null);
       baseCommonLLs);
     // baseCommonLLs
 
-
     const polygons = polygonData.clippedPolygons.map((polygon, i) => L.polygon(polygon, {
       fillColor: ColorPalette[i % ColorPalette.length].color.background,
-      fillOpacity: 0.5
-      // color: ColorPalette[i % ColorPalette.length].color.background
-      // || ColorPalette[i % ColorPalette.length].color.background || 'none'
+      fillOpacity: 0.5,
+      pmIgnore: true
     }));
-    const polygonsGroup = L.layerGroup(polygons);
-    polygonsGroup.addLayer(boundingPolyline);
-    // polygons.forEach(polygon => polygon.addTo(this.map));
 
-    const signalRadiuses = beacons.map((beacon, i) => L.circle([
-      beacon.geometry.coordinates[1],
-      beacon.geometry.coordinates[0]
-    ], {
-      radius: 13
-    }));
-    const signalRadiusesGroup = L.layerGroup(signalRadiuses);
+    polygons.forEach(p => this.polygonsGroup.addLayer(p));
+    this.polygonsGroup.addLayer(boundingPolyline);
 
     const massCenters = polygonData.clippedCenters.map((massCenter, i) => L.circleMarker([massCenter.x, massCenter.y], {
-      radius: 5
+      radius: 5,
+      pmIgnore: true
     }));
-    const massCentersGroup = L.layerGroup(massCenters);
+    massCenters.forEach(p => this.massCentersGroup.addLayer(p));
+  }
 
-    markerGroup.addTo(this.map);
-    baseContourGroup.addTo(this.map);
-    polygonsGroup.addTo(this.map);
-    massCentersGroup.addTo(this.map);
-
-    const overlayMaps = {
-      'Base contour': baseContourGroup,
-      Markers: markerGroup,
-      'Mass centers': massCentersGroup,
-      'Voronoi polygons': polygonsGroup,
-      'Signal radiuses': signalRadiusesGroup
-    };
-
-    L.control.layers(null, overlayMaps).addTo(this.map);
+  updateSignalRadiuses = () => {
+    this.signalRadiusesGroup.clearLayers();
+    this.markerGroup.eachLayer(layer => {
+      this.signalRadiusesGroup.addLayer(L.circle(layer.getLatLng(), {
+        radius: 13,
+        pmIgnore: true
+      }));
+    });
   }
 
   basicExamples = () => {
@@ -281,13 +392,12 @@ export default class Map2 extends Component {
 
     this.map.on('click', onMapClick.bind(this));
 
-
     // const layer = L.geoJSON(myLines(this.state), {style: myStyle}).addTo(this.map);
     // layer.addData(geojsonFeature(this.state));
     // layer.addData(myLines, {style: myStyle});
   }
 
-  boundingRect2Polyline = (bRect) => [
+  boundingRect2Polyline = bRect => [
     [bRect.top, bRect.left],
     [bRect.top, bRect.right],
     [bRect.bottom, bRect.right],
@@ -332,20 +442,8 @@ export default class Map2 extends Component {
     return (
       <div
         className="Map2 h-full"
-        ref={(map) => (this.mapEl = map)}
-      >
-        {/* <Map className="fullscreen-map h-full"  center={position} zoom={this.state.zoom}>
-          <TileLayer
-            attribution='&amp;copy <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
-            url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-            />
-          <Marker position={position}>
-            <Popup>
-              A pretty CSS3 popup. <br /> Easily customizable.
-            </Popup>
-          </Marker>
-        </Map> */}
-      </div>
+        ref={map => (this.mapEl = map)}
+      />
     );
   }
 }

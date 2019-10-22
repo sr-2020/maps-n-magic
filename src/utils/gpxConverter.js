@@ -1,7 +1,7 @@
 import { gpx } from '@tmcw/togeojson';
 import * as R from 'ramda';
 
-import { parseString } from "xml2js";
+import { parseString } from 'xml2js';
 // import { string as gpxData } from '../data/14-09-2019_beacons';
 // import gpxData from '../data/14-09-2019_beacons';
 
@@ -173,7 +173,7 @@ const gpxData = `<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 	</rte>
 </gpx>`;
 
-console.log('gpxData', gpxData)
+// console.log('gpxData', gpxData)
 
 // // console.log('gpxData', gpxData);
 const oParser = new DOMParser();
