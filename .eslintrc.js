@@ -93,6 +93,7 @@ module.exports = {
               skipComments: true
             }
         ],
-        'max-depth': ['error', 3]
+        'max-depth': ['error', 3],
+        'jsx-a11y/label-has-associated-control': 'off'
     }
 };

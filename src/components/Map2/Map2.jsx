@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import './Map2.css';
 import * as R from 'ramda';
+import shortid from 'shortid';
 
 import '../../utils/gpxConverter';
 
@@ -15,6 +16,8 @@ import {
   Map, TileLayer, Marker, Popup
 } from 'react-leaflet';
 import { getBeacons } from '../../data/beacons';
+
+import { baseClosedLLs, baseLLs, baseCommonLLs } from '../../data/baseContours';
 
 import { getPolygons, getPolygons2 } from '../../utils/polygonGenerator';
 
@@ -34,122 +37,63 @@ const getGeoProps = layer => layer.feature.properties;
 const maxZoom = 20;
 const minZoom = null;
 
-const geojsonFeature = ({ lng, lat }) => ({
-  type: 'Feature',
-  properties: {
-    name: 'Coors Field',
-    amenity: 'Baseball Stadium',
-    popupContent: 'This is where the Rockies play!',
-    complexData: {
-      type: 'Feature',
-      properties: {
-        name: 'Coors Field',
-        amenity: 'Baseball Stadium',
-        popupContent: 'This is where the Rockies play!'
-      },
-      geometry: {
-        type: 'Point',
-        coordinates: [lng, lat]
-      }
-    }
-  },
-  geometry: {
-    type: 'Point',
-    coordinates: [lng, lat]
-  }
-});
+// const geojsonFeature = ({ lng, lat }) => ({
+//   type: 'Feature',
+//   properties: {
+//     name: 'Coors Field',
+//     amenity: 'Baseball Stadium',
+//     popupContent: 'This is where the Rockies play!',
+//     complexData: {
+//       type: 'Feature',
+//       properties: {
+//         name: 'Coors Field',
+//         amenity: 'Baseball Stadium',
+//         popupContent: 'This is where the Rockies play!'
+//       },
+//       geometry: {
+//         type: 'Point',
+//         coordinates: [lng, lat]
+//       }
+//     }
+//   },
+//   geometry: {
+//     type: 'Point',
+//     coordinates: [lng, lat]
+//   }
+// });
 
 
-const myStyle = {
-  // "color": "#ff7800",
-  color: '#ff0000',
-  weight: 5,
-  opacity: 0.65
-};
+// const myStyle = {
+//   // "color": "#ff7800",
+//   color: '#ff0000',
+//   weight: 5,
+//   opacity: 0.65
+// };
 
-const myLines = ({ lng, lat }) => [{
-  type: 'LineString',
-  coordinates:
-  [[lng, lat - 0.005],
-    [lng - 0.01, lat - 0.005],
-    [lng - 0.005, lat]]
-// }, {
-//   "type": "LineString",
-//   "coordinates": [[-105, 40], [-110, 45], [-115, 55]]
-}];
-
-const baseClosedLLs = [
-  [36.8720195, 54.9296674],
-  [36.8720624, 54.9285209],
-  [36.873028, 54.9285393],
-  [36.8730924, 54.9282496],
-  [36.8742725, 54.9282064],
-  [36.874294, 54.9293469],
-  [36.8741223, 54.9300065],
-  [36.8727598, 54.9304504],
-  [36.8723843, 54.9296675],
-  [36.8720195, 54.9296674]
-].map(R.reverse);
-
-const baseLLs = [
-  [36.8706891, 54.9300497],
-  [36.8683717, 54.9279968],
-  [36.873382, 54.9265912],
-  [36.8744442, 54.9274728],
-  [36.8724486, 54.9278242],
-  [36.8724593, 54.9284284],
-  [36.8720946, 54.9284284],
-  [36.8720195, 54.9296674],
-  [36.8710324, 54.9300682],
-  [36.8706891, 54.9300497],
-].map(R.reverse);
-
-const baseCommonLLs = [
-  [36.8706891, 54.9300497],
-  [36.8683717, 54.9279968],
-  [36.873382, 54.9265912],
-  [36.8744442, 54.9274728],
-  [36.8724486, 54.9278242],
-  [36.8724593, 54.9284284],
-  [36.8720946, 54.9284284],
-  // [36.8720195,54.9296674],
-
-  // [36.8720195,54.9296674],
-  [36.8720624, 54.9285209],
-  [36.873028, 54.9285393],
-  [36.8730924, 54.9282496],
-  [36.8742725, 54.9282064],
-  [36.874294, 54.9293469],
-  [36.8741223, 54.9300065],
-  [36.8727598, 54.9304504],
-  [36.8723843, 54.9296675],
-  [36.8720195, 54.9296674],
-
-  [36.8710324, 54.9300682],
-  [36.8706891, 54.9300497],
-].map(R.reverse);
-
-
-const beaconLLs = [
-  [54.928743, 36.871746],
-  [54.928753, 36.871746],
-  [54.928763, 36.871746],
-  [54.928773, 36.871746],
-];
-
+// const myLines = ({ lng, lat }) => [{
+//   type: 'LineString',
+//   coordinates:
+//   [[lng, lat - 0.005],
+//     [lng - 0.01, lat - 0.005],
+//     [lng - 0.005, lat]]
+// // }, {
+// //   "type": "LineString",
+// //   "coordinates": [[-105, 40], [-110, 45], [-115, 55]]
+// }];
 
 export default class Map2 extends Component {
   state = {
     lat: 54.928743,
     lng: 36.871746,
     zoom: 17,
+    curMarker: null
     // zoom: 16,
   }
 
   componentDidMount = () => {
     console.log('Map2 mounted');
     const { lat, lng, zoom } = this.state;
-    this.geojsonFeature = geojsonFeature(this.state);
+    // this.geojsonFeature = geojsonFeature(this.state);
     this.map = L.map(this.mapEl, {
       center: [lat, lng],
       zoom,
@@ -181,19 +125,7 @@ export default class Map2 extends Component {
 
     this.fillMap();
 
-    this.map.on('pm:create', event => {
-      if (event.layer instanceof L.Marker) {
-        this.markerGroup.addLayer(event.layer);
-        event.layer.on('pm:edit', () => this.onMarkerEdit());
-        this.onMarkersChange();
-        // this.updateSignalRadiuses();
-        // this.updatePolygons();
-      } else {
-        this.locationsGroup.addLayer(event.layer);
-        event.layer.on('pm:edit', () => this.saveLocations());
-        this.saveLocations();
-      }
-    });
+    this.map.on('pm:create', this.onCreate);
 
     this.map.on('pm:remove', event => {
       if (event.layer instanceof L.Marker) {
@@ -213,6 +145,27 @@ export default class Map2 extends Component {
     // this.getStateInfo();
   }
 
+  onCreate = event => {
+    if (event.layer instanceof L.Marker) {
+      const marker = event.layer;
+      const geo = marker.toGeoJSON();
+      this.map.removeLayer(marker);
+
+      const marker2 = L.geoJSON(geo).getLayers()[0];
+      getGeoProps(marker2).name = shortid.generate();
+      this.markerGroup.addLayer(marker2);
+
+      marker2.on('pm:edit', () => this.onMarkerEdit());
+
+      this.addMarkerOnClick(marker2);
+      this.onMarkersChange();
+    } else {
+      this.locationsGroup.addLayer(event.layer);
+      event.layer.on('pm:edit', () => this.saveLocations());
+      this.saveLocations();
+    }
+  }
+
 
   fillMap = () => {
     const baseLine = L.polyline(baseLLs, {
@@ -226,12 +179,8 @@ export default class Map2 extends Component {
 
     const beacons = this.loadMarkers();
 
-    const markers = beacons.map(beacon => L.geoJSON(beacon).getLayers()[0]);
-    markers.forEach(marker => {
-      const text = JSON.stringify(getGeoProps(marker), null, '  ');
-      marker.bindPopup(text);
-      marker.on('pm:edit', () => this.onMarkerEdit());
-    });
+    this.markerPopup = L.popup();
+    const markers = this.getMarkers(beacons);
 
     const locationsData = this.loadLocations();
 
@@ -277,6 +226,55 @@ export default class Map2 extends Component {
     this.updateSignalRadiuses();
     this.updatePolygons();
     // this.onMarkersChange();
+  }
+
+
+  // const popup = L.popup();
+  // // .setLatLng([lat, lng])
+  // // .setContent("I am a standalone popup.")
+  // // .openOn(this.map);
+
+  // function onMapClick(e) {
+  //   popup
+  //     .setLatLng(e.latlng)
+  //     .setContent(`You clicked the map at ${e.latlng.toString()}`)
+  //     .openOn(this.map);
+  // }
+
+  // this.map.on('click', onMapClick.bind(this));
+
+  getMarkers = beacons => {
+    const markers = beacons.map(beacon => {
+      try {
+        return L.geoJSON(beacon).getLayers()[0];
+      } catch (err) {
+        return null;
+      }
+    }).filter(marker => !!marker);
+    markers.forEach(marker => {
+      this.addMarkerOnClick(marker);
+      // const text = JSON.stringify(getGeoProps(marker), null, '  ');
+      // marker.bindPopup(text);
+      marker.on('pm:edit', () => this.onMarkerEdit());
+    });
+    return markers;
+  }
+
+  addMarkerOnClick = marker => {
+    marker.on('click', e => {
+      console.log(e);
+      const text = JSON.stringify(getGeoProps(e.target), null, '  ');
+      console.log('geoProps', text);
+      // markerPopup.setLatLng(e.latlng).setContent(text).openOn(this.map);
+      this.setState({
+        curMarker: {
+          lat: e.target.getLatLng().lat,
+          lng: e.target.getLatLng().lng,
+          name: getGeoProps(e.target).name
+        }
+      });
+      this.markerPopup.setLatLng(e.latlng).setContent(this.markerPopupContent).openOn(this.map);
+    });
   }
 
   onMarkersChange = () => {
@@ -413,6 +411,7 @@ export default class Map2 extends Component {
     console.log('Map2 will unmount');
   }
 
+
   // getStateInfo = () => {
   //   const { dbms } = this.props;
   //   Promise.all([
@@ -425,8 +424,11 @@ export default class Map2 extends Component {
   //   });
   // }
 
+  // eslint-disable-next-line max-lines-per-function
   render() {
-    const { something, lat, lng } = this.state;
+    const {
+      something, lat, lng, curMarker
+    } = this.state;
     const position = [lat, lng];
     //const { t } = this.props;
 
@@ -438,12 +440,61 @@ export default class Map2 extends Component {
     //     maxZoom: 20,
     //     subdomains:['mt0','mt1','mt2','mt3']
     // });
+    let el = null;
+    if (curMarker) {
+      el = (
+        <>
+          <div className="mb-4">
+            <label
+              className="block text-gray-700 text-sm font-bold mb-2"
+              htmlFor="markerName"
+            >Name
+            </label>
+            <input
+              className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+              id="markerName"
+              type="text"
+              value={curMarker.name}
+            />
+          </div>
+          <div className="mb-4">
+            <label
+              className="block text-gray-700 text-sm font-bold mb-2"
+              htmlFor="markerLat"
+            >Latitude
+            </label>
+            <input
+              className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+              id="markerLat"
+              type="text"
+              value={curMarker.lat}
+            />
+          </div>
+          <div className="mb-4">
+            <label
+              className="block text-gray-700 text-sm font-bold mb-2"
+              htmlFor="markerLon"
+            >Longitude
+            </label>
+            <input
+              className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+              id="markerLon"
+              type="text"
+              value={curMarker.lng}
+            />
+          </div>
+        </>
+      );
+    }
 
     return (
-      <div
-        className="Map2 h-full"
-        ref={map => (this.mapEl = map)}
-      />
+      <>
+        <div
+          className="Map2 h-full"
+          ref={map => (this.mapEl = map)}
+        />
+        <div className="markerPopup" ref={markerPopup => (this.markerPopupContent = markerPopup)}>{el}</div>
+      </>
     );
   }
 }
