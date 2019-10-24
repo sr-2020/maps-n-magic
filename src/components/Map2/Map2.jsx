@@ -11,10 +11,13 @@ import 'leaflet/dist/leaflet.css';
 import '@geoman-io/leaflet-geoman-free';
 import '@geoman-io/leaflet-geoman-free/dist/leaflet-geoman.css';
 
-
 import {
   Map, TileLayer, Marker, Popup
 } from 'react-leaflet';
+
+import MarkerPopup from './MarkerPopup';
+
+
 import { getBeacons } from '../../data/beacons';
 
 import { baseClosedLLs, baseLLs, baseCommonLLs } from '../../data/baseContours';
@@ -411,6 +414,39 @@ export default class Map2 extends Component {
     console.log('Map2 will unmount');
   }
 
+  onMarkerChange = prop => e => {
+    const { value } = e.target;
+    // eslint-disable-next-line react/destructuring-assignment
+    const { name } = this.state.curMarker;
+    const marker = this.markerGroup.getLayers().find(marker2 => getGeoProps(marker2).name === name);
+    if (prop === 'name') {
+      getGeoProps(marker).name = value;
+    }
+    if (prop === 'lat' || prop === 'lng') {
+      const latLng = marker.getLatLng();
+      const num = Number(value);
+      if (!Number.isNaN(num)) {
+        const newLatLng = { ...latLng, [prop]: num };
+        marker.setLatLng(newLatLng);
+        this.updateSignalRadiuses();
+        this.updatePolygons();
+      }
+      // getGeoProps(marker).name = value;
+    }
+    this.saveMarkers();
+    this.setState(state => {
+      const curMarker = { ...state.curMarker, [prop]: value };
+      return ({
+        curMarker
+      });
+    });
+  }
+
+  closeMarkerPopup = () => {
+    // this.markerPopup.closePopup();
+    this.map.closePopup();
+  }
+
 
   // getStateInfo = () => {
   //   const { dbms } = this.props;
@@ -443,47 +479,13 @@ export default class Map2 extends Component {
     let el = null;
     if (curMarker) {
       el = (
-        <>
-          <div className="mb-4">
-            <label
-              className="block text-gray-700 text-sm font-bold mb-2"
-              htmlFor="markerName"
-            >Name
-            </label>
-            <input
-              className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-              id="markerName"
-              type="text"
-              value={curMarker.name}
-            />
-          </div>
-          <div className="mb-4">
-            <label
-              className="block text-gray-700 text-sm font-bold mb-2"
-              htmlFor="markerLat"
-            >Latitude
-            </label>
-            <input
-              className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-              id="markerLat"
-              type="text"
-              value={curMarker.lat}
-            />
-          </div>
-          <div className="mb-4">
-            <label
-              className="block text-gray-700 text-sm font-bold mb-2"
-              htmlFor="markerLon"
-            >Longitude
-            </label>
-            <input
-              className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-              id="markerLon"
-              type="text"
-              value={curMarker.lng}
-            />
-          </div>
-        </>
+        <MarkerPopup
+          name={curMarker.name}
+          lat={curMarker.lat}
+          lng={curMarker.lng}
+          onChange={this.onMarkerChange}
+          onClose={this.closeMarkerPopup}
+        />
       );
     }
 
@@ -493,7 +495,7 @@ export default class Map2 extends Component {
           className="Map2 h-full"
           ref={map => (this.mapEl = map)}
         />
-        <div className="markerPopup" ref={markerPopup => (this.markerPopupContent = markerPopup)}>{el}</div>
+        <div ref={markerPopup => (this.markerPopupContent = markerPopup)}>{el}</div>
       </>
     );
   }

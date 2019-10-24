@@ -94,6 +94,7 @@ module.exports = {
             }
         ],
         'max-depth': ['error', 3],
-        'jsx-a11y/label-has-associated-control': 'off'
+        'jsx-a11y/label-has-associated-control': 'off',
+        'react/prop-types': 'off'
     }
 };
