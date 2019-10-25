@@ -190,7 +190,7 @@ export default class Map2 extends Component {
     getGeoProps(location2).markers = [];
     this.locationsGroup.addLayer(location2);
 
-    this.setLocationClickHandler(location2);
+    this.setLocationEventHandlers(location2);
 
 
     // this.locationsGroup.addLayer(event.layer);
@@ -224,7 +224,7 @@ export default class Map2 extends Component {
       // }));
       // const text = JSON.stringify(getGeoProps(loc), null, '  ');
       // loc.bindPopup(text);
-      this.setLocationClickHandler(loc);
+      this.setLocationEventHandlers(loc);
       // loc.setStyle({
       //   fillColor: ColorPalette[i % ColorPalette.length].color.background,
       //   fillOpacity: 0.5,
@@ -341,24 +341,59 @@ export default class Map2 extends Component {
     return R.uniq(R.flatten(allArrs));
   }
 
-  setLocationClickHandler = location => {
-    location.on('click', e => {
-      // const text = JSON.stringify(getGeoProps(location), null, '  ');
-      // location.bindPopup(text);
-      // console.log(e);
-      const text = JSON.stringify(getGeoProps(e.target), null, '  ');
-      console.log('geoProps', text);
-      // markerPopup.setLatLng(e.latlng).setContent(text).openOn(this.map);
-      this.setState({
-        curLocation: {
-          // lat: e.target.getLatLng().lat,
-          // lng: e.target.getLatLng().lng,
-          name: getGeoProps(e.target).name,
-          markers: getGeoProps(e.target).markers || []
-        }
-      });
-      this.locationPopup.setLatLng(e.latlng).setContent(this.locationPopupContent).openOn(this.map);
+  setLocationEventHandlers = location => {
+    location.on({
+      click: this.onLocationClick,
+      mouseover: this.highlightLocation,
+      mouseout: this.resetLocationHighlight,
     });
+  }
+
+  onLocationClick = e => {
+    // const text = JSON.stringify(getGeoProps(e.target), null, '  ');
+    // console.log('geoProps', text);
+    this.setState({
+      curLocation: {
+        name: getGeoProps(e.target).name,
+        markers: getGeoProps(e.target).markers || []
+      }
+    });
+    this.locationPopup.setLatLng(e.latlng).setContent(this.locationPopupContent).openOn(this.map);
+  }
+
+  highlightLocation = e => {
+    const layer = e.target;
+
+    layer.setStyle({
+      weight: 5,
+      color: 'green',
+      dashArray: '',
+      fillOpacity: 1
+    });
+
+    const { markers } = getGeoProps(layer);
+    this.markerGroup.eachLayer(marker => {
+      const { name } = getGeoProps(marker);
+      if (R.contains(name, markers)) {
+        marker.setIcon(getIcon('green'));
+        // marker.setStyle({
+        //   weight: 5,
+        //   color: 'green',
+        //   dashArray: '',
+        //   fillOpacity: 1
+        // });
+      }
+    });
+
+    // if (!L.Browser.ie && !L.Browser.opera && !L.Browser.edge) {
+    //   layer.bringToFront();
+    // }
+  }
+
+  resetLocationHighlight = e => {
+    this.updateLocationsView();
+    this.updateMarkersView();
+    // geojson.resetStyle(e.target);
   }
 
   onMarkersChange = () => {
