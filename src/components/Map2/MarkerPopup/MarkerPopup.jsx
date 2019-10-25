@@ -3,9 +3,6 @@ import './MarkerPopup.css';
 
 export default class MarkerPopup extends Component {
   state = {
-    name: null,
-    lat: null,
-    lng: null
   };
 
   componentDidMount = () => {
