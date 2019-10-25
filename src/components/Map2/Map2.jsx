@@ -26,6 +26,8 @@ import { getPolygons, getPolygons2 } from '../../utils/polygonGenerator';
 
 import { getBoundingRect, scaleRect } from '../../utils/polygonUtils';
 
+import { getIcon } from '../../utils/icons';
+
 import ColorPalette from '../../utils/colorPalette';
 
 console.log(L);
@@ -158,6 +160,7 @@ export default class Map2 extends Component {
       getGeoProps(marker2).name = shortid.generate();
       this.markerGroup.addLayer(marker2);
 
+
       marker2.on('pm:edit', () => this.onMarkerEdit());
 
       this.addMarkerOnClick(marker2);
@@ -256,6 +259,7 @@ export default class Map2 extends Component {
     }).filter(marker => !!marker);
     markers.forEach(marker => {
       this.addMarkerOnClick(marker);
+      // marker.setIcon(getIcon('red'));
       // const text = JSON.stringify(getGeoProps(marker), null, '  ');
       // marker.bindPopup(text);
       marker.on('pm:edit', () => this.onMarkerEdit());
