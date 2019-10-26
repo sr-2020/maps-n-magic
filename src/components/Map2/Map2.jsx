@@ -11,10 +11,6 @@ import 'leaflet/dist/leaflet.css';
 import '@geoman-io/leaflet-geoman-free';
 import '@geoman-io/leaflet-geoman-free/dist/leaflet-geoman.css';
 
-import {
-  Map, TileLayer, Marker, Popup
-} from 'react-leaflet';
-
 import MarkerPopup from './MarkerPopup';
 import LocationPopup from './LocationPopup';
 
@@ -31,104 +27,34 @@ import { getIcon } from '../../utils/icons';
 
 import ColorPalette from '../../utils/colorPalette';
 
+import { mapConfig, geomanConfig, defaultTileLayer } from './MapConfigurations';
+
+import DataService from './DataService';
+
 console.log(L);
 L.Icon.Default.imagePath = './images/leafletImages/';
 
-
 const getGeoProps = layer => layer.feature.properties;
-// const getGeoProps = layer => layer.pm._layers[0].feature.properties;
-
-//
-// const minZoom = 14;
-const maxZoom = 20;
-const minZoom = null;
-
-// const geojsonFeature = ({ lng, lat }) => ({
-//   type: 'Feature',
-//   properties: {
-//     name: 'Coors Field',
-//     amenity: 'Baseball Stadium',
-//     popupContent: 'This is where the Rockies play!',
-//     complexData: {
-//       type: 'Feature',
-//       properties: {
-//         name: 'Coors Field',
-//         amenity: 'Baseball Stadium',
-//         popupContent: 'This is where the Rockies play!'
-//       },
-//       geometry: {
-//         type: 'Point',
-//         coordinates: [lng, lat]
-//       }
-//     }
-//   },
-//   geometry: {
-//     type: 'Point',
-//     coordinates: [lng, lat]
-//   }
-// });
-
-
-// const myStyle = {
-//   // "color": "#ff7800",
-//   color: '#ff0000',
-//   weight: 5,
-//   opacity: 0.65
-// };
-
-// const myLines = ({ lng, lat }) => [{
-//   type: 'LineString',
-//   coordinates:
-//   [[lng, lat - 0.005],
-//     [lng - 0.01, lat - 0.005],
-//     [lng - 0.005, lat]]
-// // }, {
-// //   "type": "LineString",
-// //   "coordinates": [[-105, 40], [-110, 45], [-115, 55]]
-// }];
 
 export default class Map2 extends Component {
   state = {
-    lat: 54.928743,
-    lng: 36.871746,
-    zoom: 17,
+    dataService: new DataService(),
     curMarker: null,
     curLocation: null
-    // zoom: 16,
   }
 
   componentDidMount = () => {
     console.log('Map2 mounted');
-    const { lat, lng, zoom } = this.state;
-    // this.geojsonFeature = geojsonFeature(this.state);
+    const { center, zoom } = mapConfig;
+    const { urlTemplate, options } = defaultTileLayer;
     this.map = L.map(this.mapEl, {
-      center: [lat, lng],
+      center,
       zoom,
-      // minZoom
     });
-    // .setView([lat, lng], zoom);
 
-    // L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-    //   attribution: '&amp;copy <a href="http://osm.org/copyright">OpenStreetMap</a> contributors',
-    //   maxZoom,
-    //   // id: 'mapbox.streets',
-    //   // accessToken: 'your.mapbox.access.token'
-    // }).addTo(this.map);
+    L.tileLayer(urlTemplate, options).addTo(this.map);
 
-    L.tileLayer('http://{s}.google.com/vt/lyrs=s&x={x}&y={y}&z={z}', {
-      maxZoom,
-      opacity: 0.4,
-      subdomains: ['mt0', 'mt1', 'mt2', 'mt3']
-    }).addTo(this.map);
-
-    this.map.pm.addControls({
-      position: 'topleft',
-      drawCircleMarker: false,
-      drawPolyline: false,
-      cutPolygon: false,
-      drawCircle: false,
-      drawRectangle: false
-    });
+    this.map.pm.addControls(geomanConfig);
 
     this.fillMap();
 
@@ -200,6 +126,7 @@ export default class Map2 extends Component {
   }
 
   fillMap = () => {
+    const { dataService } = this.state;
     const baseLine = L.polyline(baseLLs, {
       color: 'green',
       pmIgnore: true
@@ -209,13 +136,15 @@ export default class Map2 extends Component {
       pmIgnore: true
     });
 
-    const beacons = this.loadMarkers();
+    // const beacons = this.loadMarkers();
+    const beacons = dataService.getBeacons();
 
     this.markerPopup = L.popup();
     this.locationPopup = L.popup();
     const markers = this.getMarkers(beacons);
 
-    const locationsData = this.loadLocations();
+    // const locationsData = this.loadLocations();
+    const locationsData = dataService.getLocations();
 
     const locations = locationsData.map(loc => L.geoJSON(loc).getLayers()[0]);
     locations.forEach((loc, i) => {
@@ -408,23 +337,15 @@ export default class Map2 extends Component {
   };
 
   saveMarkers = () => {
-    localStorage.setItem('markers', JSON.stringify(this.markerGroup.toGeoJSON().features));
+    // eslint-disable-next-line react/destructuring-assignment
+    this.state.dataService.setBeacons(this.markerGroup.toGeoJSON().features);
     // console.log(this.markerGroup.toGeoJSON().features);
     // console.log('beacons', getBeacons());
   }
 
-  loadMarkers = () => {
-    const markers = localStorage.getItem('markers');
-    return markers ? JSON.parse(markers) : getBeacons();
-  }
-
   saveLocations = () => {
-    localStorage.setItem('locations', JSON.stringify(this.locationsGroup.toGeoJSON().features));
-  }
-
-  loadLocations = () => {
-    const locations = localStorage.getItem('locations');
-    return locations ? JSON.parse(locations) : [];
+    // eslint-disable-next-line react/destructuring-assignment
+    this.state.dataService.setLocations(this.locationsGroup.toGeoJSON().features);
   }
 
   updatePolygons = () => {
