@@ -35,12 +35,26 @@ export default class LocationPopup extends Component {
 
   updateComponentState = () => {
     const {
-      attachedMarkers, allBeacons
+      attachedMarkers, allBeacons, allLocations
     } = this.props;
 
+    const marker2loc = allLocations.reduce((acc, loc) => {
+      loc.markers.forEach(marker => (acc[marker] = loc.name));
+      return acc;
+    }, {});
+    allBeacons.forEach(beacon => (beacon.location = marker2loc[beacon.id]));
     const { attached, unattached } = R.groupBy(beacon => (R.contains(beacon.id, attachedMarkers) ? 'attached' : 'unattached'), allBeacons);
+    const comparator = R.comparator((a, b) => {
+      if (!a.location && b.location) {
+        return true;
+      }
+      if (a.location && !b.location) {
+        return false;
+      }
+      return a.name.toLowerCase() < b.name.toLowerCase();
+    });
+    const unattached2 = R.sort(comparator, unattached || []);
     const sort = R.sortBy(R.pipe(R.prop('name'), R.toLower));
-    const unattached2 = sort(unattached || []);
     const attached2 = sort(attached || []);
     this.setState({
       unattachedList: unattached2,
@@ -101,6 +115,13 @@ export default class LocationPopup extends Component {
     }
   }
 
+  _getMarkerLabel = marker => {
+    if (marker.location) {
+      return `${marker.name} (${marker.location})`;
+    }
+    return marker.name;
+  }
+
   // eslint-disable-next-line max-lines-per-function
   render() {
     const {
@@ -146,7 +167,7 @@ export default class LocationPopup extends Component {
               value={selectedAddMarker}
               className="marker-select shadow border rounded mr-2 py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
             >{
-                unattachedList.map(marker => <option value={marker.id}>{marker.name}</option>)
+                unattachedList.map(marker => <option value={marker.id}>{this._getMarkerLabel(marker)}</option>)
               }
             </select>
             <button

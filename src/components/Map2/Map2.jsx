@@ -400,10 +400,14 @@ export default class Map2 extends Component {
   }
 
   removeMarkerFromLocations = markerId => {
+    const { dataService } = this.state;
     this.locationsGroup.eachLayer(loc2 => {
       const props = loc2.options;
       if (R.contains(markerId, props.markers)) {
         props.markers = props.markers.filter(el => el !== markerId);
+        dataService.putLocation(props.id, {
+          markers: R.clone(props.markers)
+        });
       }
     });
   }
@@ -452,12 +456,15 @@ export default class Map2 extends Component {
 
     let el2 = null;
     if (curLocation) {
-      const allBeacons = dataService.getBeacons();
+      const allBeacons = R.clone(dataService.getBeacons());
+      const allLocations = R.clone(dataService.getLocations());
       el2 = (
         <LocationPopup
           name={curLocation.name}
+          id={curLocation.id}
           attachedMarkers={curLocation.markers}
           allBeacons={allBeacons}
+          allLocations={allLocations}
           onChange={this.onLocationChange}
           onLocMarkerChange={this.onLocMarkerChange}
           onClose={this.closeMarkerPopup}
