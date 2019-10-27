@@ -4,7 +4,8 @@ import './LocationPopup.css';
 
 export default class LocationPopup extends Component {
   state = {
-    markerList: [],
+    unattachedList: [],
+    attachedList: [],
     selectedAddMarker: null,
     selectedRemoveMarker: null,
   };
@@ -34,15 +35,18 @@ export default class LocationPopup extends Component {
 
   updateComponentState = () => {
     const {
-      attachedMarkers, allMarkers
+      attachedMarkers, allBeacons
     } = this.props;
-    const diff = R.difference(allMarkers, attachedMarkers);
-    const diff2 = R.sortBy(R.toLower, diff);
-    const attachedMarkers2 = R.sortBy(R.toLower, attachedMarkers);
+
+    const { attached, unattached } = R.groupBy(beacon => (R.contains(beacon.id, attachedMarkers) ? 'attached' : 'unattached'), allBeacons);
+    const sort = R.sortBy(R.pipe(R.prop('name'), R.toLower));
+    const unattached2 = sort(unattached || []);
+    const attached2 = sort(attached || []);
     this.setState({
-      markerList: diff2,
-      selectedAddMarker: diff2.length > 0 ? diff2[0] : null,
-      selectedRemoveMarker: attachedMarkers2.length > 0 ? attachedMarkers2[0] : null,
+      unattachedList: unattached2,
+      attachedList: attached2,
+      selectedAddMarker: unattached2.length > 0 ? unattached2[0].id : null,
+      selectedRemoveMarker: attached2.length > 0 ? attached2[0].id : null,
     });
   }
 
@@ -57,9 +61,8 @@ export default class LocationPopup extends Component {
       return;
     }
     onLocMarkerChange({
-      locName: name,
       action: 'remove',
-      markerName: selectedRemoveMarker
+      markerId: selectedRemoveMarker
     });
   }
 
@@ -74,21 +77,20 @@ export default class LocationPopup extends Component {
       return;
     }
     onLocMarkerChange({
-      locName: name,
       action: 'add',
-      markerName: selectedAddMarker
+      markerId: selectedAddMarker
     });
   }
 
   onSelectedAddChange = e => {
     this.setState({
-      selectedAddMarker: e.target.value
+      selectedAddMarker: Number(e.target.value)
     });
   }
 
   onSelectedRemoveChange = e => {
     this.setState({
-      selectedRemoveMarker: e.target.value
+      selectedRemoveMarker: Number(e.target.value)
     });
   }
 
@@ -102,12 +104,11 @@ export default class LocationPopup extends Component {
   // eslint-disable-next-line max-lines-per-function
   render() {
     const {
-      markerList, selectedAddMarker, selectedRemoveMarker
+      unattachedList, attachedList, selectedAddMarker, selectedRemoveMarker
     } = this.state;
     const {
-      name, onChange, attachedMarkers
+      name, onChange
     } = this.props;
-    const attachedMarkers2 = R.sortBy(R.toLower, attachedMarkers);
     return (
       <div className="LocationPopup">
         <div className="mb-4">
@@ -133,10 +134,10 @@ export default class LocationPopup extends Component {
           </label>
           <div className="mb-2">
             {
-              attachedMarkers2.map(markerName => <span className="mr-2">{markerName}</span>)
+              attachedList.map(marker => <span className="mr-2">{marker.name}</span>)
             }
             {
-              attachedMarkers2.length === 0 && <span className="font-bold">No markers</span>
+              attachedList.length === 0 && <span className="font-bold">No markers</span>
             }
           </div>
           <div className="mb-2">
@@ -145,7 +146,7 @@ export default class LocationPopup extends Component {
               value={selectedAddMarker}
               className="marker-select shadow border rounded mr-2 py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
             >{
-                markerList.map(marker => <option>{marker}</option>)
+                unattachedList.map(marker => <option value={marker.id}>{marker.name}</option>)
               }
             </select>
             <button
@@ -161,7 +162,7 @@ export default class LocationPopup extends Component {
               value={selectedRemoveMarker}
               className="marker-select shadow border rounded mr-2 py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
             >{
-                attachedMarkers2.map(marker => <option>{marker}</option>)
+                attachedList.map(marker => <option value={marker.id}>{marker.name}</option>)
               }
             </select>
             <button
