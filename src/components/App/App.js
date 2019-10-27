@@ -90,7 +90,16 @@ export default class App extends Component {
     // console.log()
     this.audioService.fromJson(data);
     return ({
-      // appState: this.state,
+      appState: R.pick([
+        'svgWidth',
+        'svgHeight',
+        'imagePositionX',
+        'imagePositionY',
+        'imageOpacity',
+        'imageScale',
+        'beacons',
+        'mainPolygon',
+        'imageUrl'], this.state),
       audioData: data,
       beacons: dataService.getBeacons(),
       locations: dataService.getLocations()
