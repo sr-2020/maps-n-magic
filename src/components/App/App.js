@@ -11,7 +11,7 @@ import {
 } from 'react-router-dom';
 
 import AudioService from '../../services/audioService';
-
+import DataService from '../../services/DataService';
 
 // import getBeacons from '../../utils/gpxExperiment';
 
@@ -63,10 +63,12 @@ if (database) {
 
 export default class App extends Component {
   state = {
+    dataService: new DataService(),
     ...initialState
   };
 
   audioService = new AudioService();
+
 
   componentDidMount() {
     // initSound(() => {
@@ -84,36 +86,39 @@ export default class App extends Component {
   prepareDataForJson = () => {
     // console.log('sdfs');
     const data = this.audioService.toJson();
+    const { dataService } = this.state;
     // console.log()
     this.audioService.fromJson(data);
     return ({
-      appState: this.state,
-      audioData: data
+      // appState: this.state,
+      audioData: data,
+      beacons: dataService.getBeacons(),
+      locations: dataService.getLocations()
     });
   }
 
-  onStateChange = prop => (e) => {
+  onStateChange = prop => e => {
     // console.log('prop');
     this.setState({
       [prop]: e.target.value
     });
   }
 
-  setBeacons = (beacons) => {
+  setBeacons = beacons => {
     // console.log('prop');
     this.setState({
       beacons
     });
   }
 
-  setMainPolygon = (mainPolygon) => {
+  setMainPolygon = mainPolygon => {
     // console.log('prop');
     this.setState({
       mainPolygon
     });
   }
 
-  setImageUrl = (imageUrl) => {
+  setImageUrl = imageUrl => {
     // console.log('prop');
     this.setState({
       imageUrl
@@ -126,7 +131,7 @@ export default class App extends Component {
     json2File(this.prepareDataForJson(), makeFileName('SR_acoustic_poc', 'json', new Date()));
   };
 
-  uploadDatabaseFile = (evt) => {
+  uploadDatabaseFile = evt => {
     const input = evt.target.querySelector('input');
     if (input) {
       input.value = '';
@@ -134,17 +139,25 @@ export default class App extends Component {
     }
   };
 
-  onFileSelected = (evt) => {
-    readJsonFile(evt).then((database2) => {
+  onFileSelected = evt => {
+    readJsonFile(evt).then(database2 => {
       console.log(database2.appState);
-      this.setState(database2.appState);
+      this.setState({
+        dataService: new DataService({
+          beacons: database2.beacons,
+          locations: database2.locations,
+        })
+      });
+      // this.setState(database2.appState);
     });
   };
 
 
+  // eslint-disable-next-line max-lines-per-function
   render() {
     const {
-      imagePositionX, imagePositionY, imageOpacity, imageScale, svgWidth, svgHeight, beacons, mainPolygon, imageUrl
+      imagePositionX, imagePositionY, imageOpacity, imageScale, svgWidth, svgHeight, beacons, mainPolygon, imageUrl,
+      dataService
     } = this.state;
 
     return (
@@ -250,10 +263,10 @@ export default class App extends Component {
                   />
                 </Route>
                 <Route path="/map2">
-                  <Map2/>
+                  <Map2 dataService={dataService} />
                 </Route>
 
-                <Route render={() => <Redirect to="/mapEditor" />} />
+                <Route render={() => <Redirect to="/map2" />} />
               </Switch>
             </main>
           </div>

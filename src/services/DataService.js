@@ -1,15 +1,29 @@
 import * as R from 'ramda';
-import { getBeacons, getBeacons2 } from '../../data/beacons';
+import { getBeacons, getBeacons2 } from '../data/beacons';
 
 
 export default class DataService {
-  constructor() {
-    const beacons = localStorage.getItem('beacons');
-    this.beacons = beacons ? JSON.parse(beacons) : getBeacons2();
+  constructor({ beacons, locations } = {}) {
+    this.beacons = beacons || this._getLSBeacons() || getBeacons2();
     this.maxBeaconId = R.reduce(R.max, 1, this.beacons.map(R.prop('id')));
-    const locations = localStorage.getItem('locations');
-    this.locations = locations ? JSON.parse(locations) : [];
+    this.locations = locations || this._getLSLocations() || [];
     this.maxLocationId = R.reduce(R.max, 1, this.locations.map(R.prop('id')));
+    if (beacons) {
+      this._saveBeacons();
+    }
+    if (locations) {
+      this._saveLocations();
+    }
+  }
+
+  _getLSBeacons = function () {
+    const beacons = localStorage.getItem('beacons');
+    return beacons ? JSON.parse(beacons) : null;
+  }
+
+  _getLSLocations = function () {
+    const locations = localStorage.getItem('locations');
+    return locations ? JSON.parse(locations) : null;
   }
 
   getBeacons = function () {

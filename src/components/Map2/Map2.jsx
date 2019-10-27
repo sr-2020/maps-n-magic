@@ -26,7 +26,13 @@ import ColorPalette from '../../utils/colorPalette';
 
 import { mapConfig, geomanConfig, defaultTileLayer } from './MapConfigurations';
 
-import DataService from './DataService';
+// import playerTracks from '../../data/initialPlayerTracks';
+
+// R.values(playerTracks).forEach((track, i) => {
+//   L.polyline(track, {
+//     color: ColorPalette[i % ColorPalette.length].color.border,
+//   }).addTo(this.map);
+// });
 
 console.log(L);
 L.Icon.Default.imagePath = './images/leafletImages/';
@@ -35,7 +41,6 @@ const getGeoProps = layer => layer.feature.properties;
 
 export default class Map2 extends Component {
   state = {
-    dataService: new DataService(),
     curMarker: null,
     curLocation: null
   }
@@ -51,12 +56,26 @@ export default class Map2 extends Component {
     });
     L.tileLayer(urlTemplate, options).addTo(this.map);
     this.map.pm.addControls(geomanConfig);
-    this.fillMap();
+    this.initMapBackbone();
+    this.populateMapData();
 
     this.map.on('pm:create', this.onCreateLayer);
     this.map.on('pm:remove', this.onRemoveLayer);
 
     // this.map.pm.toggleGlobalDragMode();
+  }
+
+  componentDidUpdate = (prevProps, prevState) => {
+    // eslint-disable-next-line react/destructuring-assignment
+    if (prevProps.dataService !== this.props.dataService) {
+      this.clearMapData();
+      this.populateMapData();
+    }
+    // console.log('Map2 did update');
+  }
+
+  componentWillUnmount = () => {
+    console.log('Map2 will unmount');
   }
 
   onCreateLayer = event => {
@@ -68,7 +87,7 @@ export default class Map2 extends Component {
   }
 
   onCreateMarker = marker => {
-    const { dataService } = this.state;
+    const { dataService } = this.props;
     const { id, name } = dataService.postBeacon(marker.getLatLng());
     L.setOptions(marker, { id, name });
     this.markerGroup.addLayer(marker);
@@ -79,7 +98,7 @@ export default class Map2 extends Component {
   }
 
   onCreateLocation = location => {
-    const { dataService } = this.state;
+    const { dataService } = this.props;
     const { id, name, markers } = dataService.postLocation({
       latlngs: location.getLatLngs()
     });
@@ -90,7 +109,7 @@ export default class Map2 extends Component {
   }
 
   onRemoveLayer = event => {
-    const { dataService } = this.state;
+    const { dataService } = this.props;
     if (event.layer instanceof L.Marker) {
       const markerId = event.layer.options.id;
       this.removeMarkerFromLocations(markerId);
@@ -107,8 +126,9 @@ export default class Map2 extends Component {
     this.closeMarkerPopup();
   }
 
-  fillMap = () => {
-    const { dataService } = this.state;
+  // eslint-disable-next-line max-lines-per-function
+  initMapBackbone = () => {
+    const { dataService } = this.props;
     const baseLine = L.polyline(baseLLs, {
       color: 'green',
       pmIgnore: true
@@ -118,34 +138,15 @@ export default class Map2 extends Component {
       pmIgnore: true
     });
 
-    const beacons2 = dataService.getBeacons();
-
     this.markerPopup = L.popup();
     this.locationPopup = L.popup();
-
-    const markers = beacons2.map(({
-      lat, lng, name, id
-    }) => L.marker({ lat, lng }, { id, name }));
-    markers.forEach(marker => {
-      this.setMarkerEventHandlers(marker);
-    });
-
-    const locationsData = dataService.getLocations();
-
-    const locations = locationsData.map(({
-      // eslint-disable-next-line no-shadow
-      latlngs, name, id, markers
-    }) => L.polygon(latlngs, { id, name, markers }));
-    locations.forEach((loc, i) => {
-      this.setLocationEventHandlers(loc);
-    });
 
     const baseContourGroup = L.layerGroup([baseLine, baseClosedLine]);
     this.polygonsGroup = L.layerGroup([]);
     this.massCentersGroup = L.layerGroup([]);
     this.signalRadiusesGroup = L.layerGroup([]);
-    this.markerGroup = L.layerGroup(markers);
-    this.locationsGroup = L.layerGroup(locations);
+    this.markerGroup = L.layerGroup([]);
+    this.locationsGroup = L.layerGroup([]);
 
     baseContourGroup.addTo(this.map);
     // polygonsGroup.addTo(this.map);
@@ -164,10 +165,39 @@ export default class Map2 extends Component {
     };
 
     L.control.layers(null, overlayMaps).addTo(this.map);
+  }
+
+  populateMapData = () => {
+    const { dataService } = this.props;
+    const beacons2 = dataService.getBeacons();
+
+    const markers = beacons2.map(({
+      lat, lng, name, id
+    }) => L.marker({ lat, lng }, { id, name }));
+    markers.forEach(marker => {
+      this.setMarkerEventHandlers(marker);
+      this.markerGroup.addLayer(marker);
+    });
+
+    const locationsData = dataService.getLocations();
+
+    const locations = locationsData.map(({
+      // eslint-disable-next-line no-shadow
+      latlngs, name, id, markers
+    }) => L.polygon(latlngs, { id, name, markers }));
+    locations.forEach((loc, i) => {
+      this.setLocationEventHandlers(loc);
+      this.locationsGroup.addLayer(loc);
+    });
 
     this.updateMarkersView();
     this.updateLocationsView();
     this.onMarkersChange();
+  }
+
+  clearMapData = () => {
+    this.markerGroup.clearLayers();
+    this.locationsGroup.clearLayers();
   }
 
   setMarkerEventHandlers = marker => {
@@ -188,7 +218,7 @@ export default class Map2 extends Component {
   }
 
   updateMarkersView = () => {
-    const { dataService } = this.state;
+    const { dataService } = this.props;
     const attachedMarkers = dataService.getAttachedBeaconIds();
     this.markerGroup.eachLayer(marker => {
       const { id } = marker.options;
@@ -229,11 +259,12 @@ export default class Map2 extends Component {
   }
 
   onLocationEdit = e => {
-    const { dataService } = this.state;
+    const { dataService } = this.props;
     const location = e.target;
     dataService.putLocation(location.options.id, {
       latlngs: location.getLatLngs()
     });
+    this.closeMarkerPopup();
   }
 
   highlightLocation = e => {
@@ -266,7 +297,7 @@ export default class Map2 extends Component {
   }
 
   onMarkerEdit = e => {
-    const { dataService } = this.state;
+    const { dataService } = this.props;
     const marker = e.target;
     dataService.putBeacon(marker.options.id, marker.getLatLng());
     this.onMarkersChange();
@@ -327,17 +358,9 @@ export default class Map2 extends Component {
     [bRect.top, bRect.left],
   ];
 
-  componentDidUpdate = () => {
-    console.log('Map2 did update');
-  }
-
-  componentWillUnmount = () => {
-    console.log('Map2 will unmount');
-  }
-
   onMarkerChange = prop => e => {
     const { value } = e.target;
-    const { dataService } = this.state;
+    const { dataService } = this.props;
     // eslint-disable-next-line react/destructuring-assignment
     const { id, name } = this.state.curMarker;
     const marker = this.markerGroup.getLayers().find(marker2 => marker2.options.id === id);
@@ -370,7 +393,7 @@ export default class Map2 extends Component {
   }
 
   onLocMarkerChange = ({ action, markerId }) => {
-    const { dataService } = this.state;
+    const { dataService } = this.props;
     // eslint-disable-next-line react/destructuring-assignment
     const locId = this.state.curLocation.id;
     this.removeMarkerFromLocations(markerId);
@@ -400,7 +423,7 @@ export default class Map2 extends Component {
   }
 
   removeMarkerFromLocations = markerId => {
-    const { dataService } = this.state;
+    const { dataService } = this.props;
     this.locationsGroup.eachLayer(loc2 => {
       const props = loc2.options;
       if (R.contains(markerId, props.markers)) {
@@ -414,7 +437,7 @@ export default class Map2 extends Component {
 
   onLocationChange = prop => e => {
     const { value } = e.target;
-    const { dataService } = this.state;
+    const { dataService } = this.props;
     // eslint-disable-next-line react/destructuring-assignment
     const { name, id } = this.state.curLocation;
     const location = this.locationsGroup.getLayers().find(loc => loc.options.id === id);
@@ -439,8 +462,11 @@ export default class Map2 extends Component {
   // eslint-disable-next-line max-lines-per-function
   render() {
     const {
-      curMarker, curLocation, dataService
+      curMarker, curLocation
     } = this.state;
+    const {
+      dataService
+    } = this.props;
     let el = null;
     if (curMarker) {
       el = (
