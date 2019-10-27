@@ -1,6 +1,10 @@
 import * as R from 'ramda';
 import { getBeacons, getBeacons2 } from '../data/beacons';
+import { getBoundingRect, scaleRect } from '../utils/polygonUtils';
 
+import { baseClosedLLs, baseLLs, baseCommonLLs } from '../data/baseContours';
+
+import { getPolygons2 } from '../utils/polygonGenerator';
 
 export default class DataService {
   constructor({ beacons, locations } = {}) {
@@ -99,4 +103,30 @@ export default class DataService {
     const allArrs = this.locations.map(loc => loc.markers);
     return R.uniq(R.flatten(allArrs));
   }
+
+  getVoronoiPolygonData = () => {
+    const bRect1 = (getBoundingRect(baseCommonLLs));
+    const bRect = scaleRect(bRect1, 1.1);
+    const boundingPolylineData = this._boundingRect2Polyline(bRect);
+
+    const plainPoints = this.getBeacons().map(beacon => ({
+      x: beacon.lat,
+      y: beacon.lng
+    }));
+    // console.log('plainPoints', plainPoints);
+    const polygonData = getPolygons2(plainPoints,
+      [bRect.bottom, bRect.left, bRect.top, bRect.right],
+      // , null);
+      baseCommonLLs);
+
+    return { boundingPolylineData, polygonData };
+  }
+
+  _boundingRect2Polyline = bRect => [
+    [bRect.top, bRect.left],
+    [bRect.top, bRect.right],
+    [bRect.bottom, bRect.right],
+    [bRect.bottom, bRect.left],
+    [bRect.top, bRect.left],
+  ];
 }

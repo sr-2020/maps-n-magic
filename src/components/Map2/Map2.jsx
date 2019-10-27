@@ -16,9 +16,6 @@ import LocationPopup from './LocationPopup';
 
 import { baseClosedLLs, baseLLs, baseCommonLLs } from '../../data/baseContours';
 
-import { getPolygons, getPolygons2 } from '../../utils/polygonGenerator';
-
-import { getBoundingRect, scaleRect } from '../../utils/polygonUtils';
 
 import { getIcon } from '../../utils/icons';
 
@@ -293,7 +290,7 @@ export default class Map2 extends Component {
 
   onMarkersChange = () => {
     this.updateSignalRadiuses();
-    this.updatePolygons();
+    this.updateVoronoiPolygons();
   }
 
   onMarkerEdit = e => {
@@ -305,24 +302,13 @@ export default class Map2 extends Component {
     console.log('pm:edit', e.target.getLatLng());
   };
 
-  updatePolygons = () => {
+  updateVoronoiPolygons = () => {
+    const { dataService } = this.props;
+    const { boundingPolylineData, polygonData } = dataService.getVoronoiPolygonData();
     this.massCentersGroup.clearLayers();
     this.polygonsGroup.clearLayers();
-    const bRect1 = (getBoundingRect(baseCommonLLs));
-    const bRect = scaleRect(bRect1, 1.1);
-    // console.log('baseCommonLLs', baseCommonLLs, bRect1, bRect);
 
-    const boundingPolyline = L.polyline(this.boundingRect2Polyline(bRect), { color: 'blue' });
-
-    const plainPoints = this.markerGroup.getLayers().map(layer => ({
-      x: layer.getLatLng().lat,
-      y: layer.getLatLng().lng
-    }));
-    // console.log('plainPoints', plainPoints);
-    const polygonData = getPolygons2(plainPoints,
-      [bRect.bottom, bRect.left, bRect.top, bRect.right],
-      // , null);
-      baseCommonLLs);
+    const boundingPolyline = L.polyline(boundingPolylineData, { color: 'blue' });
 
     const polygons = polygonData.clippedPolygons.map((polygon, i) => L.polygon(polygon, {
       fillColor: ColorPalette[i % ColorPalette.length].color.background,
@@ -341,22 +327,18 @@ export default class Map2 extends Component {
   }
 
   updateSignalRadiuses = () => {
+    const { dataService } = this.props;
     this.signalRadiusesGroup.clearLayers();
-    this.markerGroup.eachLayer(layer => {
-      this.signalRadiusesGroup.addLayer(L.circle(layer.getLatLng(), {
+    dataService.getBeacons().forEach(beacon => {
+      this.signalRadiusesGroup.addLayer(L.circle({
+        lat: beacon.lat,
+        lng: beacon.lng,
+      }, {
         radius: 13,
         pmIgnore: true
       }));
     });
   }
-
-  boundingRect2Polyline = bRect => [
-    [bRect.top, bRect.left],
-    [bRect.top, bRect.right],
-    [bRect.bottom, bRect.right],
-    [bRect.bottom, bRect.left],
-    [bRect.top, bRect.left],
-  ];
 
   onMarkerChange = prop => e => {
     const { value } = e.target;
