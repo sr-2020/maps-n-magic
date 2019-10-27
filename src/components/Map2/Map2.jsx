@@ -47,43 +47,22 @@ export default class Map2 extends Component {
     console.log('Map2 mounted');
     const { center, zoom } = mapConfig;
     const { urlTemplate, options } = defaultTileLayer;
+
     this.map = L.map(this.mapEl, {
       center,
       zoom,
     });
-
     L.tileLayer(urlTemplate, options).addTo(this.map);
-
     this.map.pm.addControls(geomanConfig);
-
     this.fillMap();
 
-    this.map.on('pm:create', this.onCreate);
-
-    this.map.on('pm:remove', event => {
-      if (event.layer instanceof L.Marker) {
-        const markerName = getGeoProps(event.layer).name;
-        this.removeMarkerFromLocations(markerName);
-        this.updateLocationsView();
-        this.markerGroup.removeLayer(event.layer);
-        this.onMarkersChange();
-        // this.updateSignalRadiuses();
-        // this.updatePolygons();
-      } else {
-        this.locationsGroup.removeLayer(event.layer);
-        this.saveLocations();
-        this.updateLocationsView();
-        this.updateMarkersView();
-        // this.locationsGroup.addLayer(event.layer);
-      }
-      // console.log('pm:remove');
-    });
+    this.map.on('pm:create', this.onCreateLayer);
+    this.map.on('pm:remove', this.onRemoveLayer);
 
     // this.map.pm.toggleGlobalDragMode();
-    // this.getStateInfo();
   }
 
-  onCreate = event => {
+  onCreateLayer = event => {
     if (event.layer instanceof L.Marker) {
       this.onCreateMarker(event.layer);
     } else {
@@ -92,17 +71,12 @@ export default class Map2 extends Component {
   }
 
   onCreateMarker = marker => {
-    const geo = marker.toGeoJSON();
-    this.map.removeLayer(marker);
+    const { dataService } = this.state;
+    const { id, name } = dataService.postBeacon(marker.getLatLng());
+    L.setOptions(marker, { id, name });
+    this.markerGroup.addLayer(marker);
 
-    const marker2 = L.geoJSON(geo).getLayers()[0];
-    getGeoProps(marker2).name = shortid.generate();
-    this.markerGroup.addLayer(marker2);
-
-
-    marker2.on('pm:edit', () => this.onMarkerEdit());
-
-    this.setMarkerClickHandler(marker2);
+    this.setMarkerEventHandlers(marker);
     this.onMarkersChange();
     this.updateMarkersView();
   }
@@ -125,6 +99,27 @@ export default class Map2 extends Component {
     this.updateLocationsView();
   }
 
+  onRemoveLayer = event => {
+    const { dataService } = this.state;
+    if (event.layer instanceof L.Marker) {
+      // const markerName = getGeoProps(event.layer).name;
+      const markerName = event.layer.options.name;
+      this.removeMarkerFromLocations(markerName);
+      this.updateLocationsView();
+      this.markerGroup.removeLayer(event.layer);
+      this.onMarkersChange();
+      this.closeMarkerPopup();
+      dataService.deleteBeacon(event.layer.options.id);
+    } else {
+      this.locationsGroup.removeLayer(event.layer);
+      this.saveLocations();
+      this.updateLocationsView();
+      this.updateMarkersView();
+      // this.locationsGroup.addLayer(event.layer);
+    }
+    // console.log('pm:remove');
+  }
+
   fillMap = () => {
     const { dataService } = this.state;
     const baseLine = L.polyline(baseLLs, {
@@ -138,10 +133,13 @@ export default class Map2 extends Component {
 
     // const beacons = this.loadMarkers();
     const beacons = dataService.getBeacons();
+    const beacons2 = dataService.getBeacons2();
 
     this.markerPopup = L.popup();
     this.locationPopup = L.popup();
-    const markers = this.getMarkers(beacons);
+    // const markers = this.getMarkers(beacons);
+    const markers = this.getMarkers2(beacons2);
+    // const markers = [];
 
     // const locationsData = this.loadLocations();
     const locationsData = dataService.getLocations();
@@ -174,7 +172,7 @@ export default class Map2 extends Component {
     // massCentersGroup.addTo(this.map);
     // this.signalRadiusesGroup.addTo(this.map);
     this.markerGroup.addTo(this.map);
-    this.locationsGroup.addTo(this.map);
+    // this.locationsGroup.addTo(this.map);
 
     const overlayMaps = {
       'Base contour': baseContourGroup,
@@ -187,27 +185,10 @@ export default class Map2 extends Component {
 
     L.control.layers(null, overlayMaps).addTo(this.map);
 
-    this.updateSignalRadiuses();
-    this.updatePolygons();
     this.updateMarkersView();
     this.updateLocationsView();
-    // this.onMarkersChange();
+    this.onMarkersChange();
   }
-
-
-  // const popup = L.popup();
-  // // .setLatLng([lat, lng])
-  // // .setContent("I am a standalone popup.")
-  // // .openOn(this.map);
-
-  // function onMapClick(e) {
-  //   popup
-  //     .setLatLng(e.latlng)
-  //     .setContent(`You clicked the map at ${e.latlng.toString()}`)
-  //     .openOn(this.map);
-  // }
-
-  // this.map.on('click', onMapClick.bind(this));
 
   getMarkers = beacons => {
     const markers = beacons.map(beacon => {
@@ -218,36 +199,54 @@ export default class Map2 extends Component {
       }
     }).filter(marker => !!marker);
     markers.forEach(marker => {
-      this.setMarkerClickHandler(marker);
+      this.setMarkerEventHandlers(marker);
       // marker.setIcon(getIcon('red'));
       // const text = JSON.stringify(getGeoProps(marker), null, '  ');
       // marker.bindPopup(text);
-      marker.on('pm:edit', () => this.onMarkerEdit());
     });
     return markers;
   }
 
-  setMarkerClickHandler = marker => {
-    marker.on('click', e => {
-      console.log(e);
-      const text = JSON.stringify(getGeoProps(e.target), null, '  ');
-      console.log('geoProps', text);
-      // markerPopup.setLatLng(e.latlng).setContent(text).openOn(this.map);
-      this.setState({
-        curMarker: {
-          lat: e.target.getLatLng().lat,
-          lng: e.target.getLatLng().lng,
-          name: getGeoProps(e.target).name
-        }
-      });
-      this.markerPopup.setLatLng(e.latlng).setContent(this.markerPopupContent).openOn(this.map);
+  getMarkers2 = beacons => {
+    const markers = beacons.map(({
+      lat, lng, name, id
+    }) => L.marker({ lat, lng }, { id, name }));
+    markers.forEach(marker => {
+      this.setMarkerEventHandlers(marker);
+      // marker.setIcon(getIcon('red'));
+      // const text = JSON.stringify(getGeoProps(marker), null, '  ');
+      // marker.bindPopup(text);
+    });
+    return markers;
+  }
+
+  setMarkerEventHandlers = marker => {
+    marker.on({
+      click: e => {
+        // console.log(e);
+        // const text = JSON.stringify(getGeoProps(e.target), null, '  ');
+        // console.log('geoProps', text);
+        // markerPopup.setLatLng(e.latlng).setContent(text).openOn(this.map);
+        this.setState({
+          curMarker: {
+            lat: e.target.getLatLng().lat,
+            lng: e.target.getLatLng().lng,
+            // name: getGeoProps(e.target).name
+            name: e.target.options.name,
+            id: e.target.options.id
+          }
+        });
+        this.markerPopup.setLatLng(e.latlng).setContent(this.markerPopupContent).openOn(this.map);
+      },
+      'pm:edit': this.onMarkerEdit
     });
   }
 
   updateMarkersView = () => {
     const attachedMarkers = this.getAttachedMarkerNames();
     this.markerGroup.eachLayer(marker => {
-      const { name } = getGeoProps(marker);
+      // const { name } = getGeoProps(marker);
+      const { name } = marker.options;
       marker.setIcon(getIcon(R.contains(name, attachedMarkers) ? 'blue' : 'red'));
     });
   }
@@ -263,7 +262,8 @@ export default class Map2 extends Component {
     });
   }
 
-  getMarkerNames = () => R.uniq(this.markerGroup.getLayers().map(marker => getGeoProps(marker).name))
+  // getMarkerNames = () => R.uniq(this.markerGroup.getLayers().map(marker => getGeoProps(marker).name))
+  getMarkerNames = () => R.uniq(this.markerGroup.getLayers().map(marker => marker.options.name))
 
   getAttachedMarkerNames = () => {
     const allArrs = this.locationsGroup.getLayers().map(loc => getGeoProps(loc).markers);
@@ -302,7 +302,8 @@ export default class Map2 extends Component {
 
     const { markers } = getGeoProps(layer);
     this.markerGroup.eachLayer(marker => {
-      const { name } = getGeoProps(marker);
+      // const { name } = getGeoProps(marker);
+      const { name } = marker.options.name;
       if (R.contains(name, markers)) {
         marker.setIcon(getIcon('green'));
         // marker.setStyle({
@@ -328,12 +329,14 @@ export default class Map2 extends Component {
   onMarkersChange = () => {
     this.updateSignalRadiuses();
     this.updatePolygons();
-    this.saveMarkers();
   }
 
-  onMarkerEdit = () => {
+  onMarkerEdit = e => {
+    const { dataService } = this.state;
+    const marker = e.target;
+    dataService.putBeacon(marker.options.id, marker.getLatLng());
     this.onMarkersChange();
-    console.log('pm:edit');
+    console.log('pm:edit', e.target.getLatLng());
   };
 
   saveMarkers = () => {
@@ -452,12 +455,18 @@ export default class Map2 extends Component {
 
   onMarkerChange = prop => e => {
     const { value } = e.target;
+    const { dataService } = this.state;
     // eslint-disable-next-line react/destructuring-assignment
-    const { name } = this.state.curMarker;
-    const marker = this.markerGroup.getLayers().find(marker2 => getGeoProps(marker2).name === name);
+    const { id, name } = this.state.curMarker;
+    // const marker = this.markerGroup.getLayers().find(marker2 => getGeoProps(marker2).name === name);
+    const marker = this.markerGroup.getLayers().find(marker2 => marker2.options.id === id);
     if (prop === 'name') {
-      getGeoProps(marker).name = value;
-      this.renameMarkerInLocations(name, value);
+      // getGeoProps(marker).name = value;
+      marker.options.name = value;
+      dataService.putBeacon(id, {
+        [prop]: value
+      });
+      // this.renameMarkerInLocations(name, value);
     }
     if (prop === 'lat' || prop === 'lng') {
       const latLng = marker.getLatLng();
@@ -465,11 +474,13 @@ export default class Map2 extends Component {
       if (!Number.isNaN(num)) {
         const newLatLng = { ...latLng, [prop]: num };
         marker.setLatLng(newLatLng);
-        this.updateSignalRadiuses();
-        this.updatePolygons();
+        dataService.putBeacon(id, {
+          [prop]: num
+        });
+        this.onMarkersChange();
       }
     }
-    this.saveMarkers();
+
     this.setState(state => {
       const curMarker = { ...state.curMarker, [prop]: value };
       return ({
