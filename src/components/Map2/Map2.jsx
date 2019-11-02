@@ -7,9 +7,10 @@ import '../../utils/gpxConverter';
 
 import L from 'leaflet/dist/leaflet-src';
 import 'leaflet/dist/leaflet.css';
-
 import '@geoman-io/leaflet-geoman-free';
 import '@geoman-io/leaflet-geoman-free/dist/leaflet-geoman.css';
+
+import { Map2PropTypes } from '../../types';
 
 import { MarkerPopup } from './MarkerPopup';
 import { LocationPopup } from './LocationPopup';
@@ -23,6 +24,7 @@ import { COLOR_PALETTE } from '../../utils/colorPalette';
 
 import { mapConfig, geomanConfig, defaultTileLayer } from './MapConfigurations';
 
+
 // import playerTracks from '../../data/initialPlayerTracks';
 
 // R.values(playerTracks).forEach((track, i) => {
@@ -34,12 +36,15 @@ import { mapConfig, geomanConfig, defaultTileLayer } from './MapConfigurations';
 console.log(L);
 L.Icon.Default.imagePath = './images/leafletImages/';
 
-const getGeoProps = (layer) => layer.feature.properties;
+export class Map2 extends Component {
+  static propTypes = Map2PropTypes;
 
-class Map2 extends Component {
-  state = {
-    curMarker: null,
-    curLocation: null
+  constructor() {
+    super();
+    this.state = {
+      curMarker: null,
+      curLocation: null
+    };
   }
 
   componentDidMount = () => {
@@ -319,10 +324,12 @@ class Map2 extends Component {
     polygons.forEach((p) => this.polygonsGroup.addLayer(p));
     this.polygonsGroup.addLayer(boundingPolyline);
 
-    const massCenters = polygonData.clippedCenters.map((massCenter, i) => L.circleMarker([massCenter.x, massCenter.y], {
-      radius: 5,
-      pmIgnore: true
-    }));
+    const massCenters = polygonData.clippedCenters
+      .filter((massCenter) => !Number.isNaN(massCenter.x) && !Number.isNaN(massCenter.y))
+      .map((massCenter, i) => L.circleMarker([massCenter.x, massCenter.y], {
+        radius: 5,
+        pmIgnore: true
+      }));
     massCenters.forEach((p) => this.massCentersGroup.addLayer(p));
   }
 
@@ -347,7 +354,6 @@ class Map2 extends Component {
     const { id, name } = this.state.curMarker;
     const marker = this.markerGroup.getLayers().find((marker2) => marker2.options.id === id);
     if (prop === 'name') {
-      // getGeoProps(marker).name = value;
       marker.options.name = value;
       dataService.putBeacon(id, {
         [prop]: value
@@ -492,5 +498,3 @@ class Map2 extends Component {
     );
   }
 }
-
-export { Map2 };

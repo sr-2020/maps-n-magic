@@ -70,15 +70,8 @@ module.exports = {
             "error",
             "always"
         ],
-        "react/jsx-indent": ["error", 2],
-        "react/jsx-indent-props": ["error", 2],
 
-        // this rule is deprecated https://github.com/evcohen/eslint-plugin-jsx-a11y/blob/master/docs/rules/label-has-for.md
-        'jsx-a11y/label-has-for': 'off',
-        'react/jsx-filename-extension': 'off',
-        'react/jsx-one-expression-per-line':'off',
-        'react/state-in-constructor': 'off',
-        // 'arrow-parens': ['error' ,'as-needed'],
+        // complexity rules
         'complexity': ['error', {max: 20}],
         'max-lines-per-function': [
             "error", {
@@ -88,9 +81,20 @@ module.exports = {
             }
         ],
         'max-depth': ['error', 3],
-        'jsx-a11y/label-has-associated-control': 'off',
-        'react/prop-types': 'off',
 
+        // this rule is deprecated https://github.com/evcohen/eslint-plugin-jsx-a11y/blob/master/docs/rules/label-has-for.md
+        'jsx-a11y/label-has-for': 'off',
+        'jsx-a11y/label-has-associated-control': 'off',
+
+        "react/jsx-indent": ["error", 2],
+        "react/jsx-indent-props": ["error", 2],
+        // 'react/jsx-filename-extension': 'off',
+        // 'react/jsx-one-expression-per-line':'off',
+        // 'react/state-in-constructor': 'off',
+        // 'react/prop-types': 'off',
+        "react/static-property-placement": ["error",  'static public field', {
+          "propTypes": 'static public field'
+        }],
 
         'import/prefer-default-export': 'off',
         'import/named': 'error',

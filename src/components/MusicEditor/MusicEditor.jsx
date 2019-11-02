@@ -1,5 +1,4 @@
 /* eslint-disable react/destructuring-assignment */
-/* eslint-disable react/prop-types */
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import './MusicEditor.css';
@@ -77,18 +76,21 @@ class MusicEditor extends Component {
                           audioService.removeSound(buffer.name);
                           this.updateBufferNames();
                         }}
-                      >Remove
-                      </button>
+                      >
+Remove
+</button>
                       <button
                         type="button"
                         onClick={() => audioService.startSound(buffer.name)}
-                      >Play
-                      </button>
+                      >
+Play
+</button>
                       <button
                         type="button"
                         onClick={() => audioService.stopSound(buffer.name)}
-                      >Stop
-                      </button>
+                      >
+Stop
+</button>
                       <input
                         type="color"
                         value={buffer.props.color}

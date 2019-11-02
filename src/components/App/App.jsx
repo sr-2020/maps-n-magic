@@ -61,14 +61,16 @@ if (database) {
   };
 }
 
-class App extends Component {
-  state = {
-    dataService: new DataService(),
-    ...initialState
-  };
-
+export class App extends Component {
   audioService = new AudioService();
 
+  constructor() {
+    super();
+    this.state = {
+      dataService: new DataService(),
+      ...initialState
+    };
+  }
 
   componentDidMount() {
     // initSound(() => {
@@ -219,7 +221,8 @@ class App extends Component {
                       data-original-title=""
                       onClick={this.downloadDatabaseAsFile}
                       title="Download database"
-                    >Download database
+                    >
+                      Download database
                     </button>
                   </li>
                 </ul>
@@ -285,5 +288,3 @@ class App extends Component {
     );
   }
 }
-
-export { App };

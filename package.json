@@ -10,6 +10,7 @@
     "@geoman-io/leaflet-geoman-free": "^2.3.0",
     "@thi.ng/geom-poly-utils": "^0.1.26",
     "@tmcw/togeojson": "^3.0.1",
+    "airbnb-prop-types": "^2.15.0",
     "bootstrap": "^4.3.1",
     "d3-delaunay": "^5.1.6",
     "dateformat": "^3.0.3",

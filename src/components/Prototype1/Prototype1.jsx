@@ -1,5 +1,4 @@
 /* eslint-disable jsx-a11y/label-has-associated-control */
-/* eslint-disable react/prop-types */
 import React, { Component, Fragment } from 'react';
 // import logo from './logo.svg';
 import './Prototype1.css';

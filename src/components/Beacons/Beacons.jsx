@@ -1,4 +1,3 @@
-/* eslint-disable react/prop-types */
 /* eslint-disable jsx-a11y/label-has-associated-control */
 import React, { Component, Fragment } from 'react';
 import './Beacons.css';
@@ -7,6 +6,7 @@ import * as R from 'ramda';
 
 import Button from 'react-bootstrap/Button';
 import Form from 'react-bootstrap/Form';
+import PropTypes from 'prop-types';
 import { Map } from '../Map';
 import { MapMarker } from '../MapMarker';
 import { MapPoint } from '../MapPoint';
@@ -21,25 +21,46 @@ import { COLOR_PALETTE } from '../../utils/colorPalette';
 
 import { polygon2polyline, euDist } from '../../utils/polygonUtils';
 
+
 let tracks = [];
 
-class Beacons extends Component {
-  state = {
-    showBeaconMarkers: true,
-    showPolygonLabels: false,
-    showPolygonBoundaries: true,
-    showBeaconSignalArea: false,
-    showMassCenters: true,
-    showTracks: true,
-    enableAutoIteration: false,
-    maxDelta: 1,
-    signalRadius: 40,
-    // addBeacon, editPolygon
-    mode: 'addBeacon',
-    // editingPolygon: false,
-    // mainPolygon: [[324.375, 80], [128.375, 370], [543.375, 560], [610.375, 454], [459.375, 414], [458.375, 302], [428.375, 301], [423.375, 135], [348.375, 79], [324.375, 80]],
-    // tracks: []
+export class Beacons extends Component {
+  static propTypes = {
+    // beacons: PropTypes.array.isRequired,
+    // setBeacons: PropTypes.func.isRequired,
+    // mainPolygon: PropTypes.array.isRequired,
+    // setMainPolygon: PropTypes.func.isRequired,
+    // imagePositionX: PropTypes.number.isRequired,
+    // imagePositionY: PropTypes.number.isRequired,
+    // imageOpacity: PropTypes.number.isRequired,
+    // imageScale: PropTypes.number.isRequired,
+    // svgWidth: PropTypes.number.isRequired,
+    // svgHeight: PropTypes.number.isRequired,
+    // beacons: PropTypes.array.isRequired,
+    // audioService: PropTypes.object.isRequired,
+    // mainPolygon: PropTypes.array.isRequired,
+    // imageUrl: PropTypes.string.isRequired
   };
+
+  constructor() {
+    super();
+    this.state = {
+      showBeaconMarkers: true,
+      showPolygonLabels: false,
+      showPolygonBoundaries: true,
+      showBeaconSignalArea: false,
+      showMassCenters: true,
+      showTracks: true,
+      enableAutoIteration: false,
+      maxDelta: 1,
+      signalRadius: 40,
+      // addBeacon, editPolygon
+      mode: 'addBeacon',
+      // editingPolygon: false,
+      // mainPolygon: [[324.375, 80], [128.375, 370], [543.375, 560], [610.375, 454], [459.375, 414], [458.375, 302], [428.375, 301], [423.375, 135], [348.375, 79], [324.375, 80]],
+      // tracks: []
+    };
+  }
 
   getClickCoords = (event) => {
     const rect = document.querySelector('svg.root-image').getBoundingClientRect();
@@ -298,7 +319,7 @@ class Beacons extends Component {
 
     const {
       imagePositionX, imagePositionY, imageOpacity, imageScale,
-      svgWidth, svgHeight, onPropChange, beacons, audioService, mainPolygon, imageUrl
+      svgWidth, svgHeight, beacons, audioService, mainPolygon, imageUrl
     } = this.props;
     // console.log(beacons);
     let polygonData;
@@ -371,13 +392,15 @@ class Beacons extends Component {
           }
           {
             beacons.map((beacon) => (
-              <MapPoint x={beacon.x} y={beacon.y} />
+              <MapPoint key={beacon.id} x={beacon.x} y={beacon.y} />
             ))
           }
           {
-            showMassCenters && polygonData && polygonData.clippedCenters && polygonData.clippedCenters.map((center, i) => (
-              <MapPoint x={center.x} y={center.y} fill="black" />
-            ))
+            showMassCenters && polygonData && polygonData.clippedCenters && polygonData.clippedCenters
+              .filter((center) => !Number.isNaN(center.x) && !Number.isNaN(center.y))
+              .map((center, i) => (
+                <MapPoint key={beacons[i].id} x={center.x} y={center.y} fill="black" />
+              ))
           }
           {
             showBeaconSignalArea && beacons.map((beacon) => (
@@ -390,6 +413,7 @@ class Beacons extends Component {
                 x={beacon.x}
                 y={beacon.y}
                 id={beacon.id}
+                key={beacon.id}
                 color={hoveredBeacon === beacon.id ? 'blue' : beacon.color}
                 onClick={this.setMovable(beacon.id)}
               />
@@ -422,7 +446,7 @@ class Beacons extends Component {
             label="Add beacon mode"
             value="addBeacon"
             name="mode-radio"
-            checked={mode === 'addBeacon'}
+            defaultChecked={mode === 'addBeacon'}
             onClick={this.setModeState('addBeacon')}
           />
 
@@ -432,7 +456,7 @@ class Beacons extends Component {
             value="editPolygon"
             name="mode-radio"
             label="Edit main polygon mode"
-            checked={mode !== 'addBeacon'}
+            defaultChecked={mode !== 'addBeacon'}
             onClick={this.setModeState('editPolygon')}
           />
           <br />
@@ -460,5 +484,3 @@ class Beacons extends Component {
     );
   }
 }
-
-export { Beacons };

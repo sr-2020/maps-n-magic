@@ -23,6 +23,7 @@ class AudioService {
 
   soundSources = {};
 
+  // TODO keep sound name uniqueness
   buffers = [];
 
   constructor(buffersToLoad = BUFFERS_TO_LOAD, oldColors = {}) {
