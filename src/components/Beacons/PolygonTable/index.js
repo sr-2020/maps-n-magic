@@ -1,3 +1,3 @@
-import PolygonTable from './PolygonTable.js';
+import { PolygonTable } from './PolygonTable.jsx';
 
-export default (PolygonTable);
+export { PolygonTable };

@@ -1,3 +1,3 @@
-import SettingsForm from './SettingsForm.js';
+import { SettingsForm } from './SettingsForm.jsx';
 
-export default (SettingsForm);
+export { SettingsForm };

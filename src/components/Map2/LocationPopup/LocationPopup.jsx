@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import * as R from 'ramda';
 import './LocationPopup.css';
 
-export default class LocationPopup extends Component {
+class LocationPopup extends Component {
   state = {
     unattachedList: [],
     attachedList: [],
@@ -15,7 +15,7 @@ export default class LocationPopup extends Component {
     this.updateComponentState();
   }
 
-  componentDidUpdate = prevProps => {
+  componentDidUpdate = (prevProps) => {
     console.log('LocationPopup did update');
     const {
       name, allMarkers, attachedMarkers
@@ -39,11 +39,11 @@ export default class LocationPopup extends Component {
     } = this.props;
 
     const marker2loc = allLocations.reduce((acc, loc) => {
-      loc.markers.forEach(marker => (acc[marker] = loc.name));
+      loc.markers.forEach((marker) => (acc[marker] = loc.name));
       return acc;
     }, {});
-    allBeacons.forEach(beacon => (beacon.location = marker2loc[beacon.id]));
-    const { attached, unattached } = R.groupBy(beacon => (R.contains(beacon.id, attachedMarkers) ? 'attached' : 'unattached'), allBeacons);
+    allBeacons.forEach((beacon) => (beacon.location = marker2loc[beacon.id]));
+    const { attached, unattached } = R.groupBy((beacon) => (R.contains(beacon.id, attachedMarkers) ? 'attached' : 'unattached'), allBeacons);
     const comparator = R.comparator((a, b) => {
       if (!a.location && b.location) {
         return true;
@@ -64,7 +64,7 @@ export default class LocationPopup extends Component {
     });
   }
 
-  removeMarker = e => {
+  removeMarker = (e) => {
     const {
       selectedRemoveMarker
     } = this.state;
@@ -80,7 +80,7 @@ export default class LocationPopup extends Component {
     });
   }
 
-  addMarker = e => {
+  addMarker = (e) => {
     const {
       selectedAddMarker
     } = this.state;
@@ -96,26 +96,27 @@ export default class LocationPopup extends Component {
     });
   }
 
-  onSelectedAddChange = e => {
+  onSelectedAddChange = (e) => {
     this.setState({
       selectedAddMarker: Number(e.target.value)
     });
   }
 
-  onSelectedRemoveChange = e => {
+  onSelectedRemoveChange = (e) => {
     this.setState({
       selectedRemoveMarker: Number(e.target.value)
     });
   }
 
-  _handleKeyDown = e => {
+  _handleKeyDown = (e) => {
     console.log('do validate');
     if (e.key === 'Enter') {
+      // eslint-disable-next-line react/destructuring-assignment
       this.props.onClose();
     }
   }
 
-  _getMarkerLabel = marker => {
+  _getMarkerLabel = (marker) => {
     if (marker.location) {
       return `${marker.name} (${marker.location})`;
     }
@@ -155,7 +156,7 @@ export default class LocationPopup extends Component {
           </label>
           <div className="mb-2">
             {
-              attachedList.map(marker => <span className="mr-2">{marker.name}</span>)
+              attachedList.map((marker) => <span className="mr-2">{marker.name}</span>)
             }
             {
               attachedList.length === 0 && <span className="font-bold">No markers</span>
@@ -167,7 +168,7 @@ export default class LocationPopup extends Component {
               value={selectedAddMarker}
               className="marker-select shadow border rounded mr-2 py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
             >{
-                unattachedList.map(marker => <option value={marker.id}>{this._getMarkerLabel(marker)}</option>)
+                unattachedList.map((marker) => <option value={marker.id}>{this._getMarkerLabel(marker)}</option>)
               }
             </select>
             <button
@@ -183,7 +184,7 @@ export default class LocationPopup extends Component {
               value={selectedRemoveMarker}
               className="marker-select shadow border rounded mr-2 py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
             >{
-                attachedList.map(marker => <option value={marker.id}>{marker.name}</option>)
+                attachedList.map((marker) => <option value={marker.id}>{marker.name}</option>)
               }
             </select>
             <button
@@ -198,3 +199,5 @@ export default class LocationPopup extends Component {
     );
   }
 }
+
+export { LocationPopup };

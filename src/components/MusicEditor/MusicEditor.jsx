@@ -7,7 +7,7 @@ import * as R from 'ramda';
 
 import { readBinaryFile } from '../../utils/fileUtils';
 
-export default class MusicEditor extends Component {
+class MusicEditor extends Component {
   state = {
     buffers: [],
     loading: true
@@ -36,8 +36,8 @@ export default class MusicEditor extends Component {
     buffers: this.getBuffers()
   });
 
-  onSoundSelected = evt => {
-    readBinaryFile(evt).then(result => {
+  onSoundSelected = (evt) => {
+    readBinaryFile(evt).then((result) => {
       this.props.audioService.addAudioFile(result).then(this.updateBufferNames);
     });
   };
@@ -61,7 +61,7 @@ export default class MusicEditor extends Component {
             </thead>
             <tbody>
               {
-                buffers.map(buffer => (
+                buffers.map((buffer) => (
                   <tr>
                     <td>
                       {/* <input
@@ -114,3 +114,5 @@ MusicEditor.propTypes = {
 MusicEditor.defaultProps = {
   // bla: 'test',
 };
+
+export { MusicEditor };

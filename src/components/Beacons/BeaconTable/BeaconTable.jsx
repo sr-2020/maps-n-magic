@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import './BeaconTable.css';
 import * as R from 'ramda';
 
-export default class BeaconTable extends Component {
+class BeaconTable extends Component {
   state = {
   };
 
@@ -27,6 +27,7 @@ export default class BeaconTable extends Component {
         <tbody>
           {
             beacons.map((beacon, i) => (
+              // eslint-disable-next-line jsx-a11y/mouse-events-have-key-events
               <tr onMouseOver={onTableHover(beacon.id)}>
                 <td>{i + 1}</td>
                 <td>
@@ -42,7 +43,7 @@ export default class BeaconTable extends Component {
                 <td>
                   <select value={beacon.props.sound} onChange={onBeaconPropChange(beacon.id, 'sound')}>
                     {
-                      ['none'].concat(audioService.getBuffers().map(R.prop('name'))).map(soundName => <option value={soundName}>{soundName}</option>)
+                      ['none'].concat(audioService.getBuffers().map(R.prop('name'))).map((soundName) => <option value={soundName}>{soundName}</option>)
                     }
                   </select>
                   {/* onChange={this.onBeaconChange(beacon.id, 'y')}  */}
@@ -65,3 +66,5 @@ export default class BeaconTable extends Component {
     );
   }
 }
+
+export { BeaconTable };

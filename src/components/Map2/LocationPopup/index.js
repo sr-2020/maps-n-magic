@@ -1,3 +1,3 @@
-import LocationPopup from './LocationPopup.jsx';
+import { LocationPopup } from './LocationPopup.jsx';
 
-export default (LocationPopup);
+export { LocationPopup };

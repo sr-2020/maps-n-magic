@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import './MapPoint.css';
 
-export default class MapPoint extends Component {
+class MapPoint extends Component {
   state = {
   };
 
@@ -24,3 +24,5 @@ MapPoint.propTypes = {
 MapPoint.defaultProps = {
   // bla: 'test',
 };
+
+export { MapPoint };

@@ -1,5 +1,5 @@
 // import { withTranslation } from 'react-i18next';
-import MusicEditor from './MusicEditor.js';
+import { MusicEditor } from './MusicEditor.jsx';
 
 // export default withTranslation()(MusicEditor);
-export default (MusicEditor);
+export { MusicEditor };

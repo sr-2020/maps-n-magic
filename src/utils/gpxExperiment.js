@@ -11,10 +11,10 @@ const oDOM = oParser.parseFromString(gpxData, 'application/xml');
 
 const parsedGpx = gpx(oDOM);
 
-const gpxPoints = parsedGpx.features.filter(feature => feature.geometry.type === 'Point');
+const gpxPoints = parsedGpx.features.filter((feature) => feature.geometry.type === 'Point');
 // console.log(gpxPoints);
 
-const srcPoints = gpxPoints.map(gpxPoint => ({
+const srcPoints = gpxPoints.map((gpxPoint) => ({
   id: gpxPoint.properties.name,
   x: gpxPoint.geometry.coordinates[0],
   y: -gpxPoint.geometry.coordinates[1],
@@ -33,17 +33,19 @@ const maxY = Math.max.apply(null, ys);
 
 // console.log(minX, maxX, minY, maxY);
 
-const normilizedPoints = srcPoints.map(srcPoint => ({
+const normilizedPoints = srcPoints.map((srcPoint) => ({
   ...srcPoint,
   x: (srcPoint.x - minX) / (maxX - minX),
   y: (srcPoint.y - minY) / (maxY - minY),
 }));
 console.log(normilizedPoints);
 
-export default function (x, y, width, height) {
-  return normilizedPoints.map(srcPoint => ({
+const getBeacons = function (x, y, width, height) {
+  return normilizedPoints.map((srcPoint) => ({
     ...srcPoint,
     x: srcPoint.x * width + x,
     y: srcPoint.y * height + y,
   }));
-}
+};
+
+export { getBeacons };

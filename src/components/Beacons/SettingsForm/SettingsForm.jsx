@@ -4,7 +4,7 @@ import './SettingsForm.css';
 
 import Button from 'react-bootstrap/Button';
 
-export default class SettingsForm extends Component {
+class SettingsForm extends Component {
   state = {
   };
 
@@ -131,3 +131,5 @@ export default class SettingsForm extends Component {
     );
   }
 }
+
+export { SettingsForm };

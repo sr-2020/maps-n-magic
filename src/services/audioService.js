@@ -2,7 +2,7 @@
 import * as R from 'ramda';
 
 import { BufferLoader } from '../utils/audioDataUtils';
-import ColorPalette from '../utils/colorPalette';
+import { COLOR_PALETTE } from '../utils/colorPalette';
 
 const BUFFERS_TO_LOAD = {
   // // kick: 'sounds/kick.wav',
@@ -18,7 +18,7 @@ const BUFFERS_TO_LOAD = {
   // ghost: 'sounds/techno.wav'
 };
 
-export default class AudioService {
+class AudioService {
   context = null;
 
   soundSources = {};
@@ -62,7 +62,7 @@ export default class AudioService {
             name,
             buffer,
             props: {
-              color: this.oldColors[name] || ColorPalette[i].color.background
+              color: this.oldColors[name] || COLOR_PALETTE[i].color.background
             }
           });
         }
@@ -72,13 +72,13 @@ export default class AudioService {
     });
   }
 
-  addAudioFile = fileData => new Promise((resolve) => {
+  addAudioFile = (fileData) => new Promise((resolve) => {
     this.context.decodeAudioData(fileData.buffer, (buffer) => {
       this.buffers.push({
         name: fileData.name,
         buffer,
         props: {
-          color: this.oldColors[fileData.name] || ColorPalette[this.buffers.length].color.background
+          color: this.oldColors[fileData.name] || COLOR_PALETTE[this.buffers.length].color.background
         }
       });
       resolve();
@@ -107,7 +107,7 @@ export default class AudioService {
   }
 
   createSource = (soundName) => {
-    const bufferInfo = this.buffers.find(bufferInfo2 => bufferInfo2.name === soundName);
+    const bufferInfo = this.buffers.find((bufferInfo2) => bufferInfo2.name === soundName);
     const { buffer } = bufferInfo;
     // if (!buffer) {
     //   buffer = BUFFERS[soundName];
@@ -133,7 +133,7 @@ export default class AudioService {
 
   removeSound = (soundName) => {
     this.stopSound();
-    this.buffers = this.buffers.filter(bufferInfo2 => bufferInfo2.name !== soundName);
+    this.buffers = this.buffers.filter((bufferInfo2) => bufferInfo2.name !== soundName);
   }
 
   stopSound = (soundName) => {
@@ -158,10 +158,10 @@ export default class AudioService {
         this.startSound(volumeData.name);
       }
     });
-    volumes.forEach(volumeData => (this.soundSources[volumeData.name].gainNode.gain.value = volumeData.gain));
+    volumes.forEach((volumeData) => (this.soundSources[volumeData.name].gainNode.gain.value = volumeData.gain));
   }
 
-  toJson = () => this.buffers.map(bufferInfo => ({
+  toJson = () => this.buffers.map((bufferInfo) => ({
     name: bufferInfo.name,
     props: bufferInfo.props
     // ...bufferInfo,
@@ -170,14 +170,14 @@ export default class AudioService {
 
   fromJson = (data) => {
     console.log('555');
-    data.map(bufferInfo => ({
+    data.map((bufferInfo) => ({
       name: bufferInfo.name,
       props: bufferInfo.props
     }));
   }
 
   getSoundProps = (soundName) => {
-    const buffer = this.buffers.find(bufferInfo2 => bufferInfo2.name === soundName);
+    const buffer = this.buffers.find((bufferInfo2) => bufferInfo2.name === soundName);
     if (buffer) {
       // console.log(soundName, 'buffer.props', buffer.props);
       return buffer.props;
@@ -202,3 +202,5 @@ export default class AudioService {
     return bytes.buffer;
   }
 }
+
+export { AudioService };

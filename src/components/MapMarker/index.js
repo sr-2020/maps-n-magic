@@ -1,4 +1,4 @@
 // import { withTranslation } from 'react-i18next';
-import MapMarker from './MapMarker.js';
+import { MapMarker } from './MapMarker.jsx';
 
-export default (MapMarker);
+export { MapMarker };

@@ -1,9 +1,9 @@
 import React, { Component, Fragment } from 'react';
 import './MainPolygon.css';
 import { polygon2polyline } from '../../utils/polygonUtils';
-import MapPoint from '../MapPoint';
+import { MapPoint } from '../MapPoint';
 
-export default class MainPolygon extends Component {
+class MainPolygon extends Component {
   state = {
   };
 
@@ -20,9 +20,11 @@ export default class MainPolygon extends Component {
           points={polygon2polyline(mainPolygon)}
         />
         {
-          mainPolygon.map(point => <MapPoint x={point[0]} y={point[1]} r={5} />)
+          mainPolygon.map((point) => <MapPoint x={point[0]} y={point[1]} r={5} />)
         }
       </>
     );
   }
 }
+
+export { MainPolygon };

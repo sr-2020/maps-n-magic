@@ -1,4 +1,4 @@
-export default [
+const COLOR_PALETTE = [
   {
     color: {
       border: '#2B7CE9',
@@ -109,3 +109,5 @@ export default [
     }
   } // 20:bright red
 ];
+
+export { COLOR_PALETTE };

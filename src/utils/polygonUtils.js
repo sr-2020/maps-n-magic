@@ -28,7 +28,7 @@ function getPerimeterMassCenter(polygon) {
     acc[1] += point[1] * point[2];
     return acc;
   }, [0, 0]);
-  const perimeter = R.sum(polygon2.map(p => p[2]));
+  const perimeter = R.sum(polygon2.map((p) => p[2]));
   return {
     x: sums[0] / perimeter,
     y: sums[1] / perimeter,
@@ -50,15 +50,15 @@ function getTriangleCentroid(triangle) {
   const pt2 = [(triangle[1][0] + triangle[2][0]) / 2, (triangle[1][1] + triangle[2][1]) / 2];
 
   return {
-    x: (pt2[0] - pt1[0]) * 2 / 3 + pt1[0],
-    y: (pt2[1] - pt1[1]) * 2 / 3 + pt1[1],
+    x: ((pt2[0] - pt1[0]) * 2) / 3 + pt1[0],
+    y: ((pt2[1] - pt1[1]) * 2) / 3 + pt1[1],
     pt1,
     pt2
   };
 }
 
 function getMultiPolygonSolidMassCenter(multiPolygon) {
-  const intermediate = R.flatten(multiPolygon.map(polygon => polygon.map(ring => ({
+  const intermediate = R.flatten(multiPolygon.map((polygon) => polygon.map((ring) => ({
     ...getSolidMassCenter(ring),
   }))));
   // const intermediate = polygons.map((polygon, i) => ({
@@ -119,25 +119,23 @@ function intermediate2massCenter(intermediate) {
   };
 }
 
-const polygon2polyline = polygon => (polygon ? polygon.map(pt => pt.join(',')).join(' ') : '');
+const polygon2polyline = (polygon) => (polygon ? polygon.map((pt) => pt.join(',')).join(' ') : '');
 
 const euDist = ({ x: x1, y: y1 }, { x: x2, y: y2 }) => Math.sqrt((x2 - x1) * (x2 - x1) + (y2 - y1) * (y2 - y1));
 
-const getBoundingRect = (polygon) => {
-  return polygon.reduce((acc, point) => {
-    const [y, x] = point;
-    acc.left = acc.left > x ? x : acc.left;
-    acc.right = acc.right < x ? x : acc.right;
-    acc.top = acc.top < y ? y : acc.top;
-    acc.bottom = acc.bottom > y ? y : acc.bottom;
-    return acc;
-  }, {
-    top: Number.MIN_VALUE,
-    bottom: Number.MAX_VALUE,
-    left: Number.MAX_VALUE,
-    right: Number.MIN_VALUE,
-  });
-};
+const getBoundingRect = (polygon) => polygon.reduce((acc, point) => {
+  const [y, x] = point;
+  acc.left = acc.left > x ? x : acc.left;
+  acc.right = acc.right < x ? x : acc.right;
+  acc.top = acc.top < y ? y : acc.top;
+  acc.bottom = acc.bottom > y ? y : acc.bottom;
+  return acc;
+}, {
+  top: Number.MIN_VALUE,
+  bottom: Number.MAX_VALUE,
+  left: Number.MAX_VALUE,
+  right: Number.MIN_VALUE,
+});
 
 const scaleRect = (rect, scale) => {
   const xCenter = (rect.right + rect.left) / 2;
@@ -147,7 +145,7 @@ const scaleRect = (rect, scale) => {
     bottom: (rect.bottom - yCenter) * scale + yCenter,
     left: (rect.left - xCenter) * scale + xCenter,
     right: (rect.right - xCenter) * scale + xCenter,
-  }
+  };
 };
 
 export {

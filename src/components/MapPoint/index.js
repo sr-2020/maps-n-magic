@@ -1,4 +1,4 @@
 // import { withTranslation } from 'react-i18next';
-import MapPoint from './MapPoint.js';
+import { MapPoint } from './MapPoint.jsx';
 
-export default (MapPoint);
+export { MapPoint };

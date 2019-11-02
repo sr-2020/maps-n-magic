@@ -1,4 +1,4 @@
 // import { withTranslation } from 'react-i18next';
-import MapEditor from './MapEditor.js';
+import { MapEditor } from './MapEditor.jsx';
 
-export default (MapEditor);
+export { MapEditor };

@@ -19,13 +19,13 @@ import { saveAs } from 'file-saver';
 //   window.open('extras/doc/nims.html');
 // };
 
-const readJsonFile = evt => new Promise((resolve, reject) => {
+const readJsonFile = (evt) => new Promise((resolve, reject) => {
   // Retrieve the first (and only!) File from the FileList object
   const f = evt.target.files[0];
 
   if (f) {
     const r = new FileReader();
-    r.onload = e => {
+    r.onload = (e) => {
       const contents = e.target.result;
       try {
         const object = JSON.parse(contents);
@@ -41,13 +41,13 @@ const readJsonFile = evt => new Promise((resolve, reject) => {
   }
 });
 
-const readBinaryFile = evt => new Promise((resolve, reject) => {
+const readBinaryFile = (evt) => new Promise((resolve, reject) => {
   // Retrieve the first (and only!) File from the FileList object
   const f = evt.target.files[0];
 
   if (f) {
     const r = new FileReader();
-    r.onload = e => {
+    r.onload = (e) => {
       const contents = e.target.result;
       resolve({
         name: f.name,

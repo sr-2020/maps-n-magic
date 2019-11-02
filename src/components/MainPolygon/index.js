@@ -1,3 +1,3 @@
-import MainPolygon from './MainPolygon.js';
+import { MainPolygon } from './MainPolygon.jsx';
 
-export default (MainPolygon);
+export { MainPolygon };

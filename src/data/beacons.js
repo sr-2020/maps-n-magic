@@ -6,7 +6,7 @@ const getBeacons = () => srcData.features.slice(0, 10);
 
 const getBeacons2 = () => {
   const beacons = getBeacons();
-  return beacons.map(beacon => ({
+  return beacons.map((beacon) => ({
     name: beacon.properties.name,
     id: parseInt(beacon.properties.name, 10),
     lat: beacon.geometry.coordinates[1],

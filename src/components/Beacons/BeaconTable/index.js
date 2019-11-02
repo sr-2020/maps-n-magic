@@ -1,3 +1,3 @@
-import BeaconTable from './BeaconTable.js';
+import { BeaconTable } from './BeaconTable.jsx';
 
-export default (BeaconTable);
+export { BeaconTable };

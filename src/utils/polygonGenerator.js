@@ -14,7 +14,7 @@ function getPolygons(beacons, SVG_WIDTH, SVG_HEIGHT, mainPolygon) {
 }
 
 function getPolygons2(beacons, boundingBox, mainPolygon) {
-  const points = beacons.map(beacon => [beacon.x, beacon.y]);
+  const points = beacons.map((beacon) => [beacon.x, beacon.y]);
   const delaunay = Delaunay.from(points);
   const voronoi = delaunay.voronoi(boundingBox);
 
@@ -43,11 +43,11 @@ function getPolygons2(beacons, boundingBox, mainPolygon) {
     }));
   } else {
     // result.clippedPolygons = result.polygons;
-    result.clippedPolygons = result.polygons.map(p => [[p]]);
+    result.clippedPolygons = result.polygons.map((p) => [[p]]);
     result.clippedCenters = result.polygonCenters;
   }
   return result;
 }
 
-export default getPolygons;
+// export default getPolygons;
 export { getPolygons, getPolygons2 };

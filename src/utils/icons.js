@@ -22,7 +22,7 @@ const colorMap = {
 
 const usedIcons = {};
 
-const getIcon = color => {
+const getIcon = (color) => {
   if (!colorMap[color]) {
     throw new Error(`Unexpected color ${color}`);
   }

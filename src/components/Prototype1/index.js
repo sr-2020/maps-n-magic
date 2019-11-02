@@ -1,2 +1,3 @@
-import Prototype1 from './Prototype1';
-export default Prototype1;
+import { Prototype1 } from './Prototype1.jsx';
+
+export { Prototype1 };

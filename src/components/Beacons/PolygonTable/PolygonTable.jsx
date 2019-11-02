@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import './PolygonTable.css';
 
-export default class PolygonTable extends Component {
+class PolygonTable extends Component {
   state = {
   };
 
@@ -35,3 +35,5 @@ export default class PolygonTable extends Component {
     );
   }
 }
+
+export { PolygonTable };

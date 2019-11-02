@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import './Map.css';
 
-export default class Map extends Component {
+class Map extends Component {
   state = {
   };
 
@@ -29,6 +29,7 @@ export default class Map extends Component {
         height={svgHeight}
         xmlns="http://www.w3.org/2000/svg"
         style={imageStyle}
+        // eslint-disable-next-line react/jsx-props-no-spreading
         {...this.props}
       >
         {/* onClick={onClick} */}
@@ -45,3 +46,5 @@ Map.propTypes = {
 Map.defaultProps = {
   // bla: 'test',
 };
+
+export { Map };

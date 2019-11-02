@@ -1,3 +1,3 @@
-import Map2 from './Map2.jsx';
+import { Map2 } from './Map2.jsx';
 
-export default (Map2);
+export { Map2 };

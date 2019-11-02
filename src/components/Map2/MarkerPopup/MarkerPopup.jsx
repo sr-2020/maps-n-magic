@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import './MarkerPopup.css';
 
-export default class MarkerPopup extends Component {
+class MarkerPopup extends Component {
   state = {
   };
 
@@ -34,9 +34,10 @@ export default class MarkerPopup extends Component {
   //   });
   // }
 
-  _handleKeyDown = e => {
+  _handleKeyDown = (e) => {
     console.log('do validate');
     if (e.key === 'Enter') {
+      // eslint-disable-next-line react/destructuring-assignment
       this.props.onClose();
     }
   }
@@ -103,3 +104,5 @@ export default class MarkerPopup extends Component {
     );
   }
 }
+
+export { MarkerPopup };

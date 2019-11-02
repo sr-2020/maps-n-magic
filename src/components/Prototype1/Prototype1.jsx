@@ -10,10 +10,10 @@ import initialPlayers from '../../data/players.json';
 
 import { animate, Timing } from '../../utils/animation';
 
-import getPolygons from '../../utils/polygonGenerator';
+import { getPolygons } from '../../utils/polygonGenerator';
 
-import MapMarker from '../MapMarker';
-import MapPoint from '../MapPoint';
+import { MapMarker } from '../MapMarker';
+import { MapPoint } from '../MapPoint';
 
 // const SVG_WIDTH = 500;
 // const SVG_HEIGHT = 400;
@@ -41,7 +41,7 @@ import MapPoint from '../MapPoint';
 
 // const sortBeacons = R.pipe(R.sortBy(R.prop('x')), R.sortBy(R.prop('y')));
 
-export default class App extends Component {
+class Prototype1 extends Component {
   state = {
     polygonData: {},
     sounds: [
@@ -70,13 +70,13 @@ export default class App extends Component {
     this.animatePlayer();
   }
 
-  animatePlayer = duration => {
+  animatePlayer = (duration) => {
     const that = this;
     this.animation = animate({
       duration: 20000,
       timing: Timing.makeEaseInOut(Timing.linear),
       draw(progress) {
-        that.setState(state => {
+        that.setState((state) => {
           if (!state.movePlayers) {
             return null;
           }
@@ -104,7 +104,7 @@ export default class App extends Component {
   }
 
   toggleMusic = () => {
-    this.setState(state => {
+    this.setState((state) => {
       // eslint-disable-next-line no-unused-expressions
       state.playing ? this.stop() : this.play();
       return {
@@ -114,7 +114,7 @@ export default class App extends Component {
   };
 
   togglePlayerMove = () => {
-    this.setState(state => ({
+    this.setState((state) => ({
       movePlayers: !state.movePlayers
     }));
   };
@@ -150,16 +150,16 @@ export default class App extends Component {
   //   }
   // }
 
-  crossfade = state => {
+  crossfade = (state) => {
     const {
       playAreaSound, playGhostSound, players, polygonData, listenPlayer
     } = state;
-    const player = players.find(player2 => player2.id === listenPlayer);
+    const player = players.find((player2) => player2.id === listenPlayer);
 
     const arrId = polygonData.delaunay.find(player.x, player.y);
     const id = polygonData.beaconIds[arrId];
 
-    const ghost = players.find(player2 => player2.id === 'Ghost');
+    const ghost = players.find((player2) => player2.id === 'Ghost');
     // if (polygonData && polygonData.delaunay) {
     const ghostIndex = polygonData.delaunay.find(ghost.x, ghost.y);
     const ghostIsHere = arrId === ghostIndex;
@@ -168,7 +168,7 @@ export default class App extends Component {
 
     const { beacons } = this.props;
     // const beacon = state.beacons.find(beacon => beacon.id === id);
-    const beaconIndex = beacons.findIndex(beacon => beacon.id === id);
+    const beaconIndex = beacons.findIndex((beacon) => beacon.id === id);
     const beacon = beacons[beaconIndex];
     // console.log(beacon);
 
@@ -195,13 +195,13 @@ export default class App extends Component {
     // const volumes = computeVolumesByDistance(state);
     // applyVolumes(volumes);
     const { audioService } = this.props;
-    let volumes = audioService.getSoundNames().map(soundName => ({
+    let volumes = audioService.getSoundNames().map((soundName) => ({
       name: soundName,
       // gain: (soundName === curBeaconSound || (ghostIsHere && soundName === 'ghost')) ? 1 : 0
       gain: playAreaSound && (soundName === curBeaconSound) ? 1 : 0
     }));
     if (playGhostSound && ghostIsHere) {
-      volumes = volumes.map(sound => ({
+      volumes = volumes.map((sound) => ({
         ...sound,
         gain: (sound.name === 'ghost') ? 1 : sound.gain
       }));
@@ -214,7 +214,7 @@ export default class App extends Component {
     this.toggleMusic();
   }
 
-  onPlayerMove = event => {
+  onPlayerMove = (event) => {
     this.togglePlayerMove();
   }
   // onChange = (event) => {
@@ -229,15 +229,15 @@ export default class App extends Component {
   //   });
   // }
 
-  listenStub = type => event => console.log(type, event);
+  listenStub = (type) => (event) => console.log(type, event);
 
   toggleBeaconMarker = () => {
-    this.setState(state => ({
+    this.setState((state) => ({
       showBeaconMarkers: !state.showBeaconMarkers
     }));
   }
 
-  setMovable = id => event => {
+  setMovable = (id) => (event) => {
     // event.stopPropagation();
     // // console.log('setMovable', id);
     // this.setState(state =>
@@ -253,7 +253,7 @@ export default class App extends Component {
   //     movableId: null
   //   })
   // };
-  moveMovable = event => {
+  moveMovable = (event) => {
     // const rect = document.querySelector('svg.root-image').getBoundingClientRect();
     // // const rect = event.target.getBoundingClientRect();
     // // console.log(event.location);
@@ -283,13 +283,13 @@ export default class App extends Component {
     // });
   }
 
-  onStateChange = prop => e => {
+  onStateChange = (prop) => (e) => {
     this.setState({
       [prop]: e.target.value
     });
   }
 
-  onCheckboxChange = prop => e => {
+  onCheckboxChange = (prop) => (e) => {
     this.setState({
       [prop]: e.target.checked
     });
@@ -307,7 +307,7 @@ export default class App extends Component {
     } = this.props;
 
     let ghostPolygonId;
-    const player = players.find(player2 => player2.id === 'Ghost');
+    const player = players.find((player2) => player2.id === 'Ghost');
     if (polygonData && polygonData.delaunay) {
       const arrId = polygonData.delaunay.find(player.x, player.y);
       ghostPolygonId = polygonData.beaconIds[arrId];
@@ -374,7 +374,7 @@ export default class App extends Component {
                   stroke="grey"
                   strokeWidth="2"
                   opacity="0.5"
-                  points={polygon.map(pt => pt.join(',')).join(' ')}
+                  points={polygon.map((pt) => pt.join(',')).join(' ')}
                 />
 
                 {(beacons[i].id === ghostPolygonId) && (
@@ -384,7 +384,7 @@ export default class App extends Component {
                     stroke="grey"
                     strokeWidth="2"
 
-                    points={polygon.map(pt => pt.join(',')).join(' ')}
+                    points={polygon.map((pt) => pt.join(',')).join(' ')}
                   />
                 )}
 
@@ -393,7 +393,7 @@ export default class App extends Component {
                   stroke="grey"
                   strokeWidth="2"
                   opacity="0.5"
-                  points={polygon.map(pt => pt.join(',')).join(' ')}
+                  points={polygon.map((pt) => pt.join(',')).join(' ')}
                 />
                 {/* <circle r="2" cx={polygon.map()x} cy={beacon.y} fill="green"/> */}
                 {/* <circle r={sound.soundR} cx={sound.x} cy={sound.y} fill={sound.color} opacity="0.2"/> */}
@@ -409,7 +409,7 @@ export default class App extends Component {
             ))
           }
           {
-            beacons.map(beacon => (
+            beacons.map((beacon) => (
               <>
                 <MapPoint x={beacon.x} y={beacon.y} fill="grey" />
 
@@ -431,7 +431,8 @@ export default class App extends Component {
             ))
           }
           {
-            players.map(player => (
+            // eslint-disable-next-line no-shadow
+            players.map((pyer) => (
               <>
                 <ellipse
                   cx={player.startX}
@@ -558,3 +559,5 @@ export default class App extends Component {
     );
   }
 }
+
+export { Prototype1 };

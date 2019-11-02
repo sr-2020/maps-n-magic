@@ -7,7 +7,7 @@ const stats = data.reduce((acc, item) => {
     acc.userIds[item.user_id] = 0;
   }
   acc.userIds[item.user_id]++;
-  item.beacons.forEach(beacon => {
+  item.beacons.forEach((beacon) => {
     if (!acc.beaconIds[beacon.bssid]) {
       acc.beaconIds[beacon.bssid] = 0;
     }
@@ -32,8 +32,8 @@ const beaconHist = makeHist(R.toPairs(stats.beaconIds));
 const beaconIndex = R.indexBy(R.prop('bssid'), beaconTable);
 // console.log('beaconIndex', beaconIndex);
 
-console.log('beaconHist', beaconHist.map(pair => [beaconIndex[pair[0]], pair[1]]));
-const beaconIdsHist = beaconHist.map(pair => [beaconIndex[pair[0]].id, pair[1]]);
+console.log('beaconHist', beaconHist.map((pair) => [beaconIndex[pair[0]], pair[1]]));
+const beaconIdsHist = beaconHist.map((pair) => [beaconIndex[pair[0]].id, pair[1]]);
 console.log('beaconHist', R.sortBy(R.prop(0), beaconIdsHist));
 
 // const data2 = data.filter(item => item.beacons.length !== 0);

@@ -1,3 +1,3 @@
-import MarkerPopup from './MarkerPopup.jsx';
+import { MarkerPopup } from './MarkerPopup.jsx';
 
-export default (MarkerPopup);
+export { MarkerPopup };

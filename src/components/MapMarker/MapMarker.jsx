@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import './MapMarker.css';
 
-export default class MapMarker extends Component {
+class MapMarker extends Component {
   state = {
   };
 
@@ -52,3 +52,5 @@ MapMarker.propTypes = {
 MapMarker.defaultProps = {
   // bla: 'test',
 };
+
+export { MapMarker };

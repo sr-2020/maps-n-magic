@@ -6,7 +6,7 @@ import { baseClosedLLs, baseLLs, baseCommonLLs } from '../data/baseContours';
 
 import { getPolygons2 } from '../utils/polygonGenerator';
 
-export default class DataService {
+class DataService {
   constructor({ beacons, locations } = {}) {
     this.beacons = beacons || this._getLSBeacons() || getBeacons2();
     this.maxBeaconId = R.reduce(R.max, 1, this.beacons.map(R.prop('id')));
@@ -35,7 +35,7 @@ export default class DataService {
   }
 
   putBeacon = (id, props) => {
-    const index = this.beacons.findIndex(beacon => beacon.id === id);
+    const index = this.beacons.findIndex((beacon) => beacon.id === id);
     this.beacons[index] = {
       ...this.beacons[index],
       ...props,
@@ -44,7 +44,7 @@ export default class DataService {
     this._saveBeacons();
   }
 
-  postBeacon = props => {
+  postBeacon = (props) => {
     this.maxBeaconId++;
     this.beacons.push({
       ...props,
@@ -55,8 +55,8 @@ export default class DataService {
     return this.beacons[this.beacons.length - 1];
   }
 
-  deleteBeacon = id => {
-    this.beacons = this.beacons.filter(beacon => beacon.id !== id);
+  deleteBeacon = (id) => {
+    this.beacons = this.beacons.filter((beacon) => beacon.id !== id);
     this._saveBeacons();
   }
 
@@ -69,7 +69,7 @@ export default class DataService {
   }
 
   putLocation = (id, props) => {
-    const index = this.locations.findIndex(loc => loc.id === id);
+    const index = this.locations.findIndex((loc) => loc.id === id);
     this.locations[index] = {
       ...this.locations[index],
       ...props,
@@ -78,7 +78,7 @@ export default class DataService {
     this._saveLocations();
   }
 
-  postLocation = props => {
+  postLocation = (props) => {
     this.maxLocationId++;
     this.locations.push({
       ...props,
@@ -90,8 +90,8 @@ export default class DataService {
     return this.locations[this.locations.length - 1];
   }
 
-  deleteLocation = id => {
-    this.locations = this.locations.filter(loc => loc.id !== id);
+  deleteLocation = (id) => {
+    this.locations = this.locations.filter((loc) => loc.id !== id);
     this._saveLocations();
   }
 
@@ -100,7 +100,7 @@ export default class DataService {
   }
 
   getAttachedBeaconIds = () => {
-    const allArrs = this.locations.map(loc => loc.markers);
+    const allArrs = this.locations.map((loc) => loc.markers);
     return R.uniq(R.flatten(allArrs));
   }
 
@@ -109,7 +109,7 @@ export default class DataService {
     const bRect = scaleRect(bRect1, 1.1);
     const boundingPolylineData = this._boundingRect2Polyline(bRect);
 
-    const plainPoints = this.getBeacons().map(beacon => ({
+    const plainPoints = this.getBeacons().map((beacon) => ({
       x: beacon.lat,
       y: beacon.lng
     }));
@@ -122,7 +122,7 @@ export default class DataService {
     return { boundingPolylineData, polygonData };
   }
 
-  _boundingRect2Polyline = bRect => [
+  _boundingRect2Polyline = (bRect) => [
     [bRect.top, bRect.left],
     [bRect.top, bRect.right],
     [bRect.bottom, bRect.right],
@@ -130,3 +130,5 @@ export default class DataService {
     [bRect.top, bRect.left],
   ];
 }
+
+export { DataService };

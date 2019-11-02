@@ -10,18 +10,18 @@ import {
   BrowserRouter as Router, Switch, Route, Redirect, Link, NavLink
 } from 'react-router-dom';
 
-import AudioService from '../../services/audioService';
-import DataService from '../../services/DataService';
+import { AudioService } from '../../services/audioService';
+import { DataService } from '../../services/DataService';
 
 // import getBeacons from '../../utils/gpxExperiment';
 
 
-import Prototype1 from '../Prototype1';
-import MapEditor from '../MapEditor';
-import MusicEditor from '../MusicEditor';
-import Beacons from '../Beacons';
-import Map2 from '../Map2';
-import ErrorBoundry from '../ErrorBoundry';
+import { Prototype1 } from '../Prototype1';
+import { MapEditor } from '../MapEditor';
+import { MusicEditor } from '../MusicEditor';
+import { Beacons } from '../Beacons';
+import { Map2 } from '../Map2';
+import { ErrorBoundry } from '../ErrorBoundry';
 
 import { json2File, makeFileName, readJsonFile } from '../../utils/fileUtils';
 
@@ -61,7 +61,7 @@ if (database) {
   };
 }
 
-export default class App extends Component {
+class App extends Component {
   state = {
     dataService: new DataService(),
     ...initialState
@@ -106,28 +106,28 @@ export default class App extends Component {
     });
   }
 
-  onStateChange = prop => e => {
+  onStateChange = (prop) => (e) => {
     // console.log('prop');
     this.setState({
       [prop]: e.target.value
     });
   }
 
-  setBeacons = beacons => {
+  setBeacons = (beacons) => {
     // console.log('prop');
     this.setState({
       beacons
     });
   }
 
-  setMainPolygon = mainPolygon => {
+  setMainPolygon = (mainPolygon) => {
     // console.log('prop');
     this.setState({
       mainPolygon
     });
   }
 
-  setImageUrl = imageUrl => {
+  setImageUrl = (imageUrl) => {
     // console.log('prop');
     this.setState({
       imageUrl
@@ -140,7 +140,7 @@ export default class App extends Component {
     json2File(this.prepareDataForJson(), makeFileName('SR_acoustic_poc', 'json', new Date()));
   };
 
-  uploadDatabaseFile = evt => {
+  uploadDatabaseFile = (evt) => {
     const input = evt.target.querySelector('input');
     if (input) {
       input.value = '';
@@ -148,8 +148,8 @@ export default class App extends Component {
     }
   };
 
-  onFileSelected = evt => {
-    readJsonFile(evt).then(database2 => {
+  onFileSelected = (evt) => {
+    readJsonFile(evt).then((database2) => {
       console.log(database2.appState);
       this.setState({
         dataService: new DataService({
@@ -285,3 +285,5 @@ export default class App extends Component {
     );
   }
 }
+
+export { App };
