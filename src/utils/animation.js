@@ -24,7 +24,7 @@ Timing.circ = timeFraction => 1 - Math.sin(Math.acos(timeFraction));
 
 Timing.back = R.curry((x, timeFraction) => (timeFraction ** 2) * ((x + 1) * timeFraction - x));
 
-Timing.bounce = (timeFraction) => {
+Timing.bounce = timeFraction => {
   for (let a = 0, b = 1, result; ; a += b, b /= 2) {
     if (timeFraction >= (7 - 4 * a) / 11) {
       return -(((11 - 6 * a - 11 * timeFraction) / 4) ** 2) + (b ** 2);
@@ -45,7 +45,7 @@ Timing.makeEaseInOut = timing => function (timeFraction) {
   return (2 - timing(2 * (1 - timeFraction))) / 2;
 };
 
-const animate = (options) => {
+const animate = options => {
   let start = performance.now();
   const animation = {
     enable: true

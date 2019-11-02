@@ -19,7 +19,7 @@ export default class MapEditor extends Component {
   state = {
   };
 
-  onFileUpload = (evt) => {
+  onFileUpload = evt => {
     const {
       setImageUrl
     } = this.props;
@@ -28,7 +28,7 @@ export default class MapEditor extends Component {
 
     if (f) {
       const r = new FileReader();
-      r.onload = (e) => {
+      r.onload = e => {
         const contents = e.target.result;
         // console.log(contents);
         setImageUrl(contents);
@@ -46,6 +46,7 @@ export default class MapEditor extends Component {
     }
   }
 
+  // eslint-disable-next-line max-lines-per-function
   render() {
     const {
       imagePositionX, imagePositionY, imageOpacity, imageScale, svgWidth, svgHeight, onPropChange, mainPolygon,

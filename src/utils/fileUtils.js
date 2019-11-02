@@ -1,5 +1,4 @@
 
-
 import dateFormat from 'dateformat';
 import { saveAs } from 'file-saver';
 
@@ -26,7 +25,7 @@ const readJsonFile = evt => new Promise((resolve, reject) => {
 
   if (f) {
     const r = new FileReader();
-    r.onload = (e) => {
+    r.onload = e => {
       const contents = e.target.result;
       try {
         const object = JSON.parse(contents);
@@ -48,7 +47,7 @@ const readBinaryFile = evt => new Promise((resolve, reject) => {
 
   if (f) {
     const r = new FileReader();
-    r.onload = (e) => {
+    r.onload = e => {
       const contents = e.target.result;
       resolve({
         name: f.name,

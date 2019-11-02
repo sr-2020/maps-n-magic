@@ -10,7 +10,7 @@ export default class MainPolygon extends Component {
   render() {
     const { mainPolygon } = this.props;
     return (
-      <Fragment>
+      <>
 
         <polyline
           fill="none"
@@ -22,7 +22,7 @@ export default class MainPolygon extends Component {
         {
           mainPolygon.map(point => <MapPoint x={point[0]} y={point[1]} r={5} />)
         }
-      </Fragment>
+      </>
     );
   }
 }

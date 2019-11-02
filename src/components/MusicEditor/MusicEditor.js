@@ -36,12 +36,13 @@ export default class MusicEditor extends Component {
     buffers: this.getBuffers()
   });
 
-  onSoundSelected = (evt) => {
-    readBinaryFile(evt).then((result) => {
+  onSoundSelected = evt => {
+    readBinaryFile(evt).then(result => {
       this.props.audioService.addAudioFile(result).then(this.updateBufferNames);
     });
   };
 
+  // eslint-disable-next-line max-lines-per-function
   render() {
     const { loading, buffers } = this.state;
     const { audioService } = this.props;

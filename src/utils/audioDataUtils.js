@@ -40,7 +40,7 @@ BufferLoader.prototype.loadBuffer = function (url, index) {
     const responseData = b642ab(ab2b64(request.response));
     loader.context.decodeAudioData(
       responseData,
-      (buffer) => {
+      buffer => {
         if (!buffer) {
           alert(`error decoding file data: ${url}`);
           return;
@@ -51,7 +51,7 @@ BufferLoader.prototype.loadBuffer = function (url, index) {
           loader.onload(loader.bufferList);
         }
       },
-      (error) => {
+      error => {
         console.error('decodeAudioData error', error);
       }
     );

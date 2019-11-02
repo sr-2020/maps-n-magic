@@ -70,13 +70,13 @@ export default class App extends Component {
     this.animatePlayer();
   }
 
-  animatePlayer = (duration) => {
+  animatePlayer = duration => {
     const that = this;
     this.animation = animate({
       duration: 20000,
       timing: Timing.makeEaseInOut(Timing.linear),
       draw(progress) {
-        that.setState((state) => {
+        that.setState(state => {
           if (!state.movePlayers) {
             return null;
           }
@@ -104,7 +104,7 @@ export default class App extends Component {
   }
 
   toggleMusic = () => {
-    this.setState((state) => {
+    this.setState(state => {
       // eslint-disable-next-line no-unused-expressions
       state.playing ? this.stop() : this.play();
       return {
@@ -150,7 +150,7 @@ export default class App extends Component {
   //   }
   // }
 
-  crossfade = (state) => {
+  crossfade = state => {
     const {
       playAreaSound, playGhostSound, players, polygonData, listenPlayer
     } = state;
@@ -214,7 +214,7 @@ export default class App extends Component {
     this.toggleMusic();
   }
 
-  onPlayerMove = (event) => {
+  onPlayerMove = event => {
     this.togglePlayerMove();
   }
   // onChange = (event) => {
@@ -237,7 +237,7 @@ export default class App extends Component {
     }));
   }
 
-  setMovable = id => (event) => {
+  setMovable = id => event => {
     // event.stopPropagation();
     // // console.log('setMovable', id);
     // this.setState(state =>
@@ -253,7 +253,7 @@ export default class App extends Component {
   //     movableId: null
   //   })
   // };
-  moveMovable = (event) => {
+  moveMovable = event => {
     // const rect = document.querySelector('svg.root-image').getBoundingClientRect();
     // // const rect = event.target.getBoundingClientRect();
     // // console.log(event.location);
@@ -283,19 +283,20 @@ export default class App extends Component {
     // });
   }
 
-  onStateChange = prop => (e) => {
+  onStateChange = prop => e => {
     this.setState({
       [prop]: e.target.value
     });
   }
 
-  onCheckboxChange = prop => (e) => {
+  onCheckboxChange = prop => e => {
     this.setState({
       [prop]: e.target.checked
     });
   }
   // listenStub = (type) => (event) => console.log(type, event);
 
+  // eslint-disable-next-line max-lines-per-function
   render() {
     const {
       sounds, players, playing, soundsLoaded, polygonData, movable, showBeaconMarkers, movePlayers, listenPlayer,
@@ -365,7 +366,7 @@ export default class App extends Component {
           {/* onMouseMove={this.listenStub('onMouseMove')} */}
           {
             polygonData.polygons && polygonData.polygons.map((polygon, i) => (
-              <Fragment>
+              <>
                 {/* <polyline fill={polygonData.beaconColors[i] || 'none'} stroke="grey" strokeWidth="2" opacity="0.5" points={polygon.map(pt => pt.join(',')).join(' ')} /> */}
                 <polyline
                   fill={audioService.getSoundProps(beacons[i].props.sound).color || 'none'}
@@ -396,20 +397,20 @@ export default class App extends Component {
                 />
                 {/* <circle r="2" cx={polygon.map()x} cy={beacon.y} fill="green"/> */}
                 {/* <circle r={sound.soundR} cx={sound.x} cy={sound.y} fill={sound.color} opacity="0.2"/> */}
-              </Fragment>
+              </>
             ))
           }
           {
             polygonData.polygonCenters && polygonData.polygonCenters.map((center, i) => (
-              <Fragment>
+              <>
                 {/* <circle r="2" cx={center.x} cy={center.y} fill="black"/> */}
                 <text x={center.x} y={center.y + 5} fontSize="15" textAnchor="middle" fill="black">{center.id}</text>
-              </Fragment>
+              </>
             ))
           }
           {
             beacons.map(beacon => (
-              <Fragment>
+              <>
                 <MapPoint x={beacon.x} y={beacon.y} fill="grey" />
 
                 {
@@ -426,12 +427,12 @@ export default class App extends Component {
                     )
                 }
 
-              </Fragment>
+              </>
             ))
           }
           {
             players.map(player => (
-              <Fragment>
+              <>
                 <ellipse
                   cx={player.startX}
                   cy={player.startY}
@@ -472,7 +473,7 @@ export default class App extends Component {
                   </svg>
 
                 </g>
-              </Fragment>
+              </>
             ))
           }
 

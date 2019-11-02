@@ -6,10 +6,12 @@ export default class BeaconTable extends Component {
   state = {
   };
 
+  // eslint-disable-next-line max-lines-per-function
   render() {
     const {
       audioService, beacons, onTableHover, onBeaconChange, onBeaconPropChange, onBeaconPropCheckboxChange,
-      onBeaconRemove } = this.props;
+      onBeaconRemove
+    } = this.props;
     return (
       <table className="beaconTable">
         <thead>

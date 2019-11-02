@@ -8,6 +8,7 @@ export default class SettingsForm extends Component {
   state = {
   };
 
+  // eslint-disable-next-line max-lines-per-function
   render() {
     const {
       showBeaconMarkers, showPolygonLabels, showPolygonBoundaries, showMassCenters, showBeaconSignalArea, signalRadius,
