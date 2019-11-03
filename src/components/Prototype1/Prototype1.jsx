@@ -236,7 +236,7 @@ export class Prototype1 extends Component {
   //   });
   // }
 
-  listenStub = (type) => (event) => console.log(type, event);
+  // listenStub = (type) => (event) => console.log(type, event);
 
   toggleBeaconMarker = () => {
     this.setState((state) => ({
@@ -301,7 +301,6 @@ export class Prototype1 extends Component {
       [prop]: e.target.checked,
     });
   }
-  // listenStub = (type) => (event) => console.log(type, event);
 
   // eslint-disable-next-line max-lines-per-function
   render() {

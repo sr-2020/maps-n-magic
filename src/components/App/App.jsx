@@ -79,7 +79,7 @@ export class App extends Component {
     // });
     // this.animatePlayer();
     setInterval(() => {
-      console.log('saving backup');
+      console.log('saving app state in local storage');
       localStorage.setItem(STORAGE_KEY, JSON.stringify(this.prepareDataForJson()));
     }, 10000);
   }
@@ -151,7 +151,7 @@ export class App extends Component {
 
   onFileSelected = (evt) => {
     readJsonFile(evt).then((database2) => {
-      console.log(database2.appState);
+      // console.log(database2.appState);
       this.setState({
         dataService: new DataService({
           beacons: database2.beacons,

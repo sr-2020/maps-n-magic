@@ -18,20 +18,11 @@ export class MusicEditor extends Component {
   }
 
   componentDidMount = () => {
-    console.log('MusicEditor mounted');
     const { audioService } = this.props;
     audioService.isLoaded.then(() => this.setState({
       loading: false,
       buffers: this.getBuffers(),
     }));
-  }
-
-  componentDidUpdate = () => {
-    console.log('MusicEditor did update');
-  }
-
-  componentWillUnmount = () => {
-    console.log('MusicEditor will unmount');
   }
 
   getBuffers = () => this.props.audioService.getBuffers().map(R.pick(['name', 'props']));

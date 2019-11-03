@@ -221,12 +221,10 @@ export class Beacons extends Component {
   }
 
   clearMainPolygon = () => {
-    // eslint-disable-next-line react/destructuring-assignment
     this.props.setMainPolygon([]);
   }
 
   clearBeacons = () => {
-    // eslint-disable-next-line react/destructuring-assignment
     this.props.setBeacons([]);
   }
 

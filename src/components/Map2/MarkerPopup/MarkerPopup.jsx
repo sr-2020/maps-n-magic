@@ -6,9 +6,7 @@ export class MarkerPopup extends Component {
   static propTypes = MarkerPopupPropTypes;
 
   _handleKeyDown = (e) => {
-    console.log('do validate');
     if (e.key === 'Enter') {
-      // eslint-disable-next-line react/destructuring-assignment
       this.props.onClose();
     }
   }

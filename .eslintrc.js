@@ -54,6 +54,7 @@ module.exports = {
         "no-param-reassign": "off",
         "no-return-assign": ["error", "except-parens"],
         // "no-console": "off",
+        "no-console": ["warn", { allow: ["warn", "error"] }],
         "no-unused-vars": "warn",
         "indent": [
             "error",
@@ -96,6 +97,7 @@ module.exports = {
         "react/static-property-placement": ["error",  'static public field', {
           "propTypes": 'static public field'
         }],
+        "react/destructuring-assignment": ["error", "always", { "ignoreClassFields": true }],
 
         'import/prefer-default-export': 'off',
         'import/named': 'error',

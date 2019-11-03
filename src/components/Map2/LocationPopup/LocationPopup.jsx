@@ -18,12 +18,10 @@ export class LocationPopup extends Component {
   }
 
   componentDidMount = () => {
-    console.log('LocationPopup mounted');
     this.updateComponentState();
   }
 
   componentDidUpdate = (prevProps) => {
-    console.log('LocationPopup did update');
     const {
       name, allBeacons, attachedMarkers,
     } = this.props;
@@ -34,10 +32,6 @@ export class LocationPopup extends Component {
       return;
     }
     this.updateComponentState();
-  }
-
-  componentWillUnmount = () => {
-    console.log('LocationPopup will unmount');
   }
 
   updateComponentState = () => {
@@ -116,9 +110,7 @@ export class LocationPopup extends Component {
   }
 
   _handleKeyDown = (e) => {
-    console.log('do validate');
     if (e.key === 'Enter') {
-      // eslint-disable-next-line react/destructuring-assignment
       this.props.onClose();
     }
   }

@@ -20,7 +20,7 @@ export class MapEditor extends Component {
     const {
       setImageUrl,
     } = this.props;
-    console.log(evt);
+    // console.log(evt);
     const f = evt.target.files[0];
 
     if (f) {

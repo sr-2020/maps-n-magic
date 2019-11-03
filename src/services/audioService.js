@@ -170,7 +170,7 @@ class AudioService {
   }))
 
   fromJson = (data) => {
-    console.log('555');
+    // console.log('555');
     data.map((bufferInfo) => ({
       name: bufferInfo.name,
       props: bufferInfo.props,

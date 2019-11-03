@@ -32,7 +32,7 @@ import { mapConfig, geomanConfig, defaultTileLayer } from './MapConfigurations';
 //   }).addTo(this.map);
 // });
 
-console.log(L);
+// console.log(L);
 L.Icon.Default.imagePath = './images/leafletImages/';
 
 export class Map2 extends Component {
@@ -47,7 +47,6 @@ export class Map2 extends Component {
   }
 
   componentDidMount = () => {
-    console.log('Map2 mounted');
     const { center, zoom } = mapConfig;
     const { urlTemplate, options } = defaultTileLayer;
 
@@ -67,16 +66,11 @@ export class Map2 extends Component {
   }
 
   componentDidUpdate = (prevProps) => {
-    // eslint-disable-next-line react/destructuring-assignment
     if (prevProps.dataService !== this.props.dataService) {
       this.clearMapData();
       this.populateMapData();
     }
     // console.log('Map2 did update');
-  }
-
-  componentWillUnmount = () => {
-    console.log('Map2 will unmount');
   }
 
   onCreateLayer = (event) => {
@@ -302,7 +296,7 @@ export class Map2 extends Component {
     dataService.putBeacon(marker.options.id, marker.getLatLng());
     this.onMarkersChange();
     this.closeMarkerPopup();
-    console.log('pm:edit', e.target.getLatLng());
+    // console.log('pm:edit', e.target.getLatLng());
   };
 
   updateVoronoiPolygons = () => {
@@ -348,7 +342,6 @@ export class Map2 extends Component {
   onMarkerChange = (prop) => (e) => {
     const { value } = e.target;
     const { dataService } = this.props;
-    // eslint-disable-next-line react/destructuring-assignment
     const { id } = this.state.curMarker;
     const marker = this.markerGroup.getLayers().find((marker2) => marker2.options.id === id);
     if (prop === 'name') {
@@ -380,7 +373,6 @@ export class Map2 extends Component {
 
   onLocMarkerChange = ({ action, markerId }) => {
     const { dataService } = this.props;
-    // eslint-disable-next-line react/destructuring-assignment
     const locId = this.state.curLocation.id;
     this.removeMarkerFromLocations(markerId);
     const loc = this.locationsGroup.getLayers().find((loc2) => loc2.options.id === locId);
@@ -424,7 +416,6 @@ export class Map2 extends Component {
   onLocationChange = (prop) => (e) => {
     const { value } = e.target;
     const { dataService } = this.props;
-    // eslint-disable-next-line react/destructuring-assignment
     const { id } = this.state.curLocation;
     const location = this.locationsGroup.getLayers().find((loc) => loc.options.id === id);
     if (prop === 'name') {
