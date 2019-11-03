@@ -1,4 +1,4 @@
-import React, { Component, Fragment } from 'react';
+import React, { } from 'react';
 import './MainPolygon.css';
 import { polygon2polyline } from '../../utils/polygonUtils';
 import { MapPoint } from '../MapPoint';

@@ -54,7 +54,7 @@ class AudioService {
       names.push(name);
       paths.push(path);
     });
-    return new Promise((resolve, reject) => {
+    return new Promise((resolve) => {
       const bufferLoader = new BufferLoader(this.context, paths, ((bufferList) => {
         for (let i = 0; i < bufferList.length; i++) {
           const buffer = bufferList[i];
@@ -63,8 +63,8 @@ class AudioService {
             name,
             buffer,
             props: {
-              color: this.oldColors[name] || COLOR_PALETTE[i].color.background
-            }
+              color: this.oldColors[name] || COLOR_PALETTE[i].color.background,
+            },
           });
         }
         resolve();
@@ -79,8 +79,8 @@ class AudioService {
         name: fileData.name,
         buffer,
         props: {
-          color: this.oldColors[fileData.name] || COLOR_PALETTE[this.buffers.length].color.background
-        }
+          color: this.oldColors[fileData.name] || COLOR_PALETTE[this.buffers.length].color.background,
+        },
       });
       resolve();
     });
@@ -128,7 +128,7 @@ class AudioService {
 
     return {
       source,
-      gainNode
+      gainNode,
     };
   }
 
@@ -164,7 +164,7 @@ class AudioService {
 
   toJson = () => this.buffers.map((bufferInfo) => ({
     name: bufferInfo.name,
-    props: bufferInfo.props
+    props: bufferInfo.props,
     // ...bufferInfo,
     // buffer: this.ab2b64(bufferInfo.buffer)
   }))
@@ -173,7 +173,7 @@ class AudioService {
     console.log('555');
     data.map((bufferInfo) => ({
       name: bufferInfo.name,
-      props: bufferInfo.props
+      props: bufferInfo.props,
     }));
   }
 
@@ -189,7 +189,7 @@ class AudioService {
   ab2b64(buf) {
     return btoa(
       new Uint8Array(buf)
-        .reduce((data, byte) => data + String.fromCharCode(byte), '')
+        .reduce((data, byte) => data + String.fromCharCode(byte), ''),
     );
   }
 

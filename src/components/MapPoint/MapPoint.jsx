@@ -1,28 +1,15 @@
-import React, { Component } from 'react';
-import PropTypes from 'prop-types';
+import React from 'react';
 import './MapPoint.css';
+import { MapPointPropTypes } from '../../types';
 
-class MapPoint extends Component {
-  state = {
-  };
+export function MapPoint(props) {
+  const {
+    x, y, fill, r = 2,
+  } = props;
 
-  render() {
-    const {
-      x, y, fill, r = 2
-    } = this.props;
-
-    return (
-      <circle r={r} cx={x} cy={y} fill={fill || 'red'} />
-    );
-  }
+  return (
+    <circle r={r} cx={x} cy={y} fill={fill || 'red'} />
+  );
 }
 
-MapPoint.propTypes = {
-  // bla: PropTypes.string,
-};
-
-MapPoint.defaultProps = {
-  // bla: 'test',
-};
-
-export { MapPoint };
+MapPoint.propTypes = MapPointPropTypes;

@@ -1,13 +1,12 @@
-import React, { Component, Fragment } from 'react';
+import React, { Component } from 'react';
 import './App.css';
 import '../../css/tailwind.css';
 // import './Icons.css';
 // import '@fortawesome/fontawesome-free/css/all.css';
 import * as R from 'ramda';
-import shortid from 'shortid';
 
 import {
-  BrowserRouter as Router, Switch, Route, Redirect, Link, NavLink
+  BrowserRouter as Router, Switch, Route, Redirect, NavLink,
 } from 'react-router-dom';
 
 import { AudioService } from '../../services/audioService';
@@ -57,7 +56,7 @@ if (database) {
     imageScale: 800,
     beacons: [],
     mainPolygon: [[324, 80], [128, 370], [543, 560], [610, 454], [459, 414], [458, 302], [428, 301], [423, 135], [348, 79], [324, 80]],
-    imageUrl: defaultImgUrl
+    imageUrl: defaultImgUrl,
   };
 }
 
@@ -68,7 +67,7 @@ export class App extends Component {
     super();
     this.state = {
       dataService: new DataService(),
-      ...initialState
+      ...initialState,
     };
   }
 
@@ -104,35 +103,35 @@ export class App extends Component {
         'imageUrl'], this.state),
       audioData: data,
       beacons: dataService.getBeacons(),
-      locations: dataService.getLocations()
+      locations: dataService.getLocations(),
     });
   }
 
-  onStateChange = (prop) => (e) => {
+  onStateChange = (prop, toType) => (e) => {
     // console.log('prop');
     this.setState({
-      [prop]: e.target.value
+      [prop]: toType(e.target.value),
     });
   }
 
   setBeacons = (beacons) => {
     // console.log('prop');
     this.setState({
-      beacons
+      beacons,
     });
   }
 
   setMainPolygon = (mainPolygon) => {
     // console.log('prop');
     this.setState({
-      mainPolygon
+      mainPolygon,
     });
   }
 
   setImageUrl = (imageUrl) => {
     // console.log('prop');
     this.setState({
-      imageUrl
+      imageUrl,
     });
   }
 
@@ -157,7 +156,7 @@ export class App extends Component {
         dataService: new DataService({
           beacons: database2.beacons,
           locations: database2.locations,
-        })
+        }),
       });
       // this.setState(database2.appState);
     });
@@ -168,7 +167,7 @@ export class App extends Component {
   render() {
     const {
       imagePositionX, imagePositionY, imageOpacity, imageScale, svgWidth, svgHeight, beacons, mainPolygon, imageUrl,
-      dataService
+      dataService,
     } = this.state;
 
     return (

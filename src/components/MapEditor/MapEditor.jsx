@@ -1,5 +1,4 @@
 import React, { Component } from 'react';
-import PropTypes from 'prop-types';
 import './MapEditor.css';
 
 // import Modal from 'react-bootstrap/Modal';
@@ -11,17 +10,15 @@ import Col from 'react-bootstrap/Col';
 import { MainPolygon } from '../MainPolygon';
 
 import { Map } from '../Map';
+import { MapEditorPropTypes } from '../../types';
 
-// const SVG_WIDTH = 500;
-// const SVG_HEIGHT = 400;
 
-class MapEditor extends Component {
-  state = {
-  };
+export class MapEditor extends Component {
+  static propTypes = MapEditorPropTypes;
 
   onFileUpload = (evt) => {
     const {
-      setImageUrl
+      setImageUrl,
     } = this.props;
     console.log(evt);
     const f = evt.target.files[0];
@@ -50,7 +47,7 @@ class MapEditor extends Component {
   render() {
     const {
       imagePositionX, imagePositionY, imageOpacity, imageScale, svgWidth, svgHeight, onPropChange, mainPolygon,
-      imageUrl, toDefaultImageUrl
+      imageUrl, toDefaultImageUrl,
     } = this.props;
 
     return (
@@ -62,7 +59,7 @@ class MapEditor extends Component {
               <Form.Label>svgWidth, px</Form.Label>
               <Form.Control
                 type="number"
-                onChange={onPropChange('svgWidth')}
+                onChange={onPropChange('svgWidth', Number)}
                 placeholder="svgWidth"
                 value={svgWidth}
               />
@@ -73,7 +70,7 @@ class MapEditor extends Component {
               <Form.Label>svgHeight, px</Form.Label>
               <Form.Control
                 type="number"
-                onChange={onPropChange('svgHeight')}
+                onChange={onPropChange('svgHeight', Number)}
                 placeholder="svgHeight"
                 value={svgHeight}
               />
@@ -98,7 +95,7 @@ class MapEditor extends Component {
               <Form.Label>imagePositionX, %</Form.Label>
               <Form.Control
                 type="number"
-                onChange={onPropChange('imagePositionX')}
+                onChange={onPropChange('imagePositionX', Number)}
                 placeholder="imagePositionX"
                 value={imagePositionX}
               />
@@ -109,7 +106,7 @@ class MapEditor extends Component {
               <Form.Label>imagePositionY, %</Form.Label>
               <Form.Control
                 type="number"
-                onChange={onPropChange('imagePositionY')}
+                onChange={onPropChange('imagePositionY', Number)}
                 placeholder="imagePositionY"
                 value={imagePositionY}
               />
@@ -120,7 +117,7 @@ class MapEditor extends Component {
               <Form.Label>imageWidth, px</Form.Label>
               <Form.Control
                 type="number"
-                onChange={onPropChange('imageScale')}
+                onChange={onPropChange('imageScale', Number)}
                 placeholder="imageScale"
                 value={imageScale}
               />
@@ -131,7 +128,7 @@ class MapEditor extends Component {
               <Form.Label>imageOpacity, %</Form.Label>
               <Form.Control
                 type="number"
-                onChange={onPropChange('imageOpacity')}
+                onChange={onPropChange('imageOpacity', Number)}
                 placeholder="imageOpacity"
                 value={imageOpacity}
               />
@@ -163,13 +160,3 @@ class MapEditor extends Component {
     );
   }
 }
-
-MapEditor.propTypes = {
-  // bla: PropTypes.string,
-};
-
-MapEditor.defaultProps = {
-  // bla: 'test',
-};
-
-export { MapEditor };

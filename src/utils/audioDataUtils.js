@@ -1,4 +1,3 @@
-import * as R from 'ramda';
 
 // const BUFFERS = {};
 
@@ -53,7 +52,7 @@ BufferLoader.prototype.loadBuffer = function (url, index) {
       },
       (error) => {
         console.error('decodeAudioData error', error);
-      }
+      },
     );
   };
 
@@ -165,7 +164,7 @@ BufferLoader.prototype.load = function () {
 function ab2b64(buf) {
   return btoa(
     new Uint8Array(buf)
-      .reduce((data, byte) => data + String.fromCharCode(byte), '')
+      .reduce((data, byte) => data + String.fromCharCode(byte), ''),
   );
 }
 
@@ -181,5 +180,5 @@ function b642ab(base64) {
 
 // initSound, createSource, createContext, loadBuffers,
 export {
-  BufferLoader, ab2b64, b642ab
+  BufferLoader, ab2b64, b642ab,
 };

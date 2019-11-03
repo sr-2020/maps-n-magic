@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React from 'react';
 import './Map.css';
 
 import { MapPropTypes } from '../../types';
@@ -7,7 +7,7 @@ export function Map(props) {
   const {
     imagePositionX,
     imagePositionY, imageOpacity, imageScale, svgWidth, svgHeight,
-    children, onClick, imageUrl
+    children, onClick, imageUrl,
   } = props;
 
   const imageStyle = {

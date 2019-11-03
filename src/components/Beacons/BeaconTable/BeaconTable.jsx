@@ -1,6 +1,5 @@
-import React, { Component } from 'react';
+import React from 'react';
 import './BeaconTable.css';
-import * as R from 'ramda';
 import { BeaconTablePropTypes } from '../../../types';
 
 // class BeaconTable extends Component {
@@ -8,7 +7,7 @@ import { BeaconTablePropTypes } from '../../../types';
 export function BeaconTable(props) {
   const {
     audioService, beacons, onTableHover, onBeaconChange, onBeaconPropChange, onBeaconPropCheckboxChange,
-    onBeaconRemove
+    onBeaconRemove,
   } = props;
   return (
     <table className="beaconTable">
@@ -29,13 +28,13 @@ export function BeaconTable(props) {
             <tr key={beacon.id} onMouseOver={onTableHover(beacon.id)}>
               <td>{i + 1}</td>
               <td>
-                <input value={beacon.id} onChange={onBeaconChange(beacon.id, 'id')} />
+                <input value={beacon.id} onChange={onBeaconChange(beacon.id, 'id', String)} />
               </td>
               <td>
-                <input className="coordInput" value={beacon.x} type="number" onChange={onBeaconChange(beacon.id, 'x')} />
+                <input className="coordInput" value={beacon.x} type="number" onChange={onBeaconChange(beacon.id, 'x', Number)} />
               </td>
               <td>
-                <input className="coordInput" value={beacon.y} type="number" onChange={onBeaconChange(beacon.id, 'y')} />
+                <input className="coordInput" value={beacon.y} type="number" onChange={onBeaconChange(beacon.id, 'y', Number)} />
               </td>
 
               <td>
@@ -50,7 +49,8 @@ export function BeaconTable(props) {
                 <input
                   type="checkbox"
                   onChange={onBeaconPropCheckboxChange(beacon.id, 'positionFixed')}
-                  checked={beacon.props.positionFixed}
+                  defaultChecked={beacon.props.positionFixed}
+                  // checked={beacon.props.positionFixed}
                 />
               </td>
               <td>

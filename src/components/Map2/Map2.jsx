@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
 import './Map2.css';
 import * as R from 'ramda';
-import shortid from 'shortid';
 
 import '../../utils/gpxConverter';
 
@@ -15,7 +14,7 @@ import { Map2PropTypes } from '../../types';
 import { MarkerPopup } from './MarkerPopup';
 import { LocationPopup } from './LocationPopup';
 
-import { baseClosedLLs, baseLLs, baseCommonLLs } from '../../data/baseContours';
+import { baseClosedLLs, baseLLs } from '../../data/baseContours';
 
 
 import { getIcon } from '../../utils/icons';
@@ -43,7 +42,7 @@ export class Map2 extends Component {
     super();
     this.state = {
       curMarker: null,
-      curLocation: null
+      curLocation: null,
     };
   }
 
@@ -67,7 +66,7 @@ export class Map2 extends Component {
     // this.map.pm.toggleGlobalDragMode();
   }
 
-  componentDidUpdate = (prevProps, prevState) => {
+  componentDidUpdate = (prevProps) => {
     // eslint-disable-next-line react/destructuring-assignment
     if (prevProps.dataService !== this.props.dataService) {
       this.clearMapData();
@@ -102,7 +101,7 @@ export class Map2 extends Component {
   onCreateLocation = (location) => {
     const { dataService } = this.props;
     const { id, name, markers } = dataService.postLocation({
-      latlngs: location.getLatLngs()
+      latlngs: location.getLatLngs(),
     });
     L.setOptions(location, { id, name, markers });
     this.locationsGroup.addLayer(location);
@@ -130,14 +129,13 @@ export class Map2 extends Component {
 
   // eslint-disable-next-line max-lines-per-function
   initMapBackbone = () => {
-    const { dataService } = this.props;
     const baseLine = L.polyline(baseLLs, {
       color: 'green',
-      pmIgnore: true
+      pmIgnore: true,
     });
     const baseClosedLine = L.polyline(baseClosedLLs, {
       color: 'darkviolet',
-      pmIgnore: true
+      pmIgnore: true,
     });
 
     this.markerPopup = L.popup();
@@ -163,7 +161,7 @@ export class Map2 extends Component {
       'Mass centers': this.massCentersGroup,
       'Voronoi polygons': this.polygonsGroup,
       'Signal radiuses': this.signalRadiusesGroup,
-      Locations: this.locationsGroup
+      Locations: this.locationsGroup,
     };
 
     L.control.layers(null, overlayMaps).addTo(this.map);
@@ -174,7 +172,7 @@ export class Map2 extends Component {
     const beacons2 = dataService.getBeacons();
 
     const markers = beacons2.map(({
-      lat, lng, name, id
+      lat, lng, name, id,
     }) => L.marker({ lat, lng }, { id, name }));
     markers.forEach((marker) => {
       this.setMarkerEventHandlers(marker);
@@ -185,9 +183,9 @@ export class Map2 extends Component {
 
     const locations = locationsData.map(({
       // eslint-disable-next-line no-shadow
-      latlngs, name, id, markers
+      latlngs, name, id, markers,
     }) => L.polygon(latlngs, { id, name, markers }));
-    locations.forEach((loc, i) => {
+    locations.forEach((loc) => {
       this.setLocationEventHandlers(loc);
       this.locationsGroup.addLayer(loc);
     });
@@ -210,12 +208,12 @@ export class Map2 extends Component {
             lat: e.target.getLatLng().lat,
             lng: e.target.getLatLng().lng,
             name: e.target.options.name,
-            id: e.target.options.id
-          }
+            id: e.target.options.id,
+          },
         });
         this.markerPopup.setLatLng(e.latlng).setContent(this.markerPopupContent).openOn(this.map);
       },
-      'pm:edit': this.onMarkerEdit
+      'pm:edit': this.onMarkerEdit,
     });
   }
 
@@ -244,7 +242,7 @@ export class Map2 extends Component {
       click: this.onLocationClick,
       mouseover: this.highlightLocation,
       mouseout: this.resetLocationHighlight,
-      'pm:edit': this.onLocationEdit
+      'pm:edit': this.onLocationEdit,
     });
   }
 
@@ -254,8 +252,8 @@ export class Map2 extends Component {
       curLocation: {
         id,
         name,
-        markers
-      }
+        markers,
+      },
     });
     this.locationPopup.setLatLng(e.latlng).setContent(this.locationPopupContent).openOn(this.map);
   }
@@ -264,7 +262,7 @@ export class Map2 extends Component {
     const { dataService } = this.props;
     const location = e.target;
     dataService.putLocation(location.options.id, {
-      latlngs: location.getLatLngs()
+      latlngs: location.getLatLngs(),
     });
     this.closeMarkerPopup();
   }
@@ -276,7 +274,7 @@ export class Map2 extends Component {
       weight: 5,
       color: 'green',
       dashArray: '',
-      fillOpacity: 1
+      fillOpacity: 1,
     });
 
     const { markers } = layer.options;
@@ -288,7 +286,7 @@ export class Map2 extends Component {
     });
   }
 
-  resetLocationHighlight = (e) => {
+  resetLocationHighlight = () => {
     this.updateLocationsView();
     this.updateMarkersView();
   }
@@ -318,7 +316,7 @@ export class Map2 extends Component {
     const polygons = polygonData.clippedPolygons.map((polygon, i) => L.polygon(polygon, {
       fillColor: COLOR_PALETTE[i % COLOR_PALETTE.length].color.background,
       fillOpacity: 0.5,
-      pmIgnore: true
+      pmIgnore: true,
     }));
 
     polygons.forEach((p) => this.polygonsGroup.addLayer(p));
@@ -326,9 +324,9 @@ export class Map2 extends Component {
 
     const massCenters = polygonData.clippedCenters
       .filter((massCenter) => !Number.isNaN(massCenter.x) && !Number.isNaN(massCenter.y))
-      .map((massCenter, i) => L.circleMarker([massCenter.x, massCenter.y], {
+      .map((massCenter) => L.circleMarker([massCenter.x, massCenter.y], {
         radius: 5,
-        pmIgnore: true
+        pmIgnore: true,
       }));
     massCenters.forEach((p) => this.massCentersGroup.addLayer(p));
   }
@@ -342,7 +340,7 @@ export class Map2 extends Component {
         lng: beacon.lng,
       }, {
         radius: 13,
-        pmIgnore: true
+        pmIgnore: true,
       }));
     });
   }
@@ -351,12 +349,12 @@ export class Map2 extends Component {
     const { value } = e.target;
     const { dataService } = this.props;
     // eslint-disable-next-line react/destructuring-assignment
-    const { id, name } = this.state.curMarker;
+    const { id } = this.state.curMarker;
     const marker = this.markerGroup.getLayers().find((marker2) => marker2.options.id === id);
     if (prop === 'name') {
       marker.options.name = value;
       dataService.putBeacon(id, {
-        [prop]: value
+        [prop]: value,
       });
     }
     if (prop === 'lat' || prop === 'lng') {
@@ -366,7 +364,7 @@ export class Map2 extends Component {
         const newLatLng = { ...latLng, [prop]: num };
         marker.setLatLng(newLatLng);
         dataService.putBeacon(id, {
-          [prop]: num
+          [prop]: num,
         });
         this.onMarkersChange();
       }
@@ -375,7 +373,7 @@ export class Map2 extends Component {
     this.setState((state) => {
       const curMarker = { ...state.curMarker, [prop]: value };
       return ({
-        curMarker
+        curMarker,
       });
     });
   }
@@ -396,7 +394,7 @@ export class Map2 extends Component {
       console.error(`Unknown action ${action}`);
     }
     dataService.putLocation(locId, {
-      markers: R.clone(props.markers)
+      markers: R.clone(props.markers),
     });
 
     this.updateLocationsView();
@@ -405,7 +403,7 @@ export class Map2 extends Component {
     this.setState((state) => {
       const curLocation = { ...state.curLocation, markers: props.markers };
       return ({
-        curLocation
+        curLocation,
       });
     });
   }
@@ -417,7 +415,7 @@ export class Map2 extends Component {
       if (R.contains(markerId, props.markers)) {
         props.markers = props.markers.filter((el) => el !== markerId);
         dataService.putLocation(props.id, {
-          markers: R.clone(props.markers)
+          markers: R.clone(props.markers),
         });
       }
     });
@@ -427,18 +425,18 @@ export class Map2 extends Component {
     const { value } = e.target;
     const { dataService } = this.props;
     // eslint-disable-next-line react/destructuring-assignment
-    const { name, id } = this.state.curLocation;
+    const { id } = this.state.curLocation;
     const location = this.locationsGroup.getLayers().find((loc) => loc.options.id === id);
     if (prop === 'name') {
       location.options.name = value;
       dataService.putLocation(id, {
-        [prop]: value
+        [prop]: value,
       });
     }
     this.setState((state) => {
       const curLocation = { ...state.curLocation, [prop]: value };
       return ({
-        curLocation
+        curLocation,
       });
     });
   }
@@ -450,10 +448,10 @@ export class Map2 extends Component {
   // eslint-disable-next-line max-lines-per-function
   render() {
     const {
-      curMarker, curLocation
+      curMarker, curLocation,
     } = this.state;
     const {
-      dataService
+      dataService,
     } = this.props;
     let el = null;
     if (curMarker) {

@@ -1,23 +1,28 @@
 /* eslint-disable react/destructuring-assignment */
 import React, { Component } from 'react';
-import PropTypes from 'prop-types';
 import './MusicEditor.css';
 import * as R from 'ramda';
 
 import { readBinaryFile } from '../../utils/fileUtils';
+import { MusicEditorPropTypes } from '../../types';
 
-class MusicEditor extends Component {
-  state = {
-    buffers: [],
-    loading: true
-  };
+export class MusicEditor extends Component {
+  static propTypes = MusicEditorPropTypes;
+
+  constructor() {
+    super();
+    this.state = {
+      buffers: [],
+      loading: true,
+    };
+  }
 
   componentDidMount = () => {
     console.log('MusicEditor mounted');
     const { audioService } = this.props;
     audioService.isLoaded.then(() => this.setState({
       loading: false,
-      buffers: this.getBuffers()
+      buffers: this.getBuffers(),
     }));
   }
 
@@ -32,7 +37,7 @@ class MusicEditor extends Component {
   getBuffers = () => this.props.audioService.getBuffers().map(R.pick(['name', 'props']));
 
   updateBufferNames = () => this.setState({
-    buffers: this.getBuffers()
+    buffers: this.getBuffers(),
   });
 
   onSoundSelected = (evt) => {
@@ -61,7 +66,7 @@ class MusicEditor extends Component {
             <tbody>
               {
                 buffers.map((buffer) => (
-                  <tr>
+                  <tr key={buffer.name}>
                     <td>
                       {/* <input
                         value={bufferInfo.name}
@@ -77,23 +82,23 @@ class MusicEditor extends Component {
                           this.updateBufferNames();
                         }}
                       >
-Remove
-</button>
+                        Remove
+                      </button>
                       <button
                         type="button"
                         onClick={() => audioService.startSound(buffer.name)}
                       >
-Play
-</button>
+                        Play
+                      </button>
                       <button
                         type="button"
                         onClick={() => audioService.stopSound(buffer.name)}
                       >
-Stop
-</button>
+                        Stop
+                      </button>
                       <input
                         type="color"
-                        value={buffer.props.color}
+                        defaultValue={buffer.props.color}
                       />
                       {/* // onClick={() => audioService.stopSound(bufferName)} */}
                     </td>
@@ -108,13 +113,3 @@ Stop
     );
   }
 }
-
-MusicEditor.propTypes = {
-  // bla: PropTypes.string,
-};
-
-MusicEditor.defaultProps = {
-  // bla: 'test',
-};
-
-export { MusicEditor };

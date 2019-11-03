@@ -1,12 +1,10 @@
 /* eslint-disable jsx-a11y/label-has-associated-control */
-import React, { Component, Fragment } from 'react';
+import React, { Component } from 'react';
 import './Beacons.css';
 import shortid from 'shortid';
 import * as R from 'ramda';
 
-import Button from 'react-bootstrap/Button';
 import Form from 'react-bootstrap/Form';
-import PropTypes from 'prop-types';
 import { Map } from '../Map';
 import { MapMarker } from '../MapMarker';
 import { MapPoint } from '../MapPoint';
@@ -21,26 +19,12 @@ import { COLOR_PALETTE } from '../../utils/colorPalette';
 
 import { polygon2polyline, euDist } from '../../utils/polygonUtils';
 
+import { BeaconsPropTypes } from '../../types';
 
 let tracks = [];
 
 export class Beacons extends Component {
-  static propTypes = {
-    // beacons: PropTypes.array.isRequired,
-    // setBeacons: PropTypes.func.isRequired,
-    // mainPolygon: PropTypes.array.isRequired,
-    // setMainPolygon: PropTypes.func.isRequired,
-    // imagePositionX: PropTypes.number.isRequired,
-    // imagePositionY: PropTypes.number.isRequired,
-    // imageOpacity: PropTypes.number.isRequired,
-    // imageScale: PropTypes.number.isRequired,
-    // svgWidth: PropTypes.number.isRequired,
-    // svgHeight: PropTypes.number.isRequired,
-    // beacons: PropTypes.array.isRequired,
-    // audioService: PropTypes.object.isRequired,
-    // mainPolygon: PropTypes.array.isRequired,
-    // imageUrl: PropTypes.string.isRequired
-  };
+  static propTypes = BeaconsPropTypes;
 
   constructor() {
     super();
@@ -79,8 +63,8 @@ export class Beacons extends Component {
       y,
       id: shortid.generate(),
       props: {
-        sound: 'none'
-      }
+        sound: 'none',
+      },
     };
 
     const { beacons, setBeacons } = this.props;
@@ -114,14 +98,14 @@ export class Beacons extends Component {
     setMainPolygon([...polygon, newPoint]);
   }
 
-  onBeaconChange = (id, prop) => (e) => {
+  onBeaconChange = (id, prop, toType) => (e) => {
     const { value } = e.target;
     const { beacons, setBeacons } = this.props;
     const index = beacons.findIndex((beacon) => beacon.id === id);
     const beacons2 = [...beacons];
     beacons2[index] = {
       ...beacons2[index],
-      [prop]: value
+      [prop]: toType(value),
     };
     setBeacons(beacons2);
   }
@@ -146,8 +130,8 @@ export class Beacons extends Component {
       ...beacons2[index],
       props: {
         ...beacons2[index].props,
-        [prop]: value
-      }
+        [prop]: value,
+      },
     };
     setBeacons(beacons2);
   }
@@ -161,22 +145,22 @@ export class Beacons extends Component {
       ...beacons2[index],
       props: {
         ...beacons2[index].props,
-        [prop]: checked
-      }
+        [prop]: checked,
+      },
     };
     setBeacons(beacons2);
   }
 
-  onBeaconRemove = (id) => (e) => {
+  onBeaconRemove = (id) => () => {
     const { beacons, setBeacons } = this.props;
     const beacons2 = beacons.filter((beacon) => beacon.id !== id);
     tracks = [];
     setBeacons(beacons2);
   }
 
-  onTableHover = (id) => (e) => {
+  onTableHover = (id) => () => {
     this.setState({
-      hoveredBeacon: id
+      hoveredBeacon: id,
     });
   }
 
@@ -185,7 +169,7 @@ export class Beacons extends Component {
     // console.log('setMovable', id);
     // console.log(state.movableId == null, (state.movableId == null ? null : id));
     this.setState((state) => ({
-      movableId: (state.movableId == null ? id : null)
+      movableId: (state.movableId == null ? id : null),
     }));
   };
 
@@ -197,7 +181,7 @@ export class Beacons extends Component {
     const eY = event.clientY;
     const movable = {
       x: eX - rect.left,
-      y: eY - rect.top
+      y: eY - rect.top,
     };
     // const { svgWidth, svgHeight } = this.props;
     this.setState((state) => {
@@ -210,7 +194,7 @@ export class Beacons extends Component {
         if (beacon.id !== state.movableId) return beacon;
         return {
           ...beacon,
-          ...movable
+          ...movable,
         };
       });
 
@@ -226,27 +210,27 @@ export class Beacons extends Component {
 
   toggleCheckbox = (prop) => () => {
     this.setState((state) => ({
-      [prop]: !state[prop]
+      [prop]: !state[prop],
     }));
   }
 
   setModeState = (mode) => () => {
     this.setState(({
-      mode
+      mode,
     }));
   }
 
-  clearMainPolygon = (mode) => {
+  clearMainPolygon = () => {
     // eslint-disable-next-line react/destructuring-assignment
     this.props.setMainPolygon([]);
   }
 
-  clearBeacons = (mode) => {
+  clearBeacons = () => {
     // eslint-disable-next-line react/destructuring-assignment
     this.props.setBeacons([]);
   }
 
-  clearTracks = (mode) => {
+  clearTracks = () => {
     tracks = [];
   }
 
@@ -258,10 +242,10 @@ export class Beacons extends Component {
 
   nextIteration = () => {
     const {
-      svgWidth, svgHeight, beacons, setBeacons, mainPolygon
+      svgWidth, svgHeight, beacons, setBeacons, mainPolygon,
     } = this.props;
     const {
-      maxDelta
+      maxDelta,
     } = this.state;
 
     const polygonData = getPolygons(beacons, svgWidth, svgHeight, mainPolygon);
@@ -288,7 +272,7 @@ export class Beacons extends Component {
     }, 0);
     if (delta < maxDelta) {
       this.setState({
-        enableAutoIteration: false
+        enableAutoIteration: false,
       });
     } else {
       tracks.push(R.clone(newBeacons));
@@ -296,10 +280,10 @@ export class Beacons extends Component {
     }
   }
 
-  onStateChange = (prop) => (e) => {
+  onStateChange = (prop, toType) => (e) => {
     // console.log('prop');
     this.setState({
-      [prop]: e.target.value
+      [prop]: toType(e.target.value),
     });
   }
 
@@ -314,12 +298,12 @@ export class Beacons extends Component {
     const {
       showBeaconMarkers, showPolygonLabels, showPolygonBoundaries,
       hoveredBeacon, mode, showBeaconSignalArea, showMassCenters,
-      enableAutoIteration, maxDelta, signalRadius, showTracks
+      enableAutoIteration, maxDelta, signalRadius, showTracks,
     } = this.state;
 
     const {
       imagePositionX, imagePositionY, imageOpacity, imageScale,
-      svgWidth, svgHeight, beacons, audioService, mainPolygon, imageUrl
+      svgWidth, svgHeight, beacons, audioService, mainPolygon, imageUrl,
     } = this.props;
     // console.log(beacons);
     let polygonData;
@@ -353,28 +337,26 @@ export class Beacons extends Component {
 
           {
             showPolygonBoundaries && polygonData.clippedPolygons
-              && polygonData.clippedPolygons.map((polygons, i) => polygons.map((polygon) => (
-                <>
-                  <polyline
-                    fill={polygonData.beaconColors[i] || COLOR_PALETTE[i % COLOR_PALETTE.length].color.background || 'none'}
-                    stroke="grey"
-                    strokeWidth="2"
-                    opacity="0.5"
-                    points={polygon2polyline(polygon)}
-                  />
-                  <polyline
-                    fill="none"
-                    stroke="grey"
-                    strokeWidth="2"
-                    opacity="0.5"
-                    points={polygon2polyline(polygon)}
-                  />
-                </>
+              && polygonData.clippedPolygons.map((polygons, i) => polygons.map((polygon, j) => (
+                // < >
+                <polyline
+                  // eslint-disable-next-line react/no-array-index-key
+                  key={`${i}_${j}`}
+                  fill={polygonData.beaconColors[i] || COLOR_PALETTE[i % COLOR_PALETTE.length].color.background || 'none'}
+                  stroke="grey"
+                  strokeWidth="2"
+                  opacity="0.5"
+                  points={polygon2polyline(polygon)}
+                />
+
+                // </>
               )))
           }
           {
-            showTracks && trackLines.map((trackLine) => (
+            showTracks && trackLines.map((trackLine, i) => (
               <polyline
+                // eslint-disable-next-line react/no-array-index-key
+                key={i}
                 fill="none"
                 stroke="black"
                 strokeWidth="1"
@@ -385,26 +367,49 @@ export class Beacons extends Component {
           }
           {
             showPolygonLabels && polygonData.polygonCenters && polygonData.polygonCenters.map((center, i) => (
-              <>
-                <text x={center.x} y={center.y + 5} fontSize="15" textAnchor="middle" fill="black">{center.id}</text>
-              </>
+              <text
+                key={beacons[i].id}
+                x={center.x}
+                y={center.y + 5}
+                fontSize="15"
+                textAnchor="middle"
+                fill="black"
+              >
+                {center.id}
+              </text>
             ))
           }
           {
             beacons.map((beacon) => (
-              <MapPoint key={beacon.id} x={beacon.x} y={beacon.y} />
+              <MapPoint
+                key={beacon.id}
+                x={beacon.x}
+                y={beacon.y}
+              />
             ))
           }
           {
             showMassCenters && polygonData && polygonData.clippedCenters && polygonData.clippedCenters
               .filter((center) => !Number.isNaN(center.x) && !Number.isNaN(center.y))
               .map((center, i) => (
-                <MapPoint key={beacons[i].id} x={center.x} y={center.y} fill="black" />
+                <MapPoint
+                  key={beacons[i].id}
+                  x={center.x}
+                  y={center.y}
+                  fill="black"
+                />
               ))
           }
           {
             showBeaconSignalArea && beacons.map((beacon) => (
-              <circle r={signalRadius} cx={beacon.x} cy={beacon.y} opacity="0.5" fill="url(#RadialGradient1)" />
+              <circle
+                key={beacon.id}
+                r={signalRadius}
+                cx={beacon.x}
+                cy={beacon.y}
+                opacity="0.5"
+                fill="url(#RadialGradient1)"
+              />
             ))
           }
           {

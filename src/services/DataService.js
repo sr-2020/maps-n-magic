@@ -1,8 +1,8 @@
 import * as R from 'ramda';
-import { getBeacons, getBeacons2 } from '../data/beacons';
+import { getBeacons2 } from '../data/beacons';
 import { getBoundingRect, scaleRect } from '../utils/polygonUtils';
 
-import { baseClosedLLs, baseLLs, baseCommonLLs } from '../data/baseContours';
+import { baseCommonLLs } from '../data/baseContours';
 
 import { getPolygons2 } from '../utils/polygonGenerator';
 
@@ -39,7 +39,7 @@ class DataService {
     this.beacons[index] = {
       ...this.beacons[index],
       ...props,
-      id
+      id,
     };
     this._saveBeacons();
   }
@@ -73,7 +73,7 @@ class DataService {
     this.locations[index] = {
       ...this.locations[index],
       ...props,
-      id
+      id,
     };
     this._saveLocations();
   }
@@ -111,7 +111,7 @@ class DataService {
 
     const plainPoints = this.getBeacons().map((beacon) => ({
       x: beacon.lat,
-      y: beacon.lng
+      y: beacon.lng,
     }));
     // console.log('plainPoints', plainPoints);
     const polygonData = getPolygons2(plainPoints,

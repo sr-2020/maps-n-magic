@@ -1,14 +1,21 @@
 import React, { Component } from 'react';
 import './ErrorBoundry.css';
 
-class ErrorBoundry extends Component {
-  state = {
-    hasError: false
-  };
+import { ErrorBoundryPropTypes } from '../../types';
+
+export class ErrorBoundry extends Component {
+  static propTypes = ErrorBoundryPropTypes;
+
+  constructor() {
+    super();
+    this.state = {
+      hasError: false,
+    };
+  }
 
   componentDidCatch = () => {
     this.setState({
-      hasError: true
+      hasError: true,
     });
   }
 
@@ -23,5 +30,3 @@ class ErrorBoundry extends Component {
     return this.props.children;
   }
 }
-
-export { ErrorBoundry };

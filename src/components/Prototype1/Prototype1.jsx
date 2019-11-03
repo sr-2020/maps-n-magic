@@ -1,5 +1,5 @@
 /* eslint-disable jsx-a11y/label-has-associated-control */
-import React, { Component, Fragment } from 'react';
+import React, { Component } from 'react';
 // import logo from './logo.svg';
 import './Prototype1.css';
 import * as R from 'ramda';
@@ -13,6 +13,8 @@ import { getPolygons } from '../../utils/polygonGenerator';
 
 import { MapMarker } from '../MapMarker';
 import { MapPoint } from '../MapPoint';
+
+import { Prototype1PropTypes } from '../../types';
 
 // const SVG_WIDTH = 500;
 // const SVG_HEIGHT = 400;
@@ -40,36 +42,42 @@ import { MapPoint } from '../MapPoint';
 
 // const sortBeacons = R.pipe(R.sortBy(R.prop('x')), R.sortBy(R.prop('y')));
 
-class Prototype1 extends Component {
-  state = {
-    polygonData: {},
-    sounds: [
-    ],
-    players: initialPlayers,
-    playing: false,
-    playGhostSound: true,
-    playAreaSound: true,
-    movePlayers: true,
-    soundsLoaded: false,
-    movableId: null,
-    showBeaconMarkers: false,
-    listenPlayer: initialPlayers[0].id
-  };
+export class Prototype1 extends Component {
+  static propTypes = Prototype1PropTypes;
+
+  constructor() {
+    super();
+    this.state = {
+      polygonData: {},
+      sounds: [
+      ],
+      players: initialPlayers,
+      playing: false,
+      playGhostSound: true,
+      playAreaSound: true,
+      movePlayers: true,
+      soundsLoaded: false,
+      movableId: null,
+      showBeaconMarkers: false,
+      listenPlayer: initialPlayers[0].id,
+    };
+  }
 
   componentDidMount() {
-    const { beacons, svgWidth, svgHeight } = this.props;
+    const {
+      beacons, svgWidth, svgHeight, audioService,
+    } = this.props;
     // this.setState(({ beacons }) => ({
     this.setState(({
       polygonData: getPolygons(beacons, svgWidth, svgHeight),
     }));
-    const { audioService } = this.props;
     audioService.isLoaded.then(() => this.setState({
       soundsLoaded: true,
     }));
     this.animatePlayer();
   }
 
-  animatePlayer = (duration) => {
+  animatePlayer = () => {
     const that = this;
     this.animation = animate({
       duration: 20000,
@@ -81,16 +89,16 @@ class Prototype1 extends Component {
           }
           const newState = {
             ...state,
-            players: state.players.map((player, i) => ({
+            players: state.players.map((player) => ({
               ...player,
               x: player.startX + Math.cos(progress * player.speed * 2 * Math.PI) * player.rx,
-              y: player.startY + Math.sin(progress * player.speed * 2 * Math.PI) * player.ry * player.moveDirection
+              y: player.startY + Math.sin(progress * player.speed * 2 * Math.PI) * player.ry * player.moveDirection,
             })),
             // players: [{
             //   x: 200 + Math.cos(progress*2 * Math.PI) * 100,
             //   y: 150 + Math.sin(progress*2 * Math.PI) * 100
             // }],
-            sounds: [...state.sounds]
+            sounds: [...state.sounds],
           };
           if (state.playing) {
             that.crossfade(newState);
@@ -98,7 +106,7 @@ class Prototype1 extends Component {
           return newState;
         });
       },
-      loop: true
+      loop: true,
     });
   }
 
@@ -107,14 +115,14 @@ class Prototype1 extends Component {
       // eslint-disable-next-line no-unused-expressions
       state.playing ? this.stop() : this.play();
       return {
-        playing: !state.playing
+        playing: !state.playing,
       };
     });
   };
 
   togglePlayerMove = () => {
     this.setState((state) => ({
-      movePlayers: !state.movePlayers
+      movePlayers: !state.movePlayers,
     }));
   };
 
@@ -151,7 +159,7 @@ class Prototype1 extends Component {
 
   crossfade = (state) => {
     const {
-      playAreaSound, playGhostSound, players, polygonData, listenPlayer
+      playAreaSound, playGhostSound, players, polygonData, listenPlayer,
     } = state;
     const player = players.find((player2) => player2.id === listenPlayer);
 
@@ -197,12 +205,12 @@ class Prototype1 extends Component {
     let volumes = audioService.getSoundNames().map((soundName) => ({
       name: soundName,
       // gain: (soundName === curBeaconSound || (ghostIsHere && soundName === 'ghost')) ? 1 : 0
-      gain: playAreaSound && (soundName === curBeaconSound) ? 1 : 0
+      gain: playAreaSound && (soundName === curBeaconSound) ? 1 : 0,
     }));
     if (playGhostSound && ghostIsHere) {
       volumes = volumes.map((sound) => ({
         ...sound,
-        gain: (sound.name === 'ghost') ? 1 : sound.gain
+        gain: (sound.name === 'ghost') ? 1 : sound.gain,
       }));
     }
 
@@ -213,7 +221,7 @@ class Prototype1 extends Component {
     this.toggleMusic();
   }
 
-  onPlayerMove = (event) => {
+  onPlayerMove = () => {
     this.togglePlayerMove();
   }
   // onChange = (event) => {
@@ -232,11 +240,11 @@ class Prototype1 extends Component {
 
   toggleBeaconMarker = () => {
     this.setState((state) => ({
-      showBeaconMarkers: !state.showBeaconMarkers
+      showBeaconMarkers: !state.showBeaconMarkers,
     }));
   }
 
-  setMovable = (id) => (event) => {
+  setMovable = () => () => {
     // event.stopPropagation();
     // // console.log('setMovable', id);
     // this.setState(state =>
@@ -252,7 +260,7 @@ class Prototype1 extends Component {
   //     movableId: null
   //   })
   // };
-  moveMovable = (event) => {
+  moveMovable = () => {
     // const rect = document.querySelector('svg.root-image').getBoundingClientRect();
     // // const rect = event.target.getBoundingClientRect();
     // // console.log(event.location);
@@ -284,13 +292,13 @@ class Prototype1 extends Component {
 
   onStateChange = (prop) => (e) => {
     this.setState({
-      [prop]: e.target.value
+      [prop]: e.target.value,
     });
   }
 
   onCheckboxChange = (prop) => (e) => {
     this.setState({
-      [prop]: e.target.checked
+      [prop]: e.target.checked,
     });
   }
   // listenStub = (type) => (event) => console.log(type, event);
@@ -298,17 +306,17 @@ class Prototype1 extends Component {
   // eslint-disable-next-line max-lines-per-function
   render() {
     const {
-      sounds, players, playing, soundsLoaded, polygonData, movable, showBeaconMarkers, movePlayers, listenPlayer,
-      playGhostSound, playAreaSound
+      players, playing, soundsLoaded, polygonData, showBeaconMarkers, movePlayers, listenPlayer,
+      playGhostSound, playAreaSound,
     } = this.state;
     const {
-      beacons, svgWidth, svgHeight, audioService
+      beacons, svgWidth, svgHeight, audioService,
     } = this.props;
 
     let ghostPolygonId;
-    const player = players.find((player2) => player2.id === 'Ghost');
+    const ghostPlayer = players.find((player2) => player2.id === 'Ghost');
     if (polygonData && polygonData.delaunay) {
-      const arrId = polygonData.delaunay.find(player.x, player.y);
+      const arrId = polygonData.delaunay.find(ghostPlayer.x, ghostPlayer.y);
       ghostPolygonId = polygonData.beaconIds[arrId];
     }
 
@@ -365,7 +373,8 @@ class Prototype1 extends Component {
           {/* onMouseMove={this.listenStub('onMouseMove')} */}
           {
             polygonData.polygons && polygonData.polygons.map((polygon, i) => (
-              <>
+              // eslint-disable-next-line react/no-array-index-key
+              <g key={i}>
                 {/* <polyline fill={polygonData.beaconColors[i] || 'none'} stroke="grey" strokeWidth="2" opacity="0.5" points={polygon.map(pt => pt.join(',')).join(' ')} /> */}
                 <polyline
                   fill={audioService.getSoundProps(beacons[i].props.sound).color || 'none'}
@@ -396,20 +405,21 @@ class Prototype1 extends Component {
                 />
                 {/* <circle r="2" cx={polygon.map()x} cy={beacon.y} fill="green"/> */}
                 {/* <circle r={sound.soundR} cx={sound.x} cy={sound.y} fill={sound.color} opacity="0.2"/> */}
-              </>
+              </g>
             ))
           }
           {
             polygonData.polygonCenters && polygonData.polygonCenters.map((center, i) => (
-              <>
+              // eslint-disable-next-line react/no-array-index-key
+              <g key={i}>
                 {/* <circle r="2" cx={center.x} cy={center.y} fill="black"/> */}
                 <text x={center.x} y={center.y + 5} fontSize="15" textAnchor="middle" fill="black">{center.id}</text>
-              </>
+              </g>
             ))
           }
           {
             beacons.map((beacon) => (
-              <>
+              <g key={beacon.id}>
                 <MapPoint x={beacon.x} y={beacon.y} fill="grey" />
 
                 {
@@ -426,13 +436,13 @@ class Prototype1 extends Component {
                     )
                 }
 
-              </>
+              </g>
             ))
           }
           {
-            // eslint-disable-next-line no-shadow
-            players.map((pyer) => (
-              <>
+            players.map((player, i) => (
+              // eslint-disable-next-line react/no-array-index-key
+              <g key={i}>
                 <ellipse
                   cx={player.startX}
                   cy={player.startY}
@@ -473,7 +483,7 @@ class Prototype1 extends Component {
                   </svg>
 
                 </g>
-              </>
+              </g>
             ))
           }
 
@@ -547,7 +557,7 @@ class Prototype1 extends Component {
             value={listenPlayer}
           >
             {/* <option value="">No value</option> */}
-            {players.map((el, i) => <option value={el.id}>{`${el.id}(${el.color})`}</option>)}
+            {players.map((el) => <option key={el.id} value={el.id}>{`${el.id}(${el.color})`}</option>)}
           </select>
           <div>
             {!soundsLoaded ? 'loading sounds...' : 'sounds loaded'}
@@ -558,5 +568,3 @@ class Prototype1 extends Component {
     );
   }
 }
-
-export { Prototype1 };

@@ -2,13 +2,20 @@ import React, { Component } from 'react';
 import * as R from 'ramda';
 import './LocationPopup.css';
 
-class LocationPopup extends Component {
-  state = {
-    unattachedList: [],
-    attachedList: [],
-    selectedAddMarker: null,
-    selectedRemoveMarker: null,
-  };
+import { LocationPopupPropTypes } from '../../../types';
+
+export class LocationPopup extends Component {
+  static propTypes = LocationPopupPropTypes;
+
+  constructor() {
+    super();
+    this.state = {
+      unattachedList: [],
+      attachedList: [],
+      selectedAddMarker: null,
+      selectedRemoveMarker: null,
+    };
+  }
 
   componentDidMount = () => {
     console.log('LocationPopup mounted');
@@ -18,11 +25,11 @@ class LocationPopup extends Component {
   componentDidUpdate = (prevProps) => {
     console.log('LocationPopup did update');
     const {
-      name, allMarkers, attachedMarkers
+      name, allBeacons, attachedMarkers,
     } = this.props;
     if (name === prevProps.name
       && R.equals(attachedMarkers, prevProps.attachedMarkers)
-      && R.equals(allMarkers, prevProps.allMarkers)
+      && R.equals(allBeacons, prevProps.allBeacons)
     ) {
       return;
     }
@@ -35,7 +42,7 @@ class LocationPopup extends Component {
 
   updateComponentState = () => {
     const {
-      attachedMarkers, allBeacons, allLocations
+      attachedMarkers, allBeacons, allLocations,
     } = this.props;
 
     const marker2loc = allLocations.reduce((acc, loc) => {
@@ -64,47 +71,47 @@ class LocationPopup extends Component {
     });
   }
 
-  removeMarker = (e) => {
+  removeMarker = () => {
     const {
-      selectedRemoveMarker
+      selectedRemoveMarker,
     } = this.state;
     const {
-      name, onLocMarkerChange
+      onLocMarkerChange,
     } = this.props;
     if (!selectedRemoveMarker) {
       return;
     }
     onLocMarkerChange({
       action: 'remove',
-      markerId: selectedRemoveMarker
+      markerId: selectedRemoveMarker,
     });
   }
 
-  addMarker = (e) => {
+  addMarker = () => {
     const {
-      selectedAddMarker
+      selectedAddMarker,
     } = this.state;
     const {
-      name, onLocMarkerChange
+      onLocMarkerChange,
     } = this.props;
     if (!selectedAddMarker) {
       return;
     }
     onLocMarkerChange({
       action: 'add',
-      markerId: selectedAddMarker
+      markerId: selectedAddMarker,
     });
   }
 
   onSelectedAddChange = (e) => {
     this.setState({
-      selectedAddMarker: Number(e.target.value)
+      selectedAddMarker: Number(e.target.value),
     });
   }
 
   onSelectedRemoveChange = (e) => {
     this.setState({
-      selectedRemoveMarker: Number(e.target.value)
+      selectedRemoveMarker: Number(e.target.value),
     });
   }
 
@@ -126,10 +133,10 @@ class LocationPopup extends Component {
   // eslint-disable-next-line max-lines-per-function
   render() {
     const {
-      unattachedList, attachedList, selectedAddMarker, selectedRemoveMarker
+      unattachedList, attachedList, selectedAddMarker, selectedRemoveMarker,
     } = this.state;
     const {
-      name, onChange
+      name, onChange,
     } = this.props;
     return (
       <div className="LocationPopup">
@@ -137,7 +144,8 @@ class LocationPopup extends Component {
           <label
             className="block text-gray-700 text-sm font-bold mb-2"
             htmlFor="locationName"
-          >Name
+          >
+            Name
           </label>
           <input
             className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
@@ -152,11 +160,12 @@ class LocationPopup extends Component {
           <label
             className="block text-gray-700 text-sm font-bold mb-2"
             htmlFor="locationName"
-          >Markers
+          >
+            Markers
           </label>
           <div className="mb-2">
             {
-              attachedList.map((marker) => <span className="mr-2">{marker.name}</span>)
+              attachedList.map((marker) => <span key={marker.id} className="mr-2">{marker.name}</span>)
             }
             {
               attachedList.length === 0 && <span className="font-bold">No markers</span>
@@ -165,33 +174,37 @@ class LocationPopup extends Component {
           <div className="mb-2">
             <select
               onChange={this.onSelectedAddChange}
-              value={selectedAddMarker}
+              value={selectedAddMarker || ''}
               className="marker-select shadow border rounded mr-2 py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-            >{
-                unattachedList.map((marker) => <option value={marker.id}>{this._getMarkerLabel(marker)}</option>)
+            >
+              {
+                unattachedList.map((marker) => <option key={marker.id} value={marker.id}>{this._getMarkerLabel(marker)}</option>)
               }
             </select>
             <button
               className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
               type="button"
               onClick={this.addMarker}
-            >Add
+            >
+              Add
             </button>
           </div>
           <div>
             <select
               onChange={this.onSelectedRemoveChange}
-              value={selectedRemoveMarker}
+              value={selectedRemoveMarker || ''}
               className="marker-select shadow border rounded mr-2 py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-            >{
-                attachedList.map((marker) => <option value={marker.id}>{marker.name}</option>)
+            >
+              {
+                attachedList.map((marker) => <option key={marker.id} value={marker.id}>{marker.name}</option>)
               }
             </select>
             <button
               className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
               type="button"
               onClick={this.removeMarker}
-            >Remove
+            >
+              Remove
             </button>
           </div>
         </div>
@@ -199,5 +212,3 @@ class LocationPopup extends Component {
     );
   }
 }
-
-export { LocationPopup };

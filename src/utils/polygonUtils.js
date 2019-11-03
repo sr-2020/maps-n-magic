@@ -1,4 +1,4 @@
-//http://e-maxx.ru/algo/gravity_center
+// http://e-maxx.ru/algo/gravity_center
 import * as R from 'ramda';
 import * as gpu from '@thi.ng/geom-poly-utils';
 
@@ -53,7 +53,7 @@ function getTriangleCentroid(triangle) {
     x: ((pt2[0] - pt1[0]) * 2) / 3 + pt1[0],
     y: ((pt2[1] - pt1[1]) * 2) / 3 + pt1[1],
     pt1,
-    pt2
+    pt2,
   };
 }
 
@@ -101,7 +101,7 @@ function getSolidMassCenter(polygon) {
   return {
     x: weightCenter[0],
     y: weightCenter[1],
-    volume: area2
+    volume: area2,
   };
 }
 
@@ -115,7 +115,7 @@ function intermediate2massCenter(intermediate) {
   return {
     x: sums[0] / volume,
     y: sums[1] / volume,
-    volume
+    volume,
   };
 }
 
@@ -156,5 +156,5 @@ export {
   euDist,
   getMultiPolygonSolidMassCenter,
   getBoundingRect,
-  scaleRect
+  scaleRect,
 };

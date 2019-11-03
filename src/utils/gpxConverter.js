@@ -1,7 +1,5 @@
 import { gpx } from '@tmcw/togeojson';
-import * as R from 'ramda';
 
-import { parseString } from 'xml2js';
 // import { string as gpxData } from '../data/14-09-2019_beacons';
 // import gpxData from '../data/14-09-2019_beacons';
 
