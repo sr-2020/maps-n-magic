@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import './App.css';
-import '../../css/tailwind.css';
+//import '../../css/tailwind.css';
 // import './Icons.css';
 // import '@fortawesome/fontawesome-free/css/all.css';
 import * as R from 'ramda';
