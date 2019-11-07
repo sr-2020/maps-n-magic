@@ -5,30 +5,6 @@ module.exports = {
         "node": true,
         "es6": true
     },
-    "globals":{
-        // webpack preload dependencies
-        $: false,
-        jQuery: false,
-        R: false,
-        Constants: false,
-        core: false,
-        U: false,
-        L10n: false,
-        UI: false,
-        CU: false,
-        FileUtils: false,
-        Errors: false,
-
-        // my window objects
-        DBMS: false,
-        SM: false,
-
-        // webpack constants
-        MODE: false,
-        DEV_OPTS: false,
-        PRODUCT: false,
-        PROJECT_NAME: false
-    },
 //    "extends": "eslint:recommended",
     "extends": "airbnb" ,
     "rules": {
@@ -44,7 +20,7 @@ module.exports = {
         "no-plusplus": "off",
         // "func-names": "off",
         "func-names": ["warn","never"],
-        "max-len": ["error",  { "code": 200, "tabWidth": 4, "ignoreStrings": true }],
+        "max-len": ["error",  { "code": 200, "tabWidth": 2, "ignoreStrings": true }],
         // "max-len": ["error",  { "code": 120, "tabWidth": 4, "ignoreStrings": true }],
         // "one-var-declaration-per-line": "off",
         // "prefer-destructuring": ["error", {

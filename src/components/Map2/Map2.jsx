@@ -23,6 +23,8 @@ import { COLOR_PALETTE } from '../../utils/colorPalette';
 
 import { mapConfig, geomanConfig, defaultTileLayer } from './MapConfigurations';
 
+import { markerPopupDom, locationPopupDom } from '../../utils/domUtils';
+
 
 // import playerTracks from '../../data/initialPlayerTracks';
 
@@ -205,7 +207,7 @@ export class Map2 extends Component {
             id: e.target.options.id,
           },
         });
-        this.markerPopup.setLatLng(e.latlng).setContent(this.markerPopupContent).openOn(this.map);
+        this.markerPopup.setLatLng(e.latlng).setContent(markerPopupDom).openOn(this.map);
       },
       'pm:edit': this.onMarkerEdit,
     });
@@ -249,7 +251,7 @@ export class Map2 extends Component {
         markers,
       },
     });
-    this.locationPopup.setLatLng(e.latlng).setContent(this.locationPopupContent).openOn(this.map);
+    this.locationPopup.setLatLng(e.latlng).setContent(locationPopupDom).openOn(this.map);
   }
 
   onLocationEdit = (e) => {
@@ -436,53 +438,63 @@ export class Map2 extends Component {
     this.map.closePopup();
   }
 
-  // eslint-disable-next-line max-lines-per-function
-  render() {
+  getMarkerPopup = () => {
     const {
-      curMarker, curLocation,
+      curMarker,
+    } = this.state;
+    if (!curMarker) {
+      return null;
+    }
+    return (
+      <MarkerPopup
+        name={curMarker.name}
+        lat={curMarker.lat}
+        lng={curMarker.lng}
+        onChange={this.onMarkerChange}
+        onClose={this.closeMarkerPopup}
+      />
+    );
+  }
+
+  getLocationPopup = () => {
+    const {
+      curLocation,
     } = this.state;
     const {
       dataService,
     } = this.props;
-    let el = null;
-    if (curMarker) {
-      el = (
-        <MarkerPopup
-          name={curMarker.name}
-          lat={curMarker.lat}
-          lng={curMarker.lng}
-          onChange={this.onMarkerChange}
-          onClose={this.closeMarkerPopup}
-        />
-      );
+    if (!curLocation) {
+      return null;
     }
+    const allBeacons = R.clone(dataService.getBeacons());
+    const allLocations = R.clone(dataService.getLocations());
+    return (
+      <LocationPopup
+        name={curLocation.name}
+        id={curLocation.id}
+        attachedMarkers={curLocation.markers}
+        allBeacons={allBeacons}
+        allLocations={allLocations}
+        onChange={this.onLocationChange}
+        onLocMarkerChange={this.onLocMarkerChange}
+        onClose={this.closeMarkerPopup}
+      />
+    );
+  }
 
-    let el2 = null;
-    if (curLocation) {
-      const allBeacons = R.clone(dataService.getBeacons());
-      const allLocations = R.clone(dataService.getLocations());
-      el2 = (
-        <LocationPopup
-          name={curLocation.name}
-          id={curLocation.id}
-          attachedMarkers={curLocation.markers}
-          allBeacons={allBeacons}
-          allLocations={allLocations}
-          onChange={this.onLocationChange}
-          onLocMarkerChange={this.onLocMarkerChange}
-          onClose={this.closeMarkerPopup}
-        />
-      );
-    }
-
+  render() {
     return (
       <>
         <div
           className="Map2 h-full"
           ref={(map) => (this.mapEl = map)}
         />
-        <div ref={(markerPopup) => (this.markerPopupContent = markerPopup)}>{el}</div>
-        <div ref={(locationPopup) => (this.locationPopupContent = locationPopup)}>{el2}</div>
+        {
+          this.getMarkerPopup()
+        }
+        {
+          this.getLocationPopup()
+        }
       </>
     );
   }

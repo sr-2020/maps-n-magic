@@ -2,7 +2,10 @@ import React, { Component } from 'react';
 import * as R from 'ramda';
 import './LocationPopup.css';
 
+import ReactDOM from 'react-dom';
 import { LocationPopupPropTypes } from '../../../types';
+
+import { locationPopupDom } from '../../../utils/domUtils';
 
 export class LocationPopup extends Component {
   static propTypes = LocationPopupPropTypes;
@@ -123,7 +126,7 @@ export class LocationPopup extends Component {
   }
 
   // eslint-disable-next-line max-lines-per-function
-  render() {
+  makeContent() {
     const {
       unattachedList, attachedList, selectedAddMarker, selectedRemoveMarker,
     } = this.state;
@@ -201,6 +204,13 @@ export class LocationPopup extends Component {
           </div>
         </div>
       </div>
+    );
+  }
+
+  render() {
+    return ReactDOM.createPortal(
+      this.makeContent(),
+      locationPopupDom,
     );
   }
 }

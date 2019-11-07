@@ -1,6 +1,9 @@
 import React, { Component } from 'react';
 import './MarkerPopup.css';
+import ReactDOM from 'react-dom';
 import { MarkerPopupPropTypes } from '../../../types';
+
+import { markerPopupDom } from '../../../utils/domUtils';
 
 export class MarkerPopup extends Component {
   static propTypes = MarkerPopupPropTypes;
@@ -12,7 +15,7 @@ export class MarkerPopup extends Component {
   }
 
   // eslint-disable-next-line max-lines-per-function
-  render() {
+  makeContent() {
     const {
       name, lat, lng, onChange,
     } = this.props;
@@ -68,6 +71,13 @@ export class MarkerPopup extends Component {
           />
         </div>
       </div>
+    );
+  }
+
+  render() {
+    return ReactDOM.createPortal(
+      this.makeContent(),
+      markerPopupDom,
     );
   }
 }

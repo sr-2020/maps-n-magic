@@ -23,8 +23,8 @@ export class ErrorBoundry extends Component {
     // eslint-disable-next-line react/destructuring-assignment
     if (this.state.hasError) {
       localStorage.removeItem('AR_POC');
-      setTimeout(() => window.location.reload(), 5000);
-      return <div> Got error, reloading page in 5 seconds</div>;
+      setTimeout(() => window.location.reload(), 15000);
+      return <div> Got error, reloading page in 15 seconds</div>;
     }
     // eslint-disable-next-line react/destructuring-assignment
     return this.props.children;
