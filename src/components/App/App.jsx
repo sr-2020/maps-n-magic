@@ -11,6 +11,7 @@ import {
 
 import { AudioService } from '../../services/audioService';
 import { DataService } from '../../services/DataService';
+import { SpiritService } from '../../services/SpiritService';
 
 // import getBeacons from '../../utils/gpxExperiment';
 
@@ -25,6 +26,7 @@ import { ErrorBoundry } from '../ErrorBoundry';
 import { json2File, makeFileName, readJsonFile } from '../../utils/fileUtils';
 
 import 'bootstrap/dist/css/bootstrap.min.css';
+import { SpiritEditor } from '../SpiritEditor';
 
 // console.log(getBeacons(100, 100, 600, 500));
 
@@ -67,6 +69,7 @@ export class App extends Component {
     super();
     this.state = {
       dataService: new DataService(),
+      spiritService: new SpiritService(),
       ...initialState,
     };
   }
@@ -87,7 +90,7 @@ export class App extends Component {
   prepareDataForJson = () => {
     // console.log('sdfs');
     const data = this.audioService.toJson();
-    const { dataService } = this.state;
+    const { dataService, spiritService } = this.state;
     // console.log()
     this.audioService.fromJson(data);
     return ({
@@ -104,6 +107,7 @@ export class App extends Component {
       audioData: data,
       beacons: dataService.getBeacons(),
       locations: dataService.getLocations(),
+      spirits: spiritService.getSpirits(),
     });
   }
 
@@ -152,10 +156,16 @@ export class App extends Component {
   onFileSelected = (evt) => {
     readJsonFile(evt).then((database2) => {
       // console.log(database2.appState);
+      const {
+        beacons, locations, spirits,
+      } = database2;
       this.setState({
         dataService: new DataService({
-          beacons: database2.beacons,
-          locations: database2.locations,
+          beacons,
+          locations,
+        }),
+        spiritService: new SpiritService({
+          spirits,
         }),
       });
       // this.setState(database2.appState);
@@ -167,122 +177,131 @@ export class App extends Component {
   render() {
     const {
       imagePositionX, imagePositionY, imageOpacity, imageScale, svgWidth, svgHeight, beacons, mainPolygon, imageUrl,
-      dataService,
+      dataService, spiritService,
     } = this.state;
 
     return (
-      <ErrorBoundry>
+      <React.StrictMode>
+        <ErrorBoundry>
 
-        <Router>
-          <div className="App flex flex-col h-screen">
-            <header className="flex-0-0-auto">
-              <nav className="view-switch">
-                <ul>
-                  <li>
-                    <NavLink to="/mapEditor">Map Editor</NavLink>
-                  </li>
-                  <li>
-                    <NavLink to="/beacons">Beacons</NavLink>
-                  </li>
-                  <li>
-                    <NavLink to="/soundManager">Sound Manager</NavLink>
-                  </li>
-                  <li>
-                    <NavLink to="/demo">Demo</NavLink>
-                  </li>
-                  <li>
-                    <NavLink to="/map2">Map2</NavLink>
-                  </li>
-                </ul>
+          <Router>
+            <div className="App flex flex-col h-screen">
+              <header className="flex-0-0-auto">
+                <nav className="view-switch">
+                  <ul>
+                    <li>
+                      <NavLink to="/mapEditor">Map Editor</NavLink>
+                    </li>
+                    <li>
+                      <NavLink to="/beacons">Beacons</NavLink>
+                    </li>
+                    <li>
+                      <NavLink to="/soundManager">Sound Manager</NavLink>
+                    </li>
+                    <li>
+                      <NavLink to="/demo">Demo</NavLink>
+                    </li>
+                    <li>
+                      <NavLink to="/map2">Map2</NavLink>
+                    </li>
+                    <li>
+                      <NavLink to="/spiritEditor">Spirit Editor</NavLink>
+                    </li>
+                  </ul>
 
-                <ul>
-                  <li>
-                    {/* className="dataLoadButton icon-button action-button mainNavButton" */}
-                    <button
-                      type="button"
-                      data-original-title=""
-                      title="Upload database"
-                      onClick={this.uploadDatabaseFile}
-                    >
-                      <input
-                        type="file"
-                        className="display-none"
-                        tabIndex="-1"
-                        onChange={this.onFileSelected}
-                      />
+                  <ul>
+                    <li>
+                      {/* className="dataLoadButton icon-button action-button mainNavButton" */}
+                      <button
+                        type="button"
+                        data-original-title=""
+                        title="Upload database"
+                        onClick={this.uploadDatabaseFile}
+                      >
+                        <input
+                          type="file"
+                          className="display-none"
+                          tabIndex="-1"
+                          onChange={this.onFileSelected}
+                        />
                       Upload database
-                    </button>
-                  </li>
-                  <li>
-                    {/* className="dataSaveButton icon-button action-button mainNavButton" */}
-                    <button
-                      type="button"
-                      data-original-title=""
-                      onClick={this.downloadDatabaseAsFile}
-                      title="Download database"
-                    >
+                      </button>
+                    </li>
+                    <li>
+                      {/* className="dataSaveButton icon-button action-button mainNavButton" */}
+                      <button
+                        type="button"
+                        data-original-title=""
+                        onClick={this.downloadDatabaseAsFile}
+                        title="Download database"
+                      >
                       Download database
-                    </button>
-                  </li>
-                </ul>
-              </nav>
-            </header>
+                      </button>
+                    </li>
+                  </ul>
+                </nav>
+              </header>
 
-            <main className="flex-1-1-auto">
+              <main className="flex-1-1-auto h-full">
 
-              <Switch>
-                <Route path="/mapEditor">
-                  <MapEditor
-                    imagePositionX={imagePositionX}
-                    imagePositionY={imagePositionY}
-                    imageOpacity={imageOpacity}
-                    imageScale={imageScale}
-                    svgWidth={svgWidth}
-                    svgHeight={svgHeight}
-                    onPropChange={this.onStateChange}
-                    mainPolygon={mainPolygon}
-                    imageUrl={imageUrl}
-                    setImageUrl={this.setImageUrl}
-                    toDefaultImageUrl={this.toDefaultImageUrl}
-                  />
-                </Route>
-                <Route path="/beacons">
-                  <Beacons
-                    imagePositionX={imagePositionX}
-                    imagePositionY={imagePositionY}
-                    imageOpacity={imageOpacity}
-                    imageScale={imageScale}
-                    svgWidth={svgWidth}
-                    svgHeight={svgHeight}
-                    beacons={beacons}
-                    setBeacons={this.setBeacons}
-                    mainPolygon={mainPolygon}
-                    setMainPolygon={this.setMainPolygon}
-                    audioService={this.audioService}
-                    imageUrl={imageUrl}
-                  />
-                </Route>
-                <Route path="/soundManager">
-                  <MusicEditor audioService={this.audioService} />
-                </Route>
-                <Route path="/demo">
-                  <Prototype1
-                    svgWidth={svgWidth}
-                    svgHeight={svgHeight}
-                    beacons={beacons}
-                    audioService={this.audioService}
-                  />
-                </Route>
-                <Route path="/map2">
-                  <Map2 dataService={dataService} />
-                </Route>
+                <Switch>
+                  <Route path="/mapEditor">
+                    <MapEditor
+                      imagePositionX={imagePositionX}
+                      imagePositionY={imagePositionY}
+                      imageOpacity={imageOpacity}
+                      imageScale={imageScale}
+                      svgWidth={svgWidth}
+                      svgHeight={svgHeight}
+                      onPropChange={this.onStateChange}
+                      mainPolygon={mainPolygon}
+                      imageUrl={imageUrl}
+                      setImageUrl={this.setImageUrl}
+                      toDefaultImageUrl={this.toDefaultImageUrl}
+                    />
+                  </Route>
+                  <Route path="/beacons">
+                    <Beacons
+                      imagePositionX={imagePositionX}
+                      imagePositionY={imagePositionY}
+                      imageOpacity={imageOpacity}
+                      imageScale={imageScale}
+                      svgWidth={svgWidth}
+                      svgHeight={svgHeight}
+                      beacons={beacons}
+                      setBeacons={this.setBeacons}
+                      mainPolygon={mainPolygon}
+                      setMainPolygon={this.setMainPolygon}
+                      audioService={this.audioService}
+                      imageUrl={imageUrl}
+                    />
+                  </Route>
+                  <Route path="/soundManager">
+                    <MusicEditor audioService={this.audioService} />
+                  </Route>
+                  <Route path="/demo">
+                    <Prototype1
+                      svgWidth={svgWidth}
+                      svgHeight={svgHeight}
+                      beacons={beacons}
+                      audioService={this.audioService}
+                    />
+                  </Route>
+                  <Route path="/map2">
+                    <Map2 dataService={dataService} />
+                  </Route>
+                  <Route path="/spiritEditor">
+                    <SpiritEditor spiritService={spiritService} />
+                  </Route>
 
-                <Route render={() => <Redirect to="/map2" />} />
-              </Switch>
-            </main>
-          </div>
-        </Router>
-      </ErrorBoundry>
+                  <Route render={() => <Redirect to="/spiritEditor" />} />
+                  {/* <Route render={() => <Redirect to="/map2" />} /> */}
+                </Switch>
+              </main>
+            </div>
+          </Router>
+        </ErrorBoundry>
+      </React.StrictMode>
 
     );
   }

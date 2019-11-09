@@ -40,6 +40,12 @@
     "tailwind:css": "./node_modules/.bin/tailwind build src/css/tailwind.src.css -c  tailwind.js -o src/css/tailwind.css",
     "start": "react-scripts start",
     "build": "npm run tailwind:css && react-scripts build",
+    
+    "build:css": "postcss src/css/tailwind.src.css -o src/css/tailwind.css",
+    "watch:css": "postcss src/css/tailwind.src.css -o src/css/tailwind.css -w",
+    "start2": "npm run watch:css && react-scripts start",
+    "build2": "npm run build:css && react-scripts build",
+
     "test": "react-scripts test",
     "eject": "react-scripts eject"
   },
@@ -57,5 +63,9 @@
       "last 1 firefox version",
       "last 1 safari version"
     ]
+  },
+  "devDependencies": {
+    "autoprefixer": "^9.7.1",
+    "postcss-cli": "^6.1.3"
   }
 }

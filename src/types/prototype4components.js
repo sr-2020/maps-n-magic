@@ -8,11 +8,15 @@ import {
   locationPropTypes,
 } from './primitives';
 
-import { dataServicePropTypes } from './services';
+import { dataServicePropTypes, spiritServicePropTypes } from './services';
 
 
 export const Map2PropTypes = {
   dataService: dataServicePropTypes.isRequired,
+};
+
+export const SpiritEditorPropTypes = {
+  spiritService: spiritServicePropTypes.isRequired,
 };
 
 export const LocationPopupPropTypes = {

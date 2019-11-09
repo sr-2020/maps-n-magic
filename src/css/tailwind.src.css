@@ -1,3 +1,16 @@
 @tailwind base;
 @tailwind components;
+
+.tw-btn {
+  @apply font-bold py-1 px-3  text-sm ;
+}
+
+.tw-btn-blue {
+  @apply bg-blue-500 text-white;
+}
+
+.tw-btn-blue:hover {
+  @apply bg-blue-700;
+}
+
 @tailwind utilities;
