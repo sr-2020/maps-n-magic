@@ -31,11 +31,14 @@ export class SpiritList extends Component {
     const spirits2 = sort(spirits || []);
     this.state = {
       spirits: spirits2,
+      removedSpiritIndex: null,
     };
+    this.onPutSpirit = this.onPutSpirit.bind(this);
   }
 
   componentDidMount = () => {
     console.log('SpiritList mounted');
+    this.props.spiritService.on('putSpirit', this.onPutSpirit);
   }
 
   componentDidUpdate = () => {
@@ -44,39 +47,75 @@ export class SpiritList extends Component {
 
   componentWillUnmount = () => {
     console.log('SpiritList will unmount');
+    this.props.spiritService.off('putSpirit', this.onPutSpirit);
+  }
+
+  // eslint-disable-next-line react/sort-comp
+  onPutSpirit(changedSpirit) {
+    const { spirits } = this.state;
+    const newSpirits = spirits.map((spirit) => {
+      if (changedSpirit.id !== spirit.id) {
+        return spirit;
+      }
+      return changedSpirit;
+    });
+
+    this.setState({
+      spirits: sort(newSpirits),
+      removedSpiritIndex: null,
+    });
   }
 
 
   createNewSpirit = (spiritName) => {
-    const { spiritService } = this.props;
+    const { spiritService, history } = this.props;
     const spirit = spiritService.postSpirit({ name: spiritName });
-    // browserHistory.push(spiritLink(spirit));
+    history.push(spiritLink(spirit));
     this.setState((state) => {
       const spirits = sort([...state.spirits, spirit]);
       return {
         spirits,
-        // newSpirit: spirit,
+        removedSpiritIndex: null,
       };
     });
   };
 
-  removeSpirit = (id) => {
-    const { spiritService } = this.props;
-    spiritService.deleteSpirit(id);
+  cloneSpirit = (e, id) => {
+    e.preventDefault();
+    e.stopPropagation();
+    const { spiritService, history } = this.props;
+    const spirit = spiritService.cloneSpirit(id);
+    history.push(spiritLink(spirit));
     this.setState((state) => {
-      const spirits = state.spirits.filter((spirit) => spirit.id !== id);
+      const spirits = sort([...state.spirits, spirit]);
       return {
         spirits,
+        removedSpiritIndex: null,
+      };
+    });
+  };
+
+  removeSpirit = (e, id) => {
+    e.preventDefault();
+    e.stopPropagation();
+    const { spiritService, history } = this.props;
+    spiritService.deleteSpirit(id);
+    this.setState((state) => {
+      const index = state.spirits.findIndex((spirit) => spirit.id === id);
+      const spirits = state.spirits.filter((spirit) => spirit.id !== id);
+      // history.push(spiritLink(spirits[index] || spirits[index - 1]));
+      return {
+        spirits,
+        removedSpiritIndex: index,
       };
     });
   };
 
   handleSpiritSubmit = (event) => {
     const form = event.currentTarget;
-    if (form.checkValidity() === false) {
-      event.preventDefault();
-      event.stopPropagation();
-    } else {
+    event.preventDefault();
+    event.stopPropagation();
+    if (form.checkValidity() === true) {
       this.createNewSpirit(form.spiritName.value);
       form.spiritName.value = '';
     }
@@ -106,7 +145,12 @@ export class SpiritList extends Component {
               "
         >
           <div className="menu float-right">
-            <Dropdown>
+            <Dropdown
+              onToggle={(isOpen, e) => {
+                e.stopPropagation && e.stopPropagation();
+                e.preventDefault && e.preventDefault();
+              }}
+            >
               <Dropdown.Toggle className="
                     tw-btn
                     tw-btn-ghost
@@ -131,7 +175,13 @@ export class SpiritList extends Component {
               <Dropdown.Menu>
                 <Dropdown.Item
                   as="button"
-                  onClick={() => this.removeSpirit(spirit.id)}
+                  onClick={(e) => this.cloneSpirit(e, spirit.id)}
+                >
+                  Clone
+                </Dropdown.Item>
+                <Dropdown.Item
+                  as="button"
+                  onClick={(e) => this.removeSpirit(e, spirit.id)}
                 >
                   Delete
                 </Dropdown.Item>
@@ -139,8 +189,8 @@ export class SpiritList extends Component {
             </Dropdown>
           </div>
           <div className="body">
-            <div className="spirit-name font-bold text-sm">{spirit.name}</div>
-            <div className="spirit-fraction text-sm">spirit</div>
+            <div className="spirit-name font-bold text-sm">{spirit.name || 'Безымянный?'}</div>
+            <div className="spirit-fraction text-sm">{spirit.fraction || 'Без фракции'}</div>
           </div>
         </NavLink>
       </li>
@@ -167,7 +217,7 @@ export class SpiritList extends Component {
 
   // eslint-disable-next-line max-lines-per-function
   render() {
-    const { spirits, newSpirit } = this.state;
+    const { spirits, newSpirit, removedSpiritIndex } = this.state;
 
     // if (newSpirit) {
     //   return <Redirect to={spiritLink(newSpirit)} />;
@@ -204,6 +254,9 @@ export class SpiritList extends Component {
             if (!spirits.map(R.prop('id')).includes(Number(id))) {
               if (spirits.length === 0) {
                 return <Redirect to="/spiritEditor" />;
+              }
+              if (removedSpiritIndex) {
+                return <Redirect to={spiritLink(spirits[removedSpiritIndex] || spirits[removedSpiritIndex - 1])} />;
               }
               return <Redirect to={spiritLink(spirits[0])} />;
             }

@@ -5,6 +5,8 @@ import '../../css/tailwind.css';
 // import '@fortawesome/fontawesome-free/css/all.css';
 import * as R from 'ramda';
 
+import DocumentTitle from 'react-document-title';
+
 import {
   BrowserRouter as Router, Switch, Route, Redirect, NavLink,
 } from 'react-router-dom';
@@ -183,123 +185,124 @@ export class App extends Component {
     return (
       <React.StrictMode>
         <ErrorBoundry>
+          <DocumentTitle title="SR2020 Map & Magic">
+            <Router>
+              <div className="App flex flex-col h-screen">
+                <header className="flex-0-0-auto">
+                  <nav className="view-switch">
+                    <ul>
+                      <li>
+                        <NavLink to="/mapEditor">Map Editor</NavLink>
+                      </li>
+                      <li>
+                        <NavLink to="/beacons">Beacons</NavLink>
+                      </li>
+                      <li>
+                        <NavLink to="/soundManager">Sound Manager</NavLink>
+                      </li>
+                      <li>
+                        <NavLink to="/demo">Demo</NavLink>
+                      </li>
+                      <li>
+                        <NavLink to="/map2">Map2</NavLink>
+                      </li>
+                      <li>
+                        <NavLink to="/spiritEditor">Spirit Editor</NavLink>
+                      </li>
+                    </ul>
 
-          <Router>
-            <div className="App flex flex-col h-screen">
-              <header className="flex-0-0-auto">
-                <nav className="view-switch">
-                  <ul>
-                    <li>
-                      <NavLink to="/mapEditor">Map Editor</NavLink>
-                    </li>
-                    <li>
-                      <NavLink to="/beacons">Beacons</NavLink>
-                    </li>
-                    <li>
-                      <NavLink to="/soundManager">Sound Manager</NavLink>
-                    </li>
-                    <li>
-                      <NavLink to="/demo">Demo</NavLink>
-                    </li>
-                    <li>
-                      <NavLink to="/map2">Map2</NavLink>
-                    </li>
-                    <li>
-                      <NavLink to="/spiritEditor">Spirit Editor</NavLink>
-                    </li>
-                  </ul>
-
-                  <ul>
-                    <li>
-                      {/* className="dataLoadButton icon-button action-button mainNavButton" */}
-                      <button
-                        type="button"
-                        data-original-title=""
-                        title="Upload database"
-                        onClick={this.uploadDatabaseFile}
-                      >
-                        <input
-                          type="file"
-                          className="display-none"
-                          tabIndex="-1"
-                          onChange={this.onFileSelected}
-                        />
+                    <ul>
+                      <li>
+                        {/* className="dataLoadButton icon-button action-button mainNavButton" */}
+                        <button
+                          type="button"
+                          data-original-title=""
+                          title="Upload database"
+                          onClick={this.uploadDatabaseFile}
+                        >
+                          <input
+                            type="file"
+                            className="display-none"
+                            tabIndex="-1"
+                            onChange={this.onFileSelected}
+                          />
                       Upload database
-                      </button>
-                    </li>
-                    <li>
-                      {/* className="dataSaveButton icon-button action-button mainNavButton" */}
-                      <button
-                        type="button"
-                        data-original-title=""
-                        onClick={this.downloadDatabaseAsFile}
-                        title="Download database"
-                      >
+                        </button>
+                      </li>
+                      <li>
+                        {/* className="dataSaveButton icon-button action-button mainNavButton" */}
+                        <button
+                          type="button"
+                          data-original-title=""
+                          onClick={this.downloadDatabaseAsFile}
+                          title="Download database"
+                        >
                       Download database
-                      </button>
-                    </li>
-                  </ul>
-                </nav>
-              </header>
+                        </button>
+                      </li>
+                    </ul>
+                  </nav>
+                </header>
 
-              <main className="flex-1-1-auto h-full">
+                <main className="flex-1-1-auto h-full">
 
-                <Switch>
-                  <Route path="/mapEditor">
-                    <MapEditor
-                      imagePositionX={imagePositionX}
-                      imagePositionY={imagePositionY}
-                      imageOpacity={imageOpacity}
-                      imageScale={imageScale}
-                      svgWidth={svgWidth}
-                      svgHeight={svgHeight}
-                      onPropChange={this.onStateChange}
-                      mainPolygon={mainPolygon}
-                      imageUrl={imageUrl}
-                      setImageUrl={this.setImageUrl}
-                      toDefaultImageUrl={this.toDefaultImageUrl}
-                    />
-                  </Route>
-                  <Route path="/beacons">
-                    <Beacons
-                      imagePositionX={imagePositionX}
-                      imagePositionY={imagePositionY}
-                      imageOpacity={imageOpacity}
-                      imageScale={imageScale}
-                      svgWidth={svgWidth}
-                      svgHeight={svgHeight}
-                      beacons={beacons}
-                      setBeacons={this.setBeacons}
-                      mainPolygon={mainPolygon}
-                      setMainPolygon={this.setMainPolygon}
-                      audioService={this.audioService}
-                      imageUrl={imageUrl}
-                    />
-                  </Route>
-                  <Route path="/soundManager">
-                    <MusicEditor audioService={this.audioService} />
-                  </Route>
-                  <Route path="/demo">
-                    <Prototype1
-                      svgWidth={svgWidth}
-                      svgHeight={svgHeight}
-                      beacons={beacons}
-                      audioService={this.audioService}
-                    />
-                  </Route>
-                  <Route path="/map2">
-                    <Map2 dataService={dataService} />
-                  </Route>
-                  <Route path="/spiritEditor">
-                    <SpiritEditor spiritService={spiritService} />
-                  </Route>
+                  <Switch>
+                    <Route path="/mapEditor">
+                      <MapEditor
+                        imagePositionX={imagePositionX}
+                        imagePositionY={imagePositionY}
+                        imageOpacity={imageOpacity}
+                        imageScale={imageScale}
+                        svgWidth={svgWidth}
+                        svgHeight={svgHeight}
+                        onPropChange={this.onStateChange}
+                        mainPolygon={mainPolygon}
+                        imageUrl={imageUrl}
+                        setImageUrl={this.setImageUrl}
+                        toDefaultImageUrl={this.toDefaultImageUrl}
+                      />
+                    </Route>
+                    <Route path="/beacons">
+                      <Beacons
+                        imagePositionX={imagePositionX}
+                        imagePositionY={imagePositionY}
+                        imageOpacity={imageOpacity}
+                        imageScale={imageScale}
+                        svgWidth={svgWidth}
+                        svgHeight={svgHeight}
+                        beacons={beacons}
+                        setBeacons={this.setBeacons}
+                        mainPolygon={mainPolygon}
+                        setMainPolygon={this.setMainPolygon}
+                        audioService={this.audioService}
+                        imageUrl={imageUrl}
+                      />
+                    </Route>
+                    <Route path="/soundManager">
+                      <MusicEditor audioService={this.audioService} />
+                    </Route>
+                    <Route path="/demo">
+                      <Prototype1
+                        svgWidth={svgWidth}
+                        svgHeight={svgHeight}
+                        beacons={beacons}
+                        audioService={this.audioService}
+                      />
+                    </Route>
+                    <Route path="/map2">
+                      <Map2 dataService={dataService} />
+                    </Route>
+                    <Route path="/spiritEditor">
+                      <SpiritEditor spiritService={spiritService} />
+                    </Route>
 
-                  <Route render={() => <Redirect to="/spiritEditor" />} />
-                  {/* <Route render={() => <Redirect to="/map2" />} /> */}
-                </Switch>
-              </main>
-            </div>
-          </Router>
+                    <Route render={() => <Redirect to="/spiritEditor" />} />
+                    {/* <Route render={() => <Redirect to="/map2" />} /> */}
+                  </Switch>
+                </main>
+              </div>
+            </Router>
+          </DocumentTitle>
         </ErrorBoundry>
       </React.StrictMode>
 

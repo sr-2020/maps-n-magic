@@ -45,4 +45,14 @@
   display: table-column;
 }
 
+.text-3xl[class] {
+  @apply text-3xl;
+}
+.w-50p[class] {
+  width: 50%;
+}
+.w-1_6p[class] {
+  width: 16.6666%;
+}
+
 @tailwind utilities;

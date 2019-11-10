@@ -21,6 +21,8 @@ export class SpiritService extends EventEmitter {
     if (spirits) {
       this._saveSpirits();
     }
+    this.fractions = [];
+    this.updateSpiritFractionsList();
   }
 
   _getLSSpirits = function () {
@@ -43,6 +45,8 @@ export class SpiritService extends EventEmitter {
       ...props,
       id,
     };
+    this.updateSpiritFractionsList();
+    this.emit('putSpirit', R.clone(this.spirits[index]));
     this._saveSpirits();
   }
 
@@ -55,13 +59,45 @@ export class SpiritService extends EventEmitter {
       // name: String(this.maxSpiritId),
     });
     this._saveSpirits();
+    this.updateSpiritFractionsList();
     return this.spirits[this.spirits.length - 1];
+  }
+
+  cloneSpirit = (id) => {
+    const spirit = this.getSpirit(id);
+    return this.postSpirit({
+      ...spirit,
+      name: this.makeSpiritName(spirit.name),
+    });
+  }
+
+  makeSpiritName = (name) => {
+    const spiritMap = R.indexBy(R.prop('name'), this.spirits);
+    const base = `${name} клон`;
+    let newName = base;
+    let counter = 1;
+    while (spiritMap[newName] != undefined) {
+      newName = `${base} ${counter}`;
+      counter++;
+    }
+    return newName;
   }
 
   deleteSpirit = (id) => {
     this.spirits = this.spirits.filter((spirit) => spirit.id !== id);
+    this.updateSpiritFractionsList();
     this._saveSpirits();
   }
+
+  updateSpiritFractionsList = () => {
+    const newFractions = R.without([''], R.uniq(this.spirits.map(R.prop('fraction'))));
+    if (this.fractions.length !== newFractions || R.symmetricDifference(newFractions, this.fractions).length > 0) {
+      this.fractions = newFractions;
+      this.emit('fractionChange', R.clone(this.fractions));
+    }
+  }
+
+  getSpiritFractionsList = () => this.fractions;
 
   _saveSpirits = function () {
     localStorage.setItem('spirits', JSON.stringify(this.spirits));

@@ -17,6 +17,7 @@ import { SpiritEditorPropTypes } from '../../types';
 
 import { SpiritList } from './SpiritList';
 import { SpiritContent } from './SpiritContent';
+import { FractionList } from './FractionList';
 
 
 // import Form from 'react-jsonschema-form';
@@ -125,7 +126,7 @@ export class SpiritEditor extends Component {
             );
           }}
         />
-
+        <FractionList spiritService={spiritService} />
       </div>
     );
   }

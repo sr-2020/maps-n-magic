@@ -1,3 +1,6 @@
+import { withRouter } from 'react-router';
 import { SpiritList } from './SpiritList.jsx';
 
-export { SpiritList };
+const sl = withRouter(SpiritList);
+
+export { sl as SpiritList };
