@@ -1,5 +1,5 @@
 import {
-  shape, number, string, func, node, arrayOf,
+  shape, number, string, func, node, arrayOf, oneOf,
 } from 'prop-types';
 
 import { sequenceOf } from 'airbnb-prop-types';
@@ -55,3 +55,52 @@ export const locationPropTypes = shape({
   markers: arrayOf(number).isRequired,
   latlngs: arrayOf(arrayOf(latLngPropTypes)).isRequired,
 });
+
+export const planePropTypes = oneOf(['real', 'astral', 'subastral']);
+
+export const spiritPropTypes = shape({
+  id: number.isRequired,
+  name: string.isRequired,
+  aura: string.isRequired,
+  fraction: string.isRequired,
+  story: string.isRequired,
+  abilities: arrayOf(string).isRequired,
+
+  latLng: latLngPropTypes.isRequired,
+  plane: planePropTypes.isRequired,
+  hitPoints: number.isRequired,
+});
+
+export const defaultSpirit = {
+  name: '',
+  aura: '',
+  fraction: '',
+  story: '',
+  abilities: [],
+
+  latLng: {
+    lat: 0,
+    lng: 0,
+  },
+  plane: 'subastral',
+  hitPoints: 10,
+};
+
+//   properties: {
+//     name: { type: 'string', title: 'Name', default: '' },
+//     story: { type: 'string', title: 'Story', default: '' },
+//     fraction: { type: 'string', title: 'Story', default: '' },
+//     aura: { type: 'string', title: 'Story', default: '' },
+//     abilities: { type: 'string', title: 'Story', default: '' },
+
+//     itinerary: {},
+//     // latitude: { type: 'number', title: 'Latitude', default: 0 },
+//     // longitude: { type: 'number', title: 'Longitude', default: 0 },
+//   },
+// };
+
+// state
+// latLng
+// plane
+// relation to ...
+// hitPoints

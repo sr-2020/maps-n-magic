@@ -1,0 +1,25 @@
+.SpiritList {
+  flex-basis: 20rem;
+}
+
+
+.SpiritListItem {
+
+}
+
+.SpiritListItem:nth-child(2n) {
+  /* background-color: rgba(120, 120, 0, 0.5); */
+}
+
+/* .SpiritListItem a:hover {
+  text-decoration: none;
+} */
+
+.SpiritListItem a:hover .SpiritMenuButton,
+.SpiritListItem a:focus .SpiritMenuButton {
+  opacity: 1;
+}
+
+.SpiritMenuButton {
+  transition: all 0.2s ease-in-out;
+}

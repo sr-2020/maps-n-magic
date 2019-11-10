@@ -19,6 +19,15 @@ export const SpiritEditorPropTypes = {
   spiritService: spiritServicePropTypes.isRequired,
 };
 
+export const SpiritContentPropTypes = {
+  spiritService: spiritServicePropTypes.isRequired,
+  id: number.isRequired,
+};
+
+export const SpiritListPropTypes = {
+  spiritService: spiritServicePropTypes.isRequired,
+};
+
 export const LocationPopupPropTypes = {
   name: string.isRequired,
   attachedMarkers: arrayOf(number).isRequired,

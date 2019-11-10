@@ -1,16 +1,48 @@
 @tailwind base;
 @tailwind components;
 
-.tw-btn {
-  @apply font-bold py-1 px-3  text-sm ;
+.tw-btn,
+.tw-btn[class]
+ {
+  @apply font-bold py-1 px-3 text-sm rounded-none;
 }
 
-.tw-btn-blue {
+.tw-btn-blue,
+.tw-btn-blue[class] {
   @apply bg-blue-500 text-white;
+}
+
+.tw-btn-ghost,
+.tw-btn-ghost[class] {
+  @apply bg-transparent text-gray-900;
+}
+
+.tw-btn-ghost:hover,
+.tw-btn-ghost:hover[class] {
+  @apply bg-indigo-300  text-gray-900;
 }
 
 .tw-btn-blue:hover {
   @apply bg-blue-700;
+}
+
+.tw-dropdown-toggle[class]::after {
+  content: '';
+  display: none;
+}
+
+.NavLink.active {
+  @apply bg-indigo-600 text-white;
+}
+.NavLink.active:hover {
+  @apply bg-indigo-800 text-white;
+}
+
+.table-caption {
+  display: table-caption;
+}
+.table-column {
+  display: table-column;
 }
 
 @tailwind utilities;

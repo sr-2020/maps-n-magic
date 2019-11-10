@@ -20,9 +20,9 @@ export const dataServicePropTypes = shape({
 
 export const spiritServicePropTypes = shape({
   getSpirits: func.isRequired,
-  putSpirits: func.isRequired,
-  postSpirits: func.isRequired,
-  deleteSpirits: func.isRequired,
+  putSpirit: func.isRequired,
+  postSpirit: func.isRequired,
+  deleteSpirit: func.isRequired,
 });
 
 export const audioServicePropTypes = shape({

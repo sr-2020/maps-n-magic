@@ -1,4 +1,5 @@
 import * as R from 'ramda';
+import EventEmitter from 'events';
 // import { getBeacons2 } from '../data/beacons';
 // import { getBoundingRect, scaleRect } from '../utils/polygonUtils';
 
@@ -6,14 +7,17 @@ import * as R from 'ramda';
 
 // import { getPolygons2 } from '../utils/polygonGenerator';
 
-const defaultSpirit = {
 
-};
+import { defaultSpirit } from '../types/primitives';
 
-export class SpiritService {
+export class SpiritService extends EventEmitter {
   constructor({ spirits } = {}) {
+    super();
     this.spirits = spirits || this._getLSSpirits() || [];
     this.maxSpiritId = R.reduce(R.max, 1, this.spirits.map(R.prop('id')));
+    if (this.spirits.length === 0) {
+      ['Иркут', 'Ангара', 'Байкал', 'Баргузин'].forEach((name) => this.postSpirit({ name }));
+    }
     if (spirits) {
       this._saveSpirits();
     }
@@ -26,6 +30,10 @@ export class SpiritService {
 
   getSpirits = function () {
     return this.spirits;
+  }
+
+  getSpirit = function (id) {
+    return { ...this.spirits.find((spirit) => spirit.id === id) };
   }
 
   putSpirit = (id, props) => {
@@ -41,10 +49,10 @@ export class SpiritService {
   postSpirit = (props) => {
     this.maxSpiritId++;
     this.spirits.push({
-      // ...default
+      ...R.clone(defaultSpirit),
       ...props,
       id: this.maxSpiritId,
-      name: String(this.maxSpiritId),
+      // name: String(this.maxSpiritId),
     });
     this._saveSpirits();
     return this.spirits[this.spirits.length - 1];
