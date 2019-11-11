@@ -10,6 +10,8 @@ import { SpiritContentPropTypes } from '../../../types';
 
 import { InPlaceInput } from '../InPlaceInput';
 
+import { AbilitiesInput } from './AbilitiesInput';
+
 
 export class SpiritContent extends Component {
   static propTypes = SpiritContentPropTypes;
@@ -77,9 +79,9 @@ export class SpiritContent extends Component {
     // hitPoints: number.isRequired,
 
     const {
-      id, name, aura, fraction, story, abilities, latLng, plane, hitPoints,
+      name, aura, fraction, story, abilities, latLng, plane, hitPoints,
     } = this.state;
-    const { spiritTmp } = this.props;
+    const { spiritService, id } = this.props;
 
     if (!id) {
       return (
@@ -106,13 +108,13 @@ export class SpiritContent extends Component {
 
             <div className="table">
               <div className="table-column w-1_6p" />
-              <h3 className="table-caption">Spirit info</h3>
-              <div className="table-row">
+              {/* <h3 className="table-caption">Spirit info</h3> */}
+              {/* <div className="table-row">
                 <div className="table-cell">Aura</div>
                 <div className="table-cell">
                   {aura}
                 </div>
-              </div>
+              </div> */}
               <div className="table-row">
                 <div className="table-cell">fraction</div>
                 <div className="table-cell">
@@ -140,12 +142,18 @@ export class SpiritContent extends Component {
               </div>
               <div className="table-row">
                 <div className="table-cell">abilities</div>
-                <div className="table-cell">{abilities.join(', ') || 'None'}</div>
+                {/* <div className="table-cell">{abilities.join(', ') || 'None'}</div> */}
+                <div className="table-cell">
+                  <AbilitiesInput
+                    spiritService={spiritService}
+                    id={id}
+                  />
+                </div>
               </div>
             </div>
 
 
-            <div className="table">
+            {/* <div className="table">
               <div className="table-column w-24" />
               <h3 className="table-caption">Current spirit status</h3>
               <div className="table-row h-8">
@@ -160,7 +168,7 @@ export class SpiritContent extends Component {
                 <div className="table-cell">Hit Points</div>
                 <div className="table-cell">{`To be done ${hitPoints}`}</div>
               </div>
-            </div>
+            </div> */}
           </div>
         </div>
       </DocumentTitle>

@@ -23,6 +23,8 @@ export class SpiritService extends EventEmitter {
     }
     this.fractions = [];
     this.updateSpiritFractionsList();
+    this.abilities = [];
+    this.updateSpiritAbilitiesList();
   }
 
   _getLSSpirits = function () {
@@ -46,6 +48,7 @@ export class SpiritService extends EventEmitter {
       id,
     };
     this.updateSpiritFractionsList();
+    this.updateSpiritAbilitiesList();
     this.emit('putSpirit', R.clone(this.spirits[index]));
     this._saveSpirits();
   }
@@ -60,6 +63,7 @@ export class SpiritService extends EventEmitter {
     });
     this._saveSpirits();
     this.updateSpiritFractionsList();
+    this.updateSpiritAbilitiesList();
     return this.spirits[this.spirits.length - 1];
   }
 
@@ -86,6 +90,7 @@ export class SpiritService extends EventEmitter {
   deleteSpirit = (id) => {
     this.spirits = this.spirits.filter((spirit) => spirit.id !== id);
     this.updateSpiritFractionsList();
+    this.updateSpiritAbilitiesList();
     this._saveSpirits();
   }
 
@@ -97,7 +102,17 @@ export class SpiritService extends EventEmitter {
     }
   }
 
+  updateSpiritAbilitiesList = () => {
+    const newAbilites = R.uniq(R.flatten(this.spirits.map(R.prop('abilities'))));
+    if (this.abilities.length !== newAbilites || R.symmetricDifference(newAbilites, this.abilities).length > 0) {
+      this.abilities = newAbilites;
+      // this.emit('fractionChange', R.clone(this.fractions));
+    }
+  }
+
   getSpiritFractionsList = () => this.fractions;
+
+  getSpiritAbilitiesList = () => this.abilities;
 
   _saveSpirits = function () {
     localStorage.setItem('spirits', JSON.stringify(this.spirits));

@@ -203,7 +203,11 @@ export class SpiritList extends Component {
       <Popover.Content>
         <Form onSubmit={this.handleSpiritSubmit}>
           <Form.Group controlId="spiritName">
-            <Form.Control type="text" required />
+            <Form.Control
+              type="text"
+              required
+              // ref={(el) => (this.newSpiritInput = el)}
+            />
           </Form.Group>
           <div className="text-right">
             <Button variant="primary" type="submit">
@@ -234,7 +238,11 @@ export class SpiritList extends Component {
             rootClose
             rootCloseEvent="click"
           >
-            <button type="button" className="tw-btn tw-btn-blue">
+            <button
+              type="button"
+              className="tw-btn tw-btn-blue"
+              // onClick={() => this.newSpiritInput.focus()}
+            >
               <FontAwesomeIcon className="fill-current w-4 h-4 mr-2" icon={faPlus} />
               <span>New Spirit</span>
             </button>
