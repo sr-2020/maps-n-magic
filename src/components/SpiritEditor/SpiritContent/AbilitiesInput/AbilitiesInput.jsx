@@ -90,7 +90,7 @@ export class AbilitiesInput extends Component {
 
   render() {
     const { abilities, allAbilities } = this.state;
-    const { t, className } = this.props;
+    const { t, className, inputId } = this.props;
 
     const datalistAbilities = sort(R.difference(allAbilities, abilities));
 

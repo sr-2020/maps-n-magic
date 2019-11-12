@@ -116,12 +116,13 @@ export class SpiritContent extends Component {
                 </div>
               </div> */}
               <div className="table-row">
-                <div className="table-cell">fraction</div>
+                <label htmlFor="fractionInput" className="table-cell">fraction</label>
                 <div className="table-cell">
                   <Form.Control
                     name="fraction"
                     type="text"
                     className="w-50p"
+                    id="fractionInput"
                     value={fraction}
                     onChange={this.handleInputChange}
                     list="fraction-datalist"
@@ -129,11 +130,12 @@ export class SpiritContent extends Component {
                 </div>
               </div>
               <div className="table-row">
-                <div className="table-cell">story</div>
+                <label htmlFor="storyInput" className="table-cell">story</label>
                 <div className="table-cell">
                   <Form.Control
                     name="story"
                     as="textarea"
+                    id="storyInput"
                     rows="3"
                     value={story}
                     onChange={this.handleInputChange}
@@ -141,7 +143,7 @@ export class SpiritContent extends Component {
                 </div>
               </div>
               <div className="table-row">
-                <div className="table-cell">abilities</div>
+                <label htmlFor="newAbility" className="table-cell">abilities</label>
                 {/* <div className="table-cell">{abilities.join(', ') || 'None'}</div> */}
                 <div className="table-cell">
                   <AbilitiesInput

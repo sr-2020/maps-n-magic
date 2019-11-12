@@ -206,7 +206,7 @@ export class SpiritList extends Component {
             <Form.Control
               type="text"
               required
-              // ref={(el) => (this.newSpiritInput = el)}
+              ref={(el) => (this.newSpiritInput = el)}
             />
           </Form.Group>
           <div className="text-right">
@@ -241,7 +241,13 @@ export class SpiritList extends Component {
             <button
               type="button"
               className="tw-btn tw-btn-blue"
-              // onClick={() => this.newSpiritInput.focus()}
+              onClick={() => {
+                setTimeout(() => {
+                  if (this.newSpiritInput) {
+                    this.newSpiritInput.focus();
+                  }
+                }, 50);
+              }}
             >
               <FontAwesomeIcon className="fill-current w-4 h-4 mr-2" icon={faPlus} />
               <span>New Spirit</span>
