@@ -1,0 +1,93 @@
+.Search {
+  display: flex;
+  align-items: center;
+  position: relative;
+  width: 100%;
+}
+
+.Search .search-input {
+  box-sizing: border-box;
+  margin: 0;
+  font-size: 100%;
+  font-family: inherit;
+  vertical-align: baseline;
+  font-size: 1rem;
+  font-weight: 400;
+  line-height: 1.375rem;
+  letter-spacing: 0;
+  outline: 2px solid transparent;
+  outline-offset: -2px;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+  background-color: #f4f4f4;
+  color: #161616;
+  padding: 0 2.5rem;
+  text-overflow: ellipsis;
+  width: 100%;
+  order: 1;
+  -webkit-transition: background-color .11s cubic-bezier(.2,0,.38,.9),outline .11s cubic-bezier(.2,0,.38,.9);
+  transition: background-color .11s cubic-bezier(.2,0,.38,.9),outline .11s cubic-bezier(.2,0,.38,.9);
+  border: none;
+  border-bottom: 1px solid #8d8d8d;
+
+  font-size: .875rem;
+  font-weight: 400;
+  line-height: 1.125rem;
+  letter-spacing: .16px;
+  height: 2rem;
+}
+
+.Search .magnifier {
+  left: .75rem;
+  z-index: 2;
+  position: absolute;
+  height: 1rem;
+  width: 1rem;
+  top: 50%;
+  -webkit-transform: translateY(-50%);
+  transform: translateY(-50%);
+  fill: #393939;
+  pointer-events: none;
+}
+
+.Search .clear-search {
+  box-sizing: border-box;
+  margin: 0;
+  font-size: 100%;
+  font-family: inherit;
+  vertical-align: baseline;
+  display: inline-block;
+  background: none;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+  border: 0;
+  padding: 0;
+  cursor: pointer;
+  outline: 2px solid transparent;
+  outline-offset: -2px;
+  position: absolute;
+  right: 0;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  -webkit-transition: opacity .11s cubic-bezier(.2,0,.38,.9),background-color .11s cubic-bezier(.2,0,.38,.9),outline .11s cubic-bezier(.2,0,.38,.9),border .11s cubic-bezier(.2,0,.38,.9);
+  transition: opacity .11s cubic-bezier(.2,0,.38,.9),background-color .11s cubic-bezier(.2,0,.38,.9),outline .11s cubic-bezier(.2,0,.38,.9),border .11s cubic-bezier(.2,0,.38,.9);
+  cursor: pointer;
+  visibility: visible;
+  /* opacity: 1; */
+  height: 2.5rem;
+  width: 2.5rem;
+  fill: #161616;
+  border: 1px solid transparent;
+  border-left: 0;
+
+  height: 2rem;
+  width: 2rem;
+}
+
+/* .display-none-important {
+  display: none !important;
+} */

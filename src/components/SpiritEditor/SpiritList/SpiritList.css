@@ -23,3 +23,17 @@
 .SpiritMenuButton {
   transition: all 0.2s ease-in-out;
 }
+
+.newSpiritButton {
+  transition: all 0.2s ease-in-out;
+}
+
+.Search.focused + .newSpiritButton {
+  width: 0;
+  padding: 0;
+  overflow: hidden;
+  margin-left: 0 !important;
+}
+
+
+/* .Search.focused {} */

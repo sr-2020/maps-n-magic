@@ -9,10 +9,11 @@ import * as R from 'ramda';
 import Dropdown from 'react-bootstrap/Dropdown';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faPlus, faEllipsisH } from '@fortawesome/free-solid-svg-icons';
-
 import {
   NavLink, Route, Redirect,
 } from 'react-router-dom';
+import { Search } from './Search';
+
 
 import { SpiritListPropTypes } from '../../../types';
 
@@ -32,8 +33,10 @@ export class SpiritList extends Component {
     this.state = {
       spirits: spirits2,
       removedSpiritIndex: null,
+      searchStr: '',
     };
     this.onPutSpirit = this.onPutSpirit.bind(this);
+    this.onSearchChange = this.onSearchChange.bind(this);
   }
 
   componentDidMount = () => {
@@ -123,13 +126,16 @@ export class SpiritList extends Component {
 
   // eslint-disable-next-line max-lines-per-function
   getSpiritList = () => {
-    const { spirits } = this.state;
+    const { spirits, searchStr } = this.state;
+    const lowerSearchStr = searchStr.toLowerCase();
     // eslint-disable-next-line max-lines-per-function
-    return spirits.map((spirit) => (
-      <li key={spirit.id} className="SpiritListItem relative">
-        <NavLink
-          to={spiritLink(spirit)}
-          className="
+    return spirits.filter((spirit) => spirit.name.toLowerCase().includes(lowerSearchStr))
+      // eslint-disable-next-line max-lines-per-function
+      .map((spirit) => (
+        <li key={spirit.id} className="SpiritListItem relative">
+          <NavLink
+            to={spiritLink(spirit)}
+            className="
                 NavLink
                 px-3
                 py-2
@@ -143,15 +149,15 @@ export class SpiritList extends Component {
                 hover:bg-indigo-200
                 active:bg-indigo-600
               "
-        >
-          <div className="menu float-right">
-            <Dropdown
-              onToggle={(isOpen, e) => {
-                e.stopPropagation && e.stopPropagation();
-                e.preventDefault && e.preventDefault();
-              }}
-            >
-              <Dropdown.Toggle className="
+          >
+            <div className="menu float-right">
+              <Dropdown
+                onToggle={(isOpen, e) => {
+                  e.stopPropagation && e.stopPropagation();
+                  e.preventDefault && e.preventDefault();
+                }}
+              >
+                <Dropdown.Toggle className="
                     tw-btn
                     tw-btn-ghost
                     SpiritMenuButton
@@ -168,33 +174,33 @@ export class SpiritList extends Component {
                     tw-dropdown-toggle
                     p-0
                   "
-              >
-                <FontAwesomeIcon icon={faEllipsisH} />
-              </Dropdown.Toggle>
+                >
+                  <FontAwesomeIcon icon={faEllipsisH} />
+                </Dropdown.Toggle>
 
-              <Dropdown.Menu>
-                <Dropdown.Item
-                  as="button"
-                  onClick={(e) => this.cloneSpirit(e, spirit.id)}
-                >
+                <Dropdown.Menu>
+                  <Dropdown.Item
+                    as="button"
+                    onClick={(e) => this.cloneSpirit(e, spirit.id)}
+                  >
                   Clone
-                </Dropdown.Item>
-                <Dropdown.Item
-                  as="button"
-                  onClick={(e) => this.removeSpirit(e, spirit.id)}
-                >
+                  </Dropdown.Item>
+                  <Dropdown.Item
+                    as="button"
+                    onClick={(e) => this.removeSpirit(e, spirit.id)}
+                  >
                   Delete
-                </Dropdown.Item>
-              </Dropdown.Menu>
-            </Dropdown>
-          </div>
-          <div className="body">
-            <div className="spirit-name font-bold text-sm">{spirit.name || 'Безымянный?'}</div>
-            <div className="spirit-fraction text-sm">{spirit.fraction || 'Без фракции'}</div>
-          </div>
-        </NavLink>
-      </li>
-    ));
+                  </Dropdown.Item>
+                </Dropdown.Menu>
+              </Dropdown>
+            </div>
+            <div className="body">
+              <div className="spirit-name font-bold text-sm">{spirit.name || 'Безымянный?'}</div>
+              <div className="spirit-fraction text-sm">{spirit.fraction || 'Без фракции'}</div>
+            </div>
+          </NavLink>
+        </li>
+      ));
   }
 
   getCreateSpiritPopover = () => (
@@ -219,6 +225,12 @@ export class SpiritList extends Component {
     </Popover>
   );
 
+  onSearchChange(searchStr) {
+    this.setState({
+      searchStr,
+    });
+  }
+
   // eslint-disable-next-line max-lines-per-function
   render() {
     const { spirits, newSpirit, removedSpiritIndex } = this.state;
@@ -230,7 +242,8 @@ export class SpiritList extends Component {
     return (
       <div className="SpiritList flex-grow-0 flex flex-col bg-gray-200">
 
-        <div className="bg-gray-400 flex-grow-0 text-right px-3 py-2">
+        <div className="bg-gray-400 flex-grow-0 text-right px-3 py-2 flex">
+          <Search className="flex-grow " onSearchChange={this.onSearchChange} />
           <OverlayTrigger
             trigger="click"
             placement="right"
@@ -240,7 +253,7 @@ export class SpiritList extends Component {
           >
             <button
               type="button"
-              className="tw-btn tw-btn-blue"
+              className="tw-btn tw-btn-blue whitespace-no-wrap flex-grow-0 newSpiritButton ml-4"
               onClick={() => {
                 setTimeout(() => {
                   if (this.newSpiritInput) {
