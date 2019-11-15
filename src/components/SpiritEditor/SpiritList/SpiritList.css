@@ -35,5 +35,8 @@
   margin-left: 0 !important;
 }
 
+a.active mark {
+  background-color: #d69e2e;
+}
 
 /* .Search.focused {} */

@@ -12,10 +12,14 @@ import { faPlus, faEllipsisH } from '@fortawesome/free-solid-svg-icons';
 import {
   NavLink, Route, Redirect,
 } from 'react-router-dom';
+import Highlight from 'react-highlighter';
+
+
 import { Search } from './Search';
 
 
 import { SpiritListPropTypes } from '../../../types';
+
 
 const sort = R.sortBy(R.pipe(R.prop('name'), R.toLower));
 
@@ -195,7 +199,13 @@ export class SpiritList extends Component {
               </Dropdown>
             </div>
             <div className="body">
-              <div className="spirit-name font-bold text-sm">{spirit.name || 'Безымянный?'}</div>
+              <div className="spirit-name font-bold text-sm">
+                {
+                  <Highlight search={lowerSearchStr} matchClass="p-0 bg-yellow-400 text-color-inherit">
+                    {spirit.name}
+                  </Highlight> || 'Безымянный?'
+                }
+              </div>
               <div className="spirit-fraction text-sm">{spirit.fraction || 'Без фракции'}</div>
             </div>
           </NavLink>

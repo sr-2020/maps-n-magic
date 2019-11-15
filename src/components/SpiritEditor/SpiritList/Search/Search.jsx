@@ -80,12 +80,8 @@ export class Search extends Component {
     const { isInputFocused, isClearFocused, searchStr } = this.state;
     const { t, className } = this.props;
 
-    // if (!something) {
-    //   return <div> Search stub </div>;
-    //   // return null;
-    // }
     const className2 = classNames('Search', className, {
-      focused: isInputFocused || isClearFocused,
+      focused: isInputFocused || isClearFocused || searchStr.length > 0,
     });
     const clearClassName = classNames('clear-search',
       searchStr.length > 0 ? 'opacity-100' : 'opacity-0');

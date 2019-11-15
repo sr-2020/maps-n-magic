@@ -55,4 +55,8 @@
   width: 16.6666%;
 }
 
+.text-color-inherit {
+  color: inherit;
+}
+
 @tailwind utilities;
