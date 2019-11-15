@@ -219,6 +219,7 @@ export class App extends Component {
                           data-original-title=""
                           title="Upload database"
                           onClick={this.uploadDatabaseFile}
+                          className="tw-btn tw-btn-blue mr-2"
                         >
                           <input
                             type="file"
@@ -236,6 +237,7 @@ export class App extends Component {
                           data-original-title=""
                           onClick={this.downloadDatabaseAsFile}
                           title="Download database"
+                          className="tw-btn tw-btn-blue"
                         >
                       Download database
                         </button>
