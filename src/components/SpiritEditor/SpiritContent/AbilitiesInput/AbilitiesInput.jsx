@@ -105,7 +105,7 @@ export class AbilitiesInput extends Component {
           <InputGroup className="mb-3">
             <FormControl required id="newAbility" list="abilities-datalist" />
             <InputGroup.Append>
-              <Button type="submit" variant="outline-secondary">Add ability</Button>
+              <Button type="submit" variant="outline-secondary">{t('addAbility')}</Button>
             </InputGroup.Append>
           </InputGroup>
         </Form>

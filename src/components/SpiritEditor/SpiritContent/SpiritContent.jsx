@@ -81,12 +81,12 @@ export class SpiritContent extends Component {
     const {
       name, aura, fraction, story, abilities, latLng, plane, hitPoints,
     } = this.state;
-    const { spiritService, id } = this.props;
+    const { spiritService, id, t } = this.props;
 
     if (!id) {
       return (
         <div className="SpiritContent flex-grow">
-          You have no spirits
+          {t('youHaveNoSpirits')}
         </div>
       );
     }
@@ -116,7 +116,7 @@ export class SpiritContent extends Component {
                 </div>
               </div> */}
               <div className="table-row">
-                <label htmlFor="fractionInput" className="table-cell">fraction</label>
+                <label htmlFor="fractionInput" className="table-cell">{t('fraction')}</label>
                 <div className="table-cell">
                   <Form.Control
                     name="fraction"
@@ -130,7 +130,7 @@ export class SpiritContent extends Component {
                 </div>
               </div>
               <div className="table-row">
-                <label htmlFor="storyInput" className="table-cell">story</label>
+                <label htmlFor="storyInput" className="table-cell">{t('story')}</label>
                 <div className="table-cell">
                   <Form.Control
                     name="story"
@@ -143,7 +143,7 @@ export class SpiritContent extends Component {
                 </div>
               </div>
               <div className="table-row">
-                <label htmlFor="newAbility" className="table-cell">abilities</label>
+                <label htmlFor="newAbility" className="table-cell">{t('abilities')}</label>
                 {/* <div className="table-cell">{abilities.join(', ') || 'None'}</div> */}
                 <div className="table-cell">
                   <AbilitiesInput

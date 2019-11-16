@@ -182,32 +182,36 @@ export class App extends Component {
       dataService, spiritService,
     } = this.state;
 
+    const {
+      t,
+    } = this.props;
+
     return (
       <React.StrictMode>
         <ErrorBoundry>
-          <DocumentTitle title="SR2020 Map & Magic">
+          <DocumentTitle title={t('appTitle')}>
             <Router>
               <div className="App flex flex-col h-screen">
                 <header className="flex-0-0-auto">
                   <nav className="view-switch">
                     <ul>
                       <li>
-                        <NavLink to="/mapEditor">Map Editor</NavLink>
+                        <NavLink to="/mapEditor">{t('mapEditor')}</NavLink>
                       </li>
                       <li>
-                        <NavLink to="/beacons">Beacons</NavLink>
+                        <NavLink to="/beacons">{t('beacons')}</NavLink>
                       </li>
                       <li>
-                        <NavLink to="/soundManager">Sound Manager</NavLink>
+                        <NavLink to="/soundManager">{t('soundManager')}</NavLink>
                       </li>
                       <li>
-                        <NavLink to="/demo">Demo</NavLink>
+                        <NavLink to="/demo">{t('demo')}</NavLink>
                       </li>
                       <li>
-                        <NavLink to="/map2">Map2</NavLink>
+                        <NavLink to="/map2">{t('map2')}</NavLink>
                       </li>
                       <li>
-                        <NavLink to="/spiritEditor">Spirit Editor</NavLink>
+                        <NavLink to="/spiritEditor">{t('spiritEditor')}</NavLink>
                       </li>
                     </ul>
 
@@ -217,7 +221,7 @@ export class App extends Component {
                         <button
                           type="button"
                           data-original-title=""
-                          title="Upload database"
+                          title={t('uploadDatabase')}
                           onClick={this.uploadDatabaseFile}
                           className="tw-btn tw-btn-blue mr-2"
                         >
@@ -227,7 +231,7 @@ export class App extends Component {
                             tabIndex="-1"
                             onChange={this.onFileSelected}
                           />
-                      Upload database
+                          {t('uploadDatabase')}
                         </button>
                       </li>
                       <li>
@@ -236,10 +240,10 @@ export class App extends Component {
                           type="button"
                           data-original-title=""
                           onClick={this.downloadDatabaseAsFile}
-                          title="Download database"
+                          title={t('downloadDatabase')}
                           className="tw-btn tw-btn-blue"
                         >
-                      Download database
+                          {t('downloadDatabase')}
                         </button>
                       </li>
                     </ul>

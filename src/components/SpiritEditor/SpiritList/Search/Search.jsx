@@ -78,7 +78,7 @@ export class Search extends Component {
 
   render() {
     const { isInputFocused, isClearFocused, searchStr } = this.state;
-    const { t, className } = this.props;
+    const { t, className, placeholder = 'Search' } = this.props;
 
     const className2 = classNames('Search', className, {
       focused: isInputFocused || isClearFocused || searchStr.length > 0,
@@ -88,11 +88,10 @@ export class Search extends Component {
     return (
 
       <div data-search="" role="search" className={className2}>
-        {/* <label id="search-input-label-1" className="bx--label" htmlFor="search__input-1">Search</label> */}
         <input
           className="search-input"
           type="text"
-          placeholder="Search"
+          placeholder={placeholder}
           value={searchStr}
           onChange={this.onChange}
           onFocus={this.onInputFocus}
@@ -101,8 +100,8 @@ export class Search extends Component {
         <FontAwesomeIcon className="magnifier" icon={faSearch} />
         <button
           className={clearClassName}
-          title="Clear search input"
-          aria-label="Clear search input"
+          title={t('clearSearchInput')}
+          aria-label={t('clearSearchInput')}
           type="button"
           onClick={this.onClear}
           onFocus={this.onClearFocus}

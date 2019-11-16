@@ -141,6 +141,7 @@ export class SpiritList extends Component {
   // eslint-disable-next-line max-lines-per-function
   getSpiritList = () => {
     const { spirits, searchStr } = this.state;
+    const { t } = this.props;
     const lowerSearchStr = searchStr.toLowerCase();
     // eslint-disable-next-line max-lines-per-function
     return spirits.filter((spirit) => spirit.name.toLowerCase().includes(lowerSearchStr))
@@ -197,13 +198,13 @@ export class SpiritList extends Component {
                     as="button"
                     onClick={(e) => this.cloneSpirit(e, spirit.id)}
                   >
-                  Clone
+                    {t('clone')}
                   </Dropdown.Item>
                   <Dropdown.Item
                     as="button"
                     onClick={(e) => this.removeSpirit(e, spirit.id)}
                   >
-                  Delete
+                    {t('delete')}
                   </Dropdown.Item>
                 </Dropdown.Menu>
               </Dropdown>
@@ -211,21 +212,23 @@ export class SpiritList extends Component {
             <div className="body">
               <div className="spirit-name font-bold text-sm">
                 {
-                  <Highlight search={lowerSearchStr} matchClass="p-0 bg-yellow-400 text-color-inherit">
-                    {spirit.name}
-                  </Highlight> || 'Безымянный?'
+                  spirit.name ? (
+                    <Highlight search={lowerSearchStr} matchClass="p-0 bg-yellow-400 text-color-inherit">
+                      {spirit.name}
+                    </Highlight>
+                  ) : t('nameless')
                 }
               </div>
-              <div className="spirit-fraction text-sm">{spirit.fraction || 'Без фракции'}</div>
+              <div className="spirit-fraction text-sm">{spirit.fraction || t('noFraction')}</div>
             </div>
           </NavLink>
         </li>
       ));
   }
 
-  getCreateSpiritPopover = () => (
+  getCreateSpiritPopover = (t) => (
     <Popover id="popover-basic">
-      <Popover.Title as="h3">Enter Spirit Name</Popover.Title>
+      <Popover.Title as="h3">{t('enterSpiritName')}</Popover.Title>
       <Popover.Content>
         <Form onSubmit={this.handleSpiritSubmit}>
           <Form.Group controlId="spiritName">
@@ -237,7 +240,7 @@ export class SpiritList extends Component {
           </Form.Group>
           <div className="text-right">
             <Button variant="primary" type="submit">
-            Create spirit
+              {t('createSpirit')}
             </Button>
           </div>
         </Form>
@@ -254,6 +257,7 @@ export class SpiritList extends Component {
   // eslint-disable-next-line max-lines-per-function
   render() {
     const { spirits, newSpirit, removedSpiritIndex } = this.state;
+    const { t } = this.props;
 
     // if (newSpirit) {
     //   return <Redirect to={spiritLink(newSpirit)} />;
@@ -263,11 +267,15 @@ export class SpiritList extends Component {
       <div className="SpiritList flex-grow-0 flex flex-col bg-gray-200">
 
         <div className="bg-gray-400 flex-grow-0 text-right px-3 py-2 flex">
-          <Search className="flex-grow " onSearchChange={this.onSearchChange} />
+          <Search
+            className="flex-grow "
+            placeholder={t('findSpirit')}
+            onSearchChange={this.onSearchChange}
+          />
           <OverlayTrigger
             trigger="click"
             placement="right"
-            overlay={this.getCreateSpiritPopover()}
+            overlay={this.getCreateSpiritPopover(t)}
             rootClose
             rootCloseEvent="click"
           >
@@ -283,14 +291,16 @@ export class SpiritList extends Component {
               }}
             >
               <FontAwesomeIcon className="fill-current w-4 h-4 mr-2" icon={faPlus} />
-              <span>New Spirit</span>
+              <span>
+                {t('newSpirit')}
+              </span>
             </button>
           </OverlayTrigger>
         </div>
         <Route
           path="/spiritEditor"
           render={() => (spirits.length === 0
-            ? <div className="alert-block alert alert-info">Create spirits</div>
+            ? <div className="alert-block alert alert-info">{t('createSpirits')}</div>
             : <Redirect to={spiritLink(spirits[0])} />)}
           exact
         />
