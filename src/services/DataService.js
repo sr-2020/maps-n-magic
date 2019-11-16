@@ -11,6 +11,11 @@ class DataService {
     this.beacons = beacons || this._getLSBeacons() || getBeacons2();
     this.maxBeaconId = R.reduce(R.max, 1, this.beacons.map(R.prop('id')));
     this.locations = locations || this._getLSLocations() || [];
+    this.locations.forEach((location) => {
+      if (!location.manaLevel) {
+        location.manaLevel = 'normal';
+      }
+    });
     this.maxLocationId = R.reduce(R.max, 1, this.locations.map(R.prop('id')));
     if (beacons) {
       this._saveBeacons();
@@ -83,6 +88,7 @@ class DataService {
     this.locations.push({
       ...props,
       markers: [],
+      manaLevel: 'normal',
       id: this.maxLocationId,
       name: String(this.maxLocationId),
     });

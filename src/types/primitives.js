@@ -58,6 +58,8 @@ export const locationPropTypes = shape({
 
 export const planePropTypes = oneOf(['real', 'astral', 'subastral']);
 
+export const manaLevels = (['low', 'normal', 'high']);
+
 export const spiritPropTypes = shape({
   id: number.isRequired,
   name: string.isRequired,

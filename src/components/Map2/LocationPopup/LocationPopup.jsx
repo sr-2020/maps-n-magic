@@ -3,7 +3,7 @@ import * as R from 'ramda';
 import './LocationPopup.css';
 
 import ReactDOM from 'react-dom';
-import { LocationPopupPropTypes } from '../../../types';
+import { LocationPopupPropTypes, manaLevels } from '../../../types';
 
 import { locationPopupDom } from '../../../utils/domUtils';
 
@@ -26,9 +26,10 @@ export class LocationPopup extends Component {
 
   componentDidUpdate = (prevProps) => {
     const {
-      name, allBeacons, attachedMarkers,
+      name, allBeacons, attachedMarkers, manaLevel,
     } = this.props;
     if (name === prevProps.name
+      && manaLevel === prevProps.manaLevel
       && R.equals(attachedMarkers, prevProps.attachedMarkers)
       && R.equals(allBeacons, prevProps.allBeacons)
     ) {
@@ -131,7 +132,7 @@ export class LocationPopup extends Component {
       unattachedList, attachedList, selectedAddMarker, selectedRemoveMarker,
     } = this.state;
     const {
-      name, onChange, t,
+      name, onChange, t, manaLevel,
     } = this.props;
     return (
       <div className="LocationPopup">
@@ -150,6 +151,27 @@ export class LocationPopup extends Component {
             onChange={onChange('name')}
             onKeyPress={this._handleKeyDown}
           />
+        </div>
+        <div className="mb-4">
+          <label
+            className="block text-gray-700 text-sm font-bold mb-2"
+            htmlFor="manaLevel"
+          >
+            {t('manaLevel')}
+          </label>
+
+          <select
+            className="marker-select shadow border rounded mr-2 py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+            id="manaLevel"
+            // type="text"
+            value={manaLevel}
+            onChange={onChange('manaLevel')}
+            // onKeyPress={this._handleKeyDown}
+          >
+            {
+              manaLevels.map((level) => <option value={level}>{level}</option>)
+            }
+          </select>
         </div>
         <div className="mb-4">
           <label

@@ -23,44 +23,88 @@ function BufferLoader(context, urlList, callback) {
   this.loadCount = 0;
 }
 
+// eslint-disable-next-line max-lines-per-function
 BufferLoader.prototype.loadBuffer = function (url, index) {
   // Load buffer asynchronously
-  const request = new XMLHttpRequest();
-  request.open('GET', url, true);
-  request.responseType = 'arraybuffer';
-
   const loader = this;
+  // const myRequest = new Request(url, {
+  //   headers: {
+  //     'Access-Control-Allow-Origin': '*',
+  //     Origin: '*',
+  //   },
+  // });
+  // fetch(myRequest)
+  fetch(url, {
+    headers: {
+      // 'Access-Control-Allow-Origin': '*',
+      // 'Access-Control-Allow-Origin': 'https://javascript.info',
+      // 'Access-Control-Allow-Origin': '*',
+      // Origin: '*',
+    },
+  })
+    .then((response) => response.arrayBuffer()).then((responseData) => {
+    // const responseData = b642ab(ab2b64());
+    // const responseData = buffer;
+      loader.context.decodeAudioData(
+        responseData,
+        (buffer) => {
+          if (!buffer) {
+            alert(`error decoding file data: ${url}`);
+            return;
+          }
+          loader.bufferList[index] = buffer;
+          if (++loader.loadCount === loader.urlList.length) {
+            console.log('sounds loaded');
+            loader.onload(loader.bufferList);
+          }
+        },
+        (error) => {
+          console.error('decodeAudioData error', error);
+        },
+      );
+      // });
+    }).catch((error) => {
+      console.error('BufferLoader: XHR error', error);
+    });
 
-  request.onload = function () {
-    // Asynchronously decode the audio file data in request.response
-    // const responseData = request.response;
-    // str2ab(ab2str(responseData));
-    // const responseData2 = b642ab(ab2b64(responseData));
-    const responseData = b642ab(ab2b64(request.response));
-    loader.context.decodeAudioData(
-      responseData,
-      (buffer) => {
-        if (!buffer) {
-          alert(`error decoding file data: ${url}`);
-          return;
-        }
-        loader.bufferList[index] = buffer;
-        if (++loader.loadCount === loader.urlList.length) {
-          console.log('sounds loaded');
-          loader.onload(loader.bufferList);
-        }
-      },
-      (error) => {
-        console.error('decodeAudioData error', error);
-      },
-    );
-  };
 
-  request.onerror = function () {
-    alert('BufferLoader: XHR error');
-  };
+  // const request = new XMLHttpRequest();
+  // request.open('GET', url, true);
+  // // request.setRequestHeader('Access-Control-Allow-Origin', '*');
+  // request.responseType = 'arraybuffer';
 
-  request.send();
+  // // const loader = this;
+
+  // request.onload = function () {
+  //   // Asynchronously decode the audio file data in request.response
+  //   // const responseData = request.response;
+  //   // str2ab(ab2str(responseData));
+  //   // const responseData2 = b642ab(ab2b64(responseData));
+  //   const responseData = b642ab(ab2b64(request.response));
+  //   loader.context.decodeAudioData(
+  //     responseData,
+  //     (buffer) => {
+  //       if (!buffer) {
+  //         alert(`error decoding file data: ${url}`);
+  //         return;
+  //       }
+  //       loader.bufferList[index] = buffer;
+  //       if (++loader.loadCount === loader.urlList.length) {
+  //         console.log('sounds loaded');
+  //         loader.onload(loader.bufferList);
+  //       }
+  //     },
+  //     (error) => {
+  //       console.error('decodeAudioData error', error);
+  //     },
+  //   );
+  // };
+
+  // request.onerror = function () {
+  //   alert('BufferLoader: XHR error');
+  // };
+
+  // request.send();
 };
 
 BufferLoader.prototype.load = function () {

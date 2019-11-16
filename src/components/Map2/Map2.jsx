@@ -189,8 +189,10 @@ export class Map2 extends Component {
 
     const locations = locationsData.map(({
       // eslint-disable-next-line no-shadow
-      latlngs, name, id, markers,
-    }) => L.polygon(latlngs, { id, name, markers }));
+      latlngs, name, id, markers, manaLevel,
+    }) => L.polygon(latlngs, {
+      id, name, markers, manaLevel,
+    }));
     locations.forEach((loc) => {
       this.setLocationEventHandlers(loc);
       this.locationsGroup.addLayer(loc);
@@ -234,11 +236,26 @@ export class Map2 extends Component {
 
   updateLocationsView = () => {
     this.locationsGroup.getLayers().forEach((loc, i) => {
-      const { markers } = loc.options;
+      const { markers, manaLevel } = loc.options;
       loc.setStyle({
         color: markers.length > 0 ? 'blue' : 'red',
-        fillColor: COLOR_PALETTE[i % COLOR_PALETTE.length].color.background,
-        fillOpacity: 0.5,
+        // fillColor: COLOR_PALETTE[i % COLOR_PALETTE.length].color.background,
+        // fillOpacity: 0.5,
+        fillOpacity: 0.8,
+        // eslint-disable-next-line no-nested-ternary
+        // fillColor: COLOR_PALETTE[manaLevel === 'low' ? 0
+        //   : (manaLevel === 'normal' ? 12
+        //     : 16)].color.background,
+        // eslint-disable-next-line no-nested-ternary
+        fillColor: manaLevel === 'low' ? 'hsla(233, 0%, 50%, 1)'
+          : (manaLevel === 'normal' ? 'hsla(233, 50%, 50%, 1)'
+            : 'hsla(233, 100%, 50%, 1)'),
+        // fillOpacity:
+        //   // eslint-disable-next-line no-nested-ternary
+        //   manaLevel === 'low' ? 0.2
+        //     : (manaLevel === 'normal' ? 0.6
+        //       : 1)
+        // ,
       });
     });
   }
@@ -253,12 +270,15 @@ export class Map2 extends Component {
   }
 
   onLocationClick = (e) => {
-    const { name, id, markers } = e.target.options;
+    const {
+      name, id, markers, manaLevel,
+    } = e.target.options;
     this.setState({
       curLocation: {
         id,
         name,
         markers,
+        manaLevel,
       },
     });
     this.locationPopup.setLatLng(e.latlng).setContent(locationPopupDom).openOn(this.map);
@@ -430,8 +450,8 @@ export class Map2 extends Component {
     const { dataService } = this.props;
     const { id } = this.state.curLocation;
     const location = this.locationsGroup.getLayers().find((loc) => loc.options.id === id);
-    if (prop === 'name') {
-      location.options.name = value;
+    if (prop === 'name' || prop === 'manaLevel') {
+      location.options[prop] = value;
       dataService.putLocation(id, {
         [prop]: value,
       });
@@ -442,6 +462,7 @@ export class Map2 extends Component {
         curLocation,
       });
     });
+    this.updateLocationsView();
   }
 
   closeMarkerPopup = () => {
@@ -482,6 +503,7 @@ export class Map2 extends Component {
       <LocationPopup
         name={curLocation.name}
         id={curLocation.id}
+        manaLevel={curLocation.manaLevel}
         attachedMarkers={curLocation.markers}
         allBeacons={allBeacons}
         allLocations={allLocations}
