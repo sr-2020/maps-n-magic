@@ -14,12 +14,9 @@ import {
 } from 'react-router-dom';
 import Highlight from 'react-highlighter';
 
-
 import { Search } from './Search';
 
-
 import { SpiritListPropTypes } from '../../../types';
-
 
 const sort = R.sortBy(R.pipe(R.prop('name'), R.toLower));
 
@@ -41,10 +38,11 @@ export class SpiritList extends Component {
     };
     this.onPutSpirit = this.onPutSpirit.bind(this);
     this.onSearchChange = this.onSearchChange.bind(this);
+    this.handleSpiritSubmit = this.handleSpiritSubmit.bind(this);
   }
 
   componentDidMount = () => {
-    console.log('SpiritList mounted');
+    // console.log('SpiritList mounted');
     this.props.spiritService.on('putSpirit', this.onPutSpirit);
   }
 
@@ -59,11 +57,11 @@ export class SpiritList extends Component {
         searchStr: '',
       });
     }
-    console.log('SpiritList did update');
+    // console.log('SpiritList did update');
   }
 
   componentWillUnmount = () => {
-    console.log('SpiritList will unmount');
+    // console.log('SpiritList will unmount');
     this.props.spiritService.off('putSpirit', this.onPutSpirit);
   }
 
@@ -83,63 +81,14 @@ export class SpiritList extends Component {
     });
   }
 
-
-  createNewSpirit = (spiritName) => {
-    const { spiritService, history } = this.props;
-    const spirit = spiritService.postSpirit({ name: spiritName });
-    history.push(spiritLink(spirit));
-    this.setState((state) => {
-      const spirits = sort([...state.spirits, spirit]);
-      return {
-        spirits,
-        removedSpiritIndex: null,
-      };
+  onSearchChange(searchStr) {
+    this.setState({
+      searchStr,
     });
-  };
-
-  cloneSpirit = (e, id) => {
-    e.preventDefault();
-    e.stopPropagation();
-    const { spiritService, history } = this.props;
-    const spirit = spiritService.cloneSpirit(id);
-    history.push(spiritLink(spirit));
-    this.setState((state) => {
-      const spirits = sort([...state.spirits, spirit]);
-      return {
-        spirits,
-        removedSpiritIndex: null,
-      };
-    });
-  };
-
-  removeSpirit = (e, id) => {
-    e.preventDefault();
-    e.stopPropagation();
-    const { spiritService, history } = this.props;
-    spiritService.deleteSpirit(id);
-    this.setState((state) => {
-      const index = state.spirits.findIndex((spirit) => spirit.id === id);
-      const spirits = state.spirits.filter((spirit) => spirit.id !== id);
-      // history.push(spiritLink(spirits[index] || spirits[index - 1]));
-      return {
-        spirits,
-        removedSpiritIndex: index,
-      };
-    });
-  };
-
-  handleSpiritSubmit = (event) => {
-    const form = event.currentTarget;
-    event.preventDefault();
-    event.stopPropagation();
-    if (form.checkValidity() === true) {
-      this.createNewSpirit(form.spiritName.value);
-      form.spiritName.value = '';
-    }
-  };
+  }
 
   // eslint-disable-next-line max-lines-per-function
-  getSpiritList = () => {
+  getSpiritList() {
     const { spirits, searchStr } = this.state;
     const { t } = this.props;
     const lowerSearchStr = searchStr.toLowerCase();
@@ -168,8 +117,8 @@ export class SpiritList extends Component {
             <div className="menu float-right">
               <Dropdown
                 onToggle={(isOpen, e) => {
-                  e.stopPropagation && e.stopPropagation();
-                  e.preventDefault && e.preventDefault();
+                  if (e.stopPropagation) e.stopPropagation();
+                  if (e.preventDefault) e.preventDefault();
                 }}
               >
                 <Dropdown.Toggle className="
@@ -226,37 +175,88 @@ export class SpiritList extends Component {
       ));
   }
 
-  getCreateSpiritPopover = (t) => (
-    <Popover id="popover-basic">
-      <Popover.Title as="h3">{t('enterSpiritName')}</Popover.Title>
-      <Popover.Content>
-        <Form onSubmit={this.handleSpiritSubmit}>
-          <Form.Group controlId="spiritName">
-            <Form.Control
-              type="text"
-              required
-              ref={(el) => (this.newSpiritInput = el)}
-            />
-          </Form.Group>
-          <div className="text-right">
-            <Button variant="primary" type="submit">
-              {t('createSpirit')}
-            </Button>
-          </div>
-        </Form>
-      </Popover.Content>
-    </Popover>
-  );
+  getCreateSpiritPopover(t) {
+    return (
+      <Popover id="popover-basic">
+        <Popover.Title as="h3">{t('enterSpiritName')}</Popover.Title>
+        <Popover.Content>
+          <Form onSubmit={this.handleSpiritSubmit}>
+            <Form.Group controlId="spiritName">
+              <Form.Control
+                type="text"
+                required
+                ref={(el) => (this.newSpiritInput = el)}
+              />
+            </Form.Group>
+            <div className="text-right">
+              <Button variant="primary" type="submit">
+                {t('createSpirit')}
+              </Button>
+            </div>
+          </Form>
+        </Popover.Content>
+      </Popover>
+    );
+  }
 
-  onSearchChange(searchStr) {
-    this.setState({
-      searchStr,
+  createNewSpirit(spiritName) {
+    const { spiritService, history } = this.props;
+    const spirit = spiritService.postSpirit({ name: spiritName });
+    history.push(spiritLink(spirit));
+    this.setState((state) => {
+      const spirits = sort([...state.spirits, spirit]);
+      return {
+        spirits,
+        removedSpiritIndex: null,
+      };
     });
   }
 
+  cloneSpirit(e, id) {
+    e.preventDefault();
+    e.stopPropagation();
+    const { spiritService, history } = this.props;
+    const spirit = spiritService.cloneSpirit(id);
+    history.push(spiritLink(spirit));
+    this.setState((state) => {
+      const spirits = sort([...state.spirits, spirit]);
+      return {
+        spirits,
+        removedSpiritIndex: null,
+      };
+    });
+  }
+
+  removeSpirit(e, id) {
+    e.preventDefault();
+    e.stopPropagation();
+    const { spiritService } = this.props;
+    spiritService.deleteSpirit(id);
+    this.setState((state) => {
+      const index = state.spirits.findIndex((spirit) => spirit.id === id);
+      const spirits = state.spirits.filter((spirit) => spirit.id !== id);
+      // history.push(spiritLink(spirits[index] || spirits[index - 1]));
+      return {
+        spirits,
+        removedSpiritIndex: index,
+      };
+    });
+  }
+
+  handleSpiritSubmit(event) {
+    const form = event.currentTarget;
+    event.preventDefault();
+    event.stopPropagation();
+    if (form.checkValidity() === true) {
+      this.createNewSpirit(form.spiritName.value);
+      form.spiritName.value = '';
+    }
+  }
+
+
   // eslint-disable-next-line max-lines-per-function
   render() {
-    const { spirits, newSpirit, removedSpiritIndex } = this.state;
+    const { spirits, removedSpiritIndex } = this.state;
     const { t } = this.props;
 
     // if (newSpirit) {

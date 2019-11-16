@@ -26,6 +26,7 @@ export const SpiritContentPropTypes = {
 
 export const SpiritListPropTypes = {
   spiritService: spiritServicePropTypes.isRequired,
+  t: func.isRequired,
 };
 
 export const LocationPopupPropTypes = {
@@ -44,4 +45,18 @@ export const MarkerPopupPropTypes = {
   lng: number.isRequired,
   onClose: func.isRequired,
   onChange: func.isRequired,
+};
+
+export const AbilitiesInputPropTypes = {
+  spiritService: spiritServicePropTypes.isRequired,
+  id: number.isRequired,
+  t: func.isRequired,
+  className: string,
+};
+
+export const SearchPropTypes = {
+  onSearchChange: func.isRequired,
+  t: func.isRequired,
+  className: string.isRequired,
+  placeholder: string.isRequired,
 };

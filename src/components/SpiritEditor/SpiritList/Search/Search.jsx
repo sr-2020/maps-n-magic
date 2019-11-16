@@ -2,13 +2,13 @@ import React, { Component } from 'react';
 import './Search.css';
 
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faSearch, faTimes, faThumbsDown } from '@fortawesome/free-solid-svg-icons';
+import { faSearch, faTimes } from '@fortawesome/free-solid-svg-icons';
 
-// import { SearchPropTypes } from '../../types';
 import classNames from 'classnames';
+import { SearchPropTypes } from '../../../../types';
 
 export class Search extends Component {
-  // static propTypes = SearchPropTypes;
+  static propTypes = SearchPropTypes;
 
   constructor() {
     super();
@@ -65,6 +65,7 @@ export class Search extends Component {
     this.setState({
       searchStr: e.target.value,
     });
+    // eslint-disable-next-line react/destructuring-assignment
     this.props.onSearchChange(e.target.value);
   }
 
@@ -73,6 +74,7 @@ export class Search extends Component {
     this.setState({
       searchStr: '',
     });
+    // eslint-disable-next-line react/destructuring-assignment
     this.props.onSearchChange('');
   }
 

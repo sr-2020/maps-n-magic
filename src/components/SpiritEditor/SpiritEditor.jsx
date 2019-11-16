@@ -1,17 +1,8 @@
 import React, { Component } from 'react';
 import './SpiritEditor.css';
 
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faPlus, faEllipsisH } from '@fortawesome/free-solid-svg-icons';
-import Dropdown from 'react-bootstrap/Dropdown';
-import Popover from 'react-bootstrap/Popover';
-import Button from 'react-bootstrap/Button';
-import OverlayTrigger from 'react-bootstrap/OverlayTrigger';
-import Form from 'react-bootstrap/Form';
-import * as R from 'ramda';
-
 import {
-  NavLink, Route, Redirect,
+  Route,
 } from 'react-router-dom';
 import { SpiritEditorPropTypes } from '../../types';
 
@@ -27,19 +18,6 @@ export class SpiritEditor extends Component {
     this.state = {
     };
   }
-
-  componentDidMount = () => {
-    console.log('SpiritEditor mounted');
-  }
-
-  componentDidUpdate = () => {
-    console.log('SpiritEditor did update');
-  }
-
-  componentWillUnmount = () => {
-    console.log('SpiritEditor will unmount');
-  }
-
 
   // eslint-disable-next-line max-lines-per-function
   render() {

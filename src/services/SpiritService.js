@@ -80,6 +80,7 @@ export class SpiritService extends EventEmitter {
     const base = `${name} клон`;
     let newName = base;
     let counter = 1;
+    // eslint-disable-next-line eqeqeq
     while (spiritMap[newName] != undefined) {
       newName = `${base} ${counter}`;
       counter++;

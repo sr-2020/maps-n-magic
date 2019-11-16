@@ -1,14 +1,9 @@
 import React, { Component } from 'react';
 import './SpiritContent.css';
 
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faEdit } from '@fortawesome/free-solid-svg-icons';
-
 import Form from 'react-bootstrap/Form';
 import DocumentTitle from 'react-document-title';
 import { SpiritContentPropTypes } from '../../../types';
-
-import { InPlaceInput } from '../InPlaceInput';
 
 import { AbilitiesInput } from './AbilitiesInput';
 
@@ -25,10 +20,6 @@ export class SpiritContent extends Component {
     this.handleInputChange = this.handleInputChange.bind(this);
   }
 
-  componentDidMount = () => {
-    console.log('SpiritContent mounted');
-  }
-
   componentDidUpdate = (prevProps) => {
     if (prevProps.id === this.props.id) {
       return;
@@ -38,17 +29,12 @@ export class SpiritContent extends Component {
     } = this.props;
     // eslint-disable-next-line react/no-did-update-set-state
     this.setState(this._getNewState(id, spiritService));
-    // this.getStateInfo();
-    // console.log('SpiritContent did update');
   }
 
   _getNewState = (id, spiritService) => ({
     ...spiritService.getSpirit(id),
   })
 
-  componentWillUnmount = () => {
-    console.log('SpiritContent will unmount');
-  }
 
   handleInputChange(event) {
     const { target } = event;
@@ -79,7 +65,7 @@ export class SpiritContent extends Component {
     // hitPoints: number.isRequired,
 
     const {
-      name, aura, fraction, story, abilities, latLng, plane, hitPoints,
+      name, fraction, story,
     } = this.state;
     const { spiritService, id, t } = this.props;
 

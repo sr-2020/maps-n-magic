@@ -1,8 +1,6 @@
 import React, { Component } from 'react';
 import './AbilitiesInput.css';
 
-// import { AbilitiesInputPropTypes } from '../../types';
-
 import Button from 'react-bootstrap/Button';
 import ButtonGroup from 'react-bootstrap/ButtonGroup';
 import InputGroup from 'react-bootstrap/InputGroup';
@@ -14,10 +12,12 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faTimes } from '@fortawesome/free-solid-svg-icons';
 import * as R from 'ramda';
 
+import { AbilitiesInputPropTypes } from '../../../../types';
+
 const sort = R.sortBy(R.toLower);
 
 export class AbilitiesInput extends Component {
-  // static propTypes = AbilitiesInputPropTypes;
+  static propTypes = AbilitiesInputPropTypes;
 
   constructor(props) {
     super(props);
@@ -27,10 +27,6 @@ export class AbilitiesInput extends Component {
       allAbilities: spiritService.getSpiritAbilitiesList(),
     };
     this.onSubmit = this.onSubmit.bind(this);
-  }
-
-  componentDidMount = () => {
-    console.log('AbilitiesInput mounted');
   }
 
   componentDidUpdate = (prevProps) => {
@@ -48,15 +44,11 @@ export class AbilitiesInput extends Component {
     // console.log('AbilitiesInput did update');
   }
 
-  componentWillUnmount = () => {
-    console.log('AbilitiesInput will unmount');
-  }
-
   onSubmit(e) {
     const form = e.currentTarget;
     e.stopPropagation();
     e.preventDefault();
-    console.log('onsubmit');
+    // console.log('onsubmit');
     const { abilities } = this.state;
     const { id, spiritService } = this.props;
     if (form.checkValidity() === true) {
@@ -65,8 +57,8 @@ export class AbilitiesInput extends Component {
         spiritService.putSpirit(id, {
           abilities: [...abilities, ability],
         });
-        this.setState(({ abilities }) => ({
-          abilities: sort([...abilities, ability]),
+        this.setState(({ abilities: prevAbilities }) => ({
+          abilities: sort([...prevAbilities, ability]),
           allAbilities: spiritService.getSpiritAbilitiesList(),
         }));
         form.newAbility.value = '';
@@ -82,22 +74,18 @@ export class AbilitiesInput extends Component {
     spiritService.putSpirit(id, {
       abilities: newAbilities,
     });
-    this.setState(({ abilities }) => ({
-      abilities: abilities.filter((ab) => ab !== ability),
+    this.setState(({ abilities: prevAbilities }) => ({
+      abilities: prevAbilities.filter((ab) => ab !== ability),
       allAbilities: spiritService.getSpiritAbilitiesList(),
     }));
   }
 
   render() {
     const { abilities, allAbilities } = this.state;
-    const { t, className, inputId } = this.props;
+    const { t, className } = this.props;
 
     const datalistAbilities = sort(R.difference(allAbilities, abilities));
 
-    // if (!something) {
-    //   return <div> AbilitiesInput stub </div>;
-    //   // return null;
-    // }
     const className2 = classNames('AbilitiesInput', className);
     return (
       <div className={className2}>
