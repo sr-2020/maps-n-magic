@@ -25,6 +25,8 @@ import { mapConfig, geomanConfig, defaultTileLayer } from './MapConfigurations';
 
 import { markerPopupDom, locationPopupDom } from '../../utils/domUtils';
 
+import { applyLeafletGeomanTranslation, getZoomTranslation } from '../../translations';
+
 
 // import playerTracks from '../../data/initialPlayerTracks';
 
@@ -55,9 +57,16 @@ export class Map2 extends Component {
     this.map = L.map(this.mapEl, {
       center,
       zoom,
+      zoomControl: false,
     });
+    L.control.zoom({
+      ...getZoomTranslation(),
+      position: 'topleft',
+    }).addTo(this.map);
     L.tileLayer(urlTemplate, options).addTo(this.map);
     this.map.pm.addControls(geomanConfig);
+    applyLeafletGeomanTranslation(this.map);
+    // applyZoomTranslation(this.map);
     this.initMapBackbone();
     this.populateMapData();
 
@@ -125,6 +134,7 @@ export class Map2 extends Component {
 
   // eslint-disable-next-line max-lines-per-function
   initMapBackbone = () => {
+    const { t } = this.props;
     const baseLine = L.polyline(baseLLs, {
       color: 'green',
       pmIgnore: true,
@@ -152,12 +162,12 @@ export class Map2 extends Component {
     this.locationsGroup.addTo(this.map);
 
     const overlayMaps = {
-      'Base contour': baseContourGroup,
-      Markers: this.markerGroup,
-      'Mass centers': this.massCentersGroup,
-      'Voronoi polygons': this.polygonsGroup,
-      'Signal radiuses': this.signalRadiusesGroup,
-      Locations: this.locationsGroup,
+      [t('baseContourLayer')]: baseContourGroup,
+      [t('beaconsLayer')]: this.markerGroup,
+      [t('massCentersLayer')]: this.massCentersGroup,
+      [t('voronoiPolygonsLayer')]: this.polygonsGroup,
+      [t('signalRadiusesLayer')]: this.signalRadiusesGroup,
+      [t('locationsLayer')]: this.locationsGroup,
     };
 
     L.control.layers(null, overlayMaps).addTo(this.map);

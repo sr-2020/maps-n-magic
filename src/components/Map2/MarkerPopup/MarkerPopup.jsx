@@ -17,7 +17,7 @@ export class MarkerPopup extends Component {
   // eslint-disable-next-line max-lines-per-function
   makeContent() {
     const {
-      name, lat, lng, onChange,
+      name, lat, lng, onChange, t,
     } = this.props;
 
     return (
@@ -27,7 +27,7 @@ export class MarkerPopup extends Component {
             className="block text-gray-700 text-sm font-bold mb-2"
             htmlFor="markerName"
           >
-            Name
+            {t('markerName')}
           </label>
           <input
             className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
@@ -43,7 +43,7 @@ export class MarkerPopup extends Component {
             className="block text-gray-700 text-sm font-bold mb-2"
             htmlFor="markerLat"
           >
-            Latitude
+            {t('latitude')}
           </label>
           <input
             className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
@@ -59,7 +59,7 @@ export class MarkerPopup extends Component {
             className="block text-gray-700 text-sm font-bold mb-2"
             htmlFor="markerLng"
           >
-            Longitude
+            {t('longitude')}
           </label>
           <input
             className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"

@@ -131,7 +131,7 @@ export class LocationPopup extends Component {
       unattachedList, attachedList, selectedAddMarker, selectedRemoveMarker,
     } = this.state;
     const {
-      name, onChange,
+      name, onChange, t,
     } = this.props;
     return (
       <div className="LocationPopup">
@@ -140,7 +140,7 @@ export class LocationPopup extends Component {
             className="block text-gray-700 text-sm font-bold mb-2"
             htmlFor="locationName"
           >
-            Name
+            {t('locationName')}
           </label>
           <input
             className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
@@ -156,14 +156,14 @@ export class LocationPopup extends Component {
             className="block text-gray-700 text-sm font-bold mb-2"
             htmlFor="locationName"
           >
-            Markers
+            {t('markers')}
           </label>
           <div className="mb-2">
             {
               attachedList.map((marker) => <span key={marker.id} className="mr-2">{marker.name}</span>)
             }
             {
-              attachedList.length === 0 && <span className="font-bold">No markers</span>
+              attachedList.length === 0 && <span className="font-bold">{t('noMarkers')}</span>
             }
           </div>
           <div className="mb-2">
@@ -181,7 +181,7 @@ export class LocationPopup extends Component {
               type="button"
               onClick={this.addMarker}
             >
-              Add
+              {t('addMarker')}
             </button>
           </div>
           <div>
@@ -199,7 +199,7 @@ export class LocationPopup extends Component {
               type="button"
               onClick={this.removeMarker}
             >
-              Remove
+              {t('removeMarker')}
             </button>
           </div>
         </div>

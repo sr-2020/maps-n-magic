@@ -5,7 +5,7 @@ const osmTileLayer = {
   options: {
     attribution: '&amp;copy <a href="http://osm.org/copyright">OpenStreetMap</a> contributors',
     maxZoom,
-  }
+  },
 };
 
 const googleTileLayer = {
@@ -13,8 +13,8 @@ const googleTileLayer = {
   options: {
     maxZoom,
     opacity: 0.4,
-    subdomains: ['mt0', 'mt1', 'mt2', 'mt3']
-  }
+    subdomains: ['mt0', 'mt1', 'mt2', 'mt3'],
+  },
 };
 
 const mapConfig = {
@@ -30,7 +30,7 @@ const geomanConfig = {
   drawPolyline: false,
   cutPolygon: false,
   drawCircle: false,
-  drawRectangle: false
+  drawRectangle: false,
 };
 
 // osmSettings
@@ -40,5 +40,5 @@ const defaultTileLayer = googleTileLayer;
 
 
 export {
-  osmTileLayer, googleTileLayer, mapConfig, geomanConfig, defaultTileLayer
+  osmTileLayer, googleTileLayer, mapConfig, geomanConfig, defaultTileLayer,
 };

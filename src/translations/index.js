@@ -1,9 +1,10 @@
-const translations = {
+export * from './leaflet';
+
+export const translations = {
   ru: {
     translation: {
 
       // App
-
       appTitle: 'SR2020 Карта и магия',
       mapEditor: 'Редактор карты - 1',
       beacons: 'Маяки - 1',
@@ -31,8 +32,24 @@ const translations = {
       story: 'История',
       abilities: 'Способности',
       addAbility: 'Добавить способность',
+
+      // Map2
+      baseContourLayer: 'Контуры базы',
+      beaconsLayer: 'Маяки',
+      massCentersLayer: 'Центры масс',
+      voronoiPolygonsLayer: 'Полигоны Вороного',
+      signalRadiusesLayer: 'Радиус сигналов маяков',
+      locationsLayer: 'Локации',
+
+      locationName: 'Название локации',
+      markers: 'Маяки',
+      noMarkers: 'Нет маяков',
+      addMarker: 'Добавить',
+      removeMarker: 'Удалить',
+
+      markerName: 'Название маркера',
+      latitude: 'Широта',
+      longitude: 'Долгота',
     },
   },
 };
-
-export { translations };
