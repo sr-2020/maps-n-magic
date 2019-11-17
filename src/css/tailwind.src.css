@@ -48,6 +48,9 @@
 .text-3xl[class] {
   @apply text-3xl;
 }
+.w-25p[class] {
+  width: 25%;
+}
 .w-50p[class] {
   width: 50%;
 }

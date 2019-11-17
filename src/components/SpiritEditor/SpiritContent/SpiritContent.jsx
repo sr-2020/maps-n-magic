@@ -31,14 +31,25 @@ export class SpiritContent extends Component {
     this.setState(this._getNewState(id, spiritService));
   }
 
+  // eslint-disable-next-line class-methods-use-this
+  getTargetValue(target) {
+    switch (target.type) {
+    case 'checkbox':
+      return target.checked;
+    case 'number':
+      return Number(target.value);
+    default:
+      return target.value;
+    }
+  }
+
   _getNewState = (id, spiritService) => ({
     ...spiritService.getSpirit(id),
   })
 
-
   handleInputChange(event) {
     const { target } = event;
-    const value = target.type === 'checkbox' ? target.checked : target.value;
+    const value = this.getTargetValue(target);
     const { name } = target;
     const { id, spiritService } = this.props;
 
@@ -65,7 +76,7 @@ export class SpiritContent extends Component {
     // hitPoints: number.isRequired,
 
     const {
-      name, fraction, story,
+      name, fraction, story, maxHitPoints,
     } = this.state;
     const { spiritService, id, t } = this.props;
 
@@ -112,6 +123,20 @@ export class SpiritContent extends Component {
                     value={fraction}
                     onChange={this.handleInputChange}
                     list="fraction-datalist"
+                  />
+                </div>
+              </div>
+              <div className="table-row">
+                <label htmlFor="maxHitPointsInput" className="table-cell">{t('maxHitPoints')}</label>
+                <div className="table-cell">
+                  <Form.Control
+                    name="maxHitPoints"
+                    type="number"
+                    className="w-25p"
+                    id="maxHitPointsInput"
+                    value={maxHitPoints}
+                    onChange={this.handleInputChange}
+                    // list="fraction-datalist"
                   />
                 </div>
               </div>

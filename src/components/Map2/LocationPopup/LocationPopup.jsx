@@ -169,7 +169,7 @@ export class LocationPopup extends Component {
             // onKeyPress={this._handleKeyDown}
           >
             {
-              manaLevels.map((level) => <option value={level}>{level}</option>)
+              manaLevels.map((level) => <option value={level}>{t(`mana${level}`)}</option>)
             }
           </select>
         </div>

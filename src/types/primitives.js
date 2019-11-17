@@ -71,6 +71,7 @@ export const spiritPropTypes = shape({
   latLng: latLngPropTypes.isRequired,
   plane: planePropTypes.isRequired,
   hitPoints: number.isRequired,
+  maxHitPoints: number.isRequired,
 });
 
 export const defaultSpirit = {
@@ -86,6 +87,7 @@ export const defaultSpirit = {
   },
   plane: 'subastral',
   hitPoints: 10,
+  maxHitPoints: 10,
 };
 
 //   properties: {

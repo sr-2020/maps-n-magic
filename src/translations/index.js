@@ -33,6 +33,8 @@ export const translations = {
       abilities: 'Способности',
       addAbility: 'Добавить способность',
 
+      maxHitPoints: 'Максимум HP',
+
       // Map2
       baseContourLayer: 'Контуры базы',
       beaconsLayer: 'Маяки',
@@ -42,10 +44,14 @@ export const translations = {
       locationsLayer: 'Локации',
 
       locationName: 'Название локации',
-      markers: 'Маяки',
+      markers: 'Маяки локации',
       noMarkers: 'Нет маяков',
       addMarker: 'Добавить',
       removeMarker: 'Удалить',
+      manaLevel: 'Уровень маны',
+      manalow: 'Низкий',
+      mananormal: 'Обычный',
+      manahigh: 'Высокий',
 
       markerName: 'Название маркера',
       latitude: 'Широта',

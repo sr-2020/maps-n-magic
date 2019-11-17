@@ -13,17 +13,19 @@ import { defaultSpirit } from '../types/primitives';
 export class SpiritService extends EventEmitter {
   constructor({ spirits } = {}) {
     super();
+    this.fractions = [];
+    this.abilities = [];
     this.spirits = spirits || this._getLSSpirits() || [];
     this.maxSpiritId = R.reduce(R.max, 1, this.spirits.map(R.prop('id')));
     if (this.spirits.length === 0) {
       ['Иркут', 'Ангара', 'Байкал', 'Баргузин'].forEach((name) => this.postSpirit({ name }));
     }
+    this.spirits.filter((spirit) => spirit.maxHitPoints === undefined)
+      .forEach((spirit) => (spirit.maxHitPoints = 10));
     if (spirits) {
       this._saveSpirits();
     }
-    this.fractions = [];
     this.updateSpiritFractionsList();
-    this.abilities = [];
     this.updateSpiritAbilitiesList();
   }
 

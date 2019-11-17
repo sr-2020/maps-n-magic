@@ -93,7 +93,7 @@ export class SpiritList extends Component {
     const { t } = this.props;
     const lowerSearchStr = searchStr.toLowerCase();
     // eslint-disable-next-line max-lines-per-function
-    return spirits.filter((spirit) => spirit.name.toLowerCase().includes(lowerSearchStr))
+    return spirits.filter((spirit) => spirit.name.toLowerCase().includes(lowerSearchStr) || spirit.fraction.toLowerCase().includes(lowerSearchStr))
       // eslint-disable-next-line max-lines-per-function
       .map((spirit) => (
         <li key={spirit.id} className="SpiritListItem relative">
@@ -168,7 +168,13 @@ export class SpiritList extends Component {
                   ) : t('nameless')
                 }
               </div>
-              <div className="spirit-fraction text-sm">{spirit.fraction || t('noFraction')}</div>
+              <div className="spirit-fraction text-sm">
+                {spirit.fraction ? (
+                  <Highlight search={lowerSearchStr} matchClass="p-0 bg-yellow-400 text-color-inherit">
+                    {spirit.fraction}
+                  </Highlight>
+                ) : t('noFraction')}
+              </div>
             </div>
           </NavLink>
         </li>
