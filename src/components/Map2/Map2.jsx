@@ -174,7 +174,7 @@ export class Map2 extends Component {
   }
 
   populateMapData = () => {
-    const { dataService } = this.props;
+    const { dataService, t } = this.props;
     const beacons2 = dataService.getBeacons();
 
     const markers = beacons2.map(({
@@ -182,6 +182,13 @@ export class Map2 extends Component {
     }) => L.marker({ lat, lng }, { id, name }));
     markers.forEach((marker) => {
       this.setMarkerEventHandlers(marker);
+      marker.on('mouseover', function (e) {
+        marker.bindTooltip(t('markerTooltip', { name: this.options.name }));
+        this.openTooltip();
+      });
+      marker.on('mouseout', function (e) {
+        this.closeTooltip();
+      });
       this.markerGroup.addLayer(marker);
     });
 
@@ -195,6 +202,13 @@ export class Map2 extends Component {
     }));
     locations.forEach((loc) => {
       this.setLocationEventHandlers(loc);
+      loc.on('mouseover', function (e) {
+        loc.bindTooltip(t('locationTooltip', { name: this.options.name }));
+        this.openTooltip();
+      });
+      loc.on('mouseout', function (e) {
+        this.closeTooltip();
+      });
       this.locationsGroup.addLayer(loc);
     });
 

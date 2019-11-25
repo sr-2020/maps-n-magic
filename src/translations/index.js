@@ -45,6 +45,8 @@ export const translations = {
 
       locationName: 'Название локации',
       markers: 'Маяки локации',
+      markerTooltip: 'Маяк "{{name}}"',
+      locationTooltip: 'Локация "{{name}}"',
       noMarkers: 'Нет маяков',
       addMarker: 'Добавить',
       removeMarker: 'Удалить',

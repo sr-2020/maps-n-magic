@@ -51,6 +51,9 @@
 .w-25p[class] {
   width: 25%;
 }
+.w-33p[class] {
+  width: 33.333333333333333333333%;
+}
 .w-50p[class] {
   width: 50%;
 }

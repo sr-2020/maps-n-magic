@@ -3,9 +3,11 @@ import * as R from 'ramda';
 import './LocationPopup.css';
 
 import ReactDOM from 'react-dom';
+import classNames from 'classnames';
 import { LocationPopupPropTypes, manaLevels } from '../../../types';
 
 import { locationPopupDom } from '../../../utils/domUtils';
+
 
 export class LocationPopup extends Component {
   static propTypes = LocationPopupPropTypes;
@@ -134,6 +136,10 @@ export class LocationPopup extends Component {
     const {
       name, onChange, t, manaLevel,
     } = this.props;
+
+    const common = 'w-33p font-bold py-2 px-4 focus:outline-none focus:shadow-outline';
+    const selectedButton = 'bg-blue-500 hover:bg-blue-700 text-white';
+    const unselectedButton = 'bg-gray-300 hover:bg-gray-400 text-gray-800';
     return (
       <div className="LocationPopup">
         <div className="mb-4">
@@ -160,18 +166,25 @@ export class LocationPopup extends Component {
             {t('manaLevel')}
           </label>
 
-          <select
-            className="marker-select shadow border rounded mr-2 py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-            id="manaLevel"
-            // type="text"
-            value={manaLevel}
-            onChange={onChange('manaLevel')}
-            // onKeyPress={this._handleKeyDown}
-          >
+          <div>
             {
-              manaLevels.map((level) => <option value={level}>{t(`mana${level}`)}</option>)
+              manaLevels.map((level, i) => (
+                <button
+                  className={classNames(common, {
+                    [selectedButton]: level === manaLevel,
+                    [unselectedButton]: level !== manaLevel,
+                    'rounded-l': i === 0,
+                    'rounded-r': i === 2,
+                  })}
+                  type="button"
+                  value={level}
+                  onClick={onChange('manaLevel')}
+                >
+                  {t(`mana${level}`)}
+                </button>
+              ))
             }
-          </select>
+          </div>
         </div>
         <div className="mb-4">
           <label
