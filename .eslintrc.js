@@ -5,8 +5,14 @@ module.exports = {
         "node": true,
         "es6": true
     },
+    "plugins": [
+      "ramda"
+    ],
 //    "extends": "eslint:recommended",
-    "extends": "airbnb" ,
+    "extends": [
+      "airbnb" ,
+      "plugin:ramda/recommended"
+    ],
     "rules": {
 //        "one-var": ["error", "never"],
 //        "one-var-declaration-per-line": ["error", "initializations"],

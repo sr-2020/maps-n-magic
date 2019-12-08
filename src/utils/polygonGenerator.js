@@ -3,7 +3,7 @@ import { Delaunay } from 'd3-delaunay';
 import * as R from 'ramda';
 import clippingUtils from 'polygon-clipping';
 import {
-  getPointMassCenter, getPerimeterMassCenter, getSolidMassCenter, getMultiPolygonSolidMassCenter
+  getPointMassCenter, getPerimeterMassCenter, getSolidMassCenter, getMultiPolygonSolidMassCenter,
 } from './polygonUtils';
 
 // const clipPolygon = (first, second) => clippingUtils.intersection([first], [second])[0][0];
@@ -31,15 +31,15 @@ function getPolygons2(beacons, boundingBox, mainPolygon) {
     beaconColors: beacons.map(R.prop('color')),
     polygonCenters: polygons.map(getSolidMassCenter).map((data, i) => ({
       ...data,
-      id: beacons[i].id
-    }))
+      id: beacons[i].id,
+    })),
   };
   if (mainPolygon && mainPolygon.length > 1) {
     result.clippedPolygons = polygons.map((polygon, i) => clipPolygon(polygon, mainPolygon));
     // result.clippedCenters = result.clippedPolygons.map(getSolidMassCenter).map((data, i) => ({
     result.clippedCenters = result.clippedPolygons.map(getMultiPolygonSolidMassCenter).map((data, i) => ({
       ...data,
-      id: beacons[i].id
+      id: beacons[i].id,
     }));
   } else {
     // result.clippedPolygons = result.polygons;

@@ -74,6 +74,7 @@
   },
   "devDependencies": {
     "autoprefixer": "^9.7.3",
+    "eslint-plugin-ramda": "^2.5.1",
     "postcss-cli": "^6.1.3"
   }
 }
