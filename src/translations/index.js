@@ -9,6 +9,7 @@ export const translations = {
       mapEditor: 'Редактор карты - 1',
       beacons: 'Маяки - 1',
       soundManager: 'Звуки',
+      soundManager2: 'Звуки - 2',
       demo: 'Демо - 1',
       map2: 'Редактор карты - 2',
       spiritEditor: 'Редактор духов',

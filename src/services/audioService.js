@@ -13,9 +13,15 @@ const BUFFERS_TO_LOAD = {
   // drums: 'sounds/stargazer.mp3',
   // organ: 'sounds/nightwalker.mp3',
   // techno: 'sounds/BoxCat_Games_-_10_-_Epic_Song.mp3',
+  // test: 'https://yadi.sk/d/_WyxgHYx9UPKnw',
+  // test: 'https://upload.wikimedia.org/wikipedia/commons/8/87/Nl-tafel.ogg',
+  // test: 'https://www.dropbox.com/s/lw9lkcaqg6nttnv/blueyellow.wav?dl=0',
+  // test: 'https://downloader.disk.yandex.ru/disk/96414750c1b1d6ab1f68fddb645b0e472d1437c67cf9ca1048828a34b6862688/5dd05c38/08ZHZczjUIa5NNyKPKAt2Cf30uOz-Yn8VYyqrBZGMj4F073T7Y7ZaTmOuU2VW1nyCHkBjZwXGTbz1gTlZ8lViQ%3D%3D?uid=0&filename=blueyellow.wav&disposition=attachment&hash=e%2BAi9kgh0fkmeNre5kWM41kEVp9MkVyBBsPaefK72Qq7PqqGdMTFHi%2BYMosnpV1Iq/J6bpmRyOJonT3VoXnDag%3D%3D&limit=0&content_type=audio%2Fwav&owner_uid=255091651&fsize=5648896&hid=20f0572d69d66695a7dd91819445c5af&media_type=audio&tknv=v2',
+  // test: 'https://drive.google.com/open?id=1heIGPMU5Na9lSE8GBwgAnq90b0HKfS-X',
+  // test: 'https://doc-0g-2o-docs.googleusercontent.com/docs/securesc/u3iv5bat4g3n5nu9amk5egb93siqp9iv/imja2uieit5tje4pvquver8stvil7ii1/1573927200000/00110623967716570548/00110623967716570548/1heIGPMU5Na9lSE8GBwgAnq90b0HKfS-X?e=download&authuser=0',
   // // drums: 'sounds/blueyellow.wav',
   // // organ: 'sounds/organ-echo-chords.wav',
-  // ghost: 'sounds/techno.wav'
+  ghost: 'sounds/techno.wav',
 };
 
 class AudioService {

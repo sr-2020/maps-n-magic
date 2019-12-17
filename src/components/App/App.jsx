@@ -12,6 +12,7 @@ import {
 } from 'react-router-dom';
 
 import { AudioService } from '../../services/audioService';
+import { SoundService } from '../../services/SoundService';
 import { DataService } from '../../services/DataService';
 import { SpiritService } from '../../services/SpiritService';
 
@@ -24,6 +25,7 @@ import { MusicEditor } from '../MusicEditor';
 import { Beacons } from '../Beacons';
 import { Map2 } from '../Map2';
 import { ErrorBoundry } from '../ErrorBoundry';
+import { SoundManager } from '../SoundManager';
 
 import { json2File, makeFileName, readJsonFile } from '../../utils/fileUtils';
 
@@ -72,6 +74,7 @@ export class App extends Component {
     this.state = {
       dataService: new DataService(),
       spiritService: new SpiritService(),
+      soundService: new SoundService(),
       ...initialState,
     };
   }
@@ -179,7 +182,7 @@ export class App extends Component {
   render() {
     const {
       imagePositionX, imagePositionY, imageOpacity, imageScale, svgWidth, svgHeight, beacons, mainPolygon, imageUrl,
-      dataService, spiritService,
+      dataService, spiritService, soundService,
     } = this.state;
 
     const {
@@ -195,12 +198,12 @@ export class App extends Component {
                 <header className="flex-0-0-auto">
                   <nav className="view-switch">
                     <ul>
-                      <li>
+                      {/* <li>
                         <NavLink to="/mapEditor">{t('mapEditor')}</NavLink>
                       </li>
                       <li>
                         <NavLink to="/beacons">{t('beacons')}</NavLink>
-                      </li>
+                      </li> */}
                       <li>
                         <NavLink to="/soundManager">{t('soundManager')}</NavLink>
                       </li>
@@ -212,6 +215,9 @@ export class App extends Component {
                       </li>
                       <li>
                         <NavLink to="/spiritEditor">{t('spiritEditor')}</NavLink>
+                      </li>
+                      <li>
+                        <NavLink to="/soundManager2">{t('soundManager2')}</NavLink>
                       </li>
                     </ul>
 
@@ -301,8 +307,11 @@ export class App extends Component {
                     <Route path="/spiritEditor">
                       <SpiritEditor spiritService={spiritService} />
                     </Route>
+                    <Route path="/soundManager2">
+                      <SoundManager soundService={soundService} />
+                    </Route>
 
-                    <Route render={() => <Redirect to="/spiritEditor" />} />
+                    <Route render={() => <Redirect to="/soundManager2" />} />
                     {/* <Route render={() => <Redirect to="/map2" />} /> */}
                   </Switch>
                 </main>
