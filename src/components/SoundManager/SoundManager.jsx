@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import './SoundManager.css';
 
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faPlay, faPause, faMusic } from '@fortawesome/free-solid-svg-icons';
+import { faPlayCircle, faPause, faMusic } from '@fortawesome/free-solid-svg-icons';
 
 // import { SoundManagerPropTypes } from '../../types';
 
@@ -64,13 +64,17 @@ export class SoundManager extends Component {
 
           {
             sounds.map((sound) => (
-              <div key={sound.name} className="py-1">
-                <button type="button" className="w-12 h-12 bg-gray-400 rounded-sm">
-                  <FontAwesomeIcon size="2x" className="text-gray-600" icon={faMusic} />
-                  <FontAwesomeIcon size="2x" className="text-gray-600" icon={faPlay} />
-                </button>
-                <span>{sound.name}</span>
-              </div>
+              <button type="button" key={sound.name} className=" rounded my-1 h-12 flex music-control-button hover:bg-gray-200 w-full">
+                {/* <button className="w-12 h-12 bg-gray-300 rounded-sm ">
+                  <FontAwesomeIcon size="2x" className="text-gray-600 music-icon" icon={faMusic} />
+                  <FontAwesomeIcon size="2x" className="text-gray-600 play-icon" icon={faPlayCircle} />
+                </button> */}
+                <div className="w-10 h-10 ml-1 bg-gray-300 rounded flex icon-container">
+                  <FontAwesomeIcon className="text-gray-600 music-icon m-auto text-2xl" icon={faMusic} />
+                  <FontAwesomeIcon className="text-gray-600 play-icon m-auto text-2xl text-white" icon={faPlayCircle} />
+                </div>
+                <span className="ml-2 pt-2 font-medium">{sound.name}</span>
+              </button>
             ))
           }
         </div>
