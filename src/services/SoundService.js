@@ -10,7 +10,15 @@ function getUrl(...args) {
   return SOUND_URL + args.join('');
 }
 
-// sound statuses: unloaded loading loaded
+// sound statuses:
+// sound data
+// {
+//   name,
+//   hash,
+//   status, unloaded loading loaded
+//   buffer: null
+//   size,
+// }
 
 const indexByName = R.indexBy(R.prop('name'));
 
@@ -37,6 +45,46 @@ class SoundService extends EventEmitter {
     return this.sounds;
   }
 
+  getSound = function (name) {
+    return this.sounds.find((sound) => sound.name === name);
+    // return this.sounds;
+  }
+
+  canPlaySound = function (name) {
+    const sound = this.getSound(name);
+    return sound.status === 'loaded';
+  }
+
+  loadSound = function (name) {
+    const sound = this.getSound(name);
+    sound.status = 'loading';
+    this.emit('soundStatusChange', {
+      name,
+      status: sound.status,
+    });
+    fetch(getUrl(SOUND_ROUTE, '/', name))
+      .then((result) => {
+        if (!result.ok) throw new Error(result);
+        return result.arrayBuffer();
+        // return result;
+      }).then((result) => {
+        // console.log(result);
+        this.soundLoaded(name, result);
+      }).catch((error) => {
+        console.error(error);
+      });
+  }
+
+  soundLoaded(name, result) {
+    const sound = this.getSound(name);
+    sound.status = 'loaded';
+    sound.buffer = result;
+    this.emit('soundStatusChange', {
+      name,
+      status: sound.status,
+    });
+  }
+
   _getSoundList() {
     fetch(getUrl(SOUND_LIST_ROUTE))
       .then((result) => {
@@ -52,7 +100,9 @@ class SoundService extends EventEmitter {
   _updateSounds(soundList) {
     console.log(soundList);
     const soundsMap = indexByName(this.sounds);
-    // const newSoundsMap = indexByName(soundList.entries);
+    const newSoundNames = soundList.entries.map(R.prop('name'));
+
+    this.sounds = this.sounds.filter((sound) => R.includes(sound.name, newSoundNames));
 
     // R.keys(soundsMap).filter
 
@@ -75,6 +125,7 @@ class SoundService extends EventEmitter {
       this.sounds = R.concat(this.sounds, soundGroups.newSound.map((sound) => ({
         name: sound.name,
         hash: sound.content_hash,
+        size: sound.size,
         status: 'unloaded',
       })));
     }

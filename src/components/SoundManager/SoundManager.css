@@ -1,4 +1,5 @@
-.music-control-button:hover .icon-container {
+.music-control-button:hover .icon-container,
+.music-control-button.selected .icon-container {
   /* .bg-gray-700	 */
   background-color: #4a5568;
 }
@@ -6,10 +7,12 @@
   display: none;
 }
 
-.music-control-button:hover .music-icon {
+.music-control-button:hover .music-icon, 
+.music-control-button.selected .music-icon {
   display: none;
 }
-.music-control-button:hover .play-icon {
+.music-control-button:hover .play-icon,
+.music-control-button.selected .play-icon {
   display: inline-block;
 }
 
