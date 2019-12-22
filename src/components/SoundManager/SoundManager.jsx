@@ -18,7 +18,8 @@ export class SoundManager extends Component {
     const sounds = props.soundService.getSounds();
     this.state = {
       sounds,
-      play: false,
+      // play: false,
+      // waitingForSound: false,
       selectedSoundName: null,
     };
     this.onSoundUpdate = this.onSoundUpdate.bind(this);
@@ -28,7 +29,6 @@ export class SoundManager extends Component {
 
   componentDidMount = () => {
     console.log('SoundManager mounted');
-
     this.props.soundService.on('soundsUpdate', this.onSoundUpdate);
     this.props.soundService.on('soundStatusChange', this.onSoundStatusChange);
   }
@@ -41,6 +41,11 @@ export class SoundManager extends Component {
   }
 
   onSoundStatusChange({ name, status }) {
+    const { selectedSoundName } = this.state;
+    if (name === selectedSoundName && this.props.soundService.canPlaySound(name)) {
+      this.props.soundService.playSound(name, true);
+    }
+
     this.setState((state) => ({
       sounds: state.sounds.map((sound) => {
         if (sound.name !== name) {
@@ -66,24 +71,31 @@ export class SoundManager extends Component {
     if (sound.status === 'loading') {
       return faSpinner;
     }
-    return faPlayCircle;
+    const { soundService } = this.props;
+    const isPlayingSound = soundService.isPlayingSound(sound.name);
+    return isPlayingSound ? faStopCircle : faPlayCircle;
   }
 
   selectSound(soundName) {
+    console.log('selectSound');
     const { soundService } = this.props;
     const sound = soundService.getSound(soundName);
     const canPlay = soundService.canPlaySound(soundName);
-    if (canPlay) {
-      // soundService.playSound(soundName);
-    } else {
-      soundService.loadSound(soundName);
-    }
-    // if(sound.status === 'unloaded') {
-
-    // }
-    this.setState({
-      selectedSoundName: soundName,
-      // selectedSoundStatus: sound.status,
+    const isPlayingSound = soundService.isPlayingSound(soundName);
+    this.setState((state) => {
+      const { selectedSoundName } = state;
+      if (selectedSoundName === soundName) { // play or stop some sound
+      } else { // stop existing sound and play other sound
+        soundService.playSound(selectedSoundName, false);
+      }
+      if (canPlay) {
+        soundService.playSound(soundName, !isPlayingSound);
+      } else {
+        soundService.loadSound(soundName);
+      }
+      return {
+        selectedSoundName: soundName,
+      };
     });
   }
 
@@ -105,7 +117,6 @@ export class SoundManager extends Component {
     // class
     return (
       <div className="SoundManager">
-        SoundManager body
         <div className="px-3">
           {
             sounds.map((sound) => (
@@ -141,7 +152,7 @@ export class SoundManager extends Component {
             ))
           }
         </div>
-        {
+        {/* {
           selectedSound && (
             <div>
               {selectedSound.name}
@@ -149,7 +160,7 @@ export class SoundManager extends Component {
               {selectedSound.status}
             </div>
           )
-        }
+        } */}
       </div>
     );
   }

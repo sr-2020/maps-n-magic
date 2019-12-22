@@ -1,5 +1,6 @@
 import * as R from 'ramda';
 import { EventEmitter } from 'events';
+import { SoundPlayer } from '../utils/SoundPlayer';
 
 const LS_KEY = 'sounds';
 const POLL_INTERVAL = 15000; // ms
@@ -25,6 +26,7 @@ const indexByName = R.indexBy(R.prop('name'));
 class SoundService extends EventEmitter {
   constructor({ sounds } = {}) {
     super();
+    this.soundPlayer = new SoundPlayer();
     this.sounds = sounds || this._getLSSounds() || [];
     this._getSoundList();
     this.pollInterval = setInterval(() => {
@@ -55,8 +57,29 @@ class SoundService extends EventEmitter {
     return sound.status === 'loaded';
   }
 
+  playSound = function (name, doPlaySound) {
+    const sound = this.getSound(name);
+    if (doPlaySound) {
+      if (sound.status !== 'loaded') {
+        console.error(`Trying to play sound which is not ready. Name ${name}, status ${sound.status}`);
+        return;
+      }
+      this.soundPlayer.playSingleSound(name, sound.buffer);
+    } else {
+      this.soundPlayer.stopSound(name);
+    }
+    // return sound.status === 'loaded';
+  }
+
+  isPlayingSound(name) {
+    return this.soundPlayer.isPlayingSound(name);
+  }
+
   loadSound = function (name) {
     const sound = this.getSound(name);
+    if (sound.status !== 'unloaded') {
+      return;
+    }
     sound.status = 'loading';
     this.emit('soundStatusChange', {
       name,
@@ -66,11 +89,11 @@ class SoundService extends EventEmitter {
       .then((result) => {
         if (!result.ok) throw new Error(result);
         return result.arrayBuffer();
-        // return result;
-      }).then((result) => {
+      }).then((result) => this.soundPlayer.makeAudioBuffer(result)).then((result) => {
         // console.log(result);
         this.soundLoaded(name, result);
-      }).catch((error) => {
+      })
+      .catch((error) => {
         console.error(error);
       });
   }
