@@ -1,3 +1,4 @@
+// eslint-disable-next-line max-classes-per-file
 import React, { Component } from 'react';
 import './SoundManager.css';
 
@@ -8,6 +9,7 @@ import {
 import classNames from 'classnames';
 
 import { formatBytes } from '../../utils/miscUtils';
+import { SoundHolder } from '../../utils/SoundHolder';
 // import { SoundManagerPropTypes } from '../../types';
 
 export class SoundManager extends Component {
@@ -16,10 +18,9 @@ export class SoundManager extends Component {
   constructor(props) {
     super(props);
     const sounds = props.soundService.getSounds();
+    this.soundHolder = new SoundHolder(props.soundService);
     this.state = {
       sounds,
-      // play: false,
-      // waitingForSound: false,
       selectedSoundName: null,
     };
     this.onSoundUpdate = this.onSoundUpdate.bind(this);
@@ -41,10 +42,11 @@ export class SoundManager extends Component {
   }
 
   onSoundStatusChange({ name, status }) {
-    const { selectedSoundName } = this.state;
-    if (name === selectedSoundName && this.props.soundService.canPlaySound(name)) {
-      this.props.soundService.playSound(name, true);
-    }
+    // const { selectedSoundName } = this.state;
+    // this.soundHolder.onSoundStatusChange({ name, status });
+    // if (name === selectedSoundName && this.props.soundService.canPlaySound(name)) {
+    //   this.props.soundService.playSound(name, true);
+    // }
 
     this.setState((state) => ({
       sounds: state.sounds.map((sound) => {
@@ -77,26 +79,30 @@ export class SoundManager extends Component {
   }
 
   selectSound(soundName) {
-    console.log('selectSound');
-    const { soundService } = this.props;
-    const sound = soundService.getSound(soundName);
-    const canPlay = soundService.canPlaySound(soundName);
-    const isPlayingSound = soundService.isPlayingSound(soundName);
-    this.setState((state) => {
-      const { selectedSoundName } = state;
-      if (selectedSoundName === soundName) { // play or stop some sound
-      } else { // stop existing sound and play other sound
-        soundService.playSound(selectedSoundName, false);
-      }
-      if (canPlay) {
-        soundService.playSound(soundName, !isPlayingSound);
-      } else {
-        soundService.loadSound(soundName);
-      }
-      return {
-        selectedSoundName: soundName,
-      };
+    this.soundHolder.onSelectSound(soundName);
+    this.setState({
+      selectedSoundName: soundName,
     });
+    // console.log('selectSound');
+    // const { soundService } = this.props;
+    // const sound = soundService.getSound(soundName);
+    // const canPlay = soundService.canPlaySound(soundName);
+    // const isPlayingSound = soundService.isPlayingSound(soundName);
+    // this.setState((state) => {
+    //   const { selectedSoundName } = state;
+    //   if (selectedSoundName === soundName) { // play or stop some sound
+    //   } else { // stop existing sound and play other sound
+    //     soundService.playSound(selectedSoundName, false);
+    //   }
+    //   if (canPlay) {
+    //     soundService.playSound(soundName, !isPlayingSound);
+    //   } else {
+    //     soundService.loadSound(soundName);
+    //   }
+    //   return {
+    //     selectedSoundName: soundName,
+    //   };
+    // });
   }
 
 

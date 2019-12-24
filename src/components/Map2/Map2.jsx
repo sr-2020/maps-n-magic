@@ -23,12 +23,13 @@ import { COLOR_PALETTE } from '../../utils/colorPalette';
 
 import { mapConfig, geomanConfig, defaultTileLayer } from './MapConfigurations';
 
-import { markerPopupDom, locationPopupDom } from '../../utils/domUtils';
+import { markerPopupDom, locationPopupDom, musicSelectDom } from '../../utils/domUtils';
 
 import { applyLeafletGeomanTranslation, getZoomTranslation } from '../../translations';
 
 
 // import playerTracks from '../../data/initialPlayerTracks';
+import { MusicSelect } from './MusicSelect';
 
 // R.values(playerTracks).forEach((track, i) => {
 //   L.polyline(track, {
@@ -72,6 +73,16 @@ export class Map2 extends Component {
 
     this.map.on('pm:create', this.onCreateLayer);
     this.map.on('pm:remove', this.onRemoveLayer);
+
+    const legend = L.control({ position: 'bottomleft' });
+    legend.onAdd = function (map) {
+      return musicSelectDom;
+    };
+    L.DomEvent.on(musicSelectDom, 'dblclick', (ev) => {
+      L.DomEvent.stopPropagation(ev);
+    });
+
+    legend.addTo(this.map);
 
     // this.map.pm.toggleGlobalDragMode();
   }
@@ -501,6 +512,18 @@ export class Map2 extends Component {
     );
   }
 
+  getMusicSelect = () => {
+    const {
+      curMarker,
+    } = this.state;
+    // if (!curMarker) {
+    //   return null;
+    // }
+    return (
+      <MusicSelect />
+    );
+  }
+
   getLocationPopup = () => {
     const {
       curLocation,
@@ -540,6 +563,9 @@ export class Map2 extends Component {
         }
         {
           this.getLocationPopup()
+        }
+        {
+          this.getMusicSelect()
         }
       </>
     );

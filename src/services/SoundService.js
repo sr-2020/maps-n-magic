@@ -23,7 +23,7 @@ function getUrl(...args) {
 
 const indexByName = R.indexBy(R.prop('name'));
 
-class SoundService extends EventEmitter {
+export class SoundService extends EventEmitter {
   constructor({ sounds } = {}) {
     super();
     this.soundPlayer = new SoundPlayer();
@@ -190,5 +190,3 @@ class SoundService extends EventEmitter {
   //     });
   // }
 }
-
-export { SoundService };
