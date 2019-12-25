@@ -1,3 +1,4 @@
+// eslint-disable-next-line max-classes-per-file
 import React, { Component } from 'react';
 import './Map2.css';
 import * as R from 'ramda';
@@ -27,6 +28,14 @@ import { markerPopupDom, locationPopupDom, musicSelectDom } from '../../utils/do
 
 import { applyLeafletGeomanTranslation, getZoomTranslation } from '../../translations';
 
+import { animate, Timing } from '../../utils/animation';
+
+import { UserWatcher } from './UserWatcher';
+
+
+// eslint-disable-next-line import/extensions
+import 'leaflet.locatecontrol/dist/L.Control.Locate.min.js';
+import 'leaflet.locatecontrol/dist/L.Control.Locate.min.css';
 
 // import playerTracks from '../../data/initialPlayerTracks';
 import { MusicSelect } from './MusicSelect';
@@ -43,8 +52,9 @@ L.Icon.Default.imagePath = './images/leafletImages/';
 export class Map2 extends Component {
   static propTypes = Map2PropTypes;
 
-  constructor() {
+  constructor(props) {
     super();
+    this.userWatcher = new UserWatcher(props.soundService);
     this.state = {
       curMarker: null,
       curLocation: null,
@@ -84,7 +94,63 @@ export class Map2 extends Component {
 
     legend.addTo(this.map);
 
+    this.map.on('locationfound', (e) => {
+      // console.log(e);
+      this.userWatcher.updateUserLocation(e, this.locationsGroup.getLayers());
+    });
+
+    this.patchLeafletMap();
+
+    const lc = L.control.locate({
+      setView: false,
+    }).addTo(this.map);
+    lc.start();
+
+    this.emulateUserMovement(center);
+
     // this.map.pm.toggleGlobalDragMode();
+  }
+
+  // eslint-disable-next-line react/sort-comp
+  patchLeafletMap() {
+    const oldHandler = this.map._handleGeolocationResponse;
+    this.map._handleGeolocationResponse = function (pos) {
+      if (!pos.artificial) {
+        return;
+      }
+      // console.log('pos', pos);
+      oldHandler.call(this, pos);
+    }.bind(this.map);
+  }
+
+  // combine with patchLeafletMap
+  emulateUserMovement(center) {
+    const speed = 1;
+    const rx = 0.0005;
+    const ry = 0.0007;
+
+    animate({
+      duration: 20000,
+      timing: Timing.makeEaseInOut(Timing.linear),
+      draw: (function (progress) {
+        const artificialPos = {
+          coords: {
+            accuracy: 10,
+            altitude: null,
+            altitudeAccuracy: null,
+            heading: null,
+            latitude: center[0] + Math.cos(progress * speed * 2 * Math.PI) * rx,
+            longitude: center[1] + Math.sin(progress * speed * 2 * Math.PI) * ry,
+            speed: null,
+          },
+          timestamp: Date.now(),
+          artificial: true,
+        };
+
+        this.map._handleGeolocationResponse(artificialPos);
+      }).bind(this),
+      loop: true,
+    });
   }
 
   componentDidUpdate = (prevProps) => {

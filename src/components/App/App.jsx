@@ -302,7 +302,7 @@ export class App extends Component {
                       />
                     </Route>
                     <Route path="/map2">
-                      <Map2 dataService={dataService} />
+                      <Map2 dataService={dataService} soundService={soundService} />
                     </Route>
                     <Route path="/spiritEditor">
                       <SpiritEditor spiritService={spiritService} />

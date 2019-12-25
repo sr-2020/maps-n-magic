@@ -64,13 +64,13 @@ export class MusicSelect extends Component {
         >
           <ul className="mb-0">
             <li>
-              <button className="font-bold py-2 px-4 focus:outline-none focus:shadow-outline bg-gray-300 hover:bg-gray-400 text-gray-800 w-full">Low</button>
+              <button type="button" className="font-bold py-2 px-4 focus:outline-none focus:shadow-outline bg-gray-300 hover:bg-gray-400 text-gray-800 w-full">Low</button>
             </li>
             <li>
-              <button className="font-bold py-2 px-4 focus:outline-none focus:shadow-outline bg-gray-300 hover:bg-gray-400 text-gray-800 w-full">Medium</button>
+              <button type="button" className="font-bold py-2 px-4 focus:outline-none focus:shadow-outline bg-gray-300 hover:bg-gray-400 text-gray-800 w-full">Medium</button>
             </li>
             <li>
-              <button className="font-bold py-2 px-4 focus:outline-none focus:shadow-outline bg-gray-300 hover:bg-gray-400 text-gray-800 w-full">High</button>
+              <button type="button" className="font-bold py-2 px-4 focus:outline-none focus:shadow-outline bg-gray-300 hover:bg-gray-400 text-gray-800 w-full">High</button>
             </li>
           </ul>
         </div>

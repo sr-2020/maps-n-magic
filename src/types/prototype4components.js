@@ -8,7 +8,7 @@ import {
   locationPropTypes,
 } from './primitives';
 
-import { dataServicePropTypes, spiritServicePropTypes } from './services';
+import { dataServicePropTypes, spiritServicePropTypes, soundServicePropTypes } from './services';
 
 
 export const Map2PropTypes = {
@@ -59,4 +59,8 @@ export const SearchPropTypes = {
   t: func.isRequired,
   className: string.isRequired,
   placeholder: string.isRequired,
+};
+
+export const SoundManagerPropTypes = {
+  soundService: soundServicePropTypes.isRequired,
 };

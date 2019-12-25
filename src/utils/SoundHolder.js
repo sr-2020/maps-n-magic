@@ -12,6 +12,15 @@ export class SoundHolder {
     }
   }
 
+  playSound(soundName) {
+    if (soundName) {
+      this.onSelectSound(soundName);
+    } else {
+      this.selectedSoundName = null;
+      this.soundService.stopAllSounds();
+    }
+  }
+
   onSelectSound(soundName) {
     // console.log('selectSound');
     // const { soundService } = this.props;

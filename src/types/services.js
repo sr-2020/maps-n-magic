@@ -39,3 +39,13 @@ export const audioServicePropTypes = shape({
   applyVolumes: func.isRequired,
   getSoundProps: func.isRequired,
 });
+
+export const soundServicePropTypes = shape({
+  getSounds: func.isRequired,
+  on: func.isRequired,
+  stopAllSounds: func.isRequired,
+  canPlaySound: func.isRequired,
+  playSound: func.isRequired,
+  isPlayingSound: func.isRequired,
+  loadSound: func.isRequired,
+});

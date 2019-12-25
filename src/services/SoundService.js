@@ -71,6 +71,10 @@ export class SoundService extends EventEmitter {
     // return sound.status === 'loaded';
   }
 
+  stopAllSounds() {
+    this.soundPlayer.stopAllSounds();
+  }
+
   isPlayingSound(name) {
     return this.soundPlayer.isPlayingSound(name);
   }

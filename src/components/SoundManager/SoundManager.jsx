@@ -4,16 +4,16 @@ import './SoundManager.css';
 
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import {
-  faPlayCircle, faPause, faMusic, faStopCircle, faSpinner,
+  faPlayCircle, faMusic, faStopCircle, faSpinner,
 } from '@fortawesome/free-solid-svg-icons';
 import classNames from 'classnames';
 
 import { formatBytes } from '../../utils/miscUtils';
 import { SoundHolder } from '../../utils/SoundHolder';
-// import { SoundManagerPropTypes } from '../../types';
+import { SoundManagerPropTypes } from '../../types';
 
 export class SoundManager extends Component {
-  // static propTypes = SoundManagerPropTypes;
+  static propTypes = SoundManagerPropTypes;
 
   constructor(props) {
     super(props);
@@ -35,19 +35,14 @@ export class SoundManager extends Component {
   }
 
   onSoundUpdate() {
-    const sounds = this.props.soundService.getSounds();
+    const { soundService } = this.props;
+    const sounds = soundService.getSounds();
     this.setState({
       sounds,
     });
   }
 
   onSoundStatusChange({ name, status }) {
-    // const { selectedSoundName } = this.state;
-    // this.soundHolder.onSoundStatusChange({ name, status });
-    // if (name === selectedSoundName && this.props.soundService.canPlaySound(name)) {
-    //   this.props.soundService.playSound(name, true);
-    // }
-
     this.setState((state) => ({
       sounds: state.sounds.map((sound) => {
         if (sound.name !== name) {
@@ -83,26 +78,6 @@ export class SoundManager extends Component {
     this.setState({
       selectedSoundName: soundName,
     });
-    // console.log('selectSound');
-    // const { soundService } = this.props;
-    // const sound = soundService.getSound(soundName);
-    // const canPlay = soundService.canPlaySound(soundName);
-    // const isPlayingSound = soundService.isPlayingSound(soundName);
-    // this.setState((state) => {
-    //   const { selectedSoundName } = state;
-    //   if (selectedSoundName === soundName) { // play or stop some sound
-    //   } else { // stop existing sound and play other sound
-    //     soundService.playSound(selectedSoundName, false);
-    //   }
-    //   if (canPlay) {
-    //     soundService.playSound(soundName, !isPlayingSound);
-    //   } else {
-    //     soundService.loadSound(soundName);
-    //   }
-    //   return {
-    //     selectedSoundName: soundName,
-    //   };
-    // });
   }
 
 
