@@ -71,7 +71,6 @@ export class SoundService extends EventEmitter {
 
   getSound = function (name) {
     return this.sounds.find((sound) => sound.name === name);
-    // return this.sounds;
   }
 
   canPlaySound = function (name) {
@@ -90,7 +89,6 @@ export class SoundService extends EventEmitter {
     } else {
       this.soundPlayer.stopSound(name);
     }
-    // return sound.status === 'loaded';
   }
 
   stopAllSounds() {
@@ -131,6 +129,10 @@ export class SoundService extends EventEmitter {
     const sound = this.getSound(name);
     sound.status = 'loaded';
     sound.buffer = result;
+    if (this.soundPlayer.isPlayingSound(name)) {
+      this.soundPlayer.stopSound(name);
+      this.soundPlayer.playSingleSound(name, result);
+    }
     this.disposeController.isDisposedCheck();
     this.emit('soundStatusChange', {
       name,
@@ -152,16 +154,21 @@ export class SoundService extends EventEmitter {
       });
   }
 
+  // eslint-disable-next-line max-lines-per-function
   _updateSounds(soundList) {
-    console.log(soundList);
+    // console.log(soundList);
     const soundsMap = indexByName(this.sounds);
     const newSoundNames = soundList.entries.map(R.prop('name'));
 
-    this.sounds = this.sounds.filter((sound) => R.includes(sound.name, newSoundNames));
+    const oldSoundsGroups = R.groupBy((sound) => (R.includes(sound.name, newSoundNames) ? 'soundExists' : 'soundRemoved'), this.sounds);
 
-    // R.keys(soundsMap).filter
+    this.sounds = oldSoundsGroups.soundExists || [];
 
-    // R.difference(R.keys(soundsMap), R.keys(newSoundsMap)
+    const hasRemovedSounds = oldSoundsGroups.soundRemoved && oldSoundsGroups.soundRemoved.length > 0;
+    if (hasRemovedSounds) {
+      oldSoundsGroups.soundRemoved.forEach((sound) => this.soundPlayer.stopSound(sound.name));
+    }
+
     const soundGroups = R.groupBy((sound) => {
       const curSound = soundsMap[sound.name];
       if (!curSound) {
@@ -173,7 +180,7 @@ export class SoundService extends EventEmitter {
     }, soundList.entries);
 
     // const hasChanges
-    if (!soundGroups.newSound && !soundGroups.changedSound) {
+    if (!soundGroups.newSound && !soundGroups.changedSound && !hasRemovedSounds) {
       return;
     }
     if (soundGroups.newSound) {
@@ -186,40 +193,16 @@ export class SoundService extends EventEmitter {
     }
     if (soundGroups.changedSound) {
       soundGroups.changedSound.forEach((sound) => {
-        const curSound = soundsMap(sound.name);
+        const curSound = soundsMap[sound.name];
         curSound.hash = sound.content_hash;
+        curSound.size = sound.size;
         if (curSound.status === 'loaded') {
-          // TODO start loading
+          curSound.status = 'unloaded';
+          this.loadSound(sound.name);
         }
       });
     }
     this.disposeController.isDisposedCheck();
     this.emit('soundsUpdate');
-
-    // const newSoundsMap = indexByName(soundList.entries);
-    // Object.keys(newSoundsMap).forEach(newSoundName => {
-    //   if (!soundsMap[newSoundName]) {
-    //     this.sounds.push({
-    //       name: newSoundName,
-    //       hash: newSoundsMap[]
-    //     })
-    //   }
-    // });
-
-    // this.r = 4;
   }
-
-  // async getFileList() {
-  //   // await fetch();
-  //   this.rrr = 5;
-
-  //   return fetch('http://localhost:3001/fileList')
-  //     .then((result) => {
-  //       if (!result.ok) throw new Error(result);
-  //       return result.json();
-  //     }).catch((error) => {
-  //       console.error(error);
-  //       throw error;
-  //     });
-  // }
 }

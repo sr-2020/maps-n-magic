@@ -102,7 +102,7 @@ export class App extends Component {
     // });
     // this.animatePlayer();
     setInterval(() => {
-      console.log('saving app state in local storage');
+      // console.log('saving app state in local storage');
       localStorage.setItem(STORAGE_KEY, JSON.stringify(this.prepareDataForJson()));
     }, 10000);
   }
