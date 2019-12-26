@@ -15,6 +15,7 @@ export const translations = {
       spiritEditor: 'Редактор духов',
       uploadDatabase: 'Загрузить базу',
       downloadDatabase: 'Скачать базу',
+      simulateMovement: 'Симулировать ходьбу',
 
       // Spirit Editor
       newSpirit: 'Новый дух',

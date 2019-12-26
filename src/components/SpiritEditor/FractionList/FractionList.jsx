@@ -12,14 +12,18 @@ export class FractionList extends Component {
 
   constructor(props) {
     super(props);
-    const fractions = props.spiritService.getSpiritFractionsList();
     this.state = {
-      fractions: sort(fractions),
+      fractions: [],
     };
     this.onFractionChange = this.onFractionChange.bind(this);
   }
 
   componentDidMount = () => {
+    const { spiritService } = this.props;
+    const fractions = spiritService.getSpiritFractionsList();
+    this.setState({
+      fractions: sort(fractions),
+    });
     console.log('FractionList mounted');
     this.props.spiritService.on('fractionChange', this.onFractionChange);
   }

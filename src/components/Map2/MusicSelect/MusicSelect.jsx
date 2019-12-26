@@ -15,8 +15,8 @@ import { musicSelectDom } from '../../../utils/domUtils';
 export class MusicSelect extends Component {
   // static propTypes = MusicSelectPropTypes;
 
-  constructor() {
-    super();
+  constructor(props) {
+    super(props);
     this.state = {
       show: false,
     };

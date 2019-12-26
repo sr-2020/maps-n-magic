@@ -10,8 +10,8 @@ import { SearchPropTypes } from '../../../../types';
 export class Search extends Component {
   static propTypes = SearchPropTypes;
 
-  constructor() {
-    super();
+  constructor(props) {
+    super(props);
     this.state = {
       searchStr: '',
       isInputFocused: false,

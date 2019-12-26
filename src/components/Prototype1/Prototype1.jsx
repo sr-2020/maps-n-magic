@@ -45,8 +45,8 @@ import { Prototype1PropTypes } from '../../types';
 export class Prototype1 extends Component {
   static propTypes = Prototype1PropTypes;
 
-  constructor() {
-    super();
+  constructor(props) {
+    super(props);
     this.state = {
       polygonData: {},
       sounds: [

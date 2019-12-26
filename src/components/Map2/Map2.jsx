@@ -53,8 +53,7 @@ export class Map2 extends Component {
   static propTypes = Map2PropTypes;
 
   constructor(props) {
-    super();
-    this.userWatcher = new UserWatcher(props.soundService);
+    super(props);
     this.state = {
       curMarker: null,
       curLocation: null,
@@ -63,7 +62,9 @@ export class Map2 extends Component {
 
   componentDidMount = () => {
     const { center, zoom } = mapConfig;
+    const { simulateGeoDataStream, soundService } = this.props;
     const { urlTemplate, options } = defaultTileLayer;
+    this.userWatcher = new UserWatcher(soundService);
 
     this.map = L.map(this.mapEl, {
       center,
@@ -106,16 +107,20 @@ export class Map2 extends Component {
     }).addTo(this.map);
     lc.start();
 
-    this.emulateUserMovement(center);
+    if (simulateGeoDataStream) {
+      this.simulateUserMovement(center);
+    }
 
     // this.map.pm.toggleGlobalDragMode();
   }
 
   // eslint-disable-next-line react/sort-comp
   patchLeafletMap() {
+    const that = this;
     const oldHandler = this.map._handleGeolocationResponse;
     this.map._handleGeolocationResponse = function (pos) {
-      if (!pos.artificial) {
+      const { simulateGeoDataStream } = that.props;
+      if (simulateGeoDataStream && !pos.artificial) {
         return;
       }
       // console.log('pos', pos);
@@ -124,12 +129,14 @@ export class Map2 extends Component {
   }
 
   // combine with patchLeafletMap
-  emulateUserMovement(center) {
+  simulateUserMovement(center) {
     const speed = 1;
     const rx = 0.0005;
     const ry = 0.0007;
 
-    animate({
+    this.stopUserMovement();
+
+    this.userMovementSimulation = animate({
       duration: 20000,
       timing: Timing.makeEaseInOut(Timing.linear),
       draw: (function (progress) {
@@ -158,7 +165,30 @@ export class Map2 extends Component {
       this.clearMapData();
       this.populateMapData();
     }
+    if (prevProps.soundService !== this.props.soundService) {
+      this.userWatcher.dispose();
+      this.userWatcher = new UserWatcher(this.props.soundService);
+    }
+    if (prevProps.simulateGeoDataStream !== this.props.simulateGeoDataStream) {
+      if (this.props.simulateGeoDataStream) {
+        const { center } = mapConfig;
+        this.simulateUserMovement(center);
+      } else {
+        this.stopUserMovement();
+      }
+    }
     // console.log('Map2 did update');
+  }
+
+  stopUserMovement() {
+    if (this.userMovementSimulation) {
+      this.userMovementSimulation.enable = false;
+    }
+  }
+
+  componentWillUnmount = () => {
+    this.userWatcher.dispose();
+    this.stopUserMovement();
   }
 
   onCreateLayer = (event) => {

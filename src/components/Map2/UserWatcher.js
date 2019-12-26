@@ -23,6 +23,10 @@ export class UserWatcher {
     this.location = null;
   }
 
+  dispose() {
+    this.soundHolder.dispose();
+  }
+
   updateUserLocation(e, locations) {
     const { latlng } = e;
     if (this.location && isPointInLocation(latlng, this.location)) {

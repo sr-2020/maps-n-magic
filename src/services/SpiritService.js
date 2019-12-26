@@ -2,6 +2,7 @@ import * as R from 'ramda';
 import EventEmitter from 'events';
 
 import { defaultSpirit } from '../types/primitives';
+import { getEeStats } from '../utils/miscUtils';
 
 export class SpiritService extends EventEmitter {
   constructor({ spirits } = {}) {
@@ -113,4 +114,16 @@ export class SpiritService extends EventEmitter {
   _saveSpirits = function () {
     localStorage.setItem('spirits', JSON.stringify(this.spirits));
   }
+
+  // on(...args) {
+  //   const res = super.on.apply(this, args);
+  //   console.log('on', getEeStats(this));
+  //   return res;
+  // }
+
+  // off(...args) {
+  //   const res = super.off.apply(this, args);
+  //   console.log('off', getEeStats(this));
+  //   return res;
+  // }
 }

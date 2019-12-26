@@ -9,8 +9,8 @@ import { MusicEditorPropTypes } from '../../types';
 export class MusicEditor extends Component {
   static propTypes = MusicEditorPropTypes;
 
-  constructor() {
-    super();
+  constructor(props) {
+    super(props);
     this.state = {
       buffers: [],
       loading: true,

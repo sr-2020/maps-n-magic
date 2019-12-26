@@ -52,6 +52,7 @@ const animate = (options) => {
   };
 
   requestAnimationFrame(function animate2(time) {
+    // console.log(options.key || 'animation triggered');
     if (!animation.enable) return;
 
     // timeFraction from 0 to 1

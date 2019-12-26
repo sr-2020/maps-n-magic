@@ -1,4 +1,4 @@
-function formatBytes(bytes, decimals = 2) {
+export function formatBytes(bytes, decimals = 2) {
   if (bytes === 0) return '0 Bytes';
 
   const k = 1024;
@@ -10,6 +10,10 @@ function formatBytes(bytes, decimals = 2) {
   return `${parseFloat((bytes / (k ** i)).toFixed(dm))} ${sizes[i]}`;
 }
 
-export {
-  formatBytes,
-};
+export function getEeStats(ee) {
+  const names = ee.eventNames();
+  return names.reduce((acc, name) => {
+    acc[name] = ee.listeners(name).length;
+    return acc;
+  }, {});
+}

@@ -21,15 +21,22 @@ export class AbilitiesInput extends Component {
 
   constructor(props) {
     super(props);
-    const { id, spiritService } = props;
     this.state = {
-      abilities: sort(spiritService.getSpirit(id).abilities),
-      allAbilities: spiritService.getSpiritAbilitiesList(),
+      initialized: false,
     };
     this.onSubmit = this.onSubmit.bind(this);
   }
 
-  componentDidUpdate = (prevProps) => {
+  componentDidMount() {
+    const { id, spiritService } = this.props;
+    this.setState({
+      abilities: sort(spiritService.getSpirit(id).abilities),
+      allAbilities: spiritService.getSpiritAbilitiesList(),
+      initialized: true,
+    });
+  }
+
+  componentDidUpdate(prevProps) {
     if (prevProps.id === this.props.id) {
       return;
     }
@@ -81,7 +88,11 @@ export class AbilitiesInput extends Component {
   }
 
   render() {
-    const { abilities, allAbilities } = this.state;
+    const { abilities, allAbilities, initialized } = this.state;
+    if (!initialized) {
+      return null;
+    }
+
     const { t, className } = this.props;
 
     const datalistAbilities = sort(R.difference(allAbilities, abilities));
@@ -99,7 +110,7 @@ export class AbilitiesInput extends Component {
         </Form>
         <div>
           {abilities.map((ability) => (
-            <ButtonGroup className="mr-2 mb-2">
+            <ButtonGroup key={ability} className="mr-2 mb-2">
               <Button variant="secondary">{ability}</Button>
               <Button variant="secondary" onClick={(e) => this.removeAbility(e, ability)}><FontAwesomeIcon icon={faTimes} /></Button>
             </ButtonGroup>

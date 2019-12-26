@@ -11,6 +11,8 @@ import {
   BrowserRouter as Router, Switch, Route, Redirect, NavLink,
 } from 'react-router-dom';
 
+import Form from 'react-bootstrap/Form';
+
 import { AudioService } from '../../services/audioService';
 import { SoundService } from '../../services/SoundService';
 import { DataService } from '../../services/DataService';
@@ -71,17 +73,28 @@ if (database) {
 export class App extends Component {
   audioService = new AudioService();
 
-  constructor() {
-    super();
+  constructor(props) {
+    super(props);
     this.state = {
-      dataService: new DataService(),
-      spiritService: new SpiritService(),
-      soundService: new SoundService(),
+      // dataService: new DataService(),
+      // spiritService: new SpiritService(),
+      // soundService: new SoundService(),
+      simulateGeoDataStream: false,
       ...initialState,
     };
+    this.switchMovementMode = this.switchMovementMode.bind(this);
   }
 
   componentDidMount() {
+    this.setState({
+      dataService: new DataService(),
+      spiritService: new SpiritService(),
+      soundService: new SoundService(),
+      simulateGeoDataStream: false,
+      ...initialState,
+      initialized: true,
+    });
+
     // initSound(() => {
     //   this.setState({
     //     soundsLoaded: true
@@ -186,12 +199,23 @@ export class App extends Component {
     });
   };
 
+  switchMovementMode() {
+    this.setState(({ simulateGeoDataStream }) => ({
+      simulateGeoDataStream: !simulateGeoDataStream,
+    }));
+  }
+
 
   // eslint-disable-next-line max-lines-per-function
   render() {
+    // eslint-disable-next-line react/destructuring-assignment
+    if (!this.state.initialized) {
+      return null;
+    }
+
     const {
       imagePositionX, imagePositionY, imageOpacity, imageScale, svgWidth, svgHeight, beacons, mainPolygon, imageUrl,
-      dataService, spiritService, soundService,
+      dataService, spiritService, soundService, simulateGeoDataStream,
     } = this.state;
 
     const {
@@ -213,12 +237,12 @@ export class App extends Component {
                       <li>
                         <NavLink to="/beacons">{t('beacons')}</NavLink>
                       </li> */}
-                      <li>
+                      {/* <li>
                         <NavLink to="/soundManager">{t('soundManager')}</NavLink>
                       </li>
                       <li>
                         <NavLink to="/demo">{t('demo')}</NavLink>
-                      </li>
+                      </li> */}
                       <li>
                         <NavLink to="/map2">{t('map2')}</NavLink>
                       </li>
@@ -231,6 +255,15 @@ export class App extends Component {
                     </ul>
 
                     <ul>
+                      <li>
+                        <Form.Check
+                          type="switch"
+                          id="movementSimulatorSwitch"
+                          label={t('simulateMovement')}
+                          value={simulateGeoDataStream}
+                          onChange={this.switchMovementMode}
+                        />
+                      </li>
                       <li>
                         {/* className="dataLoadButton icon-button action-button mainNavButton" */}
                         <button
@@ -311,7 +344,7 @@ export class App extends Component {
                       />
                     </Route>
                     <Route path="/map2">
-                      <Map2 dataService={dataService} soundService={soundService} />
+                      <Map2 dataService={dataService} soundService={soundService} simulateGeoDataStream={simulateGeoDataStream} />
                     </Route>
                     <Route path="/spiritEditor">
                       <SpiritEditor spiritService={spiritService} />

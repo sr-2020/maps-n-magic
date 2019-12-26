@@ -10,14 +10,9 @@ import { SpiritList } from './SpiritList';
 import { SpiritContent } from './SpiritContent';
 import { FractionList } from './FractionList';
 
+// eslint-disable-next-line react/prefer-stateless-function
 export class SpiritEditor extends Component {
   static propTypes = SpiritEditorPropTypes;
-
-  constructor() {
-    super();
-    this.state = {
-    };
-  }
 
   // eslint-disable-next-line max-lines-per-function
   render() {

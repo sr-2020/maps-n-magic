@@ -13,11 +13,17 @@ export class SpiritContent extends Component {
 
   constructor(props) {
     super(props);
+    this.state = {
+      initialized: false,
+    };
+    this.handleInputChange = this.handleInputChange.bind(this);
+  }
+
+  componentDidMount() {
     const {
       id, spiritService,
-    } = props;
-    this.state = this._getNewState(id, spiritService);
-    this.handleInputChange = this.handleInputChange.bind(this);
+    } = this.props;
+    this.setState(this._getNewState(id, spiritService));
   }
 
   componentDidUpdate = (prevProps) => {
@@ -45,6 +51,7 @@ export class SpiritContent extends Component {
 
   _getNewState = (id, spiritService) => ({
     ...spiritService.getSpirit(id),
+    initialized: true,
   })
 
   handleInputChange(event) {
@@ -76,8 +83,11 @@ export class SpiritContent extends Component {
     // hitPoints: number.isRequired,
 
     const {
-      name, fraction, story, maxHitPoints,
+      name, fraction, story, maxHitPoints, initialized,
     } = this.state;
+    if (!initialized) {
+      return null;
+    }
     const { spiritService, id, t } = this.props;
 
     if (!id) {

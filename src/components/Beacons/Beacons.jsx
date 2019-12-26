@@ -26,8 +26,8 @@ let tracks = [];
 export class Beacons extends Component {
   static propTypes = BeaconsPropTypes;
 
-  constructor() {
-    super();
+  constructor(props) {
+    super(props);
     this.state = {
       showBeaconMarkers: true,
       showPolygonLabels: false,

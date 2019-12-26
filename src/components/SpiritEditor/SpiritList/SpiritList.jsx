@@ -26,13 +26,9 @@ export class SpiritList extends Component {
   static propTypes = SpiritListPropTypes;
 
   constructor(props) {
-    super();
-
-    const spirits = props.spiritService.getSpirits();
-
-    const spirits2 = sort(spirits || []);
+    super(props);
     this.state = {
-      spirits: spirits2,
+      spirits: [],
       removedSpiritIndex: null,
       searchStr: '',
     };
@@ -43,6 +39,12 @@ export class SpiritList extends Component {
 
   componentDidMount = () => {
     // console.log('SpiritList mounted');
+    const spirits = this.props.spiritService.getSpirits();
+
+    const spirits2 = sort(spirits || []);
+    this.setState({
+      spirits: spirits2,
+    });
     this.props.spiritService.on('putSpirit', this.onPutSpirit);
   }
 

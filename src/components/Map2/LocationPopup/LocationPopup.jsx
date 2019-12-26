@@ -12,8 +12,8 @@ import { locationPopupDom } from '../../../utils/domUtils';
 export class LocationPopup extends Component {
   static propTypes = LocationPopupPropTypes;
 
-  constructor() {
-    super();
+  constructor(props) {
+    super(props);
     this.state = {
       unattachedList: [],
       attachedList: [],

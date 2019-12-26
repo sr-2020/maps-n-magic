@@ -17,10 +17,9 @@ export class SoundManager extends Component {
 
   constructor(props) {
     super(props);
-    const sounds = props.soundService.getSounds();
-    this.soundHolder = new SoundHolder(props.soundService);
+    console.log('SoundManager constructing');
     this.state = {
-      sounds,
+      // sounds,
       selectedSoundName: null,
     };
     this.onSoundUpdate = this.onSoundUpdate.bind(this);
@@ -29,6 +28,13 @@ export class SoundManager extends Component {
   }
 
   componentDidMount = () => {
+    const { soundService } = this.props;
+    const sounds = soundService.getSounds();
+    this.soundHolder = new SoundHolder(soundService);
+    this.setState({
+      sounds,
+      initialized: true,
+    });
     console.log('SoundManager mounted');
     this.subscribe(this.props.soundService);
   }
@@ -58,6 +64,7 @@ export class SoundManager extends Component {
   componentWillUnmount = () => {
     console.log('SoundManager will unmount');
     this.unsubscribe(this.props.soundService);
+    this.soundHolder.dispose();
   }
 
   onSoundUpdate() {
@@ -111,7 +118,12 @@ export class SoundManager extends Component {
 
   // eslint-disable-next-line max-lines-per-function
   render() {
-    const { sounds, selectedSoundName } = this.state;
+    const { sounds, selectedSoundName, initialized } = this.state;
+
+    if (!initialized) {
+      return null;
+    }
+
     let selectedSound = null;
     if (selectedSoundName) {
       selectedSound = sounds.find((sound) => sound.name === selectedSoundName);

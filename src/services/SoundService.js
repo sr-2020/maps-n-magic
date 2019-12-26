@@ -1,6 +1,7 @@
 import * as R from 'ramda';
 import { EventEmitter } from 'events';
 import { SoundPlayer } from '../utils/SoundPlayer';
+import { getEeStats } from '../utils/miscUtils';
 import { DisposeController } from '../utils/DisposeController';
 
 const LS_KEY = 'sounds';
@@ -47,9 +48,17 @@ export class SoundService extends EventEmitter {
     this.disposeController.dispose();
   }
 
-  serviceWillRemove() {
-    clearInterval(this.pollInterval);
-  }
+  // on(...args) {
+  //   const res = super.on.apply(this, args);
+  //   console.log('on', getEeStats(this));
+  //   return res;
+  // }
+
+  // off(...args) {
+  //   const res = super.off.apply(this, args);
+  //   console.log('off', getEeStats(this));
+  //   return res;
+  // }
 
   _getLSSounds = function () {
     const sounds = localStorage.getItem(LS_KEY);

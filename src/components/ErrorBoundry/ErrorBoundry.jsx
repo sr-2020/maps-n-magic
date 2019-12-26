@@ -6,8 +6,8 @@ import { ErrorBoundryPropTypes } from '../../types';
 export class ErrorBoundry extends Component {
   static propTypes = ErrorBoundryPropTypes;
 
-  constructor() {
-    super();
+  constructor(props) {
+    super(props);
     this.state = {
       hasError: false,
     };

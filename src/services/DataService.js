@@ -5,8 +5,9 @@ import { getBoundingRect, scaleRect } from '../utils/polygonUtils';
 import { baseCommonLLs } from '../data/baseContours';
 
 import { getPolygons2 } from '../utils/polygonGenerator';
+import { getEeStats } from '../utils/miscUtils';
 
-class DataService {
+export class DataService {
   constructor({ beacons, locations } = {}) {
     this.beacons = beacons || this._getLSBeacons() || getBeacons2();
     this.maxBeaconId = R.reduce(R.max, 1, this.beacons.map(R.prop('id')));
@@ -135,6 +136,16 @@ class DataService {
     [bRect.bottom, bRect.left],
     [bRect.top, bRect.left],
   ];
-}
 
-export { DataService };
+  // on(...args) {
+  //   const res = super.on.apply(this, args);
+  //   console.log('on', getEeStats(this));
+  //   return res;
+  // }
+
+  // off(...args) {
+  //   const res = super.off.apply(this, args);
+  //   console.log('off', getEeStats(this));
+  //   return res;
+  // }
+}
