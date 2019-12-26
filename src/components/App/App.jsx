@@ -34,6 +34,8 @@ import { SpiritEditor } from '../SpiritEditor';
 
 // console.log(getBeacons(100, 100, 600, 500));
 
+const hardDispose = (obj) => Object.keys(obj).forEach((key) => { delete obj[key]; });
+
 const STORAGE_KEY = 'AR_POC';
 
 const defaultImgUrl = '/images/backgroundImage.jpg';
@@ -164,14 +166,21 @@ export class App extends Component {
       const {
         beacons, locations, spirits,
       } = database2;
-      this.setState({
-        dataService: new DataService({
-          beacons,
-          locations,
-        }),
-        spiritService: new SpiritService({
-          spirits,
-        }),
+      this.setState((state) => {
+        state.soundService.dispose();
+        hardDispose(state.soundService);
+        hardDispose(state.dataService);
+        hardDispose(state.spiritService);
+        return {
+          dataService: new DataService({
+            beacons,
+            locations,
+          }),
+          soundService: new SoundService(),
+          spiritService: new SpiritService({
+            spirits,
+          }),
+        };
       });
       // this.setState(database2.appState);
     });

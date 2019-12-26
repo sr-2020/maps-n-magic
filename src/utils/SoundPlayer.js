@@ -83,6 +83,8 @@ class SoundPlayer {
     if (!ctl) {
       ctl = this.createSource(soundName, buffer);
       this.soundSources[soundName] = ctl;
+
+      // ctl.gainNode.gain.value = 0;
       if (!ctl.source.start) {
         ctl.source.noteOn(0);
       } else {

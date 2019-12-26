@@ -1,6 +1,7 @@
 import * as R from 'ramda';
 import { EventEmitter } from 'events';
 import { SoundPlayer } from '../utils/SoundPlayer';
+import { DisposeController } from '../utils/DisposeController';
 
 const LS_KEY = 'sounds';
 const POLL_INTERVAL = 15000; // ms
@@ -26,12 +27,24 @@ const indexByName = R.indexBy(R.prop('name'));
 export class SoundService extends EventEmitter {
   constructor({ sounds } = {}) {
     super();
+    this.abortController = new AbortController();
     this.soundPlayer = new SoundPlayer();
     this.sounds = sounds || this._getLSSounds() || [];
     this._getSoundList();
     this.pollInterval = setInterval(() => {
       this._getSoundList();
     }, POLL_INTERVAL);
+    this.disposeController = new DisposeController();
+    const { signal } = this.abortController;
+    signal.addEventListener('abort', () => {
+      clearInterval(this.pollInterval);
+      this.soundPlayer.stopAllSounds();
+    });
+  }
+
+  dispose() {
+    this.abortController.abort();
+    this.disposeController.dispose();
   }
 
   serviceWillRemove() {
@@ -85,11 +98,14 @@ export class SoundService extends EventEmitter {
       return;
     }
     sound.status = 'loading';
+    this.disposeController.isDisposedCheck();
     this.emit('soundStatusChange', {
       name,
       status: sound.status,
     });
-    fetch(getUrl(SOUND_ROUTE, '/', name))
+    fetch(getUrl(SOUND_ROUTE, '/', name), {
+      signal: this.abortController.signal,
+    })
       .then((result) => {
         if (!result.ok) throw new Error(result);
         return result.arrayBuffer();
@@ -106,6 +122,7 @@ export class SoundService extends EventEmitter {
     const sound = this.getSound(name);
     sound.status = 'loaded';
     sound.buffer = result;
+    this.disposeController.isDisposedCheck();
     this.emit('soundStatusChange', {
       name,
       status: sound.status,
@@ -113,7 +130,9 @@ export class SoundService extends EventEmitter {
   }
 
   _getSoundList() {
-    fetch(getUrl(SOUND_LIST_ROUTE))
+    fetch(getUrl(SOUND_LIST_ROUTE), {
+      signal: this.abortController.signal,
+    })
       .then((result) => {
         if (!result.ok) throw new Error(result);
         return result.json();
@@ -165,6 +184,7 @@ export class SoundService extends EventEmitter {
         }
       });
     }
+    this.disposeController.isDisposedCheck();
     this.emit('soundsUpdate');
 
     // const newSoundsMap = indexByName(soundList.entries);

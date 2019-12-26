@@ -3,12 +3,12 @@ import './FractionList.css';
 
 import * as R from 'ramda';
 
-// import { FractionListPropTypes } from '../../types';
+import { FractionListPropTypes } from '../../../types';
 
 const sort = R.sortBy(R.toLower);
 
 export class FractionList extends Component {
-  // static propTypes = FractionListPropTypes;
+  static propTypes = FractionListPropTypes;
 
   constructor(props) {
     super(props);
@@ -24,13 +24,28 @@ export class FractionList extends Component {
     this.props.spiritService.on('fractionChange', this.onFractionChange);
   }
 
-  componentDidUpdate = () => {
+  componentDidUpdate = (prevProps) => {
     console.log('FractionList did update');
+    if (prevProps.spiritService === this.props.spiritService) {
+      return;
+    }
+    this.onUpdate(prevProps);
+  }
+
+  onUpdate(prevProps) {
+    prevProps.spiritService.off('fractionChange', this.onFractionChange);
+
+    const { spiritService } = this.props;
+    const fractions = spiritService.getSpiritFractionsList();
+    this.setState({
+      fractions: sort(fractions),
+    });
+    spiritService.on('fractionChange', this.onFractionChange);
   }
 
   componentWillUnmount = () => {
     console.log('FractionList will unmount');
-    this.props.spiritService.on('fractionChange', this.onFractionChange);
+    this.props.spiritService.off('fractionChange', this.onFractionChange);
   }
 
   onFractionChange(fractions) {

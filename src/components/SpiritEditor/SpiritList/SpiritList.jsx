@@ -47,16 +47,19 @@ export class SpiritList extends Component {
   }
 
   componentDidUpdate = (prevProps) => {
-    if (prevProps.spiritService !== this.props.spiritService) {
-      const spirits = this.props.spiritService.getSpirits();
-      const spirits2 = sort(spirits || []);
-      // eslint-disable-next-line react/no-did-update-set-state
-      this.setState({
-        spirits: spirits2,
-        removedSpiritIndex: null,
-        searchStr: '',
-      });
+    if (prevProps.spiritService === this.props.spiritService) {
+      return;
     }
+    prevProps.spiritService.off('putSpirit', this.onPutSpirit);
+    this.props.spiritService.on('putSpirit', this.onPutSpirit);
+    const spirits = this.props.spiritService.getSpirits();
+    const spirits2 = sort(spirits || []);
+    // eslint-disable-next-line react/no-did-update-set-state
+    this.setState({
+      spirits: spirits2,
+      removedSpiritIndex: null,
+      searchStr: '',
+    });
     // console.log('SpiritList did update');
   }
 

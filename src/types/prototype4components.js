@@ -64,3 +64,7 @@ export const SearchPropTypes = {
 export const SoundManagerPropTypes = {
   soundService: soundServicePropTypes.isRequired,
 };
+
+export const FractionListPropTypes = {
+  spiritService: spiritServicePropTypes.isRequired,
+};

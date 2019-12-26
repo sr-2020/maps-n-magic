@@ -30,8 +30,34 @@ export class SoundManager extends Component {
 
   componentDidMount = () => {
     console.log('SoundManager mounted');
-    this.props.soundService.on('soundsUpdate', this.onSoundUpdate);
-    this.props.soundService.on('soundStatusChange', this.onSoundStatusChange);
+    this.subscribe(this.props.soundService);
+  }
+
+  componentDidUpdate = (prevProps) => {
+    console.log('SoundManager did update');
+    if (prevProps.soundService === this.props.soundService) {
+      return;
+    }
+    this.onUpdate(prevProps);
+  }
+
+  onUpdate(prevProps) {
+    this.unsubscribe(prevProps.soundService);
+    this.soundHolder.dispose();
+
+    const { soundService } = this.props;
+    const sounds = soundService.getSounds();
+    this.soundHolder = new SoundHolder(soundService);
+    this.setState({
+      sounds,
+      selectedSoundName: null,
+    });
+    this.subscribe(soundService);
+  }
+
+  componentWillUnmount = () => {
+    console.log('SoundManager will unmount');
+    this.unsubscribe(this.props.soundService);
   }
 
   onSoundUpdate() {
@@ -56,14 +82,6 @@ export class SoundManager extends Component {
     }));
   }
 
-  componentDidUpdate = () => {
-    console.log('SoundManager did update');
-  }
-
-  componentWillUnmount = () => {
-    console.log('SoundManager will unmount');
-  }
-
   getActiveIcon(sound) {
     if (sound.status === 'loading') {
       return faSpinner;
@@ -71,6 +89,16 @@ export class SoundManager extends Component {
     const { soundService } = this.props;
     const isPlayingSound = soundService.isPlayingSound(sound.name);
     return isPlayingSound ? faStopCircle : faPlayCircle;
+  }
+
+  subscribe(soundService) {
+    soundService.on('soundsUpdate', this.onSoundUpdate);
+    soundService.on('soundStatusChange', this.onSoundStatusChange);
+  }
+
+  unsubscribe(soundService) {
+    soundService.off('soundsUpdate', this.onSoundUpdate);
+    soundService.off('soundStatusChange', this.onSoundStatusChange);
   }
 
   selectSound(soundName) {

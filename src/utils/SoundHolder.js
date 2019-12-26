@@ -6,6 +6,10 @@ export class SoundHolder {
     this.soundService.on('soundStatusChange', this.onSoundStatusChange);
   }
 
+  dispose() {
+    this.soundService.off('soundStatusChange', this.onSoundStatusChange);
+  }
+
   onSoundStatusChange({ name, status }) {
     if (name === this.selectedSoundName && this.soundService.canPlaySound(name)) {
       this.soundService.playSound(name, true);
