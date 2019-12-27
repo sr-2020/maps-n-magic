@@ -16,6 +16,7 @@ export const translations = {
       uploadDatabase: 'Загрузить базу',
       downloadDatabase: 'Скачать базу',
       simulateMovement: 'Симулировать ходьбу',
+      jumpToUserCoords: 'Перенос карты к пользователю',
 
       // Spirit Editor
       newSpirit: 'Новый дух',

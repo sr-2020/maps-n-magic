@@ -32,6 +32,8 @@ import { animate, Timing } from '../../utils/animation';
 
 import { UserWatcher } from './UserWatcher';
 
+import { Translator } from './Translator';
+
 
 // eslint-disable-next-line import/extensions
 import 'leaflet.locatecontrol/dist/L.Control.Locate.min.js';
@@ -62,9 +64,10 @@ export class Map2 extends Component {
 
   componentDidMount = () => {
     const { center, zoom } = mapConfig;
-    const { simulateGeoDataStream, soundService } = this.props;
+    const { simulateGeoDataStream, soundService, curPosition } = this.props;
     const { urlTemplate, options } = defaultTileLayer;
     this.userWatcher = new UserWatcher(soundService);
+    this.translator = new Translator(center, curPosition);
 
     this.map = L.map(this.mapEl, {
       center,
@@ -170,14 +173,28 @@ export class Map2 extends Component {
       this.userWatcher = new UserWatcher(this.props.soundService);
     }
     if (prevProps.simulateGeoDataStream !== this.props.simulateGeoDataStream) {
-      if (this.props.simulateGeoDataStream) {
-        const { center } = mapConfig;
-        this.simulateUserMovement(center);
-      } else {
-        this.stopUserMovement();
-      }
+      this.refreshUserMovementSimulation();
+    }
+    if (prevProps.curPosition !== this.props.curPosition) {
+      const { center } = mapConfig;
+      this.map.panTo(this.props.curPosition || center);
+      console.log('position changed');
+      this.translator = new Translator(center, this.props.curPosition);
+      this.clearMapData();
+      this.populateMapData();
+      this.props.soundService.stopAllSounds();
+      this.refreshUserMovementSimulation();
     }
     // console.log('Map2 did update');
+  }
+
+  refreshUserMovementSimulation(){
+    if (this.props.simulateGeoDataStream) {
+      const { center } = mapConfig;
+      this.simulateUserMovement(this.props.curPosition || center);
+    } else {
+      this.stopUserMovement();
+    }
   }
 
   stopUserMovement() {
@@ -201,7 +218,8 @@ export class Map2 extends Component {
 
   onCreateMarker = (marker) => {
     const { dataService } = this.props;
-    const { id, name } = dataService.postBeacon(marker.getLatLng());
+    const latlng = this.translator.moveFrom(marker.getLatLng());
+    const { id, name } = dataService.postBeacon(latlng);
     L.setOptions(marker, { id, name });
     this.markerGroup.addLayer(marker);
 
@@ -212,9 +230,9 @@ export class Map2 extends Component {
 
   onCreateLocation = (location) => {
     const { dataService } = this.props;
-    const { id, name, markers } = dataService.postLocation({
+    const { id, name, markers } = dataService.postLocation(this.translator.moveFrom({
       latlngs: location.getLatLngs(),
-    });
+    }));
     L.setOptions(location, { id, name, markers });
     this.locationsGroup.addLayer(location);
     this.setLocationEventHandlers(location);
@@ -242,26 +260,17 @@ export class Map2 extends Component {
   // eslint-disable-next-line max-lines-per-function
   initMapBackbone = () => {
     const { t } = this.props;
-    const baseLine = L.polyline(baseLLs, {
-      color: 'green',
-      pmIgnore: true,
-    });
-    const baseClosedLine = L.polyline(baseClosedLLs, {
-      color: 'darkviolet',
-      pmIgnore: true,
-    });
-
     this.markerPopup = L.popup();
     this.locationPopup = L.popup();
 
-    const baseContourGroup = L.layerGroup([baseLine, baseClosedLine]);
+    this.baseContourGroup = L.layerGroup([]);
     this.polygonsGroup = L.layerGroup([]);
     this.massCentersGroup = L.layerGroup([]);
     this.signalRadiusesGroup = L.layerGroup([]);
     this.markerGroup = L.layerGroup([]);
     this.locationsGroup = L.layerGroup([]);
 
-    baseContourGroup.addTo(this.map);
+    this.baseContourGroup.addTo(this.map);
     // polygonsGroup.addTo(this.map);
     // massCentersGroup.addTo(this.map);
     // this.signalRadiusesGroup.addTo(this.map);
@@ -269,7 +278,7 @@ export class Map2 extends Component {
     this.locationsGroup.addTo(this.map);
 
     const overlayMaps = {
-      [t('baseContourLayer')]: baseContourGroup,
+      [t('baseContourLayer')]: this.baseContourGroup,
       [t('beaconsLayer')]: this.markerGroup,
       [t('massCentersLayer')]: this.massCentersGroup,
       [t('voronoiPolygonsLayer')]: this.polygonsGroup,
@@ -282,7 +291,19 @@ export class Map2 extends Component {
 
   populateMapData = () => {
     const { dataService, t } = this.props;
-    const beacons2 = dataService.getBeacons();
+
+    const baseLine = L.polyline(this.translator.moveTo(baseLLs), {
+      color: 'green',
+      pmIgnore: true,
+    });
+    const baseClosedLine = L.polyline(this.translator.moveTo(baseClosedLLs), {
+      color: 'darkviolet',
+      pmIgnore: true,
+    });
+    this.baseContourGroup.addLayer(baseLine);
+    this.baseContourGroup.addLayer(baseClosedLine);
+
+    const beacons2 = dataService.getBeacons().map(this.translator.moveTo);
 
     const markers = beacons2.map(({
       lat, lng, name, id,
@@ -299,7 +320,7 @@ export class Map2 extends Component {
       this.markerGroup.addLayer(marker);
     });
 
-    const locationsData = dataService.getLocations();
+    const locationsData = dataService.getLocations().map(this.translator.moveTo);
 
     const locations = locationsData.map(({
       // eslint-disable-next-line no-shadow
@@ -325,6 +346,7 @@ export class Map2 extends Component {
   }
 
   clearMapData = () => {
+    this.baseContourGroup.clearLayers();
     this.markerGroup.clearLayers();
     this.locationsGroup.clearLayers();
   }
@@ -408,9 +430,9 @@ export class Map2 extends Component {
   onLocationEdit = (e) => {
     const { dataService } = this.props;
     const location = e.target;
-    dataService.putLocation(location.options.id, {
+    dataService.putLocation(location.options.id, this.translator.moveFrom({
       latlngs: location.getLatLngs(),
-    });
+    }));
     this.closeMarkerPopup();
   }
 
@@ -446,7 +468,7 @@ export class Map2 extends Component {
   onMarkerEdit = (e) => {
     const { dataService } = this.props;
     const marker = e.target;
-    dataService.putBeacon(marker.options.id, marker.getLatLng());
+    dataService.putBeacon(marker.options.id, this.translator.moveFrom(marker.getLatLng()));
     this.onMarkersChange();
     this.closeMarkerPopup();
     // console.log('pm:edit', e.target.getLatLng());
@@ -458,9 +480,8 @@ export class Map2 extends Component {
     this.massCentersGroup.clearLayers();
     this.polygonsGroup.clearLayers();
 
-    const boundingPolyline = L.polyline(boundingPolylineData, { color: 'blue' });
-
-    const polygons = polygonData.clippedPolygons.map((polygon, i) => L.polygon(polygon, {
+    const boundingPolyline = L.polyline(this.translator.moveTo(boundingPolylineData), { color: 'blue' });
+    const polygons = polygonData.clippedPolygons.map((polygon, i) => L.polygon(this.translator.moveTo(polygon), {
       fillColor: COLOR_PALETTE[i % COLOR_PALETTE.length].color.background,
       fillOpacity: 0.5,
       pmIgnore: true,
@@ -471,7 +492,7 @@ export class Map2 extends Component {
 
     const massCenters = polygonData.clippedCenters
       .filter((massCenter) => !Number.isNaN(massCenter.x) && !Number.isNaN(massCenter.y))
-      .map((massCenter) => L.circleMarker([massCenter.x, massCenter.y], {
+      .map((massCenter) => L.circleMarker(this.translator.moveTo([massCenter.x, massCenter.y]), {
         radius: 5,
         pmIgnore: true,
       }));
@@ -481,7 +502,7 @@ export class Map2 extends Component {
   updateSignalRadiuses = () => {
     const { dataService } = this.props;
     this.signalRadiusesGroup.clearLayers();
-    dataService.getBeacons().forEach((beacon) => {
+    dataService.getBeacons().map(this.translator.moveTo).forEach((beacon) => {
       this.signalRadiusesGroup.addLayer(L.circle({
         lat: beacon.lat,
         lng: beacon.lng,
@@ -497,6 +518,7 @@ export class Map2 extends Component {
     const { dataService } = this.props;
     const { id } = this.state.curMarker;
     const marker = this.markerGroup.getLayers().find((marker2) => marker2.options.id === id);
+    let resValue = value;
     if (prop === 'name') {
       marker.options.name = value;
       dataService.putBeacon(id, {
@@ -509,15 +531,17 @@ export class Map2 extends Component {
       if (!Number.isNaN(num)) {
         const newLatLng = { ...latLng, [prop]: num };
         marker.setLatLng(newLatLng);
-        dataService.putBeacon(id, {
+        dataService.putBeacon(id, this.translator.moveFrom({
+          ...latLng,
           [prop]: num,
-        });
+        }));
         this.onMarkersChange();
+        resValue = num;
       }
     }
 
     this.setState((state) => {
-      const curMarker = { ...state.curMarker, [prop]: value };
+      const curMarker = { ...state.curMarker, [prop]: resValue };
       return ({
         curMarker,
       });

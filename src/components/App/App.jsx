@@ -13,6 +13,11 @@ import {
 
 import Form from 'react-bootstrap/Form';
 
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import {
+  faSpinner,
+} from '@fortawesome/free-solid-svg-icons';
+
 import { AudioService } from '../../services/audioService';
 import { SoundService } from '../../services/SoundService';
 import { DataService } from '../../services/DataService';
@@ -76,13 +81,14 @@ export class App extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      // dataService: new DataService(),
-      // spiritService: new SpiritService(),
-      // soundService: new SoundService(),
       simulateGeoDataStream: false,
       ...initialState,
+      curPosition: null,
+      waitingForGeolocation: false,
+      initialized: false,
     };
     this.switchMovementMode = this.switchMovementMode.bind(this);
+    this.jumpToUserCoords = this.jumpToUserCoords.bind(this);
   }
 
   componentDidMount() {
@@ -90,8 +96,6 @@ export class App extends Component {
       dataService: new DataService(),
       spiritService: new SpiritService(),
       soundService: new SoundService(),
-      simulateGeoDataStream: false,
-      ...initialState,
       initialized: true,
     });
 
@@ -205,6 +209,52 @@ export class App extends Component {
     }));
   }
 
+  jumpToUserCoords() {
+    this.setState(({ curPosition }) => {
+      if (curPosition) {
+        return {
+          curPosition: null,
+        };
+      }
+      this.jumpToUserCoords2();
+      return {
+        waitingForGeolocation: true,
+      };
+    });
+  }
+
+  jumpToUserCoords2() {
+    if (!navigator.geolocation) {
+      console.error('Geolocation is not supported by your browser');
+      return;
+    }
+
+    // setTimeout(() => {
+    //   this.setState({
+    //     curPosition: [52.2863655, 104.2921339],
+    //     waitingForGeolocation: false,
+    //   });
+    // }, 3000);
+
+    const success = (position) => {
+      const { latitude } = position.coords;
+      const { longitude } = position.coords;
+
+      this.setState({
+        curPosition: [latitude, longitude],
+        waitingForGeolocation: false,
+      });
+    };
+
+    function error() {
+      console.error('Unable to retrieve your location');
+      this.setState({
+        waitingForGeolocation: false,
+      });
+    }
+
+    navigator.geolocation.getCurrentPosition(success, error);
+  }
 
   // eslint-disable-next-line max-lines-per-function
   render() {
@@ -215,7 +265,7 @@ export class App extends Component {
 
     const {
       imagePositionX, imagePositionY, imageOpacity, imageScale, svgWidth, svgHeight, beacons, mainPolygon, imageUrl,
-      dataService, spiritService, soundService, simulateGeoDataStream,
+      dataService, spiritService, soundService, simulateGeoDataStream, curPosition, waitingForGeolocation,
     } = this.state;
 
     const {
@@ -258,9 +308,28 @@ export class App extends Component {
                       <li>
                         <Form.Check
                           type="switch"
+                          id="jumpToUserCoordsSwitch"
+                          label={t('jumpToUserCoords')}
+                          checked={curPosition !== null}
+                          disabled={waitingForGeolocation}
+                          onChange={this.jumpToUserCoords}
+                        />
+                        {
+                          waitingForGeolocation && (
+                            <FontAwesomeIcon
+                              // className="text-gray-600 play-icon m-auto text-2xl text-white"
+                              icon={faSpinner}
+                              spin
+                            />
+                          )
+                        }
+                      </li>
+                      <li>
+                        <Form.Check
+                          type="switch"
                           id="movementSimulatorSwitch"
                           label={t('simulateMovement')}
-                          value={simulateGeoDataStream}
+                          checked={simulateGeoDataStream}
                           onChange={this.switchMovementMode}
                         />
                       </li>
@@ -344,7 +413,12 @@ export class App extends Component {
                       />
                     </Route>
                     <Route path="/map2">
-                      <Map2 dataService={dataService} soundService={soundService} simulateGeoDataStream={simulateGeoDataStream} />
+                      <Map2
+                        dataService={dataService}
+                        soundService={soundService}
+                        simulateGeoDataStream={simulateGeoDataStream}
+                        curPosition={curPosition}
+                      />
                     </Route>
                     <Route path="/spiritEditor">
                       <SpiritEditor spiritService={spiritService} />

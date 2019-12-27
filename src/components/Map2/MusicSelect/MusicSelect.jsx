@@ -55,7 +55,7 @@ export class MusicSelect extends Component {
 
   makeContent() {
     const { show } = this.state;
-    console.log(this.props);
+    // console.log(this.props);
     return (
       <div className="MusicSelect relative">
         <div className={classNames('button-panel relative', {

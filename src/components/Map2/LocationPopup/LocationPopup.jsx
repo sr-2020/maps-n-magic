@@ -170,6 +170,7 @@ export class LocationPopup extends Component {
             {
               manaLevels.map((level, i) => (
                 <button
+                  key={level}
                   className={classNames(common, {
                     [selectedButton]: level === manaLevel,
                     [unselectedButton]: level !== manaLevel,
