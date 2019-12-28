@@ -188,10 +188,11 @@ export class Map2 extends Component {
     // console.log('Map2 did update');
   }
 
-  refreshUserMovementSimulation(){
-    if (this.props.simulateGeoDataStream) {
+  refreshUserMovementSimulation() {
+    const { simulateGeoDataStream, curPosition } = this.props;
+    if (simulateGeoDataStream) {
       const { center } = mapConfig;
-      this.simulateUserMovement(this.props.curPosition || center);
+      this.simulateUserMovement(curPosition || center);
     } else {
       this.stopUserMovement();
     }

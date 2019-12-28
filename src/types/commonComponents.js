@@ -1,5 +1,9 @@
 
 import {
+  func,
+} from 'prop-types';
+
+import {
   childrenPropTypes,
 } from './primitives';
 
@@ -11,4 +15,8 @@ export const ErrorBoundryPropTypes = {
 
 export const MusicEditorPropTypes = {
   audioService: audioServicePropTypes.isRequired,
+};
+
+export const AppPropTypes = {
+  t: func.isRequired,
 };

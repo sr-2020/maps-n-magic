@@ -17,24 +17,25 @@
   margin-top: 4px;
 }
 
-.view-switch > ul {
+.view-switch ul {
   list-style: none;
   margin: 0;
   padding: 0;
   display: flex;
 }
 
-.view-switch > ul a {
+.view-switch a {
   flex-grow: 0;
-  padding: 6px 8px;
+  /* padding: 6px 8px; */
   background-color: #ddd;
   border: none;
   border-radius: 4px 4px 0 0;
   display: inline-block;
   text-decoration: none;
+  width: 100%;
 } 
 
-.view-switch > ul a.active {
+.view-switch a.active {
   color: #fff;
   background-color: #337ab7;
 }
@@ -46,7 +47,7 @@
 /* .view-switch > ul a:not(:last-of-type), .navigation-button:not(:last-of-type) {
   margin-right: 2px;
 }  */
-.view-switch > ul > li:not(:last-of-type) {
+.view-switch ul > li:not(:last-of-type) {
   margin-right: 2px;
 } 
 

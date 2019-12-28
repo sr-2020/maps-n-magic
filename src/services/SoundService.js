@@ -158,6 +158,7 @@ export class SoundService extends EventEmitter {
   _updateSounds(soundList) {
     // console.log(soundList);
     const soundsMap = indexByName(this.sounds);
+    soundList.entries = soundList.entries.filter(el => el['.tag'] === 'file');
     const newSoundNames = soundList.entries.map(R.prop('name'));
 
     const oldSoundsGroups = R.groupBy((sound) => (R.includes(sound.name, newSoundNames) ? 'soundExists' : 'soundRemoved'), this.sounds);

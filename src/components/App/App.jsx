@@ -12,6 +12,10 @@ import {
 } from 'react-router-dom';
 
 import Form from 'react-bootstrap/Form';
+import Navbar from 'react-bootstrap/NavBar';
+import Nav from 'react-bootstrap/Nav';
+import NavDropdown from 'react-bootstrap/NavDropdown';
+import Dropdown from 'react-bootstrap/Dropdown';
 
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import {
@@ -39,6 +43,8 @@ import { json2File, makeFileName, readJsonFile } from '../../utils/fileUtils';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { SpiritEditor } from '../SpiritEditor';
 
+import { AppPropTypes } from '../../types';
+
 // console.log(getBeacons(100, 100, 600, 500));
 
 const hardDispose = (obj) => Object.keys(obj).forEach((key) => { delete obj[key]; });
@@ -46,6 +52,34 @@ const hardDispose = (obj) => Object.keys(obj).forEach((key) => { delete obj[key]
 const STORAGE_KEY = 'AR_POC';
 
 const defaultImgUrl = '/images/backgroundImage.jpg';
+
+
+const oldNavLinks = [{
+  to: '/mapEditor',
+  tKey: 'mapEditor',
+}, {
+  to: '/beacons',
+  tKey: 'beacons',
+}, {
+  to: '/soundManager',
+  tKey: 'soundManager',
+}, {
+  to: '/demo',
+  tKey: 'demo',
+}];
+
+
+const navLinks = [{
+  to: '/map2',
+  tKey: 'map2',
+}, {
+  to: '/spiritEditor',
+  tKey: 'spiritEditor',
+}, {
+  to: '/soundManager2',
+  tKey: 'soundManager2',
+}];
+
 
 let initialState;
 // let audioData = [];
@@ -78,6 +112,8 @@ if (database) {
 export class App extends Component {
   audioService = new AudioService();
 
+  static propTypes = AppPropTypes;
+
   constructor(props) {
     super(props);
     this.state = {
@@ -87,8 +123,19 @@ export class App extends Component {
       waitingForGeolocation: false,
       initialized: false,
     };
-    this.switchMovementMode = this.switchMovementMode.bind(this);
-    this.jumpToUserCoords = this.jumpToUserCoords.bind(this);
+    const funcs = `
+    switchMovementMode
+    jumpToUserCoords
+    onFileSelected
+    setBeacons
+    setMainPolygon
+    setImageUrl
+    downloadDatabaseAsFile
+    uploadDatabaseFile
+    onStateChange
+    `.split('\n').map(R.trim).filter(R.pipe(R.isEmpty, R.not));
+
+    funcs.forEach((funcName) => (this[funcName] = this[funcName].bind(this)));
   }
 
   componentDidMount() {
@@ -98,86 +145,22 @@ export class App extends Component {
       soundService: new SoundService(),
       initialized: true,
     });
-
-    // initSound(() => {
-    //   this.setState({
-    //     soundsLoaded: true
-    //   });
-    // });
-    // this.animatePlayer();
     setInterval(() => {
       // console.log('saving app state in local storage');
       localStorage.setItem(STORAGE_KEY, JSON.stringify(this.prepareDataForJson()));
     }, 10000);
   }
 
-  prepareDataForJson = () => {
-    // console.log('sdfs');
-    const data = this.audioService.toJson();
-    const { dataService, spiritService } = this.state;
-    // console.log()
-    this.audioService.fromJson(data);
-    return ({
-      appState: R.pick([
-        'svgWidth',
-        'svgHeight',
-        'imagePositionX',
-        'imagePositionY',
-        'imageOpacity',
-        'imageScale',
-        'beacons',
-        'mainPolygon',
-        'imageUrl'], this.state),
-      audioData: data,
-      beacons: dataService.getBeacons(),
-      locations: dataService.getLocations(),
-      spirits: spiritService.getSpirits(),
-    });
+  onStateChange(prop, toType) {
+    return (e) => {
+      // console.log('prop');
+      this.setState({
+        [prop]: toType(e.target.value),
+      });
+    };
   }
 
-  onStateChange = (prop, toType) => (e) => {
-    // console.log('prop');
-    this.setState({
-      [prop]: toType(e.target.value),
-    });
-  }
-
-  setBeacons = (beacons) => {
-    // console.log('prop');
-    this.setState({
-      beacons,
-    });
-  }
-
-  setMainPolygon = (mainPolygon) => {
-    // console.log('prop');
-    this.setState({
-      mainPolygon,
-    });
-  }
-
-  setImageUrl = (imageUrl) => {
-    // console.log('prop');
-    this.setState({
-      imageUrl,
-    });
-  }
-
-  toDefaultImageUrl = () => this.setImageUrl(defaultImgUrl);
-
-  downloadDatabaseAsFile = () => {
-    json2File(this.prepareDataForJson(), makeFileName('SR_acoustic_poc', 'json', new Date()));
-  };
-
-  uploadDatabaseFile = (evt) => {
-    const input = evt.target.querySelector('input');
-    if (input) {
-      input.value = '';
-      input.click();
-    }
-  };
-
-  onFileSelected = (evt) => {
+  onFileSelected(evt) {
     readJsonFile(evt).then((database2) => {
       // console.log(database2.appState);
       const {
@@ -201,15 +184,176 @@ export class App extends Component {
       });
       // this.setState(database2.appState);
     });
-  };
+  }
 
-  switchMovementMode() {
+  setBeacons(beacons) {
+    // console.log('prop');
+    this.setState({
+      beacons,
+    });
+  }
+
+  setImageUrl(imageUrl) {
+    // console.log('prop');
+    this.setState({
+      imageUrl,
+    });
+  }
+
+  setMainPolygon(mainPolygon) {
+    // console.log('prop');
+    this.setState({
+      mainPolygon,
+    });
+  }
+
+  getDownloadButton() {
+    const {
+      t,
+    } = this.props;
+    return (
+      <Dropdown.Item
+        as="button"
+        type="button"
+        data-original-title=""
+        onClick={this.downloadDatabaseAsFile}
+        title={t('downloadDatabase')}
+        className="py-3 text-xl"
+      >
+        {t('downloadDatabase')}
+      </Dropdown.Item>
+    );
+  }
+
+  getUploadButton() {
+    const {
+      t,
+    } = this.props;
+    return (
+      <Dropdown.Item
+        as="button"
+        type="button"
+        data-original-title=""
+        title={t('uploadDatabase')}
+        onClick={this.uploadDatabaseFile}
+        className="py-3 text-xl"
+      >
+        <input
+          type="file"
+          className="display-none"
+          tabIndex="-1"
+          onChange={this.onFileSelected}
+        />
+        {t('uploadDatabase')}
+      </Dropdown.Item>
+    );
+  }
+
+  getJumpToUserCoordsSwitch() {
+    const {
+      curPosition, waitingForGeolocation,
+    } = this.state;
+
+    const {
+      t,
+    } = this.props;
+    return (
+      <Dropdown.Item as="button" onClick={this.jumpToUserCoords}>
+        <Form.Check
+          type="switch"
+          id="jumpToUserCoordsSwitch"
+          label={t('jumpToUserCoords')}
+          checked={curPosition !== null}
+          disabled={waitingForGeolocation}
+          className="py-3 text-xl"
+          style={{ display: 'inline-block' }}
+        >
+        </Form.Check>
+        {
+          waitingForGeolocation && (
+            <FontAwesomeIcon
+              className="ml-2 text-2xl text-gray-700"
+              icon={faSpinner}
+              spin
+            />
+          )
+        }
+      </Dropdown.Item>
+    );
+  }
+
+  getMovementSimulatorSwitch() {
+    const {
+      simulateGeoDataStream,
+    } = this.state;
+
+    const {
+      t,
+    } = this.props;
+    return (
+      <Dropdown.Item as="button" onClick={this.switchMovementMode}>
+        <Form.Check
+          type="switch"
+          id="movementSimulatorSwitch"
+          label={t('simulateMovement')}
+          checked={simulateGeoDataStream}
+          className="py-3 text-xl"
+        />
+      </Dropdown.Item>
+    );
+  }
+
+  toDefaultImageUrl = () => this.setImageUrl(defaultImgUrl);
+
+  prepareDataForJson() {
+    // console.log('sdfs');
+    const data = this.audioService.toJson();
+    const { dataService, spiritService } = this.state;
+    // console.log()
+    this.audioService.fromJson(data);
+    return ({
+      appState: R.pick([
+        'svgWidth',
+        'svgHeight',
+        'imagePositionX',
+        'imagePositionY',
+        'imageOpacity',
+        'imageScale',
+        'beacons',
+        'mainPolygon',
+        'imageUrl'], this.state),
+      audioData: data,
+      beacons: dataService.getBeacons(),
+      locations: dataService.getLocations(),
+      spirits: spiritService.getSpirits(),
+    });
+  }
+
+  downloadDatabaseAsFile() {
+    json2File(this.prepareDataForJson(), makeFileName('SR_acoustic_poc', 'json', new Date()));
+  }
+
+  // eslint-disable-next-line class-methods-use-this
+  uploadDatabaseFile(evt) {
+    const input = evt.target.querySelector('input');
+    if (input) {
+      input.value = '';
+      input.click();
+    }
+  }
+
+
+  switchMovementMode(e) {
+    e.stopPropagation();
+    e.preventDefault();
     this.setState(({ simulateGeoDataStream }) => ({
       simulateGeoDataStream: !simulateGeoDataStream,
     }));
   }
 
-  jumpToUserCoords() {
+  jumpToUserCoords(e) {
+    e.stopPropagation();
+    e.preventDefault();
     this.setState(({ curPosition }) => {
       if (curPosition) {
         return {
@@ -279,92 +423,53 @@ export class App extends Component {
             <Router>
               <div className="App flex flex-col h-screen">
                 <header className="flex-0-0-auto">
-                  <nav className="view-switch">
-                    <ul>
-                      {/* <li>
-                        <NavLink to="/mapEditor">{t('mapEditor')}</NavLink>
-                      </li>
-                      <li>
-                        <NavLink to="/beacons">{t('beacons')}</NavLink>
-                      </li> */}
-                      {/* <li>
-                        <NavLink to="/soundManager">{t('soundManager')}</NavLink>
-                      </li>
-                      <li>
-                        <NavLink to="/demo">{t('demo')}</NavLink>
-                      </li> */}
-                      <li>
-                        <NavLink to="/map2">{t('map2')}</NavLink>
-                      </li>
-                      <li>
-                        <NavLink to="/spiritEditor">{t('spiritEditor')}</NavLink>
-                      </li>
-                      <li>
-                        <NavLink to="/soundManager2">{t('soundManager2')}</NavLink>
-                      </li>
-                    </ul>
+                  <Navbar expand="md" className="view-switch pb-0">
 
-                    <ul>
-                      <li>
-                        <Form.Check
-                          type="switch"
-                          id="jumpToUserCoordsSwitch"
-                          label={t('jumpToUserCoords')}
-                          checked={curPosition !== null}
-                          disabled={waitingForGeolocation}
-                          onChange={this.jumpToUserCoords}
-                        />
+                    <Navbar.Toggle aria-controls="basic-navbar-nav" />
+                    <Navbar.Collapse id="basic-navbar-nav">
+                      <Nav as="ul">
                         {
-                          waitingForGeolocation && (
-                            <FontAwesomeIcon
-                              // className="text-gray-600 play-icon m-auto text-2xl text-white"
-                              icon={faSpinner}
-                              spin
-                            />
-                          )
+                          navLinks.map((navLink) => (
+                            <Nav.Item as="li" key={navLink.to}>
+                              <NavLink className="px-3 py-2 text-xl" to={navLink.to}>{t(navLink.tKey)}</NavLink>
+                            </Nav.Item>
+                          ))
                         }
-                      </li>
-                      <li>
-                        <Form.Check
-                          type="switch"
-                          id="movementSimulatorSwitch"
-                          label={t('simulateMovement')}
-                          checked={simulateGeoDataStream}
-                          onChange={this.switchMovementMode}
-                        />
-                      </li>
-                      <li>
-                        {/* className="dataLoadButton icon-button action-button mainNavButton" */}
-                        <button
-                          type="button"
-                          data-original-title=""
-                          title={t('uploadDatabase')}
-                          onClick={this.uploadDatabaseFile}
-                          className="tw-btn tw-btn-blue mr-2"
-                        >
-                          <input
-                            type="file"
-                            className="display-none"
-                            tabIndex="-1"
-                            onChange={this.onFileSelected}
-                          />
-                          {t('uploadDatabase')}
-                        </button>
-                      </li>
-                      <li>
-                        {/* className="dataSaveButton icon-button action-button mainNavButton" */}
-                        <button
-                          type="button"
-                          data-original-title=""
-                          onClick={this.downloadDatabaseAsFile}
-                          title={t('downloadDatabase')}
-                          className="tw-btn tw-btn-blue"
-                        >
-                          {t('downloadDatabase')}
-                        </button>
-                      </li>
-                    </ul>
-                  </nav>
+                        <Dropdown as="li">
+                          <Dropdown.Toggle as="a" className="px-3 py-2 text-xl" href="#">{t('prevPrototypes')}</Dropdown.Toggle>
+                          <Dropdown.Menu>
+                            {
+                              oldNavLinks.map((navLink) => (
+                                <Nav.Item as="li" key={navLink.to}>
+                                  <NavLink className="px-3 py-2 text-xl" to={navLink.to}>{t(navLink.tKey)}</NavLink>
+                                </Nav.Item>
+                              ))
+                            }
+                          </Dropdown.Menu>
+                        </Dropdown>
+                      </Nav>
+                    </Navbar.Collapse>
+
+                    <Dropdown as={Nav.Item} alignRight>
+                      <Dropdown.Toggle as={Nav.Link} className="text-xl">{t('actionMenu')}</Dropdown.Toggle>
+                      <Dropdown.Menu style={{zIndex: 2000}}>
+                        {
+                          this.getUploadButton()
+                        }
+                        {
+                          this.getDownloadButton()
+                        }
+                        <Dropdown.Divider />
+                        {
+                          this.getJumpToUserCoordsSwitch()
+                        }
+
+                        {
+                          this.getMovementSimulatorSwitch()
+                        }
+                      </Dropdown.Menu>
+                    </Dropdown>
+                  </Navbar>
                 </header>
 
                 <main className="flex-1-1-auto h-full">
