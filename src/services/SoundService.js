@@ -4,11 +4,13 @@ import { SoundPlayer } from '../utils/SoundPlayer';
 import { getEeStats } from '../utils/miscUtils';
 import { DisposeController } from '../utils/DisposeController';
 
+import { AUDIO_RETRANSLATOR } from '../settings';
+
+const {
+  POLL_INTERVAL, SOUND_URL, SOUND_LIST_ROUTE, SOUND_ROUTE,
+} = AUDIO_RETRANSLATOR;
+
 const LS_KEY = 'sounds';
-const POLL_INTERVAL = 15000; // ms
-const SOUND_URL = 'http://localhost:3001';
-const SOUND_LIST_ROUTE = '/fileList';
-const SOUND_ROUTE = '/file';
 function getUrl(...args) {
   return SOUND_URL + args.join('');
 }
