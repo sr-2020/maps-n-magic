@@ -3,6 +3,7 @@ import { getBeacons2 } from '../data/beacons';
 import { getBoundingRect, scaleRect } from '../utils/polygonUtils';
 
 import { baseCommonLLs } from '../data/baseContours';
+import { initialLocations } from '../data/locations';
 
 import { getPolygons2 } from '../utils/polygonGenerator';
 import { getEeStats } from '../utils/miscUtils';
@@ -11,7 +12,7 @@ export class DataService {
   constructor({ beacons, locations } = {}) {
     this.beacons = beacons || this._getLSBeacons() || getBeacons2();
     this.maxBeaconId = R.reduce(R.max, 1, this.beacons.map(R.prop('id')));
-    this.locations = locations || this._getLSLocations() || [];
+    this.locations = locations || this._getLSLocations() || initialLocations;
     this.locations.forEach((location) => {
       if (!location.manaLevel) {
         location.manaLevel = 'normal';

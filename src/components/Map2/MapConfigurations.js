@@ -18,11 +18,12 @@ const googleTileLayer = {
 };
 
 const mapConfig = {
-  lat: 54.928743,
-  lng: 36.871746,
-  center: [54.928743, 36.871746],
+  lat: 54.92822999834723,
+  lng: 36.87105243803666,
   zoom: 17,
 };
+
+mapConfig.center = [mapConfig.lat, mapConfig.lng];
 
 const geomanConfig = {
   position: 'topleft',
