@@ -31,6 +31,7 @@ export class SoundService extends EventEmitter {
     this.abortController = new AbortController();
     this.soundPlayer = new SoundPlayer();
     this.sounds = sounds || this._getLSSounds() || [];
+    this.soundMapping = {};
     this._getSoundList();
     this.pollInterval = setInterval(() => {
       this._getSoundList();
@@ -46,6 +47,27 @@ export class SoundService extends EventEmitter {
   dispose() {
     this.abortController.abort();
     this.disposeController.dispose();
+  }
+
+  getSoundMapping() {
+    return this.soundMapping;
+  }
+
+  mapSoundToKey(key, soundName) {
+    if (this.getSound(soundName)) {
+      this.soundMapping[key] = soundName;
+      this.loadSound(soundName);
+      this.emit('soundToKeySet', {
+        key,
+        soundName,
+      });
+    } else {
+      console.error('Tring to map to absent sound key', key, 'sound', soundName);
+    }
+  }
+
+  getSoundForKey(key) {
+    return this.soundMapping[key];
   }
 
   // on(...args) {
@@ -157,8 +179,9 @@ export class SoundService extends EventEmitter {
   // eslint-disable-next-line max-lines-per-function
   _updateSounds(soundList) {
     // console.log(soundList);
+
     const soundsMap = indexByName(this.sounds);
-    soundList.entries = soundList.entries.filter(el => el['.tag'] === 'file');
+    soundList.entries = soundList.entries.filter((el) => el['.tag'] === 'file');
     const newSoundNames = soundList.entries.map(R.prop('name'));
 
     const oldSoundsGroups = R.groupBy((sound) => (R.includes(sound.name, newSoundNames) ? 'soundExists' : 'soundRemoved'), this.sounds);
@@ -204,6 +227,18 @@ export class SoundService extends EventEmitter {
       });
     }
     this.disposeController.isDisposedCheck();
+    if (R.isEmpty(this.soundMapping)) {
+      if (newSoundNames[0]) {
+        this.mapSoundToKey('low', newSoundNames[0]);
+      }
+      if (newSoundNames[1]) {
+        this.mapSoundToKey('normal', newSoundNames[1]);
+      }
+      if (newSoundNames[2]) {
+        this.mapSoundToKey('high', newSoundNames[2]);
+      }
+    }
+
     this.emit('soundsUpdate');
   }
 }

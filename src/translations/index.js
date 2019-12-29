@@ -59,6 +59,8 @@ export const translations = {
       manalow: 'Низкий',
       mananormal: 'Обычный',
       manahigh: 'Высокий',
+      selectMusic: 'Выбор звуков',
+      noSound: 'Нет звука',
 
       markerName: 'Название маркера',
       latitude: 'Широта',

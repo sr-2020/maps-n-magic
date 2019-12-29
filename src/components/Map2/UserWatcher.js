@@ -21,10 +21,23 @@ export class UserWatcher {
     this.soundService = soundService;
     this.soundHolder = new SoundHolder(soundService);
     this.location = null;
+    this.onSoundToKeySet = this.onSoundToKeySet.bind(this);
+    this.soundService.on('soundToKeySet', this.onSoundToKeySet);
   }
 
   dispose() {
+    this.soundService.off('soundToKeySet', this.onSoundToKeySet);
     this.soundHolder.dispose();
+  }
+
+  onSoundToKeySet({ key, soundName }) {
+    if (!this.location) {
+      return;
+    }
+    const { manaLevel } = this.location.options;
+    if (manaLevel === key) {
+      this.soundHolder.playSound(soundName);
+    }
   }
 
   updateUserLocation(e, locations) {
@@ -40,16 +53,8 @@ export class UserWatcher {
     }
     if (location) {
       const { manaLevel } = location.options;
-      const sounds = this.soundService.getSounds();
-      if (manaLevel === 'low' && sounds[0]) {
-        this.soundHolder.playSound(sounds[0].name);
-      }
-      if (manaLevel === 'normal' && sounds[1]) {
-        this.soundHolder.playSound(sounds[1].name);
-      }
-      if (manaLevel === 'high' && sounds[2]) {
-        this.soundHolder.playSound(sounds[2].name);
-      }
+      const soundName = this.soundService.getSoundForKey(manaLevel);
+      this.soundHolder.playSound(soundName);
     } else {
       this.soundHolder.playSound();
       // this.soundService.stopAllSounds();

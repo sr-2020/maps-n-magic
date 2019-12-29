@@ -18,6 +18,9 @@ export class SoundHolder {
 
   playSound(soundName) {
     if (soundName) {
+      if (this.selectedSoundName === soundName) {
+        return;
+      }
       this.onSelectSound(soundName);
     } else {
       this.selectedSoundName = null;

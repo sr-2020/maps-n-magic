@@ -115,7 +115,6 @@ export class SoundManager extends Component {
     });
   }
 
-
   // eslint-disable-next-line max-lines-per-function
   render() {
     const { sounds, selectedSoundName, initialized } = this.state;

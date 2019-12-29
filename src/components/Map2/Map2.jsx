@@ -95,6 +95,7 @@ export class Map2 extends Component {
     L.DomEvent.on(musicSelectDom, 'dblclick', (ev) => {
       L.DomEvent.stopPropagation(ev);
     });
+    L.DomEvent.disableScrollPropagation(musicSelectDom);
 
     legend.addTo(this.map);
 
@@ -113,7 +114,6 @@ export class Map2 extends Component {
     if (simulateGeoDataStream) {
       this.simulateUserMovement(center);
     }
-
     // this.map.pm.toggleGlobalDragMode();
   }
 
@@ -635,13 +635,13 @@ export class Map2 extends Component {
 
   getMusicSelect = () => {
     const {
-      curMarker,
-    } = this.state;
+      soundService,
+    } = this.props;
     // if (!curMarker) {
     //   return null;
     // }
     return (
-      <MusicSelect />
+      <MusicSelect soundService={soundService} userWatcher={this.userWatcher} />
     );
   }
 

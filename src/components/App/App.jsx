@@ -452,7 +452,7 @@ export class App extends Component {
 
                     <Dropdown as={Nav.Item} alignRight>
                       <Dropdown.Toggle as={Nav.Link} className="text-xl">{t('actionMenu')}</Dropdown.Toggle>
-                      <Dropdown.Menu style={{zIndex: 2000}}>
+                      <Dropdown.Menu style={{ zIndex: 2000 }}>
                         {
                           this.getUploadButton()
                         }
