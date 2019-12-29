@@ -1,10 +1,14 @@
 .MusicSelect .button-panel {
   left: 0;
   opacity: 1;
+  height: auto;
+  width: auto;
   transition: all 0.5s ease-in-out;
 }
 
 .MusicSelect .button-panel.hidden-panel {
   left: -100%;
   opacity: 0;
+  height: 0;
+  width: 0;
 }

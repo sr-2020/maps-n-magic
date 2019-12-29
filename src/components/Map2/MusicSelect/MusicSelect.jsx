@@ -119,8 +119,16 @@ export class MusicSelect extends Component {
       name: 'manalow',
     }];
     return (
-      <div className="MusicSelect relative">
-        <div className={classNames('button-panel relative', {
+      <div className="MusicSelect relative text-right">
+        <button
+          type="button"
+          className="text-base bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 pl-3 pr-2 rounded focus:outline-none focus:shadow-outline"
+          onClick={this.onSelectClick}
+        >
+          <span>{t('selectMusic')}</span>
+          <FontAwesomeIcon className="ml-1 text-base w-4 h-4" fixedWidth icon={show ? faTimes : faChevronRight} />
+        </button>
+        <div className={classNames('button-panel relative  text-left', {
           'hidden-panel': !show,
         })}
         >
@@ -167,14 +175,7 @@ export class MusicSelect extends Component {
             }
           </Accordion>
         </div>
-        <button
-          type="button"
-          className="text-base bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 pl-3 pr-2 rounded focus:outline-none focus:shadow-outline"
-          onClick={this.onSelectClick}
-        >
-          <span>{t('selectMusic')}</span>
-          <FontAwesomeIcon className="ml-1 text-base w-4 h-4" fixedWidth icon={show ? faTimes : faChevronRight} />
-        </button>
+
       </div>
     );
   }

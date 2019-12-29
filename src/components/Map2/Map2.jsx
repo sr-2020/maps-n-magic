@@ -89,7 +89,8 @@ export class Map2 extends Component {
     this.map.on('pm:create', this.onCreateLayer);
     this.map.on('pm:remove', this.onRemoveLayer);
 
-    const legend = L.control({ position: 'bottomleft' });
+    // const legend = L.control({ position: 'bottomleft' });
+    const legend = L.control({ position: 'topright' });
     legend.onAdd = function (map) {
       return musicSelectDom;
     };
