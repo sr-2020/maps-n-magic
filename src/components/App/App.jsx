@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
-import './App.css';
+import 'bootstrap/dist/css/bootstrap.min.css';
 import '../../css/tailwind.css';
+import './App.css';
 // import './Icons.css';
 // import '@fortawesome/fontawesome-free/css/all.css';
 import * as R from 'ramda';
@@ -40,7 +41,7 @@ import { SoundManager } from '../SoundManager';
 
 import { json2File, makeFileName, readJsonFile } from '../../utils/fileUtils';
 
-import 'bootstrap/dist/css/bootstrap.min.css';
+
 import { SpiritEditor } from '../SpiritEditor';
 
 import { AppPropTypes } from '../../types';

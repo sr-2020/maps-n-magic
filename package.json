@@ -57,6 +57,7 @@
     "start:css": "postcss src/css/tailwind.src.css -o src/css/tailwind.css -w",
     "start2": "npm run start:css && react-scripts start",
     "build2": "npm run build:css && react-scripts build",
+    "serve:build": "serve -s build",
     "test": "react-scripts test",
     "eject": "react-scripts eject"
   },

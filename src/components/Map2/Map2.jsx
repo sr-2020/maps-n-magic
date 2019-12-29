@@ -1,6 +1,5 @@
 // eslint-disable-next-line max-classes-per-file
 import React, { Component } from 'react';
-import './Map2.css';
 import * as R from 'ramda';
 
 import '../../utils/gpxConverter';
@@ -47,6 +46,8 @@ import { MusicSelect } from './MusicSelect';
 //     color: ColorPalette[i % ColorPalette.length].color.border,
 //   }).addTo(this.map);
 // });
+
+import './Map2.css';
 
 // console.log(L);
 L.Icon.Default.imagePath = './images/leafletImages/';
