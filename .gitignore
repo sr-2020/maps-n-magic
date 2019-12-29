@@ -22,3 +22,5 @@ npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
 src/css/tailwind.css
+audio-retranslator/node_modules/
+audio-retranslator/settings-real.js
