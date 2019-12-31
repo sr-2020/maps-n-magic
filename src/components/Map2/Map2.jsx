@@ -33,6 +33,8 @@ import { UserWatcher } from './UserWatcher';
 
 import { Translator } from './Translator';
 
+import { BotService, Bot } from '../../services/BotService';
+
 
 // eslint-disable-next-line import/extensions
 import 'leaflet.locatecontrol/dist/L.Control.Locate.min.js';
@@ -61,9 +63,16 @@ export class Map2 extends Component {
       curMarker: null,
       curLocation: null,
     };
+    this.onBotUpdate = this.onBotUpdate.bind(this);
   }
 
   componentDidMount = () => {
+    this.botService = new BotService();
+    this.botService.putBot('bot1', new Bot());
+    this.botService.runBot('bot1');
+    this.botService.runMainCycle();
+    this.botService.on('botUpdate', this.onBotUpdate);
+
     const { center, zoom } = mapConfig;
     const { simulateGeoDataStream, soundService, curPosition } = this.props;
     const { urlTemplate, options } = defaultTileLayer;
@@ -209,6 +218,29 @@ export class Map2 extends Component {
   componentWillUnmount = () => {
     this.userWatcher.dispose();
     this.stopUserMovement();
+    this.botService.off('botUpdate', this.onBotUpdate);
+    this.botService.dispose();
+  }
+
+  onBotUpdate() {
+    console.log('On bot update');
+    const activeBots = this.botService.getActiveBots();
+    const botMap = R.indexBy((bot) => bot.getName(), activeBots);
+    const botsOnMap = this.botGroup.getLayers();
+    const curMarkers = {};
+    botsOnMap.forEach((botMarker) => {
+      const bot = botMap[botMarker.options.id];
+      if (!bot) {
+        this.botGroup.removeLayer(botMarker);
+      } else {
+        curMarkers[botMarker.options.id] = true;
+        botMarker.setLatLng(bot.getCutPosition());
+      }
+    });
+    activeBots.filter((bot) => !curMarkers[bot.getName()]).forEach((bot) => {
+      const botMarker = L.marker(bot.getCutPosition(), { id: bot.getName() });
+      this.botGroup.addLayer(botMarker);
+    });
   }
 
   onCreateLayer = (event) => {
@@ -272,13 +304,15 @@ export class Map2 extends Component {
     this.signalRadiusesGroup = L.layerGroup([]);
     this.markerGroup = L.layerGroup([]);
     this.locationsGroup = L.layerGroup([]);
+    this.botGroup = L.layerGroup([]);
 
     this.baseContourGroup.addTo(this.map);
     // polygonsGroup.addTo(this.map);
     // massCentersGroup.addTo(this.map);
     // this.signalRadiusesGroup.addTo(this.map);
-    this.markerGroup.addTo(this.map);
+    // this.markerGroup.addTo(this.map);
     this.locationsGroup.addTo(this.map);
+    this.botGroup.addTo(this.map);
 
     const overlayMaps = {
       [t('baseContourLayer')]: this.baseContourGroup,
@@ -287,6 +321,7 @@ export class Map2 extends Component {
       [t('voronoiPolygonsLayer')]: this.polygonsGroup,
       [t('signalRadiusesLayer')]: this.signalRadiusesGroup,
       [t('locationsLayer')]: this.locationsGroup,
+      [t('botLayer')]: this.botGroup,
     };
 
     L.control.layers(null, overlayMaps).addTo(this.map);

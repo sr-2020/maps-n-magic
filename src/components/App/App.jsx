@@ -27,6 +27,7 @@ import { AudioService } from '../../services/audioService';
 import { SoundService } from '../../services/SoundService';
 import { DataService } from '../../services/DataService';
 import { SpiritService } from '../../services/SpiritService';
+import { BotService } from '../../services/BotService';
 
 // import getBeacons from '../../utils/gpxExperiment';
 
@@ -439,6 +440,7 @@ export class App extends Component {
                         <Dropdown as="li">
                           <Dropdown.Toggle as="a" className="px-3 py-2 text-xl" href="#">{t('prevPrototypes')}</Dropdown.Toggle>
                           <Dropdown.Menu>
+                            {/* as="ul" */}
                             {
                               oldNavLinks.map((navLink) => (
                                 <Nav.Item as="li" key={navLink.to}>
