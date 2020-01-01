@@ -19,6 +19,8 @@ export const translations = {
       jumpToUserCoords: 'Перенос карты к пользователю',
       actionMenu: 'Меню действий',
       prevPrototypes: 'Др. страницы',
+      startModelRun: 'Запустить модель',
+      stopModelRun: 'Остановить модель',
 
       // Spirit Editor
       newSpirit: 'Новый дух',

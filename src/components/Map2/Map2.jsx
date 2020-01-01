@@ -33,9 +33,6 @@ import { UserWatcher } from './UserWatcher';
 
 import { Translator } from './Translator';
 
-import { BotService, Bot } from '../../services/BotService';
-
-
 // eslint-disable-next-line import/extensions
 import 'leaflet.locatecontrol/dist/L.Control.Locate.min.js';
 import 'leaflet.locatecontrol/dist/L.Control.Locate.min.css';
@@ -66,24 +63,26 @@ export class Map2 extends Component {
     this.onBotUpdate = this.onBotUpdate.bind(this);
   }
 
+  // eslint-disable-next-line max-lines-per-function
   componentDidMount = () => {
-    this.botService = new BotService();
-    this.botService.putBot('bot1', new Bot());
-    this.botService.runBot('bot1');
-    this.botService.runMainCycle();
-    this.botService.on('botUpdate', this.onBotUpdate);
-
     const { center, zoom } = mapConfig;
-    const { simulateGeoDataStream, soundService, curPosition } = this.props;
+    const { simulateGeoDataStream, soundService, curPosition, gameModel } = this.props;
     const { urlTemplate, options } = defaultTileLayer;
     this.userWatcher = new UserWatcher(soundService);
     this.translator = new Translator(center, curPosition);
+
+    gameModel.on('botUpdate', this.onBotUpdate);
 
     this.map = L.map(this.mapEl, {
       center,
       zoom,
       zoomControl: false,
     });
+    // Svg image proof of concept
+    // const imageUrl = 'images/test.svg';
+    // const imageBounds = [[54.93064336, 36.868068075], [54.92639824, 36.874747825]];
+    // L.imageOverlay(imageUrl, imageBounds).addTo(this.map);
+
     L.control.zoom({
       ...getZoomTranslation(),
       position: 'topleft',
@@ -218,13 +217,12 @@ export class Map2 extends Component {
   componentWillUnmount = () => {
     this.userWatcher.dispose();
     this.stopUserMovement();
-    this.botService.off('botUpdate', this.onBotUpdate);
-    this.botService.dispose();
+    this.props.gameModel.off('botUpdate', this.onBotUpdate);
   }
 
   onBotUpdate() {
     console.log('On bot update');
-    const activeBots = this.botService.getActiveBots();
+    const activeBots = this.props.gameModel.getActiveBots();
     const botMap = R.indexBy((bot) => bot.getName(), activeBots);
     const botsOnMap = this.botGroup.getLayers();
     const curMarkers = {};

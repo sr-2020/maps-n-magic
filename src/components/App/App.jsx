@@ -27,7 +27,6 @@ import { AudioService } from '../../services/audioService';
 import { SoundService } from '../../services/SoundService';
 import { DataService } from '../../services/DataService';
 import { SpiritService } from '../../services/SpiritService';
-import { BotService } from '../../services/BotService';
 
 // import getBeacons from '../../utils/gpxExperiment';
 
@@ -46,6 +45,11 @@ import { json2File, makeFileName, readJsonFile } from '../../utils/fileUtils';
 import { SpiritEditor } from '../SpiritEditor';
 
 import { AppPropTypes } from '../../types';
+
+import { GameModel } from '../../services/GameModel';
+import { Bot } from '../../services/Bot';
+
+import { ModelRunControl } from '../ModelRunControl';
 
 // console.log(getBeacons(100, 100, 600, 500));
 
@@ -141,10 +145,13 @@ export class App extends Component {
   }
 
   componentDidMount() {
+    const gameModel = new GameModel();
+    gameModel.putBot('bot1', new Bot());
     this.setState({
       dataService: new DataService(),
       spiritService: new SpiritService(),
       soundService: new SoundService(),
+      gameModel,
       initialized: true,
     });
     setInterval(() => {
@@ -170,9 +177,12 @@ export class App extends Component {
       } = database2;
       this.setState((state) => {
         state.soundService.dispose();
+        state.gameModel.dispose();
         hardDispose(state.soundService);
         hardDispose(state.dataService);
         hardDispose(state.spiritService);
+        const gameModel = new GameModel();
+        gameModel.putBot('bot1', new Bot());
         return {
           dataService: new DataService({
             beacons,
@@ -182,6 +192,7 @@ export class App extends Component {
           spiritService: new SpiritService({
             spirits,
           }),
+          gameModel,
         };
       });
       // this.setState(database2.appState);
@@ -411,7 +422,7 @@ export class App extends Component {
 
     const {
       imagePositionX, imagePositionY, imageOpacity, imageScale, svgWidth, svgHeight, beacons, mainPolygon, imageUrl,
-      dataService, spiritService, soundService, simulateGeoDataStream, curPosition, waitingForGeolocation,
+      dataService, spiritService, soundService, simulateGeoDataStream, curPosition, waitingForGeolocation, gameModel,
     } = this.state;
 
     const {
@@ -452,7 +463,8 @@ export class App extends Component {
                         </Dropdown>
                       </Nav>
                     </Navbar.Collapse>
-
+                    
+                    <ModelRunControl gameModel={gameModel} />
                     <Dropdown as={Nav.Item} alignRight>
                       <Dropdown.Toggle as={Nav.Link} className="text-xl">{t('actionMenu')}</Dropdown.Toggle>
                       <Dropdown.Menu style={{ zIndex: 2000 }}>
@@ -526,6 +538,7 @@ export class App extends Component {
                         soundService={soundService}
                         simulateGeoDataStream={simulateGeoDataStream}
                         curPosition={curPosition}
+                        gameModel={gameModel}
                       />
                     </Route>
                     <Route path="/spiritEditor">
