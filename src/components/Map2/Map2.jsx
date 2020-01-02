@@ -80,14 +80,32 @@ export class Map2 extends Component {
     });
     // Svg image proof of concept
     // const imageUrl = 'images/test.svg';
-    // const imageBounds = [[54.93064336, 36.868068075], [54.92639824, 36.874747825]];
-    // L.imageOverlay(imageUrl, imageBounds).addTo(this.map);
+    // const imageUrl = 'images/sr2020_base_map1.svg';
+    const imageUrl = 'images/sr2020_base_map2.svg';
+    const width=976;
+    const height=578;
+
+    // (y1 - y2) / height = (x2 - x1) / width
+    const y1 = 54.930300122616605;
+    const x1 = 36.86880692955018;
+    const y2 = 54.926889453719246;
+    const x2 = 36.87855139322438;
+    // const x2 = ((y1 - y2) / height) * width + x1;
+    const imageBounds = [
+      [y1, x1],
+      [y2, x2]
+    ];
+    // const imageBounds = [
+    //   [54.93064336, 36.868368075], 
+    //   [54.92720824, 36.874747825]
+    // ];
+    L.imageOverlay(imageUrl, imageBounds).addTo(this.map);
 
     L.control.zoom({
       ...getZoomTranslation(),
       position: 'topleft',
     }).addTo(this.map);
-    L.tileLayer(urlTemplate, options).addTo(this.map);
+    // L.tileLayer(urlTemplate, options).addTo(this.map);
     this.map.pm.addControls(geomanConfig);
     applyLeafletGeomanTranslation(this.map);
     // applyZoomTranslation(this.map);
@@ -120,6 +138,8 @@ export class Map2 extends Component {
       setView: false,
     }).addTo(this.map);
     lc.start();
+    // Interesting object which can be used to draw position with arrow
+    // L.Control.Locate.prototype.options.compassClass
 
     if (simulateGeoDataStream) {
       this.simulateUserMovement(center);
@@ -304,7 +324,7 @@ export class Map2 extends Component {
     this.locationsGroup = L.layerGroup([]);
     this.botGroup = L.layerGroup([]);
 
-    this.baseContourGroup.addTo(this.map);
+    // this.baseContourGroup.addTo(this.map);
     // polygonsGroup.addTo(this.map);
     // massCentersGroup.addTo(this.map);
     // this.signalRadiusesGroup.addTo(this.map);
