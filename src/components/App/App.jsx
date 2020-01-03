@@ -51,6 +51,9 @@ import { Bot } from '../../services/Bot';
 
 import { ModelRunControl } from '../ModelRunControl';
 
+import { fillGameModelWithBots } from '../../services/GameModelFiller';
+
+
 // console.log(getBeacons(100, 100, 600, 500));
 
 const hardDispose = (obj) => Object.keys(obj).forEach((key) => { delete obj[key]; });
@@ -145,11 +148,13 @@ export class App extends Component {
   }
 
   componentDidMount() {
+    const dataService = new DataService();
+    const spiritService = new SpiritService();
     const gameModel = new GameModel();
-    gameModel.putBot('bot1', new Bot());
+    fillGameModelWithBots(gameModel, spiritService.getSpirits(), dataService.getLocations());
     this.setState({
-      dataService: new DataService(),
-      spiritService: new SpiritService(),
+      dataService,
+      spiritService,
       soundService: new SoundService(),
       gameModel,
       initialized: true,
@@ -181,17 +186,20 @@ export class App extends Component {
         hardDispose(state.soundService);
         hardDispose(state.dataService);
         hardDispose(state.spiritService);
+
+        const dataService = new DataService({
+          beacons,
+          locations,
+        });
+        const spiritService = new SpiritService({
+          spirits,
+        });
         const gameModel = new GameModel();
-        gameModel.putBot('bot1', new Bot());
+        fillGameModelWithBots(gameModel, spiritService.getSpirits(), dataService.getLocations());
         return {
-          dataService: new DataService({
-            beacons,
-            locations,
-          }),
+          dataService,
           soundService: new SoundService(),
-          spiritService: new SpiritService({
-            spirits,
-          }),
+          spiritService,
           gameModel,
         };
       });
@@ -463,7 +471,7 @@ export class App extends Component {
                         </Dropdown>
                       </Nav>
                     </Navbar.Collapse>
-                    
+
                     <ModelRunControl gameModel={gameModel} />
                     <Dropdown as={Nav.Item} alignRight>
                       <Dropdown.Toggle as={Nav.Link} className="text-xl">{t('actionMenu')}</Dropdown.Toggle>

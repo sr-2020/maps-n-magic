@@ -79,33 +79,33 @@ export class Map2 extends Component {
       zoomControl: false,
     });
     // Svg image proof of concept
-    // const imageUrl = 'images/test.svg';
-    // const imageUrl = 'images/sr2020_base_map1.svg';
-    const imageUrl = 'images/sr2020_base_map2.svg';
-    const width=976;
-    const height=578;
+    // // const imageUrl = 'images/test.svg';
+    // // const imageUrl = 'images/sr2020_base_map1.svg';
+    // const imageUrl = 'images/sr2020_base_map2.svg';
+    // const width=976;
+    // const height=578;
 
-    // (y1 - y2) / height = (x2 - x1) / width
-    const y1 = 54.930300122616605;
-    const x1 = 36.86880692955018;
-    const y2 = 54.926889453719246;
-    const x2 = 36.87855139322438;
-    // const x2 = ((y1 - y2) / height) * width + x1;
-    const imageBounds = [
-      [y1, x1],
-      [y2, x2]
-    ];
+    // // (y1 - y2) / height = (x2 - x1) / width
+    // const y1 = 54.930300122616605;
+    // const x1 = 36.86880692955018;
+    // const y2 = 54.926889453719246;
+    // const x2 = 36.87855139322438;
+    // // const x2 = ((y1 - y2) / height) * width + x1;
     // const imageBounds = [
-    //   [54.93064336, 36.868368075], 
-    //   [54.92720824, 36.874747825]
+    //   [y1, x1],
+    //   [y2, x2]
     // ];
-    L.imageOverlay(imageUrl, imageBounds).addTo(this.map);
+    // // const imageBounds = [
+    // //   [54.93064336, 36.868368075], 
+    // //   [54.92720824, 36.874747825]
+    // // ];
+    // L.imageOverlay(imageUrl, imageBounds).addTo(this.map);
 
     L.control.zoom({
       ...getZoomTranslation(),
       position: 'topleft',
     }).addTo(this.map);
-    // L.tileLayer(urlTemplate, options).addTo(this.map);
+    L.tileLayer(urlTemplate, options).addTo(this.map);
     this.map.pm.addControls(geomanConfig);
     applyLeafletGeomanTranslation(this.map);
     // applyZoomTranslation(this.map);
@@ -245,6 +245,7 @@ export class Map2 extends Component {
     const activeBots = this.props.gameModel.getActiveBots();
     const botMap = R.indexBy((bot) => bot.getName(), activeBots);
     const botsOnMap = this.botGroup.getLayers();
+    const botsTracksOnMap = this.botTrackGroup.getLayers();
     const curMarkers = {};
     botsOnMap.forEach((botMarker) => {
       const bot = botMap[botMarker.options.id];
@@ -255,9 +256,20 @@ export class Map2 extends Component {
         botMarker.setLatLng(bot.getCutPosition());
       }
     });
-    activeBots.filter((bot) => !curMarkers[bot.getName()]).forEach((bot) => {
+    botsTracksOnMap.forEach((botTrack) => {
+      const bot = botMap[botTrack.options.id];
+      if (!bot) {
+        this.botTrackGroup.removeLayer(botTrack);
+      }
+    });
+    activeBots.filter((bot) => !curMarkers[bot.getName()]).forEach((bot, i) => {
       const botMarker = L.marker(bot.getCutPosition(), { id: bot.getName() });
       this.botGroup.addLayer(botMarker);
+      const botTrack = L.polyline(bot.getPath(), {
+        id: bot.getName(),
+        color: COLOR_PALETTE[i % COLOR_PALETTE.length].color.background,
+      });
+      this.botTrackGroup.addLayer(botTrack);
     });
   }
 
@@ -322,14 +334,16 @@ export class Map2 extends Component {
     this.signalRadiusesGroup = L.layerGroup([]);
     this.markerGroup = L.layerGroup([]);
     this.locationsGroup = L.layerGroup([]);
+    this.botTrackGroup = L.layerGroup([]);
     this.botGroup = L.layerGroup([]);
 
-    // this.baseContourGroup.addTo(this.map);
+    this.baseContourGroup.addTo(this.map);
     // polygonsGroup.addTo(this.map);
     // massCentersGroup.addTo(this.map);
     // this.signalRadiusesGroup.addTo(this.map);
     // this.markerGroup.addTo(this.map);
     this.locationsGroup.addTo(this.map);
+    this.botTrackGroup.addTo(this.map);
     this.botGroup.addTo(this.map);
 
     const overlayMaps = {
@@ -339,6 +353,7 @@ export class Map2 extends Component {
       [t('voronoiPolygonsLayer')]: this.polygonsGroup,
       [t('signalRadiusesLayer')]: this.signalRadiusesGroup,
       [t('locationsLayer')]: this.locationsGroup,
+      [t('botTrackLayer')]: this.botTrackGroup,
       [t('botLayer')]: this.botGroup,
     };
 

@@ -51,7 +51,8 @@ export class GameModel extends EventEmitter {
       this.emit('botUpdate');
 
       if (R.isEmpty(this.activeBots)) {
-        this.runBot('bot1');
+        // this.runBot('bot1');
+        R.keys(this.bots).forEach(this.runBot.bind(this));
       }
 
       // // timeFraction from 0 to 1

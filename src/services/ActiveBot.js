@@ -36,6 +36,10 @@ export class ActiveBot {
     return this.name;
   }
 
+  getPath() {
+    return this.bot.path;
+  }
+
   getCutPosition() {
     return meters2deg(this.curPosition);
   }
