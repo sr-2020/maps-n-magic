@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import './GeoDataStreamSimulator.css';
 
-import { animate, Timing } from '../../../utils/animation';
+import { animate, Timing } from '../../utils/animation';
 
 // import { GeoDataStreamSimulatorPropTypes } from '../../types';
 

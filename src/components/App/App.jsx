@@ -57,7 +57,7 @@ import { UserWatcher } from './UserWatcher';
 
 import { mapConfig } from '../../configs/map';
 
-import { GeoDataStreamSimulator } from '../Map2/GeoDataStreamSimulator';
+import { GeoDataStreamSimulator } from '../GeoDataStreamSimulator';
 
 // console.log(getBeacons(100, 100, 600, 500));
 
@@ -147,6 +147,8 @@ export class App extends Component {
     downloadDatabaseAsFile
     uploadDatabaseFile
     onStateChange
+    onGetPosition
+    onSaveDataInLs
     `.split('\n').map(R.trim).filter(R.pipe(R.isEmpty, R.not));
 
     funcs.forEach((funcName) => (this[funcName] = this[funcName].bind(this)));
@@ -166,10 +168,43 @@ export class App extends Component {
       gameModel,
       initialized: true,
     });
-    setInterval(() => {
-      // console.log('saving app state in local storage');
-      localStorage.setItem(STORAGE_KEY, JSON.stringify(this.prepareDataForJson()));
-    }, 10000);
+    this.saveDataInLsId = setInterval(this.onSaveDataInLs, 10000);
+    this.watchGeolocationId = navigator.geolocation.watchPosition(this.onGetPosition);
+  }
+
+  componentWillUnmount() {
+    clearInterval(this.saveDataInLsId);
+    // eslint-disable-next-line no-undef
+    clearWatch(this.watchGeolocationId);
+  }
+
+  onSaveDataInLs() {
+    // console.log('saving app state in local storage');
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(this.prepareDataForJson()));
+  }
+
+  onGetPosition(position) {
+    console.log(position.coords.latitude, position.coords.longitude);
+    if (this.state.simulateGeoDataStream) {
+      return;
+    }
+
+    const artificialPos = {
+      coords: {
+        accuracy: 10,
+        altitude: null,
+        altitudeAccuracy: null,
+        heading: null,
+        latitude: position.coords.latitude,
+        longitude: position.coords.longitude,
+        speed: null,
+      },
+      timestamp: Date.now(),
+      // artificial: true,
+    };
+
+    // this.map._handleGeolocationResponse(artificialPos);
+    this.state.gameModel.setUserPosition(artificialPos);
   }
 
   onStateChange(prop, toType) {
