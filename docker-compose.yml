@@ -1,0 +1,9 @@
+version: "3.6"
+
+services:
+  app:
+    image: ${IMAGE_APP}
+    ports:
+      - ${APP_PORT}:3001
+    environment:
+      DROPBOX_TOKEN: ${DROPBOX_TOKEN}
