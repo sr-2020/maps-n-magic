@@ -28,18 +28,21 @@ app.use(logger('dev'));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
-app.use(express.static(path.join(__dirname, 'public')));
+// app.use(express.static(path.join(__dirname, 'public')));
 
 
-app.use('/', indexRouter);
+// app.use('/', indexRouter);
 // app.use('/users', usersRouter);
 
 app.get('/fileList', fileListRouter);
 app.get('/file/:name', fileRouter);
 
+app.use(express.static(path.join(__dirname, '../build')));
+
 // catch 404 and forward to error handler
 app.use((req, res, next) => {
-  next(createError(404));
+  // next(createError(404));
+  res.sendFile(path.join(__dirname, '../build', '/index.html'));
 });
 
 // error handler
