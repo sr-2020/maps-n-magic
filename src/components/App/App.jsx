@@ -31,10 +31,10 @@ import { SpiritService } from '../../services/SpiritService';
 // import getBeacons from '../../utils/gpxExperiment';
 
 
-import { Prototype1 } from '../Prototype1';
-import { MapEditor } from '../MapEditor';
-import { MusicEditor } from '../MusicEditor';
-import { Beacons } from '../Beacons';
+import { Prototype1 } from '../../outdatedComponents/Prototype1';
+import { MapEditor } from '../../outdatedComponents/MapEditor';
+import { MusicEditor } from '../../outdatedComponents/MusicEditor';
+import { Beacons } from '../../outdatedComponents/Beacons';
 import { Map2 } from '../Map2';
 import { ErrorBoundry } from '../ErrorBoundry';
 import { SoundManager } from '../SoundManager';
