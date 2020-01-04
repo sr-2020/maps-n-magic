@@ -148,7 +148,7 @@ export class MusicSelect extends Component {
                       <ul>
                         {
                           sounds.map((sound) => (
-                            <li>
+                            <li key={sound.name}>
                               <Button
                                 variant="outline-dark"
                                 className="w-full text-left mb-2"

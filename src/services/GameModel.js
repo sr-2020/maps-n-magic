@@ -8,6 +8,14 @@ export class GameModel extends EventEmitter {
     super();
     this.bots = {};
     this.activeBots = [];
+    this.user = {
+      pos: null, // based on position from leaflet
+    };
+  }
+
+  setUserPosition(pos) {
+    this.user.pos = pos;
+    this.emit('userPositionUpdate', this.user);
   }
 
   getActiveBots() {

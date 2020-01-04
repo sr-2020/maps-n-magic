@@ -21,15 +21,11 @@ import { getIcon } from '../../utils/icons';
 
 import { COLOR_PALETTE } from '../../utils/colorPalette';
 
-import { mapConfig, geomanConfig, defaultTileLayer } from './MapConfigurations';
+import { geomanConfig, defaultTileLayer } from '../../configs/map';
 
 import { markerPopupDom, locationPopupDom, musicSelectDom } from '../../utils/domUtils';
 
 import { applyLeafletGeomanTranslation, getZoomTranslation } from '../../translations';
-
-import { animate, Timing } from '../../utils/animation';
-
-import { UserWatcher } from './UserWatcher';
 
 import { Translator } from './Translator';
 
@@ -60,18 +56,21 @@ export class Map2 extends Component {
       curMarker: null,
       curLocation: null,
     };
+    this.onUserPositionUpdate = this.onUserPositionUpdate.bind(this);
     this.onBotUpdate = this.onBotUpdate.bind(this);
   }
 
   // eslint-disable-next-line max-lines-per-function
   componentDidMount = () => {
+    const {
+      soundService, curPosition, gameModel, mapConfig,
+    } = this.props;
     const { center, zoom } = mapConfig;
-    const { simulateGeoDataStream, soundService, curPosition, gameModel } = this.props;
     const { urlTemplate, options } = defaultTileLayer;
-    this.userWatcher = new UserWatcher(soundService);
     this.translator = new Translator(center, curPosition);
 
     gameModel.on('botUpdate', this.onBotUpdate);
+    gameModel.on('userPositionUpdate', this.onUserPositionUpdate);
 
     this.map = L.map(this.mapEl, {
       center,
@@ -96,7 +95,7 @@ export class Map2 extends Component {
     //   [y2, x2]
     // ];
     // // const imageBounds = [
-    // //   [54.93064336, 36.868368075], 
+    // //   [54.93064336, 36.868368075],
     // //   [54.92720824, 36.874747825]
     // // ];
     // L.imageOverlay(imageUrl, imageBounds).addTo(this.map);
@@ -127,70 +126,10 @@ export class Map2 extends Component {
 
     legend.addTo(this.map);
 
-    this.map.on('locationfound', (e) => {
-      // console.log(e);
-      this.userWatcher.updateUserLocation(e, this.locationsGroup.getLayers());
-    });
-
-    this.patchLeafletMap();
-
-    const lc = L.control.locate({
-      setView: false,
-    }).addTo(this.map);
-    lc.start();
     // Interesting object which can be used to draw position with arrow
     // L.Control.Locate.prototype.options.compassClass
 
-    if (simulateGeoDataStream) {
-      this.simulateUserMovement(center);
-    }
     // this.map.pm.toggleGlobalDragMode();
-  }
-
-  // eslint-disable-next-line react/sort-comp
-  patchLeafletMap() {
-    const that = this;
-    const oldHandler = this.map._handleGeolocationResponse;
-    this.map._handleGeolocationResponse = function (pos) {
-      const { simulateGeoDataStream } = that.props;
-      if (simulateGeoDataStream && !pos.artificial) {
-        return;
-      }
-      // console.log('pos', pos);
-      oldHandler.call(this, pos);
-    }.bind(this.map);
-  }
-
-  // combine with patchLeafletMap
-  simulateUserMovement(center) {
-    const speed = 1;
-    const rx = 0.0005;
-    const ry = 0.0007;
-
-    this.stopUserMovement();
-
-    this.userMovementSimulation = animate({
-      duration: 20000,
-      timing: Timing.makeEaseInOut(Timing.linear),
-      draw: (function (progress) {
-        const artificialPos = {
-          coords: {
-            accuracy: 10,
-            altitude: null,
-            altitudeAccuracy: null,
-            heading: null,
-            latitude: center[0] + Math.cos(progress * speed * 2 * Math.PI) * rx,
-            longitude: center[1] + Math.sin(progress * speed * 2 * Math.PI) * ry,
-            speed: null,
-          },
-          timestamp: Date.now(),
-          artificial: true,
-        };
-
-        this.map._handleGeolocationResponse(artificialPos);
-      }).bind(this),
-      loop: true,
-    });
   }
 
   componentDidUpdate = (prevProps) => {
@@ -198,46 +137,45 @@ export class Map2 extends Component {
       this.clearMapData();
       this.populateMapData();
     }
-    if (prevProps.soundService !== this.props.soundService) {
-      this.userWatcher.dispose();
-      this.userWatcher = new UserWatcher(this.props.soundService);
-    }
-    if (prevProps.simulateGeoDataStream !== this.props.simulateGeoDataStream) {
-      this.refreshUserMovementSimulation();
-    }
     if (prevProps.curPosition !== this.props.curPosition) {
-      const { center } = mapConfig;
+      const { center } = this.props.mapConfig;
       this.map.panTo(this.props.curPosition || center);
       console.log('position changed');
       this.translator = new Translator(center, this.props.curPosition);
       this.clearMapData();
       this.populateMapData();
       this.props.soundService.stopAllSounds();
-      this.refreshUserMovementSimulation();
     }
     // console.log('Map2 did update');
   }
 
-  refreshUserMovementSimulation() {
-    const { simulateGeoDataStream, curPosition } = this.props;
-    if (simulateGeoDataStream) {
-      const { center } = mapConfig;
-      this.simulateUserMovement(curPosition || center);
-    } else {
-      this.stopUserMovement();
-    }
-  }
-
-  stopUserMovement() {
-    if (this.userMovementSimulation) {
-      this.userMovementSimulation.enable = false;
-    }
-  }
-
   componentWillUnmount = () => {
-    this.userWatcher.dispose();
-    this.stopUserMovement();
     this.props.gameModel.off('botUpdate', this.onBotUpdate);
+    this.props.gameModel.off('userPositionUpdate', this.onUserPositionUpdate);
+  }
+
+  onUserPositionUpdate(user) {
+    const layers = this.userGroup.getLayers();
+    const hasUser = layers.length > 0;
+    const coords = user.pos && user.pos.coords;
+    const latlng = coords ? {
+      lat: coords.latitude,
+      lng: coords.longitude,
+    } : null;
+    if (!coords && !hasUser) {
+      return;
+    }
+    if (!coords && hasUser) {
+      this.userGroup.removeLayer(layers[0]);
+    }
+    if (coords && !hasUser) {
+      const { markerClass: MarkerClass, markerStyle } = L.Control.Locate.prototype.options;
+      const userMarker = new MarkerClass(latlng, markerStyle);
+      this.userGroup.addLayer(userMarker);
+    }
+    if (coords && hasUser) {
+      layers[0].setLatLng(latlng);
+    }
   }
 
   onBotUpdate() {
@@ -336,6 +274,7 @@ export class Map2 extends Component {
     this.locationsGroup = L.layerGroup([]);
     this.botTrackGroup = L.layerGroup([]);
     this.botGroup = L.layerGroup([]);
+    this.userGroup = L.layerGroup([]);
 
     this.baseContourGroup.addTo(this.map);
     // polygonsGroup.addTo(this.map);
@@ -345,6 +284,7 @@ export class Map2 extends Component {
     this.locationsGroup.addTo(this.map);
     this.botTrackGroup.addTo(this.map);
     this.botGroup.addTo(this.map);
+    this.userGroup.addTo(this.map);
 
     const overlayMaps = {
       [t('baseContourLayer')]: this.baseContourGroup,
@@ -355,6 +295,7 @@ export class Map2 extends Component {
       [t('locationsLayer')]: this.locationsGroup,
       [t('botTrackLayer')]: this.botTrackGroup,
       [t('botLayer')]: this.botGroup,
+      [t('userLayer')]: this.userGroup,
     };
 
     L.control.layers(null, overlayMaps).addTo(this.map);
@@ -711,7 +652,7 @@ export class Map2 extends Component {
     //   return null;
     // }
     return (
-      <MusicSelect soundService={soundService} userWatcher={this.userWatcher} />
+      <MusicSelect soundService={soundService} />
     );
   }
 

@@ -53,6 +53,11 @@ import { ModelRunControl } from '../ModelRunControl';
 
 import { fillGameModelWithBots } from '../../services/GameModelFiller';
 
+import { UserWatcher } from './UserWatcher';
+
+import { mapConfig } from '../../configs/map';
+
+import { GeoDataStreamSimulator } from '../Map2/GeoDataStreamSimulator';
 
 // console.log(getBeacons(100, 100, 600, 500));
 
@@ -150,12 +155,14 @@ export class App extends Component {
   componentDidMount() {
     const dataService = new DataService();
     const spiritService = new SpiritService();
+    const soundService = new SoundService();
     const gameModel = new GameModel();
     fillGameModelWithBots(gameModel, spiritService.getSpirits(), dataService.getLocations());
+    this.userWatcher = new UserWatcher(soundService, dataService, gameModel);
     this.setState({
       dataService,
       spiritService,
-      soundService: new SoundService(),
+      soundService,
       gameModel,
       initialized: true,
     });
@@ -195,10 +202,13 @@ export class App extends Component {
           spirits,
         });
         const gameModel = new GameModel();
+        const soundService = new SoundService();
         fillGameModelWithBots(gameModel, spiritService.getSpirits(), dataService.getLocations());
+        this.userWatcher.dispose();
+        this.userWatcher = new UserWatcher(soundService, dataService, gameModel);
         return {
           dataService,
-          soundService: new SoundService(),
+          soundService,
           spiritService,
           gameModel,
         };
@@ -547,6 +557,7 @@ export class App extends Component {
                         simulateGeoDataStream={simulateGeoDataStream}
                         curPosition={curPosition}
                         gameModel={gameModel}
+                        mapConfig={mapConfig}
                       />
                     </Route>
                     <Route path="/spiritEditor">
@@ -559,6 +570,12 @@ export class App extends Component {
                     <Route render={() => <Redirect to="/soundManager2" />} />
                     {/* <Route render={() => <Redirect to="/map2" />} /> */}
                   </Switch>
+                  <GeoDataStreamSimulator
+                    simulateGeoDataStream={simulateGeoDataStream}
+                    gameModel={gameModel}
+                    curPosition={curPosition}
+                    center={mapConfig.center}
+                  />
                 </main>
               </div>
             </Router>
