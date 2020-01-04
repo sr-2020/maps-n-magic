@@ -14,6 +14,7 @@ jobs:
   - stage: deploy production
     script:
       - make deploy server=instance.evarun.ru password=$USER_PASSWORD
+    if: branch = master
 
 addons:
   ssh_known_hosts:
