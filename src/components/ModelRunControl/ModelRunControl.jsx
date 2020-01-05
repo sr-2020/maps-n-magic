@@ -21,7 +21,7 @@ export class ModelRunControl extends Component {
   componentDidMount = () => {
     const { gameModel } = this.props;
     this.setState({
-      isModelRunning: gameModel.isModelRunning(),
+      isModelRunning: gameModel.get('isModelRunning'),
     });
     gameModel.on('modelRunningChange', this.onModelRunningChange);
     console.log('ModelRunControl mounted');
@@ -45,11 +45,7 @@ export class ModelRunControl extends Component {
   onClick() {
     const { isModelRunning } = this.state;
     const { gameModel } = this.props;
-    if (isModelRunning) {
-      gameModel.stop();
-    } else {
-      gameModel.start();
-    }
+    gameModel.dispatch(isModelRunning ? 'stopModel' : 'runModel');
   }
 
   // gameModel.start();

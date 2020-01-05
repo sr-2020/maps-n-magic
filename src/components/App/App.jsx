@@ -204,7 +204,10 @@ export class App extends Component {
     };
 
     // this.map._handleGeolocationResponse(artificialPos);
-    this.state.gameModel.setUserPosition(artificialPos);
+    this.state.gameModel.dispatch({
+      type: 'updateUserPosition',
+      pos: artificialPos,
+    });
   }
 
   onStateChange(prop, toType) {

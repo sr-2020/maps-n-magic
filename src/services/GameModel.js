@@ -1,32 +1,75 @@
+// eslint-disable-next-line max-classes-per-file
 import * as R from 'ramda';
 import EventEmitter from 'events';
 
 import { ActiveBot } from './ActiveBot';
+
+import { UserService } from './UserService';
+
+function stringToType(entity) {
+  return R.is(String, entity) ? {
+    type: entity,
+  } : entity;
+}
 
 export class GameModel extends EventEmitter {
   constructor() {
     super();
     this.bots = {};
     this.activeBots = [];
-    this.user = {
-      pos: null, // based on position from leaflet
+
+    this.actionMap = {};
+
+    this.userService = new UserService(this);
+    this.registerService(this.userService);
+    this.onDefaultAction = this.onDefaultAction.bind(this);
+  }
+
+  registerService(service) {
+    const { actions } = service.metadata;
+    const localActionMap = R.fromPairs(actions.map((action) => [action, service]));
+    this.actionMap = {
+      ...this.actionMap,
+      ...localActionMap,
     };
   }
 
-  setUserPosition(pos) {
-    this.user.pos = pos;
-    this.emit('userPositionUpdate', this.user);
+  dispatch(action) {
+    action = stringToType(action);
+    const service = this.actionMap[action.type];
+    if (service) {
+      service.dispatch(action, this.onDefaultAction);
+      return;
+    }
+    if (action.type === 'runModel') {
+      this._start();
+      return;
+    }
+    if (action.type === 'stopModel') {
+      this._stop();
+      return;
+    }
+    this.onDefaultAction(action);
   }
 
-  getActiveBots() {
-    return this.activeBots;
+  // eslint-disable-next-line class-methods-use-this
+  onDefaultAction(action) {
+    throw new Error(`Unknown action ${JSON.stringify(action)}`);
   }
 
-  isModelRunning() {
+  get(request) {
+    request = stringToType(request);
+    if (request.type === 'isModelRunning') {
+      return this._isModelRunning();
+    }
+    throw new Error(`Unknown request ${JSON.stringify(request)}`);
+  }
+
+  _isModelRunning() {
     return this.mainCycleAbortController && !this.mainCycleAbortController.signal.aborted;
   }
 
-  stop() {
+  _stop() {
     if (this.mainCycleAbortController) {
       this.mainCycleAbortController.abort();
       this.activeBots.forEach((bot) => bot.stop());
@@ -34,7 +77,7 @@ export class GameModel extends EventEmitter {
     }
   }
 
-  start(options) {
+  _start() {
     console.log(this);
     const start = performance.now();
     this.mainCycleAbortController = new AbortController();
@@ -56,7 +99,7 @@ export class GameModel extends EventEmitter {
       this.activeBots = this.activeBots.filter((bot) => bot.hasNext());
       this.activeBots.forEach((bot) => bot.next(time));
       // R.values(this.activeBots).forEach((bot) => bot.next(time));
-      this.emit('botUpdate');
+      this.emit('botUpdate', this.activeBots);
 
       if (R.isEmpty(this.activeBots)) {
         // this.runBot('bot1');
@@ -85,7 +128,7 @@ export class GameModel extends EventEmitter {
   }
 
   dispose() {
-    this.stop();
+    this._stop();
     // if (this.mainCycleAbortController) {
     //   this.mainCycleAbortController.abort();
     // }

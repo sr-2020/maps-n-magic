@@ -178,9 +178,8 @@ export class Map2 extends Component {
     }
   }
 
-  onBotUpdate() {
+  onBotUpdate(activeBots) {
     console.log('On bot update');
-    const activeBots = this.props.gameModel.getActiveBots();
     const botMap = R.indexBy((bot) => bot.getName(), activeBots);
     const botsOnMap = this.botGroup.getLayers();
     const botsTracksOnMap = this.botTrackGroup.getLayers();
