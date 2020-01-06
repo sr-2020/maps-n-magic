@@ -1,16 +1,20 @@
 export class UserService {
   metadata = {
     actions: ['updateUserPosition'],
-    getters: [],
-    events: ['userPositionUpdate'],
+    emitEvents: ['userPositionUpdate'],
   };
 
-  constructor(gameModel) {
-    this.gameModel = gameModel;
+  constructor() {
     this.user = {
       pos: null, // based on position from leaflet
     };
   }
+
+  init(gameModel) {
+    this.gameModel = gameModel;
+  }
+
+  dispose() {}
 
   dispatch(action, onDefaultAction) {
     if (action.type === 'updateUserPosition') {

@@ -2,9 +2,11 @@
 import * as R from 'ramda';
 import EventEmitter from 'events';
 
-import { ActiveBot } from './ActiveBot';
-
 import { UserService } from './UserService';
+
+import { BotService } from './BotService';
+
+import { TickerService } from './TickerService';
 
 function stringToType(entity) {
   return R.is(String, entity) ? {
@@ -15,23 +17,77 @@ function stringToType(entity) {
 export class GameModel extends EventEmitter {
   constructor() {
     super();
-    this.bots = {};
-    this.activeBots = [];
-
     this.actionMap = {};
-
-    this.userService = new UserService(this);
-    this.registerService(this.userService);
+    this.requestMap = {};
+    this.initErrors = [];
     this.onDefaultAction = this.onDefaultAction.bind(this);
+    this.onDefaultRequest = this.onDefaultRequest.bind(this);
+  }
+
+  init() {
+    const services = [UserService, BotService, TickerService];
+    this.services = services.map((ServiceClass) => {
+      const service = new ServiceClass();
+      service.init(this);
+      this.registerService(service);
+      return service;
+    });
+
+    this.verifyServices();
+
+    if (!R.isEmpty(this.initErrors)) {
+      this.initErrors.forEach((err) => console.error(err));
+      throw new Error(`Found ${this.initErrors.length} errors during game model initialization\n${this.initErrors.join('\n')}`);
+    }
   }
 
   registerService(service) {
-    const { actions } = service.metadata;
+    const { actions = [], requests = [] } = service.metadata;
     const localActionMap = R.fromPairs(actions.map((action) => [action, service]));
+
+    const actionIntersection = R.intersection(R.keys(this.actionMap), actions);
+    if (!R.isEmpty(actionIntersection)) {
+      actionIntersection.forEach((action) => {
+        const service1 = service.constructor.name;
+        const service2 = this.actionMap[action].constructor.name;
+        this.initErrors.push(`Action with name ${action} is processed by two services: ${service1} and ${service2}`);
+      });
+    }
+
     this.actionMap = {
       ...this.actionMap,
       ...localActionMap,
     };
+
+    const localRequestsMap = R.fromPairs(requests.map((request) => [request, service]));
+
+    const requestIntersection = R.intersection(R.keys(this.requestMap), requests);
+    if (!R.isEmpty(requestIntersection)) {
+      requestIntersection.forEach((request) => {
+        const service1 = service.constructor.name;
+        const service2 = this.requestMap[request].constructor.name;
+        this.initErrors.push(`Request with name ${request} is processed by two services: ${service1} and ${service2}`);
+      });
+    }
+
+    this.requestMap = {
+      ...this.requestMap,
+      ...localRequestsMap,
+    };
+  }
+
+  verifyServices() {
+    const allEmittedEvents = R.flatten(this.services.map((service) => service.metadata.emitEvents || []));
+    this.services.forEach((service) => {
+      const { listenEvents = [] } = service.metadata;
+      const diff = R.difference(listenEvents, allEmittedEvents);
+      if (!R.isEmpty(diff)) {
+        diff.forEach((eventname) => {
+          const serviceName = service.constructor.name;
+          this.initErrors.push(`No event emitter for ${eventname} which is expected by ${serviceName}`);
+        });
+      }
+    });
   }
 
   dispatch(action) {
@@ -41,14 +97,7 @@ export class GameModel extends EventEmitter {
       service.dispatch(action, this.onDefaultAction);
       return;
     }
-    if (action.type === 'runModel') {
-      this._start();
-      return;
-    }
-    if (action.type === 'stopModel') {
-      this._stop();
-      return;
-    }
+
     this.onDefaultAction(action);
   }
 
@@ -59,112 +108,19 @@ export class GameModel extends EventEmitter {
 
   get(request) {
     request = stringToType(request);
-    if (request.type === 'isModelRunning') {
-      return this._isModelRunning();
+    const service = this.requestMap[request.type];
+    if (service) {
+      return service.get(request, this.onDefaultRequest);
     }
+    return this.onDefaultRequest(request);
+  }
+
+  // eslint-disable-next-line class-methods-use-this
+  onDefaultRequest(request) {
     throw new Error(`Unknown request ${JSON.stringify(request)}`);
   }
 
-  _isModelRunning() {
-    return this.mainCycleAbortController && !this.mainCycleAbortController.signal.aborted;
-  }
-
-  _stop() {
-    if (this.mainCycleAbortController) {
-      this.mainCycleAbortController.abort();
-      this.activeBots.forEach((bot) => bot.stop());
-      this.emit('modelRunningChange', false);
-    }
-  }
-
-  _start() {
-    console.log(this);
-    const start = performance.now();
-    this.mainCycleAbortController = new AbortController();
-    // const animation = {
-    //   enable: true,
-    // };
-
-    const filterBots = R.pipe(R.toPairs, R.filter(([, bot]) => bot.hasNext()), R.fromPairs);
-
-    requestAnimationFrame(function animate2(time) {
-      // console.log(options.key || 'animation triggered');
-      // if (!animation.enable) return;
-      if (this.mainCycleAbortController.signal.aborted) return;
-
-      // console.log(time - start);
-
-
-      // this.activeBots = filterBots(this.activeBots);
-      this.activeBots = this.activeBots.filter((bot) => bot.hasNext());
-      this.activeBots.forEach((bot) => bot.next(time));
-      // R.values(this.activeBots).forEach((bot) => bot.next(time));
-      this.emit('botUpdate', this.activeBots);
-
-      if (R.isEmpty(this.activeBots)) {
-        // this.runBot('bot1');
-        R.keys(this.bots).forEach(this.runBot.bind(this));
-      }
-
-      // // timeFraction from 0 to 1
-      // let timeFraction = (time - start) / options.duration;
-      // if (timeFraction > 1) timeFraction = 1;
-
-      // // current animation state
-      // const progress = options.timing(timeFraction);
-
-      // options.draw(progress);
-
-      // if (timeFraction < 1) {
-      requestAnimationFrame(animate2.bind(this));
-      // } else if (options.loop) {
-      //   start += options.duration;
-      //   requestAnimationFrame(animate2);
-      // }
-    }.bind(this));
-
-    this.emit('modelRunningChange', true);
-    // return animation;
-  }
-
   dispose() {
-    this._stop();
-    // if (this.mainCycleAbortController) {
-    //   this.mainCycleAbortController.abort();
-    // }
-  }
-
-  putBot(name, bot) {
-    this.bots[name] = bot;
-  }
-
-  getBot(name) {
-    return this.bots[name];
-  }
-
-  runBot(name) {
-    // this.activeBots[name] = new ActiveBot(name, this.bots[name]);
-    this.activeBots.push(new ActiveBot(name, this.bots[name]));
+    this.services.forEach((service) => service.dispose());
   }
 }
-
-
-// export class GameModel extends EventEmitter {
-//   constructor() {
-//     this.services = [];
-//   }
-
-//   putService(Service) {
-//     const service = new Service(this);
-//     this.services.push(service);
-//   }
-
-//   // dispose() {
-//   //   this.services.forEach((service) => service.dispose());
-//   //   delete this.services;
-//   // }
-
-//   // dispatch(action) {
-
-//   // }
-// }

@@ -10,7 +10,11 @@ export function fillGameModelWithBots(gameModel, spirits, locations) {
       path.push(points[(((j + 3) * 31) + (5 + i) * 13) % points.length]);
       j++;
     }
-    gameModel.putBot(spirit.name + i, new Bot(speeds[i % 3], path));
+    gameModel.dispatch({
+      type: 'putBot',
+      name: spirit.name + i,
+      bot: new Bot(speeds[i % 3], path),
+    });
   });
 }
 

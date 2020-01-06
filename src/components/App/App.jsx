@@ -159,6 +159,7 @@ export class App extends Component {
     const spiritService = new SpiritService();
     const soundService = new SoundService();
     const gameModel = new GameModel();
+    gameModel.init();
     fillGameModelWithBots(gameModel, spiritService.getSpirits(), dataService.getLocations());
     this.userWatcher = new UserWatcher(soundService, dataService, gameModel);
     this.setState({
@@ -240,6 +241,7 @@ export class App extends Component {
           spirits,
         });
         const gameModel = new GameModel();
+        gameModel.init();
         const soundService = new SoundService();
         fillGameModelWithBots(gameModel, spiritService.getSpirits(), dataService.getLocations());
         this.userWatcher.dispose();
