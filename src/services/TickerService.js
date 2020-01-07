@@ -1,4 +1,6 @@
-export class TickerService {
+import { AbstractService } from './AbstractService';
+
+export class TickerService extends AbstractService {
   metadata = {
     actions: ['runModel', 'stopModel'],
     requests: ['isModelRunning'],
@@ -6,6 +8,7 @@ export class TickerService {
   };
 
   constructor() {
+    super();
     this.mainCycleAbortController = null;
   }
 

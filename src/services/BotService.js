@@ -2,7 +2,9 @@ import * as R from 'ramda';
 
 import { ActiveBot } from './ActiveBot';
 
-export class BotService {
+import { AbstractService } from './AbstractService';
+
+export class BotService extends AbstractService {
   metadata = {
     actions: ['putBot', 'runBot', 'moveBots', 'stopBots'],
     emitEvents: ['botUpdate'],
@@ -10,6 +12,7 @@ export class BotService {
   };
 
   constructor() {
+    super();
     this.bots = {};
     this.activeBots = [];
     this.onModelRunningChange = this.onModelRunningChange.bind(this);

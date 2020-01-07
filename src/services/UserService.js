@@ -1,10 +1,13 @@
-export class UserService {
+import { AbstractService } from './AbstractService';
+
+export class UserService extends AbstractService {
   metadata = {
     actions: ['updateUserPosition'],
     emitEvents: ['userPositionUpdate'],
   };
 
   constructor() {
+    super();
     this.user = {
       pos: null, // based on position from leaflet
     };
@@ -13,8 +16,6 @@ export class UserService {
   init(gameModel) {
     this.gameModel = gameModel;
   }
-
-  dispose() {}
 
   execute(action, onDefaultAction) {
     if (action.type === 'updateUserPosition') {
