@@ -50,7 +50,11 @@ export class SpiritContent extends Component {
   }
 
   _getNewState = (id, spiritService) => ({
-    ...spiritService.getSpirit(id),
+    // ...spiritService.getSpirit(id),
+    ...spiritService.get({
+      type: 'spirit',
+      id,
+    }),
     initialized: true,
   })
 
@@ -60,8 +64,16 @@ export class SpiritContent extends Component {
     const { name } = target;
     const { id, spiritService } = this.props;
 
-    spiritService.putSpirit(id, {
-      [name]: value,
+    // spiritService.putSpirit(id, {
+    //   [name]: value,
+    // });
+
+    spiritService.execute({
+      type: 'putSpirit',
+      id,
+      props: {
+        [name]: value,
+      },
     });
 
     this.setState({

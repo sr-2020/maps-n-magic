@@ -97,10 +97,10 @@ const navLinks = [{
 
 let initialState;
 // let audioData = [];
-const database = localStorage.getItem(STORAGE_KEY);
+let database = localStorage.getItem(STORAGE_KEY);
 if (database) {
-  const parsedDb = JSON.parse(database);
-  initialState = parsedDb.appState;
+  database = JSON.parse(database);
+  initialState = database.appState;
   // audioData = database.audioData;
   // console.log('audioData', audioData);
   // initialState.beacons = getBeacons(100, 100, initialState.svgWidth - 200, initialState.svgHeight - 200).map(beacon => ({
@@ -110,6 +110,7 @@ if (database) {
   //   }
   // }));
 } else {
+  database = {};
   initialState = {
     svgWidth: 800,
     svgHeight: 581,
@@ -155,12 +156,23 @@ export class App extends Component {
   }
 
   componentDidMount() {
-    const dataService = new DataService();
+    const {
+      beacons, locations, spirits,
+    } = database;
+    const dataService = new DataService({
+      beacons,
+      locations,
+    });
     const spiritService = new SpiritService();
+    spiritService.setData(database);
+    // const dataService = new DataService();
+    // const spiritService = new SpiritService();
     const soundService = new SoundService();
     const gameModel = new GameModel();
     gameModel.init();
-    fillGameModelWithBots(gameModel, spiritService.getSpirits(), dataService.getLocations());
+    gameModel.setData(database);
+    // fillGameModelWithBots(gameModel, spiritService.getSpirits(), dataService.getLocations());
+    fillGameModelWithBots(gameModel, spiritService.get('spirits'), dataService.getLocations());
     this.userWatcher = new UserWatcher(soundService, dataService, gameModel);
     this.setState({
       dataService,
@@ -205,7 +217,7 @@ export class App extends Component {
     };
 
     // this.map._handleGeolocationResponse(artificialPos);
-    this.state.gameModel.dispatch({
+    this.state.gameModel.execute({
       type: 'updateUserPosition',
       pos: artificialPos,
     });
@@ -237,13 +249,14 @@ export class App extends Component {
           beacons,
           locations,
         });
-        const spiritService = new SpiritService({
-          spirits,
-        });
+        const spiritService = new SpiritService();
+        spiritService.setData(database2);
         const gameModel = new GameModel();
         gameModel.init();
+        gameModel.setData(database2);
         const soundService = new SoundService();
-        fillGameModelWithBots(gameModel, spiritService.getSpirits(), dataService.getLocations());
+        // fillGameModelWithBots(gameModel, spiritService.getSpirits(), dataService.getLocations());
+        fillGameModelWithBots(gameModel, spiritService.get('spirits'), dataService.getLocations());
         this.userWatcher.dispose();
         this.userWatcher = new UserWatcher(soundService, dataService, gameModel);
         return {
@@ -396,7 +409,9 @@ export class App extends Component {
       audioData: data,
       beacons: dataService.getBeacons(),
       locations: dataService.getLocations(),
-      spirits: spiritService.getSpirits(),
+      // spirits: spiritService.getSpirits(),
+      spirits: spiritService.get('spirits'),
+      version: '0.1.0',
     });
   }
 

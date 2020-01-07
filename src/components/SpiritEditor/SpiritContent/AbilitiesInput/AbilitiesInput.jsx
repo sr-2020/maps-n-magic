@@ -30,8 +30,13 @@ export class AbilitiesInput extends Component {
   componentDidMount() {
     const { id, spiritService } = this.props;
     this.setState({
-      abilities: sort(spiritService.getSpirit(id).abilities),
-      allAbilities: spiritService.getSpiritAbilitiesList(),
+      // abilities: sort(spiritService.getSpirit(id).abilities),
+      abilities: sort(spiritService.get({
+        type: 'spirit',
+        id,
+      }).abilities),
+      // allAbilities: spiritService.getSpiritAbilitiesList(),
+      allAbilities: spiritService.get('spiritAbilitiesList'),
       initialized: true,
     });
   }
@@ -45,8 +50,13 @@ export class AbilitiesInput extends Component {
     } = this.props;
     // eslint-disable-next-line react/no-did-update-set-state
     this.setState({
-      abilities: spiritService.getSpirit(id).abilities,
-      allAbilities: spiritService.getSpiritAbilitiesList(),
+      // abilities: spiritService.getSpirit(id).abilities,
+      abilities: spiritService.get({
+        type: 'spirit',
+        id,
+      }).abilities,
+      // allAbilities: spiritService.getSpiritAbilitiesList(),
+      allAbilities: spiritService.get('spiritAbilitiesList'),
     });
     // console.log('AbilitiesInput did update');
   }
@@ -61,12 +71,20 @@ export class AbilitiesInput extends Component {
     if (form.checkValidity() === true) {
       const ability = form.newAbility.value.trim();
       if (!abilities.includes(ability)) {
-        spiritService.putSpirit(id, {
-          abilities: [...abilities, ability],
+        // spiritService.putSpirit(id, {
+        //   abilities: [...abilities, ability],
+        // });
+        spiritService.execute({
+          type: 'putSpirit',
+          id,
+          props: {
+            abilities: [...abilities, ability],
+          },
         });
         this.setState(({ abilities: prevAbilities }) => ({
           abilities: sort([...prevAbilities, ability]),
-          allAbilities: spiritService.getSpiritAbilitiesList(),
+          // allAbilities: spiritService.getSpiritAbilitiesList(),
+          allAbilities: spiritService.get('spiritAbilitiesList'),
         }));
         form.newAbility.value = '';
       }
@@ -78,12 +96,20 @@ export class AbilitiesInput extends Component {
     const { id, spiritService } = this.props;
     const { abilities } = this.state;
     const newAbilities = abilities.filter((ab) => ab !== ability);
-    spiritService.putSpirit(id, {
-      abilities: newAbilities,
+    // spiritService.putSpirit(id, {
+    //   abilities: newAbilities,
+    // });
+    spiritService.execute({
+      type: 'putSpirit',
+      id,
+      props: {
+        abilities: newAbilities,
+      },
     });
     this.setState(({ abilities: prevAbilities }) => ({
       abilities: prevAbilities.filter((ab) => ab !== ability),
-      allAbilities: spiritService.getSpiritAbilitiesList(),
+      // allAbilities: spiritService.getSpiritAbilitiesList(),
+      allAbilities: spiritService.get('spiritAbilitiesList'),
     }));
   }
 

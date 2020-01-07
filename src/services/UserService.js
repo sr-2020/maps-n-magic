@@ -16,12 +16,11 @@ export class UserService {
 
   dispose() {}
 
-  dispatch(action, onDefaultAction) {
+  execute(action, onDefaultAction) {
     if (action.type === 'updateUserPosition') {
-      this._setUserPosition(action.pos);
-      return;
+      return this._setUserPosition(action.pos);
     }
-    onDefaultAction(action);
+    return onDefaultAction(action);
   }
 
   _setUserPosition(pos) {

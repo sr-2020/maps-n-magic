@@ -40,24 +40,20 @@ export class BotService {
     // }
   }
 
-  dispatch(action, onDefaultAction) {
+  execute(action, onDefaultAction) {
     if (action.type === 'putBot') {
-      this._putBot(action);
-      return;
+      return this._putBot(action);
     }
     if (action.type === 'runBot') {
-      this._runBot(action);
-      return;
+      return this._runBot(action);
     }
     if (action.type === 'moveBots') {
-      this._moveBots(action);
-      return;
+      return this._moveBots(action);
     }
     if (action.type === 'stopBots') {
-      this._stopBots(action);
-      return;
+      return this._stopBots(action);
     }
-    onDefaultAction(action);
+    return onDefaultAction(action);
   }
 
   _putBot({ name, bot }) {

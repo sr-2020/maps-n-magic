@@ -39,7 +39,8 @@ export class SpiritList extends Component {
 
   componentDidMount = () => {
     // console.log('SpiritList mounted');
-    const spirits = this.props.spiritService.getSpirits();
+    // const spirits = this.props.spiritService.getSpirits();
+    const spirits = this.props.spiritService.get('spirits');
 
     const spirits2 = sort(spirits || []);
     this.setState({
@@ -54,7 +55,8 @@ export class SpiritList extends Component {
     }
     prevProps.spiritService.off('putSpirit', this.onPutSpirit);
     this.props.spiritService.on('putSpirit', this.onPutSpirit);
-    const spirits = this.props.spiritService.getSpirits();
+    // const spirits = this.props.spiritService.getSpirits();
+    const spirits = this.props.spiritService.get('spirits');
     const spirits2 = sort(spirits || []);
     // eslint-disable-next-line react/no-did-update-set-state
     this.setState({
@@ -212,7 +214,11 @@ export class SpiritList extends Component {
 
   createNewSpirit(spiritName) {
     const { spiritService, history } = this.props;
-    const spirit = spiritService.postSpirit({ name: spiritName });
+    // const spirit = spiritService.postSpirit({ name: spiritName });
+    const spirit = spiritService.execute({
+      type: 'postSpirit',
+      props: { name: spiritName },
+    });
     history.push(spiritLink(spirit));
     this.setState((state) => {
       const spirits = sort([...state.spirits, spirit]);
@@ -227,7 +233,11 @@ export class SpiritList extends Component {
     e.preventDefault();
     e.stopPropagation();
     const { spiritService, history } = this.props;
-    const spirit = spiritService.cloneSpirit(id);
+    // const spirit = spiritService.cloneSpirit(id);
+    const spirit = spiritService.execute({
+      type: 'cloneSpirit',
+      id,
+    });
     history.push(spiritLink(spirit));
     this.setState((state) => {
       const spirits = sort([...state.spirits, spirit]);
@@ -242,7 +252,11 @@ export class SpiritList extends Component {
     e.preventDefault();
     e.stopPropagation();
     const { spiritService } = this.props;
-    spiritService.deleteSpirit(id);
+    // spiritService.deleteSpirit(id);
+    spiritService.execute({
+      type: 'deleteSpirit',
+      id,
+    });
     this.setState((state) => {
       const index = state.spirits.findIndex((spirit) => spirit.id === id);
       const spirits = state.spirits.filter((spirit) => spirit.id !== id);

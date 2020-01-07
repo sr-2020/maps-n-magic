@@ -20,7 +20,8 @@ export class FractionList extends Component {
 
   componentDidMount = () => {
     const { spiritService } = this.props;
-    const fractions = spiritService.getSpiritFractionsList();
+    // const fractions = spiritService.getSpiritFractionsList();
+    const fractions = spiritService.get('spiritFractionsList');
     this.setState({
       fractions: sort(fractions),
     });
@@ -40,7 +41,8 @@ export class FractionList extends Component {
     prevProps.spiritService.off('fractionChange', this.onFractionChange);
 
     const { spiritService } = this.props;
-    const fractions = spiritService.getSpiritFractionsList();
+    // const fractions = spiritService.getSpiritFractionsList();
+    const fractions = spiritService.get('spiritFractionsList');
     this.setState({
       fractions: sort(fractions),
     });

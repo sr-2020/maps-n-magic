@@ -10,9 +10,11 @@ import { getEeStats } from '../utils/miscUtils';
 
 export class DataService {
   constructor({ beacons, locations } = {}) {
-    this.beacons = beacons || this._getLSBeacons() || getBeacons2();
+    // this.beacons = beacons || this._getLSBeacons() || getBeacons2();
+    this.beacons = beacons || getBeacons2();
     this.maxBeaconId = R.reduce(R.max, 1, this.beacons.map(R.prop('id')));
-    this.locations = locations || this._getLSLocations() || initialLocations;
+    // this.locations = locations || this._getLSLocations() || initialLocations;
+    this.locations = locations || initialLocations;
     this.locations.forEach((location) => {
       if (!location.manaLevel) {
         location.manaLevel = 'normal';
@@ -27,15 +29,15 @@ export class DataService {
     }
   }
 
-  _getLSBeacons = function () {
-    const beacons = localStorage.getItem('beacons');
-    return beacons ? JSON.parse(beacons) : null;
-  }
+  // _getLSBeacons = function () {
+  //   const beacons = localStorage.getItem('beacons');
+  //   return beacons ? JSON.parse(beacons) : null;
+  // }
 
-  _getLSLocations = function () {
-    const locations = localStorage.getItem('locations');
-    return locations ? JSON.parse(locations) : null;
-  }
+  // _getLSLocations = function () {
+  //   const locations = localStorage.getItem('locations');
+  //   return locations ? JSON.parse(locations) : null;
+  // }
 
   getBeacons = function () {
     return this.beacons;
@@ -68,7 +70,7 @@ export class DataService {
   }
 
   _saveBeacons = function () {
-    localStorage.setItem('beacons', JSON.stringify(this.beacons));
+    // localStorage.setItem('beacons', JSON.stringify(this.beacons));
   }
 
   getLocations = function () {
@@ -104,7 +106,7 @@ export class DataService {
   }
 
   _saveLocations = function () {
-    localStorage.setItem('locations', JSON.stringify(this.locations));
+    // localStorage.setItem('locations', JSON.stringify(this.locations));
   }
 
   getAttachedBeaconIds = () => {

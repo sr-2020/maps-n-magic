@@ -13,16 +13,14 @@ export class TickerService {
     this.gameModel = gameModel;
   }
 
-  dispatch(action, onDefaultAction) {
+  execute(action, onDefaultAction) {
     if (action.type === 'runModel') {
-      this._start();
-      return;
+      return this._start();
     }
     if (action.type === 'stopModel') {
-      this._stop();
-      return;
+      return this._stop();
     }
-    onDefaultAction(action);
+    return onDefaultAction(action);
   }
 
   get(request, onDefaultRequest) {

@@ -65,7 +65,7 @@ export class GeoDataStreamSimulator extends Component {
         };
 
         // this.map._handleGeolocationResponse(artificialPos);
-        gameModel.dispatch({
+        gameModel.execute({
           type: 'updateUserPosition',
           pos: artificialPos,
         });

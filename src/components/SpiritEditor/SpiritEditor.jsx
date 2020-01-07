@@ -30,7 +30,11 @@ export class SpiritEditor extends Component {
               <SpiritContent
                 id={Number(id)}
                 spiritService={spiritService}
-                spiritTmp={spiritService.getSpirit(Number(id))}
+                // spiritTmp={spiritService.getSpirit(Number(id))}
+                spiritTmp={spiritService.get({
+                  type: 'spirit',
+                  id: Number(id),
+                })}
               />
             );
           }}

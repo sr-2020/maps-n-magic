@@ -41,6 +41,10 @@ export class GameModel extends EventEmitter {
     }
   }
 
+  setData(database) {
+    this.services.filter((service) => !!service.setData).forEach((service) => service.setData(database));
+  }
+
   registerService(service) {
     const { actions = [], requests = [] } = service.metadata;
     const localActionMap = R.fromPairs(actions.map((action) => [action, service]));
@@ -90,15 +94,14 @@ export class GameModel extends EventEmitter {
     });
   }
 
-  dispatch(action) {
+  execute(action) {
     action = stringToType(action);
     const service = this.actionMap[action.type];
     if (service) {
-      service.dispatch(action, this.onDefaultAction);
-      return;
+      return service.execute(action, this.onDefaultAction);
     }
 
-    this.onDefaultAction(action);
+    return this.onDefaultAction(action);
   }
 
   // eslint-disable-next-line class-methods-use-this

@@ -45,7 +45,7 @@ export class ModelRunControl extends Component {
   onClick() {
     const { isModelRunning } = this.state;
     const { gameModel } = this.props;
-    gameModel.dispatch(isModelRunning ? 'stopModel' : 'runModel');
+    gameModel.execute(isModelRunning ? 'stopModel' : 'runModel');
   }
 
   // gameModel.start();

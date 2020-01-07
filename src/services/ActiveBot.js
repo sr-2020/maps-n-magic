@@ -93,8 +93,4 @@ export class ActiveBot {
 
     this.lastTime = curTime;
   }
-
-  // makeStep() {
-
-  // }
 }
