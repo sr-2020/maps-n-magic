@@ -10,7 +10,9 @@ export class AbstractService {
 
   setData(database) {}
 
-  getData() {}
+  getData() {
+    return {};
+  }
 
   dispose() {}
 

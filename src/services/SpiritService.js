@@ -1,16 +1,23 @@
 import * as R from 'ramda';
-import EventEmitter from 'events';
 
 import { defaultSpirit } from '../types/primitives';
 import { getEeStats } from '../utils/miscUtils';
 
-function stringToType(entity) {
-  return R.is(String, entity) ? {
-    type: entity,
-  } : entity;
-}
+import { AbstractService } from './AbstractService';
 
-export class SpiritService extends EventEmitter {
+// function stringToType(entity) {
+//   return R.is(String, entity) ? {
+//     type: entity,
+//   } : entity;
+// }
+
+export class SpiritService extends AbstractService {
+  metadata = {
+    actions: ['putSpirit', 'postSpirit', 'cloneSpirit', 'deleteSpirit'],
+    requests: ['spirits', 'spirit', 'spiritFractionsList', 'spiritAbilitiesList'],
+    emitEvents: ['putSpirit', 'fractionChange'],
+  };
+
   constructor() {
     super();
     this.fractions = [];
@@ -18,6 +25,10 @@ export class SpiritService extends EventEmitter {
     this.spirits = [];
     this.maxSpiritId = 1;
     // this.spirits = spirits || this._getLSSpirits() || [];
+  }
+
+  init(gameModel) {
+    this.gameModel = gameModel;
   }
 
   setData({ spirits } = {}) {
@@ -37,13 +48,19 @@ export class SpiritService extends EventEmitter {
     this._updateSpiritAbilitiesList();
   }
 
+  getData() {
+    return {
+      spirits: this._getSpirits(),
+    };
+  }
+
   // _getLSSpirits = function () {
   //   const spirits = localStorage.getItem('spirits');
   //   return spirits ? JSON.parse(spirits) : null;
   // }
 
   get(request, onDefaultRequest) {
-    request = stringToType(request);
+    // request = stringToType(request);
     if (request.type === 'spirits') {
       return this._getSpirits();
     }
@@ -77,7 +94,7 @@ export class SpiritService extends EventEmitter {
   _getSpiritAbilitiesList = () => this.abilities;
 
   execute(action, onDefaultAction) {
-    action = stringToType(action);
+    // action = stringToType(action);
     if (action.type === 'putSpirit') {
       return this._putSpirit(action);
     }
@@ -102,7 +119,7 @@ export class SpiritService extends EventEmitter {
     };
     this._updateSpiritFractionsList();
     this._updateSpiritAbilitiesList();
-    this.emit('putSpirit', R.clone(this.spirits[index]));
+    this.gameModel.emit('putSpirit', R.clone(this.spirits[index]));
     this._saveSpirits();
   }
 
@@ -122,10 +139,7 @@ export class SpiritService extends EventEmitter {
 
   _cloneSpirit = ({ id }) => {
     // const spirit = this.getSpirit(id);
-    const spirit = this.get({
-      type: 'spirit',
-      id,
-    });
+    const spirit = this._getSpirit({ id });
     return this._postSpirit({
       props: {
         ...spirit,
@@ -158,7 +172,7 @@ export class SpiritService extends EventEmitter {
     const newFractions = R.without([''], R.uniq(this.spirits.map(R.prop('fraction'))));
     if (this.fractions.length !== newFractions || R.symmetricDifference(newFractions, this.fractions).length > 0) {
       this.fractions = newFractions;
-      this.emit('fractionChange', R.clone(this.fractions));
+      this.gameModel.emit('fractionChange', R.clone(this.fractions));
     }
   }
 

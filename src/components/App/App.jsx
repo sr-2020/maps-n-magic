@@ -26,7 +26,6 @@ import {
 import { AudioService } from '../../services/audioService';
 import { SoundService } from '../../services/SoundService';
 import { DataService } from '../../services/DataService';
-import { SpiritService } from '../../services/SpiritService';
 
 // import getBeacons from '../../utils/gpxExperiment';
 
@@ -163,20 +162,15 @@ export class App extends Component {
       beacons,
       locations,
     });
-    const spiritService = new SpiritService();
-    spiritService.setData(database);
-    // const dataService = new DataService();
-    // const spiritService = new SpiritService();
     const soundService = new SoundService();
     const gameModel = new GameModel();
     gameModel.init();
     gameModel.setData(database);
-    // fillGameModelWithBots(gameModel, spiritService.getSpirits(), dataService.getLocations());
-    fillGameModelWithBots(gameModel, spiritService.get('spirits'), dataService.getLocations());
+
+    fillGameModelWithBots(gameModel, gameModel.get('spirits'), dataService.getLocations());
     this.userWatcher = new UserWatcher(soundService, dataService, gameModel);
     this.setState({
       dataService,
-      spiritService,
       soundService,
       gameModel,
       initialized: true,
@@ -243,26 +237,22 @@ export class App extends Component {
         state.gameModel.dispose();
         hardDispose(state.soundService);
         hardDispose(state.dataService);
-        hardDispose(state.spiritService);
+        hardDispose(state.gameModel);
 
         const dataService = new DataService({
           beacons,
           locations,
         });
-        const spiritService = new SpiritService();
-        spiritService.setData(database2);
         const gameModel = new GameModel();
         gameModel.init();
         gameModel.setData(database2);
         const soundService = new SoundService();
-        // fillGameModelWithBots(gameModel, spiritService.getSpirits(), dataService.getLocations());
-        fillGameModelWithBots(gameModel, spiritService.get('spirits'), dataService.getLocations());
+        fillGameModelWithBots(gameModel, gameModel.get('spirits'), dataService.getLocations());
         this.userWatcher.dispose();
         this.userWatcher = new UserWatcher(soundService, dataService, gameModel);
         return {
           dataService,
           soundService,
-          spiritService,
           gameModel,
         };
       });
@@ -392,7 +382,7 @@ export class App extends Component {
   prepareDataForJson() {
     // console.log('sdfs');
     const data = this.audioService.toJson();
-    const { dataService, spiritService } = this.state;
+    const { dataService, gameModel } = this.state;
     // console.log()
     this.audioService.fromJson(data);
     return ({
@@ -409,8 +399,7 @@ export class App extends Component {
       audioData: data,
       beacons: dataService.getBeacons(),
       locations: dataService.getLocations(),
-      // spirits: spiritService.getSpirits(),
-      spirits: spiritService.get('spirits'),
+      ...gameModel.getData(),
       version: '0.1.0',
     });
   }
@@ -495,7 +484,7 @@ export class App extends Component {
 
     const {
       imagePositionX, imagePositionY, imageOpacity, imageScale, svgWidth, svgHeight, beacons, mainPolygon, imageUrl,
-      dataService, spiritService, soundService, simulateGeoDataStream, curPosition, waitingForGeolocation, gameModel,
+      dataService, soundService, simulateGeoDataStream, curPosition, waitingForGeolocation, gameModel,
     } = this.state;
 
     const {
@@ -616,7 +605,7 @@ export class App extends Component {
                       />
                     </Route>
                     <Route path="/spiritEditor">
-                      <SpiritEditor spiritService={spiritService} />
+                      <SpiritEditor spiritService={gameModel} />
                     </Route>
                     <Route path="/soundManager2">
                       <SoundManager soundService={soundService} />

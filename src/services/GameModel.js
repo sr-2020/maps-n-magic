@@ -7,6 +7,9 @@ import { UserService } from './UserService';
 import { BotService } from './BotService';
 
 import { TickerService } from './TickerService';
+import { SpiritService } from './SpiritService';
+
+import { GameModelVerificator } from './GameModelVerficator';
 
 function stringToType(entity) {
   return R.is(String, entity) ? {
@@ -19,13 +22,13 @@ export class GameModel extends EventEmitter {
     super();
     this.actionMap = {};
     this.requestMap = {};
-    this.initErrors = [];
+    this.verificator = new GameModelVerificator();
     this.onDefaultAction = this.onDefaultAction.bind(this);
     this.onDefaultRequest = this.onDefaultRequest.bind(this);
   }
 
   init() {
-    const services = [UserService, BotService, TickerService];
+    const services = [UserService, BotService, TickerService, SpiritService];
     this.services = services.map((ServiceClass) => {
       const service = new ServiceClass();
       service.init(this);
@@ -33,65 +36,34 @@ export class GameModel extends EventEmitter {
       return service;
     });
 
-    this.verifyServices();
+    this.verificator.verifyServices(this.services);
 
-    if (!R.isEmpty(this.initErrors)) {
-      this.initErrors.forEach((err) => console.error(err));
-      throw new Error(`Found ${this.initErrors.length} errors during game model initialization\n${this.initErrors.join('\n')}`);
-    }
+    this.verificator.finishVerification();
   }
 
   setData(database) {
-    this.services.filter((service) => !!service.setData).forEach((service) => service.setData(database));
+    this.services.forEach((service) => service.setData(database));
+  }
+
+  getData() {
+    return R.mergeAll(this.services.map((service) => service.getData()));
   }
 
   registerService(service) {
     const { actions = [], requests = [] } = service.metadata;
     const localActionMap = R.fromPairs(actions.map((action) => [action, service]));
-
-    const actionIntersection = R.intersection(R.keys(this.actionMap), actions);
-    if (!R.isEmpty(actionIntersection)) {
-      actionIntersection.forEach((action) => {
-        const service1 = service.constructor.name;
-        const service2 = this.actionMap[action].constructor.name;
-        this.initErrors.push(`Action with name ${action} is processed by two services: ${service1} and ${service2}`);
-      });
-    }
-
+    this.verificator.checkActionOverrides(service, actions, this.actionMap);
     this.actionMap = {
       ...this.actionMap,
       ...localActionMap,
     };
 
     const localRequestsMap = R.fromPairs(requests.map((request) => [request, service]));
-
-    const requestIntersection = R.intersection(R.keys(this.requestMap), requests);
-    if (!R.isEmpty(requestIntersection)) {
-      requestIntersection.forEach((request) => {
-        const service1 = service.constructor.name;
-        const service2 = this.requestMap[request].constructor.name;
-        this.initErrors.push(`Request with name ${request} is processed by two services: ${service1} and ${service2}`);
-      });
-    }
-
+    this.verificator.checkRequestOverrides(service, requests, this.requestMap);
     this.requestMap = {
       ...this.requestMap,
       ...localRequestsMap,
     };
-  }
-
-  verifyServices() {
-    const allEmittedEvents = R.flatten(this.services.map((service) => service.metadata.emitEvents || []));
-    this.services.forEach((service) => {
-      const { listenEvents = [] } = service.metadata;
-      const diff = R.difference(listenEvents, allEmittedEvents);
-      if (!R.isEmpty(diff)) {
-        diff.forEach((eventname) => {
-          const serviceName = service.constructor.name;
-          this.initErrors.push(`No event emitter for ${eventname} which is expected by ${serviceName}`);
-        });
-      }
-    });
   }
 
   execute(action) {
