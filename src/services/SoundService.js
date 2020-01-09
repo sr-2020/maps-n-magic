@@ -1,3 +1,4 @@
+// eslint-disable-next-line max-classes-per-file
 import * as R from 'ramda';
 import { EventEmitter } from 'events';
 import { SoundPlayer } from '../utils/SoundPlayer';
@@ -25,6 +26,28 @@ function getUrl(...args) {
 //   size,
 // }
 
+class SoundMappingService {
+  constructor() {
+    this.soundMapping = {};
+  }
+
+  getSoundMapping() {
+    return this.soundMapping;
+  }
+
+  mapSoundToKey(key, soundName) {
+    this.soundMapping[key] = soundName;
+  }
+
+  getSoundForKey(key) {
+    return this.soundMapping[key];
+  }
+
+  isEmpty() {
+    return R.isEmpty(this.soundMapping);
+  }
+}
+
 const indexByName = R.indexBy(R.prop('name'));
 
 export class SoundService extends EventEmitter {
@@ -32,8 +55,9 @@ export class SoundService extends EventEmitter {
     super();
     this.abortController = new AbortController();
     this.soundPlayer = new SoundPlayer();
-    this.sounds = sounds || this._getLSSounds() || [];
-    this.soundMapping = {};
+    // this.sounds = sounds || this._getLSSounds() || [];
+    this.sounds = sounds || [];
+    this.soundMappingService = new SoundMappingService();
     this._getSoundList();
     this.pollInterval = setInterval(() => {
       this._getSoundList();
@@ -52,12 +76,12 @@ export class SoundService extends EventEmitter {
   }
 
   getSoundMapping() {
-    return this.soundMapping;
+    return this.soundMappingService.getSoundMapping();
   }
 
   mapSoundToKey(key, soundName) {
     if (this.getSound(soundName)) {
-      this.soundMapping[key] = soundName;
+      this.soundMappingService.mapSoundToKey(key, soundName);
       this.loadSound(soundName);
       this.emit('soundToKeySet', {
         key,
@@ -69,7 +93,7 @@ export class SoundService extends EventEmitter {
   }
 
   getSoundForKey(key) {
-    return this.soundMapping[key];
+    return this.soundMappingService.getSoundForKey(key);
   }
 
   // on(...args) {
@@ -84,10 +108,10 @@ export class SoundService extends EventEmitter {
   //   return res;
   // }
 
-  _getLSSounds = function () {
-    const sounds = localStorage.getItem(LS_KEY);
-    return sounds ? JSON.parse(sounds) : null;
-  }
+  // _getLSSounds = function () {
+  //   const sounds = localStorage.getItem(LS_KEY);
+  //   return sounds ? JSON.parse(sounds) : null;
+  // }
 
   getSounds = function () {
     return this.sounds;
@@ -229,7 +253,7 @@ export class SoundService extends EventEmitter {
       });
     }
     this.disposeController.isDisposedCheck();
-    if (R.isEmpty(this.soundMapping)) {
+    if (this.soundMappingService.isEmpty()) {
       if (newSoundNames[0]) {
         this.mapSoundToKey('low', newSoundNames[0]);
       }
