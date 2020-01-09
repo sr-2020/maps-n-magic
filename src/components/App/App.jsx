@@ -58,6 +58,8 @@ import { mapConfig } from '../../configs/map';
 
 import { GeoDataStreamSimulator } from '../GeoDataStreamSimulator';
 
+import { SoundMapper } from '../SoundMapper';
+
 // console.log(getBeacons(100, 100, 600, 500));
 
 const hardDispose = (obj) => Object.keys(obj).forEach((key) => { delete obj[key]; });
@@ -91,6 +93,9 @@ const navLinks = [{
 }, {
   to: '/soundManager2',
   tKey: 'soundManager2',
+}, {
+  to: '/soundMapping',
+  tKey: 'soundMapping',
 }];
 
 
@@ -609,6 +614,9 @@ export class App extends Component {
                     </Route>
                     <Route path="/soundManager2">
                       <SoundManager soundService={soundService} />
+                    </Route>
+                    <Route path="/soundMapping">
+                      <SoundMapper soundService={soundService} />
                     </Route>
 
                     <Route render={() => <Redirect to="/soundManager2" />} />

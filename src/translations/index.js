@@ -21,6 +21,7 @@ export const translations = {
       prevPrototypes: 'Др. страницы',
       startModelRun: 'Запустить модель',
       stopModelRun: 'Остановить модель',
+      soundMapping: 'Сопоставление звука',
 
       // Spirit Editor
       newSpirit: 'Новый дух',
