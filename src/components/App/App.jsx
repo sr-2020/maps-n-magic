@@ -39,6 +39,8 @@ import { ErrorBoundry } from '../ErrorBoundry';
 import { SoundManager } from '../SoundManager';
 
 import { json2File, makeFileName, readJsonFile } from '../../utils/fileUtils';
+import { AudioContextWrapper } from '../../utils/AudioContextWrapper';
+import { SoundPlayer } from '../../utils/SoundPlayer';
 
 
 import { SpiritEditor } from '../SpiritEditor';
@@ -131,6 +133,10 @@ if (database) {
 export class App extends Component {
   audioService = new AudioService();
 
+  audioContextWrapper = new AudioContextWrapper();
+
+  soundPlayer = new SoundPlayer(this.audioContextWrapper);
+
   static propTypes = AppPropTypes;
 
   constructor(props) {
@@ -167,7 +173,7 @@ export class App extends Component {
       beacons,
       locations,
     });
-    const soundService = new SoundService();
+    const soundService = new SoundService(this.audioContextWrapper, this.soundPlayer);
     const gameModel = new GameModel();
     gameModel.init();
     gameModel.setData(database);
@@ -251,7 +257,7 @@ export class App extends Component {
         const gameModel = new GameModel();
         gameModel.init();
         gameModel.setData(database2);
-        const soundService = new SoundService();
+        const soundService = new SoundService(this.audioContextWrapper, this.soundPlayer);
         fillGameModelWithBots(gameModel, dataService.getLocations());
         this.userWatcher.dispose();
         this.userWatcher = new UserWatcher(soundService, dataService, gameModel);

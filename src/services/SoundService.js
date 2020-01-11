@@ -4,8 +4,11 @@ import { EventEmitter } from 'events';
 import { SoundPlayer } from '../utils/SoundPlayer';
 import { getEeStats } from '../utils/miscUtils';
 import { DisposeController } from '../utils/DisposeController';
+import { AudioContextWrapper } from '../utils/AudioContextWrapper';
 
 import { AUDIO_RETRANSLATOR } from '../settings';
+
+import { SoundMappingService } from './SoundMappingService';
 
 const {
   POLL_INTERVAL, SOUND_URL, SOUND_LIST_ROUTE, SOUND_ROUTE,
@@ -26,46 +29,37 @@ function getUrl(...args) {
 //   size,
 // }
 
-class SoundMappingService {
-  constructor() {
-    this.soundMapping = {};
-  }
-
-  getSoundMapping() {
-    return this.soundMapping;
-  }
-
-  mapSoundToKey(key, soundName) {
-    this.soundMapping[key] = soundName;
-  }
-
-  getSoundForKey(key) {
-    return this.soundMapping[key];
-  }
-
-  isEmpty() {
-    return R.isEmpty(this.soundMapping);
-  }
-}
-
 const indexByName = R.indexBy(R.prop('name'));
 
 export class SoundService extends EventEmitter {
-  constructor() {
+  constructor(context, soundPlayer) {
     super();
+
+    // sound load
     this.abortController = new AbortController();
-    this.soundPlayer = new SoundPlayer();
-    // this.sounds = sounds || this._getLSSounds() || [];
+
+    this.context = context;
+    // sound player
+    // this.soundPlayer = new SoundPlayer(context);
+    this.soundPlayer = soundPlayer;
+
+    // sound data
     this.sounds = [];
+
+    // sound mapping
     this.soundMappingService = new SoundMappingService();
+
+    // sound load
     this._getSoundList();
     this.pollInterval = setInterval(() => {
       this._getSoundList();
     }, POLL_INTERVAL);
+
     this.disposeController = new DisposeController();
     const { signal } = this.abortController;
     signal.addEventListener('abort', () => {
       clearInterval(this.pollInterval);
+      // this.emit('stopAllSounds');
       this.soundPlayer.stopAllSounds();
     });
   }
@@ -133,13 +127,21 @@ export class SoundService extends EventEmitter {
         console.error(`Trying to play sound which is not ready. Name ${name}, status ${sound.status}`);
         return;
       }
+      // this.emit('playSingleSound', {
+      //   name,
+      //   buffer: sound.buffer,
+      // });
       this.soundPlayer.playSingleSound(name, sound.buffer);
     } else {
+      // this.emit('stopSound', {
+      //   name,
+      // });
       this.soundPlayer.stopSound(name);
     }
   }
 
   stopAllSounds() {
+    // this.emit('stopAllSounds');
     this.soundPlayer.stopAllSounds();
   }
 
@@ -164,7 +166,7 @@ export class SoundService extends EventEmitter {
       .then((result) => {
         if (!result.ok) throw new Error(result);
         return result.arrayBuffer();
-      }).then((result) => this.soundPlayer.makeAudioBuffer(result)).then((result) => {
+      }).then((result) => this.context.makeAudioBuffer(result)).then((result) => {
         // console.log(result);
         this.soundLoaded(name, result);
       })
