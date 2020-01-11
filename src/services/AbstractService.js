@@ -6,7 +6,9 @@ export class AbstractService {
     listenEvents: [],
   };
 
-  init(gameModel) {}
+  init(gameModel) {
+    this.gameModel = gameModel;
+  }
 
   setData(database) {}
 
@@ -22,5 +24,17 @@ export class AbstractService {
 
   get(request, onDefaultRequest) {
     return onDefaultRequest(request);
+  }
+
+  emit(...args) {
+    return this.gameModel.emit(...args);
+  }
+
+  on(...args) {
+    return this.gameModel.on(...args);
+  }
+
+  off(...args) {
+    return this.gameModel.off(...args);
   }
 }

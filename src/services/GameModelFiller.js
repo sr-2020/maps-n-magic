@@ -1,7 +1,8 @@
 import { Bot } from './Bot';
 
-export function fillGameModelWithBots(gameModel, spirits, locations) {
+export function fillGameModelWithBots(gameModel, locations) {
   const points = locations.map(locToSomePoint);
+  const spirits = gameModel.get('spirits');
   const speeds = [3, 5, 8];
   spirits.filter((s, i) => i < 6).forEach((spirit, i) => {
     const path = [];

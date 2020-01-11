@@ -13,10 +13,6 @@ export class UserService extends AbstractService {
     };
   }
 
-  init(gameModel) {
-    this.gameModel = gameModel;
-  }
-
   execute(action, onDefaultAction) {
     if (action.type === 'updateUserPosition') {
       return this._setUserPosition(action.pos);
@@ -26,6 +22,6 @@ export class UserService extends AbstractService {
 
   _setUserPosition(pos) {
     this.user.pos = pos;
-    this.gameModel.emit('userPositionUpdate', this.user);
+    this.emit('userPositionUpdate', this.user);
   }
 }

@@ -27,10 +27,6 @@ export class SpiritService extends AbstractService {
     // this.spirits = spirits || this._getLSSpirits() || [];
   }
 
-  init(gameModel) {
-    this.gameModel = gameModel;
-  }
-
   setData({ spirits } = {}) {
     this.spirits = spirits || [];
     this.maxSpiritId = R.reduce(R.max, 1, this.spirits.map(R.prop('id')));
@@ -119,7 +115,7 @@ export class SpiritService extends AbstractService {
     };
     this._updateSpiritFractionsList();
     this._updateSpiritAbilitiesList();
-    this.gameModel.emit('putSpirit', R.clone(this.spirits[index]));
+    this.emit('putSpirit', R.clone(this.spirits[index]));
     this._saveSpirits();
   }
 
@@ -172,7 +168,7 @@ export class SpiritService extends AbstractService {
     const newFractions = R.without([''], R.uniq(this.spirits.map(R.prop('fraction'))));
     if (this.fractions.length !== newFractions || R.symmetricDifference(newFractions, this.fractions).length > 0) {
       this.fractions = newFractions;
-      this.gameModel.emit('fractionChange', R.clone(this.fractions));
+      this.emit('fractionChange', R.clone(this.fractions));
     }
   }
 

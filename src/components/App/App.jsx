@@ -172,7 +172,7 @@ export class App extends Component {
     gameModel.init();
     gameModel.setData(database);
 
-    fillGameModelWithBots(gameModel, gameModel.get('spirits'), dataService.getLocations());
+    fillGameModelWithBots(gameModel, dataService.getLocations());
     this.userWatcher = new UserWatcher(soundService, dataService, gameModel);
     this.setState({
       dataService,
@@ -252,7 +252,7 @@ export class App extends Component {
         gameModel.init();
         gameModel.setData(database2);
         const soundService = new SoundService();
-        fillGameModelWithBots(gameModel, gameModel.get('spirits'), dataService.getLocations());
+        fillGameModelWithBots(gameModel, dataService.getLocations());
         this.userWatcher.dispose();
         this.userWatcher = new UserWatcher(soundService, dataService, gameModel);
         return {

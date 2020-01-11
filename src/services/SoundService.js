@@ -51,12 +51,12 @@ class SoundMappingService {
 const indexByName = R.indexBy(R.prop('name'));
 
 export class SoundService extends EventEmitter {
-  constructor({ sounds } = {}) {
+  constructor() {
     super();
     this.abortController = new AbortController();
     this.soundPlayer = new SoundPlayer();
     // this.sounds = sounds || this._getLSSounds() || [];
-    this.sounds = sounds || [];
+    this.sounds = [];
     this.soundMappingService = new SoundMappingService();
     this._getSoundList();
     this.pollInterval = setInterval(() => {

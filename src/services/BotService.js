@@ -19,15 +19,15 @@ export class BotService extends AbstractService {
     this.onModelTick = this.onModelTick.bind(this);
   }
 
-  init(gameModel) {
-    this.gameModel = gameModel;
-    this.gameModel.on('modelRunningChange', this.onModelRunningChange);
-    this.gameModel.on('modelTick', this.onModelTick);
+  init(...args) {
+    super.init(...args);
+    this.on('modelRunningChange', this.onModelRunningChange);
+    this.on('modelTick', this.onModelTick);
   }
 
   dispose() {
-    this.gameModel.off('modelRunningChange', this.onModelRunningChange);
-    this.gameModel.off('modelTick', this.onModelTick);
+    this.off('modelRunningChange', this.onModelRunningChange);
+    this.off('modelTick', this.onModelTick);
   }
 
   onModelRunningChange(isModelRunning) {
@@ -75,7 +75,7 @@ export class BotService extends AbstractService {
   _moveBots({ time }) {
     this.activeBots = this.activeBots.filter((bot) => bot.hasNext());
     this.activeBots.forEach((bot) => bot.next(time));
-    this.gameModel.emit('botUpdate', this.activeBots);
+    this.emit('botUpdate', this.activeBots);
 
     if (R.isEmpty(this.activeBots)) {
       // this.runBot('bot1');

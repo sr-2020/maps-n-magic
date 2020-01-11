@@ -12,10 +12,6 @@ export class TickerService extends AbstractService {
     this.mainCycleAbortController = null;
   }
 
-  init(gameModel) {
-    this.gameModel = gameModel;
-  }
-
   execute(action, onDefaultAction) {
     if (action.type === 'runModel') {
       return this._start();
@@ -45,7 +41,7 @@ export class TickerService extends AbstractService {
   _stop() {
     if (this.mainCycleAbortController) {
       this.mainCycleAbortController.abort();
-      this.gameModel.emit('modelRunningChange', false);
+      this.emit('modelRunningChange', false);
     }
   }
 
@@ -67,7 +63,7 @@ export class TickerService extends AbstractService {
       // console.log(time - start);
       // this.activeBots = filterBots(this.activeBots);
 
-      this.gameModel.emit('modelTick', {
+      this.emit('modelTick', {
         time,
       });
       // this.dispatch({
@@ -104,7 +100,7 @@ export class TickerService extends AbstractService {
       // }
     }.bind(this));
 
-    this.gameModel.emit('modelRunningChange', true);
+    this.emit('modelRunningChange', true);
     // return animation;
   }
 }
