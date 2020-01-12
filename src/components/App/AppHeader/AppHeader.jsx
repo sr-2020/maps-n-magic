@@ -20,19 +20,19 @@ import { MovementSimulatorSwitch } from '../MovementSimulatorSwitch';
 
 // import { AppHeaderPropTypes } from '../../types';
 
-const oldNavLinks = [{
-  to: '/mapEditor',
-  tKey: 'mapEditor',
-}, {
-  to: '/beacons',
-  tKey: 'beacons',
-}, {
-  to: '/soundManager',
-  tKey: 'soundManager',
-}, {
-  to: '/demo',
-  tKey: 'demo',
-}];
+// const oldNavLinks = [{
+//   to: '/mapEditor',
+//   tKey: 'mapEditor',
+// }, {
+//   to: '/beacons',
+//   tKey: 'beacons',
+// }, {
+//   to: '/soundManager',
+//   tKey: 'soundManager',
+// }, {
+//   to: '/demo',
+//   tKey: 'demo',
+// }];
 
 
 const navLinks = [{
@@ -96,10 +96,9 @@ export class AppHeader extends Component {
                   </Nav.Item>
                 ))
               }
-              <Dropdown as="li">
+              {/* <Dropdown as="li">
                 <Dropdown.Toggle as="a" className="px-3 py-2 text-xl" href="#">{t('prevPrototypes')}</Dropdown.Toggle>
                 <Dropdown.Menu>
-                  {/* as="ul" */}
                   {
                     oldNavLinks.map((navLink) => (
                       <Nav.Item as="li" key={navLink.to}>
@@ -108,7 +107,7 @@ export class AppHeader extends Component {
                     ))
                   }
                 </Dropdown.Menu>
-              </Dropdown>
+              </Dropdown> */}
             </Nav>
           </Navbar.Collapse>
 

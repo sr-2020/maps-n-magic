@@ -12,17 +12,9 @@ import {
   BrowserRouter as Router, Switch, Route, Redirect, NavLink,
 } from 'react-router-dom';
 
-import { AudioService } from '../../services/audioService';
 import { SoundService } from '../../services/SoundService';
 import { DataService } from '../../services/DataService';
 
-// import getBeacons from '../../utils/gpxExperiment';
-
-
-import { Prototype1 } from '../../outdatedComponents/Prototype1';
-import { MapEditor } from '../../outdatedComponents/MapEditor';
-import { MusicEditor } from '../../outdatedComponents/MusicEditor';
-import { Beacons } from '../../outdatedComponents/Beacons';
 import { Map2 } from '../Map2';
 import { ErrorBoundry } from '../ErrorBoundry';
 import { SoundManager } from '../SoundManager';
@@ -37,8 +29,6 @@ import { SpiritEditor } from '../SpiritEditor';
 import { AppPropTypes } from '../../types';
 
 import { GameModel } from '../../services/GameModel';
-
-import { ModelRunControl } from '../ModelRunControl';
 
 import { fillGameModelWithBots } from '../../services/GameModelFiller';
 
@@ -58,41 +48,14 @@ const hardDispose = (obj) => Object.keys(obj).forEach((key) => { delete obj[key]
 
 const STORAGE_KEY = 'AR_POC';
 
-const defaultImgUrl = '/images/backgroundImage.jpg';
-
-
-let initialState;
-// let audioData = [];
 let database = localStorage.getItem(STORAGE_KEY);
 if (database) {
   database = JSON.parse(database);
-  initialState = database.appState;
-  // audioData = database.audioData;
-  // console.log('audioData', audioData);
-  // initialState.beacons = getBeacons(100, 100, initialState.svgWidth - 200, initialState.svgHeight - 200).map(beacon => ({
-  //   ...beacon,
-  //   props: {
-  //     sound: 'none'
-  //   }
-  // }));
 } else {
   database = {};
-  initialState = {
-    svgWidth: 800,
-    svgHeight: 581,
-    imagePositionX: 50,
-    imagePositionY: 68,
-    imageOpacity: 80,
-    imageScale: 800,
-    beacons: [],
-    mainPolygon: [[324, 80], [128, 370], [543, 560], [610, 454], [459, 414], [458, 302], [428, 301], [423, 135], [348, 79], [324, 80]],
-    imageUrl: defaultImgUrl,
-  };
 }
 
 export class App extends Component {
-  audioService = new AudioService();
-
   audioContextWrapper = new AudioContextWrapper();
 
   soundPlayer = new SoundPlayer(this.audioContextWrapper);
@@ -103,7 +66,6 @@ export class App extends Component {
     super(props);
     this.state = {
       simulateGeoDataStream: false,
-      ...initialState,
       curPosition: null,
       waitingForGeolocation: false,
       initialized: false,
@@ -112,11 +74,7 @@ export class App extends Component {
     switchMovementMode
     jumpToUserCoords
     onUploadFileSelected
-    setBeacons
-    setMainPolygon
-    setImageUrl
     downloadDatabaseAsFile
-    onStateChange
     onGetPosition
     onSaveDataInLs
     `.split('\n').map(R.trim).filter(R.pipe(R.isEmpty, R.not));
@@ -161,7 +119,7 @@ export class App extends Component {
   }
 
   onGetPosition(position) {
-    console.log(position.coords.latitude, position.coords.longitude);
+    // console.log(position.coords.latitude, position.coords.longitude);
     // eslint-disable-next-line react/destructuring-assignment
     if (this.state.simulateGeoDataStream) {
       return;
@@ -181,7 +139,6 @@ export class App extends Component {
       // artificial: true,
     };
 
-    // this.map._handleGeolocationResponse(artificialPos);
     // eslint-disable-next-line react/destructuring-assignment
     this.state.gameModel.execute({
       type: 'updateUserPosition',
@@ -189,20 +146,11 @@ export class App extends Component {
     });
   }
 
-  onStateChange(prop, toType) {
-    return (e) => {
-      // console.log('prop');
-      this.setState({
-        [prop]: toType(e.target.value),
-      });
-    };
-  }
-
   onUploadFileSelected(evt) {
     readJsonFile(evt).then((database2) => {
       // console.log(database2.appState);
       const {
-        beacons, locations, spirits,
+        beacons, locations,
       } = database2;
       this.setState((state) => {
         state.soundService.dispose();
@@ -228,51 +176,12 @@ export class App extends Component {
           gameModel,
         };
       });
-      // this.setState(database2.appState);
     });
   }
-
-  setBeacons(beacons) {
-    // console.log('prop');
-    this.setState({
-      beacons,
-    });
-  }
-
-  setImageUrl(imageUrl) {
-    // console.log('prop');
-    this.setState({
-      imageUrl,
-    });
-  }
-
-  setMainPolygon(mainPolygon) {
-    // console.log('prop');
-    this.setState({
-      mainPolygon,
-    });
-  }
-
-  toDefaultImageUrl = () => this.setImageUrl(defaultImgUrl);
 
   prepareDataForJson() {
-    // console.log('sdfs');
-    const data = this.audioService.toJson();
     const { dataService, gameModel } = this.state;
-    // console.log()
-    this.audioService.fromJson(data);
     return ({
-      appState: R.pick([
-        'svgWidth',
-        'svgHeight',
-        'imagePositionX',
-        'imagePositionY',
-        'imageOpacity',
-        'imageScale',
-        'beacons',
-        'mainPolygon',
-        'imageUrl'], this.state),
-      audioData: data,
       beacons: dataService.getBeacons(),
       locations: dataService.getLocations(),
       ...gameModel.getData(),
@@ -283,16 +192,6 @@ export class App extends Component {
   downloadDatabaseAsFile() {
     json2File(this.prepareDataForJson(), makeFileName('SR_acoustic_poc', 'json', new Date()));
   }
-
-  // eslint-disable-next-line class-methods-use-this
-  // uploadDatabaseFile(evt) {
-  //   const input = evt.target.querySelector('input');
-  //   if (input) {
-  //     input.value = '';
-  //     input.click();
-  //   }
-  // }
-
 
   switchMovementMode(e) {
     e.stopPropagation();
@@ -324,13 +223,6 @@ export class App extends Component {
       return;
     }
 
-    // setTimeout(() => {
-    //   this.setState({
-    //     curPosition: [52.2863655, 104.2921339],
-    //     waitingForGeolocation: false,
-    //   });
-    // }, 3000);
-
     const success = (position) => {
       const { latitude } = position.coords;
       const { longitude } = position.coords;
@@ -359,7 +251,6 @@ export class App extends Component {
     }
 
     const {
-      imagePositionX, imagePositionY, imageOpacity, imageScale, svgWidth, svgHeight, beacons, mainPolygon, imageUrl,
       dataService, soundService, simulateGeoDataStream, curPosition, waitingForGeolocation, gameModel,
     } = this.state;
 
@@ -386,48 +277,6 @@ export class App extends Component {
 
                 <main className="flex-1-1-auto h-full">
                   <Switch>
-                    <Route path="/mapEditor">
-                      <MapEditor
-                        imagePositionX={imagePositionX}
-                        imagePositionY={imagePositionY}
-                        imageOpacity={imageOpacity}
-                        imageScale={imageScale}
-                        svgWidth={svgWidth}
-                        svgHeight={svgHeight}
-                        onPropChange={this.onStateChange}
-                        mainPolygon={mainPolygon}
-                        imageUrl={imageUrl}
-                        setImageUrl={this.setImageUrl}
-                        toDefaultImageUrl={this.toDefaultImageUrl}
-                      />
-                    </Route>
-                    <Route path="/beacons">
-                      <Beacons
-                        imagePositionX={imagePositionX}
-                        imagePositionY={imagePositionY}
-                        imageOpacity={imageOpacity}
-                        imageScale={imageScale}
-                        svgWidth={svgWidth}
-                        svgHeight={svgHeight}
-                        beacons={beacons}
-                        setBeacons={this.setBeacons}
-                        mainPolygon={mainPolygon}
-                        setMainPolygon={this.setMainPolygon}
-                        audioService={this.audioService}
-                        imageUrl={imageUrl}
-                      />
-                    </Route>
-                    <Route path="/soundManager">
-                      <MusicEditor audioService={this.audioService} />
-                    </Route>
-                    <Route path="/demo">
-                      <Prototype1
-                        svgWidth={svgWidth}
-                        svgHeight={svgHeight}
-                        beacons={beacons}
-                        audioService={this.audioService}
-                      />
-                    </Route>
                     <Route path="/map2">
                       <Map2
                         dataService={dataService}
@@ -449,7 +298,6 @@ export class App extends Component {
                     </Route>
 
                     <Route render={() => <Redirect to="/soundManager2" />} />
-                    {/* <Route render={() => <Redirect to="/map2" />} /> */}
                   </Switch>
                   <GeoDataStreamSimulator
                     simulateGeoDataStream={simulateGeoDataStream}
