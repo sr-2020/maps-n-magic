@@ -12,17 +12,6 @@ import {
   BrowserRouter as Router, Switch, Route, Redirect, NavLink,
 } from 'react-router-dom';
 
-import Form from 'react-bootstrap/Form';
-import Navbar from 'react-bootstrap/Navbar';
-import Nav from 'react-bootstrap/Nav';
-import NavDropdown from 'react-bootstrap/NavDropdown';
-import Dropdown from 'react-bootstrap/Dropdown';
-
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import {
-  faSpinner,
-} from '@fortawesome/free-solid-svg-icons';
-
 import { AudioService } from '../../services/audioService';
 import { SoundService } from '../../services/SoundService';
 import { DataService } from '../../services/DataService';
@@ -48,7 +37,6 @@ import { SpiritEditor } from '../SpiritEditor';
 import { AppPropTypes } from '../../types';
 
 import { GameModel } from '../../services/GameModel';
-import { Bot } from '../../services/Bot';
 
 import { ModelRunControl } from '../ModelRunControl';
 
@@ -62,6 +50,8 @@ import { GeoDataStreamSimulator } from '../GeoDataStreamSimulator';
 
 import { SoundMapper } from '../SoundMapper';
 
+import { AppHeader } from './AppHeader';
+
 // console.log(getBeacons(100, 100, 600, 500));
 
 const hardDispose = (obj) => Object.keys(obj).forEach((key) => { delete obj[key]; });
@@ -69,36 +59,6 @@ const hardDispose = (obj) => Object.keys(obj).forEach((key) => { delete obj[key]
 const STORAGE_KEY = 'AR_POC';
 
 const defaultImgUrl = '/images/backgroundImage.jpg';
-
-
-const oldNavLinks = [{
-  to: '/mapEditor',
-  tKey: 'mapEditor',
-}, {
-  to: '/beacons',
-  tKey: 'beacons',
-}, {
-  to: '/soundManager',
-  tKey: 'soundManager',
-}, {
-  to: '/demo',
-  tKey: 'demo',
-}];
-
-
-const navLinks = [{
-  to: '/map2',
-  tKey: 'map2',
-}, {
-  to: '/spiritEditor',
-  tKey: 'spiritEditor',
-}, {
-  to: '/soundManager2',
-  tKey: 'soundManager2',
-}, {
-  to: '/soundMapping',
-  tKey: 'soundMapping',
-}];
 
 
 let initialState;
@@ -151,12 +111,11 @@ export class App extends Component {
     const funcs = `
     switchMovementMode
     jumpToUserCoords
-    onFileSelected
+    onUploadFileSelected
     setBeacons
     setMainPolygon
     setImageUrl
     downloadDatabaseAsFile
-    uploadDatabaseFile
     onStateChange
     onGetPosition
     onSaveDataInLs
@@ -167,7 +126,7 @@ export class App extends Component {
 
   componentDidMount() {
     const {
-      beacons, locations, spirits,
+      beacons, locations,
     } = database;
     const dataService = new DataService({
       beacons,
@@ -203,6 +162,7 @@ export class App extends Component {
 
   onGetPosition(position) {
     console.log(position.coords.latitude, position.coords.longitude);
+    // eslint-disable-next-line react/destructuring-assignment
     if (this.state.simulateGeoDataStream) {
       return;
     }
@@ -222,6 +182,7 @@ export class App extends Component {
     };
 
     // this.map._handleGeolocationResponse(artificialPos);
+    // eslint-disable-next-line react/destructuring-assignment
     this.state.gameModel.execute({
       type: 'updateUserPosition',
       pos: artificialPos,
@@ -237,7 +198,7 @@ export class App extends Component {
     };
   }
 
-  onFileSelected(evt) {
+  onUploadFileSelected(evt) {
     readJsonFile(evt).then((database2) => {
       // console.log(database2.appState);
       const {
@@ -292,102 +253,6 @@ export class App extends Component {
     });
   }
 
-  getDownloadButton() {
-    const {
-      t,
-    } = this.props;
-    return (
-      <Dropdown.Item
-        as="button"
-        type="button"
-        data-original-title=""
-        onClick={this.downloadDatabaseAsFile}
-        title={t('downloadDatabase')}
-        className="py-3 text-xl"
-      >
-        {t('downloadDatabase')}
-      </Dropdown.Item>
-    );
-  }
-
-  getUploadButton() {
-    const {
-      t,
-    } = this.props;
-    return (
-      <Dropdown.Item
-        as="button"
-        type="button"
-        data-original-title=""
-        title={t('uploadDatabase')}
-        onClick={this.uploadDatabaseFile}
-        className="py-3 text-xl"
-      >
-        <input
-          type="file"
-          className="display-none"
-          tabIndex="-1"
-          onChange={this.onFileSelected}
-        />
-        {t('uploadDatabase')}
-      </Dropdown.Item>
-    );
-  }
-
-  getJumpToUserCoordsSwitch() {
-    const {
-      curPosition, waitingForGeolocation,
-    } = this.state;
-
-    const {
-      t,
-    } = this.props;
-    return (
-      <Dropdown.Item as="button" onClick={this.jumpToUserCoords}>
-        <Form.Check
-          type="switch"
-          id="jumpToUserCoordsSwitch"
-          label={t('jumpToUserCoords')}
-          checked={curPosition !== null}
-          disabled={waitingForGeolocation}
-          className="py-3 text-xl"
-          style={{ display: 'inline-block' }}
-        >
-        </Form.Check>
-        {
-          waitingForGeolocation && (
-            <FontAwesomeIcon
-              className="ml-2 text-2xl text-gray-700"
-              icon={faSpinner}
-              spin
-            />
-          )
-        }
-      </Dropdown.Item>
-    );
-  }
-
-  getMovementSimulatorSwitch() {
-    const {
-      simulateGeoDataStream,
-    } = this.state;
-
-    const {
-      t,
-    } = this.props;
-    return (
-      <Dropdown.Item as="button" onClick={this.switchMovementMode}>
-        <Form.Check
-          type="switch"
-          id="movementSimulatorSwitch"
-          label={t('simulateMovement')}
-          checked={simulateGeoDataStream}
-          className="py-3 text-xl"
-        />
-      </Dropdown.Item>
-    );
-  }
-
   toDefaultImageUrl = () => this.setImageUrl(defaultImgUrl);
 
   prepareDataForJson() {
@@ -420,13 +285,13 @@ export class App extends Component {
   }
 
   // eslint-disable-next-line class-methods-use-this
-  uploadDatabaseFile(evt) {
-    const input = evt.target.querySelector('input');
-    if (input) {
-      input.value = '';
-      input.click();
-    }
-  }
+  // uploadDatabaseFile(evt) {
+  //   const input = evt.target.querySelector('input');
+  //   if (input) {
+  //     input.value = '';
+  //     input.click();
+  //   }
+  // }
 
 
   switchMovementMode(e) {
@@ -508,60 +373,18 @@ export class App extends Component {
           <DocumentTitle title={t('appTitle')}>
             <Router>
               <div className="App flex flex-col h-screen">
-                <header className="flex-0-0-auto">
-                  <Navbar expand="md" className="view-switch pb-0">
-
-                    <Navbar.Toggle aria-controls="basic-navbar-nav" />
-                    <Navbar.Collapse id="basic-navbar-nav">
-                      <Nav as="ul">
-                        {
-                          navLinks.map((navLink) => (
-                            <Nav.Item as="li" key={navLink.to}>
-                              <NavLink className="px-3 py-2 text-xl" to={navLink.to}>{t(navLink.tKey)}</NavLink>
-                            </Nav.Item>
-                          ))
-                        }
-                        <Dropdown as="li">
-                          <Dropdown.Toggle as="a" className="px-3 py-2 text-xl" href="#">{t('prevPrototypes')}</Dropdown.Toggle>
-                          <Dropdown.Menu>
-                            {/* as="ul" */}
-                            {
-                              oldNavLinks.map((navLink) => (
-                                <Nav.Item as="li" key={navLink.to}>
-                                  <NavLink className="px-3 py-2 text-xl" to={navLink.to}>{t(navLink.tKey)}</NavLink>
-                                </Nav.Item>
-                              ))
-                            }
-                          </Dropdown.Menu>
-                        </Dropdown>
-                      </Nav>
-                    </Navbar.Collapse>
-
-                    <ModelRunControl gameModel={gameModel} />
-                    <Dropdown as={Nav.Item} alignRight>
-                      <Dropdown.Toggle as={Nav.Link} className="text-xl">{t('actionMenu')}</Dropdown.Toggle>
-                      <Dropdown.Menu style={{ zIndex: 2000 }}>
-                        {
-                          this.getUploadButton()
-                        }
-                        {
-                          this.getDownloadButton()
-                        }
-                        <Dropdown.Divider />
-                        {
-                          this.getJumpToUserCoordsSwitch()
-                        }
-
-                        {
-                          this.getMovementSimulatorSwitch()
-                        }
-                      </Dropdown.Menu>
-                    </Dropdown>
-                  </Navbar>
-                </header>
+                <AppHeader
+                  gameModel={gameModel}
+                  waitingForGeolocation={waitingForGeolocation}
+                  curPosition={curPosition}
+                  simulateGeoDataStream={simulateGeoDataStream}
+                  onUploadFileSelected={this.onUploadFileSelected}
+                  downloadDatabaseAsFile={this.downloadDatabaseAsFile}
+                  jumpToUserCoords={this.jumpToUserCoords}
+                  switchMovementMode={this.switchMovementMode}
+                />
 
                 <main className="flex-1-1-auto h-full">
-
                   <Switch>
                     <Route path="/mapEditor">
                       <MapEditor
