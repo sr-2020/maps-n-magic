@@ -3,11 +3,10 @@ import * as R from 'ramda';
 import EventEmitter from 'events';
 
 import { UserService } from './UserService';
-
 import { BotService } from './BotService';
-
 import { TickerService } from './TickerService';
 import { SpiritService } from './SpiritService';
+import { SoundService2 } from './SoundService2';
 
 import { GameModelVerificator } from './GameModelVerficator';
 
@@ -28,7 +27,7 @@ export class GameModel extends EventEmitter {
   }
 
   init() {
-    const services = [UserService, BotService, TickerService, SpiritService];
+    const services = [UserService, BotService, TickerService, SpiritService, SoundService2];
     this.services = services.map((ServiceClass) => {
       const service = new ServiceClass();
       service.init(this);

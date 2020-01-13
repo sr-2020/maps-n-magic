@@ -42,7 +42,7 @@ import { SoundMapper } from '../SoundMapper';
 
 import { AppHeader } from './AppHeader';
 
-// console.log(getBeacons(100, 100, 600, 500));
+import { SoundWatcher } from '../SoundWatcher';
 
 const hardDispose = (obj) => Object.keys(obj).forEach((key) => { delete obj[key]; });
 
@@ -90,7 +90,7 @@ export class App extends Component {
       beacons,
       locations,
     });
-    const soundService = new SoundService(this.audioContextWrapper, this.soundPlayer);
+    const soundService = new SoundService(this.soundPlayer);
     const gameModel = new GameModel();
     gameModel.init();
     gameModel.setData(database);
@@ -166,7 +166,7 @@ export class App extends Component {
         const gameModel = new GameModel();
         gameModel.init();
         gameModel.setData(database2);
-        const soundService = new SoundService(this.audioContextWrapper, this.soundPlayer);
+        const soundService = new SoundService(this.soundPlayer);
         fillGameModelWithBots(gameModel, dataService.getLocations());
         this.userWatcher.dispose();
         this.userWatcher = new UserWatcher(soundService, dataService, gameModel);
@@ -304,6 +304,11 @@ export class App extends Component {
                     gameModel={gameModel}
                     curPosition={curPosition}
                     center={mapConfig.center}
+                  />
+                  <SoundWatcher
+                    soundService={soundService}
+                    gameModel={gameModel}
+                    context={this.audioContextWrapper}
                   />
                 </main>
               </div>

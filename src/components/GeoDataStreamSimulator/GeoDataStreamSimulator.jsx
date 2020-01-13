@@ -91,8 +91,6 @@ export class GeoDataStreamSimulator extends Component {
   }
 
   render() {
-    return (
-      <div className="GeoDataStreamSimulator hidden" />
-    );
+    return null;
   }
 }

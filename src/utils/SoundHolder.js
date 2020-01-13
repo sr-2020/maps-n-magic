@@ -11,7 +11,8 @@ export class SoundHolder {
   }
 
   onSoundStatusChange({ name, status }) {
-    if (name === this.selectedSoundName && this.soundService.canPlaySound(name)) {
+    // if (name === this.selectedSoundName && this.soundService.canPlaySound(name)) {
+    if (name === this.selectedSoundName) {
       this.soundService.playSound(name, true);
     }
   }
@@ -32,7 +33,7 @@ export class SoundHolder {
     // console.log('selectSound');
     // const { soundService } = this.props;
     const sound = this.soundService.getSound(soundName);
-    const canPlay = this.soundService.canPlaySound(soundName);
+    // const canPlay = this.soundService.canPlaySound(soundName);
     const isPlayingSound = this.soundService.isPlayingSound(soundName);
     // this.setState((state) => {
     // const { selectedSoundName } = state;
@@ -40,11 +41,11 @@ export class SoundHolder {
     } else { // stop existing sound and play other sound
       this.soundService.playSound(this.selectedSoundName, false);
     }
-    if (canPlay) {
-      this.soundService.playSound(soundName, !isPlayingSound);
-    } else {
-      this.soundService.loadSound(soundName);
-    }
+    // if (canPlay) {
+    this.soundService.playSound(soundName, !isPlayingSound);
+    // } else {
+    //   this.soundService.loadSound(soundName);
+    // }
     this.selectedSoundName = soundName;
     // return {
     //   selectedSoundName: soundName,
