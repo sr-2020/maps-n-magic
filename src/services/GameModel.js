@@ -2,12 +2,6 @@
 import * as R from 'ramda';
 import EventEmitter from 'events';
 
-import { UserService } from './UserService';
-import { BotService } from './BotService';
-import { TickerService } from './TickerService';
-import { SpiritService } from './SpiritService';
-import { SoundService2 } from './SoundService2';
-
 import { GameModelVerificator } from './GameModelVerficator';
 
 function stringToType(entity) {
@@ -26,8 +20,7 @@ export class GameModel extends EventEmitter {
     this.onDefaultRequest = this.onDefaultRequest.bind(this);
   }
 
-  init() {
-    const services = [UserService, BotService, TickerService, SpiritService, SoundService2];
+  init(services) {
     this.services = services.map((ServiceClass) => {
       const service = new ServiceClass();
       service.init(this);

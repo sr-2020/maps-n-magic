@@ -2,7 +2,7 @@
 // eslint-disable-next-line max-classes-per-file
 import * as R from 'ramda';
 
-class SoundPlayer {
+export class SoundPlayer {
   context = null;
 
   soundSources = {};
@@ -50,5 +50,3 @@ class SoundPlayer {
     }
   }
 }
-
-export { SoundPlayer };

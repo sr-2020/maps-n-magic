@@ -30,6 +30,8 @@ import { AppPropTypes } from '../../types';
 
 import { GameModel } from '../../services/GameModel';
 
+import { services } from '../../services/GameModelServices';
+
 import { fillGameModelWithBots } from '../../services/GameModelFiller';
 
 import { UserWatcher } from './UserWatcher';
@@ -92,7 +94,7 @@ export class App extends Component {
     });
     const soundService = new SoundService(this.soundPlayer);
     const gameModel = new GameModel();
-    gameModel.init();
+    gameModel.init(services);
     gameModel.setData(database);
 
     fillGameModelWithBots(gameModel, dataService.getLocations());
@@ -164,7 +166,7 @@ export class App extends Component {
           locations,
         });
         const gameModel = new GameModel();
-        gameModel.init();
+        gameModel.init(services);
         gameModel.setData(database2);
         const soundService = new SoundService(this.soundPlayer);
         fillGameModelWithBots(gameModel, dataService.getLocations());
