@@ -46,6 +46,8 @@ import { AppHeader } from './AppHeader';
 
 import { SoundWatcher } from '../SoundWatcher';
 
+import { SoundStage } from './SoundStage';
+
 const hardDispose = (obj) => Object.keys(obj).forEach((key) => { delete obj[key]; });
 
 const STORAGE_KEY = 'AR_POC';
@@ -61,6 +63,8 @@ export class App extends Component {
   audioContextWrapper = new AudioContextWrapper();
 
   soundPlayer = new SoundPlayer(this.audioContextWrapper);
+
+  soundStage = new SoundStage(this.audioContextWrapper);
 
   static propTypes = AppPropTypes;
 
@@ -293,7 +297,7 @@ export class App extends Component {
                       <SpiritEditor spiritService={gameModel} />
                     </Route>
                     <Route path="/soundManager2">
-                      <SoundManager soundService={soundService} />
+                      <SoundManager soundService={soundService} gameModel={gameModel} />
                     </Route>
                     <Route path="/soundMapping">
                       <SoundMapper soundService={soundService} />

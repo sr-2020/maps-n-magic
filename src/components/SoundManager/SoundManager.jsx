@@ -11,6 +11,8 @@ import classNames from 'classnames';
 import { formatBytes } from '../../utils/miscUtils';
 import { SoundHolder } from '../../utils/SoundHolder';
 import { SoundManagerPropTypes } from '../../types';
+import { SoundStageEcho } from './SoundStageEcho';
+import { SoundStage } from '../App/SoundStage';
 
 export class SoundManager extends Component {
   static propTypes = SoundManagerPropTypes;
@@ -113,6 +115,11 @@ export class SoundManager extends Component {
     this.setState({
       selectedSoundName: soundName,
     });
+    const { gameModel } = this.props;
+    gameModel.execute({
+      type: 'setBackgroundSound',
+      name: soundName,
+    });
   }
 
   // eslint-disable-next-line max-lines-per-function
@@ -128,7 +135,7 @@ export class SoundManager extends Component {
       selectedSound = sounds.find((sound) => sound.name === selectedSoundName);
     }
 
-    // const { t } = this.props;
+    const { gameModel } = this.props;
 
     // if (!something) {
     //   return <div> SoundManager stub </div>;
@@ -181,6 +188,7 @@ export class SoundManager extends Component {
             </div>
           )
         } */}
+        <SoundStageEcho gameModel={gameModel} />
       </div>
     );
   }
