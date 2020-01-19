@@ -103,6 +103,8 @@ export class App extends Component {
 
     fillGameModelWithBots(gameModel, dataService.getLocations());
     this.userWatcher = new UserWatcher(soundService, dataService, gameModel);
+
+    this.soundStage.subscribeOnModel(gameModel);
     this.setState({
       dataService,
       soundService,
@@ -117,6 +119,7 @@ export class App extends Component {
     clearInterval(this.saveDataInLsId);
     // eslint-disable-next-line no-undef
     clearWatch(this.watchGeolocationId);
+    this.soundStage.dispose();
   }
 
   onSaveDataInLs() {
@@ -174,6 +177,7 @@ export class App extends Component {
         gameModel.setData(database2);
         const soundService = new SoundService(this.soundPlayer);
         fillGameModelWithBots(gameModel, dataService.getLocations());
+        this.soundStage.subscribeOnModel(gameModel);
         this.userWatcher.dispose();
         this.userWatcher = new UserWatcher(soundService, dataService, gameModel);
         return {

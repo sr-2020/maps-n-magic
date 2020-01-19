@@ -43,6 +43,12 @@ export const translations = {
 
       maxHitPoints: 'Максимум HP',
 
+      // SoundManager
+      setToBackground: 'Поставить на фон',
+      isBackground: 'Текущий фон',
+      addToRotation: 'Добавить в ротацию',
+      inRotation: 'В ротацию',
+
       // Map2
       baseContourLayer: 'Контуры базы',
       beaconsLayer: 'Маяки',

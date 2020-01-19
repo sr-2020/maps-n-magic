@@ -2,17 +2,11 @@
 import React, { Component } from 'react';
 import './SoundManager.css';
 
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import {
-  faPlayCircle, faMusic, faStopCircle, faSpinner,
-} from '@fortawesome/free-solid-svg-icons';
-import classNames from 'classnames';
-
-import { formatBytes } from '../../utils/miscUtils';
-import { SoundHolder } from '../../utils/SoundHolder';
+// import { SoundHolder } from '../../utils/SoundHolder';
 import { SoundManagerPropTypes } from '../../types';
 import { SoundStageEcho } from './SoundStageEcho';
-import { SoundStage } from '../App/SoundStage';
+
+import { SoundRow } from './SoundRow';
 
 export class SoundManager extends Component {
   static propTypes = SoundManagerPropTypes;
@@ -21,18 +15,21 @@ export class SoundManager extends Component {
     super(props);
     console.log('SoundManager constructing');
     this.state = {
-      // sounds,
+      sounds: [],
+      // soundStage: [],
       selectedSoundName: null,
     };
     this.onSoundUpdate = this.onSoundUpdate.bind(this);
     this.onSoundStatusChange = this.onSoundStatusChange.bind(this);
-    this.getActiveIcon = this.getActiveIcon.bind(this);
+    // this.getActiveIcon = this.getActiveIcon.bind(this);
+    this.selectBackgroundSound = this.selectBackgroundSound.bind(this);
+    this.selectRotationSound = this.selectRotationSound.bind(this);
   }
 
   componentDidMount = () => {
     const { soundService } = this.props;
     const sounds = soundService.getSounds();
-    this.soundHolder = new SoundHolder(soundService);
+    // this.soundHolder = new SoundHolder(soundService);
     this.setState({
       sounds,
       initialized: true,
@@ -51,11 +48,11 @@ export class SoundManager extends Component {
 
   onUpdate(prevProps) {
     this.unsubscribe(prevProps.soundService);
-    this.soundHolder.dispose();
+    // this.soundHolder.dispose();
 
     const { soundService } = this.props;
     const sounds = soundService.getSounds();
-    this.soundHolder = new SoundHolder(soundService);
+    // this.soundHolder = new SoundHolder(soundService);
     this.setState({
       sounds,
       selectedSoundName: null,
@@ -66,7 +63,7 @@ export class SoundManager extends Component {
   componentWillUnmount = () => {
     console.log('SoundManager will unmount');
     this.unsubscribe(this.props.soundService);
-    this.soundHolder.dispose();
+    // this.soundHolder.dispose();
   }
 
   onSoundUpdate() {
@@ -91,14 +88,14 @@ export class SoundManager extends Component {
     }));
   }
 
-  getActiveIcon(sound) {
-    if (sound.status === 'loading') {
-      return faSpinner;
-    }
-    const { soundService } = this.props;
-    const isPlayingSound = soundService.isPlayingSound(sound.name);
-    return isPlayingSound ? faStopCircle : faPlayCircle;
-  }
+  // getActiveIcon(sound) {
+  //   if (sound.status === 'loading') {
+  //     return faSpinner;
+  //   }
+  //   const { soundService } = this.props;
+  //   const isPlayingSound = soundService.isPlayingSound(sound.name);
+  //   return isPlayingSound ? faStopCircle : faPlayCircle;
+  // }
 
   subscribe(soundService) {
     soundService.on('soundsUpdate', this.onSoundUpdate);
@@ -110,15 +107,33 @@ export class SoundManager extends Component {
     soundService.off('soundStatusChange', this.onSoundStatusChange);
   }
 
-  selectSound(soundName) {
-    this.soundHolder.onSelectSound(soundName);
-    this.setState({
-      selectedSoundName: soundName,
-    });
+  selectBackgroundSound(soundName) {
+    // this.soundHolder.onSelectSound(soundName);
+    // this.setState({
+    //   selectedSoundName: soundName,
+    // });
     const { gameModel } = this.props;
+    const soundStage = gameModel.get('soundStage');
     gameModel.execute({
       type: 'setBackgroundSound',
-      name: soundName,
+      name: soundStage.backgroundSound === soundName ? null : soundName,
+    });
+  }
+
+  selectRotationSound(soundName) {
+    // this.soundHolder.onSelectSound(soundName);
+    // this.setState({
+    //   selectedSoundName: soundName,
+    // });
+    const { gameModel } = this.props;
+    const soundStage = gameModel.get('soundStage');
+
+    const isInRotation = soundStage.rotationSounds.includes(soundName);
+    gameModel.execute({
+      type: 'rotationSoundsChange',
+      added: isInRotation ? [] : [soundName],
+      removed: isInRotation ? [soundName] : [],
+      // name: soundStage.backgroundSound === soundName ? null : soundName,
     });
   }
 
@@ -137,45 +152,18 @@ export class SoundManager extends Component {
 
     const { gameModel } = this.props;
 
-    // if (!something) {
-    //   return <div> SoundManager stub </div>;
-    //   // return null;
-    // }
-    // class
     return (
       <div className="SoundManager">
         <div className="px-3">
           {
             sounds.map((sound) => (
-              <button
-                type="button"
+              <SoundRow
                 key={sound.name}
-                className={
-                  classNames('rounded my-1 h-12 flex music-control-button hover:bg-gray-200 w-full flex items-center', {
-                    selected: selectedSoundName === sound.name,
-                  })
-                }
-
-                onClick={() => this.selectSound(sound.name)}
-              >
-                <div className="w-10 h-10 ml-1 bg-gray-300 rounded flex icon-container">
-                  <FontAwesomeIcon className="text-gray-600 music-icon m-auto text-2xl" icon={faMusic} />
-                  <FontAwesomeIcon
-                    className="text-gray-600 play-icon m-auto text-2xl text-white"
-                    icon={this.getActiveIcon(sound)}
-                    spin={sound.status === 'loading'}
-                  />
-                </div>
-                <div className="text-left">
-                  <div className="leading-none">
-                    <span className="ml-2 pt-1 font-medium text-sm">{sound.name}</span>
-                  </div>
-                  <div>
-                    <span className="ml-2 pt-1 text-sm text-gray-600">{formatBytes(sound.size)}</span>
-                    <span className="ml-2 pt-1 text-sm text-gray-600">{sound.status}</span>
-                  </div>
-                </div>
-              </button>
+                sound={sound}
+                isSelected={selectedSoundName === sound.name}
+                selectBackgroundSound={this.selectBackgroundSound}
+                selectRotationSound={this.selectRotationSound}
+              />
             ))
           }
         </div>

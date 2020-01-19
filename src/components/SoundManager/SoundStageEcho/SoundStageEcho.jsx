@@ -22,7 +22,6 @@ export class SoundStageEcho extends Component {
     console.log('SoundStageEcho mounted');
   }
 
-
   componentDidUpdate = (prevProps) => {
     if (prevProps.gameModel !== this.props.gameModel) {
       this.unsubscribe(prevProps.gameModel);
