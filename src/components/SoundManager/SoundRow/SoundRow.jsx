@@ -7,7 +7,7 @@ import {
 } from '@fortawesome/free-solid-svg-icons';
 import classNames from 'classnames';
 
-import { formatBytes } from '../../../utils/miscUtils';
+import { formatBytes, formatDuration } from '../../../utils/miscUtils';
 
 // import { SoundRowPropTypes } from '../../types';
 
@@ -47,6 +47,7 @@ export class SoundRow extends Component {
     // const { something } = this.state;
     const {
       sound, isSelected, selectBackgroundSound, selectRotationSound, t,
+      isInRotation, isBackground, playbackIndex,
     } = this.props;
 
     // if (!something) {
@@ -79,6 +80,7 @@ export class SoundRow extends Component {
             </div>
             <div>
               <span className="ml-2 pt-1 text-sm text-gray-600">{formatBytes(sound.size)}</span>
+              <span className="ml-2 pt-1 text-sm text-gray-600">{sound.buffer && formatDuration(sound.buffer.duration)}</span>
               <span className="ml-2 pt-1 text-sm text-gray-600">{sound.status}</span>
             </div>
           </div>
@@ -104,7 +106,7 @@ export class SoundRow extends Component {
           </div> */}
           <div className="text-left">
             <div className="leading-none">
-              <span className="ml-2 pt-1 font-medium text-sm">{t('setToBackground')}</span>
+              <span className="ml-2 pt-1 font-medium text-sm">{t(isBackground ? 'isBackground' : 'setToBackground')}</span>
             </div>
             <div>
               {/* <span className="ml-2 pt-1 text-sm text-gray-600">{formatBytes(sound.size)}</span> */}
@@ -133,11 +135,15 @@ export class SoundRow extends Component {
           </div> */}
           <div className="text-left">
             <div className="leading-none">
-              <span className="ml-2 pt-1 font-medium text-sm">{t('addToRotation')}</span>
+              <span className="ml-2 pt-1 font-medium text-sm">{t(isInRotation ? 'inRotation' : 'addToRotation')}</span>
             </div>
             <div>
               {/* <span className="ml-2 pt-1 text-sm text-gray-600">{formatBytes(sound.size)}</span> */}
-              <span className="ml-2 pt-1 text-sm text-gray-600" />
+              <span className="ml-2 pt-1 text-sm text-gray-600">
+                {playbackIndex !== -1 && t(playbackIndex === 0 ? 'playingNow' : 'queuePlace', {
+                  index: playbackIndex,
+                })}
+              </span>
             </div>
           </div>
         </button>

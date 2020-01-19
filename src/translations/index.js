@@ -47,7 +47,9 @@ export const translations = {
       setToBackground: 'Поставить на фон',
       isBackground: 'Текущий фон',
       addToRotation: 'Добавить в ротацию',
-      inRotation: 'В ротацию',
+      inRotation: 'В ротации',
+      playingNow: 'Играет сейчас',
+      queuePlace: '{{index}} в очереди',
 
       // Map2
       baseContourLayer: 'Контуры базы',

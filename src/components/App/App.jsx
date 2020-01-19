@@ -301,7 +301,11 @@ export class App extends Component {
                       <SpiritEditor spiritService={gameModel} />
                     </Route>
                     <Route path="/soundManager2">
-                      <SoundManager soundService={soundService} gameModel={gameModel} />
+                      <SoundManager
+                        soundService={soundService}
+                        gameModel={gameModel}
+                        soundStage={this.soundStage}
+                      />
                     </Route>
                     <Route path="/soundMapping">
                       <SoundMapper soundService={soundService} />

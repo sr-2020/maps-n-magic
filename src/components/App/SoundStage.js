@@ -1,10 +1,11 @@
 /* eslint-disable class-methods-use-this */
 // eslint-disable-next-line max-classes-per-file
 import * as R from 'ramda';
+import { EventEmitter } from 'events';
 
 import { shuffle } from '../../utils/miscUtils';
 
-export class SoundStage {
+export class SoundStage extends EventEmitter {
   context = null;
 
   backgroundSound = null;
@@ -21,6 +22,7 @@ export class SoundStage {
   rotationTimeoutId = null;
 
   constructor(context) {
+    super();
     this.context = context;
     this.onBackgroundSoundUpdate = this.onBackgroundSoundUpdate.bind(this);
     this.onRotationSoundsUpdate = this.onRotationSoundsUpdate.bind(this);
@@ -32,7 +34,8 @@ export class SoundStage {
       this.unsubscribe(this.gameModel);
     }
     this.rotationSounds = [];
-    this.playbackRotation = [];
+    // this.playbackRotation = [];
+    this._setPlaybackRotation([]);
     this.stopAllSounds();
     clearTimeout(this.rotationTimeoutId);
   }
@@ -91,9 +94,20 @@ export class SoundStage {
     if (this.rotationSounds.length === 0 || this.rotationTimeoutId !== null) {
       return;
     }
-    this.playbackRotation = shuffle([...this.rotationSounds]);
-    console.log('playbackRotation', this.playbackRotation);
+    this._setPlaybackRotation(shuffle([...this.rotationSounds]));
     this.startRotationSound();
+  }
+
+  _setPlaybackRotation(playbackRotation) {
+    this.playbackRotation = playbackRotation;
+    this.emit('playbackRotationUpdate', {
+      playbackRotation: this.playbackRotation,
+    });
+    console.log('playbackRotation', this.playbackRotation);
+  }
+
+  getPlaybackRotation() {
+    return [...this.playbackRotation];
   }
 
   startRotationSound() {
@@ -109,8 +123,7 @@ export class SoundStage {
   onSoundEnded(e) {
     // console.log('onSoundEnded');
     this.stopSound(e.target.customData.soundName);
-    this.playbackRotation = R.tail(this.playbackRotation);
-    console.log('playbackRotation', this.playbackRotation);
+    this._setPlaybackRotation(R.tail(this.playbackRotation));
     if (this.playbackRotation.length > 0) {
       console.log('startTimeout');
       this.rotationTimeoutId = setTimeout(() => {

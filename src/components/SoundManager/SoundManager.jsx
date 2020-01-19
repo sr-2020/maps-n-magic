@@ -2,7 +2,6 @@
 import React, { Component } from 'react';
 import './SoundManager.css';
 
-// import { SoundHolder } from '../../utils/SoundHolder';
 import { SoundManagerPropTypes } from '../../types';
 import { SoundStageEcho } from './SoundStageEcho';
 
@@ -16,138 +15,122 @@ export class SoundManager extends Component {
     console.log('SoundManager constructing');
     this.state = {
       sounds: [],
-      // soundStage: [],
-      selectedSoundName: null,
+      soundStageState: {},
+      playbackRotation: [],
     };
     this.onSoundUpdate = this.onSoundUpdate.bind(this);
-    this.onSoundStatusChange = this.onSoundStatusChange.bind(this);
-    // this.getActiveIcon = this.getActiveIcon.bind(this);
+    this.onSoundStageUpdate = this.onSoundStageUpdate.bind(this);
     this.selectBackgroundSound = this.selectBackgroundSound.bind(this);
     this.selectRotationSound = this.selectRotationSound.bind(this);
+    this.onPlaybackRotationUpdate = this.onPlaybackRotationUpdate.bind(this);
   }
 
   componentDidMount = () => {
-    const { soundService } = this.props;
-    const sounds = soundService.getSounds();
-    // this.soundHolder = new SoundHolder(soundService);
+    this.onSoundUpdate();
+    this.onSoundStageUpdate();
+    this.onPlaybackRotationUpdate();
     this.setState({
-      sounds,
       initialized: true,
     });
     console.log('SoundManager mounted');
-    this.subscribe(this.props.soundService);
+    this.subscribe(this.props.gameModel);
+    this.subscribeOnSoundStage(this.props.soundStage);
   }
 
   componentDidUpdate = (prevProps) => {
     console.log('SoundManager did update');
-    if (prevProps.soundService === this.props.soundService) {
-      return;
+    if (prevProps.gameModel !== this.props.gameModel) {
+      this.onGameModelUpdate(prevProps);
     }
-    this.onUpdate(prevProps);
   }
 
-  onUpdate(prevProps) {
-    this.unsubscribe(prevProps.soundService);
-    // this.soundHolder.dispose();
-
-    const { soundService } = this.props;
-    const sounds = soundService.getSounds();
-    // this.soundHolder = new SoundHolder(soundService);
-    this.setState({
-      sounds,
-      selectedSoundName: null,
-    });
-    this.subscribe(soundService);
+  onGameModelUpdate(prevProps) {
+    this.unsubscribe(prevProps.gameModel);
+    this.onSoundUpdate();
+    this.onSoundStageUpdate();
+    this.subscribe(this.props.gameModel);
   }
 
   componentWillUnmount = () => {
     console.log('SoundManager will unmount');
-    this.unsubscribe(this.props.soundService);
-    // this.soundHolder.dispose();
+    this.unsubscribe(this.props.gameModel);
+    this.unsubscribeFromSoundStage(this.props.soundStage);
   }
 
   onSoundUpdate() {
-    const { soundService } = this.props;
-    const sounds = soundService.getSounds();
+    const { gameModel } = this.props;
+    const sounds = gameModel.get('sounds');
     this.setState({
       sounds,
     });
   }
 
-  onSoundStatusChange({ name, status }) {
-    this.setState((state) => ({
-      sounds: state.sounds.map((sound) => {
-        if (sound.name !== name) {
-          return sound;
-        }
-        return {
-          ...sound,
-          status,
-        };
-      }),
-    }));
+  onSoundStageUpdate() {
+    const { gameModel } = this.props;
+    const soundStageState = gameModel.get('soundStage');
+    this.setState({
+      soundStageState,
+    });
   }
 
-  // getActiveIcon(sound) {
-  //   if (sound.status === 'loading') {
-  //     return faSpinner;
-  //   }
-  //   const { soundService } = this.props;
-  //   const isPlayingSound = soundService.isPlayingSound(sound.name);
-  //   return isPlayingSound ? faStopCircle : faPlayCircle;
-  // }
-
-  subscribe(soundService) {
-    soundService.on('soundsUpdate', this.onSoundUpdate);
-    soundService.on('soundStatusChange', this.onSoundStatusChange);
+  onPlaybackRotationUpdate() {
+    const { soundStage } = this.props;
+    this.setState({
+      playbackRotation: soundStage.getPlaybackRotation(),
+    });
   }
 
-  unsubscribe(soundService) {
-    soundService.off('soundsUpdate', this.onSoundUpdate);
-    soundService.off('soundStatusChange', this.onSoundStatusChange);
+  subscribeOnSoundStage(soundStage) {
+    soundStage.on('playbackRotationUpdate', this.onPlaybackRotationUpdate);
+  }
+
+  unsubscribeFromSoundStage(soundStage) {
+    soundStage.off('playbackRotationUpdate', this.onPlaybackRotationUpdate);
+  }
+
+  subscribe(gameModel) {
+    gameModel.on('soundLoaded', this.onSoundUpdate);
+    gameModel.on('soundsRemoved', this.onSoundUpdate);
+    gameModel.on('rotationSoundsUpdate', this.onSoundStageUpdate);
+    gameModel.on('backgroundSoundUpdate', this.onSoundStageUpdate);
+  }
+
+  unsubscribe(gameModel) {
+    gameModel.off('soundLoaded', this.onSoundUpdate);
+    gameModel.off('soundsRemoved', this.onSoundUpdate);
+    gameModel.off('rotationSoundsUpdate', this.onSoundStageUpdate);
+    gameModel.off('backgroundSoundUpdate', this.onSoundStageUpdate);
   }
 
   selectBackgroundSound(soundName) {
-    // this.soundHolder.onSelectSound(soundName);
-    // this.setState({
-    //   selectedSoundName: soundName,
-    // });
     const { gameModel } = this.props;
-    const soundStage = gameModel.get('soundStage');
+    const soundStageState = gameModel.get('soundStage');
     gameModel.execute({
       type: 'setBackgroundSound',
-      name: soundStage.backgroundSound === soundName ? null : soundName,
+      name: soundStageState.backgroundSound === soundName ? null : soundName,
     });
   }
 
   selectRotationSound(soundName) {
-    // this.soundHolder.onSelectSound(soundName);
-    // this.setState({
-    //   selectedSoundName: soundName,
-    // });
     const { gameModel } = this.props;
-    const soundStage = gameModel.get('soundStage');
+    const soundStageState = gameModel.get('soundStage');
 
-    const isInRotation = soundStage.rotationSounds.includes(soundName);
+    const isInRotation = soundStageState.rotationSounds.includes(soundName);
     gameModel.execute({
       type: 'rotationSoundsChange',
       added: isInRotation ? [] : [soundName],
       removed: isInRotation ? [soundName] : [],
-      // name: soundStage.backgroundSound === soundName ? null : soundName,
     });
   }
 
   // eslint-disable-next-line max-lines-per-function
   render() {
-    const { sounds, selectedSoundName, initialized } = this.state;
+    const {
+      sounds, soundStageState, initialized, playbackRotation,
+    } = this.state;
 
     if (!initialized) {
       return null;
-    }
-
-    let selectedSound = null;
-    if (selectedSoundName) {
-      selectedSound = sounds.find((sound) => sound.name === selectedSoundName);
     }
 
     const { gameModel } = this.props;
@@ -160,23 +143,17 @@ export class SoundManager extends Component {
               <SoundRow
                 key={sound.name}
                 sound={sound}
-                isSelected={selectedSoundName === sound.name}
+                isSelected={false}
+                isInRotation={soundStageState.rotationSounds.includes(sound.name)}
+                isBackground={soundStageState.backgroundSound === sound.name}
                 selectBackgroundSound={this.selectBackgroundSound}
                 selectRotationSound={this.selectRotationSound}
+                playbackIndex={playbackRotation.findIndex((el) => el === sound.name)}
               />
             ))
           }
         </div>
-        {/* {
-          selectedSound && (
-            <div>
-              {selectedSound.name}
-              {' '}
-              {selectedSound.status}
-            </div>
-          )
-        } */}
-        <SoundStageEcho gameModel={gameModel} />
+        {/* <SoundStageEcho gameModel={gameModel} /> */}
       </div>
     );
   }
