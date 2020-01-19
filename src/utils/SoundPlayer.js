@@ -36,17 +36,17 @@ export class SoundPlayer {
   }
 
   startSound = (soundName, buffer) => {
-    let ctl = this.soundSources[soundName];
-    if (!ctl) {
-      ctl = this.context.createSource(buffer);
-      this.soundSources[soundName] = ctl;
+    // let ctl = this.soundSources[soundName];
+    // if (!ctl) {
+    //   ctl = this.context.createSource(buffer);
+    //   this.soundSources[soundName] = ctl;
 
-      // ctl.gainNode.gain.value = 0;
-      if (!ctl.source.start) {
-        ctl.source.noteOn(0);
-      } else {
-        ctl.source.start(0);
-      }
-    }
+    //   // ctl.gainNode.gain.value = 0;
+    //   if (!ctl.source.start) {
+    //     ctl.source.noteOn(0);
+    //   } else {
+    //     ctl.source.start(0);
+    //   }
+    // }
   }
 }

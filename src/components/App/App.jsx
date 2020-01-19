@@ -302,7 +302,7 @@ export class App extends Component {
                     </Route>
                     <Route path="/soundManager2">
                       <SoundManager
-                        soundService={soundService}
+                        // soundService={soundService}
                         gameModel={gameModel}
                         soundStage={this.soundStage}
                       />
@@ -320,7 +320,7 @@ export class App extends Component {
                     center={mapConfig.center}
                   />
                   <SoundWatcher
-                    soundService={soundService}
+                    // soundService={soundService}
                     gameModel={gameModel}
                     context={this.audioContextWrapper}
                   />
