@@ -4,7 +4,8 @@ import { TickerService } from './TickerService';
 import { SpiritService } from './SpiritService';
 import { SoundService2 } from './SoundService2';
 import { SoundStageService } from './SoundStageService';
-import { DataService } from './DataService';
+import { BeaconService } from './BeaconService';
+import { LocationService } from './LocationService';
 
 export const services = [
   UserService,
@@ -13,5 +14,6 @@ export const services = [
   SpiritService,
   SoundService2,
   SoundStageService,
-  DataService,
+  BeaconService,
+  LocationService,
 ];
