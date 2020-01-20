@@ -8,9 +8,36 @@ import { initialLocations } from '../data/locations';
 import { getPolygons2 } from '../utils/polygonGenerator';
 import { getEeStats } from '../utils/miscUtils';
 
-export class DataService {
-  constructor({ beacons, locations } = {}) {
-    // this.beacons = beacons || this._getLSBeacons() || getBeacons2();
+import { AbstractService } from './AbstractService';
+
+function stringToType(entity) {
+  return R.is(String, entity) ? {
+    type: entity,
+  } : entity;
+}
+
+export class DataService extends AbstractService {
+  metadata = {
+    actions: ['postLocation', 'deleteLocation', 'putLocation', 'postBeacon', 'deleteBeacon', 'putBeacon'],
+    requests: ['beacons', 'locations', 'attachedBeaconIds', 'voronoiPolygonData'],
+    emitEvents: [],
+    listenEvents: [],
+  };
+
+  constructor() {
+    super();
+    this.beacons = getBeacons2();
+    this.maxBeaconId = 1;
+    this.locations = initialLocations;
+    this.locations.forEach((location) => {
+      if (!location.manaLevel) {
+        location.manaLevel = 'normal';
+      }
+    });
+    this.maxLocationId = 1;
+  }
+
+  setData({ beacons, locations } = {}) {
     this.beacons = beacons || getBeacons2();
     this.maxBeaconId = R.reduce(R.max, 1, this.beacons.map(R.prop('id')));
     // this.locations = locations || this._getLSLocations() || initialLocations;
@@ -21,73 +48,113 @@ export class DataService {
       }
     });
     this.maxLocationId = R.reduce(R.max, 1, this.locations.map(R.prop('id')));
-    if (beacons) {
-      this._saveBeacons();
-    }
-    if (locations) {
-      this._saveLocations();
-    }
   }
 
-  // _getLSBeacons = function () {
-  //   const beacons = localStorage.getItem('beacons');
-  //   return beacons ? JSON.parse(beacons) : null;
-  // }
+  getData() {
+    return {
+      beacons: this._getBeacons(),
+      locations: this._getLocations(),
+    };
+  }
 
-  // _getLSLocations = function () {
-  //   const locations = localStorage.getItem('locations');
-  //   return locations ? JSON.parse(locations) : null;
-  // }
+  execute(action, onDefaultAction) {
+    action = stringToType(action);
+    if (action.type === 'putLocation') {
+      return this._putLocation(action);
+    }
+    if (action.type === 'postLocation') {
+      return this._postLocation(action);
+    }
+    if (action.type === 'deleteLocation') {
+      return this._deleteLocation(action);
+    }
+    if (action.type === 'putBeacon') {
+      return this._putBeacon(action);
+    }
+    if (action.type === 'postBeacon') {
+      return this._postBeacon(action);
+    }
+    if (action.type === 'deleteBeacon') {
+      return this._deleteBeacon(action);
+    }
+    return onDefaultAction(action);
+  }
 
-  getBeacons = function () {
+  get(request, onDefaultRequest) {
+    request = stringToType(request);
+    if (request.type === 'beacons') {
+      return this._getBeacons(request);
+    }
+    if (request.type === 'locations') {
+      return this._getLocations(request);
+    }
+    if (request.type === 'attachedBeaconIds') {
+      return this._getAttachedBeaconIds(request);
+    }
+    if (request.type === 'voronoiPolygonData') {
+      return this._getVoronoiPolygonData(request);
+    }
+    return onDefaultRequest(request);
+  }
+
+  _getBeacons() {
     return this.beacons;
   }
 
-  putBeacon = (id, props) => {
+  // getBeacons = function () {
+  //   return this._getBeacons();
+  // }
+
+  _getLocations() {
+    return this.locations;
+  }
+
+  // getLocations = function () {
+  //   return this._getLocations();
+  // }
+
+  _putBeacon({ id, props }) {
     const index = this.beacons.findIndex((beacon) => beacon.id === id);
     this.beacons[index] = {
       ...this.beacons[index],
       ...props,
       id,
     };
-    this._saveBeacons();
   }
 
-  postBeacon = (props) => {
+  // putBeacon = (id, props) => this._putBeacon({ id, props })
+
+  _postBeacon = ({ props }) => {
     this.maxBeaconId++;
     this.beacons.push({
       ...props,
       id: this.maxBeaconId,
       name: String(this.maxBeaconId),
     });
-    this._saveBeacons();
+
     return this.beacons[this.beacons.length - 1];
   }
 
-  deleteBeacon = (id) => {
+  // postBeacon = (props) => this._postBeacon({ props })
+
+  _deleteBeacon = ({ id }) => {
     this.beacons = this.beacons.filter((beacon) => beacon.id !== id);
-    this._saveBeacons();
   }
 
-  _saveBeacons = function () {
-    // localStorage.setItem('beacons', JSON.stringify(this.beacons));
-  }
+  // deleteBeacon = (id) => this._deleteBeacon({ id })
 
-  getLocations = function () {
-    return this.locations;
-  }
-
-  putLocation = (id, props) => {
+  _putLocation({ id, props }) {
     const index = this.locations.findIndex((loc) => loc.id === id);
     this.locations[index] = {
       ...this.locations[index],
       ...props,
       id,
     };
-    this._saveLocations();
   }
 
-  postLocation = (props) => {
+  // putLocation = (id, props) => this._putLocation({ id, props })
+
+  _postLocation({ props }) {
     this.maxLocationId++;
     this.locations.push({
       ...props,
@@ -96,30 +163,31 @@ export class DataService {
       id: this.maxLocationId,
       name: String(this.maxLocationId),
     });
-    this._saveLocations();
+
     return this.locations[this.locations.length - 1];
   }
 
-  deleteLocation = (id) => {
+  // postLocation = (props) => this._postLocation({ props })
+
+  _deleteLocation({ id }) {
     this.locations = this.locations.filter((loc) => loc.id !== id);
-    this._saveLocations();
   }
 
-  _saveLocations = function () {
-    // localStorage.setItem('locations', JSON.stringify(this.locations));
-  }
+  // deleteLocation = (id) => this._deleteLocation({ id })
 
-  getAttachedBeaconIds = () => {
+  _getAttachedBeaconIds() {
     const allArrs = this.locations.map((loc) => loc.markers);
     return R.uniq(R.flatten(allArrs));
   }
 
-  getVoronoiPolygonData = () => {
+  // getAttachedBeaconIds = () => this._getAttachedBeaconIds()
+
+  _getVoronoiPolygonData() {
     const bRect1 = (getBoundingRect(baseCommonLLs));
     const bRect = scaleRect(bRect1, 1.1);
     const boundingPolylineData = this._boundingRect2Polyline(bRect);
 
-    const plainPoints = this.getBeacons().map((beacon) => ({
+    const plainPoints = this._getBeacons().map((beacon) => ({
       x: beacon.lat,
       y: beacon.lng,
     }));
@@ -131,6 +199,8 @@ export class DataService {
 
     return { boundingPolylineData, polygonData };
   }
+
+  // getVoronoiPolygonData = () => this._getVoronoiPolygonData()
 
   _boundingRect2Polyline = (bRect) => [
     [bRect.top, bRect.left],

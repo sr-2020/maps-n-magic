@@ -63,7 +63,7 @@ export class Map2 extends Component {
   // eslint-disable-next-line max-lines-per-function
   componentDidMount = () => {
     const {
-      soundService, curPosition, gameModel, mapConfig,
+      curPosition, gameModel, mapConfig,
     } = this.props;
     const { center, zoom } = mapConfig;
     const { urlTemplate, options } = defaultTileLayer;
@@ -81,8 +81,8 @@ export class Map2 extends Component {
     // // const imageUrl = 'images/test.svg';
     // // const imageUrl = 'images/sr2020_base_map1.svg';
     // const imageUrl = 'images/sr2020_base_map2.svg';
-    // const width=976;
-    // const height=578;
+    // const width = 976;
+    // const height = 578;
 
     // // (y1 - y2) / height = (x2 - x1) / width
     // const y1 = 54.930300122616605;
@@ -92,7 +92,7 @@ export class Map2 extends Component {
     // // const x2 = ((y1 - y2) / height) * width + x1;
     // const imageBounds = [
     //   [y1, x1],
-    //   [y2, x2]
+    //   [y2, x2],
     // ];
     // // const imageBounds = [
     // //   [54.93064336, 36.868368075],
@@ -133,7 +133,7 @@ export class Map2 extends Component {
   }
 
   componentDidUpdate = (prevProps) => {
-    if (prevProps.dataService !== this.props.dataService) {
+    if (prevProps.gameModel !== this.props.gameModel) {
       this.clearMapData();
       this.populateMapData();
     }
@@ -144,7 +144,7 @@ export class Map2 extends Component {
       this.translator = new Translator(center, this.props.curPosition);
       this.clearMapData();
       this.populateMapData();
-      this.props.soundService.stopAllSounds();
+      // this.props.soundService.stopAllSounds();
     }
     // console.log('Map2 did update');
   }
@@ -219,9 +219,13 @@ export class Map2 extends Component {
   }
 
   onCreateMarker = (marker) => {
-    const { dataService } = this.props;
+    const { gameModel } = this.props;
     const latlng = this.translator.moveFrom(marker.getLatLng());
-    const { id, name } = dataService.postBeacon(latlng);
+    // const { id, name } = gameModel.postBeacon(latlng);
+    const { id, name } = gameModel.execute({
+      type: 'postBeacon',
+      props: { ...latlng },
+    });
     L.setOptions(marker, { id, name });
     this.markerGroup.addLayer(marker);
 
@@ -231,10 +235,15 @@ export class Map2 extends Component {
   }
 
   onCreateLocation = (location) => {
-    const { dataService } = this.props;
-    const { id, name, markers } = dataService.postLocation(this.translator.moveFrom({
+    const { gameModel } = this.props;
+    const latlngs = this.translator.moveFrom({
       latlngs: location.getLatLngs(),
-    }));
+    });
+    // const { id, name, markers } = gameModel.postLocation(latlngs);
+    const { id, name, markers } = gameModel.execute({
+      type: 'postLocation',
+      props: { ...latlngs },
+    });
     L.setOptions(location, { id, name, markers });
     this.locationsGroup.addLayer(location);
     this.setLocationEventHandlers(location);
@@ -242,17 +251,25 @@ export class Map2 extends Component {
   }
 
   onRemoveLayer = (event) => {
-    const { dataService } = this.props;
+    const { gameModel } = this.props;
     if (event.layer instanceof L.Marker) {
       const markerId = event.layer.options.id;
       this.removeMarkerFromLocations(markerId);
       this.updateLocationsView();
       this.markerGroup.removeLayer(event.layer);
       this.onMarkersChange();
-      dataService.deleteBeacon(event.layer.options.id);
+      // gameModel.deleteBeacon(event.layer.options.id);
+      gameModel.execute({
+        type: 'deleteBeacon',
+        id: event.layer.options.id,
+      });
     } else {
       this.locationsGroup.removeLayer(event.layer);
-      dataService.deleteLocation(event.layer.options.id);
+      // gameModel.deleteLocation(event.layer.options.id);
+      gameModel.execute({
+        type: 'deleteLocation',
+        id: event.layer.options.id,
+      });
       this.updateLocationsView();
       this.updateMarkersView();
     }
@@ -301,7 +318,7 @@ export class Map2 extends Component {
   }
 
   populateMapData = () => {
-    const { dataService, t } = this.props;
+    const { gameModel, t } = this.props;
 
     const baseLine = L.polyline(this.translator.moveTo(baseLLs), {
       color: 'green',
@@ -314,7 +331,8 @@ export class Map2 extends Component {
     this.baseContourGroup.addLayer(baseLine);
     this.baseContourGroup.addLayer(baseClosedLine);
 
-    const beacons2 = dataService.getBeacons().map(this.translator.moveTo);
+    // const beacons2 = gameModel.getBeacons().map(this.translator.moveTo);
+    const beacons2 = gameModel.get('beacons').map(this.translator.moveTo);
 
     const markers = beacons2.map(({
       lat, lng, name, id,
@@ -331,7 +349,8 @@ export class Map2 extends Component {
       this.markerGroup.addLayer(marker);
     });
 
-    const locationsData = dataService.getLocations().map(this.translator.moveTo);
+    // const locationsData = gameModel.getLocations().map(this.translator.moveTo);
+    const locationsData = gameModel.get('locations').map(this.translator.moveTo);
 
     const locations = locationsData.map(({
       // eslint-disable-next-line no-shadow
@@ -380,8 +399,9 @@ export class Map2 extends Component {
   }
 
   updateMarkersView = () => {
-    const { dataService } = this.props;
-    const attachedMarkers = dataService.getAttachedBeaconIds();
+    const { gameModel } = this.props;
+    // const attachedMarkers = gameModel.getAttachedBeaconIds();
+    const attachedMarkers = gameModel.get('attachedBeaconIds');
     this.markerGroup.eachLayer((marker) => {
       const { id } = marker.options;
       marker.setIcon(getIcon(R.contains(id, attachedMarkers) ? 'blue' : 'red'));
@@ -439,11 +459,21 @@ export class Map2 extends Component {
   }
 
   onLocationEdit = (e) => {
-    const { dataService } = this.props;
+    const { gameModel } = this.props;
     const location = e.target;
-    dataService.putLocation(location.options.id, this.translator.moveFrom({
-      latlngs: location.getLatLngs(),
-    }));
+    // gameModel.putLocation(location.options.id, this.translator.moveFrom({
+    //   latlngs: location.getLatLngs(),
+    // }));
+    gameModel.execute({
+      type: 'putLocation',
+      id: location.options.id,
+      props: {
+        ...this.translator.moveFrom({
+          latlngs: location.getLatLngs(),
+        }),
+      },
+    });
+    // putLocation(location.options.id, );
     this.closeMarkerPopup();
   }
 
@@ -477,17 +507,25 @@ export class Map2 extends Component {
   }
 
   onMarkerEdit = (e) => {
-    const { dataService } = this.props;
+    const { gameModel } = this.props;
     const marker = e.target;
-    dataService.putBeacon(marker.options.id, this.translator.moveFrom(marker.getLatLng()));
+    // gameModel.putBeacon(marker.options.id, this.translator.moveFrom(marker.getLatLng()));
+    gameModel.execute({
+      type: 'putBeacon',
+      id: marker.options.id,
+      props: {
+        ...this.translator.moveFrom(marker.getLatLng()),
+      },
+    });
     this.onMarkersChange();
     this.closeMarkerPopup();
     // console.log('pm:edit', e.target.getLatLng());
   };
 
   updateVoronoiPolygons = () => {
-    const { dataService } = this.props;
-    const { boundingPolylineData, polygonData } = dataService.getVoronoiPolygonData();
+    const { gameModel } = this.props;
+    // const { boundingPolylineData, polygonData } = gameModel.getVoronoiPolygonData();
+    const { boundingPolylineData, polygonData } = gameModel.get('voronoiPolygonData');
     this.massCentersGroup.clearLayers();
     this.polygonsGroup.clearLayers();
 
@@ -511,9 +549,10 @@ export class Map2 extends Component {
   }
 
   updateSignalRadiuses = () => {
-    const { dataService } = this.props;
+    const { gameModel } = this.props;
     this.signalRadiusesGroup.clearLayers();
-    dataService.getBeacons().map(this.translator.moveTo).forEach((beacon) => {
+    // gameModel.getBeacons().map(this.translator.moveTo).forEach((beacon) => {
+    gameModel.get('beacons').map(this.translator.moveTo).forEach((beacon) => {
       this.signalRadiusesGroup.addLayer(L.circle({
         lat: beacon.lat,
         lng: beacon.lng,
@@ -526,14 +565,21 @@ export class Map2 extends Component {
 
   onMarkerChange = (prop) => (e) => {
     const { value } = e.target;
-    const { dataService } = this.props;
+    const { gameModel } = this.props;
     const { id } = this.state.curMarker;
     const marker = this.markerGroup.getLayers().find((marker2) => marker2.options.id === id);
     let resValue = value;
     if (prop === 'name') {
       marker.options.name = value;
-      dataService.putBeacon(id, {
-        [prop]: value,
+      // gameModel.putBeacon(id, {
+      //   [prop]: value,
+      // });
+      gameModel.execute({
+        type: 'putBeacon',
+        id,
+        props: {
+          [prop]: value,
+        },
       });
     }
     if (prop === 'lat' || prop === 'lng') {
@@ -542,10 +588,20 @@ export class Map2 extends Component {
       if (!Number.isNaN(num)) {
         const newLatLng = { ...latLng, [prop]: num };
         marker.setLatLng(newLatLng);
-        dataService.putBeacon(id, this.translator.moveFrom({
-          ...latLng,
-          [prop]: num,
-        }));
+        // gameModel.putBeacon(id, this.translator.moveFrom({
+        //   ...latLng,
+        //   [prop]: num,
+        // }));
+        gameModel.execute({
+          type: 'putBeacon',
+          id,
+          props: {
+            ...this.translator.moveFrom({
+              ...latLng,
+              [prop]: num,
+            }),
+          },
+        });
         this.onMarkersChange();
         resValue = num;
       }
@@ -560,7 +616,7 @@ export class Map2 extends Component {
   }
 
   onLocMarkerChange = ({ action, markerId }) => {
-    const { dataService } = this.props;
+    const { gameModel } = this.props;
     const locId = this.state.curLocation.id;
     this.removeMarkerFromLocations(markerId);
     const loc = this.locationsGroup.getLayers().find((loc2) => loc2.options.id === locId);
@@ -573,8 +629,15 @@ export class Map2 extends Component {
     } else {
       console.error(`Unknown action ${action}`);
     }
-    dataService.putLocation(locId, {
-      markers: R.clone(props.markers),
+    // gameModel.putLocation(locId, {
+    //   markers: R.clone(props.markers),
+    // });
+    gameModel.execute({
+      type: 'putLocation',
+      id: locId,
+      props: {
+        markers: R.clone(props.markers),
+      },
     });
 
     this.updateLocationsView();
@@ -589,13 +652,20 @@ export class Map2 extends Component {
   }
 
   removeMarkerFromLocations = (markerId) => {
-    const { dataService } = this.props;
+    const { gameModel } = this.props;
     this.locationsGroup.eachLayer((loc2) => {
       const props = loc2.options;
       if (R.contains(markerId, props.markers)) {
         props.markers = props.markers.filter((el) => el !== markerId);
-        dataService.putLocation(props.id, {
-          markers: R.clone(props.markers),
+        // gameModel.putLocation(props.id, {
+        //   markers: R.clone(props.markers),
+        // });
+        gameModel.execute({
+          type: 'putLocation',
+          id: props.id,
+          props: {
+            markers: R.clone(props.markers),
+          },
         });
       }
     });
@@ -603,13 +673,20 @@ export class Map2 extends Component {
 
   onLocationChange = (prop) => (e) => {
     const { value } = e.target;
-    const { dataService } = this.props;
+    const { gameModel } = this.props;
     const { id } = this.state.curLocation;
     const location = this.locationsGroup.getLayers().find((loc) => loc.options.id === id);
     if (prop === 'name' || prop === 'manaLevel') {
       location.options[prop] = value;
-      dataService.putLocation(id, {
-        [prop]: value,
+      // gameModel.putLocation(id, {
+      //   [prop]: value,
+      // });
+      gameModel.execute({
+        type: 'putLocation',
+        id,
+        props: {
+          [prop]: value,
+        },
       });
     }
     this.setState((state) => {
@@ -660,13 +737,15 @@ export class Map2 extends Component {
       curLocation,
     } = this.state;
     const {
-      dataService,
+      gameModel,
     } = this.props;
     if (!curLocation) {
       return null;
     }
-    const allBeacons = R.clone(dataService.getBeacons());
-    const allLocations = R.clone(dataService.getLocations());
+    // const allBeacons = R.clone(gameModel.getBeacons());
+    // const allLocations = R.clone(gameModel.getLocations());
+    const allBeacons = R.clone(gameModel.get('beacons'));
+    const allLocations = R.clone(gameModel.get('locations'));
     return (
       <LocationPopup
         name={curLocation.name}

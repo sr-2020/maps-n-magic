@@ -13,7 +13,6 @@ import {
 } from 'react-router-dom';
 
 import { SoundService } from '../../services/SoundService';
-import { DataService } from '../../services/DataService';
 
 import { Map2 } from '../Map2';
 import { ErrorBoundry } from '../ErrorBoundry';
@@ -89,24 +88,16 @@ export class App extends Component {
   }
 
   componentDidMount() {
-    const {
-      beacons, locations,
-    } = database;
-    const dataService = new DataService({
-      beacons,
-      locations,
-    });
     const soundService = new SoundService(this.soundPlayer);
     const gameModel = new GameModel();
     gameModel.init(services);
     gameModel.setData(database);
 
-    fillGameModelWithBots(gameModel, dataService.getLocations());
-    this.userWatcher = new UserWatcher(soundService, dataService, gameModel);
+    fillGameModelWithBots(gameModel);
+    this.userWatcher = new UserWatcher(soundService, gameModel);
 
     this.soundStage.subscribeOnModel(gameModel);
     this.setState({
-      dataService,
       soundService,
       gameModel,
       initialized: true,
@@ -158,30 +149,21 @@ export class App extends Component {
   onUploadFileSelected(evt) {
     readJsonFile(evt).then((database2) => {
       // console.log(database2.appState);
-      const {
-        beacons, locations,
-      } = database2;
       this.setState((state) => {
         state.soundService.dispose();
         state.gameModel.dispose();
         hardDispose(state.soundService);
-        hardDispose(state.dataService);
         hardDispose(state.gameModel);
 
-        const dataService = new DataService({
-          beacons,
-          locations,
-        });
         const gameModel = new GameModel();
         gameModel.init(services);
         gameModel.setData(database2);
         const soundService = new SoundService(this.soundPlayer);
-        fillGameModelWithBots(gameModel, dataService.getLocations());
+        fillGameModelWithBots(gameModel);
         this.soundStage.subscribeOnModel(gameModel);
         this.userWatcher.dispose();
-        this.userWatcher = new UserWatcher(soundService, dataService, gameModel);
+        this.userWatcher = new UserWatcher(soundService, gameModel);
         return {
-          dataService,
           soundService,
           gameModel,
         };
@@ -190,10 +172,8 @@ export class App extends Component {
   }
 
   prepareDataForJson() {
-    const { dataService, gameModel } = this.state;
+    const { gameModel } = this.state;
     return ({
-      beacons: dataService.getBeacons(),
-      locations: dataService.getLocations(),
       ...gameModel.getData(),
       version: '0.1.0',
     });
@@ -261,7 +241,7 @@ export class App extends Component {
     }
 
     const {
-      dataService, soundService, simulateGeoDataStream, curPosition, waitingForGeolocation, gameModel,
+      soundService, simulateGeoDataStream, curPosition, waitingForGeolocation, gameModel,
     } = this.state;
 
     const {
@@ -289,7 +269,6 @@ export class App extends Component {
                   <Switch>
                     <Route path="/map2">
                       <Map2
-                        dataService={dataService}
                         soundService={soundService}
                         simulateGeoDataStream={simulateGeoDataStream}
                         curPosition={curPosition}
