@@ -722,13 +722,13 @@ export class Map2 extends Component {
 
   getMusicSelect = () => {
     const {
-      soundService,
+      gameModel
     } = this.props;
     // if (!curMarker) {
     //   return null;
     // }
     return (
-      <MusicSelect soundService={soundService} />
+      <MusicSelect gameModel={gameModel} />
     );
   }
 

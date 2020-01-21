@@ -6,6 +6,7 @@ import { SoundService2 } from './SoundService2';
 import { SoundStageService } from './SoundStageService';
 import { BeaconService } from './BeaconService';
 import { LocationService } from './LocationService';
+import { SoundMappingService } from './SoundMappingService';
 
 export const services = [
   UserService,
@@ -16,4 +17,5 @@ export const services = [
   SoundStageService,
   BeaconService,
   LocationService,
+  SoundMappingService,
 ];

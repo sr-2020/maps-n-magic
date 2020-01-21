@@ -4,12 +4,6 @@ import { initialLocations } from '../data/locations';
 
 import { AbstractService } from './AbstractService';
 
-function stringToType(entity) {
-  return R.is(String, entity) ? {
-    type: entity,
-  } : entity;
-}
-
 export class LocationService extends AbstractService {
   metadata = {
     actions: ['postLocation', 'deleteLocation', 'putLocation'],
@@ -46,7 +40,6 @@ export class LocationService extends AbstractService {
   }
 
   execute(action, onDefaultAction) {
-    action = stringToType(action);
     if (action.type === 'putLocation') {
       return this._putLocation(action);
     }
@@ -60,7 +53,6 @@ export class LocationService extends AbstractService {
   }
 
   get(request, onDefaultRequest) {
-    request = stringToType(request);
     if (request.type === 'locations') {
       return this._getLocations(request);
     }

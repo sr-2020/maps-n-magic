@@ -104,6 +104,7 @@ export class App extends Component {
     });
     this.saveDataInLsId = setInterval(this.onSaveDataInLs, 10000);
     this.watchGeolocationId = navigator.geolocation.watchPosition(this.onGetPosition);
+    window.addEventListener('beforeunload', this.onSaveDataInLs);
   }
 
   componentWillUnmount() {
@@ -111,11 +112,13 @@ export class App extends Component {
     // eslint-disable-next-line no-undef
     clearWatch(this.watchGeolocationId);
     this.soundStage.dispose();
+    window.removeEventListener('beforeunload', this.onSaveDataInLs);
   }
 
   onSaveDataInLs() {
     // console.log('saving app state in local storage');
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(this.prepareDataForJson()));
+    const database2 = this.prepareDataForJson();
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(database2));
   }
 
   onGetPosition(position) {
@@ -180,7 +183,8 @@ export class App extends Component {
   }
 
   downloadDatabaseAsFile() {
-    json2File(this.prepareDataForJson(), makeFileName('SR_acoustic_poc', 'json', new Date()));
+    const database2 = this.prepareDataForJson();
+    json2File(database2, makeFileName('SR_acoustic_poc', 'json', new Date()));
   }
 
   switchMovementMode(e) {
@@ -281,13 +285,12 @@ export class App extends Component {
                     </Route>
                     <Route path="/soundManager2">
                       <SoundManager
-                        // soundService={soundService}
                         gameModel={gameModel}
                         soundStage={this.soundStage}
                       />
                     </Route>
                     <Route path="/soundMapping">
-                      <SoundMapper soundService={soundService} />
+                      <SoundMapper gameModel={gameModel} />
                     </Route>
 
                     <Route render={() => <Redirect to="/soundManager2" />} />
@@ -299,7 +302,6 @@ export class App extends Component {
                     center={mapConfig.center}
                   />
                   <SoundWatcher
-                    // soundService={soundService}
                     gameModel={gameModel}
                     context={this.audioContextWrapper}
                   />

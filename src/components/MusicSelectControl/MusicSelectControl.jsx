@@ -38,36 +38,41 @@ export class MusicSelectControl extends Component {
   }
 
   componentDidMount = () => {
-    const { soundService } = this.props;
-    soundService.on('soundsUpdate', this.onSoundUpdate);
-    soundService.on('soundToKeySet', this.onSoundToKeySet);
+    const { gameModel } = this.props;
+    gameModel.on('soundLoaded', this.onSoundUpdate);
+    gameModel.on('soundsRemoved', this.onSoundUpdate);
+    gameModel.on('soundToKeySet', this.onSoundToKeySet);
     this.setState({
-      sounds: soundService.getSounds(),
-      soundMapping: soundService.getSoundMapping(),
+      sounds: gameModel.get('sounds'),
+      soundMapping: gameModel.get('soundMapping'),
       initialized: true,
     });
     console.log('MusicSelectControl mounted');
   }
 
   componentDidUpdate = (prevProps) => {
-    if (prevProps.soundService !== this.props.soundService) {
-      prevProps.soundService.off('soundsUpdate', this.onSoundUpdate);
-      prevProps.soundService.off('soundToKeySet', this.onSoundToKeySet);
-      this.props.soundService.on('soundsUpdate', this.onSoundUpdate);
-      this.props.soundService.on('soundToKeySet', this.onSoundToKeySet);
+    const { gameModel } = this.props;
+    if (prevProps.gameModel !== this.props.gameModel) {
+      prevProps.gameModel.off('soundLoaded', this.onSoundUpdate);
+      prevProps.gameModel.off('soundsRemoved', this.onSoundUpdate);
+      prevProps.gameModel.off('soundToKeySet', this.onSoundToKeySet);
+      gameModel.on('soundLoaded', this.onSoundUpdate);
+      gameModel.on('soundsRemoved', this.onSoundUpdate);
+      gameModel.on('soundToKeySet', this.onSoundToKeySet);
       // eslint-disable-next-line react/no-did-update-set-state
       this.setState({
-        sounds: this.props.soundService.getSounds(),
-        soundMapping: this.props.soundService.getSoundMapping(),
+        sounds: gameModel.get('sounds'),
+        soundMapping: gameModel.get('soundMapping'),
       });
     }
     console.log('MusicSelectControl did update');
   }
 
   componentWillUnmount = () => {
-    const { soundService } = this.props;
-    soundService.off('soundsUpdate', this.onSoundUpdate);
-    soundService.off('soundToKeySet', this.onSoundToKeySet);
+    const { gameModel } = this.props;
+    gameModel.off('soundLoaded', this.onSoundUpdate);
+    gameModel.off('soundsRemoved', this.onSoundUpdate);
+    gameModel.off('soundToKeySet', this.onSoundToKeySet);
     console.log('MusicSelectControl will unmount');
   }
 
@@ -81,25 +86,19 @@ export class MusicSelectControl extends Component {
   }
 
   onSoundUpdate(e) {
-    const { soundService } = this.props;
+    const { gameModel } = this.props;
     this.setState({
-      sounds: soundService.getSounds(),
+      sounds: gameModel.get('sounds'),
     });
   }
 
-
-  // onSelectClick(e) {
-  //   e.stopPropagation();
-  //   e.preventDefault();
-  //   this.setState((state) => ({
-  //     show: !state.show,
-  //   }));
-  //   // return false;
-  // }
-
   mapSoundToKey(key, name) {
-    const { soundService } = this.props;
-    soundService.mapSoundToKey(key, name);
+    const { gameModel } = this.props;
+    gameModel.execute({
+      type: 'mapSoundToKey',
+      key,
+      soundName: name,
+    });
   }
 
   // eslint-disable-next-line max-lines-per-function
@@ -113,9 +112,6 @@ export class MusicSelectControl extends Component {
     const { t } = this.props;
 
     return (
-      // <div className="MusicSelectControl">
-      //   MusicSelectControl body
-      // </div>
       <Accordion className="MusicSelectControl">
         {
           values.map((value, i) => (

@@ -60,7 +60,7 @@ export class MusicSelect extends Component {
     // if (!initialized) {
     //   return null;
     // }
-    const { t, soundService } = this.props;
+    const { t, gameModel } = this.props;
     return (
       <div className="MusicSelect relative text-right">
         <button
@@ -75,7 +75,7 @@ export class MusicSelect extends Component {
           'hidden-panel': !show,
         })}
         >
-          <MusicSelectControl soundService={soundService} />
+          <MusicSelectControl gameModel={gameModel} />
         </div>
 
       </div>

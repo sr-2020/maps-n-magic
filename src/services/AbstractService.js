@@ -37,4 +37,12 @@ export class AbstractService {
   off(...args) {
     return this.gameModel.off(...args);
   }
+
+  getFromModel(...args) {
+    return this.gameModel.get(...args);
+  }
+
+  executeOnModel(...args) {
+    return this.gameModel.execute(...args);
+  }
 }

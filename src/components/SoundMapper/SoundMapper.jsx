@@ -27,16 +27,10 @@ export class SoundMapper extends Component {
   }
 
   render() {
-    const { soundService } = this.props;
-    // const { t } = this.props;
-
-    // if (!something) {
-    //   return <div> SoundMapper stub </div>;
-    //   // return null;
-    // }
+    const { gameModel } = this.props;
     return (
       <div className="SoundMapper">
-        <MusicSelectControl soundService={soundService} />
+        <MusicSelectControl gameModel={gameModel} />
       </div>
     );
   }
