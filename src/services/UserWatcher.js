@@ -2,6 +2,8 @@ import * as R from 'ramda';
 import * as gi from '@thi.ng/geom-isec';
 
 import L from 'leaflet/dist/leaflet-src';
+import { AbstractService } from './AbstractService';
+
 
 const latlngs2arr = R.map((el) => [el.lat, el.lng]);
 
@@ -25,19 +27,34 @@ function isPointInLocation(latlng, latlngPolygon) {
   return false;
 }
 
-export class UserWatcher {
-  constructor(gameModel) {
-    this.gameModel = gameModel;
+export class UserWatcher extends AbstractService {
+  metadata = {
+    actions: [],
+    requests: [],
+    emitEvents: [],
+    needActions: ['setBackgroundSound'],
+    needRequests: ['soundForKey'],
+    listenEvents: ['soundToKeySet', 'userPositionUpdate'],
+  };
+
+  constructor() {
+    super();
+    // this.gameModel = null;
     this.location = null;
     this.onSoundToKeySet = this.onSoundToKeySet.bind(this);
     this.onUserPositionUpdate = this.onUserPositionUpdate.bind(this);
-    this.gameModel.on('soundToKeySet', this.onSoundToKeySet);
-    this.gameModel.on('userPositionUpdate', this.onUserPositionUpdate);
+  }
+
+  init(...args) {
+    super.init(...args);
+    // this.gameModel = gameModel;
+    this.on('soundToKeySet', this.onSoundToKeySet);
+    this.on('userPositionUpdate', this.onUserPositionUpdate);
   }
 
   dispose() {
-    this.gameModel.off('soundToKeySet', this.onSoundToKeySet);
-    this.gameModel.off('userPositionUpdate', this.onUserPositionUpdate);
+    this.off('soundToKeySet', this.onSoundToKeySet);
+    this.off('userPositionUpdate', this.onUserPositionUpdate);
   }
 
   onSoundToKeySet({ key, soundName }) {
@@ -46,7 +63,7 @@ export class UserWatcher {
     }
     const { manaLevel } = this.location;
     if (manaLevel === key) {
-      this.gameModel.execute({
+      this.executeOnModel({
         type: 'setBackgroundSound',
         name: soundName,
       });
@@ -59,7 +76,7 @@ export class UserWatcher {
       lat: coords.latitude,
       lng: coords.longitude,
     } : null;
-    const locations = this.gameModel.get('locations');
+    const locations = this.getFromModel('locations');
     // if (this.location && isPointInLocation(latlng, this.location.getLatLngs()[0])) {
     if (this.location && isPointInLocation(latlng, this.location.latlngs[0])) {
       return;
@@ -73,16 +90,16 @@ export class UserWatcher {
     if (location) {
       const { manaLevel } = location;
 
-      const soundName = this.gameModel.get({
+      const soundName = this.getFromModel({
         type: 'soundForKey',
         key: manaLevel,
       });
-      this.gameModel.execute({
+      this.executeOnModel({
         type: 'setBackgroundSound',
         name: soundName,
       });
     } else {
-      this.gameModel.execute({
+      this.executeOnModel({
         type: 'setBackgroundSound',
         name: null,
       });

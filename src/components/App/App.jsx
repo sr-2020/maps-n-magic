@@ -29,8 +29,6 @@ import { services } from '../../services/GameModelServices';
 
 import { fillGameModelWithBots } from '../../services/GameModelFiller';
 
-import { UserWatcher } from './UserWatcher';
-
 import { mapConfig } from '../../configs/map';
 
 import { GeoDataStreamSimulator } from '../GeoDataStreamSimulator';
@@ -87,7 +85,6 @@ export class App extends Component {
     gameModel.setData(database);
 
     fillGameModelWithBots(gameModel);
-    this.userWatcher = new UserWatcher(gameModel);
 
     this.soundStage.subscribeOnModel(gameModel);
     this.setState({
@@ -153,8 +150,6 @@ export class App extends Component {
         gameModel.setData(database2);
         fillGameModelWithBots(gameModel);
         this.soundStage.subscribeOnModel(gameModel);
-        this.userWatcher.dispose();
-        this.userWatcher = new UserWatcher(gameModel);
         return {
           gameModel,
         };

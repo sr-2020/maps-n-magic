@@ -3,6 +3,8 @@ export class AbstractService {
     actions: [],
     requests: [],
     emitEvents: [],
+    needActions: [],
+    needRequests: [],
     listenEvents: [],
   };
 

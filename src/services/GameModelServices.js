@@ -7,6 +7,7 @@ import { SoundStageService } from './SoundStageService';
 import { BeaconService } from './BeaconService';
 import { LocationService } from './LocationService';
 import { SoundMappingService } from './SoundMappingService';
+import { UserWatcher } from './UserWatcher';
 
 export const services = [
   UserService,
@@ -18,4 +19,5 @@ export const services = [
   BeaconService,
   LocationService,
   SoundMappingService,
+  UserWatcher,
 ];
