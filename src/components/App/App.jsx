@@ -12,16 +12,12 @@ import {
   BrowserRouter as Router, Switch, Route, Redirect, NavLink,
 } from 'react-router-dom';
 
-import { SoundService } from '../../services/SoundService';
-
 import { Map2 } from '../Map2';
 import { ErrorBoundry } from '../ErrorBoundry';
 import { SoundManager } from '../SoundManager';
 
 import { json2File, makeFileName, readJsonFile } from '../../utils/fileUtils';
 import { AudioContextWrapper } from '../../utils/AudioContextWrapper';
-import { SoundPlayer } from '../../utils/SoundPlayer';
-
 
 import { SpiritEditor } from '../SpiritEditor';
 
@@ -61,8 +57,6 @@ if (database) {
 export class App extends Component {
   audioContextWrapper = new AudioContextWrapper();
 
-  soundPlayer = new SoundPlayer(this.audioContextWrapper);
-
   soundStage = new SoundStage(this.audioContextWrapper);
 
   static propTypes = AppPropTypes;
@@ -88,17 +82,15 @@ export class App extends Component {
   }
 
   componentDidMount() {
-    const soundService = new SoundService(this.soundPlayer);
     const gameModel = new GameModel();
     gameModel.init(services);
     gameModel.setData(database);
 
     fillGameModelWithBots(gameModel);
-    this.userWatcher = new UserWatcher(soundService, gameModel);
+    this.userWatcher = new UserWatcher(gameModel);
 
     this.soundStage.subscribeOnModel(gameModel);
     this.setState({
-      soundService,
       gameModel,
       initialized: true,
     });
@@ -153,21 +145,17 @@ export class App extends Component {
     readJsonFile(evt).then((database2) => {
       // console.log(database2.appState);
       this.setState((state) => {
-        state.soundService.dispose();
         state.gameModel.dispose();
-        hardDispose(state.soundService);
         hardDispose(state.gameModel);
 
         const gameModel = new GameModel();
         gameModel.init(services);
         gameModel.setData(database2);
-        const soundService = new SoundService(this.soundPlayer);
         fillGameModelWithBots(gameModel);
         this.soundStage.subscribeOnModel(gameModel);
         this.userWatcher.dispose();
-        this.userWatcher = new UserWatcher(soundService, gameModel);
+        this.userWatcher = new UserWatcher(gameModel);
         return {
-          soundService,
           gameModel,
         };
       });
@@ -245,7 +233,7 @@ export class App extends Component {
     }
 
     const {
-      soundService, simulateGeoDataStream, curPosition, waitingForGeolocation, gameModel,
+      simulateGeoDataStream, curPosition, waitingForGeolocation, gameModel,
     } = this.state;
 
     const {
@@ -273,7 +261,6 @@ export class App extends Component {
                   <Switch>
                     <Route path="/map2">
                       <Map2
-                        soundService={soundService}
                         simulateGeoDataStream={simulateGeoDataStream}
                         curPosition={curPosition}
                         gameModel={gameModel}

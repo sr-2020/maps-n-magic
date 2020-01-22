@@ -177,7 +177,6 @@ export class SoundWatcher extends Component {
     const sound = this.getSound(name);
     sound.status = 'loaded';
     sound.buffer = result;
-    // this.props.soundService.loadedSound(sound);
     this.props.gameModel.execute({
       type: 'soundLoaded',
       sound,
