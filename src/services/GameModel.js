@@ -2,7 +2,7 @@
 import * as R from 'ramda';
 import EventEmitter from 'events';
 
-import { GameModelVerificator } from './GameModelVerficator';
+import { GameModelVerificator } from './GameModelVerificator';
 
 function stringToType(entity) {
   return R.is(String, entity) ? {

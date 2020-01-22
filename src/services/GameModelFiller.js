@@ -5,19 +5,21 @@ export function fillGameModelWithBots(gameModel) {
   const points = locations.map(locToSomePoint);
   const spirits = gameModel.get('spirits');
   const speeds = [3, 5, 8];
-  spirits.filter((s, i) => i < 6).forEach((spirit, i) => {
-    const path = [];
-    let j = 0;
-    while (j < 5) {
-      path.push(points[(((j + 3) * 31) + (5 + i) * 13) % points.length]);
-      j++;
-    }
-    gameModel.execute({
-      type: 'putBot',
-      name: spirit.name + i,
-      bot: new Bot(speeds[i % 3], path),
+  spirits
+  // .filter((s, i) => i < 6)
+    .forEach((spirit, i) => {
+      const path = [];
+      let j = 0;
+      while (j < 5) {
+        path.push(points[(((j + 3) * 31) + (5 + i) * 13) % points.length]);
+        j++;
+      }
+      gameModel.execute({
+        type: 'putBot',
+        name: spirit.name + i,
+        bot: new Bot(speeds[i % 3], path, i),
+      });
     });
-  });
 }
 
 function locToSomePoint(loc) {

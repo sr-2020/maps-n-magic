@@ -33,28 +33,29 @@ export class UserWatcher extends AbstractService {
     requests: [],
     emitEvents: [],
     needActions: ['setBackgroundSound'],
-    needRequests: ['soundForKey'],
+    needRequests: ['soundForKey', 'activeBots'],
     listenEvents: ['soundToKeySet', 'userPositionUpdate'],
   };
 
   constructor() {
     super();
-    // this.gameModel = null;
     this.location = null;
     this.onSoundToKeySet = this.onSoundToKeySet.bind(this);
     this.onUserPositionUpdate = this.onUserPositionUpdate.bind(this);
+    this.onBotUpdate = this.onBotUpdate.bind(this);
   }
 
   init(...args) {
     super.init(...args);
-    // this.gameModel = gameModel;
     this.on('soundToKeySet', this.onSoundToKeySet);
     this.on('userPositionUpdate', this.onUserPositionUpdate);
+    this.on('botUpdate', this.onBotUpdate);
   }
 
   dispose() {
     this.off('soundToKeySet', this.onSoundToKeySet);
     this.off('userPositionUpdate', this.onUserPositionUpdate);
+    this.off('botUpdate', this.onBotUpdate);
   }
 
   onSoundToKeySet({ key, soundName }) {
@@ -68,6 +69,39 @@ export class UserWatcher extends AbstractService {
         name: soundName,
       });
     }
+  }
+
+  onBotUpdate({ bots }) {
+    this.updateBotSounds({ bots });
+  }
+
+  updateBotSounds({ bots }) {
+    if (!this.location) {
+      return;
+    }
+    const sounds = this.getFromModel('sounds').filter((sound) => sound.name.includes('spirit')).map(R.prop('name'));
+    if (sounds.length === 0) {
+      return;
+    }
+    const closeBots = bots.filter((bot) => {
+      const latlng = bot.getCurPosition();
+      return isPointInLocation(latlng, this.location.latlngs[0]);
+    });
+
+    const curSoundStage = this.getFromModel('soundStage');
+
+    const newRotation = R.uniq(closeBots.map((bot) => sounds[bot.getIndex() % sounds.length]));
+    // console.log('closeBots.length', closeBots.length);
+
+    if (R.symmetricDifference(curSoundStage.rotationSounds, newRotation).length === 0) {
+      return;
+    }
+    this.executeOnModel({
+      type: 'rotationSoundsChange',
+      added: R.difference(newRotation, curSoundStage.rotationSounds),
+      remove: R.difference(curSoundStage.rotationSounds, newRotation),
+    });
+    // console.log('newRotation', newRotation);
   }
 
   onUserPositionUpdate(user) {
@@ -96,7 +130,8 @@ export class UserWatcher extends AbstractService {
       });
       this.executeOnModel({
         type: 'setBackgroundSound',
-        name: soundName,
+        // name: soundName,
+        name: null,
       });
     } else {
       this.executeOnModel({
@@ -105,5 +140,9 @@ export class UserWatcher extends AbstractService {
       });
     }
     this.location = R.clone(location);
+
+    this.updateBotSounds({
+      bots: this.getFromModel('activeBots'),
+    });
   }
 }

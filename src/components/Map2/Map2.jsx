@@ -178,9 +178,9 @@ export class Map2 extends Component {
     }
   }
 
-  onBotUpdate(activeBots) {
-    console.log('On bot update');
-    const botMap = R.indexBy((bot) => bot.getName(), activeBots);
+  onBotUpdate({ bots }) {
+    // console.log('On bot update');
+    const botMap = R.indexBy((bot) => bot.getName(), bots);
     const botsOnMap = this.botGroup.getLayers();
     const botsTracksOnMap = this.botTrackGroup.getLayers();
     const curMarkers = {};
@@ -190,7 +190,7 @@ export class Map2 extends Component {
         this.botGroup.removeLayer(botMarker);
       } else {
         curMarkers[botMarker.options.id] = true;
-        botMarker.setLatLng(bot.getCutPosition());
+        botMarker.setLatLng(bot.getCurPosition());
       }
     });
     botsTracksOnMap.forEach((botTrack) => {
@@ -199,8 +199,8 @@ export class Map2 extends Component {
         this.botTrackGroup.removeLayer(botTrack);
       }
     });
-    activeBots.filter((bot) => !curMarkers[bot.getName()]).forEach((bot, i) => {
-      const botMarker = L.marker(bot.getCutPosition(), { id: bot.getName() });
+    bots.filter((bot) => !curMarkers[bot.getName()]).forEach((bot, i) => {
+      const botMarker = L.marker(bot.getCurPosition(), { id: bot.getName() });
       this.botGroup.addLayer(botMarker);
       const botTrack = L.polyline(bot.getPath(), {
         id: bot.getName(),
@@ -722,7 +722,7 @@ export class Map2 extends Component {
 
   getMusicSelect = () => {
     const {
-      gameModel
+      gameModel,
     } = this.props;
     // if (!curMarker) {
     //   return null;

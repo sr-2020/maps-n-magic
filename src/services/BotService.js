@@ -7,6 +7,7 @@ import { AbstractService } from './AbstractService';
 export class BotService extends AbstractService {
   metadata = {
     actions: ['putBot', 'runBot', 'moveBots', 'stopBots'],
+    requests: ['activeBots'],
     emitEvents: ['botUpdate'],
     listenEvents: ['modelRunningChange', 'modelTick'],
   };
@@ -59,6 +60,18 @@ export class BotService extends AbstractService {
     return onDefaultAction(action);
   }
 
+  get(request, onDefaultRequest) {
+    // request = stringToType(request);
+    if (request.type === 'activeBots') {
+      return this._getActiveBots(request);
+    }
+    return onDefaultRequest(request);
+  }
+
+  _getActiveBots() {
+    return this.activeBots;
+  }
+
   _putBot({ name, bot }) {
     this.bots[name] = bot;
   }
@@ -75,7 +88,9 @@ export class BotService extends AbstractService {
   _moveBots({ time }) {
     this.activeBots = this.activeBots.filter((bot) => bot.hasNext());
     this.activeBots.forEach((bot) => bot.next(time));
-    this.emit('botUpdate', this.activeBots);
+    this.emit('botUpdate', {
+      bots: this.activeBots,
+    });
 
     if (R.isEmpty(this.activeBots)) {
       // this.runBot('bot1');

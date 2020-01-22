@@ -40,7 +40,11 @@ export class ActiveBot {
     return this.bot.path;
   }
 
-  getCutPosition() {
+  getIndex() {
+    return this.bot.index;
+  }
+
+  getCurPosition() {
     return meters2deg(this.curPosition);
   }
 
@@ -89,7 +93,7 @@ export class ActiveBot {
       lat: (this.nextPoint.lat - this.curPosition.lat) * walkedPart + this.curPosition.lat,
       lng: (this.nextPoint.lng - this.curPosition.lng) * walkedPart + this.curPosition.lng,
     };
-    console.log('curPosition', this.curPosition);
+    // console.log('curPosition', this.curPosition);
 
     this.lastTime = curTime;
   }
