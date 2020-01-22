@@ -130,8 +130,8 @@ export class UserWatcher extends AbstractService {
       });
       this.executeOnModel({
         type: 'setBackgroundSound',
-        // name: soundName,
-        name: null,
+        name: soundName,
+        // name: null,
       });
     } else {
       this.executeOnModel({
