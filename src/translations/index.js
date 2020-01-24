@@ -50,6 +50,8 @@ export const translations = {
       inRotation: 'В ротации',
       playingNow: 'Играет сейчас',
       queuePlace: '{{index}} в очереди',
+      nextSoundIn: 'Следующий звук через {{timeout}}',
+
 
       // Map2
       baseContourLayer: 'Контуры базы',

@@ -5,6 +5,8 @@ import './SoundManager.css';
 import { SoundManagerPropTypes } from '../../types';
 import { SoundStageEcho } from './SoundStageEcho';
 
+import { SoundSettingsForm } from './SoundSettingsForm';
+
 import { SoundRow } from './SoundRow';
 
 export class SoundManager extends Component {
@@ -17,12 +19,14 @@ export class SoundManager extends Component {
       sounds: [],
       soundStageState: {},
       playbackRotation: [],
+      currentTimeout: null,
     };
     this.onSoundUpdate = this.onSoundUpdate.bind(this);
     this.onSoundStageUpdate = this.onSoundStageUpdate.bind(this);
     this.selectBackgroundSound = this.selectBackgroundSound.bind(this);
     this.selectRotationSound = this.selectRotationSound.bind(this);
     this.onPlaybackRotationUpdate = this.onPlaybackRotationUpdate.bind(this);
+    this.onCurrentTimeoutUpdate = this.onCurrentTimeoutUpdate.bind(this);
   }
 
   componentDidMount = () => {
@@ -80,12 +84,20 @@ export class SoundManager extends Component {
     });
   }
 
+  onCurrentTimeoutUpdate({ currentTimeout }) {
+    this.setState({
+      currentTimeout,
+    });
+  }
+
   subscribeOnSoundStage(soundStage) {
     soundStage.on('playbackRotationUpdate', this.onPlaybackRotationUpdate);
+    soundStage.on('currentTimeoutUpdate', this.onCurrentTimeoutUpdate);
   }
 
   unsubscribeFromSoundStage(soundStage) {
     soundStage.off('playbackRotationUpdate', this.onPlaybackRotationUpdate);
+    soundStage.off('currentTimeoutUpdate', this.onCurrentTimeoutUpdate);
   }
 
   subscribe(gameModel) {
@@ -126,17 +138,18 @@ export class SoundManager extends Component {
   // eslint-disable-next-line max-lines-per-function
   render() {
     const {
-      sounds, soundStageState, initialized, playbackRotation,
+      sounds, soundStageState, initialized, playbackRotation, currentTimeout,
     } = this.state;
 
     if (!initialized) {
       return null;
     }
 
-    const { gameModel } = this.props;
+    const { gameModel, t } = this.props;
 
     return (
       <div className="SoundManager">
+        <SoundSettingsForm gameModel={gameModel} />
         <div className="px-3">
           {
             sounds.map((sound) => (
@@ -153,6 +166,14 @@ export class SoundManager extends Component {
             ))
           }
         </div>
+
+        {currentTimeout && (
+          <div>
+            {t('nextSoundIn', {
+              timeout: `${(currentTimeout / 1000).toFixed(1)}s`,
+            })}
+          </div>
+        )}
         {/* <SoundStageEcho gameModel={gameModel} /> */}
       </div>
     );

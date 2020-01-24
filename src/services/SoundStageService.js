@@ -13,6 +13,8 @@ export class SoundStageService extends AbstractService {
     super();
     this.backgroundSound = null;
     this.rotationSounds = [];
+    this.rotationTimeout = 2000;
+    this.rotationSoundTimeout = 5000;
   }
 
   execute(action, onDefaultAction) {
@@ -24,6 +26,12 @@ export class SoundStageService extends AbstractService {
     }
     if (action.type === 'clearSoundStage') {
       return this._clearSoundStage(action);
+    }
+    if (action.type === 'setRotationTimeout') {
+      return this._setRotationTimeout(action);
+    }
+    if (action.type === 'setRotationSoundTimeout') {
+      return this._setRotationSoundTimeout(action);
     }
     return onDefaultAction(action);
   }
@@ -43,6 +51,20 @@ export class SoundStageService extends AbstractService {
     this.backgroundSound = name;
     this.emit('backgroundSoundUpdate', {
       backgroundSound: this.backgroundSound,
+    });
+  }
+
+  _setRotationTimeout({ rotationTimeout }) {
+    this.rotationTimeout = rotationTimeout;
+    this.emit('rotationTimeoutUpdate', {
+      rotationTimeout,
+    });
+  }
+
+  _setRotationSoundTimeout({ rotationSoundTimeout }) {
+    this.rotationSoundTimeout = rotationSoundTimeout;
+    this.emit('rotationSoundTimeoutUpdate', {
+      rotationSoundTimeout,
     });
   }
 
@@ -77,6 +99,8 @@ export class SoundStageService extends AbstractService {
     return {
       backgroundSound: this.backgroundSound,
       rotationSounds: [...this.rotationSounds],
+      rotationTimeout: this.rotationTimeout,
+      rotationSoundTimeout: this.rotationSoundTimeout,
     };
   }
 }

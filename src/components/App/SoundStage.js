@@ -12,12 +12,17 @@ export class SoundStage extends EventEmitter {
 
   rotationSounds = [];
 
+  rotationTimeout = null;
+
+  rotationSoundTimeout = null;
+
+  // immediate rotation data
+
   playbackRotation = [];
 
   soundSources = {};
 
-  // rotationTimeout = 5000;
-  rotationTimeout = 2000;
+  currentTimeout = null;
 
   rotationTimeoutId = null;
 
@@ -26,6 +31,8 @@ export class SoundStage extends EventEmitter {
     this.context = context;
     this.onBackgroundSoundUpdate = this.onBackgroundSoundUpdate.bind(this);
     this.onRotationSoundsUpdate = this.onRotationSoundsUpdate.bind(this);
+    this.onRotationTimeoutUpdate = this.onRotationTimeoutUpdate.bind(this);
+    this.onRotationSoundTimeoutUpdate = this.onRotationSoundTimeoutUpdate.bind(this);
     this.onSoundEnded = this.onSoundEnded.bind(this);
   }
 
@@ -38,6 +45,20 @@ export class SoundStage extends EventEmitter {
     this._setPlaybackRotation([]);
     this.stopAllSounds();
     clearTimeout(this.rotationTimeoutId);
+  }
+
+  subscribe(gameModel) {
+    gameModel.on('backgroundSoundUpdate', this.onBackgroundSoundUpdate);
+    gameModel.on('rotationSoundsUpdate', this.onRotationSoundsUpdate);
+    gameModel.on('rotationTimeoutUpdate', this.onRotationTimeoutUpdate);
+    gameModel.on('rotationSoundTimeoutUpdate', this.onRotationSoundTimeoutUpdate);
+  }
+
+  unsubscribe(gameModel) {
+    gameModel.off('backgroundSoundUpdate', this.onBackgroundSoundUpdate);
+    gameModel.off('rotationSoundsUpdate', this.onRotationSoundsUpdate);
+    gameModel.off('rotationTimeoutUpdate', this.onRotationTimeoutUpdate);
+    gameModel.off('rotationSoundTimeoutUpdate', this.onRotationSoundTimeoutUpdate);
   }
 
   subscribeOnModel(gameModel) {
@@ -54,6 +75,8 @@ export class SoundStage extends EventEmitter {
     const soundStage = this.gameModel.get('soundStage');
     this.onBackgroundSoundUpdate(soundStage);
     this.onRotationSoundsUpdate(soundStage);
+    this.onRotationTimeoutUpdate(soundStage);
+    this.onRotationSoundTimeoutUpdate(soundStage);
     // this.backgroundSound = soundStage.backgroundSound;
     // this.rotationSounds = [...soundStage.rotationSounds];
     this.subscribe(this.gameModel);
@@ -87,6 +110,14 @@ export class SoundStage extends EventEmitter {
       this.generateAndStartRotation();
     }
     console.log('SoundStage onRotationSoundsUpdate');
+  }
+
+  onRotationTimeoutUpdate({ rotationTimeout }) {
+    this.rotationTimeout = rotationTimeout;
+  }
+
+  onRotationSoundTimeoutUpdate({ rotationSoundTimeout }) {
+    this.rotationSoundTimeout = rotationSoundTimeout;
   }
 
   generateAndStartRotation() {
@@ -128,28 +159,28 @@ export class SoundStage extends EventEmitter {
       console.log('startTimeout');
       this.rotationTimeoutId = setTimeout(() => {
         this.startRotationSound();
+        this.setCurrentTimeout(null);
       }, this.rotationTimeout);
+      this.setCurrentTimeout(this.rotationTimeout);
     } else if (this.rotationSounds.length > 0) {
       console.log('startTimeout');
       this.rotationTimeoutId = setTimeout(() => {
         this.rotationTimeoutId = null;
         this.generateAndStartRotation();
-      }, this.rotationTimeout);
+        this.setCurrentTimeout(null);
+      }, this.rotationSoundTimeout);
+      this.setCurrentTimeout(this.rotationSoundTimeout);
     } else {
       this.rotationTimeoutId = null;
     }
     // console.log('onSoundEnded', e);
   }
 
-  subscribe(gameModel) {
-    gameModel.on('backgroundSoundUpdate', this.onBackgroundSoundUpdate);
-    gameModel.on('rotationSoundsUpdate', this.onRotationSoundsUpdate);
+  setCurrentTimeout(currentTimeout) {
+    this.currentTimeout = currentTimeout;
+    this.emit('currentTimeoutUpdate', { currentTimeout });
   }
 
-  unsubscribe(gameModel) {
-    gameModel.off('backgroundSoundUpdate', this.onBackgroundSoundUpdate);
-    gameModel.off('rotationSoundsUpdate', this.onRotationSoundsUpdate);
-  }
 
   // playSingleSound(name, buffer) {
   //   this.stopAllSounds();
@@ -190,6 +221,7 @@ export class SoundStage extends EventEmitter {
       }
       ctl.source.customData = { soundName };
       // ctl.gainNode.gain.value = 0;
+      ctl.gainNode.gain.value = 0.1;
       if (!ctl.source.start) {
         ctl.source.noteOn(0);
       } else {
