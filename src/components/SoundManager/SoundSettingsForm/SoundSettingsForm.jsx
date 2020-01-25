@@ -1,6 +1,9 @@
 import React, { Component } from 'react';
 import './SoundSettingsForm.css';
 
+import classNames from 'classnames';
+import { TimeoutInput } from './TimeoutInput';
+
 // import { SoundSettingsFormPropTypes } from '../../types';
 
 export class SoundSettingsForm extends Component {
@@ -15,6 +18,9 @@ export class SoundSettingsForm extends Component {
     };
     this.onRotationTimeoutUpdate = this.onRotationTimeoutUpdate.bind(this);
     this.onRotationSoundTimeoutUpdate = this.onRotationSoundTimeoutUpdate.bind(this);
+    this.onRotationSoundTimeoutChange = this.onRotationSoundTimeoutChange.bind(this);
+    this.onIncrement = this.onIncrement.bind(this);
+    this.onDecrement = this.onDecrement.bind(this);
   }
 
   componentDidMount = () => {
@@ -58,14 +64,42 @@ export class SoundSettingsForm extends Component {
     this.setState({
       rotationTimeout,
     });
-    // this.rotationTimeout = rotationTimeout;
   }
 
   onRotationSoundTimeoutUpdate({ rotationSoundTimeout }) {
     this.setState({
       rotationSoundTimeout,
     });
-    // this.rotationSoundTimeout = rotationSoundTimeout;
+  }
+
+  onRotationSoundTimeoutChange(e) {
+    const { value } = e.target;
+    const { gameModel } = this.props;
+    gameModel.execute({
+      type: 'setRotationSoundTimeout',
+      rotationSoundTimeout: Number(value) * 1000,
+    });
+  }
+
+  onRotationTimeoutChange(e) {
+    const { value } = e.target;
+    const { gameModel } = this.props;
+    gameModel.execute({
+      type: 'setRotationTimeout',
+      rotationTimeout: Number(value) * 1000,
+    });
+  }
+
+  onIncrement(prop, callback) {
+    return () => {
+      callback.apply(this, [{ target: { value: this.state[prop] / 1000 + 1 } }]);
+    };
+  }
+
+  onDecrement(prop, callback) {
+    return () => {
+      callback.apply(this, [{ target: { value: this.state[prop] / 1000 - 1 } }]);
+    };
   }
 
   subscribe(gameModel) {
@@ -84,34 +118,39 @@ export class SoundSettingsForm extends Component {
     if (!initialized) {
       return null;
     }
-    // const { t } = this.props;
-
-    // if (!something) {
-    //   return <div> SoundSettingsForm stub </div>;
-    //   // return null;
-    // }
+    const { t } = this.props;
     return (
       <div className="SoundSettingsForm">
-        SoundSettingsForm body
-        {rotationSoundTimeout}
-        <br />
-        {rotationTimeout}
-        {/* <div className="mb-4">
+        <div className="mb-4">
           <label
             className="block text-gray-700 text-sm font-bold mb-2"
-            htmlFor="locationName"
+            htmlFor="rotationSoundTimeout"
           >
-            {t('locationName')}
+            {t('rotationSoundTimeout')}
           </label>
-          <input
-            className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-            id="locationName"
-            type="text"
-            value={name}
-            onChange={onChange('name')}
-            onKeyPress={this._handleKeyDown}
+          <TimeoutInput
+            inputId="rotationSoundTimeout"
+            value={rotationSoundTimeout / 1000}
+            onChange={this.onRotationSoundTimeoutChange}
+            onIncrement={this.onIncrement('rotationSoundTimeout', this.onRotationSoundTimeoutChange)}
+            onDecrement={this.onDecrement('rotationSoundTimeout', this.onRotationSoundTimeoutChange)}
           />
-        </div> */}
+        </div>
+        <div className="mb-4">
+          <label
+            className="block text-gray-700 text-sm font-bold mb-2"
+            htmlFor="rotationTimeout"
+          >
+            {t('rotationTimeout')}
+          </label>
+          <TimeoutInput
+            inputId="rotationTimeout"
+            value={rotationTimeout / 1000}
+            onChange={this.onRotationTimeoutChange}
+            onIncrement={this.onIncrement('rotationTimeout', this.onRotationTimeoutChange)}
+            onDecrement={this.onDecrement('rotationTimeout', this.onRotationTimeoutChange)}
+          />
+        </div>
       </div>
     );
   }

@@ -4,7 +4,7 @@ import { AbstractService } from './AbstractService';
 
 export class SoundStageService extends AbstractService {
   metadata = {
-    actions: ['setBackgroundSound', 'rotationSoundsChange', 'clearSoundStage'],
+    actions: ['setBackgroundSound', 'rotationSoundsChange', 'clearSoundStage', 'setRotationTimeout', 'setRotationSoundTimeout'],
     requests: ['soundStage'],
     emitEvents: ['backgroundSoundUpdate', 'rotationSoundsUpdate'],
   };
@@ -55,6 +55,15 @@ export class SoundStageService extends AbstractService {
   }
 
   _setRotationTimeout({ rotationTimeout }) {
+    if (!R.is(Number, rotationTimeout)) {
+      return;
+    }
+    if (rotationTimeout < 0) {
+      rotationTimeout = 0;
+    }
+    if (rotationTimeout > 30000) {
+      rotationTimeout = 30000;
+    }
     this.rotationTimeout = rotationTimeout;
     this.emit('rotationTimeoutUpdate', {
       rotationTimeout,
@@ -62,6 +71,15 @@ export class SoundStageService extends AbstractService {
   }
 
   _setRotationSoundTimeout({ rotationSoundTimeout }) {
+    if (!R.is(Number, rotationSoundTimeout)) {
+      return;
+    }
+    if (rotationSoundTimeout < 0) {
+      rotationSoundTimeout = 0;
+    }
+    if (rotationSoundTimeout > 30000) {
+      rotationSoundTimeout = 30000;
+    }
     this.rotationSoundTimeout = rotationSoundTimeout;
     this.emit('rotationSoundTimeoutUpdate', {
       rotationSoundTimeout,

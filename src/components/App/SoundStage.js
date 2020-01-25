@@ -12,8 +12,10 @@ export class SoundStage extends EventEmitter {
 
   rotationSounds = [];
 
+  // timeout between sounds in rotation
   rotationTimeout = null;
 
+  // timeout between rotations
   rotationSoundTimeout = null;
 
   // immediate rotation data
