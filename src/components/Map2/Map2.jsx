@@ -115,16 +115,16 @@ export class Map2 extends Component {
     this.map.on('pm:remove', this.onRemoveLayer);
 
     // const legend = L.control({ position: 'bottomleft' });
-    const legend = L.control({ position: 'topright' });
-    legend.onAdd = function (map) {
-      return musicSelectDom;
-    };
-    L.DomEvent.on(musicSelectDom, 'dblclick', (ev) => {
-      L.DomEvent.stopPropagation(ev);
-    });
-    L.DomEvent.disableScrollPropagation(musicSelectDom);
+    // const legend = L.control({ position: 'topright' });
+    // legend.onAdd = function (map) {
+    //   return musicSelectDom;
+    // };
+    // L.DomEvent.on(musicSelectDom, 'dblclick', (ev) => {
+    //   L.DomEvent.stopPropagation(ev);
+    // });
+    // L.DomEvent.disableScrollPropagation(musicSelectDom);
 
-    legend.addTo(this.map);
+    // legend.addTo(this.map);
 
     // Interesting object which can be used to draw position with arrow
     // L.Control.Locate.prototype.options.compassClass
@@ -180,6 +180,7 @@ export class Map2 extends Component {
 
   onBotUpdate({ bots }) {
     // console.log('On bot update');
+    const { t } = this.props;
     const botMap = R.indexBy((bot) => bot.getName(), bots);
     const botsOnMap = this.botGroup.getLayers();
     const botsTracksOnMap = this.botTrackGroup.getLayers();
@@ -197,12 +198,27 @@ export class Map2 extends Component {
       const bot = botMap[botTrack.options.id];
       if (!bot) {
         this.botTrackGroup.removeLayer(botTrack);
+      } else {
+        botTrack.setLatLngs([bot.getCurPosition(), bot.getNextPoint()]);
+        // curMarkers[botMarker.options.id] = true;
+        // botMarker.setLatLng(bot.getCurPosition());
       }
     });
     bots.filter((bot) => !curMarkers[bot.getName()]).forEach((bot, i) => {
       const botMarker = L.marker(bot.getCurPosition(), { id: bot.getName() });
+      botMarker.on('mouseover', function (e) {
+        botMarker.bindTooltip(t('botTooltip', {
+          name: bot.getName(),
+          speed: bot.getSpeed(),
+        }));
+        this.openTooltip();
+      });
+      botMarker.on('mouseout', function (e) {
+        this.closeTooltip();
+      });
       this.botGroup.addLayer(botMarker);
-      const botTrack = L.polyline(bot.getPath(), {
+      // const botTrack = L.polyline(bot.getPath(), {
+      const botTrack = L.polyline([bot.getCurPosition(), bot.getNextPoint()], {
         id: bot.getName(),
         color: COLOR_PALETTE[i % COLOR_PALETTE.length].color.background,
       });
@@ -720,17 +736,17 @@ export class Map2 extends Component {
     );
   }
 
-  getMusicSelect = () => {
-    const {
-      gameModel,
-    } = this.props;
-    // if (!curMarker) {
-    //   return null;
-    // }
-    return (
-      <MusicSelect gameModel={gameModel} />
-    );
-  }
+  getMusicSelect = () => null
+  // const {
+  //   gameModel,
+  // } = this.props;
+  // // if (!curMarker) {
+  // //   return null;
+  // // }
+  // return (
+  //   <MusicSelect gameModel={gameModel} />
+  // );
+
 
   getLocationPopup = () => {
     const {

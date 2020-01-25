@@ -20,6 +20,7 @@ export class ActiveBot {
     [this.curPosition, this.nextPoint] = bot.path;
     this.curPosition = deg2meters(this.curPosition);
     this.nextPoint = deg2meters(this.nextPoint);
+    // this.prevPoint = deg2meters(this.prevPoint);
 
     // this.direction = {
     //   lat: this.nextPoint.lat - this.prevPoint.lat,
@@ -36,6 +37,10 @@ export class ActiveBot {
     return this.name;
   }
 
+  getSpeed() {
+    return this.speed;
+  }
+
   getPath() {
     return this.bot.path;
   }
@@ -46,6 +51,10 @@ export class ActiveBot {
 
   getCurPosition() {
     return meters2deg(this.curPosition);
+  }
+
+  getNextPoint() {
+    return meters2deg(this.nextPoint);
   }
 
   _hasNextPoint() {
@@ -79,10 +88,12 @@ export class ActiveBot {
     while (walkedDistance > restOfDistance) {
       this.curPosition = { ...this.nextPoint };
       if (this._hasNextPoint()) {
+        // this.prevPoint = this.nextPoint;
         this.nextPoint = this._getNextPoint();
         walkedDistance -= restOfDistance;
         restOfDistance = dist(this.curPosition, this.nextPoint);
       } else {
+        // this.prevPoint = this.nextPoint;
         this.nextPoint = null;
         return;
       }

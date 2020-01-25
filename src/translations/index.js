@@ -87,6 +87,8 @@ export const translations = {
       markerName: 'Название маркера',
       latitude: 'Широта',
       longitude: 'Долгота',
+
+      botTooltip: 'Дух "{{name}}", скорость {{speed}} м/с',
     },
   },
 };
