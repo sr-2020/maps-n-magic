@@ -198,10 +198,8 @@ export class Map2 extends Component {
       const bot = botMap[botTrack.options.id];
       if (!bot) {
         this.botTrackGroup.removeLayer(botTrack);
-      } else {
+      } else if (bot.getNextPoint()) {
         botTrack.setLatLngs([bot.getCurPosition(), bot.getNextPoint()]);
-        // curMarkers[botMarker.options.id] = true;
-        // botMarker.setLatLng(bot.getCurPosition());
       }
     });
     bots.filter((bot) => !curMarkers[bot.getName()]).forEach((bot, i) => {
@@ -217,12 +215,14 @@ export class Map2 extends Component {
         this.closeTooltip();
       });
       this.botGroup.addLayer(botMarker);
-      // const botTrack = L.polyline(bot.getPath(), {
-      const botTrack = L.polyline([bot.getCurPosition(), bot.getNextPoint()], {
-        id: bot.getName(),
-        color: COLOR_PALETTE[i % COLOR_PALETTE.length].color.background,
-      });
-      this.botTrackGroup.addLayer(botTrack);
+      if (bot.getNextPoint()) {
+        // const botTrack = L.polyline(bot.getPath(), {
+        const botTrack = L.polyline([bot.getCurPosition(), bot.getNextPoint()], {
+          id: bot.getName(),
+          color: COLOR_PALETTE[i % COLOR_PALETTE.length].color.background,
+        });
+        this.botTrackGroup.addLayer(botTrack);
+      }
     });
   }
 

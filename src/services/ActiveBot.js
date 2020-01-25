@@ -54,7 +54,7 @@ export class ActiveBot {
   }
 
   getNextPoint() {
-    return meters2deg(this.nextPoint);
+    return this.nextPoint ? meters2deg(this.nextPoint) : null;
   }
 
   _hasNextPoint() {
