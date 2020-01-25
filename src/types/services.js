@@ -51,3 +51,8 @@ export const soundServicePropTypes = shape({
   isPlayingSound: func.isRequired,
   loadSound: func.isRequired,
 });
+
+export const gameModelPropTypes = shape({
+  get: func.isRequired,
+  execute: func.isRequired,
+});

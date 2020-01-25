@@ -7,7 +7,7 @@ import classNames from 'classnames';
 
 export function TimeoutInput(props) {
   const {
-    t, value, onChange, onIncrement, onDecrement, inputId,
+    t, value, onChange, onIncrement, onDecrement, inputId, incrementKey, decrementKey,
   } = props;
 
   const common = 'w-33p font-bold py-2 px-4 focus:outline-none focus:shadow-outline';
@@ -15,7 +15,7 @@ export function TimeoutInput(props) {
   return (
     <div className="TimeoutInput flex">
       <input
-        className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+        className="flex-auto min-w-0 shadow appearance-none border rounded py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
         id={inputId}
         type="number"
         value={value}
@@ -23,17 +23,17 @@ export function TimeoutInput(props) {
       />
       <button
         type="button"
-        className={classNames(common, selectedButton, 'ml-2')}
+        className={classNames(common, selectedButton, 'ml-2 flex-auto')}
         onClick={onDecrement}
       >
-        {t('decrementSoundTimeout')}
+        {t(decrementKey)}
       </button>
       <button
         type="button"
-        className={classNames(common, selectedButton, 'ml-2')}
+        className={classNames(common, selectedButton, 'ml-2 flex-auto')}
         onClick={onIncrement}
       >
-        {t('incrementSoundTimeout')}
+        {t(incrementKey)}
       </button>
     </div>
   );

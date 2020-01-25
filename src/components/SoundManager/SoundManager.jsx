@@ -2,8 +2,11 @@
 import React, { Component } from 'react';
 import './SoundManager.css';
 
+import Accordion from 'react-bootstrap/Accordion';
+import Card from 'react-bootstrap/Card';
 import { SoundManagerPropTypes } from '../../types';
 import { SoundStageEcho } from './SoundStageEcho';
+
 
 import { SoundSettingsForm } from './SoundSettingsForm';
 
@@ -20,6 +23,7 @@ export class SoundManager extends Component {
       soundStageState: {},
       playbackRotation: [],
       currentTimeout: null,
+      currentTimeoutType: null,
     };
     this.onSoundUpdate = this.onSoundUpdate.bind(this);
     this.onSoundStageUpdate = this.onSoundStageUpdate.bind(this);
@@ -84,9 +88,10 @@ export class SoundManager extends Component {
     });
   }
 
-  onCurrentTimeoutUpdate({ currentTimeout }) {
+  onCurrentTimeoutUpdate({ currentTimeout, currentTimeoutType }) {
     this.setState({
       currentTimeout,
+      currentTimeoutType,
     });
   }
 
@@ -138,7 +143,7 @@ export class SoundManager extends Component {
   // eslint-disable-next-line max-lines-per-function
   render() {
     const {
-      sounds, soundStageState, initialized, playbackRotation, currentTimeout,
+      sounds, soundStageState, initialized, playbackRotation, currentTimeout, currentTimeoutType,
     } = this.state;
 
     if (!initialized) {
@@ -149,7 +154,17 @@ export class SoundManager extends Component {
 
     return (
       <div className="SoundManager">
-        <SoundSettingsForm gameModel={gameModel} />
+        <Accordion>
+          <Card>
+            <Accordion.Toggle as={Card.Header} eventKey="0">
+              {t('soundSettings')}
+            </Accordion.Toggle>
+            <Accordion.Collapse eventKey="0">
+              <Card.Body><SoundSettingsForm gameModel={gameModel} /></Card.Body>
+            </Accordion.Collapse>
+          </Card>
+        </Accordion>
+
         <div className="px-3">
           {
             sounds.map((sound) => (
@@ -169,7 +184,7 @@ export class SoundManager extends Component {
 
         {currentTimeout && (
           <div>
-            {t('nextSoundIn', {
+            {t(currentTimeoutType === 'rotationTimeout' ? 'nextSpiritIn' : 'nextRotationIn', {
               timeout: `${(currentTimeout / 1000).toFixed(1)}s`,
             })}
           </div>

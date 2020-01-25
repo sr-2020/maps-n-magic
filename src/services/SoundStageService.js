@@ -4,9 +4,24 @@ import { AbstractService } from './AbstractService';
 
 export class SoundStageService extends AbstractService {
   metadata = {
-    actions: ['setBackgroundSound', 'rotationSoundsChange', 'clearSoundStage', 'setRotationTimeout', 'setRotationSoundTimeout'],
+    actions: [
+      'setBackgroundSound',
+      'rotationSoundsChange',
+      'clearSoundStage',
+      'setRotationTimeout',
+      'setRotationSoundTimeout',
+      'setRotationVolume',
+      'setBackgroundVolume',
+    ],
     requests: ['soundStage'],
-    emitEvents: ['backgroundSoundUpdate', 'rotationSoundsUpdate'],
+    emitEvents: [
+      'backgroundSoundUpdate',
+      'rotationSoundsUpdate',
+      'rotationTimeoutUpdate',
+      'rotationSoundTimeoutUpdate',
+      'backgroundVolumeUpdate',
+      'rotationVolumeUpdate',
+    ],
   };
 
   constructor() {
@@ -15,46 +30,40 @@ export class SoundStageService extends AbstractService {
     this.rotationSounds = [];
     this.rotationTimeout = 2000;
     this.rotationSoundTimeout = 5000;
+    this.backgroundVolume = 50;
+    this.rotationVolume = 50;
   }
 
-  execute(action, onDefaultAction) {
-    if (action.type === 'setBackgroundSound') {
-      return this._setBackgroundSound(action);
-    }
-    if (action.type === 'rotationSoundsChange') {
-      return this._rotationSoundsChange(action);
-    }
-    if (action.type === 'clearSoundStage') {
-      return this._clearSoundStage(action);
-    }
-    if (action.type === 'setRotationTimeout') {
-      return this._setRotationTimeout(action);
-    }
-    if (action.type === 'setRotationSoundTimeout') {
-      return this._setRotationSoundTimeout(action);
-    }
-    return onDefaultAction(action);
+  setData({ soundStageSettings = {} } = {}) {
+    this.rotationTimeout = soundStageSettings.rotationTimeout || this.rotationTimeout;
+    this.rotationSoundTimeout = soundStageSettings.rotationSoundTimeout || this.rotationSoundTimeout;
+    this.backgroundVolume = soundStageSettings.backgroundVolume || this.backgroundVolume;
+    this.rotationVolume = soundStageSettings.rotationVolume || this.rotationVolume;
   }
 
-  get(request, onDefaultRequest) {
-    if (request.type === 'soundStage') {
-      return this._getSoundStage();
-    }
-    return onDefaultRequest(request);
+  getData() {
+    return {
+      soundStageSettings: {
+        rotationTimeout: this.rotationTimeout,
+        rotationSoundTimeout: this.rotationSoundTimeout,
+        backgroundVolume: this.backgroundVolume,
+        rotationVolume: this.rotationVolume,
+      },
+    };
   }
 
   // dispose() {
   //   // this._stop();
   // }
 
-  _setBackgroundSound({ name }) {
+  setBackgroundSound({ name }) {
     this.backgroundSound = name;
     this.emit('backgroundSoundUpdate', {
       backgroundSound: this.backgroundSound,
     });
   }
 
-  _setRotationTimeout({ rotationTimeout }) {
+  setRotationTimeout({ rotationTimeout }) {
     if (!R.is(Number, rotationTimeout)) {
       return;
     }
@@ -70,7 +79,7 @@ export class SoundStageService extends AbstractService {
     });
   }
 
-  _setRotationSoundTimeout({ rotationSoundTimeout }) {
+  setRotationSoundTimeout({ rotationSoundTimeout }) {
     if (!R.is(Number, rotationSoundTimeout)) {
       return;
     }
@@ -86,7 +95,39 @@ export class SoundStageService extends AbstractService {
     });
   }
 
-  _clearSoundStage() {
+  setBackgroundVolume({ backgroundVolume }) {
+    if (!R.is(Number, backgroundVolume)) {
+      return;
+    }
+    if (backgroundVolume < 0) {
+      backgroundVolume = 0;
+    }
+    if (backgroundVolume > 100) {
+      backgroundVolume = 100;
+    }
+    this.backgroundVolume = backgroundVolume;
+    this.emit('backgroundVolumeUpdate', {
+      backgroundVolume,
+    });
+  }
+
+  setRotationVolume({ rotationVolume }) {
+    if (!R.is(Number, rotationVolume)) {
+      return;
+    }
+    if (rotationVolume < 0) {
+      rotationVolume = 0;
+    }
+    if (rotationVolume > 100) {
+      rotationVolume = 100;
+    }
+    this.rotationVolume = rotationVolume;
+    this.emit('rotationVolumeUpdate', {
+      rotationVolume,
+    });
+  }
+
+  clearSoundStage() {
     const hasBackgroundSound = !!this.backgroundSound;
     if (hasBackgroundSound) {
       this.backgroundSound = null;
@@ -103,7 +144,7 @@ export class SoundStageService extends AbstractService {
     }
   }
 
-  _rotationSoundsChange({ added = [], removed = [] }) {
+  rotationSoundsChange({ added = [], removed = [] }) {
     const sounds = R.difference(this.rotationSounds, removed).concat(added);
     if (R.symmetricDifference(this.rotationSounds, sounds).length !== 0) {
       this.rotationSounds = sounds;
@@ -113,12 +154,14 @@ export class SoundStageService extends AbstractService {
     }
   }
 
-  _getSoundStage() {
+  getSoundStage() {
     return {
       backgroundSound: this.backgroundSound,
       rotationSounds: [...this.rotationSounds],
       rotationTimeout: this.rotationTimeout,
       rotationSoundTimeout: this.rotationSoundTimeout,
+      backgroundVolume: this.backgroundVolume,
+      rotationVolume: this.rotationVolume,
     };
   }
 }

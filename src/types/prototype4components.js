@@ -8,7 +8,9 @@ import {
   locationPropTypes,
 } from './primitives';
 
-import { dataServicePropTypes, spiritServicePropTypes, soundServicePropTypes } from './services';
+import {
+  dataServicePropTypes, spiritServicePropTypes, soundServicePropTypes, gameModelPropTypes,
+} from './services';
 
 
 export const Map2PropTypes = {
@@ -62,17 +64,22 @@ export const SearchPropTypes = {
 };
 
 export const SoundManagerPropTypes = {
-  soundService: soundServicePropTypes.isRequired,
+  // soundService: soundServicePropTypes.isRequired,
 };
 
 export const MusicSelectPropTypes = {
-  soundService: soundServicePropTypes.isRequired,
+  // soundService: soundServicePropTypes.isRequired,
 };
 
 export const MusicSelectControlPropTypes = {
-  soundService: soundServicePropTypes.isRequired,
+  // soundService: soundServicePropTypes.isRequired,
 };
 
 export const FractionListPropTypes = {
   spiritService: spiritServicePropTypes.isRequired,
+};
+
+export const SoundSettingsFormPropTypes = {
+  gameModel: gameModelPropTypes.isRequired,
+  t: func.isRequired,
 };
