@@ -54,7 +54,7 @@ export class FractionList extends Component {
     this.props.spiritService.off('fractionChange', this.onFractionChange);
   }
 
-  onFractionChange(fractions) {
+  onFractionChange({ fractions }) {
     // const { spirits } = this.state;
     // const newSpirits = spirits.map((spirit) => {
     //   if (changedSpirit.id !== spirit.id) {

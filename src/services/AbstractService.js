@@ -28,30 +28,41 @@ export class AbstractService {
     this.gameModel = gameModel;
   }
 
+  // eslint-disable-next-line class-methods-use-this
   setData(database) {}
 
+  // eslint-disable-next-line class-methods-use-this
   getData() {
     return {};
   }
 
+  // eslint-disable-next-line class-methods-use-this
   dispose() {}
 
   execute(action, onDefaultAction) {
     const includes = this.metadata.actions.includes(action.type);
-    if (includes) {
+    if (includes && !!this[action.type]) {
       return this[action.type](action);
     }
-    throw new Error(`Action ${action.type} is not found in ${this.constructor.name}`);
+    if (!includes) {
+      throw new Error(`Action ${action.type} is not found in ${this.constructor.name} metadata`);
+    } else {
+      throw new Error(`Action ${action.type} is not found in ${this.constructor.name} instance`);
+    }
 
     // return onDefaultAction(action);
   }
 
   get(request, onDefaultRequest) {
     const includes = this.metadata.requests.includes(request.type);
-    if (includes) {
+    if (includes && !!this[typeToGetter(request.type)]) {
       return this[typeToGetter(request.type)](request);
     }
-    throw new Error(`Request ${request.type} is not found in ${this.constructor.name}`);
+    if (!includes) {
+      throw new Error(`Request ${request.type} is not found in ${this.constructor.name} metadata`);
+    } else {
+      throw new Error(`Request ${request.type} is not found in ${this.constructor.name} instance`);
+    }
 
     // return onDefaultRequest(request);
   }

@@ -3,10 +3,12 @@ import { AbstractService } from './AbstractService';
 
 export class SoundMappingService extends AbstractService {
   metadata = {
+    ...this.metadata,
     actions: ['mapSoundToKey'],
     requests: ['soundMapping', 'soundForKey'],
-    emitEvents: ['soundToKeySet'],
-    listenEvents: [],
+    emitEvents: ['soundToKeySet', 'soundMappingChange'],
+    listenEvents: ['fractionChange'],
+    needRequests: ['sound'],
   };
 
   constructor() {
@@ -15,6 +17,16 @@ export class SoundMappingService extends AbstractService {
       manaLevels: {},
       spiritFractions: {},
     };
+    this.onFractionChange = this.onFractionChange.bind(this);
+  }
+
+  init(...args) {
+    super.init(...args);
+    this.on('fractionChange', this.onFractionChange);
+  }
+
+  dispose() {
+    this.off('fractionChange', this.onFractionChange);
   }
 
   setData({ soundMapping } = {}) {
@@ -52,6 +64,20 @@ export class SoundMappingService extends AbstractService {
 
   getSoundForKey({ key, keyType }) {
     return this.soundMapping[keyType][key];
+  }
+
+  onFractionChange({ removed }) {
+    const usedFractions = R.keys(this.soundMapping.spiritFractions);
+    if (removed.length > 0 && R.intersection(usedFractions, removed).length > 0) {
+      const existingFractions = R.difference(usedFractions, removed);
+      this.soundMapping = {
+        ...this.soundMapping,
+        spiritFractions: R.pick(existingFractions, this.soundMapping.spiritFractions),
+      };
+      this.emit('soundMappingChange', {
+        ...this.soundMapping,
+      });
+    }
   }
 
   // isEmpty() {

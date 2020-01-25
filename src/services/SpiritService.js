@@ -5,12 +5,6 @@ import { getEeStats } from '../utils/miscUtils';
 
 import { AbstractService } from './AbstractService';
 
-// function stringToType(entity) {
-//   return R.is(String, entity) ? {
-//     type: entity,
-//   } : entity;
-// }
-
 export class SpiritService extends AbstractService {
   metadata = {
     actions: ['putSpirit', 'postSpirit', 'cloneSpirit', 'deleteSpirit'],
@@ -24,7 +18,6 @@ export class SpiritService extends AbstractService {
     this.abilities = [];
     this.spirits = [];
     this.maxSpiritId = 1;
-    // this.spirits = spirits || this._getLSSpirits() || [];
   }
 
   setData({ spirits } = {}) {
@@ -37,76 +30,29 @@ export class SpiritService extends AbstractService {
     }
     this.spirits.filter((spirit) => spirit.maxHitPoints === undefined)
       .forEach((spirit) => (spirit.maxHitPoints = 10));
-    if (spirits) {
-      this._saveSpirits();
-    }
     this._updateSpiritFractionsList();
     this._updateSpiritAbilitiesList();
   }
 
   getData() {
     return {
-      spirits: this._getSpirits(),
+      spirits: this.getSpirits(),
     };
   }
 
-  // _getLSSpirits = function () {
-  //   const spirits = localStorage.getItem('spirits');
-  //   return spirits ? JSON.parse(spirits) : null;
-  // }
-
-  get(request, onDefaultRequest) {
-    // request = stringToType(request);
-    if (request.type === 'spirits') {
-      return this._getSpirits();
-    }
-    if (request.type === 'spirit') {
-      return this._getSpirit(request);
-    }
-    if (request.type === 'spiritFractionsList') {
-      return this._getSpiritFractionsList(request);
-    }
-    if (request.type === 'spiritAbilitiesList') {
-      return this._getSpiritAbilitiesList(request);
-    }
-    return onDefaultRequest(request);
-  }
-
-  _getSpirits = function () {
+  getSpirits = function () {
     return this.spirits;
   }
 
-  // getSpirit = function (id) {
-  //   return { ...this.spirits.find((spirit) => spirit.id === id) };
-  // }
-
-  _getSpirit = function ({ id }) {
-    // return this.getSpirit(id);
+  getSpirit = function ({ id }) {
     return { ...this.spirits.find((spirit) => spirit.id === id) };
   }
 
-  _getSpiritFractionsList = () => this.fractions;
+  getSpiritFractionsList = () => this.fractions;
 
-  _getSpiritAbilitiesList = () => this.abilities;
+  getSpiritAbilitiesList = () => this.abilities;
 
-  execute(action, onDefaultAction) {
-    // action = stringToType(action);
-    if (action.type === 'putSpirit') {
-      return this._putSpirit(action);
-    }
-    if (action.type === 'postSpirit') {
-      return this._postSpirit(action);
-    }
-    if (action.type === 'cloneSpirit') {
-      return this._cloneSpirit(action);
-    }
-    if (action.type === 'deleteSpirit') {
-      return this._deleteSpirit(action);
-    }
-    return onDefaultAction(action);
-  }
-
-  _putSpirit = ({ id, props }) => {
+  putSpirit = ({ id, props }) => {
     const index = this.spirits.findIndex((spirit) => spirit.id === id);
     this.spirits[index] = {
       ...this.spirits[index],
@@ -116,10 +62,9 @@ export class SpiritService extends AbstractService {
     this._updateSpiritFractionsList();
     this._updateSpiritAbilitiesList();
     this.emit('putSpirit', R.clone(this.spirits[index]));
-    this._saveSpirits();
   }
 
-  _postSpirit = ({ props }) => {
+  postSpirit = ({ props }) => {
     this.maxSpiritId++;
     this.spirits.push({
       ...R.clone(defaultSpirit),
@@ -127,16 +72,14 @@ export class SpiritService extends AbstractService {
       id: this.maxSpiritId,
       // name: String(this.maxSpiritId),
     });
-    this._saveSpirits();
     this._updateSpiritFractionsList();
     this._updateSpiritAbilitiesList();
     return this.spirits[this.spirits.length - 1];
   }
 
-  _cloneSpirit = ({ id }) => {
-    // const spirit = this.getSpirit(id);
-    const spirit = this._getSpirit({ id });
-    return this._postSpirit({
+  cloneSpirit = ({ id }) => {
+    const spirit = this.getSpirit({ id });
+    return this.postSpirit({
       props: {
         ...spirit,
         name: this._makeSpiritName(spirit.name),
@@ -144,11 +87,10 @@ export class SpiritService extends AbstractService {
     });
   }
 
-  _deleteSpirit = ({ id }) => {
+  deleteSpirit = ({ id }) => {
     this.spirits = this.spirits.filter((spirit) => spirit.id !== id);
     this._updateSpiritFractionsList();
     this._updateSpiritAbilitiesList();
-    this._saveSpirits();
   }
 
   _makeSpiritName = (name) => {
@@ -167,21 +109,22 @@ export class SpiritService extends AbstractService {
   _updateSpiritFractionsList = () => {
     const newFractions = R.without([''], R.uniq(this.spirits.map(R.prop('fraction'))));
     if (this.fractions.length !== newFractions || R.symmetricDifference(newFractions, this.fractions).length > 0) {
+      const changeData = {
+        added: R.difference(newFractions, this.fractions),
+        removed: R.difference(this.fractions, newFractions),
+        fractions: [...this.fractions],
+      };
       this.fractions = newFractions;
-      this.emit('fractionChange', R.clone(this.fractions));
+      this.emit('fractionChange', changeData);
     }
   }
 
   _updateSpiritAbilitiesList = () => {
     const newAbilites = R.uniq(R.flatten(this.spirits.map(R.prop('abilities'))));
-    if (this.abilities.length !== newAbilites || R.symmetricDifference(newAbilites, this.abilities).length > 0) {
+    if (this.abilities.length !== newAbilites.length || R.symmetricDifference(newAbilites, this.abilities).length > 0) {
       this.abilities = newAbilites;
       // this.emit('fractionChange', R.clone(this.fractions));
     }
-  }
-
-  _saveSpirits = function () {
-    // localStorage.setItem('spirits', JSON.stringify(this.spirits));
   }
 
   // on(...args) {
