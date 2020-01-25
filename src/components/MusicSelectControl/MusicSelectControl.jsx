@@ -76,11 +76,14 @@ export class MusicSelectControl extends Component {
     console.log('MusicSelectControl will unmount');
   }
 
-  onSoundToKeySet({ key, soundName }) {
+  onSoundToKeySet({ key, keyType, soundName }) {
     this.setState(({ soundMapping }) => ({
       soundMapping: {
-        ...soundMapping,
-        [key]: soundName,
+        // ...soundMapping,
+        [keyType]: {
+          ...soundMapping[keyType],
+          [key]: soundName,
+        },
       },
     }));
   }
@@ -97,6 +100,7 @@ export class MusicSelectControl extends Component {
     gameModel.execute({
       type: 'mapSoundToKey',
       key,
+      keyType: 'manaLevels',
       soundName: name,
     });
   }
@@ -109,6 +113,7 @@ export class MusicSelectControl extends Component {
     if (!initialized) {
       return null;
     }
+    const { manaLevels } = soundMapping;
     const { t } = this.props;
 
     return (
@@ -121,7 +126,7 @@ export class MusicSelectControl extends Component {
                 {' '}
                 {t(value.name)}
                 <br />
-                {soundMapping[value.key] || <span className="text-gray-600">{t('noSound')}</span>}
+                {manaLevels[value.key] || <span className="text-gray-600">{t('noSound')}</span>}
               </Accordion.Toggle>
               <Accordion.Collapse eventKey={String(i)}>
                 <Card.Body style={{ maxHeight: '20rem', overflow: 'auto' }} onScroll={(e) => e.stopPropagation()}>
@@ -136,7 +141,7 @@ export class MusicSelectControl extends Component {
                           >
                             <FontAwesomeIcon
                               className={classNames('mr-1 text-base w-4 h-4 ', {
-                                invisible: soundMapping[value.key] !== sound.name,
+                                invisible: manaLevels[value.key] !== sound.name,
                               })}
                               fixedWidth
                               icon={faCheck}

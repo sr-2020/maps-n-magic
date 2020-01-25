@@ -33,8 +33,8 @@ export class UserWatcher extends AbstractService {
     requests: [],
     emitEvents: [],
     needActions: ['setBackgroundSound'],
-    needRequests: ['soundForKey', 'activeBots'],
-    listenEvents: ['soundToKeySet', 'userPositionUpdate'],
+    needRequests: ['soundForKey', 'activeBots', 'locations', 'sounds', 'soundStage'],
+    listenEvents: ['soundToKeySet', 'userPositionUpdate', 'botUpdate'],
   };
 
   constructor() {
@@ -126,6 +126,7 @@ export class UserWatcher extends AbstractService {
 
       const soundName = this.getFromModel({
         type: 'soundForKey',
+        keyType: 'manaLevels',
         key: manaLevel,
       });
       this.executeOnModel({

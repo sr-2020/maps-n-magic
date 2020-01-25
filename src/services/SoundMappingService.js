@@ -1,12 +1,6 @@
 import * as R from 'ramda';
 import { AbstractService } from './AbstractService';
 
-function stringToType(entity) {
-  return R.is(String, entity) ? {
-    type: entity,
-  } : entity;
-}
-
 export class SoundMappingService extends AbstractService {
   metadata = {
     actions: ['mapSoundToKey'],
@@ -17,71 +11,47 @@ export class SoundMappingService extends AbstractService {
 
   constructor() {
     super();
-    this.soundMapping = {};
+    this.soundMapping = {
+      manaLevels: {},
+      spiritFractions: {},
+    };
   }
 
   setData({ soundMapping } = {}) {
-    this.soundMapping = soundMapping || {};
+    this.soundMapping = soundMapping || {
+      manaLevels: {},
+      spiritFractions: {},
+    };
   }
 
   getData() {
     return {
-      soundMapping: this._getSoundMapping(),
+      soundMapping: this.getSoundMapping(),
     };
   }
 
-  execute(action, onDefaultAction) {
-    action = stringToType(action);
-    if (action.type === 'mapSoundToKey') {
-      return this._mapSoundToKey(action);
-    }
-    return onDefaultAction(action);
-  }
-
-  get(request, onDefaultRequest) {
-    request = stringToType(request);
-    if (request.type === 'soundMapping') {
-      return this._getSoundMapping(request);
-    }
-    if (request.type === 'soundForKey') {
-      return this._getSoundForKey(request);
-    }
-    return onDefaultRequest(request);
-  }
-
-  _getSoundMapping() {
+  getSoundMapping() {
     return this.soundMapping;
   }
 
-  getSoundMapping() {
-    return this._getSoundMapping();
-  }
-
-  _mapSoundToKey({ key, soundName }) {
+  mapSoundToKey({ key, keyType, soundName }) {
     if (this.getFromModel({
       type: 'sound',
       name: soundName,
     })) {
-      this.soundMapping[key] = soundName;
+      this.soundMapping[keyType][key] = soundName;
       this.emit('soundToKeySet', {
         key,
         soundName,
+        keyType,
       });
     } else {
       console.error('Trying to map to absent sound key', key, 'sound', soundName);
     }
   }
 
-  mapSoundToKey(key, soundName) {
-    return this._mapSoundToKey({ key, soundName });
-  }
-
-  _getSoundForKey({ key }) {
-    return this.soundMapping[key];
-  }
-
-  getSoundForKey(key) {
-    return this.getSoundForKey({ key });
+  getSoundForKey({ key, keyType }) {
+    return this.soundMapping[keyType][key];
   }
 
   // isEmpty() {

@@ -20,7 +20,7 @@ export class GameModel extends EventEmitter {
     this.onDefaultRequest = this.onDefaultRequest.bind(this);
   }
 
-  init(services) {
+  init(services, migrator) {
     this.services = services.map((ServiceClass) => {
       const service = new ServiceClass();
       service.init(this);
@@ -31,9 +31,14 @@ export class GameModel extends EventEmitter {
     this.verificator.verifyServices(this.services);
 
     this.verificator.finishVerification();
+
+    this.migrator = migrator;
   }
 
   setData(database) {
+    if (this.migrator) {
+      database = this.migrator.migrate(database);
+    }
     this.services.forEach((service) => service.setData(database));
   }
 

@@ -24,6 +24,7 @@ import { SpiritEditor } from '../SpiritEditor';
 import { AppPropTypes } from '../../types';
 
 import { GameModel } from '../../services/GameModel';
+import { Migrator } from '../../services/Migrator';
 
 import { services } from '../../services/GameModelServices';
 
@@ -81,7 +82,7 @@ export class App extends Component {
 
   componentDidMount() {
     const gameModel = new GameModel();
-    gameModel.init(services);
+    gameModel.init(services, Migrator);
     gameModel.setData(database);
 
     fillGameModelWithBots(gameModel);
@@ -146,7 +147,7 @@ export class App extends Component {
         hardDispose(state.gameModel);
 
         const gameModel = new GameModel();
-        gameModel.init(services);
+        gameModel.init(services, Migrator);
         gameModel.setData(database2);
         fillGameModelWithBots(gameModel);
         this.soundStage.subscribeOnModel(gameModel);
@@ -159,10 +160,7 @@ export class App extends Component {
 
   prepareDataForJson() {
     const { gameModel } = this.state;
-    return ({
-      ...gameModel.getData(),
-      version: '0.1.0',
-    });
+    return gameModel.getData();
   }
 
   downloadDatabaseAsFile() {

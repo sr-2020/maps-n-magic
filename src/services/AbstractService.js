@@ -1,9 +1,17 @@
+import * as R from 'ramda';
+
 function capitalizeFirstLetter(string) {
   return string.charAt(0).toUpperCase() + string.slice(1);
 }
 
 function typeToGetter(type) {
   return `get${capitalizeFirstLetter(type)}`;
+}
+
+function stringToType(entity) {
+  return R.is(String, entity) ? {
+    type: entity,
+  } : entity;
 }
 
 export class AbstractService {
@@ -33,9 +41,9 @@ export class AbstractService {
     if (includes) {
       return this[action.type](action);
     }
-    console.error(`Action ${action.type} is not found in ${this.constructor.name}`);
+    throw new Error(`Action ${action.type} is not found in ${this.constructor.name}`);
 
-    return onDefaultAction(action);
+    // return onDefaultAction(action);
   }
 
   get(request, onDefaultRequest) {
@@ -43,9 +51,9 @@ export class AbstractService {
     if (includes) {
       return this[typeToGetter(request.type)](request);
     }
-    console.error(`Request ${request.type} is not found in ${this.constructor.name}`);
+    throw new Error(`Request ${request.type} is not found in ${this.constructor.name}`);
 
-    return onDefaultRequest(request);
+    // return onDefaultRequest(request);
   }
 
   emit(...args) {
@@ -56,18 +64,38 @@ export class AbstractService {
   }
 
   on(...args) {
+    if (!this.metadata.listenEvents.includes(args[0])) {
+      throw new Error(`Event ${args[0]} is not in listen events list of ${this.constructor.name}`);
+    }
     return this.gameModel.on(...args);
   }
 
   off(...args) {
+    if (!this.metadata.listenEvents.includes(args[0])) {
+      throw new Error(`Event ${args[0]} is not in listen events list of ${this.constructor.name}`);
+    }
     return this.gameModel.off(...args);
   }
 
   getFromModel(...args) {
+    const request = stringToType(args[0]);
+
+    const includes = this.metadata.needRequests.includes(request.type);
+    if (!includes) {
+      throw new Error(`Request ${request.type} is not expected from ${this.constructor.name}`);
+    }
+
     return this.gameModel.get(...args);
   }
 
   executeOnModel(...args) {
+    const action = stringToType(args[0]);
+
+    const includes = this.metadata.needActions.includes(action.type);
+    if (!includes) {
+      throw new Error(`Action ${action.type} is not expected from ${this.constructor.name}`);
+    }
+
     return this.gameModel.execute(...args);
   }
 }
