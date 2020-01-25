@@ -55,7 +55,9 @@ export class AppHeader extends Component {
   constructor() {
     super();
     this.state = {
+      // expanded: false,
     };
+    // this.onToggle = this.onToggle.bind(this);
   }
 
   componentDidMount = () => {
@@ -70,9 +72,13 @@ export class AppHeader extends Component {
     console.log('AppHeader will unmount');
   }
 
+  // onToggle() {
+  //   this.setState(({ expanded }) => this.setState({ expanded: !expanded }));
+  // }
+
   // eslint-disable-next-line max-lines-per-function
   render() {
-    // const { something } = this.state;
+    const { expanded } = this.state;
     const {
       t, gameModel, waitingForGeolocation, curPosition, simulateGeoDataStream,
       onUploadFileSelected, downloadDatabaseAsFile, jumpToUserCoords, switchMovementMode,
@@ -84,7 +90,13 @@ export class AppHeader extends Component {
     // }
     return (
       <header className="AppHeader flex-0-0-auto">
-        <Navbar expand="md" className="view-switch pb-0">
+        <Navbar
+          expand="md"
+          className="view-switch pb-0"
+          // collapseOnSelect
+          // expanded={expanded}
+          // onToggle={this.onToggle}
+        >
 
           <Navbar.Toggle aria-controls="basic-navbar-nav" />
           <Navbar.Collapse id="basic-navbar-nav">
@@ -92,7 +104,13 @@ export class AppHeader extends Component {
               {
                 navLinks.map((navLink) => (
                   <Nav.Item as="li" key={navLink.to}>
-                    <NavLink className="px-3 py-2 text-xl" to={navLink.to}>{t(navLink.tKey)}</NavLink>
+                    <NavLink
+                      className="px-3 py-2 text-xl"
+                      to={navLink.to}
+                      // onClick={this.onToggle}
+                    >
+                      {t(navLink.tKey)}
+                    </NavLink>
                   </Nav.Item>
                 ))
               }
