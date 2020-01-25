@@ -32,7 +32,7 @@ export class UserWatcher extends AbstractService {
     actions: [],
     requests: [],
     emitEvents: [],
-    needActions: ['setBackgroundSound'],
+    needActions: ['setBackgroundSound', 'rotationSoundsChange'],
     needRequests: ['soundForKey', 'activeBots', 'locations', 'sounds', 'soundStage'],
     listenEvents: ['soundToKeySet', 'userPositionUpdate', 'botUpdate'],
   };
