@@ -3,67 +3,68 @@ import { AbstractService } from './AbstractService';
 export class TickerService extends AbstractService {
   metadata = {
     actions: ['runModel', 'stopModel'],
-    requests: ['isModelRunning'],
+    requests: ['isModelRunning', 'modelSpeed'],
     emitEvents: ['modelRunningChange', 'modelTick'],
   };
 
   constructor() {
     super();
+    this.startTime = null;
+    this.speed = null;
     this.mainCycleAbortController = null;
   }
 
-  execute(action, onDefaultAction) {
-    if (action.type === 'runModel') {
-      return this._start();
-    }
-    if (action.type === 'stopModel') {
-      return this._stop();
-    }
-    return onDefaultAction(action);
-  }
-
-  get(request, onDefaultRequest) {
-    // request = stringToType(request);
-    if (request.type === 'isModelRunning') {
-      return this._isModelRunning();
-    }
-    return onDefaultRequest(request);
-  }
-
   dispose() {
-    this._stop();
+    this.stopModel();
   }
 
-  _isModelRunning() {
+  getIsModelRunning() {
     return this.mainCycleAbortController && !this.mainCycleAbortController.signal.aborted;
   }
 
-  _stop() {
+  getModelSpeed() {
+    return this.speed;
+  }
+
+  stopModel() {
     if (this.mainCycleAbortController) {
       this.mainCycleAbortController.abort();
-      this.emit('modelRunningChange', false);
+      this.emit('modelRunningChange', {
+        isModelRunning: false,
+      });
     }
   }
 
-  _start() {
+  runModel({ speed }) {
+    if (this.getIsModelRunning()) {
+      this.stopModel();
+    }
     console.log(this);
-    const start = performance.now();
+    // const start = performance.now();
     this.mainCycleAbortController = new AbortController();
     // const animation = {
     //   enable: true,
     // };
+    this.speed = speed;
+    this.startTime = performance.now();
 
     requestAnimationFrame(function animate2(time) {
       // console.log(options.key || 'animation triggered');
       // if (!animation.enable) return;
       if (this.mainCycleAbortController.signal.aborted) return;
 
+
       // console.log(time - start);
       // this.activeBots = filterBots(this.activeBots);
 
+      // if (lastTime !== null) {
+      const newTime = this.startTime + (time - this.startTime) * this.speed;
       this.emit('modelTick', {
-        time,
+        // time,
+        time: newTime,
       });
+      // }
+      // lastTime = time;
 
       // // timeFraction from 0 to 1
       // let timeFraction = (time - start) / options.duration;
@@ -82,7 +83,10 @@ export class TickerService extends AbstractService {
       // }
     }.bind(this));
 
-    this.emit('modelRunningChange', true);
+    this.emit('modelRunningChange', {
+      isModelRunning: true,
+      speed: this.speed,
+    });
     // return animation;
   }
 }

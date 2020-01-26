@@ -19,7 +19,7 @@ export const translations = {
       jumpToUserCoords: 'Перенос карты к пользователю',
       actionMenu: 'Меню действий',
       prevPrototypes: 'Др. страницы',
-      startModelRun: 'Запустить духов',
+      startModelRun: 'Запустить духов, скорость {{speed}}x',
       stopModelRun: 'Остановить духов',
       soundMapping: 'Сопоставление звука',
 

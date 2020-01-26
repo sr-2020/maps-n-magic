@@ -31,7 +31,7 @@ export class BotService extends AbstractService {
     this.off('modelTick', this.onModelTick);
   }
 
-  onModelRunningChange(isModelRunning) {
+  onModelRunningChange({ isModelRunning }) {
     if (!isModelRunning) {
       this._stopBots();
     }

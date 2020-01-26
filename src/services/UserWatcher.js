@@ -108,10 +108,12 @@ export class UserWatcher extends AbstractService {
     if (R.symmetricDifference(curSoundStage.rotationSounds, newRotation).length === 0) {
       return;
     }
+    const added = R.difference(newRotation, curSoundStage.rotationSounds);
+    const removed = R.difference(curSoundStage.rotationSounds, newRotation);
     this.executeOnModel({
       type: 'rotationSoundsChange',
-      added: R.difference(newRotation, curSoundStage.rotationSounds),
-      remove: R.difference(curSoundStage.rotationSounds, newRotation),
+      added,
+      removed,
     });
     // console.log('newRotation', newRotation);
   }

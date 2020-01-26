@@ -16,6 +16,7 @@ import { DownloadDatabaseButton } from '../DownloadDatabaseButton';
 import { UploadDatabaseButton } from '../UploadDatabaseButton';
 import { JumpToUserCoordsSwitch } from '../JumpToUserCoordsSwitch';
 import { MovementSimulatorSwitch } from '../MovementSimulatorSwitch';
+import { ModelRunSelector } from '../ModelRunSelector';
 
 
 // import { AppHeaderPropTypes } from '../../types';
@@ -105,7 +106,7 @@ export class AppHeader extends Component {
                 navLinks.map((navLink) => (
                   <Nav.Item as="li" key={navLink.to}>
                     <NavLink
-                      className="px-3 py-2 text-xl"
+                      className="px-3 py-2 text-lg"
                       to={navLink.to}
                       // onClick={this.onToggle}
                     >
@@ -129,9 +130,9 @@ export class AppHeader extends Component {
             </Nav>
           </Navbar.Collapse>
 
-          <ModelRunControl gameModel={gameModel} />
+          {/* <ModelRunControl gameModel={gameModel} /> */}
           <Dropdown as={Nav.Item} alignRight>
-            <Dropdown.Toggle as={Nav.Link} className="text-xl">{t('actionMenu')}</Dropdown.Toggle>
+            <Dropdown.Toggle as={Nav.Link} className="text-lg">{t('actionMenu')}</Dropdown.Toggle>
             <Dropdown.Menu style={{ zIndex: 2000 }}>
               <UploadDatabaseButton onChange={onUploadFileSelected} />
               <DownloadDatabaseButton onClick={downloadDatabaseAsFile} />
@@ -145,6 +146,8 @@ export class AppHeader extends Component {
                 onClick={switchMovementMode}
                 simulateGeoDataStream={simulateGeoDataStream}
               />
+              <Dropdown.Divider />
+              <ModelRunSelector gameModel={gameModel} />
             </Dropdown.Menu>
           </Dropdown>
         </Navbar>

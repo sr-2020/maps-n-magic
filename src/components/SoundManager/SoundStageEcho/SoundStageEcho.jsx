@@ -79,7 +79,7 @@ export class SoundStageEcho extends Component {
     // }
     return (
       <div className="SoundStageEcho">
-        SoundStageEcho body
+        {/* SoundStageEcho body */}
         <div>
           <div>background sound</div>
           <div>{backgroundSound}</div>

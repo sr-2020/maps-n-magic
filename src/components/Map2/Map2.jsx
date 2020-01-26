@@ -27,6 +27,8 @@ import { markerPopupDom, locationPopupDom, musicSelectDom } from '../../utils/do
 
 import { applyLeafletGeomanTranslation, getZoomTranslation } from '../../translations';
 
+import { SoundStageEcho } from '../SoundManager/SoundStageEcho';
+
 import { Translator } from './Translator';
 
 // eslint-disable-next-line import/extensions
@@ -114,17 +116,17 @@ export class Map2 extends Component {
     this.map.on('pm:create', this.onCreateLayer);
     this.map.on('pm:remove', this.onRemoveLayer);
 
-    // const legend = L.control({ position: 'bottomleft' });
+    const legend = L.control({ position: 'bottomleft' });
     // const legend = L.control({ position: 'topright' });
-    // legend.onAdd = function (map) {
-    //   return musicSelectDom;
-    // };
-    // L.DomEvent.on(musicSelectDom, 'dblclick', (ev) => {
-    //   L.DomEvent.stopPropagation(ev);
-    // });
-    // L.DomEvent.disableScrollPropagation(musicSelectDom);
+    legend.onAdd = function (map) {
+      return musicSelectDom;
+    };
+    L.DomEvent.on(musicSelectDom, 'dblclick', (ev) => {
+      L.DomEvent.stopPropagation(ev);
+    });
+    L.DomEvent.disableScrollPropagation(musicSelectDom);
 
-    // legend.addTo(this.map);
+    legend.addTo(this.map);
 
     // Interesting object which can be used to draw position with arrow
     // L.Control.Locate.prototype.options.compassClass
@@ -738,16 +740,19 @@ export class Map2 extends Component {
     );
   }
 
-  getMusicSelect = () => null
-  // const {
-  //   gameModel,
-  // } = this.props;
-  // // if (!curMarker) {
-  // //   return null;
-  // // }
-  // return (
-  //   <MusicSelect gameModel={gameModel} />
-  // );
+  // getMusicSelect = () => null
+  getMusicSelect = () => {
+    const {
+      gameModel,
+    } = this.props;
+    // if (!curMarker) {
+    //   return null;
+    // }
+    return (
+      <SoundStageEcho gameModel={gameModel} />
+      // <MusicSelect gameModel={gameModel} />
+    );
+  }
 
 
   getLocationPopup = () => {

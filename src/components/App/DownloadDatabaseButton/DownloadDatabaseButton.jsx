@@ -16,7 +16,7 @@ export function DownloadDatabaseButton(props) {
       data-original-title=""
       onClick={onClick}
       title={t('downloadDatabase')}
-      className="py-3 text-xl"
+      className="py-3 text-lg"
     >
       {t('downloadDatabase')}
     </Dropdown.Item>

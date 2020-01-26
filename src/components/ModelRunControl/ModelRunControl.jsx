@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import './ModelRunControl.css';
 
 import Button from 'react-bootstrap/Button';
+import Dropdown from 'react-bootstrap/Dropdown';
 
 // import { ModelRunControlPropTypes } from '../../types';
 
@@ -36,7 +37,7 @@ export class ModelRunControl extends Component {
     this.props.gameModel.off('modelRunningChange', this.onModelRunningChange);
   }
 
-  onModelRunningChange(isModelRunning) {
+  onModelRunningChange({ isModelRunning }) {
     this.setState({
       isModelRunning,
     });
@@ -45,7 +46,10 @@ export class ModelRunControl extends Component {
   onClick() {
     const { isModelRunning } = this.state;
     const { gameModel } = this.props;
-    gameModel.execute(isModelRunning ? 'stopModel' : 'runModel');
+    gameModel.execute(isModelRunning ? 'stopModel' : {
+      type: 'runModel',
+      speed: 1,
+    });
   }
 
   // gameModel.start();

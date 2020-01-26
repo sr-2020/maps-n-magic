@@ -11,9 +11,10 @@ export function fillGameModelWithBots(gameModel) {
   const locations = gameModel.get('locations');
   const points = locations.map(locToSomePoint);
   const spirits = gameModel.get('spirits');
-  const speeds = [3, 5, 8];
+  const speeds = [2, 3, 5];
   // const speeds = [30, 50, 80];
-  const waitTimes = [2, 3];
+  // const waitTimes = [2, 3, 5];
+  const waitTimes = [120, 180, 300];
   const pathLength = 5;
   spirits
   // .filter((s, i) => i < 6)

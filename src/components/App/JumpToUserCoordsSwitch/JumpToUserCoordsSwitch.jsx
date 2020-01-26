@@ -23,7 +23,7 @@ export function JumpToUserCoordsSwitch(props) {
         label={t('jumpToUserCoords')}
         checked={curPosition !== null}
         disabled={waitingForGeolocation}
-        className="py-3 text-xl"
+        className="py-3 text-lg"
         style={{ display: 'inline-block' }}
       >
       </Form.Check>
