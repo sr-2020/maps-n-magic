@@ -1,11 +1,10 @@
 import React, { Component } from 'react';
 import './SoundStageEcho.css';
 
-// import { SoundStageEchoPropTypes } from '../../types';
-import { GameModel } from '../../../services/GameModel';
+import { SoundStageEchoPropTypes } from '../../../types';
 
 export class SoundStageEcho extends Component {
-  // static propTypes = SoundStageEchoPropTypes;
+  static propTypes = SoundStageEchoPropTypes;
 
   constructor(props) {
     super(props);
@@ -71,12 +70,7 @@ export class SoundStageEcho extends Component {
 
   render() {
     const { backgroundSound, rotationSounds } = this.state;
-    const { gameModel } = this.props;
 
-    // if (!something) {
-    //   return <div> SoundStageEcho stub </div>;
-    //   // return null;
-    // }
     return (
       <div className="SoundStageEcho">
         {/* SoundStageEcho body */}

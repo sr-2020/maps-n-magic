@@ -85,6 +85,7 @@ export class SoundRow extends Component {
             </div>
           </div>
         </button>
+        {/* <div className="soundBreak" /> */}
         <button
           type="button"
           className={

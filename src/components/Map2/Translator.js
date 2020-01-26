@@ -36,6 +36,10 @@ export class Translator {
     return obj;
   }
 
+  _isPoint = (el) => R.is(Object, el) && !!el[0] && !!el[1];
+
+  _isLatlng = (el) => R.is(Object, el) && !!el.lat && !!el.lng;
+
   _moveBeacon(beacon, func) {
     return {
       ...beacon,
@@ -61,7 +65,8 @@ export class Translator {
   }
 
   _movePolygon(polygon, func) {
-    return polygon.map((point) => this._movePoint(point, func));
+    // return polygon.map((point) => (this._isPoint(point) ? this._movePoint(point, func) : this._moveBeacon(point, func)));
+    return polygon.map((point) => (this._isPoint(point) ? this._movePoint(point, func) : this._moveBeacon(point, func)));
   }
 
   _movePoint(point, func) {

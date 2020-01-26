@@ -24,9 +24,25 @@ export class SpiritService extends AbstractService {
     this.spirits = spirits || [];
     this.maxSpiritId = R.reduce(R.max, 1, this.spirits.map(R.prop('id')));
     if (this.spirits.length === 0) {
-      ['Иркут', 'Ангара', 'Байкал', 'Баргузин'].forEach((name) => this._postSpirit({
-        props: { name },
-      }));
+      const fractions = ['Дрозд', 'Медведь', 'Неясыть'];
+      `Байкал
+      Ангара
+      Иркут
+      Селенга
+      Баргузин
+      Турка
+      Снежная
+      Витим
+      Орон
+      Сибихта
+      Чуро
+      Котеру
+      Ангаракан
+      Янчуй
+      Солзан
+      Утулик`.split('\n').map(R.trim).forEach((name, i) => this.postSpirit({
+          props: { name, fraction: fractions[i % fractions.length] },
+        }));
     }
     this.spirits.filter((spirit) => spirit.maxHitPoints === undefined)
       .forEach((spirit) => (spirit.maxHitPoints = 10));

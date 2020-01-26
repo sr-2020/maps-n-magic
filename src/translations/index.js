@@ -22,6 +22,9 @@ export const translations = {
       startModelRun: 'Запустить духов, скорость {{speed}}x',
       stopModelRun: 'Остановить духов',
       soundMapping: 'Сопоставление звука',
+      botTrackLayer: 'Треки движения духов',
+      botLayer: 'Духи',
+      userLayer: 'Пользователь',
 
       // Spirit Editor
       newSpirit: 'Новый дух',

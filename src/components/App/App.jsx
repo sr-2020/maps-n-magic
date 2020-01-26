@@ -198,6 +198,11 @@ export class App extends Component {
       return;
     }
 
+    // this.setState({
+    //   curPosition: [52.2982526, 104.1270739],
+    //   waitingForGeolocation: false,
+    // });
+
     const success = (position) => {
       const { latitude } = position.coords;
       const { longitude } = position.coords;

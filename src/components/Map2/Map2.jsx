@@ -172,11 +172,11 @@ export class Map2 extends Component {
     }
     if (coords && !hasUser) {
       const { markerClass: MarkerClass, markerStyle } = L.Control.Locate.prototype.options;
-      const userMarker = new MarkerClass(latlng, markerStyle);
+      const userMarker = new MarkerClass(this.translator.moveTo(latlng), markerStyle);
       this.userGroup.addLayer(userMarker);
     }
     if (coords && hasUser) {
-      layers[0].setLatLng(latlng);
+      layers[0].setLatLng(this.translator.moveTo(latlng));
     }
   }
 
@@ -193,7 +193,7 @@ export class Map2 extends Component {
         this.botGroup.removeLayer(botMarker);
       } else {
         curMarkers[botMarker.options.id] = true;
-        botMarker.setLatLng(bot.getCurPosition());
+        botMarker.setLatLng(this.translator.moveTo(bot.getCurPosition()));
       }
     });
     botsTracksOnMap.forEach((botTrack) => {
@@ -201,11 +201,11 @@ export class Map2 extends Component {
       if (!bot) {
         this.botTrackGroup.removeLayer(botTrack);
       } else if (bot.getNextPoint()) {
-        botTrack.setLatLngs([bot.getCurPosition(), bot.getNextPoint()]);
+        botTrack.setLatLngs(this.translator.moveTo([bot.getCurPosition(), bot.getNextPoint()]));
       }
     });
     bots.filter((bot) => !curMarkers[bot.getName()]).forEach((bot, i) => {
-      const botMarker = L.marker(bot.getCurPosition(), { id: bot.getName() });
+      const botMarker = L.marker(this.translator.moveTo(bot.getCurPosition()), { id: bot.getName() });
       botMarker.on('mouseover', function (e) {
         botMarker.bindPopup(t('botTooltip', {
           name: bot.getName(),
@@ -221,7 +221,7 @@ export class Map2 extends Component {
       this.botGroup.addLayer(botMarker);
       if (bot.getNextPoint()) {
         // const botTrack = L.polyline(bot.getPath(), {
-        const botTrack = L.polyline([bot.getCurPosition(), bot.getNextPoint()], {
+        const botTrack = L.polyline(this.translator.moveTo([bot.getCurPosition(), bot.getNextPoint()]), {
           id: bot.getName(),
           color: COLOR_PALETTE[i % COLOR_PALETTE.length].color.background,
         });

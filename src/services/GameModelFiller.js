@@ -31,7 +31,7 @@ export function fillGameModelWithBots(gameModel) {
       }
       gameModel.execute({
         type: 'putBot',
-        name: spirit.name + i,
+        name: spirit.name,
         bot: new Bot(speeds[i % 3], path, i, waitTimes[i % 2], spirit.fraction),
       });
     });

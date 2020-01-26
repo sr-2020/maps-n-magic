@@ -1,6 +1,19 @@
 import * as R from 'ramda';
 import { AbstractService } from './AbstractService';
 
+const defaultSoundMapping = {
+  manaLevels: {
+    high: 'mana_strong_07064025.mp3',
+    normal: 'mana_normal_07059107.mp3',
+    low: 'mana_weak_07072013.mp3',
+  },
+  spiritFractions: {
+    Дрозд: 'spirit2_drozd.mp3',
+    Медведь: 'spirit3_medved.mp3',
+    Неясыть: 'spirit1_neiasit.mp3',
+  },
+};
+
 export class SoundMappingService extends AbstractService {
   metadata = {
     ...this.metadata,
@@ -13,10 +26,7 @@ export class SoundMappingService extends AbstractService {
 
   constructor() {
     super();
-    this.soundMapping = {
-      manaLevels: {},
-      spiritFractions: {},
-    };
+    this.soundMapping = R.clone(defaultSoundMapping);
     this.onFractionChange = this.onFractionChange.bind(this);
   }
 
@@ -30,10 +40,7 @@ export class SoundMappingService extends AbstractService {
   }
 
   setData({ soundMapping } = {}) {
-    this.soundMapping = soundMapping || {
-      manaLevels: {},
-      spiritFractions: {},
-    };
+    this.soundMapping = soundMapping || R.clone(defaultSoundMapping);
   }
 
   getData() {

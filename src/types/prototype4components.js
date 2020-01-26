@@ -9,7 +9,7 @@ import {
 } from './primitives';
 
 import {
-  dataServicePropTypes, spiritServicePropTypes, soundServicePropTypes, gameModelPropTypes,
+  spiritServicePropTypes, gameModelPropTypes,
 } from './services';
 
 
@@ -82,4 +82,17 @@ export const FractionListPropTypes = {
 export const SoundSettingsFormPropTypes = {
   gameModel: gameModelPropTypes.isRequired,
   t: func.isRequired,
+};
+export const SoundStageEchoPropTypes = {
+  gameModel: gameModelPropTypes.isRequired,
+  // t: func.isRequired,
+};
+export const ModelRunControlPropTypes = {
+  gameModel: gameModelPropTypes.isRequired,
+  // t: func.isRequired,
+};
+
+export const GeoDataStreamSimulatorPropTypes = {
+  // gameModel: gameModelPropTypes.isRequired,
+  // t: func.isRequired,
 };
