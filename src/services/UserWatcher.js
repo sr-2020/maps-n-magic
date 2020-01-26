@@ -27,6 +27,8 @@ function isPointInLocation(latlng, latlngPolygon) {
   return false;
 }
 
+const notNull = R.pipe(R.isNil, R.not);
+
 export class UserWatcher extends AbstractService {
   metadata = {
     actions: [],
@@ -79,10 +81,10 @@ export class UserWatcher extends AbstractService {
     if (!this.location) {
       return;
     }
-    const sounds = this.getFromModel('sounds').filter((sound) => sound.name.includes('spirit')).map(R.prop('name'));
-    if (sounds.length === 0) {
-      return;
-    }
+    // const sounds = this.getFromModel('sounds').filter((sound) => sound.name.includes('spirit')).map(R.prop('name'));
+    // if (sounds.length === 0) {
+    //   return;
+    // }
     const closeBots = bots.filter((bot) => {
       const latlng = bot.getCurPosition();
       return isPointInLocation(latlng, this.location.latlngs[0]);
@@ -90,7 +92,17 @@ export class UserWatcher extends AbstractService {
 
     const curSoundStage = this.getFromModel('soundStage');
 
-    const newRotation = R.uniq(closeBots.map((bot) => sounds[bot.getIndex() % sounds.length]));
+    const newRotation = R.uniq(closeBots
+      .map((bot) => bot.getFraction())
+      .filter(notNull)
+      .map((fraction) => this.getFromModel({
+        type: 'soundForKey',
+        key: fraction,
+        keyType: 'spiritFractions',
+      }))
+      .filter(notNull));
+
+    // const newRotation = R.uniq(closeBots.map((bot) => sounds[bot.getIndex() % sounds.length]));
     // console.log('closeBots.length', closeBots.length);
 
     if (R.symmetricDifference(curSoundStage.rotationSounds, newRotation).length === 0) {

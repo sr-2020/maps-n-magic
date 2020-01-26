@@ -12,6 +12,7 @@ export function fillGameModelWithBots(gameModel) {
   const points = locations.map(locToSomePoint);
   const spirits = gameModel.get('spirits');
   const speeds = [3, 5, 8];
+  // const speeds = [30, 50, 80];
   const waitTimes = [2, 3];
   const pathLength = 5;
   spirits
@@ -30,7 +31,7 @@ export function fillGameModelWithBots(gameModel) {
       gameModel.execute({
         type: 'putBot',
         name: spirit.name + i,
-        bot: new Bot(speeds[i % 3], path, i, waitTimes[i % 2]),
+        bot: new Bot(speeds[i % 3], path, i, waitTimes[i % 2], spirit.fraction),
       });
     });
 }

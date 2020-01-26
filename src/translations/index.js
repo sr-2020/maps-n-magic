@@ -88,7 +88,7 @@ export const translations = {
       latitude: 'Широта',
       longitude: 'Долгота',
 
-      botTooltip: 'Дух "{{name}}", скорость {{speed}} м/с',
+      botTooltip: 'Дух "{{name}}", скорость {{speed}} м/с, фракция {{fraction}}',
     },
   },
 };

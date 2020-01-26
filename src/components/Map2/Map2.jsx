@@ -208,6 +208,7 @@ export class Map2 extends Component {
         botMarker.bindTooltip(t('botTooltip', {
           name: bot.getName(),
           speed: bot.getSpeed(),
+          fraction: bot.getFraction(),
         }));
         this.openTooltip();
       });

@@ -45,6 +45,10 @@ export class ActiveBot {
     return this.bot.path;
   }
 
+  getFraction() {
+    return this.bot.fraction;
+  }
+
   getIndex() {
     return this.bot.index;
   }
