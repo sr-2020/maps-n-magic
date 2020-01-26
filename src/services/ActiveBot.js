@@ -12,6 +12,9 @@ const dist = (pt1, pt2) => Math.sqrt((pt1.lat - pt2.lat) ** 2 + (pt1.lng - pt2.l
 // 63995/1 = 5/X
 // x = 5/63995 =
 
+// state sequence
+// walk <-> wait -> finish
+
 export class ActiveBot {
   constructor(name, bot) {
     this.name = name;
@@ -31,6 +34,8 @@ export class ActiveBot {
     // this.dist = dist(this.prevPoint, this.nextPoint);
     console.log(this.curPosition, this.nextPoint);
     this.speed = bot.speed;
+
+    this.curTask = 'walk';
   }
 
   getName() {
@@ -47,6 +52,10 @@ export class ActiveBot {
 
   getFraction() {
     return this.bot.fraction;
+  }
+
+  getWaitTime() {
+    return this.bot.waitTime;
   }
 
   getIndex() {
@@ -72,44 +81,66 @@ export class ActiveBot {
     return nextPoint;
   }
 
-  hasNext() {
+  hasMoreTasks() {
+    return this.curTask !== 'finish';
     // return true;
-    return this.nextPoint !== null;
+    // return this.nextPoint !== null;
   }
 
   stop() {
     this.lastTime = null;
   }
 
-  next(curTime) {
+  runTask(curTime) {
     if (!this.lastTime) {
       this.lastTime = curTime;
       return;
     }
-    let walkedDistance = ((curTime - this.lastTime) / 1000) * this.speed;
-    let restOfDistance = dist(this.curPosition, this.nextPoint);
 
-    while (walkedDistance > restOfDistance) {
-      this.curPosition = { ...this.nextPoint };
-      if (this._hasNextPoint()) {
-        // this.prevPoint = this.nextPoint;
-        this.nextPoint = this._getNextPoint();
-        walkedDistance -= restOfDistance;
-        restOfDistance = dist(this.curPosition, this.nextPoint);
-      } else {
-        // this.prevPoint = this.nextPoint;
-        this.nextPoint = null;
+    if (this.curTask === 'walk') {
+      const walkedDistance = ((curTime - this.lastTime) / 1000) * this.speed;
+      const restOfDistance = dist(this.curPosition, this.nextPoint);
+
+      if (walkedDistance > restOfDistance) {
+        this.curPosition = { ...this.nextPoint };
+
+        const spentTime = (restOfDistance / this.speed) * 1000;
+
+        this.lastTime += spentTime;
+
+        this.curTask = 'wait';
+        this.runTask(curTime);
         return;
+        // if (this._hasNextPoint()) {
+        //   // this.prevPoint = this.nextPoint;
+        //   this.nextPoint = this._getNextPoint();
+        //   walkedDistance -= restOfDistance;
+        //   restOfDistance = dist(this.curPosition, this.nextPoint);
+        // } else {
+        //   // this.prevPoint = this.nextPoint;
+        //   this.nextPoint = null;
+        //   return;
+        // }
+      }
+      const walkedPart = walkedDistance / restOfDistance;
+      this.curPosition = {
+        lat: (this.nextPoint.lat - this.curPosition.lat) * walkedPart + this.curPosition.lat,
+        lng: (this.nextPoint.lng - this.curPosition.lng) * walkedPart + this.curPosition.lng,
+      };
+      // console.log('curPosition', this.curPosition);
+      this.lastTime = curTime;
+    }
+    if (this.curTask === 'wait') {
+      if ((curTime - this.lastTime) > this.bot.waitTime * 1000) {
+        this.lastTime += this.bot.waitTime * 1000;
+        if (this._hasNextPoint()) {
+          this.nextPoint = this._getNextPoint();
+          this.curTask = 'walk';
+          this.runTask(curTime);
+          return;
+        }
+        this.curTask = 'finish';
       }
     }
-
-    const walkedPart = walkedDistance / restOfDistance;
-    this.curPosition = {
-      lat: (this.nextPoint.lat - this.curPosition.lat) * walkedPart + this.curPosition.lat,
-      lng: (this.nextPoint.lng - this.curPosition.lng) * walkedPart + this.curPosition.lng,
-    };
-    // console.log('curPosition', this.curPosition);
-
-    this.lastTime = curTime;
   }
 }

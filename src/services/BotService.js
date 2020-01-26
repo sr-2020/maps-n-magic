@@ -86,8 +86,8 @@ export class BotService extends AbstractService {
   }
 
   _moveBots({ time }) {
-    this.activeBots = this.activeBots.filter((bot) => bot.hasNext());
-    this.activeBots.forEach((bot) => bot.next(time));
+    this.activeBots = this.activeBots.filter((bot) => bot.hasMoreTasks());
+    this.activeBots.forEach((bot) => bot.runTask(time));
     this.emit('botUpdate', {
       bots: this.activeBots,
     });

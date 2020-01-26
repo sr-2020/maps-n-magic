@@ -53,8 +53,6 @@ export class TickerService extends AbstractService {
     //   enable: true,
     // };
 
-    // const filterBots = R.pipe(R.toPairs, R.filter(([, bot]) => bot.hasNext()), R.fromPairs);
-
     requestAnimationFrame(function animate2(time) {
       // console.log(options.key || 'animation triggered');
       // if (!animation.enable) return;
@@ -66,22 +64,6 @@ export class TickerService extends AbstractService {
       this.emit('modelTick', {
         time,
       });
-      // this.dispatch({
-      //   type: 'moveBots',
-      //   time,
-      // });
-      // this.activeBots = this.activeBots.filter((bot) => bot.hasNext());
-      // this.activeBots.forEach((bot) => bot.next(time));
-      // // R.values(this.activeBots).forEach((bot) => bot.next(time));
-      // this.emit('botUpdate', this.activeBots);
-
-      // if (R.isEmpty(this.activeBots)) {
-      //   // this.runBot('bot1');
-      //   R.keys(this.bots).forEach((name) => this.dispatch({
-      //     type: 'runBot',
-      //     name,
-      //   }));
-      // }
 
       // // timeFraction from 0 to 1
       // let timeFraction = (time - start) / options.duration;

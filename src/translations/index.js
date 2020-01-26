@@ -19,8 +19,8 @@ export const translations = {
       jumpToUserCoords: 'Перенос карты к пользователю',
       actionMenu: 'Меню действий',
       prevPrototypes: 'Др. страницы',
-      startModelRun: 'Запустить модель',
-      stopModelRun: 'Остановить модель',
+      startModelRun: 'Запустить духов',
+      stopModelRun: 'Остановить духов',
       soundMapping: 'Сопоставление звука',
 
       // Spirit Editor
@@ -88,7 +88,7 @@ export const translations = {
       latitude: 'Широта',
       longitude: 'Долгота',
 
-      botTooltip: 'Дух "{{name}}", скорость {{speed}} м/с, фракция {{fraction}}',
+      botTooltip: 'Дух "{{name}}"<br>Скорость {{speed}} м/с<br>Фракция {{fraction}}<br>Время остановки {{waitTime}}с',
     },
   },
 };

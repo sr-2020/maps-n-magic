@@ -205,12 +205,13 @@ export class Map2 extends Component {
     bots.filter((bot) => !curMarkers[bot.getName()]).forEach((bot, i) => {
       const botMarker = L.marker(bot.getCurPosition(), { id: bot.getName() });
       botMarker.on('mouseover', function (e) {
-        botMarker.bindTooltip(t('botTooltip', {
+        botMarker.bindPopup(t('botTooltip', {
           name: bot.getName(),
           speed: bot.getSpeed(),
           fraction: bot.getFraction(),
+          waitTime: bot.getWaitTime(),
         }));
-        this.openTooltip();
+        this.openPopup();
       });
       botMarker.on('mouseout', function (e) {
         this.closeTooltip();
