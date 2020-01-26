@@ -88,6 +88,7 @@ export class ModelRunSelector extends Component {
           speeds.map((speed2) => (
 
             <Dropdown.Item
+              key={speed2}
               as="button"
               type="button"
               data-original-title=""

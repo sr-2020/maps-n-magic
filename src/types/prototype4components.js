@@ -14,7 +14,7 @@ import {
 
 
 export const Map2PropTypes = {
-  dataService: dataServicePropTypes.isRequired,
+  // dataService: dataServicePropTypes.isRequired,
 };
 
 export const SpiritEditorPropTypes = {
