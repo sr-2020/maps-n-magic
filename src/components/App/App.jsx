@@ -42,9 +42,18 @@ import { SoundWatcher } from '../SoundWatcher';
 
 import { SoundStage } from './SoundStage';
 
+import { Translator } from '../Map2/Translator';
+
 const hardDispose = (obj) => Object.keys(obj).forEach((key) => { delete obj[key]; });
 
 const STORAGE_KEY = 'AR_POC';
+
+const TEST_POSITION = {
+  coords: {
+    latitude: 52.2982526,
+    longitude: 104.1270739,
+  },
+};
 
 let database = localStorage.getItem(STORAGE_KEY);
 if (database) {
@@ -94,6 +103,7 @@ export class App extends Component {
     });
     this.saveDataInLsId = setInterval(this.onSaveDataInLs, 10000);
     this.watchGeolocationId = navigator.geolocation.watchPosition(this.onGetPosition);
+    // setInterval(this.onGetPosition, 1000);
     window.addEventListener('beforeunload', this.onSaveDataInLs);
   }
 
@@ -117,6 +127,23 @@ export class App extends Component {
     if (this.state.simulateGeoDataStream) {
       return;
     }
+
+    // position = TEST_POSITION;
+
+    // eslint-disable-next-line react/destructuring-assignment
+    const translator = new Translator(mapConfig.center, this.state.curPosition);
+
+    const coords = translator.moveFrom({
+      lat: position.coords.latitude,
+      lng: position.coords.longitude,
+    });
+
+    position = {
+      coords: {
+        latitude: coords.lat,
+        longitude: coords.lng,
+      },
+    };
 
     const artificialPos = {
       coords: {
@@ -199,7 +226,7 @@ export class App extends Component {
     }
 
     // this.setState({
-    //   curPosition: [52.2982526, 104.1270739],
+    //   curPosition: [TEST_POSITION.coords.latitude, TEST_POSITION.coords.longitude],
     //   waitingForGeolocation: false,
     // });
 
