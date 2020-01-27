@@ -46,6 +46,10 @@ import { MusicSelect } from './MusicSelect';
 
 import './Map2.css';
 
+import { UserLayer } from './UserLayer';
+import { BotLayer } from './BotLayer';
+import { LocationsLayer } from './LocationsLayer';
+
 // console.log(L);
 L.Icon.Default.imagePath = './images/leafletImages/';
 
@@ -157,84 +161,20 @@ export class Map2 extends Component {
   }
 
   onUserPositionUpdate(user) {
-    const layers = this.userGroup.getLayers();
-    const hasUser = layers.length > 0;
-    const coords = user.pos && user.pos.coords;
-    const latlng = coords ? {
-      lat: coords.latitude,
-      lng: coords.longitude,
-    } : null;
-    if (!coords && !hasUser) {
-      return;
-    }
-    if (!coords && hasUser) {
-      this.userGroup.removeLayer(layers[0]);
-    }
-    if (coords && !hasUser) {
-      const { markerClass: MarkerClass, markerStyle } = L.Control.Locate.prototype.options;
-      const userMarker = new MarkerClass(this.translator.moveTo(latlng), markerStyle);
-      this.userGroup.addLayer(userMarker);
-    }
-    if (coords && hasUser) {
-      layers[0].setLatLng(this.translator.moveTo(latlng));
-    }
+    this.userLayer.onUserPositionUpdate(user, this.translator);
   }
 
   onBotUpdate({ bots }) {
-    // console.log('On bot update');
     const { t } = this.props;
-    const botMap = R.indexBy((bot) => bot.getName(), bots);
-    const botsOnMap = this.botGroup.getLayers();
-    const botsTracksOnMap = this.botTrackGroup.getLayers();
-    const curMarkers = {};
-    botsOnMap.forEach((botMarker) => {
-      const bot = botMap[botMarker.options.id];
-      if (!bot) {
-        this.botGroup.removeLayer(botMarker);
-      } else {
-        curMarkers[botMarker.options.id] = true;
-        botMarker.setLatLng(this.translator.moveTo(bot.getCurPosition()));
-      }
-    });
-    botsTracksOnMap.forEach((botTrack) => {
-      const bot = botMap[botTrack.options.id];
-      if (!bot) {
-        this.botTrackGroup.removeLayer(botTrack);
-      } else if (bot.getNextPoint()) {
-        botTrack.setLatLngs(this.translator.moveTo([bot.getCurPosition(), bot.getNextPoint()]));
-      }
-    });
-    bots.filter((bot) => !curMarkers[bot.getName()]).forEach((bot, i) => {
-      const botMarker = L.marker(this.translator.moveTo(bot.getCurPosition()), { id: bot.getName() });
-      botMarker.on('mouseover', function (e) {
-        botMarker.bindPopup(t('botTooltip', {
-          name: bot.getName(),
-          speed: bot.getSpeed(),
-          fraction: bot.getFraction(),
-          waitTime: bot.getWaitTime(),
-        }));
-        this.openPopup();
-      });
-      botMarker.on('mouseout', function (e) {
-        this.closeTooltip();
-      });
-      this.botGroup.addLayer(botMarker);
-      if (bot.getNextPoint()) {
-        // const botTrack = L.polyline(bot.getPath(), {
-        const botTrack = L.polyline(this.translator.moveTo([bot.getCurPosition(), bot.getNextPoint()]), {
-          id: bot.getName(),
-          color: COLOR_PALETTE[i % COLOR_PALETTE.length].color.background,
-        });
-        this.botTrackGroup.addLayer(botTrack);
-      }
-    });
+    this.botLayer.onBotUpdate(bots, t, this.translator);
   }
 
   onCreateLayer = (event) => {
     if (event.layer instanceof L.Marker) {
       this.onCreateMarker(event.layer);
     } else {
-      this.onCreateLocation(event.layer);
+      const { gameModel } = this.props;
+      this.locationsLayer.onCreateLocation(event.layer, gameModel, this.translator, this.setLocationEventHandlers);
     }
   }
 
@@ -254,28 +194,13 @@ export class Map2 extends Component {
     this.updateMarkersView();
   }
 
-  onCreateLocation = (location) => {
-    const { gameModel } = this.props;
-    const latlngs = this.translator.moveFrom({
-      latlngs: location.getLatLngs(),
-    });
-    // const { id, name, markers } = gameModel.postLocation(latlngs);
-    const { id, name, markers } = gameModel.execute({
-      type: 'postLocation',
-      props: { ...latlngs },
-    });
-    L.setOptions(location, { id, name, markers });
-    this.locationsGroup.addLayer(location);
-    this.setLocationEventHandlers(location);
-    this.updateLocationsView();
-  }
-
   onRemoveLayer = (event) => {
     const { gameModel } = this.props;
     if (event.layer instanceof L.Marker) {
       const markerId = event.layer.options.id;
-      this.removeMarkerFromLocations(markerId);
-      this.updateLocationsView();
+      this.locationsLayer.removeMarkerFromLocations(markerId, gameModel);
+      // this.updateLocationsView();
+      this.locationsLayer.updateLocationsView();
       this.markerGroup.removeLayer(event.layer);
       this.onMarkersChange();
       // gameModel.deleteBeacon(event.layer.options.id);
@@ -284,13 +209,7 @@ export class Map2 extends Component {
         id: event.layer.options.id,
       });
     } else {
-      this.locationsGroup.removeLayer(event.layer);
-      // gameModel.deleteLocation(event.layer.options.id);
-      gameModel.execute({
-        type: 'deleteLocation',
-        id: event.layer.options.id,
-      });
-      this.updateLocationsView();
+      this.locationsLayer.onRemoveLocation(event.layer, gameModel);
       this.updateMarkersView();
     }
     this.closeMarkerPopup();
@@ -307,20 +226,28 @@ export class Map2 extends Component {
     this.massCentersGroup = L.layerGroup([]);
     this.signalRadiusesGroup = L.layerGroup([]);
     this.markerGroup = L.layerGroup([]);
-    this.locationsGroup = L.layerGroup([]);
-    this.botTrackGroup = L.layerGroup([]);
-    this.botGroup = L.layerGroup([]);
-    this.userGroup = L.layerGroup([]);
+    this.locationsLayer = new LocationsLayer();
+    // this.locationsGroup = L.layerGroup([]);
+    // this.locationsGroup = this.locationsLayer.getGroup();
+    // this.botTrackGroup = L.layerGroup([]);
+    // this.botGroup = L.layerGroup([]);
+    this.botLayer = new BotLayer();
+    // this.userGroup = L.layerGroup([]);
+    this.userLayer = new UserLayer();
 
     this.baseContourGroup.addTo(this.map);
     // polygonsGroup.addTo(this.map);
     // massCentersGroup.addTo(this.map);
     // this.signalRadiusesGroup.addTo(this.map);
     // this.markerGroup.addTo(this.map);
-    this.locationsGroup.addTo(this.map);
-    this.botTrackGroup.addTo(this.map);
-    this.botGroup.addTo(this.map);
-    this.userGroup.addTo(this.map);
+    // this.locationsGroup.addTo(this.map);
+    this.locationsLayer.getGroup().addTo(this.map);
+    // this.botTrackGroup.addTo(this.map);
+    // this.botGroup.addTo(this.map);
+    this.botLayer.getBotGroup().addTo(this.map);
+    this.botLayer.getBotTrackGroup().addTo(this.map);
+    // this.userGroup.addTo(this.map);
+    this.userLayer.getGroup().addTo(this.map);
 
     const overlayMaps = {
       [t('baseContourLayer')]: this.baseContourGroup,
@@ -328,10 +255,14 @@ export class Map2 extends Component {
       [t('massCentersLayer')]: this.massCentersGroup,
       [t('voronoiPolygonsLayer')]: this.polygonsGroup,
       [t('signalRadiusesLayer')]: this.signalRadiusesGroup,
-      [t('locationsLayer')]: this.locationsGroup,
-      [t('botTrackLayer')]: this.botTrackGroup,
-      [t('botLayer')]: this.botGroup,
-      [t('userLayer')]: this.userGroup,
+      // [t('locationsLayer')]: this.locationsGroup,
+      [t(this.locationsLayer.getNameKey())]: this.locationsLayer.getGroup(),
+      // [t('botTrackLayer')]: this.botTrackGroup,
+      // [t('botLayer')]: this.botGroup,
+      [t(this.botLayer.getBotGroupKey())]: this.botLayer.getBotGroup(),
+      [t(this.botLayer.getBotTrackGroupKey())]: this.botLayer.getBotTrackGroup(),
+      // [t('userLayer')]: this.userGroup,
+      [t(this.userLayer.getNameKey())]: this.userLayer.getGroup(),
     };
 
     L.control.layers(null, overlayMaps).addTo(this.map);
@@ -369,36 +300,20 @@ export class Map2 extends Component {
       this.markerGroup.addLayer(marker);
     });
 
-    // const locationsData = gameModel.getLocations().map(this.translator.moveTo);
-    const locationsData = gameModel.get('locations').map(this.translator.moveTo);
-
-    const locations = locationsData.map(({
-      // eslint-disable-next-line no-shadow
-      latlngs, name, id, markers, manaLevel,
-    }) => L.polygon(latlngs, {
-      id, name, markers, manaLevel,
-    }));
-    locations.forEach((loc) => {
-      this.setLocationEventHandlers(loc);
-      loc.on('mouseover', function (e) {
-        loc.bindTooltip(t('locationTooltip', { name: this.options.name }));
-        this.openTooltip();
-      });
-      loc.on('mouseout', function (e) {
-        this.closeTooltip();
-      });
-      this.locationsGroup.addLayer(loc);
-    });
+    this.locationsLayer.populateLocations(gameModel, this.translator, this.setLocationEventHandlers, t);
 
     this.updateMarkersView();
-    this.updateLocationsView();
+    // this.updateLocationsView();
+    this.locationsLayer.updateLocationsView();
     this.onMarkersChange();
   }
 
-  clearMapData = () => {
+  // eslint-disable-next-line react/sort-comp
+  clearMapData() {
     this.baseContourGroup.clearLayers();
     this.markerGroup.clearLayers();
-    this.locationsGroup.clearLayers();
+    // this.locationsGroup.clearLayers();
+    this.locationsLayer.clear();
   }
 
   setMarkerEventHandlers = (marker) => {
@@ -425,32 +340,6 @@ export class Map2 extends Component {
     this.markerGroup.eachLayer((marker) => {
       const { id } = marker.options;
       marker.setIcon(getIcon(R.contains(id, attachedMarkers) ? 'blue' : 'red'));
-    });
-  }
-
-  updateLocationsView = () => {
-    this.locationsGroup.getLayers().forEach((loc, i) => {
-      const { markers, manaLevel } = loc.options;
-      loc.setStyle({
-        color: markers.length > 0 ? 'blue' : 'red',
-        // fillColor: COLOR_PALETTE[i % COLOR_PALETTE.length].color.background,
-        // fillOpacity: 0.5,
-        fillOpacity: 0.8,
-        // eslint-disable-next-line no-nested-ternary
-        // fillColor: COLOR_PALETTE[manaLevel === 'low' ? 0
-        //   : (manaLevel === 'normal' ? 12
-        //     : 16)].color.background,
-        // eslint-disable-next-line no-nested-ternary
-        fillColor: manaLevel === 'low' ? 'hsla(233, 0%, 50%, 1)'
-          : (manaLevel === 'normal' ? 'hsla(233, 50%, 50%, 1)'
-            : 'hsla(233, 100%, 50%, 1)'),
-        // fillOpacity:
-        //   // eslint-disable-next-line no-nested-ternary
-        //   manaLevel === 'low' ? 0.2
-        //     : (manaLevel === 'normal' ? 0.6
-        //       : 1)
-        // ,
-      });
     });
   }
 
@@ -517,7 +406,8 @@ export class Map2 extends Component {
   }
 
   resetLocationHighlight = () => {
-    this.updateLocationsView();
+    // this.updateLocationsView();
+    this.locationsLayer.updateLocationsView();
     this.updateMarkersView();
   }
 
@@ -638,29 +528,9 @@ export class Map2 extends Component {
   onLocMarkerChange = ({ action, markerId }) => {
     const { gameModel } = this.props;
     const locId = this.state.curLocation.id;
-    this.removeMarkerFromLocations(markerId);
-    const loc = this.locationsGroup.getLayers().find((loc2) => loc2.options.id === locId);
-    const props = loc.options;
-    if (action === 'add') {
-      props.markers = [...props.markers];
-      props.markers.push(markerId);
-    } else if (action === 'remove') {
-      props.markers = props.markers.filter((el) => el !== markerId);
-    } else {
-      console.error(`Unknown action ${action}`);
-    }
-    // gameModel.putLocation(locId, {
-    //   markers: R.clone(props.markers),
-    // });
-    gameModel.execute({
-      type: 'putLocation',
-      id: locId,
-      props: {
-        markers: R.clone(props.markers),
-      },
-    });
+    const props = this.locationsLayer.onLocMarkerChange(action, markerId, gameModel, locId);
 
-    this.updateLocationsView();
+    this.locationsLayer.updateLocationsView();
     this.updateMarkersView();
 
     this.setState((state) => {
@@ -671,51 +541,18 @@ export class Map2 extends Component {
     });
   }
 
-  removeMarkerFromLocations = (markerId) => {
-    const { gameModel } = this.props;
-    this.locationsGroup.eachLayer((loc2) => {
-      const props = loc2.options;
-      if (R.contains(markerId, props.markers)) {
-        props.markers = props.markers.filter((el) => el !== markerId);
-        // gameModel.putLocation(props.id, {
-        //   markers: R.clone(props.markers),
-        // });
-        gameModel.execute({
-          type: 'putLocation',
-          id: props.id,
-          props: {
-            markers: R.clone(props.markers),
-          },
-        });
-      }
-    });
-  }
-
   onLocationChange = (prop) => (e) => {
     const { value } = e.target;
     const { gameModel } = this.props;
     const { id } = this.state.curLocation;
-    const location = this.locationsGroup.getLayers().find((loc) => loc.options.id === id);
-    if (prop === 'name' || prop === 'manaLevel') {
-      location.options[prop] = value;
-      // gameModel.putLocation(id, {
-      //   [prop]: value,
-      // });
-      gameModel.execute({
-        type: 'putLocation',
-        id,
-        props: {
-          [prop]: value,
-        },
-      });
-    }
+    this.locationsLayer.onLocationChange(prop, value, gameModel, id);
     this.setState((state) => {
       const curLocation = { ...state.curLocation, [prop]: value };
       return ({
         curLocation,
       });
     });
-    this.updateLocationsView();
+    this.locationsLayer.updateLocationsView();
   }
 
   closeMarkerPopup = () => {
