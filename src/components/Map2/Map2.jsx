@@ -14,13 +14,6 @@ import { Map2PropTypes } from '../../types';
 import { MarkerPopup } from './MarkerPopup';
 import { LocationPopup } from './LocationPopup';
 
-import { baseClosedLLs, baseLLs } from '../../data/baseContours';
-
-
-import { getIcon } from '../../utils/icons';
-
-import { COLOR_PALETTE } from '../../utils/colorPalette';
-
 import { geomanConfig, defaultTileLayer } from '../../configs/map';
 
 import { markerPopupDom, locationPopupDom, musicSelectDom } from '../../utils/domUtils';
@@ -52,6 +45,7 @@ import { LocationsLayer } from './LocationsLayer';
 import { SignalRadiusesLayer } from './SignalRadiusesLayer';
 import { VoronoiPolygonsLayer } from './VoronoiPolygonsLayer';
 import { BaseContourLayer } from './BaseContourLayer';
+import { MarkerLayer } from './MarkerLayer';
 
 // console.log(L);
 L.Icon.Default.imagePath = './images/leafletImages/';
@@ -173,27 +167,14 @@ export class Map2 extends Component {
   }
 
   onCreateLayer = (event) => {
+    const { gameModel } = this.props;
     if (event.layer instanceof L.Marker) {
-      this.onCreateMarker(event.layer);
+      this.markerLayer.onCreateMarker(event.layer, gameModel, this.translator, this.setMarkerEventHandlers);
+      this.onMarkersChange();
+      this.updateMarkersView();
     } else {
-      const { gameModel } = this.props;
       this.locationsLayer.onCreateLocation(event.layer, gameModel, this.translator, this.setLocationEventHandlers);
     }
-  }
-
-  onCreateMarker = (marker) => {
-    const { gameModel } = this.props;
-    const latlng = this.translator.moveFrom(marker.getLatLng());
-    const { id, name } = gameModel.execute({
-      type: 'postBeacon',
-      props: { ...latlng },
-    });
-    L.setOptions(marker, { id, name });
-    this.markerGroup.addLayer(marker);
-
-    this.setMarkerEventHandlers(marker);
-    this.onMarkersChange();
-    this.updateMarkersView();
   }
 
   onRemoveLayer = (event) => {
@@ -202,12 +183,8 @@ export class Map2 extends Component {
       const markerId = event.layer.options.id;
       this.locationsLayer.removeMarkerFromLocations(markerId, gameModel);
       this.locationsLayer.updateLocationsView();
-      this.markerGroup.removeLayer(event.layer);
+      this.markerLayer.onRemoveMarker(event.layer, gameModel);
       this.onMarkersChange();
-      gameModel.execute({
-        type: 'deleteBeacon',
-        id: event.layer.options.id,
-      });
     } else {
       this.locationsLayer.onRemoveLocation(event.layer, gameModel);
       this.updateMarkersView();
@@ -218,77 +195,39 @@ export class Map2 extends Component {
   // eslint-disable-next-line max-lines-per-function
   // eslint-disable-next-line react/sort-comp
   initMapBackbone() {
-    const { t } = this.props;
     this.markerPopup = L.popup();
     this.locationPopup = L.popup();
 
     this.baseContourLayer = new BaseContourLayer();
-    // this.baseContourGroup = L.layerGroup([]);
-    this.baseContourGroup = this.baseContourLayer.group;
+    this.markerLayer = new MarkerLayer();
     this.voronoiPolygonsLayer = new VoronoiPolygonsLayer();
-    // this.polygonsGroup = L.layerGroup([]);
-    // this.massCentersGroup = L.layerGroup([]);
-    // this.polygonsGroup = this.voronoiPolygonsLayer.polygonsGroup;
-    // this.massCentersGroup = this.voronoiPolygonsLayer.massCentersGroup;
-    // this.signalRadiusesGroup = L.layerGroup([]);
     this.signalRadiusesLayer = new SignalRadiusesLayer();
-    this.markerGroup = L.layerGroup([]);
     this.locationsLayer = new LocationsLayer();
-    // this.locationsGroup = L.layerGroup([]);
-    // this.locationsGroup = this.locationsLayer.getGroup();
-    // this.botTrackGroup = L.layerGroup([]);
-    // this.botGroup = L.layerGroup([]);
     this.botLayer = new BotLayer();
-    // this.userGroup = L.layerGroup([]);
     this.userLayer = new UserLayer();
 
-    // this.baseContourGroup.addTo(this.map);
-    // polygonsGroup.addTo(this.map);
-    // massCentersGroup.addTo(this.map);
-    // this.signalRadiusesGroup.addTo(this.map);
-    this.markerGroup.addTo(this.map);
-    // this.locationsGroup.addTo(this.map);
-    // this.locationsLayer.getGroup().addTo(this.map);
-    // this.botTrackGroup.addTo(this.map);
-    // this.botGroup.addTo(this.map);
-    // this.botLayer.getBotGroup().addTo(this.map);
-    // this.botLayer.getBotTrackGroup().addTo(this.map);
-    // this.userGroup.addTo(this.map);
-    // this.userLayer.getGroup().addTo(this.map);
-
     const overlayMaps = {
-      // [t('baseContourLayer')]: this.baseContourGroup,
-      [t('beaconsLayer')]: this.markerGroup,
-      // [t('massCentersLayer')]: this.massCentersGroup,
-      // [t('voronoiPolygonsLayer')]: this.polygonsGroup,
-      // [t('signalRadiusesLayer')]: this.signalRadiusesGroup,
-      // [t(this.signalRadiusesLayer.getNameKey())]: this.signalRadiusesLayer.getGroup(),
-      // [t('locationsLayer')]: this.locationsGroup,
-      // [t(this.locationsLayer.getNameKey())]: this.locationsLayer.getGroup(),
-      // [t('botTrackLayer')]: this.botTrackGroup,
-      // [t('botLayer')]: this.botGroup,
-      // [t(this.botLayer.getBotGroupKey())]: this.botLayer.getBotGroup(),
-      // [t(this.botLayer.getBotTrackGroupKey())]: this.botLayer.getBotTrackGroup(),
-      // [t('userLayer')]: this.userGroup,
-      // [t(this.userLayer.getNameKey())]: this.userLayer.getGroup(),
+      ...this.setLayersMeta(this.baseContourLayer.getLayersMeta(), true),
+      ...this.setLayersMeta(this.markerLayer.getLayersMeta(), true),
+      ...this.setLayersMeta(this.voronoiPolygonsLayer.getLayersMeta()),
+      ...this.setLayersMeta(this.signalRadiusesLayer.getLayersMeta()),
+      ...this.setLayersMeta(this.locationsLayer.getLayersMeta(), true),
+      ...this.setLayersMeta(this.botLayer.getLayersMeta(), false),
+      ...this.setLayersMeta(this.userLayer.getLayersMeta(), false),
     };
-
-    this.setLayersMeta(this.baseContourLayer.getLayersMeta(), overlayMaps, true);
-    this.setLayersMeta(this.voronoiPolygonsLayer.getLayersMeta(), overlayMaps);
-    this.setLayersMeta(this.signalRadiusesLayer.getLayersMeta(), overlayMaps);
-    this.setLayersMeta(this.locationsLayer.getLayersMeta(), overlayMaps, false);
-    this.setLayersMeta(this.botLayer.getLayersMeta(), overlayMaps, false);
-    this.setLayersMeta(this.userLayer.getLayersMeta(), overlayMaps, false);
 
     L.control.layers(null, overlayMaps).addTo(this.map);
   }
 
-  setLayersMeta(layersMeta, overlayMaps, enable) {
+  setLayersMeta(layersMeta, enableByDefault) {
     const { t } = this.props;
-    if (enable) {
+    if (enableByDefault) {
       Object.values(layersMeta).forEach((group) => group.addTo(this.map));
     }
-    Object.entries(layersMeta).forEach(([nameKey, group]) => (overlayMaps[t(nameKey)] = group));
+    return Object.entries(layersMeta).reduce((acc, [nameKey, group]) => {
+      acc[t(nameKey)] = group;
+      return acc;
+    }, {});
   }
 
   populateMapData = () => {
@@ -296,22 +235,7 @@ export class Map2 extends Component {
 
     this.baseContourLayer.populate(this.translator);
 
-    const beacons2 = gameModel.get('beacons').map(this.translator.moveTo);
-
-    const markers = beacons2.map(({
-      lat, lng, name, id,
-    }) => L.marker({ lat, lng }, { id, name }));
-    markers.forEach((marker) => {
-      this.setMarkerEventHandlers(marker);
-      marker.on('mouseover', function (e) {
-        marker.bindTooltip(t('markerTooltip', { name: this.options.name }));
-        this.openTooltip();
-      });
-      marker.on('mouseout', function (e) {
-        this.closeTooltip();
-      });
-      this.markerGroup.addLayer(marker);
-    });
+    this.markerLayer.populate(gameModel, this.translator, t, this.setMarkerEventHandlers);
 
     this.locationsLayer.populate(gameModel, this.translator, this.setLocationEventHandlers, t);
 
@@ -323,7 +247,7 @@ export class Map2 extends Component {
   // eslint-disable-next-line react/sort-comp
   clearMapData() {
     this.baseContourLayer.clear();
-    this.markerGroup.clearLayers();
+    this.markerLayer.clear();
     this.locationsLayer.clear();
   }
 
@@ -346,11 +270,7 @@ export class Map2 extends Component {
 
   updateMarkersView = () => {
     const { gameModel } = this.props;
-    const attachedMarkers = gameModel.get('attachedBeaconIds');
-    this.markerGroup.eachLayer((marker) => {
-      const { id } = marker.options;
-      marker.setIcon(getIcon(R.contains(id, attachedMarkers) ? 'blue' : 'red'));
-    });
+    this.markerLayer.updateMarkersView(gameModel);
   }
 
   setLocationEventHandlers = (location) => {
@@ -403,16 +323,10 @@ export class Map2 extends Component {
     });
 
     const { markers } = layer.options;
-    this.markerGroup.eachLayer((marker) => {
-      const { id } = marker.options;
-      if (R.contains(id, markers)) {
-        marker.setIcon(getIcon('green'));
-      }
-    });
+    this.markerLayer.highlightMarkers(markers);
   }
 
   resetLocationHighlight = () => {
-    // this.updateLocationsView();
     this.locationsLayer.updateLocationsView();
     this.updateMarkersView();
   }
@@ -442,43 +356,7 @@ export class Map2 extends Component {
     const { value } = e.target;
     const { gameModel } = this.props;
     const { id } = this.state.curMarker;
-    const marker = this.markerGroup.getLayers().find((marker2) => marker2.options.id === id);
-    let resValue = value;
-    if (prop === 'name') {
-      marker.options.name = value;
-      gameModel.execute({
-        type: 'putBeacon',
-        id,
-        props: {
-          [prop]: value,
-        },
-      });
-    }
-    if (prop === 'lat' || prop === 'lng') {
-      const latLng = marker.getLatLng();
-      const num = Number(value);
-      if (!Number.isNaN(num)) {
-        const newLatLng = { ...latLng, [prop]: num };
-        marker.setLatLng(newLatLng);
-        // gameModel.putBeacon(id, this.translator.moveFrom({
-        //   ...latLng,
-        //   [prop]: num,
-        // }));
-        gameModel.execute({
-          type: 'putBeacon',
-          id,
-          props: {
-            ...this.translator.moveFrom({
-              ...latLng,
-              [prop]: num,
-            }),
-          },
-        });
-        this.onMarkersChange();
-        resValue = num;
-      }
-    }
-
+    const resValue = this.markerLayer.onMarkerChange(prop, value, gameModel, id);
     this.setState((state) => {
       const curMarker = { ...state.curMarker, [prop]: resValue };
       return ({
