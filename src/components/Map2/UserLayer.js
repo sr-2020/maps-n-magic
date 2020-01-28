@@ -5,6 +5,12 @@ export class UserLayer {
 
   nameKey = 'userLayer';
 
+  getLayersMeta() {
+    return {
+      [this.nameKey]: this.group,
+    };
+  }
+
   getGroup() {
     return this.group;
   }

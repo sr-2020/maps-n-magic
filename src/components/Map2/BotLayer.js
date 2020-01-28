@@ -10,7 +10,14 @@ export class BotLayer {
 
   botTrackGroup = L.layerGroup([]);
 
-  botTrackGroupKey = 'botLayer';
+  botTrackGroupKey = 'botTrackLayer';
+
+  getLayersMeta() {
+    return {
+      [this.botTrackGroupKey]: this.botTrackGroup,
+      [this.botGroupKey]: this.botGroup,
+    };
+  }
 
   getBotGroup() {
     return this.botGroup;

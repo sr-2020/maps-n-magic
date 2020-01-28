@@ -6,6 +6,12 @@ export class LocationsLayer {
 
   nameKey = 'locationsLayer';
 
+  getLayersMeta() {
+    return {
+      [this.nameKey]: this.group,
+    };
+  }
+
   getGroup() {
     return this.group;
   }
@@ -18,7 +24,7 @@ export class LocationsLayer {
     this.group.clearLayers();
   }
 
-  populateLocations(gameModel, translator, setLocationEventHandlers, t) {
+  populate(gameModel, translator, setLocationEventHandlers, t) {
     const locationsData = gameModel.get('locations').map(translator.moveTo);
 
     const locations = locationsData.map(({

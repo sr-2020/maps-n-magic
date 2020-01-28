@@ -49,6 +49,9 @@ import './Map2.css';
 import { UserLayer } from './UserLayer';
 import { BotLayer } from './BotLayer';
 import { LocationsLayer } from './LocationsLayer';
+import { SignalRadiusesLayer } from './SignalRadiusesLayer';
+import { VoronoiPolygonsLayer } from './VoronoiPolygonsLayer';
+import { BaseContourLayer } from './BaseContourLayer';
 
 // console.log(L);
 L.Icon.Default.imagePath = './images/leafletImages/';
@@ -181,7 +184,6 @@ export class Map2 extends Component {
   onCreateMarker = (marker) => {
     const { gameModel } = this.props;
     const latlng = this.translator.moveFrom(marker.getLatLng());
-    // const { id, name } = gameModel.postBeacon(latlng);
     const { id, name } = gameModel.execute({
       type: 'postBeacon',
       props: { ...latlng },
@@ -199,11 +201,9 @@ export class Map2 extends Component {
     if (event.layer instanceof L.Marker) {
       const markerId = event.layer.options.id;
       this.locationsLayer.removeMarkerFromLocations(markerId, gameModel);
-      // this.updateLocationsView();
       this.locationsLayer.updateLocationsView();
       this.markerGroup.removeLayer(event.layer);
       this.onMarkersChange();
-      // gameModel.deleteBeacon(event.layer.options.id);
       gameModel.execute({
         type: 'deleteBeacon',
         id: event.layer.options.id,
@@ -216,15 +216,22 @@ export class Map2 extends Component {
   }
 
   // eslint-disable-next-line max-lines-per-function
-  initMapBackbone = () => {
+  // eslint-disable-next-line react/sort-comp
+  initMapBackbone() {
     const { t } = this.props;
     this.markerPopup = L.popup();
     this.locationPopup = L.popup();
 
-    this.baseContourGroup = L.layerGroup([]);
-    this.polygonsGroup = L.layerGroup([]);
-    this.massCentersGroup = L.layerGroup([]);
-    this.signalRadiusesGroup = L.layerGroup([]);
+    this.baseContourLayer = new BaseContourLayer();
+    // this.baseContourGroup = L.layerGroup([]);
+    this.baseContourGroup = this.baseContourLayer.group;
+    this.voronoiPolygonsLayer = new VoronoiPolygonsLayer();
+    // this.polygonsGroup = L.layerGroup([]);
+    // this.massCentersGroup = L.layerGroup([]);
+    // this.polygonsGroup = this.voronoiPolygonsLayer.polygonsGroup;
+    // this.massCentersGroup = this.voronoiPolygonsLayer.massCentersGroup;
+    // this.signalRadiusesGroup = L.layerGroup([]);
+    this.signalRadiusesLayer = new SignalRadiusesLayer();
     this.markerGroup = L.layerGroup([]);
     this.locationsLayer = new LocationsLayer();
     // this.locationsGroup = L.layerGroup([]);
@@ -235,54 +242,60 @@ export class Map2 extends Component {
     // this.userGroup = L.layerGroup([]);
     this.userLayer = new UserLayer();
 
-    this.baseContourGroup.addTo(this.map);
+    // this.baseContourGroup.addTo(this.map);
     // polygonsGroup.addTo(this.map);
     // massCentersGroup.addTo(this.map);
     // this.signalRadiusesGroup.addTo(this.map);
-    // this.markerGroup.addTo(this.map);
+    this.markerGroup.addTo(this.map);
     // this.locationsGroup.addTo(this.map);
-    this.locationsLayer.getGroup().addTo(this.map);
+    // this.locationsLayer.getGroup().addTo(this.map);
     // this.botTrackGroup.addTo(this.map);
     // this.botGroup.addTo(this.map);
-    this.botLayer.getBotGroup().addTo(this.map);
-    this.botLayer.getBotTrackGroup().addTo(this.map);
+    // this.botLayer.getBotGroup().addTo(this.map);
+    // this.botLayer.getBotTrackGroup().addTo(this.map);
     // this.userGroup.addTo(this.map);
-    this.userLayer.getGroup().addTo(this.map);
+    // this.userLayer.getGroup().addTo(this.map);
 
     const overlayMaps = {
-      [t('baseContourLayer')]: this.baseContourGroup,
+      // [t('baseContourLayer')]: this.baseContourGroup,
       [t('beaconsLayer')]: this.markerGroup,
-      [t('massCentersLayer')]: this.massCentersGroup,
-      [t('voronoiPolygonsLayer')]: this.polygonsGroup,
-      [t('signalRadiusesLayer')]: this.signalRadiusesGroup,
+      // [t('massCentersLayer')]: this.massCentersGroup,
+      // [t('voronoiPolygonsLayer')]: this.polygonsGroup,
+      // [t('signalRadiusesLayer')]: this.signalRadiusesGroup,
+      // [t(this.signalRadiusesLayer.getNameKey())]: this.signalRadiusesLayer.getGroup(),
       // [t('locationsLayer')]: this.locationsGroup,
-      [t(this.locationsLayer.getNameKey())]: this.locationsLayer.getGroup(),
+      // [t(this.locationsLayer.getNameKey())]: this.locationsLayer.getGroup(),
       // [t('botTrackLayer')]: this.botTrackGroup,
       // [t('botLayer')]: this.botGroup,
-      [t(this.botLayer.getBotGroupKey())]: this.botLayer.getBotGroup(),
-      [t(this.botLayer.getBotTrackGroupKey())]: this.botLayer.getBotTrackGroup(),
+      // [t(this.botLayer.getBotGroupKey())]: this.botLayer.getBotGroup(),
+      // [t(this.botLayer.getBotTrackGroupKey())]: this.botLayer.getBotTrackGroup(),
       // [t('userLayer')]: this.userGroup,
-      [t(this.userLayer.getNameKey())]: this.userLayer.getGroup(),
+      // [t(this.userLayer.getNameKey())]: this.userLayer.getGroup(),
     };
 
+    this.setLayersMeta(this.baseContourLayer.getLayersMeta(), overlayMaps, true);
+    this.setLayersMeta(this.voronoiPolygonsLayer.getLayersMeta(), overlayMaps);
+    this.setLayersMeta(this.signalRadiusesLayer.getLayersMeta(), overlayMaps);
+    this.setLayersMeta(this.locationsLayer.getLayersMeta(), overlayMaps, false);
+    this.setLayersMeta(this.botLayer.getLayersMeta(), overlayMaps, false);
+    this.setLayersMeta(this.userLayer.getLayersMeta(), overlayMaps, false);
+
     L.control.layers(null, overlayMaps).addTo(this.map);
+  }
+
+  setLayersMeta(layersMeta, overlayMaps, enable) {
+    const { t } = this.props;
+    if (enable) {
+      Object.values(layersMeta).forEach((group) => group.addTo(this.map));
+    }
+    Object.entries(layersMeta).forEach(([nameKey, group]) => (overlayMaps[t(nameKey)] = group));
   }
 
   populateMapData = () => {
     const { gameModel, t } = this.props;
 
-    const baseLine = L.polyline(this.translator.moveTo(baseLLs), {
-      color: 'green',
-      pmIgnore: true,
-    });
-    const baseClosedLine = L.polyline(this.translator.moveTo(baseClosedLLs), {
-      color: 'darkviolet',
-      pmIgnore: true,
-    });
-    this.baseContourGroup.addLayer(baseLine);
-    this.baseContourGroup.addLayer(baseClosedLine);
+    this.baseContourLayer.populate(this.translator);
 
-    // const beacons2 = gameModel.getBeacons().map(this.translator.moveTo);
     const beacons2 = gameModel.get('beacons').map(this.translator.moveTo);
 
     const markers = beacons2.map(({
@@ -300,19 +313,17 @@ export class Map2 extends Component {
       this.markerGroup.addLayer(marker);
     });
 
-    this.locationsLayer.populateLocations(gameModel, this.translator, this.setLocationEventHandlers, t);
+    this.locationsLayer.populate(gameModel, this.translator, this.setLocationEventHandlers, t);
 
     this.updateMarkersView();
-    // this.updateLocationsView();
     this.locationsLayer.updateLocationsView();
     this.onMarkersChange();
   }
 
   // eslint-disable-next-line react/sort-comp
   clearMapData() {
-    this.baseContourGroup.clearLayers();
+    this.baseContourLayer.clear();
     this.markerGroup.clearLayers();
-    // this.locationsGroup.clearLayers();
     this.locationsLayer.clear();
   }
 
@@ -335,7 +346,6 @@ export class Map2 extends Component {
 
   updateMarkersView = () => {
     const { gameModel } = this.props;
-    // const attachedMarkers = gameModel.getAttachedBeaconIds();
     const attachedMarkers = gameModel.get('attachedBeaconIds');
     this.markerGroup.eachLayer((marker) => {
       const { id } = marker.options;
@@ -370,9 +380,6 @@ export class Map2 extends Component {
   onLocationEdit = (e) => {
     const { gameModel } = this.props;
     const location = e.target;
-    // gameModel.putLocation(location.options.id, this.translator.moveFrom({
-    //   latlngs: location.getLatLngs(),
-    // }));
     gameModel.execute({
       type: 'putLocation',
       id: location.options.id,
@@ -382,7 +389,6 @@ export class Map2 extends Component {
         }),
       },
     });
-    // putLocation(location.options.id, );
     this.closeMarkerPopup();
   }
 
@@ -412,14 +418,14 @@ export class Map2 extends Component {
   }
 
   onMarkersChange = () => {
-    this.updateSignalRadiuses();
-    this.updateVoronoiPolygons();
+    const { gameModel } = this.props;
+    this.signalRadiusesLayer.updateSignalRadiuses(gameModel, this.translator);
+    this.voronoiPolygonsLayer.updateVoronoiPolygons(gameModel, this.translator);
   }
 
   onMarkerEdit = (e) => {
     const { gameModel } = this.props;
     const marker = e.target;
-    // gameModel.putBeacon(marker.options.id, this.translator.moveFrom(marker.getLatLng()));
     gameModel.execute({
       type: 'putBeacon',
       id: marker.options.id,
@@ -432,47 +438,6 @@ export class Map2 extends Component {
     // console.log('pm:edit', e.target.getLatLng());
   };
 
-  updateVoronoiPolygons = () => {
-    const { gameModel } = this.props;
-    // const { boundingPolylineData, polygonData } = gameModel.getVoronoiPolygonData();
-    const { boundingPolylineData, polygonData } = gameModel.get('voronoiPolygonData');
-    this.massCentersGroup.clearLayers();
-    this.polygonsGroup.clearLayers();
-
-    const boundingPolyline = L.polyline(this.translator.moveTo(boundingPolylineData), { color: 'blue' });
-    const polygons = polygonData.clippedPolygons.map((polygon, i) => L.polygon(this.translator.moveTo(polygon), {
-      fillColor: COLOR_PALETTE[i % COLOR_PALETTE.length].color.background,
-      fillOpacity: 0.5,
-      pmIgnore: true,
-    }));
-
-    polygons.forEach((p) => this.polygonsGroup.addLayer(p));
-    this.polygonsGroup.addLayer(boundingPolyline);
-
-    const massCenters = polygonData.clippedCenters
-      .filter((massCenter) => !Number.isNaN(massCenter.x) && !Number.isNaN(massCenter.y))
-      .map((massCenter) => L.circleMarker(this.translator.moveTo([massCenter.x, massCenter.y]), {
-        radius: 5,
-        pmIgnore: true,
-      }));
-    massCenters.forEach((p) => this.massCentersGroup.addLayer(p));
-  }
-
-  updateSignalRadiuses = () => {
-    const { gameModel } = this.props;
-    this.signalRadiusesGroup.clearLayers();
-    // gameModel.getBeacons().map(this.translator.moveTo).forEach((beacon) => {
-    gameModel.get('beacons').map(this.translator.moveTo).forEach((beacon) => {
-      this.signalRadiusesGroup.addLayer(L.circle({
-        lat: beacon.lat,
-        lng: beacon.lng,
-      }, {
-        radius: 13,
-        pmIgnore: true,
-      }));
-    });
-  }
-
   onMarkerChange = (prop) => (e) => {
     const { value } = e.target;
     const { gameModel } = this.props;
@@ -481,9 +446,6 @@ export class Map2 extends Component {
     let resValue = value;
     if (prop === 'name') {
       marker.options.name = value;
-      // gameModel.putBeacon(id, {
-      //   [prop]: value,
-      // });
       gameModel.execute({
         type: 'putBeacon',
         id,
