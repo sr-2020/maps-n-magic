@@ -19,7 +19,7 @@ export class BeaconService extends AbstractService {
   metadata = {
     actions: ['postBeacon', 'deleteBeacon', 'putBeacon'],
     requests: ['beacons', 'voronoiPolygonData'],
-    emitEvents: [],
+    emitEvents: ['postBeacon', 'deleteBeacon', 'putBeacon'],
     listenEvents: [],
   };
 
@@ -36,69 +36,51 @@ export class BeaconService extends AbstractService {
 
   getData() {
     return {
-      beacons: this._getBeacons(),
+      beacons: this.getBeacons(),
     };
   }
 
-  execute(action, onDefaultAction) {
-    action = stringToType(action);
-    if (action.type === 'putBeacon') {
-      return this._putBeacon(action);
-    }
-    if (action.type === 'postBeacon') {
-      return this._postBeacon(action);
-    }
-    if (action.type === 'deleteBeacon') {
-      return this._deleteBeacon(action);
-    }
-    return onDefaultAction(action);
-  }
-
-  get(request, onDefaultRequest) {
-    request = stringToType(request);
-    if (request.type === 'beacons') {
-      return this._getBeacons(request);
-    }
-    if (request.type === 'voronoiPolygonData') {
-      return this._getVoronoiPolygonData(request);
-    }
-    return onDefaultRequest(request);
-  }
-
-  _getBeacons() {
+  getBeacons() {
     return this.beacons;
   }
 
-  _putBeacon({ id, props }) {
+  putBeacon({ id, props }) {
     const index = this.beacons.findIndex((beacon) => beacon.id === id);
     this.beacons[index] = {
       ...this.beacons[index],
       ...props,
       id,
     };
+    this.emit('putBeacon', this.beacons[index]);
+    return this.beacons[index];
   }
 
-  _postBeacon = ({ props }) => {
+  postBeacon = ({ props }) => {
     this.maxBeaconId++;
     this.beacons.push({
       ...props,
       id: this.maxBeaconId,
       name: String(this.maxBeaconId),
     });
-
-    return this.beacons[this.beacons.length - 1];
+    const beacon = this.beacons[this.beacons.length - 1];
+    this.emit('postBeacon', beacon);
+    return beacon;
   }
 
-  _deleteBeacon = ({ id }) => {
-    this.beacons = this.beacons.filter((beacon) => beacon.id !== id);
+  deleteBeacon = ({ id }) => {
+    const index = this.beacons.findIndex((beacon) => beacon.id === id);
+    const beacon = this.beacons[index];
+    this.beacons = R.remove(index, 1, this.beacons);
+    this.emit('deleteBeacon', beacon);
+    return beacon;
   }
 
-  _getVoronoiPolygonData() {
+  getVoronoiPolygonData() {
     const bRect1 = (getBoundingRect(baseCommonLLs));
     const bRect = scaleRect(bRect1, 1.1);
     const boundingPolylineData = this._boundingRect2Polyline(bRect);
 
-    const plainPoints = this._getBeacons().map((beacon) => ({
+    const plainPoints = this.getBeacons().map((beacon) => ({
       x: beacon.lat,
       y: beacon.lng,
     }));

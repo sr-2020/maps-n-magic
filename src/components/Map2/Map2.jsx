@@ -61,10 +61,11 @@ export class Map2 extends Component {
     };
     this.onUserPositionUpdate = this.onUserPositionUpdate.bind(this);
     this.onBotUpdate = this.onBotUpdate.bind(this);
+    this.onMarkersChange = this.onMarkersChange.bind(this);
   }
 
   // eslint-disable-next-line max-lines-per-function
-  componentDidMount = () => {
+  componentDidMount() {
     const {
       curPosition, gameModel, mapConfig,
     } = this.props;
@@ -72,8 +73,7 @@ export class Map2 extends Component {
     const { urlTemplate, options } = defaultTileLayer;
     this.translator = new Translator(center, curPosition);
 
-    gameModel.on('botUpdate', this.onBotUpdate);
-    gameModel.on('userPositionUpdate', this.onUserPositionUpdate);
+    this.subscribe('on', gameModel);
 
     this.map = L.map(this.mapEl, {
       center,
@@ -135,16 +135,21 @@ export class Map2 extends Component {
     // this.map.pm.toggleGlobalDragMode();
   }
 
-  componentDidUpdate = (prevProps) => {
-    if (prevProps.gameModel !== this.props.gameModel) {
+  componentDidUpdate(prevProps) {
+    const {
+      curPosition, gameModel, mapConfig,
+    } = this.props;
+    if (prevProps.gameModel !== gameModel) {
+      this.subscribe('off', prevProps.gameModel);
+      this.subscribe('on', gameModel);
       this.clearMapData();
       this.populateMapData();
     }
-    if (prevProps.curPosition !== this.props.curPosition) {
-      const { center } = this.props.mapConfig;
-      this.map.panTo(this.props.curPosition || center);
+    if (prevProps.curPosition !== curPosition) {
+      const { center } = mapConfig;
+      this.map.panTo(curPosition || center);
       console.log('position changed');
-      this.translator = new Translator(center, this.props.curPosition);
+      this.translator = new Translator(center, curPosition);
       this.clearMapData();
       this.populateMapData();
       // this.props.soundService.stopAllSounds();
@@ -152,9 +157,20 @@ export class Map2 extends Component {
     // console.log('Map2 did update');
   }
 
-  componentWillUnmount = () => {
-    this.props.gameModel.off('botUpdate', this.onBotUpdate);
-    this.props.gameModel.off('userPositionUpdate', this.onUserPositionUpdate);
+  componentWillUnmount() {
+    const {
+      gameModel,
+    } = this.props;
+    this.subscribe('off', gameModel);
+  }
+
+  // eslint-disable-next-line react/sort-comp
+  subscribe(action, gameModel) {
+    gameModel[action]('botUpdate', this.onBotUpdate);
+    gameModel[action]('userPositionUpdate', this.onUserPositionUpdate);
+    gameModel[action]('putBeacon', this.onMarkersChange);
+    gameModel[action]('postBeacon', this.onMarkersChange);
+    gameModel[action]('deleteBeacon', this.onMarkersChange);
   }
 
   onUserPositionUpdate(user) {
@@ -170,8 +186,6 @@ export class Map2 extends Component {
     const { gameModel } = this.props;
     if (event.layer instanceof L.Marker) {
       this.markerLayer.onCreateMarker(event.layer, gameModel, this.translator, this.setMarkerEventHandlers);
-      this.onMarkersChange();
-      this.updateMarkersView();
     } else {
       this.locationsLayer.onCreateLocation(event.layer, gameModel, this.translator, this.setLocationEventHandlers);
     }
@@ -184,7 +198,6 @@ export class Map2 extends Component {
       this.locationsLayer.removeMarkerFromLocations(markerId, gameModel);
       this.locationsLayer.updateLocationsView();
       this.markerLayer.onRemoveMarker(event.layer, gameModel);
-      this.onMarkersChange();
     } else {
       this.locationsLayer.onRemoveLocation(event.layer, gameModel);
       this.updateMarkersView();
@@ -230,7 +243,7 @@ export class Map2 extends Component {
     }, {});
   }
 
-  populateMapData = () => {
+  populateMapData() {
     const { gameModel, t } = this.props;
 
     this.baseContourLayer.populate(this.translator);
@@ -239,9 +252,10 @@ export class Map2 extends Component {
 
     this.locationsLayer.populate(gameModel, this.translator, this.setLocationEventHandlers, t);
 
-    this.updateMarkersView();
+    // this.updateMarkersView();
     this.locationsLayer.updateLocationsView();
-    this.onMarkersChange();
+    this.signalRadiusesLayer.populate(gameModel, this.translator);
+    this.voronoiPolygonsLayer.populate(gameModel, this.translator);
   }
 
   // eslint-disable-next-line react/sort-comp
@@ -249,6 +263,8 @@ export class Map2 extends Component {
     this.baseContourLayer.clear();
     this.markerLayer.clear();
     this.locationsLayer.clear();
+    this.signalRadiusesLayer.clear();
+    this.voronoiPolygonsLayer.clear();
   }
 
   setMarkerEventHandlers = (marker) => {
@@ -268,7 +284,7 @@ export class Map2 extends Component {
     });
   }
 
-  updateMarkersView = () => {
+  updateMarkersView() {
     const { gameModel } = this.props;
     this.markerLayer.updateMarkersView(gameModel);
   }
@@ -331,7 +347,8 @@ export class Map2 extends Component {
     this.updateMarkersView();
   }
 
-  onMarkersChange = () => {
+  // eslint-disable-next-line react/sort-comp
+  onMarkersChange() {
     const { gameModel } = this.props;
     this.signalRadiusesLayer.updateSignalRadiuses(gameModel, this.translator);
     this.voronoiPolygonsLayer.updateVoronoiPolygons(gameModel, this.translator);
@@ -347,7 +364,6 @@ export class Map2 extends Component {
         ...this.translator.moveFrom(marker.getLatLng()),
       },
     });
-    this.onMarkersChange();
     this.closeMarkerPopup();
     // console.log('pm:edit', e.target.getLatLng());
   };
@@ -399,7 +415,7 @@ export class Map2 extends Component {
     this.map.closePopup();
   }
 
-  getMarkerPopup = () => {
+  getMarkerPopup() {
     const {
       curMarker,
     } = this.state;
@@ -418,7 +434,7 @@ export class Map2 extends Component {
   }
 
   // getMusicSelect = () => null
-  getMusicSelect = () => {
+  getMusicSelect() {
     const {
       gameModel,
     } = this.props;
@@ -432,7 +448,7 @@ export class Map2 extends Component {
   }
 
 
-  getLocationPopup = () => {
+  getLocationPopup() {
     const {
       curLocation,
     } = this.state;

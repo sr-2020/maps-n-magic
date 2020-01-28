@@ -26,7 +26,7 @@ export class MarkerLayer {
 
     setMarkerEventHandlers(marker);
     // this.onMarkersChange();
-    // this.updateMarkersView();
+    this.updateMarkersView(gameModel);
   }
 
   updateMarkersView(gameModel) {
@@ -64,6 +64,7 @@ export class MarkerLayer {
       });
       this.group.addLayer(marker);
     });
+    this.updateMarkersView(gameModel);
   }
 
   onRemoveMarker(marker, gameModel) {

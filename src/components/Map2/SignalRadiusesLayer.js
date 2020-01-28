@@ -19,10 +19,11 @@ export class SignalRadiusesLayer {
     return this.nameKey;
   }
 
-  updateSignalRadiuses = (gameModel, translator) => {
-    // const { gameModel } = this.props;
+  clear() {
     this.group.clearLayers();
-    // gameModel.getBeacons().map(this.translator.moveTo).forEach((beacon) => {
+  }
+
+  populate(gameModel, translator) {
     gameModel.get('beacons').map(translator.moveTo).forEach((beacon) => {
       this.group.addLayer(L.circle({
         lat: beacon.lat,
@@ -32,5 +33,10 @@ export class SignalRadiusesLayer {
         pmIgnore: true,
       }));
     });
+  }
+
+  updateSignalRadiuses = (gameModel, translator) => {
+    this.clear();
+    this.populate(gameModel, translator);
   }
 }

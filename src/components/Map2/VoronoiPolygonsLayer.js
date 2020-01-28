@@ -18,12 +18,13 @@ export class VoronoiPolygonsLayer {
     };
   }
 
-  updateVoronoiPolygons(gameModel, translator) {
-    // const { gameModel } = this.props;
-    const { boundingPolylineData, polygonData } = gameModel.get('voronoiPolygonData');
+  clear() {
     this.massCentersGroup.clearLayers();
     this.polygonsGroup.clearLayers();
+  }
 
+  populate(gameModel, translator) {
+    const { boundingPolylineData, polygonData } = gameModel.get('voronoiPolygonData');
     const boundingPolyline = L.polyline(translator.moveTo(boundingPolylineData), { color: 'blue' });
     const polygons = polygonData.clippedPolygons.map((polygon, i) => L.polygon(translator.moveTo(polygon), {
       fillColor: COLOR_PALETTE[i % COLOR_PALETTE.length].color.background,
@@ -41,5 +42,10 @@ export class VoronoiPolygonsLayer {
         pmIgnore: true,
       }));
     massCenters.forEach((p) => this.massCentersGroup.addLayer(p));
+  }
+
+  updateVoronoiPolygons(gameModel, translator) {
+    this.clear();
+    this.populate(gameModel, translator);
   }
 }
