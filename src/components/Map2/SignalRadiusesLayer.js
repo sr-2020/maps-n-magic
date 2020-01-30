@@ -35,7 +35,7 @@ export class SignalRadiusesLayer {
     });
   }
 
-  updateSignalRadiuses = (gameModel, translator) => {
+  updateSignalRadiuses(gameModel, translator) {
     this.clear();
     this.populate(gameModel, translator);
   }

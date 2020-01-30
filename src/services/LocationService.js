@@ -8,7 +8,7 @@ export class LocationService extends AbstractService {
   metadata = {
     actions: ['postLocation', 'deleteLocation', 'putLocation'],
     requests: ['locations', 'attachedBeaconIds'],
-    emitEvents: [],
+    emitEvents: ['postLocation', 'deleteLocation', 'putLocation'],
     listenEvents: [],
   };
 
@@ -35,47 +35,25 @@ export class LocationService extends AbstractService {
 
   getData() {
     return {
-      locations: this._getLocations(),
+      locations: this.getLocations(),
     };
   }
 
-  execute(action, onDefaultAction) {
-    if (action.type === 'putLocation') {
-      return this._putLocation(action);
-    }
-    if (action.type === 'postLocation') {
-      return this._postLocation(action);
-    }
-    if (action.type === 'deleteLocation') {
-      return this._deleteLocation(action);
-    }
-    return onDefaultAction(action);
-  }
-
-  get(request, onDefaultRequest) {
-    if (request.type === 'locations') {
-      return this._getLocations(request);
-    }
-    if (request.type === 'attachedBeaconIds') {
-      return this._getAttachedBeaconIds(request);
-    }
-    return onDefaultRequest(request);
-  }
-
-  _getLocations() {
+  getLocations() {
     return this.locations;
   }
 
-  _putLocation({ id, props }) {
+  putLocation({ id, props }) {
     const index = this.locations.findIndex((loc) => loc.id === id);
     this.locations[index] = {
       ...this.locations[index],
       ...props,
       id,
     };
+    this.emit('putLocation', this.locations[index]);
   }
 
-  _postLocation({ props }) {
+  postLocation({ props }) {
     this.maxLocationId++;
     this.locations.push({
       ...props,
@@ -84,15 +62,20 @@ export class LocationService extends AbstractService {
       id: this.maxLocationId,
       name: String(this.maxLocationId),
     });
-
-    return this.locations[this.locations.length - 1];
+    const location = this.locations[this.locations.length - 1];
+    this.emit('postLocation', location);
+    return location;
   }
 
-  _deleteLocation({ id }) {
-    this.locations = this.locations.filter((loc) => loc.id !== id);
+  deleteLocation({ id }) {
+    const index = this.locations.findIndex((location) => location.id === id);
+    const location = this.locations[index];
+    this.locations = R.remove(index, 1, this.locations);
+    this.emit('deleteLocation', location);
+    return location;
   }
 
-  _getAttachedBeaconIds() {
+  getAttachedBeaconIds() {
     const allArrs = this.locations.map((loc) => loc.markers);
     return R.uniq(R.flatten(allArrs));
   }

@@ -9,12 +9,6 @@ import { getEeStats } from '../utils/miscUtils';
 
 import { AbstractService } from './AbstractService';
 
-function stringToType(entity) {
-  return R.is(String, entity) ? {
-    type: entity,
-  } : entity;
-}
-
 export class BeaconService extends AbstractService {
   metadata = {
     actions: ['postBeacon', 'deleteBeacon', 'putBeacon'],

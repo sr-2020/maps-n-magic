@@ -62,6 +62,7 @@ export class Map2 extends Component {
     this.onUserPositionUpdate = this.onUserPositionUpdate.bind(this);
     this.onBotUpdate = this.onBotUpdate.bind(this);
     this.onMarkersChange = this.onMarkersChange.bind(this);
+    this.updateMarkersView = this.updateMarkersView.bind(this);
   }
 
   // eslint-disable-next-line max-lines-per-function
@@ -152,7 +153,6 @@ export class Map2 extends Component {
       this.translator = new Translator(center, curPosition);
       this.clearMapData();
       this.populateMapData();
-      // this.props.soundService.stopAllSounds();
     }
     // console.log('Map2 did update');
   }
@@ -171,6 +171,8 @@ export class Map2 extends Component {
     gameModel[action]('putBeacon', this.onMarkersChange);
     gameModel[action]('postBeacon', this.onMarkersChange);
     gameModel[action]('deleteBeacon', this.onMarkersChange);
+    gameModel[action]('putLocation', this.updateMarkersView);
+    gameModel[action]('deleteLocation', this.updateMarkersView);
   }
 
   onUserPositionUpdate(user) {
@@ -200,7 +202,6 @@ export class Map2 extends Component {
       this.markerLayer.onRemoveMarker(event.layer, gameModel);
     } else {
       this.locationsLayer.onRemoveLocation(event.layer, gameModel);
-      this.updateMarkersView();
     }
     this.closeMarkerPopup();
   }
@@ -245,15 +246,9 @@ export class Map2 extends Component {
 
   populateMapData() {
     const { gameModel, t } = this.props;
-
     this.baseContourLayer.populate(this.translator);
-
     this.markerLayer.populate(gameModel, this.translator, t, this.setMarkerEventHandlers);
-
     this.locationsLayer.populate(gameModel, this.translator, this.setLocationEventHandlers, t);
-
-    // this.updateMarkersView();
-    this.locationsLayer.updateLocationsView();
     this.signalRadiusesLayer.populate(gameModel, this.translator);
     this.voronoiPolygonsLayer.populate(gameModel, this.translator);
   }
@@ -338,12 +333,16 @@ export class Map2 extends Component {
       fillOpacity: 1,
     });
 
+    // this is a communication between layers
+    // need to add connector for such case
     const { markers } = layer.options;
     this.markerLayer.highlightMarkers(markers);
   }
 
   resetLocationHighlight = () => {
     this.locationsLayer.updateLocationsView();
+    // this is a communication between layers
+    // need to add connector for such case
     this.updateMarkersView();
   }
 
@@ -385,9 +384,6 @@ export class Map2 extends Component {
     const { gameModel } = this.props;
     const locId = this.state.curLocation.id;
     const props = this.locationsLayer.onLocMarkerChange(action, markerId, gameModel, locId);
-
-    this.locationsLayer.updateLocationsView();
-    this.updateMarkersView();
 
     this.setState((state) => {
       const curLocation = { ...state.curLocation, markers: props.markers };

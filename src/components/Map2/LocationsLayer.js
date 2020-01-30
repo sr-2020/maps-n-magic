@@ -44,6 +44,7 @@ export class LocationsLayer {
       });
       this.group.addLayer(loc);
     });
+    this.updateLocationsView();
   }
 
   onCreateLocation(location, gameModel, translator, setLocationEventHandlers) {
@@ -104,6 +105,7 @@ export class LocationsLayer {
         markers: R.clone(props.markers),
       },
     });
+    this.updateLocationsView();
     return props;
   }
 
