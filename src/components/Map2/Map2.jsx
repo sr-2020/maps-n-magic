@@ -31,6 +31,8 @@ import 'leaflet.locatecontrol/dist/L.Control.Locate.min.css';
 // import playerTracks from '../../data/initialPlayerTracks';
 import { MusicSelect } from './MusicSelect';
 
+import { BotLayer2 } from './BotLayer2';
+
 // R.values(playerTracks).forEach((track, i) => {
 //   L.polyline(track, {
 //     color: ColorPalette[i % ColorPalette.length].color.border,
@@ -58,11 +60,13 @@ export class Map2 extends Component {
     this.state = {
       curMarker: null,
       curLocation: null,
+      map: null,
     };
     this.onUserPositionUpdate = this.onUserPositionUpdate.bind(this);
-    this.onBotUpdate = this.onBotUpdate.bind(this);
+    // this.onBotUpdate = this.onBotUpdate.bind(this);
     this.onMarkersChange = this.onMarkersChange.bind(this);
     this.updateMarkersView = this.updateMarkersView.bind(this);
+    this.setLayersMeta = this.setLayersMeta.bind(this);
   }
 
   // eslint-disable-next-line max-lines-per-function
@@ -130,6 +134,10 @@ export class Map2 extends Component {
 
     legend.addTo(this.map);
 
+    this.setState({
+      map: this.map,
+    });
+
     // Interesting object which can be used to draw position with arrow
     // L.Control.Locate.prototype.options.compassClass
 
@@ -166,7 +174,7 @@ export class Map2 extends Component {
 
   // eslint-disable-next-line react/sort-comp
   subscribe(action, gameModel) {
-    gameModel[action]('botUpdate', this.onBotUpdate);
+    // gameModel[action]('botUpdate', this.onBotUpdate);
     gameModel[action]('userPositionUpdate', this.onUserPositionUpdate);
     gameModel[action]('putBeacon', this.onMarkersChange);
     gameModel[action]('postBeacon', this.onMarkersChange);
@@ -179,10 +187,10 @@ export class Map2 extends Component {
     this.userLayer.onUserPositionUpdate(user, this.translator);
   }
 
-  onBotUpdate({ bots }) {
-    const { t } = this.props;
-    this.botLayer.onBotUpdate(bots, t, this.translator);
-  }
+  // onBotUpdate({ bots }) {
+  //   const { t } = this.props;
+  //   this.botLayer.onBotUpdate(bots, t, this.translator);
+  // }
 
   onCreateLayer = (event) => {
     const { gameModel } = this.props;
@@ -217,20 +225,19 @@ export class Map2 extends Component {
     this.voronoiPolygonsLayer = new VoronoiPolygonsLayer();
     this.signalRadiusesLayer = new SignalRadiusesLayer();
     this.locationsLayer = new LocationsLayer();
-    this.botLayer = new BotLayer();
+    // this.botLayer = new BotLayer();
     this.userLayer = new UserLayer();
 
-    const overlayMaps = {
-      ...this.setLayersMeta(this.baseContourLayer.getLayersMeta(), true),
-      ...this.setLayersMeta(this.markerLayer.getLayersMeta(), true),
-      ...this.setLayersMeta(this.voronoiPolygonsLayer.getLayersMeta()),
-      ...this.setLayersMeta(this.signalRadiusesLayer.getLayersMeta()),
-      ...this.setLayersMeta(this.locationsLayer.getLayersMeta(), true),
-      ...this.setLayersMeta(this.botLayer.getLayersMeta(), false),
-      ...this.setLayersMeta(this.userLayer.getLayersMeta(), false),
-    };
+    this.layerControl = L.control.layers();
+    this.layerControl.addTo(this.map);
 
-    L.control.layers(null, overlayMaps).addTo(this.map);
+    this.setLayersMeta(this.baseContourLayer.getLayersMeta(), true);
+    this.setLayersMeta(this.markerLayer.getLayersMeta(), true);
+    this.setLayersMeta(this.voronoiPolygonsLayer.getLayersMeta());
+    this.setLayersMeta(this.signalRadiusesLayer.getLayersMeta());
+    this.setLayersMeta(this.locationsLayer.getLayersMeta(), true);
+    // this.setLayersMeta(this.botLayer.getLayersMeta(), true);
+    this.setLayersMeta(this.userLayer.getLayersMeta(), false);
   }
 
   setLayersMeta(layersMeta, enableByDefault) {
@@ -238,10 +245,9 @@ export class Map2 extends Component {
     if (enableByDefault) {
       Object.values(layersMeta).forEach((group) => group.addTo(this.map));
     }
-    return Object.entries(layersMeta).reduce((acc, [nameKey, group]) => {
-      acc[t(nameKey)] = group;
-      return acc;
-    }, {});
+    Object.entries(layersMeta).forEach(([nameKey, group]) => {
+      this.layerControl.addOverlay(group, t(nameKey));
+    });
   }
 
   populateMapData() {
@@ -474,12 +480,27 @@ export class Map2 extends Component {
   }
 
   render() {
+    const { map } = this.state;
+
+    const {
+      gameModel,
+    } = this.props;
+
+    const layers = map ? (
+      <BotLayer2
+        gameModel={gameModel}
+        enableByDefault
+        setLayersMeta={this.setLayersMeta}
+        translator={this.translator}
+      />
+    ) : null;
     return (
       <>
         <div
           className="Map2 h-full"
           ref={(map) => (this.mapEl = map)}
         />
+        {layers}
         {
           this.getMarkerPopup()
         }

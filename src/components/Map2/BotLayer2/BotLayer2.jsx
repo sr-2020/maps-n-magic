@@ -1,9 +1,14 @@
+import React, { Component } from 'react';
+import './BotLayer2.css';
+
 import L from 'leaflet/dist/leaflet-src';
 import * as R from 'ramda';
 
-import { COLOR_PALETTE } from '../../utils/colorPalette';
+import { COLOR_PALETTE } from '../../../utils/colorPalette';
 
-export class BotLayer {
+// import { BotLayer2PropTypes } from '../../types';
+
+export class BotLayer2 extends Component {
   botGroup = L.layerGroup([]);
 
   botGroupKey = 'botLayer';
@@ -11,17 +16,67 @@ export class BotLayer {
   botTrackGroup = L.layerGroup([]);
 
   botTrackGroupKey = 'botTrackLayer';
+  // static propTypes = BotLayer2PropTypes;
 
-  getLayersMeta() {
-    return {
-      [this.botTrackGroupKey]: this.botTrackGroup,
-      [this.botGroupKey]: this.botGroup,
+  constructor(props) {
+    super(props);
+    this.state = {
     };
+    this.onBotUpdate = this.onBotUpdate.bind(this);
   }
 
-  onBotUpdate(bots, t, translator) {
+  componentDidMount() {
+    const {
+      translator, gameModel, enableByDefault, setLayersMeta,
+    } = this.props;
+    this.subscribe('on', gameModel);
+    setLayersMeta(this.getLayersMeta(), enableByDefault);
+    this.populate();
+    console.log('BotLayer2 mounted');
+  }
+
+  componentDidUpdate(prevProps) {
+    const { gameModel } = this.props;
+    if (prevProps.gameModel !== gameModel) {
+      this.subscribe('off', prevProps.gameModel);
+      this.subscribe('on', gameModel);
+      this.clear();
+      this.populate();
+    }
+    console.log('BotLayer2 did update');
+  }
+
+  componentWillUnmount() {
+    this.clear();
+    const {
+      gameModel,
+    } = this.props;
+    this.subscribe('off', gameModel);
+    console.log('BotLayer2 will unmount');
+  }
+
+  populate() {
+    const {
+      gameModel,
+    } = this.props;
+
+    const bots = gameModel.get('activeBots');
+    this.onBotUpdate({ bots });
+  }
+
+  // eslint-disable-next-line react/sort-comp
+  subscribe(action, gameModel) {
+    gameModel[action]('botUpdate', this.onBotUpdate);
+  }
+
+  // onBotUpdate2({ bots }) {
+  //   const { t } = this.props;
+  //   this.botLayer.onBotUpdate(bots, t, this.translator);
+  // }
+
+  onBotUpdate({ bots }) {
     // console.log('On bot update');
-    // const { t } = this.props;
+    const { t, translator } = this.props;
     const botMap = R.indexBy((bot) => bot.getName(), bots);
     const botsOnMap = this.botGroup.getLayers();
     const botsTracksOnMap = this.botTrackGroup.getLayers();
@@ -67,5 +122,22 @@ export class BotLayer {
         this.botTrackGroup.addLayer(botTrack);
       }
     });
+  }
+
+  getLayersMeta() {
+    return {
+      [this.botTrackGroupKey]: this.botTrackGroup,
+      [this.botGroupKey]: this.botGroup,
+    };
+  }
+
+  clear() {
+    this.botGroup.clearLayers();
+    this.botTrackGroup.clearLayers();
+  }
+
+  render() {
+    // console.log('test');
+    return null;
   }
 }

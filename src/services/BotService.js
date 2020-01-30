@@ -33,59 +33,35 @@ export class BotService extends AbstractService {
 
   onModelRunningChange({ isModelRunning }) {
     if (!isModelRunning) {
-      this._stopBots();
+      this.stopBots();
     }
   }
 
   onModelTick(data) {
-    this._moveBots(data);
+    this.moveBots(data);
     // if (!isModelRunning) {
     //   this._stopBots();
     // }
   }
 
-  execute(action, onDefaultAction) {
-    if (action.type === 'putBot') {
-      return this._putBot(action);
-    }
-    if (action.type === 'runBot') {
-      return this._runBot(action);
-    }
-    if (action.type === 'moveBots') {
-      return this._moveBots(action);
-    }
-    if (action.type === 'stopBots') {
-      return this._stopBots(action);
-    }
-    return onDefaultAction(action);
-  }
-
-  get(request, onDefaultRequest) {
-    // request = stringToType(request);
-    if (request.type === 'activeBots') {
-      return this._getActiveBots(request);
-    }
-    return onDefaultRequest(request);
-  }
-
-  _getActiveBots() {
+  getActiveBots() {
     return this.activeBots;
   }
 
-  _putBot({ name, bot }) {
+  putBot({ name, bot }) {
     this.bots[name] = bot;
   }
 
-  _runBot({ name }) {
+  runBot({ name }) {
     // this.activeBots[name] = new ActiveBot(name, this.bots[name]);
     this.activeBots.push(new ActiveBot(name, this.bots[name]));
   }
 
-  _stopBots() {
+  stopBots() {
     this.activeBots.forEach((bot) => bot.stop());
   }
 
-  _moveBots({ time }) {
+  moveBots({ time }) {
     this.activeBots = this.activeBots.filter((bot) => bot.hasMoreTasks());
     this.activeBots.forEach((bot) => bot.runTask(time));
     this.emit('botUpdate', {
@@ -94,7 +70,7 @@ export class BotService extends AbstractService {
 
     if (R.isEmpty(this.activeBots)) {
       // this.runBot('bot1');
-      R.keys(this.bots).forEach((name) => this._runBot({ name }));
+      R.keys(this.bots).forEach((name) => this.runBot({ name }));
       // R.keys(this.bots).forEach((name) => this.dispatch({
       //   type: 'runBot',
       //   name,
