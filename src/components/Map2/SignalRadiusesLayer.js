@@ -11,14 +11,6 @@ export class SignalRadiusesLayer {
     };
   }
 
-  getGroup() {
-    return this.group;
-  }
-
-  getNameKey() {
-    return this.nameKey;
-  }
-
   clear() {
     this.group.clearLayers();
   }
