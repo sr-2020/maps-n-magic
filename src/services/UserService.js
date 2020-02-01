@@ -3,6 +3,7 @@ import { AbstractService } from './AbstractService';
 export class UserService extends AbstractService {
   metadata = {
     actions: ['updateUserPosition'],
+    requests: ['user'],
     emitEvents: ['userPositionUpdate'],
   };
 
@@ -13,15 +14,12 @@ export class UserService extends AbstractService {
     };
   }
 
-  execute(action, onDefaultAction) {
-    if (action.type === 'updateUserPosition') {
-      return this._setUserPosition(action.pos);
-    }
-    return onDefaultAction(action);
+  updateUserPosition({ pos }) {
+    this.user.pos = pos;
+    this.emit('userPositionUpdate', { user: this.user });
   }
 
-  _setUserPosition(pos) {
-    this.user.pos = pos;
-    this.emit('userPositionUpdate', this.user);
+  getUser() {
+    return this.user;
   }
 }

@@ -11,14 +11,6 @@ export class UserLayer {
     };
   }
 
-  getGroup() {
-    return this.group;
-  }
-
-  getNameKey() {
-    return this.nameKey;
-  }
-
   onUserPositionUpdate(user, translator) {
     const layers = this.group.getLayers();
     const hasUser = layers.length > 0;

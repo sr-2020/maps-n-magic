@@ -118,7 +118,7 @@ export class UserWatcher extends AbstractService {
     // console.log('newRotation', newRotation);
   }
 
-  onUserPositionUpdate(user) {
+  onUserPositionUpdate({ user }) {
     const coords = user.pos && user.pos.coords;
     const latlng = coords ? {
       lat: coords.latitude,

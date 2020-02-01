@@ -32,6 +32,7 @@ import 'leaflet.locatecontrol/dist/L.Control.Locate.min.css';
 import { MusicSelect } from './MusicSelect';
 
 import { BotLayer2 } from './BotLayer2';
+import { UserLayer2 } from './UserLayer2';
 
 // R.values(playerTracks).forEach((track, i) => {
 //   L.polyline(track, {
@@ -62,7 +63,7 @@ export class Map2 extends Component {
       curLocation: null,
       map: null,
     };
-    this.onUserPositionUpdate = this.onUserPositionUpdate.bind(this);
+    // this.onUserPositionUpdate = this.onUserPositionUpdate.bind(this);
     // this.onBotUpdate = this.onBotUpdate.bind(this);
     this.onMarkersChange = this.onMarkersChange.bind(this);
     this.updateMarkersView = this.updateMarkersView.bind(this);
@@ -175,7 +176,7 @@ export class Map2 extends Component {
   // eslint-disable-next-line react/sort-comp
   subscribe(action, gameModel) {
     // gameModel[action]('botUpdate', this.onBotUpdate);
-    gameModel[action]('userPositionUpdate', this.onUserPositionUpdate);
+    // gameModel[action]('userPositionUpdate', this.onUserPositionUpdate);
     gameModel[action]('putBeacon', this.onMarkersChange);
     gameModel[action]('postBeacon', this.onMarkersChange);
     gameModel[action]('deleteBeacon', this.onMarkersChange);
@@ -183,9 +184,9 @@ export class Map2 extends Component {
     gameModel[action]('deleteLocation', this.updateMarkersView);
   }
 
-  onUserPositionUpdate(user) {
-    this.userLayer.onUserPositionUpdate(user, this.translator);
-  }
+  // onUserPositionUpdate(user) {
+  //   // this.userLayer.onUserPositionUpdate(user, this.translator);
+  // }
 
   // onBotUpdate({ bots }) {
   //   const { t } = this.props;
@@ -226,7 +227,7 @@ export class Map2 extends Component {
     this.signalRadiusesLayer = new SignalRadiusesLayer();
     this.locationsLayer = new LocationsLayer();
     // this.botLayer = new BotLayer();
-    this.userLayer = new UserLayer();
+    // this.userLayer = new UserLayer();
 
     this.layerControl = L.control.layers();
     this.layerControl.addTo(this.map);
@@ -237,7 +238,7 @@ export class Map2 extends Component {
     this.setLayersMeta(this.signalRadiusesLayer.getLayersMeta());
     this.setLayersMeta(this.locationsLayer.getLayersMeta(), true);
     // this.setLayersMeta(this.botLayer.getLayersMeta(), true);
-    this.setLayersMeta(this.userLayer.getLayersMeta(), false);
+    // this.setLayersMeta(this.userLayer.getLayersMeta(), true);
   }
 
   setLayersMeta(layersMeta, enableByDefault) {
@@ -460,8 +461,6 @@ export class Map2 extends Component {
     if (!curLocation) {
       return null;
     }
-    // const allBeacons = R.clone(gameModel.getBeacons());
-    // const allLocations = R.clone(gameModel.getLocations());
     const allBeacons = R.clone(gameModel.get('beacons'));
     const allLocations = R.clone(gameModel.get('locations'));
     return (
@@ -487,18 +486,26 @@ export class Map2 extends Component {
     } = this.props;
 
     const layers = map ? (
-      <BotLayer2
-        gameModel={gameModel}
-        enableByDefault
-        setLayersMeta={this.setLayersMeta}
-        translator={this.translator}
-      />
+      <>
+        <BotLayer2
+          gameModel={gameModel}
+          enableByDefault
+          setLayersMeta={this.setLayersMeta}
+          translator={this.translator}
+        />
+        <UserLayer2
+          gameModel={gameModel}
+          enableByDefault
+          setLayersMeta={this.setLayersMeta}
+          translator={this.translator}
+        />
+      </>
     ) : null;
     return (
       <>
         <div
           className="Map2 h-full"
-          ref={(map) => (this.mapEl = map)}
+          ref={(map2) => (this.mapEl = map2)}
         />
         {layers}
         {

@@ -55,6 +55,7 @@ export class BotLayer2 extends Component {
     console.log('BotLayer2 will unmount');
   }
 
+  // eslint-disable-next-line react/sort-comp
   populate() {
     const {
       gameModel,
@@ -68,11 +69,6 @@ export class BotLayer2 extends Component {
   subscribe(action, gameModel) {
     gameModel[action]('botUpdate', this.onBotUpdate);
   }
-
-  // onBotUpdate2({ bots }) {
-  //   const { t } = this.props;
-  //   this.botLayer.onBotUpdate(bots, t, this.translator);
-  // }
 
   onBotUpdate({ bots }) {
     // console.log('On bot update');
@@ -137,7 +133,6 @@ export class BotLayer2 extends Component {
   }
 
   render() {
-    // console.log('test');
     return null;
   }
 }
