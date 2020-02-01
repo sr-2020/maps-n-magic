@@ -35,6 +35,7 @@ import { BotLayer2 } from './BotLayer2';
 import { UserLayer2 } from './UserLayer2';
 import { SignalRadiusesLayer2 } from './SignalRadiusesLayer2';
 import { VoronoiPolygonsLayer2 } from './VoronoiPolygonsLayer2';
+import { BaseContourLayer2 } from './BaseContourLayer2';
 
 // R.values(playerTracks).forEach((track, i) => {
 //   L.polyline(track, {
@@ -223,7 +224,7 @@ export class Map2 extends Component {
     this.markerPopup = L.popup();
     this.locationPopup = L.popup();
 
-    this.baseContourLayer = new BaseContourLayer();
+    // this.baseContourLayer = new BaseContourLayer();
     this.markerLayer = new MarkerLayer();
     // this.voronoiPolygonsLayer = new VoronoiPolygonsLayer();
     // this.signalRadiusesLayer = new SignalRadiusesLayer();
@@ -234,7 +235,7 @@ export class Map2 extends Component {
     this.layerControl = L.control.layers();
     this.layerControl.addTo(this.map);
 
-    this.setLayersMeta(this.baseContourLayer.getLayersMeta(), true);
+    // this.setLayersMeta(this.baseContourLayer.getLayersMeta(), true);
     this.setLayersMeta(this.markerLayer.getLayersMeta(), true);
     // this.setLayersMeta(this.voronoiPolygonsLayer.getLayersMeta());
     // this.setLayersMeta(this.signalRadiusesLayer.getLayersMeta(), true);
@@ -255,7 +256,7 @@ export class Map2 extends Component {
 
   populateMapData() {
     const { gameModel, t } = this.props;
-    this.baseContourLayer.populate(this.translator);
+    // this.baseContourLayer.populate(this.translator);
     this.markerLayer.populate(gameModel, this.translator, t, this.setMarkerEventHandlers);
     this.locationsLayer.populate(gameModel, this.translator, this.setLocationEventHandlers, t);
     // this.signalRadiusesLayer.populate(gameModel, this.translator);
@@ -264,7 +265,7 @@ export class Map2 extends Component {
 
   // eslint-disable-next-line react/sort-comp
   clearMapData() {
-    this.baseContourLayer.clear();
+    // this.baseContourLayer.clear();
     this.markerLayer.clear();
     this.locationsLayer.clear();
     // this.signalRadiusesLayer.clear();
@@ -490,9 +491,14 @@ export class Map2 extends Component {
 
     const layers = map ? (
       <>
+        <BaseContourLayer2
+          enableByDefault
+          setLayersMeta={this.setLayersMeta}
+          translator={this.translator}
+        />
         <VoronoiPolygonsLayer2
           gameModel={gameModel}
-          enableByDefault
+          // enableByDefault
           setLayersMeta={this.setLayersMeta}
           translator={this.translator}
         />
