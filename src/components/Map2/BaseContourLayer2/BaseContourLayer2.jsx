@@ -30,14 +30,12 @@ export class BaseContourLayer2 extends Component {
     console.log('BaseContourLayer2 mounted');
   }
 
-  componentDidUpdate() {
-    // const { gameModel } = this.props;
-    // if (prevProps.gameModel !== gameModel) {
-    //   this.subscribe('off', prevProps.gameModel);
-    //   this.subscribe('on', gameModel);
-    //   this.clear();
-    //   this.populate();
-    // }
+  componentDidUpdate(prevProps) {
+    const { translator } = this.props;
+    if (prevProps.translator !== translator) {
+      this.clear();
+      this.populate();
+    }
     console.log('BaseContourLayer2 did update');
   }
 
@@ -54,6 +52,8 @@ export class BaseContourLayer2 extends Component {
 
   populate() {
     const { translator } = this.props;
+    // console.log('was ', baseLLs);
+    // console.log('new ', translator.moveTo(baseLLs));
     const baseLine = L.polyline(translator.moveTo(baseLLs), {
       color: 'green',
       pmIgnore: true,

@@ -68,7 +68,7 @@ export class Map2 extends Component {
     };
     // this.onUserPositionUpdate = this.onUserPositionUpdate.bind(this);
     // this.onBotUpdate = this.onBotUpdate.bind(this);
-    this.onMarkersChange = this.onMarkersChange.bind(this);
+    // this.onMarkersChange = this.onMarkersChange.bind(this);
     this.updateMarkersView = this.updateMarkersView.bind(this);
     this.setLayersMeta = this.setLayersMeta.bind(this);
   }
@@ -126,6 +126,7 @@ export class Map2 extends Component {
     this.map.on('pm:create', this.onCreateLayer);
     this.map.on('pm:remove', this.onRemoveLayer);
 
+    // TODO extract as debug control?
     const legend = L.control({ position: 'bottomleft' });
     // const legend = L.control({ position: 'topright' });
     legend.onAdd = function (map) {
@@ -140,6 +141,7 @@ export class Map2 extends Component {
 
     this.setState({
       map: this.map,
+      translator: this.translator,
     });
 
     // Interesting object which can be used to draw position with arrow
@@ -165,6 +167,9 @@ export class Map2 extends Component {
       this.translator = new Translator(center, curPosition);
       this.clearMapData();
       this.populateMapData();
+      this.setState({
+        translator: this.translator,
+      });
     }
     // console.log('Map2 did update');
   }
@@ -180,9 +185,9 @@ export class Map2 extends Component {
   subscribe(action, gameModel) {
     // gameModel[action]('botUpdate', this.onBotUpdate);
     // gameModel[action]('userPositionUpdate', this.onUserPositionUpdate);
-    gameModel[action]('putBeacon', this.onMarkersChange);
-    gameModel[action]('postBeacon', this.onMarkersChange);
-    gameModel[action]('deleteBeacon', this.onMarkersChange);
+    // gameModel[action]('putBeacon', this.onMarkersChange);
+    // gameModel[action]('postBeacon', this.onMarkersChange);
+    // gameModel[action]('deleteBeacon', this.onMarkersChange);
     gameModel[action]('putLocation', this.updateMarkersView);
     gameModel[action]('deleteLocation', this.updateMarkersView);
   }
@@ -357,11 +362,11 @@ export class Map2 extends Component {
   }
 
   // eslint-disable-next-line react/sort-comp
-  onMarkersChange() {
-    const { gameModel } = this.props;
-    // this.signalRadiusesLayer.updateSignalRadiuses(gameModel, this.translator);
-    // this.voronoiPolygonsLayer.updateVoronoiPolygons(gameModel, this.translator);
-  }
+  // onMarkersChange() {
+  //   const { gameModel } = this.props;
+  //   // this.signalRadiusesLayer.updateSignalRadiuses(gameModel, this.translator);
+  //   // this.voronoiPolygonsLayer.updateVoronoiPolygons(gameModel, this.translator);
+  // }
 
   onMarkerEdit = (e) => {
     const { gameModel } = this.props;
@@ -504,7 +509,7 @@ export class Map2 extends Component {
         />
         <SignalRadiusesLayer2
           gameModel={gameModel}
-          enableByDefault
+          // enableByDefault
           setLayersMeta={this.setLayersMeta}
           translator={this.translator}
         />

@@ -31,10 +31,14 @@ export class UserLayer2 extends Component {
   }
 
   componentDidUpdate(prevProps) {
-    const { gameModel } = this.props;
+    const { gameModel, translator } = this.props;
     if (prevProps.gameModel !== gameModel) {
       this.subscribe('off', prevProps.gameModel);
       this.subscribe('on', gameModel);
+      this.clear();
+      this.populate();
+    }
+    if (prevProps.translator !== translator) {
       this.clear();
       this.populate();
     }

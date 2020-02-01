@@ -50,8 +50,10 @@ const STORAGE_KEY = 'AR_POC';
 
 const TEST_POSITION = {
   coords: {
-    latitude: 52.2982526,
-    longitude: 104.1270739,
+    // latitude: 52.2982526,
+    // longitude: 104.1270739,
+    latitude: 54.92822999834723,
+    longitude: 36.88105243803666,
   },
 };
 
@@ -229,6 +231,7 @@ export class App extends Component {
     //   curPosition: [TEST_POSITION.coords.latitude, TEST_POSITION.coords.longitude],
     //   waitingForGeolocation: false,
     // });
+    // return;
 
     const success = (position) => {
       const { latitude } = position.coords;
