@@ -34,6 +34,7 @@ import { MusicSelect } from './MusicSelect';
 import { BotLayer2 } from './BotLayer2';
 import { UserLayer2 } from './UserLayer2';
 import { SignalRadiusesLayer2 } from './SignalRadiusesLayer2';
+import { VoronoiPolygonsLayer2 } from './VoronoiPolygonsLayer2';
 
 // R.values(playerTracks).forEach((track, i) => {
 //   L.polyline(track, {
@@ -224,7 +225,7 @@ export class Map2 extends Component {
 
     this.baseContourLayer = new BaseContourLayer();
     this.markerLayer = new MarkerLayer();
-    this.voronoiPolygonsLayer = new VoronoiPolygonsLayer();
+    // this.voronoiPolygonsLayer = new VoronoiPolygonsLayer();
     // this.signalRadiusesLayer = new SignalRadiusesLayer();
     this.locationsLayer = new LocationsLayer();
     // this.botLayer = new BotLayer();
@@ -235,7 +236,7 @@ export class Map2 extends Component {
 
     this.setLayersMeta(this.baseContourLayer.getLayersMeta(), true);
     this.setLayersMeta(this.markerLayer.getLayersMeta(), true);
-    this.setLayersMeta(this.voronoiPolygonsLayer.getLayersMeta());
+    // this.setLayersMeta(this.voronoiPolygonsLayer.getLayersMeta());
     // this.setLayersMeta(this.signalRadiusesLayer.getLayersMeta(), true);
     this.setLayersMeta(this.locationsLayer.getLayersMeta(), true);
     // this.setLayersMeta(this.botLayer.getLayersMeta(), true);
@@ -258,7 +259,7 @@ export class Map2 extends Component {
     this.markerLayer.populate(gameModel, this.translator, t, this.setMarkerEventHandlers);
     this.locationsLayer.populate(gameModel, this.translator, this.setLocationEventHandlers, t);
     // this.signalRadiusesLayer.populate(gameModel, this.translator);
-    this.voronoiPolygonsLayer.populate(gameModel, this.translator);
+    // this.voronoiPolygonsLayer.populate(gameModel, this.translator);
   }
 
   // eslint-disable-next-line react/sort-comp
@@ -267,7 +268,7 @@ export class Map2 extends Component {
     this.markerLayer.clear();
     this.locationsLayer.clear();
     // this.signalRadiusesLayer.clear();
-    this.voronoiPolygonsLayer.clear();
+    // this.voronoiPolygonsLayer.clear();
   }
 
   setMarkerEventHandlers = (marker) => {
@@ -358,7 +359,7 @@ export class Map2 extends Component {
   onMarkersChange() {
     const { gameModel } = this.props;
     // this.signalRadiusesLayer.updateSignalRadiuses(gameModel, this.translator);
-    this.voronoiPolygonsLayer.updateVoronoiPolygons(gameModel, this.translator);
+    // this.voronoiPolygonsLayer.updateVoronoiPolygons(gameModel, this.translator);
   }
 
   onMarkerEdit = (e) => {
@@ -479,6 +480,7 @@ export class Map2 extends Component {
     );
   }
 
+  // eslint-disable-next-line max-lines-per-function
   render() {
     const { map } = this.state;
 
@@ -488,6 +490,12 @@ export class Map2 extends Component {
 
     const layers = map ? (
       <>
+        <VoronoiPolygonsLayer2
+          gameModel={gameModel}
+          enableByDefault
+          setLayersMeta={this.setLayersMeta}
+          translator={this.translator}
+        />
         <SignalRadiusesLayer2
           gameModel={gameModel}
           enableByDefault
