@@ -488,7 +488,7 @@ export class Map2 extends Component {
 
   // eslint-disable-next-line max-lines-per-function
   render() {
-    const { map } = this.state;
+    const { map, translator } = this.state;
 
     const {
       gameModel,
@@ -499,31 +499,31 @@ export class Map2 extends Component {
         <BaseContourLayer2
           enableByDefault
           setLayersMeta={this.setLayersMeta}
-          translator={this.translator}
+          translator={translator}
         />
         <VoronoiPolygonsLayer2
           gameModel={gameModel}
           // enableByDefault
           setLayersMeta={this.setLayersMeta}
-          translator={this.translator}
+          translator={translator}
         />
         <SignalRadiusesLayer2
           gameModel={gameModel}
           // enableByDefault
           setLayersMeta={this.setLayersMeta}
-          translator={this.translator}
+          translator={translator}
         />
         <BotLayer2
           gameModel={gameModel}
           enableByDefault
           setLayersMeta={this.setLayersMeta}
-          translator={this.translator}
+          translator={translator}
         />
         <UserLayer2
           gameModel={gameModel}
           enableByDefault
           setLayersMeta={this.setLayersMeta}
-          translator={this.translator}
+          translator={translator}
         />
       </>
     ) : null;
