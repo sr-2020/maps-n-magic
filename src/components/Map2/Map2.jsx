@@ -9,6 +9,8 @@ import 'leaflet/dist/leaflet.css';
 import '@geoman-io/leaflet-geoman-free';
 import '@geoman-io/leaflet-geoman-free/dist/leaflet-geoman.css';
 
+import { EventEmitter } from 'events';
+
 import { Map2PropTypes } from '../../types';
 
 import { MarkerPopup } from './MarkerPopup';
@@ -53,6 +55,7 @@ import { VoronoiPolygonsLayer } from './VoronoiPolygonsLayer';
 import { BaseContourLayer } from './BaseContourLayer';
 import { MarkerLayer } from './MarkerLayer';
 
+
 // console.log(L);
 L.Icon.Default.imagePath = './images/leafletImages/';
 
@@ -71,6 +74,11 @@ export class Map2 extends Component {
     // this.onMarkersChange = this.onMarkersChange.bind(this);
     this.updateMarkersView = this.updateMarkersView.bind(this);
     this.setLayersMeta = this.setLayersMeta.bind(this);
+    this.onRemoveBeacon = this.onRemoveBeacon.bind(this);
+    this.onHighlightLocation_locations = this.onHighlightLocation_locations.bind(this);
+    this.onHighlightLocation_markers = this.onHighlightLocation_markers.bind(this);
+    this.onResetHighlightLocation_locations = this.onResetHighlightLocation_locations.bind(this);
+    this.onResetHighlightLocation_markers = this.onResetHighlightLocation_markers.bind(this);
   }
 
   // eslint-disable-next-line max-lines-per-function
@@ -80,9 +88,13 @@ export class Map2 extends Component {
     } = this.props;
     const { center, zoom } = mapConfig;
     const { urlTemplate, options } = defaultTileLayer;
+
+    this.layerCommunicator = new EventEmitter();
+
     this.translator = new Translator(center, curPosition);
 
     this.subscribe('on', gameModel);
+    this.highlightSubscribe('on');
 
     this.map = L.map(this.mapEl, {
       center,
@@ -179,6 +191,7 @@ export class Map2 extends Component {
       gameModel,
     } = this.props;
     this.subscribe('off', gameModel);
+    this.highlightSubscribe('off');
   }
 
   // eslint-disable-next-line react/sort-comp
@@ -190,6 +203,14 @@ export class Map2 extends Component {
     // gameModel[action]('deleteBeacon', this.onMarkersChange);
     gameModel[action]('putLocation', this.updateMarkersView);
     gameModel[action]('deleteLocation', this.updateMarkersView);
+    gameModel[action]('deleteBeacon', this.onRemoveBeacon);
+  }
+
+  highlightSubscribe(action) {
+    this.layerCommunicator[action]('highlightLocation', this.onHighlightLocation_locations);
+    this.layerCommunicator[action]('highlightLocation', this.onHighlightLocation_markers);
+    this.layerCommunicator[action]('resetLocationHighlight', this.onResetHighlightLocation_locations);
+    this.layerCommunicator[action]('resetLocationHighlight', this.onResetHighlightLocation_markers);
   }
 
   // onUserPositionUpdate(user) {
@@ -213,14 +234,17 @@ export class Map2 extends Component {
   onRemoveLayer = (event) => {
     const { gameModel } = this.props;
     if (event.layer instanceof L.Marker) {
-      const markerId = event.layer.options.id;
-      this.locationsLayer.removeMarkerFromLocations(markerId, gameModel);
-      this.locationsLayer.updateLocationsView();
       this.markerLayer.onRemoveMarker(event.layer, gameModel);
     } else {
       this.locationsLayer.onRemoveLocation(event.layer, gameModel);
     }
     this.closeMarkerPopup();
+  }
+
+  onRemoveBeacon({ beacon }) {
+    const { gameModel } = this.props;
+    this.locationsLayer.removeMarkerFromLocations(beacon.id, gameModel);
+    this.locationsLayer.updateLocationsView();
   }
 
   // eslint-disable-next-line max-lines-per-function
@@ -340,22 +364,35 @@ export class Map2 extends Component {
 
   highlightLocation = (e) => {
     const layer = e.target;
+    this.layerCommunicator.emit('highlightLocation', { location: layer });
+  }
 
-    layer.setStyle({
+  // eslint-disable-next-line camelcase
+  onHighlightLocation_locations({ location }) {
+    location.setStyle({
       weight: 5,
       color: 'green',
       dashArray: '',
       fillOpacity: 1,
     });
+  }
 
+  onHighlightLocation_markers({ location }) {
     // this is a communication between layers
     // need to add connector for such case
-    const { markers } = layer.options;
+    const { markers } = location.options;
     this.markerLayer.highlightMarkers(markers);
   }
 
   resetLocationHighlight = () => {
+    this.layerCommunicator.emit('resetLocationHighlight');
+  }
+
+  onResetHighlightLocation_locations() {
     this.locationsLayer.updateLocationsView();
+  }
+
+  onResetHighlightLocation_markers() {
     // this is a communication between layers
     // need to add connector for such case
     this.updateMarkersView();

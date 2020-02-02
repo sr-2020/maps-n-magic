@@ -45,8 +45,9 @@ export class BeaconService extends AbstractService {
       ...props,
       id,
     };
-    this.emit('putBeacon', this.beacons[index]);
-    return this.beacons[index];
+    const beacon = this.beacons[index];
+    this.emit('putBeacon', { beacon });
+    return beacon;
   }
 
   postBeacon = ({ props }) => {
@@ -57,7 +58,7 @@ export class BeaconService extends AbstractService {
       name: String(this.maxBeaconId),
     });
     const beacon = this.beacons[this.beacons.length - 1];
-    this.emit('postBeacon', beacon);
+    this.emit('postBeacon', { beacon });
     return beacon;
   }
 
@@ -65,7 +66,7 @@ export class BeaconService extends AbstractService {
     const index = this.beacons.findIndex((beacon) => beacon.id === id);
     const beacon = this.beacons[index];
     this.beacons = R.remove(index, 1, this.beacons);
-    this.emit('deleteBeacon', beacon);
+    this.emit('deleteBeacon', { beacon });
     return beacon;
   }
 
