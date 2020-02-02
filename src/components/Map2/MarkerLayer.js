@@ -75,7 +75,7 @@ export class MarkerLayer {
     });
   }
 
-  onMarkerChange(prop, value, gameModel, id) {
+  onMarkerChange(prop, value, gameModel, id, translator) {
     const marker = this.group.getLayers().find((marker2) => marker2.options.id === id);
     let resValue = value;
     if (prop === 'name') {
@@ -98,13 +98,12 @@ export class MarkerLayer {
           type: 'putBeacon',
           id,
           props: {
-            ...this.translator.moveFrom({
+            ...translator.moveFrom({
               ...latLng,
               [prop]: num,
             }),
           },
         });
-        this.onMarkersChange();
         resValue = num;
       }
     }

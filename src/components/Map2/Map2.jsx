@@ -38,6 +38,7 @@ import { UserLayer2 } from './UserLayer2';
 import { SignalRadiusesLayer2 } from './SignalRadiusesLayer2';
 import { VoronoiPolygonsLayer2 } from './VoronoiPolygonsLayer2';
 import { BaseContourLayer2 } from './BaseContourLayer2';
+import { MarkerLayer2 } from './MarkerLayer2';
 
 // R.values(playerTracks).forEach((track, i) => {
 //   L.polyline(track, {
@@ -65,20 +66,15 @@ export class Map2 extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      curMarker: null,
       curLocation: null,
       map: null,
     };
-    // this.onUserPositionUpdate = this.onUserPositionUpdate.bind(this);
-    // this.onBotUpdate = this.onBotUpdate.bind(this);
-    // this.onMarkersChange = this.onMarkersChange.bind(this);
-    this.updateMarkersView = this.updateMarkersView.bind(this);
-    this.setLayersMeta = this.setLayersMeta.bind(this);
     this.onRemoveBeacon = this.onRemoveBeacon.bind(this);
     this.onHighlightLocation_locations = this.onHighlightLocation_locations.bind(this);
-    this.onHighlightLocation_markers = this.onHighlightLocation_markers.bind(this);
     this.onResetHighlightLocation_locations = this.onResetHighlightLocation_locations.bind(this);
-    this.onResetHighlightLocation_markers = this.onResetHighlightLocation_markers.bind(this);
+    this.getMap = this.getMap.bind(this);
+    this.closePopup = this.closePopup.bind(this);
+    this.setLayersMeta = this.setLayersMeta.bind(this);
   }
 
   // eslint-disable-next-line max-lines-per-function
@@ -132,7 +128,16 @@ export class Map2 extends Component {
     this.map.pm.addControls(geomanConfig);
     applyLeafletGeomanTranslation(this.map);
     // applyZoomTranslation(this.map);
-    this.initMapBackbone();
+
+    this.locationPopup = L.popup();
+
+    this.locationsLayer = new LocationsLayer();
+
+    this.layerControl = L.control.layers();
+    this.layerControl.addTo(this.map);
+
+    this.setLayersMeta(this.locationsLayer.getLayersMeta(), true);
+
     this.populateMapData();
 
     this.map.on('pm:create', this.onCreateLayer);
@@ -196,36 +201,23 @@ export class Map2 extends Component {
 
   // eslint-disable-next-line react/sort-comp
   subscribe(action, gameModel) {
-    // gameModel[action]('botUpdate', this.onBotUpdate);
-    // gameModel[action]('userPositionUpdate', this.onUserPositionUpdate);
-    // gameModel[action]('putBeacon', this.onMarkersChange);
-    // gameModel[action]('postBeacon', this.onMarkersChange);
-    // gameModel[action]('deleteBeacon', this.onMarkersChange);
-    gameModel[action]('putLocation', this.updateMarkersView);
-    gameModel[action]('deleteLocation', this.updateMarkersView);
     gameModel[action]('deleteBeacon', this.onRemoveBeacon);
   }
 
   highlightSubscribe(action) {
     this.layerCommunicator[action]('highlightLocation', this.onHighlightLocation_locations);
-    this.layerCommunicator[action]('highlightLocation', this.onHighlightLocation_markers);
     this.layerCommunicator[action]('resetLocationHighlight', this.onResetHighlightLocation_locations);
-    this.layerCommunicator[action]('resetLocationHighlight', this.onResetHighlightLocation_markers);
   }
 
-  // onUserPositionUpdate(user) {
-  //   // this.userLayer.onUserPositionUpdate(user, this.translator);
-  // }
-
-  // onBotUpdate({ bots }) {
-  //   const { t } = this.props;
-  //   this.botLayer.onBotUpdate(bots, t, this.translator);
-  // }
+  getMap() {
+    return this.map;
+  }
 
   onCreateLayer = (event) => {
     const { gameModel } = this.props;
+    this.layerCommunicator.emit('onCreateLayer', event);
     if (event.layer instanceof L.Marker) {
-      this.markerLayer.onCreateMarker(event.layer, gameModel, this.translator, this.setMarkerEventHandlers);
+      // this.markerLayer.onCreateMarker(event.layer, gameModel, this.translator, this.setMarkerEventHandlers);
     } else {
       this.locationsLayer.onCreateLocation(event.layer, gameModel, this.translator, this.setLocationEventHandlers);
     }
@@ -233,44 +225,19 @@ export class Map2 extends Component {
 
   onRemoveLayer = (event) => {
     const { gameModel } = this.props;
+    this.layerCommunicator.emit('onRemoveLayer', event);
     if (event.layer instanceof L.Marker) {
-      this.markerLayer.onRemoveMarker(event.layer, gameModel);
+      // this.markerLayer.onRemoveMarker(event.layer, gameModel);
     } else {
       this.locationsLayer.onRemoveLocation(event.layer, gameModel);
+      this.closePopup();
     }
-    this.closeMarkerPopup();
   }
 
   onRemoveBeacon({ beacon }) {
     const { gameModel } = this.props;
     this.locationsLayer.removeMarkerFromLocations(beacon.id, gameModel);
     this.locationsLayer.updateLocationsView();
-  }
-
-  // eslint-disable-next-line max-lines-per-function
-  // eslint-disable-next-line react/sort-comp
-  initMapBackbone() {
-    this.markerPopup = L.popup();
-    this.locationPopup = L.popup();
-
-    // this.baseContourLayer = new BaseContourLayer();
-    this.markerLayer = new MarkerLayer();
-    // this.voronoiPolygonsLayer = new VoronoiPolygonsLayer();
-    // this.signalRadiusesLayer = new SignalRadiusesLayer();
-    this.locationsLayer = new LocationsLayer();
-    // this.botLayer = new BotLayer();
-    // this.userLayer = new UserLayer();
-
-    this.layerControl = L.control.layers();
-    this.layerControl.addTo(this.map);
-
-    // this.setLayersMeta(this.baseContourLayer.getLayersMeta(), true);
-    this.setLayersMeta(this.markerLayer.getLayersMeta(), true);
-    // this.setLayersMeta(this.voronoiPolygonsLayer.getLayersMeta());
-    // this.setLayersMeta(this.signalRadiusesLayer.getLayersMeta(), true);
-    this.setLayersMeta(this.locationsLayer.getLayersMeta(), true);
-    // this.setLayersMeta(this.botLayer.getLayersMeta(), true);
-    // this.setLayersMeta(this.userLayer.getLayersMeta(), true);
   }
 
   setLayersMeta(layersMeta, enableByDefault) {
@@ -285,42 +252,12 @@ export class Map2 extends Component {
 
   populateMapData() {
     const { gameModel, t } = this.props;
-    // this.baseContourLayer.populate(this.translator);
-    this.markerLayer.populate(gameModel, this.translator, t, this.setMarkerEventHandlers);
     this.locationsLayer.populate(gameModel, this.translator, this.setLocationEventHandlers, t);
-    // this.signalRadiusesLayer.populate(gameModel, this.translator);
-    // this.voronoiPolygonsLayer.populate(gameModel, this.translator);
   }
 
   // eslint-disable-next-line react/sort-comp
   clearMapData() {
-    // this.baseContourLayer.clear();
-    this.markerLayer.clear();
     this.locationsLayer.clear();
-    // this.signalRadiusesLayer.clear();
-    // this.voronoiPolygonsLayer.clear();
-  }
-
-  setMarkerEventHandlers = (marker) => {
-    marker.on({
-      click: (e) => {
-        this.setState({
-          curMarker: {
-            lat: e.target.getLatLng().lat,
-            lng: e.target.getLatLng().lng,
-            name: e.target.options.name,
-            id: e.target.options.id,
-          },
-        });
-        this.markerPopup.setLatLng(e.latlng).setContent(markerPopupDom).openOn(this.map);
-      },
-      'pm:edit': this.onMarkerEdit,
-    });
-  }
-
-  updateMarkersView() {
-    const { gameModel } = this.props;
-    this.markerLayer.updateMarkersView(gameModel);
   }
 
   setLocationEventHandlers = (location) => {
@@ -359,7 +296,7 @@ export class Map2 extends Component {
         }),
       },
     });
-    this.closeMarkerPopup();
+    this.closePopup();
   }
 
   highlightLocation = (e) => {
@@ -377,59 +314,12 @@ export class Map2 extends Component {
     });
   }
 
-  onHighlightLocation_markers({ location }) {
-    // this is a communication between layers
-    // need to add connector for such case
-    const { markers } = location.options;
-    this.markerLayer.highlightMarkers(markers);
-  }
-
   resetLocationHighlight = () => {
     this.layerCommunicator.emit('resetLocationHighlight');
   }
 
   onResetHighlightLocation_locations() {
     this.locationsLayer.updateLocationsView();
-  }
-
-  onResetHighlightLocation_markers() {
-    // this is a communication between layers
-    // need to add connector for such case
-    this.updateMarkersView();
-  }
-
-  // eslint-disable-next-line react/sort-comp
-  // onMarkersChange() {
-  //   const { gameModel } = this.props;
-  //   // this.signalRadiusesLayer.updateSignalRadiuses(gameModel, this.translator);
-  //   // this.voronoiPolygonsLayer.updateVoronoiPolygons(gameModel, this.translator);
-  // }
-
-  onMarkerEdit = (e) => {
-    const { gameModel } = this.props;
-    const marker = e.target;
-    gameModel.execute({
-      type: 'putBeacon',
-      id: marker.options.id,
-      props: {
-        ...this.translator.moveFrom(marker.getLatLng()),
-      },
-    });
-    this.closeMarkerPopup();
-    // console.log('pm:edit', e.target.getLatLng());
-  };
-
-  onMarkerChange = (prop) => (e) => {
-    const { value } = e.target;
-    const { gameModel } = this.props;
-    const { id } = this.state.curMarker;
-    const resValue = this.markerLayer.onMarkerChange(prop, value, gameModel, id);
-    this.setState((state) => {
-      const curMarker = { ...state.curMarker, [prop]: resValue };
-      return ({
-        curMarker,
-      });
-    });
   }
 
   onLocMarkerChange = ({ action, markerId }) => {
@@ -459,26 +349,8 @@ export class Map2 extends Component {
     this.locationsLayer.updateLocationsView();
   }
 
-  closeMarkerPopup = () => {
+  closePopup() {
     this.map.closePopup();
-  }
-
-  getMarkerPopup() {
-    const {
-      curMarker,
-    } = this.state;
-    if (!curMarker) {
-      return null;
-    }
-    return (
-      <MarkerPopup
-        name={curMarker.name}
-        lat={curMarker.lat}
-        lng={curMarker.lng}
-        onChange={this.onMarkerChange}
-        onClose={this.closeMarkerPopup}
-      />
-    );
   }
 
   // getMusicSelect = () => null
@@ -518,7 +390,7 @@ export class Map2 extends Component {
         allLocations={allLocations}
         onChange={this.onLocationChange}
         onLocMarkerChange={this.onLocMarkerChange}
-        onClose={this.closeMarkerPopup}
+        onClose={this.closePopup}
       />
     );
   }
@@ -537,6 +409,15 @@ export class Map2 extends Component {
           enableByDefault
           setLayersMeta={this.setLayersMeta}
           translator={translator}
+        />
+        <MarkerLayer2
+          enableByDefault
+          setLayersMeta={this.setLayersMeta}
+          translator={translator}
+          gameModel={gameModel}
+          getMap={this.getMap}
+          closePopup={this.closePopup}
+          layerCommunicator={this.layerCommunicator}
         />
         <VoronoiPolygonsLayer2
           gameModel={gameModel}
@@ -571,9 +452,6 @@ export class Map2 extends Component {
           ref={(map2) => (this.mapEl = map2)}
         />
         {layers}
-        {
-          this.getMarkerPopup()
-        }
         {
           this.getLocationPopup()
         }
