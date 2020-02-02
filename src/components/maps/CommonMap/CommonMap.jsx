@@ -11,6 +11,9 @@ import { VoronoiPolygonsLayer2 } from '../layers/VoronoiPolygonsLayer2';
 import { BaseContourLayer2 } from '../layers/BaseContourLayer2';
 import { MarkerLayer2 } from '../layers/MarkerLayer2';
 import { LocationLayer2 } from '../layers/LocationLayer2';
+import { SoundDebug } from '../layers/SoundDebug';
+import { SatelliteBackground } from '../layers/SatelliteBackground';
+import { ImageBackground } from '../layers/ImageBackground';
 
 // import { CommonMapPropTypes } from '../../types';
 
@@ -35,6 +38,7 @@ export class CommonMap extends Component {
     console.log('CommonMap will unmount');
   }
 
+  // eslint-disable-next-line max-lines-per-function
   render() {
     const {
       curPosition, gameModel, mapConfig, translator,
@@ -53,6 +57,8 @@ export class CommonMap extends Component {
           };
           return (
             <>
+              <SatelliteBackground {...commonProps} />
+              {/* <ImageBackground {...commonProps} /> */}
               <BaseContourLayer2
                 enableByDefault
                 {...commonProps}
@@ -81,6 +87,7 @@ export class CommonMap extends Component {
                 enableByDefault
                 {...commonProps}
               />
+              <SoundDebug {...commonProps} />
             </>
           );
         }}
