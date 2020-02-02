@@ -4,7 +4,7 @@ import './BaseContourLayer2.css';
 import L from 'leaflet/dist/leaflet-src';
 import * as R from 'ramda';
 
-import { baseClosedLLs, baseLLs } from '../../../data/baseContours';
+import { baseClosedLLs, baseLLs } from '../../../../data/baseContours';
 
 // import { BaseContourLayer2PropTypes } from '../../types';
 

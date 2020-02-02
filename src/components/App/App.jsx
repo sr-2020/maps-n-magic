@@ -12,7 +12,7 @@ import {
   BrowserRouter as Router, Switch, Route, Redirect, NavLink,
 } from 'react-router-dom';
 
-import { Map2 } from '../Map2';
+import { Map2 } from '../maps/Map2';
 import { ErrorBoundry } from '../ErrorBoundry';
 import { SoundManager } from '../SoundManager';
 

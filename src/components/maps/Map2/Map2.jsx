@@ -2,7 +2,7 @@
 import React, { Component } from 'react';
 import * as R from 'ramda';
 
-import '../../utils/gpxConverter';
+import '../../../utils/gpxConverter';
 
 import L from 'leaflet/dist/leaflet-src';
 import 'leaflet/dist/leaflet.css';
@@ -11,30 +11,30 @@ import '@geoman-io/leaflet-geoman-free/dist/leaflet-geoman.css';
 
 import { EventEmitter } from 'events';
 
-import { Map2PropTypes } from '../../types';
+import { Map2PropTypes } from '../../../types';
 
-import { geomanConfig, defaultTileLayer } from '../../configs/map';
+import { geomanConfig, defaultTileLayer } from '../../../configs/map';
 
-import { markerPopupDom, locationPopupDom, musicSelectDom } from '../../utils/domUtils';
+import { markerPopupDom, locationPopupDom, musicSelectDom } from '../../../utils/domUtils';
 
-import { applyLeafletGeomanTranslation, getZoomTranslation } from '../../translations';
+import { applyLeafletGeomanTranslation, getZoomTranslation } from '../../../translations';
 
-import { SoundStageEcho } from '../SoundManager/SoundStageEcho';
+import { SoundStageEcho } from '../../SoundManager/SoundStageEcho';
 
 // eslint-disable-next-line import/extensions
 import 'leaflet.locatecontrol/dist/L.Control.Locate.min.js';
 import 'leaflet.locatecontrol/dist/L.Control.Locate.min.css';
 
 // import playerTracks from '../../data/initialPlayerTracks';
-import { MusicSelect } from './MusicSelect';
+import { MusicSelect } from '../layers/MusicSelect';
 
-import { BotLayer2 } from './BotLayer2';
-import { UserLayer2 } from './UserLayer2';
-import { SignalRadiusesLayer2 } from './SignalRadiusesLayer2';
-import { VoronoiPolygonsLayer2 } from './VoronoiPolygonsLayer2';
-import { BaseContourLayer2 } from './BaseContourLayer2';
-import { MarkerLayer2 } from './MarkerLayer2';
-import { LocationLayer2 } from './LocationLayer2';
+import { BotLayer2 } from '../layers/BotLayer2';
+import { UserLayer2 } from '../layers/UserLayer2';
+import { SignalRadiusesLayer2 } from '../layers/SignalRadiusesLayer2';
+import { VoronoiPolygonsLayer2 } from '../layers/VoronoiPolygonsLayer2';
+import { BaseContourLayer2 } from '../layers/BaseContourLayer2';
+import { MarkerLayer2 } from '../layers/MarkerLayer2';
+import { LocationLayer2 } from '../layers/LocationLayer2';
 
 // R.values(playerTracks).forEach((track, i) => {
 //   L.polyline(track, {

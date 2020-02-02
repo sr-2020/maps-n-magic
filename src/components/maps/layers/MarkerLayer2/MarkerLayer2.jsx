@@ -3,9 +3,9 @@ import './MarkerLayer2.css';
 
 import L from 'leaflet/dist/leaflet-src';
 
-import { MarkerLayer } from '../MarkerLayer';
+import { MarkerLayer } from './MarkerLayer';
 
-import { markerPopupDom } from '../../../utils/domUtils';
+import { markerPopupDom } from '../../../../utils/domUtils';
 
 import { MarkerPopup } from '../MarkerPopup';
 

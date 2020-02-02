@@ -1,9 +1,9 @@
 import React, { Component } from 'react';
 import './MarkerPopup.css';
 import ReactDOM from 'react-dom';
-import { MarkerPopupPropTypes } from '../../../types';
+import { MarkerPopupPropTypes } from '../../../../types';
 
-import { markerPopupDom } from '../../../utils/domUtils';
+import { markerPopupDom } from '../../../../utils/domUtils';
 
 export class MarkerPopup extends Component {
   static propTypes = MarkerPopupPropTypes;

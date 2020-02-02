@@ -4,9 +4,9 @@ import './LocationPopup.css';
 
 import ReactDOM from 'react-dom';
 import classNames from 'classnames';
-import { LocationPopupPropTypes, manaLevels } from '../../../types';
+import { LocationPopupPropTypes, manaLevels } from '../../../../types';
 
-import { locationPopupDom } from '../../../utils/domUtils';
+import { locationPopupDom } from '../../../../utils/domUtils';
 
 
 export class LocationPopup extends Component {

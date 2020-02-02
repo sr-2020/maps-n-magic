@@ -4,9 +4,9 @@ import './LocationLayer2.css';
 import L from 'leaflet/dist/leaflet-src';
 import * as R from 'ramda';
 
-import { LocationsLayer } from '../LocationsLayer';
+import { LocationsLayer } from './LocationsLayer';
 
-import { locationPopupDom } from '../../../utils/domUtils';
+import { locationPopupDom } from '../../../../utils/domUtils';
 
 import { LocationPopup } from '../LocationPopup';
 
