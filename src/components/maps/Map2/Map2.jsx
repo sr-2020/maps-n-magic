@@ -25,23 +25,6 @@ import { SoundStageEcho } from '../../SoundManager/SoundStageEcho';
 import 'leaflet.locatecontrol/dist/L.Control.Locate.min.js';
 import 'leaflet.locatecontrol/dist/L.Control.Locate.min.css';
 
-// import playerTracks from '../../data/initialPlayerTracks';
-import { MusicSelect } from '../layers/MusicSelect';
-
-import { BotLayer2 } from '../layers/BotLayer2';
-import { UserLayer2 } from '../layers/UserLayer2';
-import { SignalRadiusesLayer2 } from '../layers/SignalRadiusesLayer2';
-import { VoronoiPolygonsLayer2 } from '../layers/VoronoiPolygonsLayer2';
-import { BaseContourLayer2 } from '../layers/BaseContourLayer2';
-import { MarkerLayer2 } from '../layers/MarkerLayer2';
-import { LocationLayer2 } from '../layers/LocationLayer2';
-
-// R.values(playerTracks).forEach((track, i) => {
-//   L.polyline(track, {
-//     color: ColorPalette[i % ColorPalette.length].color.border,
-//   }).addTo(this.map);
-// });
-
 import './Map2.css';
 
 // console.log(L);
@@ -103,12 +86,13 @@ export class Map2 extends Component {
       position: 'topleft',
     }).addTo(this.map);
     L.tileLayer(urlTemplate, options).addTo(this.map);
-    this.map.pm.addControls(geomanConfig);
-    applyLeafletGeomanTranslation(this.map);
-    // applyZoomTranslation(this.map);
 
     this.layerControl = L.control.layers();
     this.layerControl.addTo(this.map);
+
+    this.map.pm.addControls(geomanConfig);
+    applyLeafletGeomanTranslation(this.map);
+    // applyZoomTranslation(this.map);
 
     this.map.on('pm:create', this.onCreateLayer);
     this.map.on('pm:remove', this.onRemoveLayer);
@@ -205,69 +189,20 @@ export class Map2 extends Component {
     const { map } = this.state;
 
     const {
-      gameModel, translator,
+      render,
     } = this.props;
 
     const mapProps = {
-      translator,
       layerCommunicator: this.layerCommunicator,
     };
 
-    const layers = map ? (
-      <>
-        <BaseContourLayer2
-          enableByDefault
-          // eslint-disable-next-line react/jsx-props-no-spreading
-          {...mapProps}
-        />
-        <MarkerLayer2
-          enableByDefault
-          gameModel={gameModel}
-          // eslint-disable-next-line react/jsx-props-no-spreading
-          {...mapProps}
-        />
-        <LocationLayer2
-          enableByDefault
-          gameModel={gameModel}
-          // eslint-disable-next-line react/jsx-props-no-spreading
-          {...mapProps}
-        />
-        <VoronoiPolygonsLayer2
-          gameModel={gameModel}
-          // enableByDefault
-          // eslint-disable-next-line react/jsx-props-no-spreading
-          {...mapProps}
-        />
-        <SignalRadiusesLayer2
-          gameModel={gameModel}
-          // enableByDefault
-          // eslint-disable-next-line react/jsx-props-no-spreading
-          {...mapProps}
-        />
-        <BotLayer2
-          gameModel={gameModel}
-          enableByDefault
-          // eslint-disable-next-line react/jsx-props-no-spreading
-          {...mapProps}
-        />
-        <UserLayer2
-          gameModel={gameModel}
-          enableByDefault
-          // eslint-disable-next-line react/jsx-props-no-spreading
-          {...mapProps}
-        />
-      </>
-    ) : null;
     return (
       <>
         <div
           className="Map2 h-full"
           ref={(map2) => (this.mapEl = map2)}
         />
-        {layers}
-        {/* {
-          this.getLocationPopup()
-        } */}
+        {map && render(mapProps)}
         {
           this.getMusicSelect()
         }

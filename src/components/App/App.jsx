@@ -13,6 +13,7 @@ import {
 } from 'react-router-dom';
 
 import { Map2 } from '../maps/Map2';
+import { CommonMap } from '../maps/CommonMap';
 import { ErrorBoundry } from '../ErrorBoundry';
 import { SoundManager } from '../SoundManager';
 
@@ -294,8 +295,7 @@ export class App extends Component {
                 <main className="flex-1-1-auto h-full">
                   <Switch>
                     <Route path="/map2">
-                      <Map2
-                        simulateGeoDataStream={simulateGeoDataStream}
+                      <CommonMap
                         curPosition={curPosition}
                         gameModel={gameModel}
                         mapConfig={mapConfig}
