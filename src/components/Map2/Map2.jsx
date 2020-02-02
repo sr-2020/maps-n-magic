@@ -39,6 +39,7 @@ import { SignalRadiusesLayer2 } from './SignalRadiusesLayer2';
 import { VoronoiPolygonsLayer2 } from './VoronoiPolygonsLayer2';
 import { BaseContourLayer2 } from './BaseContourLayer2';
 import { MarkerLayer2 } from './MarkerLayer2';
+import { LocationLayer2 } from './LocationLayer2';
 
 // R.values(playerTracks).forEach((track, i) => {
 //   L.polyline(track, {
@@ -48,13 +49,13 @@ import { MarkerLayer2 } from './MarkerLayer2';
 
 import './Map2.css';
 
-import { UserLayer } from './UserLayer';
-import { BotLayer } from './BotLayer';
-import { LocationsLayer } from './LocationsLayer';
-import { SignalRadiusesLayer } from './SignalRadiusesLayer';
-import { VoronoiPolygonsLayer } from './VoronoiPolygonsLayer';
-import { BaseContourLayer } from './BaseContourLayer';
-import { MarkerLayer } from './MarkerLayer';
+// import { UserLayer } from './UserLayer';
+// import { BotLayer } from './BotLayer';
+// import { LocationsLayer } from './LocationsLayer';
+// import { SignalRadiusesLayer } from './SignalRadiusesLayer';
+// import { VoronoiPolygonsLayer } from './VoronoiPolygonsLayer';
+// import { BaseContourLayer } from './BaseContourLayer';
+// import { MarkerLayer } from './MarkerLayer';
 
 
 // console.log(L);
@@ -66,12 +67,9 @@ export class Map2 extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      curLocation: null,
+      translator: null,
       map: null,
     };
-    this.onRemoveBeacon = this.onRemoveBeacon.bind(this);
-    this.onHighlightLocation_locations = this.onHighlightLocation_locations.bind(this);
-    this.onResetHighlightLocation_locations = this.onResetHighlightLocation_locations.bind(this);
     this.getMap = this.getMap.bind(this);
     this.closePopup = this.closePopup.bind(this);
     this.setLayersMeta = this.setLayersMeta.bind(this);
@@ -88,9 +86,6 @@ export class Map2 extends Component {
     this.layerCommunicator = new EventEmitter();
 
     this.translator = new Translator(center, curPosition);
-
-    this.subscribe('on', gameModel);
-    this.highlightSubscribe('on');
 
     this.map = L.map(this.mapEl, {
       center,
@@ -129,16 +124,8 @@ export class Map2 extends Component {
     applyLeafletGeomanTranslation(this.map);
     // applyZoomTranslation(this.map);
 
-    this.locationPopup = L.popup();
-
-    this.locationsLayer = new LocationsLayer();
-
     this.layerControl = L.control.layers();
     this.layerControl.addTo(this.map);
-
-    this.setLayersMeta(this.locationsLayer.getLayersMeta(), true);
-
-    this.populateMapData();
 
     this.map.on('pm:create', this.onCreateLayer);
     this.map.on('pm:remove', this.onRemoveLayer);
@@ -171,19 +158,11 @@ export class Map2 extends Component {
     const {
       curPosition, gameModel, mapConfig,
     } = this.props;
-    if (prevProps.gameModel !== gameModel) {
-      this.subscribe('off', prevProps.gameModel);
-      this.subscribe('on', gameModel);
-      this.clearMapData();
-      this.populateMapData();
-    }
     if (prevProps.curPosition !== curPosition) {
       const { center } = mapConfig;
       this.map.panTo(curPosition || center);
       console.log('position changed');
       this.translator = new Translator(center, curPosition);
-      this.clearMapData();
-      this.populateMapData();
       this.setState({
         translator: this.translator,
       });
@@ -192,21 +171,6 @@ export class Map2 extends Component {
   }
 
   componentWillUnmount() {
-    const {
-      gameModel,
-    } = this.props;
-    this.subscribe('off', gameModel);
-    this.highlightSubscribe('off');
-  }
-
-  // eslint-disable-next-line react/sort-comp
-  subscribe(action, gameModel) {
-    gameModel[action]('deleteBeacon', this.onRemoveBeacon);
-  }
-
-  highlightSubscribe(action) {
-    this.layerCommunicator[action]('highlightLocation', this.onHighlightLocation_locations);
-    this.layerCommunicator[action]('resetLocationHighlight', this.onResetHighlightLocation_locations);
   }
 
   getMap() {
@@ -214,30 +178,11 @@ export class Map2 extends Component {
   }
 
   onCreateLayer = (event) => {
-    const { gameModel } = this.props;
     this.layerCommunicator.emit('onCreateLayer', event);
-    if (event.layer instanceof L.Marker) {
-      // this.markerLayer.onCreateMarker(event.layer, gameModel, this.translator, this.setMarkerEventHandlers);
-    } else {
-      this.locationsLayer.onCreateLocation(event.layer, gameModel, this.translator, this.setLocationEventHandlers);
-    }
   }
 
   onRemoveLayer = (event) => {
-    const { gameModel } = this.props;
     this.layerCommunicator.emit('onRemoveLayer', event);
-    if (event.layer instanceof L.Marker) {
-      // this.markerLayer.onRemoveMarker(event.layer, gameModel);
-    } else {
-      this.locationsLayer.onRemoveLocation(event.layer, gameModel);
-      this.closePopup();
-    }
-  }
-
-  onRemoveBeacon({ beacon }) {
-    const { gameModel } = this.props;
-    this.locationsLayer.removeMarkerFromLocations(beacon.id, gameModel);
-    this.locationsLayer.updateLocationsView();
   }
 
   setLayersMeta(layersMeta, enableByDefault) {
@@ -248,105 +193,6 @@ export class Map2 extends Component {
     Object.entries(layersMeta).forEach(([nameKey, group]) => {
       this.layerControl.addOverlay(group, t(nameKey));
     });
-  }
-
-  populateMapData() {
-    const { gameModel, t } = this.props;
-    this.locationsLayer.populate(gameModel, this.translator, this.setLocationEventHandlers, t);
-  }
-
-  // eslint-disable-next-line react/sort-comp
-  clearMapData() {
-    this.locationsLayer.clear();
-  }
-
-  setLocationEventHandlers = (location) => {
-    location.on({
-      click: this.onLocationClick,
-      mouseover: this.highlightLocation,
-      mouseout: this.resetLocationHighlight,
-      'pm:edit': this.onLocationEdit,
-    });
-  }
-
-  onLocationClick = (e) => {
-    const {
-      name, id, markers, manaLevel,
-    } = e.target.options;
-    this.setState({
-      curLocation: {
-        id,
-        name,
-        markers,
-        manaLevel,
-      },
-    });
-    this.locationPopup.setLatLng(e.latlng).setContent(locationPopupDom).openOn(this.map);
-  }
-
-  onLocationEdit = (e) => {
-    const { gameModel } = this.props;
-    const location = e.target;
-    gameModel.execute({
-      type: 'putLocation',
-      id: location.options.id,
-      props: {
-        ...this.translator.moveFrom({
-          latlngs: location.getLatLngs(),
-        }),
-      },
-    });
-    this.closePopup();
-  }
-
-  highlightLocation = (e) => {
-    const layer = e.target;
-    this.layerCommunicator.emit('highlightLocation', { location: layer });
-  }
-
-  // eslint-disable-next-line camelcase
-  onHighlightLocation_locations({ location }) {
-    location.setStyle({
-      weight: 5,
-      color: 'green',
-      dashArray: '',
-      fillOpacity: 1,
-    });
-  }
-
-  resetLocationHighlight = () => {
-    this.layerCommunicator.emit('resetLocationHighlight');
-  }
-
-  onResetHighlightLocation_locations() {
-    this.locationsLayer.updateLocationsView();
-  }
-
-  onLocMarkerChange = ({ action, markerId }) => {
-    const { gameModel } = this.props;
-    const locId = this.state.curLocation.id;
-    const props = this.locationsLayer.onLocMarkerChange(action, markerId, gameModel, locId);
-
-    this.setState((state) => {
-      const curLocation = { ...state.curLocation, markers: props.markers };
-      return ({
-        curLocation,
-      });
-    });
-  }
-
-  onLocationChange = (prop) => (e) => {
-    const { value } = e.target;
-    const { gameModel } = this.props;
-    const { id } = this.state.curLocation;
-    this.locationsLayer.onLocationChange(prop, value, gameModel, id);
-    this.setState((state) => {
-      const curLocation = { ...state.curLocation, [prop]: value };
-      return ({
-        curLocation,
-      });
-    });
-    this.locationsLayer.updateLocationsView();
   }
 
   closePopup() {
@@ -367,34 +213,6 @@ export class Map2 extends Component {
     );
   }
 
-
-  getLocationPopup() {
-    const {
-      curLocation,
-    } = this.state;
-    const {
-      gameModel,
-    } = this.props;
-    if (!curLocation) {
-      return null;
-    }
-    const allBeacons = R.clone(gameModel.get('beacons'));
-    const allLocations = R.clone(gameModel.get('locations'));
-    return (
-      <LocationPopup
-        name={curLocation.name}
-        id={curLocation.id}
-        manaLevel={curLocation.manaLevel}
-        attachedMarkers={curLocation.markers}
-        allBeacons={allBeacons}
-        allLocations={allLocations}
-        onChange={this.onLocationChange}
-        onLocMarkerChange={this.onLocMarkerChange}
-        onClose={this.closePopup}
-      />
-    );
-  }
-
   // eslint-disable-next-line max-lines-per-function
   render() {
     const { map, translator } = this.state;
@@ -403,45 +221,56 @@ export class Map2 extends Component {
       gameModel,
     } = this.props;
 
+    const mapProps = {
+      translator,
+      setLayersMeta: this.setLayersMeta,
+      getMap: this.getMap,
+      closePopup: this.closePopup,
+      layerCommunicator: this.layerCommunicator,
+    };
+
     const layers = map ? (
       <>
         <BaseContourLayer2
           enableByDefault
-          setLayersMeta={this.setLayersMeta}
-          translator={translator}
+          // eslint-disable-next-line react/jsx-props-no-spreading
+          {...mapProps}
         />
         <MarkerLayer2
           enableByDefault
-          setLayersMeta={this.setLayersMeta}
-          translator={translator}
           gameModel={gameModel}
-          getMap={this.getMap}
-          closePopup={this.closePopup}
-          layerCommunicator={this.layerCommunicator}
+          // eslint-disable-next-line react/jsx-props-no-spreading
+          {...mapProps}
+        />
+        <LocationLayer2
+          enableByDefault
+          gameModel={gameModel}
+          // eslint-disable-next-line react/jsx-props-no-spreading
+          {...mapProps}
         />
         <VoronoiPolygonsLayer2
           gameModel={gameModel}
           // enableByDefault
-          setLayersMeta={this.setLayersMeta}
-          translator={translator}
+          // eslint-disable-next-line react/jsx-props-no-spreading
+          {...mapProps}
         />
         <SignalRadiusesLayer2
           gameModel={gameModel}
           // enableByDefault
-          setLayersMeta={this.setLayersMeta}
-          translator={translator}
+          // eslint-disable-next-line react/jsx-props-no-spreading
+          {...mapProps}
         />
         <BotLayer2
           gameModel={gameModel}
           enableByDefault
-          setLayersMeta={this.setLayersMeta}
-          translator={translator}
+          // eslint-disable-next-line react/jsx-props-no-spreading
+          {...mapProps}
         />
         <UserLayer2
           gameModel={gameModel}
           enableByDefault
-          setLayersMeta={this.setLayersMeta}
-          translator={translator}
+          // eslint-disable-next-line react/jsx-props-no-spreading
+          {...mapProps}
         />
       </>
     ) : null;
@@ -452,9 +281,9 @@ export class Map2 extends Component {
           ref={(map2) => (this.mapEl = map2)}
         />
         {layers}
-        {
+        {/* {
           this.getLocationPopup()
-        }
+        } */}
         {
           this.getMusicSelect()
         }

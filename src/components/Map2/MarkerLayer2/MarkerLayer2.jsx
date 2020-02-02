@@ -28,13 +28,13 @@ export class MarkerLayer2 extends Component {
 
   componentDidMount() {
     const {
-      setLayersMeta, gameModel, t, translator,
+      setLayersMeta, gameModel, t, translator, enableByDefault,
     } = this.props;
     this.subscribe('on', gameModel);
     this.highlightSubscribe('on');
     this.markerPopup = L.popup();
     this.markerLayer = new MarkerLayer();
-    setLayersMeta(this.markerLayer.getLayersMeta(), true);
+    setLayersMeta(this.markerLayer.getLayersMeta(), enableByDefault);
     this.populate();
     console.log('MarkerLayer2 mounted');
   }
@@ -62,6 +62,7 @@ export class MarkerLayer2 extends Component {
     } = this.props;
     this.subscribe('off', gameModel);
     this.highlightSubscribe('off');
+    this.clear();
     console.log('MarkerLayer2 will unmount');
   }
 
