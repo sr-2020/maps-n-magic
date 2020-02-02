@@ -3,8 +3,6 @@ import './GeoDataStreamSimulator.css';
 
 import { animate, Timing } from '../../utils/animation';
 
-import { Translator } from '../Map2/Translator';
-
 import { GeoDataStreamSimulatorPropTypes } from '../../types';
 
 export class GeoDataStreamSimulator extends Component {
@@ -21,8 +19,6 @@ export class GeoDataStreamSimulator extends Component {
       simulateGeoDataStream, center,
     } = this.props;
 
-    this.translator = new Translator(center, this.props.curPosition);
-
     if (simulateGeoDataStream) {
       this.simulateUserMovement(center);
     }
@@ -32,13 +28,6 @@ export class GeoDataStreamSimulator extends Component {
   componentDidUpdate = (prevProps) => {
     if (prevProps.simulateGeoDataStream !== this.props.simulateGeoDataStream) {
       this.refreshUserMovementSimulation();
-    }
-    if (prevProps.curPosition !== this.props.curPosition) {
-      const { center, curPosition } = this.props;
-      // this.map.panTo(this.props.curPosition || center);
-      // console.log('position changed');
-      this.translator = new Translator(center, curPosition);
-      // this.clearMapData();
     }
     console.log('GeoDataStreamSimulator did update');
   }
@@ -53,16 +42,15 @@ export class GeoDataStreamSimulator extends Component {
     const rx = 0.0005;
     const ry = 0.0007;
 
-    const { gameModel } = this.props;
+    const { gameModel, translator } = this.props;
 
     this.stopUserMovement();
 
-    const that = this;
     this.userMovementSimulation = animate({
       duration: 120000,
       timing: Timing.makeEaseInOut(Timing.linear),
       draw(progress) {
-        const center2 = that.translator.moveFrom(center);
+        const center2 = translator.moveFrom(center);
         const artificialPos = {
           coords: {
             accuracy: 10,

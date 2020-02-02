@@ -21,8 +21,6 @@ import { applyLeafletGeomanTranslation, getZoomTranslation } from '../../transla
 
 import { SoundStageEcho } from '../SoundManager/SoundStageEcho';
 
-import { Translator } from './Translator';
-
 // eslint-disable-next-line import/extensions
 import 'leaflet.locatecontrol/dist/L.Control.Locate.min.js';
 import 'leaflet.locatecontrol/dist/L.Control.Locate.min.css';

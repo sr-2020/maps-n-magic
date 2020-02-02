@@ -42,7 +42,7 @@ import { SoundWatcher } from '../SoundWatcher';
 
 import { SoundStage } from './SoundStage';
 
-import { Translator } from '../Map2/Translator';
+import { Translator } from '../../utils/Translator';
 
 const hardDispose = (obj) => Object.keys(obj).forEach((key) => { delete obj[key]; });
 
@@ -322,6 +322,7 @@ export class App extends Component {
                     gameModel={gameModel}
                     curPosition={curPosition}
                     center={mapConfig.center}
+                    translator={translator}
                   />
                   <SoundWatcher
                     gameModel={gameModel}
