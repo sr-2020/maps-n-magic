@@ -76,6 +76,7 @@ export class App extends Component {
     this.state = {
       simulateGeoDataStream: false,
       curPosition: null,
+      translator: null,
       waitingForGeolocation: false,
       initialized: false,
     };
@@ -101,6 +102,7 @@ export class App extends Component {
     this.soundStage.subscribeOnModel(gameModel);
     this.setState({
       gameModel,
+      translator: new Translator(mapConfig.center, null),
       initialized: true,
     });
     this.saveDataInLsId = setInterval(this.onSaveDataInLs, 10000);
@@ -212,6 +214,7 @@ export class App extends Component {
       if (curPosition) {
         return {
           curPosition: null,
+          translator: new Translator(mapConfig.center, null),
         };
       }
       this.jumpToUserCoords2();
@@ -227,8 +230,10 @@ export class App extends Component {
       return;
     }
 
+    // const curPosition = [TEST_POSITION.coords.latitude, TEST_POSITION.coords.longitude];
     // this.setState({
-    //   curPosition: [TEST_POSITION.coords.latitude, TEST_POSITION.coords.longitude],
+    //   curPosition,
+    //   translator: new Translator(mapConfig.center, curPosition),
     //   waitingForGeolocation: false,
     // });
     // return;
@@ -239,6 +244,7 @@ export class App extends Component {
 
       this.setState({
         curPosition: [latitude, longitude],
+        translator: new Translator(mapConfig.center, [latitude, longitude]),
         waitingForGeolocation: false,
       });
     };
@@ -261,7 +267,7 @@ export class App extends Component {
     }
 
     const {
-      simulateGeoDataStream, curPosition, waitingForGeolocation, gameModel,
+      simulateGeoDataStream, curPosition, waitingForGeolocation, gameModel, translator,
     } = this.state;
 
     const {
@@ -293,6 +299,7 @@ export class App extends Component {
                         curPosition={curPosition}
                         gameModel={gameModel}
                         mapConfig={mapConfig}
+                        translator={translator}
                       />
                     </Route>
                     <Route path="/spiritEditor">

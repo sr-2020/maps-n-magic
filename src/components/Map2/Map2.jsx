@@ -55,7 +55,6 @@ export class Map2 extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      translator: null,
       map: null,
     };
     this.openPopup = this.openPopup.bind(this);
@@ -66,14 +65,12 @@ export class Map2 extends Component {
   // eslint-disable-next-line max-lines-per-function
   componentDidMount() {
     const {
-      curPosition, gameModel, mapConfig,
+      mapConfig,
     } = this.props;
     const { center, zoom } = mapConfig;
     const { urlTemplate, options } = defaultTileLayer;
 
     this.layerCommunicator = new EventEmitter();
-
-    this.translator = new Translator(center, curPosition);
 
     this.map = L.map(this.mapEl, {
       center,
@@ -133,7 +130,6 @@ export class Map2 extends Component {
 
     this.setState({
       map: this.map,
-      translator: this.translator,
     });
 
     this.communicatorSubscribe('on');
@@ -146,16 +142,12 @@ export class Map2 extends Component {
 
   componentDidUpdate(prevProps) {
     const {
-      curPosition, gameModel, mapConfig,
+      curPosition, mapConfig,
     } = this.props;
     if (prevProps.curPosition !== curPosition) {
       const { center } = mapConfig;
       this.map.panTo(curPosition || center);
       console.log('position changed');
-      this.translator = new Translator(center, curPosition);
-      this.setState({
-        translator: this.translator,
-      });
     }
     // console.log('Map2 did update');
   }
@@ -212,10 +204,10 @@ export class Map2 extends Component {
 
   // eslint-disable-next-line max-lines-per-function
   render() {
-    const { map, translator } = this.state;
+    const { map } = this.state;
 
     const {
-      gameModel,
+      gameModel, translator,
     } = this.props;
 
     const mapProps = {
