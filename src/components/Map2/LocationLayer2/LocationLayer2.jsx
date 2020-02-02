@@ -29,15 +29,17 @@ export class LocationLayer2 extends Component {
 
   componentDidMount() {
     const {
-      gameModel, t, setLayersMeta, enableByDefault, translator,
+      gameModel, enableByDefault, layerCommunicator,
     } = this.props;
     this.subscribe('on', gameModel);
-    this.highlightSubscribe('on');
+    this.communicatorSubscribe('on');
     this.locationPopup = L.popup();
     this.locationsLayer = new LocationsLayer();
-    setLayersMeta(this.locationsLayer.getLayersMeta(), enableByDefault);
+    layerCommunicator.emit('setLayersMeta', {
+      layersMeta: this.locationsLayer.getLayersMeta(),
+      enableByDefault,
+    });
     this.populate();
-    // this.locationsLayer.populate(gameModel, translator, this.setLocationEventHandlers, t);
     console.log('LocationLayer2 mounted');
   }
 
@@ -63,7 +65,7 @@ export class LocationLayer2 extends Component {
       gameModel,
     } = this.props;
     this.subscribe('off', gameModel);
-    this.highlightSubscribe('off');
+    this.communicatorSubscribe('off');
     this.clear();
     console.log('LocationLayer2 will unmount');
   }
@@ -84,7 +86,7 @@ export class LocationLayer2 extends Component {
     gameModel[action]('deleteBeacon', this.onRemoveBeacon);
   }
 
-  highlightSubscribe(action) {
+  communicatorSubscribe(action) {
     const { layerCommunicator } = this.props;
     layerCommunicator[action]('highlightLocation', this.onHighlightLocation_locations);
     layerCommunicator[action]('resetLocationHighlight', this.onResetHighlightLocation_locations);
@@ -101,11 +103,13 @@ export class LocationLayer2 extends Component {
   }
 
   onRemoveLayer(event) {
-    const { gameModel, translator, closePopup } = this.props;
+    const {
+      gameModel, translator, closePopup, layerCommunicator,
+    } = this.props;
     if (event.layer instanceof L.Polygon) {
       // this.markerLayer.onRemoveMarker(event.layer, gameModel, translator, this.setMarkerEventHandlers);
       this.locationsLayer.onRemoveLocation(event.layer, gameModel);
-      closePopup();
+      layerCommunicator.emit('closePopup');
     }
   }
 
@@ -131,7 +135,7 @@ export class LocationLayer2 extends Component {
   }
 
   onLocationClick = (e) => {
-    const { getMap } = this.props;
+    const { layerCommunicator } = this.props;
     const {
       name, id, markers, manaLevel,
     } = e.target.options;
@@ -143,11 +147,15 @@ export class LocationLayer2 extends Component {
         manaLevel,
       },
     });
-    this.locationPopup.setLatLng(e.latlng).setContent(locationPopupDom).openOn(getMap());
+    layerCommunicator.emit('openPopup', {
+      popup: this.locationPopup.setLatLng(e.latlng).setContent(locationPopupDom),
+    });
   }
 
   onLocationEdit = (e) => {
-    const { gameModel, translator, closePopup } = this.props;
+    const {
+      gameModel, translator, closePopup, layerCommunicator,
+    } = this.props;
     const location = e.target;
     gameModel.execute({
       type: 'putLocation',
@@ -158,7 +166,7 @@ export class LocationLayer2 extends Component {
         }),
       },
     });
-    closePopup();
+    layerCommunicator.emit('closePopup');
   }
 
   resetLocationHighlight = () => {

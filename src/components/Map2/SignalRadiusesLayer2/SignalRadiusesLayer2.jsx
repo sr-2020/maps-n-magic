@@ -21,10 +21,13 @@ export class SignalRadiusesLayer2 extends Component {
 
   componentDidMount() {
     const {
-      gameModel, enableByDefault, setLayersMeta,
+      gameModel, enableByDefault, layerCommunicator,
     } = this.props;
     this.subscribe('on', gameModel);
-    setLayersMeta(this.getLayersMeta(), enableByDefault);
+    layerCommunicator.emit('setLayersMeta', {
+      layersMeta: this.getLayersMeta(),
+      enableByDefault,
+    });
     this.populate();
     console.log('SignalRadiusesLayer2 mounted');
   }

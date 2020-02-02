@@ -28,13 +28,16 @@ export class MarkerLayer2 extends Component {
 
   componentDidMount() {
     const {
-      setLayersMeta, gameModel, t, translator, enableByDefault,
+      gameModel, enableByDefault, layerCommunicator,
     } = this.props;
     this.subscribe('on', gameModel);
-    this.highlightSubscribe('on');
+    this.communicatorSubscribe('on');
     this.markerPopup = L.popup();
     this.markerLayer = new MarkerLayer();
-    setLayersMeta(this.markerLayer.getLayersMeta(), enableByDefault);
+    layerCommunicator.emit('setLayersMeta', {
+      layersMeta: this.markerLayer.getLayersMeta(),
+      enableByDefault,
+    });
     this.populate();
     console.log('MarkerLayer2 mounted');
   }
@@ -61,7 +64,7 @@ export class MarkerLayer2 extends Component {
       gameModel,
     } = this.props;
     this.subscribe('off', gameModel);
-    this.highlightSubscribe('off');
+    this.communicatorSubscribe('off');
     this.clear();
     console.log('MarkerLayer2 will unmount');
   }
@@ -80,10 +83,13 @@ export class MarkerLayer2 extends Component {
   }
 
   onRemoveLayer(event) {
-    const { gameModel, translator, closePopup } = this.props;
+    const {
+      gameModel, translator, closePopup, layerCommunicator,
+    } = this.props;
     if (event.layer instanceof L.Marker) {
       this.markerLayer.onRemoveMarker(event.layer, gameModel, translator, this.setMarkerEventHandlers);
-      closePopup();
+      // closePopup();
+      layerCommunicator.emit('closePopup');
     }
   }
 
@@ -92,7 +98,7 @@ export class MarkerLayer2 extends Component {
     this.markerLayer.updateMarkersView(gameModel);
   }
 
-  highlightSubscribe(action) {
+  communicatorSubscribe(action) {
     const { layerCommunicator } = this.props;
     layerCommunicator[action]('highlightLocation', this.onHighlightLocation_markers);
     layerCommunicator[action]('resetLocationHighlight', this.onResetHighlightLocation_markers);
@@ -114,7 +120,7 @@ export class MarkerLayer2 extends Component {
   }
 
   setMarkerEventHandlers = (marker) => {
-    const { getMap } = this.props;
+    const { layerCommunicator } = this.props;
     marker.on({
       click: (e) => {
         this.setState({
@@ -125,7 +131,9 @@ export class MarkerLayer2 extends Component {
             id: e.target.options.id,
           },
         });
-        this.markerPopup.setLatLng(e.latlng).setContent(markerPopupDom).openOn(getMap());
+        layerCommunicator.emit('openPopup', {
+          popup: this.markerPopup.setLatLng(e.latlng).setContent(markerPopupDom),
+        });
       },
       'pm:edit': this.onMarkerEdit,
     });
@@ -176,7 +184,9 @@ export class MarkerLayer2 extends Component {
   }
 
   onMarkerEdit = (e) => {
-    const { gameModel, translator, closePopup } = this.props;
+    const {
+      gameModel, translator, closePopup, layerCommunicator,
+    } = this.props;
     const marker = e.target;
     gameModel.execute({
       type: 'putBeacon',
@@ -185,7 +195,8 @@ export class MarkerLayer2 extends Component {
         ...translator.moveFrom(marker.getLatLng()),
       },
     });
-    closePopup();
+    // closePopup();
+    layerCommunicator.emit('closePopup');
   // console.log('pm:edit', e.target.getLatLng());
   };
 

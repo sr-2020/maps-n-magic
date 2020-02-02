@@ -22,10 +22,12 @@ export class BaseContourLayer2 extends Component {
 
   componentDidMount() {
     const {
-      enableByDefault, setLayersMeta,
+      enableByDefault, layerCommunicator,
     } = this.props;
-    // this.subscribe('on', gameModel);
-    setLayersMeta(this.getLayersMeta(), enableByDefault);
+    layerCommunicator.emit('setLayersMeta', {
+      layersMeta: this.getLayersMeta(),
+      enableByDefault,
+    });
     this.populate();
     console.log('BaseContourLayer2 mounted');
   }

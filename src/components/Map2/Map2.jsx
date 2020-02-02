@@ -13,9 +13,6 @@ import { EventEmitter } from 'events';
 
 import { Map2PropTypes } from '../../types';
 
-import { MarkerPopup } from './MarkerPopup';
-import { LocationPopup } from './LocationPopup';
-
 import { geomanConfig, defaultTileLayer } from '../../configs/map';
 
 import { markerPopupDom, locationPopupDom, musicSelectDom } from '../../utils/domUtils';
@@ -49,15 +46,6 @@ import { LocationLayer2 } from './LocationLayer2';
 
 import './Map2.css';
 
-// import { UserLayer } from './UserLayer';
-// import { BotLayer } from './BotLayer';
-// import { LocationsLayer } from './LocationsLayer';
-// import { SignalRadiusesLayer } from './SignalRadiusesLayer';
-// import { VoronoiPolygonsLayer } from './VoronoiPolygonsLayer';
-// import { BaseContourLayer } from './BaseContourLayer';
-// import { MarkerLayer } from './MarkerLayer';
-
-
 // console.log(L);
 L.Icon.Default.imagePath = './images/leafletImages/';
 
@@ -70,7 +58,7 @@ export class Map2 extends Component {
       translator: null,
       map: null,
     };
-    this.getMap = this.getMap.bind(this);
+    this.openPopup = this.openPopup.bind(this);
     this.closePopup = this.closePopup.bind(this);
     this.setLayersMeta = this.setLayersMeta.bind(this);
   }
@@ -148,6 +136,8 @@ export class Map2 extends Component {
       translator: this.translator,
     });
 
+    this.communicatorSubscribe('on');
+
     // Interesting object which can be used to draw position with arrow
     // L.Control.Locate.prototype.options.compassClass
 
@@ -171,10 +161,13 @@ export class Map2 extends Component {
   }
 
   componentWillUnmount() {
+    this.communicatorSubscribe('off');
   }
 
-  getMap() {
-    return this.map;
+  communicatorSubscribe(action) {
+    this.layerCommunicator[action]('openPopup', this.openPopup);
+    this.layerCommunicator[action]('closePopup', this.closePopup);
+    this.layerCommunicator[action]('setLayersMeta', this.setLayersMeta);
   }
 
   onCreateLayer = (event) => {
@@ -185,7 +178,7 @@ export class Map2 extends Component {
     this.layerCommunicator.emit('onRemoveLayer', event);
   }
 
-  setLayersMeta(layersMeta, enableByDefault) {
+  setLayersMeta({ layersMeta, enableByDefault }) {
     const { t } = this.props;
     if (enableByDefault) {
       Object.values(layersMeta).forEach((group) => group.addTo(this.map));
@@ -193,6 +186,10 @@ export class Map2 extends Component {
     Object.entries(layersMeta).forEach(([nameKey, group]) => {
       this.layerControl.addOverlay(group, t(nameKey));
     });
+  }
+
+  openPopup({ popup }) {
+    popup.openOn(this.map);
   }
 
   closePopup() {
@@ -223,9 +220,6 @@ export class Map2 extends Component {
 
     const mapProps = {
       translator,
-      setLayersMeta: this.setLayersMeta,
-      getMap: this.getMap,
-      closePopup: this.closePopup,
       layerCommunicator: this.layerCommunicator,
     };
 

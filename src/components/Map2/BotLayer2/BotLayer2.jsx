@@ -27,10 +27,13 @@ export class BotLayer2 extends Component {
 
   componentDidMount() {
     const {
-      translator, gameModel, enableByDefault, setLayersMeta,
+      translator, gameModel, enableByDefault, layerCommunicator,
     } = this.props;
     this.subscribe('on', gameModel);
-    setLayersMeta(this.getLayersMeta(), enableByDefault);
+    layerCommunicator.emit('setLayersMeta', {
+      layersMeta: this.getLayersMeta(),
+      enableByDefault,
+    });
     this.populate();
     console.log('BotLayer2 mounted');
   }
