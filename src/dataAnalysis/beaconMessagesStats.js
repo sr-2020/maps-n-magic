@@ -1,5 +1,5 @@
 const R = require('ramda');
-const data = require('./rawBeaconMessages2');
+const data = require('./rawBeaconMessages_notEmpty');
 const beaconTable = require('./beaconTable');
 
 const stats = data.reduce((acc, item) => {
@@ -16,7 +16,7 @@ const stats = data.reduce((acc, item) => {
   return acc;
 }, {
   userIds: {},
-  beaconIds: {}
+  beaconIds: {},
 });
 
 console.log(stats);

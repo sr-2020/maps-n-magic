@@ -1,4 +1,4 @@
-import srcData from './14-09-2019_beacons.json';
+import srcData from '../dataAnalysis/14-09-2019_beacons.json';
 
 
 const getBeacons = () => srcData.features.slice(0, 10);

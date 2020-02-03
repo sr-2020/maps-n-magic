@@ -14,6 +14,7 @@ import { LocationLayer2 } from '../layers/LocationLayer2';
 import { SoundDebug } from '../layers/SoundDebug';
 import { SatelliteBackground } from '../layers/SatelliteBackground';
 import { ImageBackground } from '../layers/ImageBackground';
+import { RealTrackDemo } from '../layers/RealTrackDemo';
 
 // import { CommonMapPropTypes } from '../../types';
 
@@ -63,7 +64,7 @@ export class CommonMap extends Component {
                 enableByDefault
                 {...commonProps}
               />
-              <MarkerLayer2
+              {/* <MarkerLayer2
                 enableByDefault
                 {...commonProps}
               />
@@ -84,6 +85,10 @@ export class CommonMap extends Component {
                 {...commonProps}
               />
               <UserLayer2
+                enableByDefault
+                {...commonProps}
+              /> */}
+              <RealTrackDemo
                 enableByDefault
                 {...commonProps}
               />
