@@ -18,85 +18,63 @@ import { RealTrackDemo } from '../layers/RealTrackDemo';
 
 // import { CommonMapPropTypes } from '../../types';
 
-export class CommonMap extends Component {
-  // static propTypes = CommonMapPropTypes;
+// eslint-disable-next-line max-lines-per-function
+export function CommonMap(props) {
+  const {
+    curPosition, gameModel, mapConfig, translator,
+  } = props;
 
-  constructor(props) {
-    super(props);
-    this.state = {
-    };
-  }
-
-  componentDidMount() {
-    console.log('CommonMap mounted');
-  }
-
-  componentDidUpdate() {
-    console.log('CommonMap did update');
-  }
-
-  componentWillUnmount() {
-    console.log('CommonMap will unmount');
-  }
-
-  // eslint-disable-next-line max-lines-per-function
-  render() {
-    const {
-      curPosition, gameModel, mapConfig, translator,
-    } = this.props;
-
-    return (
-      <Map2
-        curPosition={curPosition}
-        gameModel={gameModel}
-        mapConfig={mapConfig}
-        render={(mapProps) => {
-          const commonProps = {
-            ...mapProps,
-            translator,
-            gameModel,
-          };
-          return (
-            <>
-              <SatelliteBackground {...commonProps} />
-              {/* <ImageBackground {...commonProps} /> */}
-              <BaseContourLayer2
-                enableByDefault
-                {...commonProps}
-              />
-              {/* <MarkerLayer2
-                enableByDefault
-                {...commonProps}
-              />
-              <LocationLayer2
-                enableByDefault
-                {...commonProps}
-              />
-              <VoronoiPolygonsLayer2
+  return (
+    <Map2
+      curPosition={curPosition}
+      gameModel={gameModel}
+      mapConfig={mapConfig}
+      render={(mapProps) => {
+        const commonProps = {
+          ...mapProps,
+          translator,
+          gameModel,
+        };
+        return (
+          <>
+            <SatelliteBackground {...commonProps} />
+            {/* <ImageBackground {...commonProps} /> */}
+            <BaseContourLayer2
+              enableByDefault
+              {...commonProps}
+            />
+            <MarkerLayer2
+              enableByDefault
+              {...commonProps}
+            />
+            <LocationLayer2
+              enableByDefault
+              {...commonProps}
+            />
+            <VoronoiPolygonsLayer2
               // enableByDefault
-                {...commonProps}
-              />
-              <SignalRadiusesLayer2
+              {...commonProps}
+            />
+            <SignalRadiusesLayer2
               // enableByDefault
-                {...commonProps}
-              />
-              <BotLayer2
-                enableByDefault
-                {...commonProps}
-              />
-              <UserLayer2
+              {...commonProps}
+            />
+            <BotLayer2
+              enableByDefault
+              {...commonProps}
+            />
+            <UserLayer2
+              enableByDefault
+              {...commonProps}
+            />
+            {/* <RealTrackDemo
                 enableByDefault
                 {...commonProps}
               /> */}
-              <RealTrackDemo
-                enableByDefault
-                {...commonProps}
-              />
-              <SoundDebug {...commonProps} />
-            </>
-          );
-        }}
-      />
-    );
-  }
+            <SoundDebug {...commonProps} />
+          </>
+        );
+      }}
+    />
+  );
 }

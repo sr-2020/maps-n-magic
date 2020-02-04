@@ -12,8 +12,8 @@ import {
   BrowserRouter as Router, Switch, Route, Redirect, NavLink,
 } from 'react-router-dom';
 
-import { Map2 } from '../maps/Map2';
 import { CommonMap } from '../maps/CommonMap';
+import { TrackDemoMap } from '../maps/TrackDemoMap';
 import { ErrorBoundry } from '../ErrorBoundry';
 import { SoundManager } from '../SoundManager';
 
@@ -296,6 +296,14 @@ export class App extends Component {
                   <Switch>
                     <Route path="/map2">
                       <CommonMap
+                        curPosition={curPosition}
+                        gameModel={gameModel}
+                        mapConfig={mapConfig}
+                        translator={translator}
+                      />
+                    </Route>
+                    <Route path="/trackDemo">
+                      <TrackDemoMap
                         curPosition={curPosition}
                         gameModel={gameModel}
                         mapConfig={mapConfig}

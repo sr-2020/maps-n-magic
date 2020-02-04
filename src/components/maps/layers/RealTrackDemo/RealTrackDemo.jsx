@@ -89,6 +89,11 @@ export class RealTrackDemo extends Component {
     this.tracks = R.fromPairs(this.tracks);
   }
 
+  clear() {
+    this.beaconGroup.clearLayers();
+    R.values(this.tracks).forEach((track) => track.clearLayers());
+  }
+
   render() {
     return null;
   }
