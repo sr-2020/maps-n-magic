@@ -9,6 +9,7 @@ import { LocationService } from './LocationService';
 import { SoundMappingService } from './SoundMappingService';
 import { UserWatcher } from './UserWatcher';
 import { BaseVersion } from './BaseVersion';
+import { BeaconDictionaryService } from './BeaconDictionaryService';
 
 export const services = [
   UserService,
@@ -22,4 +23,5 @@ export const services = [
   SoundMappingService,
   UserWatcher,
   BaseVersion,
+  BeaconDictionaryService,
 ];

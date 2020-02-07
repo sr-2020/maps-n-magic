@@ -45,6 +45,9 @@ import { SoundStage } from './SoundStage';
 
 import { Translator } from '../../utils/Translator';
 
+import { MockBeaconRecordCommunicator } from '../MockBeaconRecordCommunicator';
+import { BeaconRecordEditor } from '../BeaconRecordEditor';
+
 const hardDispose = (obj) => Object.keys(obj).forEach((key) => { delete obj[key]; });
 
 const STORAGE_KEY = 'AR_POC';
@@ -322,6 +325,9 @@ export class App extends Component {
                     <Route path="/soundMapping">
                       <SoundMapper gameModel={gameModel} />
                     </Route>
+                    <Route path="/beaconRecordEditor">
+                      <BeaconRecordEditor gameModel={gameModel} />
+                    </Route>
 
                     <Route render={() => <Redirect to="/soundManager2" />} />
                   </Switch>
@@ -336,6 +342,7 @@ export class App extends Component {
                     gameModel={gameModel}
                     context={this.audioContextWrapper}
                   />
+                  <MockBeaconRecordCommunicator gameModel={gameModel} />
                 </main>
               </div>
             </Router>
