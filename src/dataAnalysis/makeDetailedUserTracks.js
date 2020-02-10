@@ -12,11 +12,29 @@ const usersData = require('./data/usersData');
 
 const data = require('./improveRawData').improveData(rawData);
 
+const countDeltas = (arr) => R.aperture(2, arr).map(([p1, p2]) => p2.timeMillis - p1.timeMillis);
+const hist = R.pipe(countDeltas, R.groupBy(R.identity), R.mapObjIndexed((value) => value.length));
+
 const countStats = function (data2) {
   const total = data2.length;
+  const messageIntervalHist = hist(data2);
+  const avgSource = R.toPairs(messageIntervalHist).reduce((acc, pair) => {
+    // if (Number(pair[0]) > 60000) { // ignore delta more than minute
+    //   return acc;
+    // }
+    acc.meausureNumber += pair[1];
+    acc.multiplication += Number(pair[0]) * pair[1];
+    return acc;
+  }, {
+    meausureNumber: 0,
+    multiplication: 0,
+  });
+  const avgMessageInterval = avgSource.multiplication / avgSource.meausureNumber;
   const stats = {
     ...countElsByType(data2),
     ...getTimeLimits(data2),
+    messageIntervalHist,
+    avgMessageInterval,
     total,
   };
   stats.emptyMessages = stats.emptyMessages || 0;
@@ -67,15 +85,23 @@ const dataArrToTracks = function (dataArr) {
   });
 };
 
-// console.log(messagesByUser['5']);
+// console.log(messagesByUser['5'].map(R.prop('timeMillis')));
+
+// const deltas = countDeltas(messagesByUser['5']);
+// console.log(deltas);
+// // console.log(R.groupBy(R.identity, deltas));
+// console.log(hist(deltas));
 // const res = dataArrToTracks(messagesByUser['5']);
 // console.log(res, res.tracks.length);
 // console.log(JSON.stringify(res, null, '  '));
 
 const userTracks = R.mapObjIndexed((dataArr, key) => ({
-  userData: usersData[key] || null,
+  userData: {
+    id: Number(key),
+    ...usersData[key],
+  },
   stats: countStats(dataArr),
-  // rawDataArr: dataArr,
+  rawDataArr: dataArr,
   tracks: dataArrToTracks(dataArr).tracks,
 }), messagesByUser);
 

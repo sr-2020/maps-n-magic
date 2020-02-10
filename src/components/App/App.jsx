@@ -47,6 +47,7 @@ import { Translator } from '../../utils/Translator';
 
 import { MockBeaconRecordCommunicator } from '../MockBeaconRecordCommunicator';
 import { BeaconRecordEditor } from '../BeaconRecordEditor';
+import { RealTrackStats } from '../RealTrackStats';
 
 const hardDispose = (obj) => Object.keys(obj).forEach((key) => { delete obj[key]; });
 
@@ -327,6 +328,9 @@ export class App extends Component {
                     </Route>
                     <Route path="/beaconRecordEditor">
                       <BeaconRecordEditor gameModel={gameModel} />
+                    </Route>
+                    <Route path="/realTrackStats">
+                      <RealTrackStats />
                     </Route>
 
                     <Route render={() => <Redirect to="/soundManager2" />} />
