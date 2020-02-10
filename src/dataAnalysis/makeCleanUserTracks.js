@@ -1,7 +1,7 @@
 // excludes empty messages, ignore beacons with unknown coords and build user tracks
 const R = require('ramda');
 const { beaconIndex, bssid2idSubset } = require('./beaconUtils');
-const { getClosestBeacon } = require('./utils');
+const { getLoudestBeacon } = require('./utils');
 const data = require('./data/rawBeaconMessages_notEmpty');
 // const data = require('./rawBeaconMessages');
 
@@ -11,7 +11,7 @@ const data = require('./data/rawBeaconMessages_notEmpty');
 // const data2 = data.filter((item) => beaconIndex[getClosestBeacon(item.beacons).bssid]);
 const data2 = data.map((item) => ({
   ...item,
-  beacon: getClosestBeacon(item.beacons),
+  beacon: getLoudestBeacon(item.beacons),
 })).filter((item) => beaconIndex[item.beacon.bssid]);
 
 // console.log(data2);

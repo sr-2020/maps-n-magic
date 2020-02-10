@@ -1,13 +1,13 @@
 const R = require('ramda');
 const beaconTable = require('./data/postgresBeaconTable');
-const beacons = require('./data/googleMapBeaconList');
+const beaconLatlngs = require('./data/googleMapBeaconList');
 
 // console.log(JSON.stringify(beacons));
 
-const beaconIndex1 = R.indexBy(R.prop('id'), beacons);
+const beaconLatlngsIndex = R.indexBy(R.prop('id'), beaconLatlngs);
 
-const beaconTable2 = beaconTable.filter((beacon) => beaconIndex1[beacon.id]).map((beacon) => {
-  const { lat, lng } = beaconIndex1[beacon.id];
+const beaconTable2 = beaconTable.filter((beacon) => beaconLatlngsIndex[beacon.id]).map((beacon) => {
+  const { lat, lng } = beaconLatlngsIndex[beacon.id];
   beacon.latlng = [lat, lng];
   return beacon;
 });
@@ -45,12 +45,35 @@ exports.calcDataBeaconStats = function (data) {
   const id2bssid = R.invertObj(bssid2idSubset);
   // console.log('id2bssid', id2bssid);
 
-  const coordKnowledge = R.groupBy((id) => (beaconIndex1[id] ? 'known' : 'unknown'), R.keys(id2bssid));
+  const coordKnowledge = R.groupBy((id) => (beaconLatlngsIndex[id] ? 'known' : 'unknown'), R.keys(id2bssid));
   // console.log('coordKnowledge', coordKnowledge);
 
   // console.log('Beacons with unknown coordinates meets these number of times', R.pick(coordKnowledge.unknown, frequencyOfIds));
   // console.log('Beacons with known coordinates meets these number of times', R.pick(coordKnowledge.known, frequencyOfIds));
 };
 
+function resolveBssidToId(bssid2id2, beacons) {
+  return beacons.map((beacon) => ({
+    ...beacon,
+    beaconId: bssid2id2[beacon.bssid],
+  }));
+}
+
+const sumBy = R.reduceBy(R.inc, 0);
+
+const countElsByType = sumBy((el) => {
+  if (el.loudestBeacon === null) {
+    return 'emptyMessages';
+  }
+  if (!beaconLatlngsIndex[el.loudestBeacon.beaconId]) {
+    return 'unknownBeaconLatlngs';
+  }
+  return 'knownBeaconLatlngs';
+});
+
 exports.beaconIndex = beaconIndex;
 exports.bssid2idSubset = bssid2id;
+exports.bssid2id = bssid2id;
+exports.resolveBssidToId = resolveBssidToId;
+exports.beaconLatlngsIndex = beaconLatlngsIndex;
+exports.countElsByType = countElsByType;

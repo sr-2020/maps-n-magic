@@ -10,11 +10,38 @@ import * as Hotline from 'leaflet-hotline';
 // require('leaflet-hotline')(L);
 
 // import trackData from '../../../../dataAnalysis/playerTracks2.json';
-import trackData from '../../../../dataAnalysis/pt3.json';
+// import trackData from '../../../../dataAnalysis/data/pt3.json';
+import tracksData from '../../../../dataAnalysis/data/pt6.json';
+import usersData from '../../../../dataAnalysis/data/usersData.json';
+import beaconLatlngs from '../../../../dataAnalysis/data/googleMapBeaconList.json';
+// import * as BeaconUtils from '../../../../dataAnalysis/beaconUtils';
+
+// import { userTracks } from '../../../../dataAnalysis/makeDetailedUserTracks';
 
 import { COLOR_PALETTE } from '../../../../utils/colorPalette';
 
+// console.log('BeaconUtils', BeaconUtils);
+
 console.log('Hotline', Hotline);
+
+const defaultOptions = {
+  // id: userName,
+  // color: COLOR_PALETTE[index % COLOR_PALETTE.length].color.background,
+  // palette: {
+  //   0.0: '#00000000',
+  //   1.0: '#ffffffff',
+  // },
+  palette: {
+    0.0: '#00ff00',
+    0.25: '#008800',
+    0.5: '#ffff00',
+    0.75: '#ff8800',
+    1.0: '#ff0000',
+  },
+  weight: 5,
+  outlineColor: '#000000',
+  outlineWidth: 1,
+};
 
 // import { RealTrackDemoPropTypes } from '../../types';
 
@@ -61,13 +88,13 @@ export class RealTrackDemo extends Component {
   }
 
   // eslint-disable-next-line max-lines-per-function
+  // eslint-disable-next-line react/sort-comp
   populate() {
     // const {
     //   gameModel, translator,
     // } = this.props;
 
-    R.values(trackData.beaconIndex).forEach((beacon) => {
-      // L.Marker();
+    beaconLatlngs.forEach((beacon) => {
       const marker = L.marker({
         lat: beacon.lat,
         lng: beacon.lng,
@@ -82,46 +109,47 @@ export class RealTrackDemo extends Component {
       this.beaconGroup.addLayer(marker);
     });
 
-    let index = 0;
-    const getNoise = () => (Math.random() - 0.5) / 20000;
-    const addNoise = ([lat, lng]) => [lat + getNoise(), lng + getNoise()];
-    const addNoise2 = (obj) => ({
-      ...obj,
-      lat: obj.lat + getNoise(),
-      lng: obj.lng + getNoise(),
-    });
-    this.tracks = R.toPairs(trackData.userTracks).map(([userName, userTrack]) => {
+    this.tracks = R.toPairs(tracksData).map(([userId, user]) => {
       const group = L.layerGroup([]);
-      // const track = L.polyline(userTrack.map(R.prop('latlng')).map(addNoise), {
-      const track = L.hotline(userTrack.map((el) => ({
-        lat: el.latlng[0],
-        lng: el.latlng[1],
-        z: new Date(el.time).getTime(),
-      })).map(addNoise2).map((el) => [el.lat, el.lng, el.z]), {
-        id: userName,
-        color: COLOR_PALETTE[index % COLOR_PALETTE.length].color.background,
-        min: new Date(R.head(userTrack).time).getTime(),
-        max: new Date(R.last(userTrack).time).getTime(),
-        // palette: {
-        //   0.0: '#00000000',
-        //   1.0: '#ffffffff',
-        // },
-        palette: {
-          0.0: '#00ff00',
-          0.25: '#008800',
-          0.5: '#ffff00',
-          0.75: '#ff8800',
-          1.0: '#ff0000',
-        },
-        weight: 5,
-        outlineColor: '#000000',
-        outlineWidth: 1,
+      const preparedTracks = user.tracks.map((trackData) => this.prepareTrack(trackData, user)).filter((data) => {
+        if (data.preparedTrack.length < 2) {
+          console.warn('User', user.userData.name, 'has track with', data.preparedTrack.length, 'points');
+          return false;
+        }
+        return true;
       });
-      group.addLayer(track);
-      index++;
-      return [`id ${userName} (${userTrack.length} points)`, group];
+
+      const tracks = preparedTracks.map((data) => {
+        const track = L.hotline(data.preparedTrack, {
+          ...defaultOptions,
+          min: data.min,
+          max: data.max,
+        });
+        return track;
+      });
+      tracks.forEach(group.addLayer.bind(group));
+
+      const points = R.sum(preparedTracks.map(R.pipe(R.prop('preparedTrack'), R.length)));
+
+      return [`${user.userData.name} (id ${userId}, ${points} points, ${tracks.length} tracks)`, group];
     });
     this.tracks = R.fromPairs(this.tracks);
+  }
+
+  // eslint-disable-next-line class-methods-use-this
+  prepareTrack(trackData, user) {
+    const preparedTrack = trackData.map((el) => ([el.lat, el.lng, el.timeMillis])).filter((value, index, arr) => {
+      if (arr[index + 1] && value[2] === arr[index + 1][2]) {
+        console.warn('User', user.userData.name, 'has track with two measures with the equal time', value[2]);
+        return false;
+      }
+      return true;
+    });
+    return {
+      preparedTrack,
+      min: R.head(preparedTrack)[2],
+      max: R.last(preparedTrack)[2],
+    };
   }
 
   clear() {
