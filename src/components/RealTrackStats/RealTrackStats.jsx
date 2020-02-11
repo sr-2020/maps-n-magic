@@ -2,7 +2,10 @@ import React, { Component } from 'react';
 import './RealTrackStats.css';
 import * as R from 'ramda';
 
+
 import * as moment from 'moment';
+
+import Button from 'react-bootstrap/Button';
 
 
 import {
@@ -10,6 +13,8 @@ import {
 } from 'recharts';
 
 import Table from 'react-bootstrap/Table';
+
+import { makeFileName, str2File } from '../../utils/fileUtils';
 import { COLOR_PALETTE } from '../../utils/colorPalette';
 
 import tracksData from '../../dataAnalysis/data/pt6.json';
@@ -55,6 +60,7 @@ export class RealTrackStats extends Component {
   constructor(props) {
     super(props);
     this.state = {
+      selectedRow: 6,
     };
   }
 
@@ -68,6 +74,20 @@ export class RealTrackStats extends Component {
 
   componentWillUnmount() {
     console.log('RealTrackStats will unmount');
+  }
+
+  onSelectRow(index) {
+    this.setState({
+      selectedRow: index,
+    });
+  }
+
+  // eslint-disable-next-line class-methods-use-this
+  onDownloadChart(userName) {
+    const svg = document.querySelector('.chart-container svg');
+    console.log(userName, svg.outerHTML);
+    const svgStr = `${svg.outerHTML.slice(0, 4)} xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" ${svg.outerHTML.slice(4)}`;
+    str2File(svgStr, makeFileName(`${userName}_15_Sept_2019_route`, 'svg', new Date()));
   }
 
   // eslint-disable-next-line max-lines-per-function
@@ -139,9 +159,10 @@ export class RealTrackStats extends Component {
     );
   }
 
+
   // eslint-disable-next-line class-methods-use-this
   cleanRawData(rawDataArr) {
-    // const res = rawDataArr.slice(0, 1000).map((el) => ({
+    // const res = rawDataArr.slice(0, 100).map((el) => ({
     const res = rawDataArr.map((el) => ({
     // const res = rawDataArr.filter(R.pipe(R.prop('loudestBeacon'), R.isNil, R.not)).map((el) => ({
       ...el,
@@ -168,7 +189,7 @@ export class RealTrackStats extends Component {
 
   // eslint-disable-next-line max-lines-per-function
   render() {
-    // const { something } = this.state;
+    const { selectedRow } = this.state;
     // // const { t } = this.props;
 
     // if (!something) {
@@ -221,7 +242,7 @@ export class RealTrackStats extends Component {
               // eslint-disable-next-line max-lines-per-function
               sortByTotal(Object.values(tracksData)).map((trackData, index) => (
                 <>
-                  <tr>
+                  <tr onClick={() => this.onSelectRow(index)} className="cursor-pointer">
                     <td>{trackData.userData.name}</td>
                     <td className="text-right">{trackData.stats.emptyMessages}</td>
                     <td
@@ -274,44 +295,75 @@ export class RealTrackStats extends Component {
                     </td>
                   </tr>
                   {
-                    ((index === 6) || false) && (
-                      <tr>
-                        <td colSpan="12" style={{ width: '100%', height: 300 }}>
-                          <ResponsiveContainer>
-                            <ScatterChart
-                              margin={{
-                                top: 20, right: 20, bottom: 20, left: 20,
+                    ((index === selectedRow) || false) && (
+                      <>
+                        <tr>
+                          <td colSpan="12">
+                            <div
+                              className="chart-container"
+                              style={{
+                                width: 8000,
+                                // width: '100%',
+                                height: 600,
                               }}
                             >
-                              <CartesianGrid />
-                              <XAxis
-                                type="number"
-                                dataKey="timeMillis"
-                                domain={[trackData.stats.minTimeMillis - 600000, trackData.stats.maxTimeMillis + 600000]}
-                                tickFormatter={(unixTime) => moment(unixTime).format('HH:mm Do')}
-                                name="Время"
-                                // unit="cm"
-                              />
-                              <YAxis
-                                type="number"
-                                dataKey="level"
-                                name="Уровень сигнала"
-                                // unit="kg"
-                                domain={[-120, 'auto']}
-                              />
-                              <Tooltip cursor={{ strokeDasharray: '3 3' }} />
-                              <Legend />
-                              {/* <Scatter name="A school" data={data} fill="#8884d8" /> */}
-                              {this.getScatters(trackData)}
-                              {/* <Scatter name="A school" data={this.cleanRawData(trackData.rawDataArr)} fill="#8884d8">
-                                {
-                                  data.map((entry, index) => <Cell key={`cell-${index}`} fill="#8884d8" shape="triangle" />)
-                                }
-                              </Scatter> */}
-                            </ScatterChart>
-                          </ResponsiveContainer>
-                        </td>
-                      </tr>
+
+                              <ResponsiveContainer>
+                                <ScatterChart
+                                // width={"100%"}
+                                // height={"100%"}
+                                  margin={{
+                                    top: 20, right: 20, bottom: 20, left: 20,
+                                  }}
+                                >
+                                  <CartesianGrid />
+                                  <XAxis
+                                    type="number"
+                                    dataKey="timeMillis"
+                                    domain={[trackData.stats.minTimeMillis - 600000, trackData.stats.maxTimeMillis + 600000]}
+                                    tickFormatter={(unixTime) => moment(unixTime).format('HH:mm Do')}
+                                    name="Время"
+                                  // unit="cm"
+                                  />
+                                  <YAxis
+                                    type="number"
+                                    dataKey="level"
+                                    name="Уровень сигнала"
+                                    // unit="kg"
+                                    domain={[-120, 'auto']}
+                                  />
+                                  <Tooltip cursor={{ strokeDasharray: '3 3' }} />
+                                  <Legend />
+                                  {/* <Scatter name="A school" data={data} fill="#8884d8" /> */}
+                                  {this.getScatters(trackData)}
+                                  {/* <Scatter name="A school" data={this.cleanRawData(trackData.rawDataArr)} fill="#8884d8">
+                                  {
+                                    data.map((entry, index) => <Cell key={`cell-${index}`} fill="#8884d8" shape="triangle" />)
+                                  }
+                                </Scatter> */}
+                                </ScatterChart>
+                              </ResponsiveContainer>
+                            </div>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td colSpan="12">
+                            <div className="text-right">
+
+                              <Button
+                                variant="primary"
+                                // className="ModelRunControl"
+                                onClick={() => this.onDownloadChart(trackData.userData.name)}
+                              >
+                                Скачать график
+                                {/* {!isModelRunning ? t('startModelRun') : t('stopModelRun')} */}
+                              </Button>
+                              {/* <button className="">Скачать</button> */}
+                            </div>
+
+                          </td>
+                        </tr>
+                      </>
                     )
                   }
                 </>

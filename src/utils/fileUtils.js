@@ -2,7 +2,7 @@
 import dateFormat from 'dateformat';
 import { saveAs } from 'file-saver';
 
-//const R = require('ramda');
+// const R = require('ramda');
 // const { saveAs } = require('file-saver');
 // const CU = require('./common/commonUtils');
 
@@ -51,7 +51,7 @@ const readBinaryFile = (evt) => new Promise((resolve, reject) => {
       const contents = e.target.result;
       resolve({
         name: f.name,
-        buffer: contents
+        buffer: contents,
       });
     };
     r.readAsArrayBuffer(f);
@@ -94,13 +94,13 @@ function json2File(str, fileName) {
 
 function str2File(str, fileName) {
   const blob = new Blob([str], {
-    type: 'text/plain;charset=utf-8'
+    type: 'text/plain;charset=utf-8',
   });
   saveAs(blob, fileName);
 }
 
 export {
-  json2File, makeFileName, readJsonFile, readBinaryFile
+  json2File, makeFileName, readJsonFile, readBinaryFile, str2File,
 };
 
 // function preprocessCsvStr(str) {
