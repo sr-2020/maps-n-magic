@@ -2,7 +2,7 @@
 const R = require('ramda');
 const fs = require('fs');
 const {
-  beaconIndex, bssid2idSubset, beaconLatlngsIndex, countElsByType,
+  beaconIndex, bssid2idSubset, beaconLatlngsIndex, countElsByType, calcDataBeaconStats,
 } = require('./beaconUtils');
 const { getTimeLimits } = require('./utils');
 // const data = require('./data/rawBeaconMessages_improved');
@@ -95,19 +95,22 @@ const dataArrToTracks = function (dataArr) {
 // console.log(res, res.tracks.length);
 // console.log(JSON.stringify(res, null, '  '));
 
-const userTracks = R.mapObjIndexed((dataArr, key) => ({
-  userData: {
-    id: Number(key),
-    ...usersData[key],
-  },
-  stats: countStats(dataArr),
-  rawDataArr: dataArr,
-  tracks: dataArrToTracks(dataArr).tracks,
-}), messagesByUser);
+// const userTracks = R.mapObjIndexed((dataArr, key) => ({
+//   userData: {
+//     id: Number(key),
+//     ...usersData[key],
+//   },
+//   stats: countStats(dataArr),
+//   rawDataArr: dataArr,
+//   tracks: dataArrToTracks(dataArr).tracks,
+// }), messagesByUser);
 
-// console.log(JSON.stringify(userTracks, null, '  '));
-console.log(JSON.stringify(R.keys(userTracks), null, '  '));
+// // console.log(JSON.stringify(userTracks, null, '  '));
+// console.log(JSON.stringify(R.keys(userTracks), null, '  '));
 
-exports.userTracks = userTracks;
+// exports.userTracks = userTracks;
 
-fs.writeFileSync('./data/pt6.json', JSON.stringify(userTracks, null, '  '), 'utf-8');
+// fs.writeFileSync('./data/pt6.json', JSON.stringify(userTracks, null, '  '), 'utf-8');
+
+
+calcDataBeaconStats(data);

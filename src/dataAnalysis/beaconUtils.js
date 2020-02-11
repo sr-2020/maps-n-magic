@@ -34,22 +34,22 @@ exports.calcDataBeaconStats = function (data) {
     return acc;
   }, {});
 
-  // console.log('frequencyOfIds', frequencyOfIds);
+  console.log('frequencyOfIds', frequencyOfIds);
 
   const meetsBssid = R.uniq(rawBssidList);
-  // console.log('meetsBssid', meetsBssid);
+  console.log('meetsBssid', meetsBssid);
 
   const bssid2idSubset = R.pick(meetsBssid, bssid2id);
-  // console.log('bssid2idSubset', bssid2idSubset);
+  console.log('bssid2idSubset', bssid2idSubset);
 
   const id2bssid = R.invertObj(bssid2idSubset);
-  // console.log('id2bssid', id2bssid);
+  console.log('id2bssid', id2bssid);
 
   const coordKnowledge = R.groupBy((id) => (beaconLatlngsIndex[id] ? 'known' : 'unknown'), R.keys(id2bssid));
-  // console.log('coordKnowledge', coordKnowledge);
+  console.log('coordKnowledge', coordKnowledge);
 
-  // console.log('Beacons with unknown coordinates meets these number of times', R.pick(coordKnowledge.unknown, frequencyOfIds));
-  // console.log('Beacons with known coordinates meets these number of times', R.pick(coordKnowledge.known, frequencyOfIds));
+  console.log('Beacons with unknown coordinates meets these number of times', R.pick(coordKnowledge.unknown, frequencyOfIds));
+  console.log('Beacons with known coordinates meets these number of times', R.pick(coordKnowledge.known, frequencyOfIds));
 };
 
 function resolveBssidToId(bssid2id2, beacons) {
