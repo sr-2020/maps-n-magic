@@ -70,6 +70,7 @@ export class RealTrackStats extends Component {
     console.log('RealTrackStats will unmount');
   }
 
+  // eslint-disable-next-line max-lines-per-function
   getScatters(trackData) {
     const { res, beaconIds } = this.cleanRawData(trackData.rawDataArr);
     const { emptyMessages = [], indoors = [], outdoors = [] } = res;
@@ -79,7 +80,8 @@ export class RealTrackStats extends Component {
     const getFillColor = (el) => {
       const index = findIndex(el);
       console.log('');
-      const color = COLOR_PALETTE[index % COLOR_PALETTE.length].color.background;
+      // const color = COLOR_PALETTE[index % COLOR_PALETTE.length].color.background;
+      const color = COLOR_PALETTE[index % COLOR_PALETTE.length].color.border;
       // const color = COLOR_PALETTE[index % 10].color.background;
       return color;
     };
@@ -93,12 +95,15 @@ export class RealTrackStats extends Component {
             indoors.map((entry, index) => (
               <Cell
                 key={`indoors-cell-${index}`}
-                stroke="blue"
-                strokeWidth="1"
+                stroke={getFillColor(entry)}
+                fill="blue"
+                strokeWidth="2"
+                // stroke="blue"
+                // fill={getFillColor(entry)}
+                // strokeWidth="1"
                 points=""
                 // width="6"
                 // height="6"
-                fill={getFillColor(entry)}
               />
             ))
           }
@@ -108,16 +113,28 @@ export class RealTrackStats extends Component {
             outdoors.map((entry, index) => (
               <Cell
                 key={`outdoors-cell-${index}`}
-                stroke="red"
-                strokeWidth="1"
+                stroke={getFillColor(entry)}
+                fill="red"
+                strokeWidth="2"
+                // stroke="red"
+                // fill={getFillColor(entry)}
+                // strokeWidth="1"
                 points=""
                 // width="6"
-                fill={getFillColor(entry)}
               />
             ))
           }
         </Scatter>,
-        <Scatter name="Маяка нет в сообщении" data={emptyMessages} fill="#82ca9d" shape="circle" />,
+        <Scatter name="Маяка нет в сообщении" data={emptyMessages} fill="#82ca9d" shape="circle">
+          {
+            emptyMessages.map((entry, index) => (
+              <Cell
+                key={`empty-cell-${index}`}
+                points=""
+              />
+            ))
+          }
+        </Scatter>,
       ]
     );
   }
@@ -257,7 +274,7 @@ export class RealTrackStats extends Component {
                     </td>
                   </tr>
                   {
-                    ((index === 0) || false) && (
+                    ((index === 6) || false) && (
                       <tr>
                         <td colSpan="12" style={{ width: '100%', height: 300 }}>
                           <ResponsiveContainer>
