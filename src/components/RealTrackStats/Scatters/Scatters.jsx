@@ -15,7 +15,7 @@ import { COLOR_PALETTE } from '../../../utils/colorPalette';
 
 const getFillColor = (index) => {
   // const index = findIndex(el);
-  console.log('');
+  // console.log('');
   // const color = COLOR_PALETTE[index % COLOR_PALETTE.length].color.background;
   const color = COLOR_PALETTE[index % COLOR_PALETTE.length].color.border;
   // const color = COLOR_PALETTE[index % 10].color.background;
@@ -24,7 +24,8 @@ const getFillColor = (index) => {
 // eslint-disable-next-line max-lines-per-function
 export function Scatters(props) {
   const { res, beaconIds } = props;
-  const findIndex = R.pipe(R.path(['loudestBeacon', 'beaconId']), R.toString, R.equals, R.findIndex(R.__, beaconIds));
+  // const findIndex = R.pipe(R.path(['loudestBeacon', 'beaconId']), R.toString, R.equals, R.findIndex(R.__, beaconIds));
+  const findIndex = R.pipe(R.path(['beacon', 'beaconId']), R.toString, R.equals, R.findIndex(R.__, beaconIds));
 
   const { emptyMessages = [], indoors = [], outdoors = [] } = res;
 
