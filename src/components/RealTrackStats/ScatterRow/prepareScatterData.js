@@ -5,16 +5,25 @@ import { AvgFilter } from './AvgFilter';
 // const hasBeacon = R.pipe(R.prop('loudestBeacon'), R.isNil, R.not);
 const hasBeacon = R.pipe(R.prop('beacon'), R.isNil, R.not);
 
-export function cleanRawData(rawDataArr, beaconLatlngsIndex) {
-  // const subArr = rawDataArr.slice(0, 100);
+export function cleanRawData({
+  rawDataArr,
+  beaconLatlngsIndex,
+  filterChart,
+  filterSize,
+  percentUsage,
+}) {
+  const newSize = Math.floor(rawDataArr.length * (percentUsage / 100));
+  const subArr = rawDataArr.slice(0, newSize);
   // const subArr = rawDataArr.slice(0, 1000);
-  const subArr = rawDataArr;
+  // const subArr = rawDataArr;
   // const subArr = rawDataArr.filter(hasBeacon);
   // const res = R.unnest(subArr.map(messageToLoudestOrEmpty(beaconLatlngsIndex)));
   const res = R.unnest(subArr.map(messageToAllBeaconsOrEmpty(beaconLatlngsIndex)));
-  const filteredRes = res;
-  // const avgFilter = new AvgFilter(100);
-  // const filteredRes = res.map(avgFilter.filter.bind(avgFilter));
+  let filteredRes = res;
+  if (filterChart) {
+    const avgFilter = new AvgFilter(filterSize);
+    filteredRes = res.map(avgFilter.filter.bind(avgFilter));
+  }
   const res2 = R.groupBy(R.prop('placement'), filteredRes);
 
   // const makeIndex = R.indexBy(R.path(['loudestBeacon', 'beaconId']));

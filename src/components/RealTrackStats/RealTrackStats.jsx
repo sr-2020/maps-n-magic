@@ -23,7 +23,12 @@ export class RealTrackStats extends Component {
     super(props);
     this.state = {
       selectedRow: 6,
+      filterChart: true,
+      filterSize: 20,
+      percentUsage: 1,
+      showExtendedChart: true,
     };
+    this.onChange = this.onChange.bind(this);
   }
 
   onSelectRow(index) {
@@ -32,9 +37,33 @@ export class RealTrackStats extends Component {
     });
   }
 
+  onChange(e, name) {
+    // filterChart, filterSize, percentUsage, showExtendedChart,
+    if (name === 'filterChart' || name === 'showExtendedChart') {
+      this.setState({
+        [name]: e.target.checked,
+      });
+    }
+    if (name === 'percentUsage' || name === 'filterSize') {
+      const upperLimit = name === 'percentUsage' ? 100 : 500;
+      let value = Number(e.target.value);
+      if (value < 1) {
+        value = 1;
+      }
+      if (value > upperLimit) {
+        value = upperLimit;
+      }
+      this.setState({
+        [name]: value,
+      });
+    }
+  }
+
   // eslint-disable-next-line max-lines-per-function
   render() {
-    const { selectedRow } = this.state;
+    const {
+      selectedRow, filterChart, filterSize, percentUsage, showExtendedChart,
+    } = this.state;
 
     const sortByTotal = R.sortBy((el) => -el.stats.total);
     return (
@@ -53,8 +82,22 @@ export class RealTrackStats extends Component {
                   {
                     ((index === selectedRow) || false) && (
                       <>
-                        <ScatterRow trackData={trackData} beaconLatlngsIndex={beaconLatlngsIndex} />
-                        <DownloadChartRow userName={trackData.userData.name} />
+                        <ScatterRow
+                          trackData={trackData}
+                          beaconLatlngsIndex={beaconLatlngsIndex}
+                          filterChart={filterChart}
+                          filterSize={filterSize}
+                          percentUsage={percentUsage}
+                          showExtendedChart={showExtendedChart}
+                        />
+                        <DownloadChartRow
+                          userName={trackData.userData.name}
+                          filterChart={filterChart}
+                          filterSize={filterSize}
+                          percentUsage={percentUsage}
+                          showExtendedChart={showExtendedChart}
+                          onChange={this.onChange}
+                        />
                       </>
                     )
                   }

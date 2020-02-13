@@ -15,6 +15,23 @@ import { cleanRawData } from './prepareScatterData';
 
 // import { ScatterRowPropTypes } from '../../types';
 
+const CustomTooltip = ({ active, payload, label }) => {
+  if (active) {
+    const { beacon } = payload[1].payload;
+    const date = new Date(payload[0].value);
+
+    return (
+      <div className="custom-tooltip bg-gray-200">
+        <p className="label">{`Время : ${moment(date).format('D MMM YYYY HH:mm:ss')}`}</p>
+        <p className="intro">{`Маяк : ${beacon ? beacon.beaconId : ''}`}</p>
+        <p className="intro">{`Уровень сигнала : ${payload[1].payload.level}`}</p>
+      </div>
+    );
+  }
+
+  return null;
+};
+
 export class ScatterRow extends Component {
   // static propTypes = ScatterRowPropTypes;
 
@@ -24,19 +41,35 @@ export class ScatterRow extends Component {
     };
   }
 
+  // eslint-disable-next-line max-lines-per-function
   render() {
-    const { trackData, beaconLatlngsIndex } = this.props;
+    const {
+      trackData, beaconLatlngsIndex, filterChart, filterSize, percentUsage, showExtendedChart,
+    } = this.props;
+
+    const style = showExtendedChart ? {
+      width: 8000,
+      // width: '100%',
+      // height: 600,
+      height: 400,
+    } : {
+      // width: 8000,
+      width: '100%',
+      height: 400,
+    };
 
     return (
       <tr className="ScatterRow">
-        <td colSpan="12">
+        <td
+          colSpan="12"
+          style={{
+            maxWidth: '90vw',
+            overflow: 'auto',
+          }}
+        >
           <div
             className="chart-container"
-            style={{
-              width: 8000,
-              // width: '100%',
-              height: 600,
-            }}
+            style={style}
           >
             <ResponsiveContainer>
               <ScatterChart
@@ -60,9 +93,15 @@ export class ScatterRow extends Component {
                   name="Уровень сигнала"
                   domain={[-120, 'auto']}
                 />
-                <Tooltip cursor={{ strokeDasharray: '3 3' }} />
+                <Tooltip cursor={{ strokeDasharray: '3 3' }} content={<CustomTooltip />} />
                 <Legend />
-                {Scatters(cleanRawData(trackData.rawDataArr, beaconLatlngsIndex))}
+                {Scatters(cleanRawData({
+                  rawDataArr: trackData.rawDataArr,
+                  beaconLatlngsIndex,
+                  filterChart,
+                  filterSize,
+                  percentUsage,
+                }))}
               </ScatterChart>
             </ResponsiveContainer>
           </div>
