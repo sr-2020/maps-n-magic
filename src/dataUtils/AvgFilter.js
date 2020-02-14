@@ -1,3 +1,5 @@
+// this filter is applied after simplification messages with beacon arrays to list of single beacon messages
+// AvgFilter2 applied to raw data so it can be used directly. Also it is more precise for time.
 export class AvgFilter {
   queue = [];
 
