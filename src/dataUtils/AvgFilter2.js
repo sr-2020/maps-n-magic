@@ -1,3 +1,5 @@
+import * as R from 'ramda';
+
 // AvgFilter2 applied to raw data so it can be used directly. Also it is more precise for time.
 export class AvgFilter2 {
   queue = [];
@@ -6,6 +8,7 @@ export class AvgFilter2 {
 
   constructor(queueSize) {
     this.queueSize = queueSize;
+    this.timeWindow = 60000;
     this.appendBeaconToAverage = this.appendBeaconToAverage.bind(this);
     this.removeBeaconFromAverage = this.removeBeaconFromAverage.bind(this);
   }
@@ -43,35 +46,55 @@ export class AvgFilter2 {
     avgData.total--;
   }
 
+  // return avg only for current recieved beacons
+  // updateWithAvgLevel(el) {
+  //   const newEl = { ...el };
+  //   newEl.rawBeacons = newEl.beacons;
+  //   newEl.beacons = newEl.beacons.map((beacon) => ({
+  //     ...beacon,
+  //     level: this.getBeaconAvgLevel(beacon),
+  //   }));
+  //   return newEl;
+  // }
+
+  // return avg for all hearable in previous time beacons
   updateWithAvgLevel(el) {
     const newEl = { ...el };
     newEl.rawBeacons = newEl.beacons;
-    newEl.beacons = newEl.beacons.map((beacon) => ({
-      ...beacon,
-      level: this.getBeaconAvgLevel(beacon),
+
+    newEl.beacons = Object.entries(this.avgObj).filter((pair) => pair[1].total > 0).map((pair) => ({
+      beaconId: Number(pair[0]),
+      level: Math.round(pair[1].valueSum / pair[1].total),
     }));
     return newEl;
   }
 
+  // return avg for all hearable in previous time beacons
   getBeaconAvgLevel(beacon) {
     const avgData = this.avgObj[beacon.beaconId];
     return Math.round(avgData.valueSum / avgData.total);
-    // return (avgData.valueSum / avgData.total);
   }
 
   filter(newEl) {
     this.queue.push(newEl);
     this.appendToAverage(newEl);
+    this.clearByTime(newEl);
+    this.clearByOverflow();
+    return this.updateWithAvgLevel(newEl);
+  }
+
+  clearByTime(el) {
+    const timeBoundary = el.timeMillis - this.timeWindow;
+    while (this.queue[0].timeMillis < timeBoundary) {
+      const removedEl = this.queue.shift();
+      this.removeFromAverage(removedEl);
+    }
+  }
+
+  clearByOverflow() {
     if (this.queue.length > this.queueSize) {
       const removedEl = this.queue.shift();
       this.removeFromAverage(removedEl);
     }
-
-    return this.updateWithAvgLevel(newEl);
-
-    // return !newEl.beacon ? newEl : {
-    //   ...newEl,
-    //   level: this.getAvgLevel(newEl),
-    // };
   }
 }
