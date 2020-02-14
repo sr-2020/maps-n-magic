@@ -22,7 +22,7 @@ export class RealTrackStats extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      selectedRow: 6,
+      selectedRow: null,
       filterChart: true,
       filterSize: 20,
       percentUsage: 1,
@@ -32,9 +32,9 @@ export class RealTrackStats extends Component {
   }
 
   onSelectRow(index) {
-    this.setState({
-      selectedRow: index,
-    });
+    this.setState(({ selectedRow }) => ({
+      selectedRow: selectedRow === index ? null : index,
+    }));
   }
 
   onChange(e, name) {

@@ -2,6 +2,8 @@ const R = require('ramda');
 const beaconTable = require('./data/postgresBeaconTable');
 const beaconLatlngs = require('./data/googleMapBeaconList');
 
+console.log('beaconTable.length', beaconTable.length);
+
 // console.log(JSON.stringify(beacons));
 
 const beaconLatlngsIndex = R.indexBy(R.prop('id'), beaconLatlngs);
@@ -53,10 +55,23 @@ exports.calcDataBeaconStats = function (data) {
 };
 
 function resolveBssidToId(bssid2id2, beacons) {
-  return beacons.map((beacon) => ({
+  const unknownMacAddresses = {};
+  const result = beacons.filter((beacon) => {
+    if (!bssid2id2[beacon.bssid]) {
+      unknownMacAddresses[beacon.bssid] = true;
+      return false;
+    }
+    return true;
+  }).map((beacon) => ({
     ...beacon,
     beaconId: bssid2id2[beacon.bssid],
   }));
+
+  if (R.keys(unknownMacAddresses).length > 0) {
+    console.warn('Unknown mac addresses', R.keys(unknownMacAddresses));
+  }
+
+  return result;
 }
 
 const sumBy = R.reduceBy(R.inc, 0);
@@ -71,9 +86,22 @@ const countElsByType = sumBy((el) => {
   return 'knownBeaconLatlngs';
 });
 
+const getBeaconsListFromData = function (arr) {
+  const beaconIdList = arr.reduce((acc, el) => {
+    const beaconsIds = el.beacons.map(R.prop('beaconId'));
+    if (beaconsIds.includes(undefined)) {
+      throw new Error(JSON.stringify(el));
+    }
+    acc = R.union(acc, beaconsIds);
+    return acc;
+  }, []);
+  return R.sortBy(Number, beaconIdList);
+};
+
 exports.beaconIndex = beaconIndex;
 exports.bssid2idSubset = bssid2id;
 exports.bssid2id = bssid2id;
 exports.resolveBssidToId = resolveBssidToId;
 exports.beaconLatlngsIndex = beaconLatlngsIndex;
 exports.countElsByType = countElsByType;
+exports.getBeaconsListFromData = getBeaconsListFromData;

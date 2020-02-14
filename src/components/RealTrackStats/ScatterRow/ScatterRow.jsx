@@ -11,7 +11,7 @@ import {
 
 import { Scatters } from '../Scatters';
 
-import { cleanRawData } from './prepareScatterData';
+import { cleanRawData } from '../../../dataUtils/prepareScatterData';
 
 // import { ScatterRowPropTypes } from '../../types';
 
@@ -96,6 +96,7 @@ export class ScatterRow extends Component {
                 <Tooltip cursor={{ strokeDasharray: '3 3' }} content={<CustomTooltip />} />
                 <Legend />
                 {Scatters(cleanRawData({
+                  trackData,
                   rawDataArr: trackData.rawDataArr,
                   beaconLatlngsIndex,
                   filterChart,

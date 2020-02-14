@@ -25,7 +25,7 @@ const getFillColor = (index) => {
 export function Scatters(props) {
   const { res, beaconIds } = props;
   // const findIndex = R.pipe(R.path(['loudestBeacon', 'beaconId']), R.toString, R.equals, R.findIndex(R.__, beaconIds));
-  const findIndex = R.pipe(R.path(['beacon', 'beaconId']), R.toString, R.equals, R.findIndex(R.__, beaconIds));
+  const findIndex = R.pipe(R.path(['beacon', 'beaconId']), R.toString, R.equals, R.findIndex(R.__, beaconIds.map(String)));
 
   const { emptyMessages = [], indoors = [], outdoors = [] } = res;
 

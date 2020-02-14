@@ -3,6 +3,7 @@ const R = require('ramda');
 const fs = require('fs');
 const {
   beaconIndex, bssid2idSubset, beaconLatlngsIndex, countElsByType, calcDataBeaconStats,
+  getBeaconsListFromData,
 } = require('./beaconUtils');
 const { getTimeLimits } = require('./utils');
 // const data = require('./data/rawBeaconMessages_improved');
@@ -10,7 +11,7 @@ const { getTimeLimits } = require('./utils');
 const rawData = require('./data/rawBeaconMessages2');
 const usersData = require('./data/usersData');
 
-const data = require('./improveRawData').improveData(rawData);
+const improvedData = require('./improveRawData').improveData(rawData);
 
 const countDeltas = (arr) => R.aperture(2, arr).map(([p1, p2]) => p2.timeMillis - p1.timeMillis);
 const hist = R.pipe(countDeltas, R.groupBy(R.identity), R.mapObjIndexed((value) => value.length));
@@ -46,10 +47,10 @@ const countStats = function (data2) {
   return stats;
 };
 
-const overallStats = countStats(data);
+const overallStats = countStats(improvedData);
 console.log(overallStats);
 
-const messagesByUser = R.groupBy(R.prop('user_id'), data);
+const messagesByUser = R.groupBy(R.prop('user_id'), improvedData);
 
 
 // exports.userTracks = userTracks;
@@ -85,6 +86,7 @@ const dataArrToTracks = function (dataArr) {
   });
 };
 
+
 // console.log(messagesByUser['5'].map(R.prop('timeMillis')));
 
 // const deltas = countDeltas(messagesByUser['5']);
@@ -95,22 +97,28 @@ const dataArrToTracks = function (dataArr) {
 // console.log(res, res.tracks.length);
 // console.log(JSON.stringify(res, null, '  '));
 
-// const userTracks = R.mapObjIndexed((dataArr, key) => ({
-//   userData: {
-//     id: Number(key),
-//     ...usersData[key],
-//   },
-//   stats: countStats(dataArr),
-//   rawDataArr: dataArr,
-//   tracks: dataArrToTracks(dataArr).tracks,
-// }), messagesByUser);
+const fullBeaconList = getBeaconsListFromData(improvedData);
 
-// // console.log(JSON.stringify(userTracks, null, '  '));
+// console.log(getBeaconsListFromData(improvedData));
+
+const userTracks = R.mapObjIndexed((dataArr, key) => ({
+  userData: {
+    id: Number(key),
+    ...usersData[key],
+  },
+  stats: countStats(dataArr),
+  fullBeaconList,
+  userBeaconList: getBeaconsListFromData(dataArr),
+  tracks: dataArrToTracks(dataArr).tracks,
+  rawDataArr: dataArr,
+}), messagesByUser);
+
+// console.log(JSON.stringify(userTracks, null, '  '));
 // console.log(JSON.stringify(R.keys(userTracks), null, '  '));
 
-// exports.userTracks = userTracks;
+exports.userTracks = userTracks;
 
-// fs.writeFileSync('./data/pt6.json', JSON.stringify(userTracks, null, '  '), 'utf-8');
+fs.writeFileSync('./data/pt6.json', JSON.stringify(userTracks, null, '  '), 'utf-8');
 
 
-calcDataBeaconStats(data);
+// calcDataBeaconStats(data);

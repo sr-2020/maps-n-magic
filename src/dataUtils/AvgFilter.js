@@ -34,7 +34,8 @@ export class AvgFilter {
 
   getAvgLevel(el) {
     const avgData = this.avgObj[el.beacon.beaconId];
-    return avgData.valueSum / avgData.total;
+    return Math.round(avgData.valueSum / avgData.total);
+    // return (avgData.valueSum / avgData.total);
   }
 
   filter(newEl) {

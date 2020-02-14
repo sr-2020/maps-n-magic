@@ -6,6 +6,7 @@ import { AvgFilter } from './AvgFilter';
 const hasBeacon = R.pipe(R.prop('beacon'), R.isNil, R.not);
 
 export function cleanRawData({
+  trackData,
   rawDataArr,
   beaconLatlngsIndex,
   filterChart,
@@ -30,11 +31,11 @@ export function cleanRawData({
   const makeIndex = R.indexBy(R.path(['beacon', 'beaconId']));
   const getBeaconIds = R.pipe(R.filter(hasBeacon), makeIndex, R.keys);
 
-  const beaconIds = getBeaconIds(res);
+  // const beaconIds = getBeaconIds(res);
 
   return {
     res: res2,
-    beaconIds,
+    beaconIds: trackData.fullBeaconList,
   };
 }
 
