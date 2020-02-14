@@ -3,6 +3,8 @@ import * as R from 'ramda';
 import { AvgFilter } from './AvgFilter';
 import { AvgFilter2 } from './AvgFilter2';
 
+import { getLoudestBeacon } from '../dataAnalysis/utils';
+
 // const hasBeacon = R.pipe(R.prop('loudestBeacon'), R.isNil, R.not);
 const hasBeacon = R.pipe(R.prop('beacon'), R.isNil, R.not);
 
@@ -14,6 +16,8 @@ export function cleanRawData({
   filterSize,
   percentUsage,
 }) {
+  // experiment for understanding filter influence
+  // calcFilterInfluence(rawDataArr);
   const newSize = Math.floor(rawDataArr.length * (percentUsage / 100));
   let subArr = rawDataArr.slice(0, newSize);
   // const subArr = rawDataArr.slice(0, 1000);
@@ -42,6 +46,36 @@ export function cleanRawData({
     res: res2,
     beaconIds: trackData.fullBeaconList,
   };
+}
+
+function calcFilterInfluence(rawDataArr) {
+  console.log('no filter', 'switches', countTopLevelBeaconSwitches(rawDataArr));
+  for (let i = 1; i < 30; i++) {
+    const avgFilter2 = new AvgFilter2(i);
+    const newArr = rawDataArr.map(avgFilter2.filter.bind(avgFilter2));
+    console.log('filter size', i, 'switches', countTopLevelBeaconSwitches(newArr));
+  }
+}
+
+function countTopLevelBeaconSwitches(newArr) {
+  let counter = 0;
+  newArr.forEach((elNext, index, arr) => {
+    const elPrev = arr[index - 1];
+    if (!elPrev) {
+      return;
+    }
+    if (elPrev.beacons.length === 0 && elNext.beacons.length === 0) {
+      return;
+    }
+    if (elPrev.beacons.length !== 0 && elNext.beacons.length !== 0) {
+      const bPrev = getLoudestBeacon(elPrev.beacons);
+      const bNext = getLoudestBeacon(elNext.beacons);
+      counter += bPrev.beaconId !== bNext.beaconId ? 1 : 0;
+      return;
+    }
+    counter++;
+  });
+  return counter;
 }
 
 function messageToLoudestOrEmpty(beaconLatlngsIndex) {
