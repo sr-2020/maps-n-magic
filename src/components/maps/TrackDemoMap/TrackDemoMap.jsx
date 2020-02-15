@@ -13,7 +13,7 @@ import { RealTrackDemo } from '../layers/RealTrackDemo';
 
 export function TrackDemoMap(props) {
   const {
-    curPosition, gameModel, mapConfig, translator,
+    curPosition, gameModel, mapConfig, translator, externalRender,
   } = props;
 
   return (
@@ -35,10 +35,14 @@ export function TrackDemoMap(props) {
               enableByDefault
               {...commonProps}
             />
-            <RealTrackDemo
+            {externalRender({
+              // enableByDefault,
+              commonProps,
+            })}
+            {/* <RealTrackDemo
               enableByDefault
               {...commonProps}
-            />
+            /> */}
           </>
         );
       }}

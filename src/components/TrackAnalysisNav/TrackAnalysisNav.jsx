@@ -12,6 +12,9 @@ const navLinks = [{
 }, {
   to: '/trackDemo',
   tKey: 'trackDemo',
+}, {
+  to: '/userTrackAnalysis',
+  tKey: 'userTrackAnalysis',
 }];
 
 // import { TrackAnalysisNavPropTypes } from '../../types';

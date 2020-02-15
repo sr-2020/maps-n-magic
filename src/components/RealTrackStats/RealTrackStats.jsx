@@ -4,7 +4,6 @@ import * as R from 'ramda';
 
 import Table from 'react-bootstrap/Table';
 
-import tracksData from '../../dataAnalysis/data/pt6.json';
 import beaconLatlngs from '../../dataAnalysis/data/googleMapBeaconList.json';
 
 import { TableHead } from './TableHead';
@@ -64,6 +63,9 @@ export class RealTrackStats extends Component {
     const {
       selectedRow, filterChart, filterSize, percentUsage, showExtendedChart,
     } = this.state;
+    const {
+      tracksData,
+    } = this.props;
 
     const sortByTotal = R.sortBy((el) => -el.stats.total);
     return (

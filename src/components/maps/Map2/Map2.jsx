@@ -37,6 +37,7 @@ export class Map2 extends Component {
     this.openPopup = this.openPopup.bind(this);
     this.closePopup = this.closePopup.bind(this);
     this.setLayersMeta = this.setLayersMeta.bind(this);
+    this.removeLayersMeta = this.removeLayersMeta.bind(this);
     this.addToMap = this.addToMap.bind(this);
   }
 
@@ -116,10 +117,21 @@ export class Map2 extends Component {
     });
   }
 
+  removeLayersMeta({ layersMeta }) {
+    // const { t } = this.props;
+    // if (enableByDefault) {
+    Object.values(layersMeta).forEach((group) => group.remove());
+    // }
+    Object.entries(layersMeta).forEach(([nameKey, group]) => {
+      this.layerControl.removeLayer(group);
+    });
+  }
+
   communicatorSubscribe(action) {
     this.layerCommunicator[action]('openPopup', this.openPopup);
     this.layerCommunicator[action]('closePopup', this.closePopup);
     this.layerCommunicator[action]('setLayersMeta', this.setLayersMeta);
+    this.layerCommunicator[action]('removeLayersMeta', this.removeLayersMeta);
     this.layerCommunicator[action]('addToMap', this.addToMap);
   }
 

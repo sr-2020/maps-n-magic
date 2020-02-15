@@ -97,6 +97,7 @@ export const translations = {
       // track analysis
       trackDemo: 'Карта с треками пользователей',
       realTrackStats: 'Статистика по позиционированию пользователей',
+      userTrackAnalysis: 'Анализ трека пользователя',
     },
   },
 };

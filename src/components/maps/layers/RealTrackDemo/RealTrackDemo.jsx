@@ -60,18 +60,32 @@ export class RealTrackDemo extends Component {
 
   componentDidMount() {
     const {
-      enableByDefault, layerCommunicator,
+      enableByDefault, layerCommunicator, userData,
     } = this.props;
     // this.subscribe('on', gameModel);
-    this.populate();
+    this.populate(userData || tracksData);
     layerCommunicator.emit('setLayersMeta', {
       layersMeta: this.getLayersMeta(),
-      enableByDefault: false,
+      enableByDefault,
     });
     console.log('RealTrackDemo mounted');
   }
 
-  componentDidUpdate() {
+  componentDidUpdate(prevProps) {
+    const {
+      enableByDefault, layerCommunicator, userData,
+    } = this.props;
+    if (prevProps.userData !== userData) {
+      layerCommunicator.emit('removeLayersMeta', {
+        layersMeta: this.getLayersMeta(),
+      });
+      this.clear();
+      this.populate(userData || tracksData);
+      layerCommunicator.emit('setLayersMeta', {
+        layersMeta: this.getLayersMeta(),
+        enableByDefault,
+      });
+    }
     console.log('RealTrackDemo did update');
   }
 
@@ -89,7 +103,7 @@ export class RealTrackDemo extends Component {
 
   // eslint-disable-next-line max-lines-per-function
   // eslint-disable-next-line react/sort-comp
-  populate() {
+  populate(tracksData2) {
     // const {
     //   gameModel, translator,
     // } = this.props;
@@ -109,7 +123,7 @@ export class RealTrackDemo extends Component {
       this.beaconGroup.addLayer(marker);
     });
 
-    this.tracks = R.toPairs(tracksData).map(([userId, user]) => {
+    this.tracks = R.toPairs(tracksData2).map(([userId, user]) => {
       const group = L.layerGroup([]);
       const preparedTracks = user.tracks.map((trackData) => this.prepareTrack(trackData, user)).filter((data) => {
         if (data.preparedTrack.length < 2) {
