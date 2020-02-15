@@ -25,6 +25,7 @@ export const translations = {
       botTrackLayer: 'Треки движения духов',
       botLayer: 'Духи',
       userLayer: 'Пользователь',
+      trackAnalysisNav: 'Анализ мастерки',
 
       // Spirit Editor
       newSpirit: 'Новый дух',
@@ -92,6 +93,10 @@ export const translations = {
       longitude: 'Долгота',
 
       botTooltip: 'Дух "{{name}}"<br>Скорость {{speed}} м/с<br>Фракция {{fraction}}<br>Время остановки {{waitTime}}с',
+
+      // track analysis
+      trackDemo: 'Карта с треками пользователей',
+      realTrackStats: 'Статистика по позиционированию пользователей',
     },
   },
 };

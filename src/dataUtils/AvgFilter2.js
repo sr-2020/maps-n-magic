@@ -47,27 +47,27 @@ export class AvgFilter2 {
   }
 
   // return avg only for current recieved beacons
-  // updateWithAvgLevel(el) {
-  //   const newEl = { ...el };
-  //   newEl.rawBeacons = newEl.beacons;
-  //   newEl.beacons = newEl.beacons.map((beacon) => ({
-  //     ...beacon,
-  //     level: this.getBeaconAvgLevel(beacon),
-  //   }));
-  //   return newEl;
-  // }
-
-  // return avg for all hearable in previous time beacons
   updateWithAvgLevel(el) {
     const newEl = { ...el };
     newEl.rawBeacons = newEl.beacons;
-
-    newEl.beacons = Object.entries(this.avgObj).filter((pair) => pair[1].total > 0).map((pair) => ({
-      beaconId: Number(pair[0]),
-      level: Math.round(pair[1].valueSum / pair[1].total),
+    newEl.beacons = newEl.beacons.map((beacon) => ({
+      ...beacon,
+      level: this.getBeaconAvgLevel(beacon),
     }));
     return newEl;
   }
+
+  // return avg for all hearable in previous time beacons
+  // updateWithAvgLevel(el) {
+  //   const newEl = { ...el };
+  //   newEl.rawBeacons = newEl.beacons;
+
+  //   newEl.beacons = Object.entries(this.avgObj).filter((pair) => pair[1].total > 0).map((pair) => ({
+  //     beaconId: Number(pair[0]),
+  //     level: Math.round(pair[1].valueSum / pair[1].total),
+  //   }));
+  //   return newEl;
+  // }
 
   // return avg for all hearable in previous time beacons
   getBeaconAvgLevel(beacon) {

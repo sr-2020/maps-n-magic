@@ -48,6 +48,9 @@ const navLinks = [{
 }, {
   to: '/soundMapping',
   tKey: 'soundMapping',
+}, {
+  to: '/trackAnalysisNav',
+  tKey: 'trackAnalysisNav',
 }];
 
 export class AppHeader extends Component {

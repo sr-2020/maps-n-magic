@@ -42,6 +42,7 @@ import { AppHeader } from './AppHeader';
 import { SoundWatcher } from '../SoundWatcher';
 
 import { SoundStage } from './SoundStage';
+import { TrackAnalysisNav } from '../TrackAnalysisNav';
 
 import { Translator } from '../../utils/Translator';
 
@@ -331,6 +332,9 @@ export class App extends Component {
                     </Route>
                     <Route path="/realTrackStats">
                       <RealTrackStats />
+                    </Route>
+                    <Route path="/trackAnalysisNav">
+                      <TrackAnalysisNav />
                     </Route>
 
                     <Route render={() => <Redirect to="/soundManager2" />} />

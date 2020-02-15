@@ -12,18 +12,25 @@ import {
 import { Scatters } from '../Scatters';
 
 import { cleanRawData } from '../../../dataUtils/prepareScatterData';
+import beaconTable from '../../../dataAnalysis/data/postgresBeaconTable.json';
 
+const beaconIndex = R.indexBy(R.prop('id'), beaconTable);
+// const beaconTable = require('../../../  ../../../data/postgresBeaconTable');
+// import * as BeaconUtils from '../../../dataAnalysis/beaconUtils';
+
+// console.log(BeaconUtils);
 // import { ScatterRowPropTypes } from '../../types';
 
 const CustomTooltip = ({ active, payload, label }) => {
   if (active) {
     const { beacon } = payload[1].payload;
     const date = new Date(payload[0].value);
+    const { label } = beacon ? beaconIndex[beacon.beaconId] : '';
 
     return (
       <div className="custom-tooltip bg-gray-200">
         <p className="label">{`Время : ${moment(date).format('D MMM YYYY HH:mm:ss')}`}</p>
-        <p className="intro">{`Маяк : ${beacon ? beacon.beaconId : ''}`}</p>
+        <p className="intro">{`Маяк : ${beacon ? beacon.beaconId : ''} ${label}`}</p>
         <p className="intro">{`Уровень сигнала : ${payload[1].payload.level}`}</p>
       </div>
     );
