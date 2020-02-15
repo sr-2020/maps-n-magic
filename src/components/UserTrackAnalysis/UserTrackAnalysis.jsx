@@ -6,6 +6,7 @@ import Form from 'react-bootstrap/Form';
 import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
 
+import { TimeRange } from './TimeRange';
 import tracksData from '../../dataAnalysis/data/pt6.json';
 
 import { RealTrackStats } from '../RealTrackStats';
@@ -27,13 +28,22 @@ export class UserTrackAnalysis extends Component {
     super(props);
     this.state = {
       selectedUser: null,
+      maxTime: null,
+      timeDelta: null,
     };
     this.onUserSelect = this.onUserSelect.bind(this);
+    this.onTimeRangeChange = this.onTimeRangeChange.bind(this);
   }
 
   componentDidMount() {
+    const selectedUser = userList[10].userId;
+    const userData = tracksData[selectedUser];
     this.setState({
-      selectedUser: userList[10].userId,
+      selectedUser,
+      maxTime: userData.stats.maxTimeMillis,
+      maxTimeBoundary: userData.stats.maxTimeMillis + (userData.stats.maxTimeMillis % 60000),
+      minTimeBoundary: userData.stats.minTimeMillis - (userData.stats.minTimeMillis % 60000),
+      timeDelta: userData.stats.maxTimeMillis - userData.stats.minTimeMillis,
     });
     console.log('UserTrackAnalysis mounted');
   }
@@ -52,8 +62,21 @@ export class UserTrackAnalysis extends Component {
     });
   }
 
+  onTimeRangeChange(e) {
+    this.setState({
+      timeDelta: e[1] - e[0],
+      maxTime: e[1],
+    });
+    // console.log(e);
+  }
+
   render() {
-    const { selectedUser } = this.state;
+    const {
+      selectedUser, maxTime, timeDelta, maxTimeBoundary, minTimeBoundary,
+    } = this.state;
+    if (!maxTime) {
+      return null;
+    }
     const { drawMap } = this.props;
     const userData = R.pick([selectedUser], tracksData);
     return (
@@ -76,6 +99,16 @@ export class UserTrackAnalysis extends Component {
             </Form.Control>
           </Form.Group>
         </Form>
+        <div className="m-8">
+          <TimeRange
+            values={[maxTime - timeDelta, maxTime]}
+            onChange={this.onTimeRangeChange}
+            max={maxTimeBoundary}
+            min={minTimeBoundary}
+            step={60000}
+            tickStep={60000 * 60}
+          />
+        </div>
         <RealTrackStats tracksData={userData} />
         <div style={{ height: '100vh' }}>
           {drawMap({ userData })}
