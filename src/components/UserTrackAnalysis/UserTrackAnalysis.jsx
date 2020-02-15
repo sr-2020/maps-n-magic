@@ -7,6 +7,7 @@ import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
 
 import { TimeRange } from './TimeRange';
+import { TimeRangeWrapper } from './TimeRangeWrapper';
 import tracksData from '../../dataAnalysis/data/pt6.json';
 
 import { RealTrackStats } from '../RealTrackStats';
@@ -70,6 +71,7 @@ export class UserTrackAnalysis extends Component {
     // console.log(e);
   }
 
+  // eslint-disable-next-line max-lines-per-function
   render() {
     const {
       selectedUser, maxTime, timeDelta, maxTimeBoundary, minTimeBoundary,
@@ -78,7 +80,15 @@ export class UserTrackAnalysis extends Component {
       return null;
     }
     const { drawMap } = this.props;
-    const userData = R.pick([selectedUser], tracksData);
+    let userData = R.pick([selectedUser], tracksData);
+
+    userData = R.mapObjIndexed((oneUserData) => {
+      oneUserData.rawDataArr = oneUserData.rawDataArr.filter((el) => (el.timeMillis >= (maxTime - timeDelta))
+      && el.timeMillis <= maxTime);
+      return {
+        ...oneUserData,
+      };
+    }, userData);
     return (
       <div className="UserTrackAnalysis">
         <Form>
@@ -100,7 +110,7 @@ export class UserTrackAnalysis extends Component {
           </Form.Group>
         </Form>
         <div className="m-8">
-          <TimeRange
+          <TimeRangeWrapper
             values={[maxTime - timeDelta, maxTime]}
             onChange={this.onTimeRangeChange}
             max={maxTimeBoundary}
@@ -108,6 +118,9 @@ export class UserTrackAnalysis extends Component {
             step={60000}
             tickStep={60000 * 60}
           />
+          {maxTime}
+          <br />
+          {timeDelta}
         </div>
         <RealTrackStats tracksData={userData} />
         <div style={{ height: '100vh' }}>

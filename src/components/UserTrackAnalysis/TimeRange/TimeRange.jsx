@@ -10,7 +10,7 @@ import { Range, getTrackBackground } from 'react-range';
 // eslint-disable-next-line max-lines-per-function
 export function TimeRange(props) {
   const {
-    values, onChange, max, min, step, tickStep,
+    values, onChange, max, min, step, tickStep, onFinalChange,
   } = props;
 
   // min
@@ -42,6 +42,7 @@ export function TimeRange(props) {
         max={max}
         values={values}
         onChange={onChange}
+        onFinalChange={onFinalChange}
         // eslint-disable-next-line max-lines-per-function
         renderTrack={({ props, children }) => (
           <>
