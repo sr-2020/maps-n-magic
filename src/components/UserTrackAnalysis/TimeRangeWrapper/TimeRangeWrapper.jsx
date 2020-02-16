@@ -14,6 +14,7 @@ export class TimeRangeWrapper extends Component {
       values: null,
     };
     this.onTimeRangeChange = this.onTimeRangeChange.bind(this);
+    this.onFinalChange = this.onFinalChange.bind(this);
   }
 
   componentDidMount() {
@@ -43,10 +44,33 @@ export class TimeRangeWrapper extends Component {
     console.log('TimeRangeWrapper will unmount');
   }
 
+  onFinalChange(e) {
+    const {
+      onChange,
+    } = this.props;
+    const {
+      values,
+    } = this.state;
+    // this.setState({
+    //   values: [...e],
+    // });
+    onChange(values);
+  }
+
   onTimeRangeChange(e) {
-    this.setState({
-      values: [...e],
-    });
+    const {
+      values,
+    } = this.props;
+    if (e[1] !== values[1]) {
+      const delta = values[1] - values[0];
+      this.setState({
+        values: [e[1] - delta, e[1]],
+      });
+    } else if (e[0] !== values[0]) {
+      this.setState({
+        values: [...e],
+      });
+    }
   }
 
   render() {
@@ -60,11 +84,10 @@ export class TimeRangeWrapper extends Component {
       return null;
     }
     return (
-
       <TimeRange
         values={values}
         onChange={this.onTimeRangeChange}
-        onFinalChange={onChange}
+        onFinalChange={this.onFinalChange}
         max={max}
         min={min}
         step={step}

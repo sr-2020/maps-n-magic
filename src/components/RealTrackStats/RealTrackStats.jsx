@@ -30,6 +30,22 @@ export class RealTrackStats extends Component {
     this.onChange = this.onChange.bind(this);
   }
 
+  componentDidMount() {
+    const {
+      initialPercentUsage, initialShowExtendedChart,
+    } = this.props;
+    if (initialPercentUsage !== undefined) {
+      this.setState({
+        percentUsage: initialPercentUsage,
+      });
+    }
+    if (initialShowExtendedChart !== undefined) {
+      this.setState({
+        showExtendedChart: initialShowExtendedChart,
+      });
+    }
+  }
+
   onSelectRow(index) {
     this.setState(({ selectedRow }) => ({
       selectedRow: selectedRow === index ? null : index,

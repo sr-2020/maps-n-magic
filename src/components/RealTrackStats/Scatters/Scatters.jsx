@@ -36,7 +36,8 @@ export function Scatters(props) {
         {
           indoors.map((entry, index) => (
             <Cell
-              key={`indoors-cell-${index}`}
+              // key={`indoors-cell-${index}`}
+              key={`indoors-cell-${entry.timeMillis}`}
               stroke={getFillColor(findIndex(entry))}
               fill="blue"
               strokeWidth="2"
@@ -54,7 +55,8 @@ export function Scatters(props) {
         {
           outdoors.map((entry, index) => (
             <Cell
-              key={`outdoors-cell-${index}`}
+              // key={`outdoors-cell-${index}`}
+              key={`outdoors-cell-${entry.timeMillis}`}
               stroke={getFillColor(findIndex(entry))}
               fill="red"
               strokeWidth="2"
@@ -71,7 +73,8 @@ export function Scatters(props) {
         {
           emptyMessages.map((entry, index) => (
             <Cell
-              key={`empty-cell-${index}`}
+              // key={`empty-cell-${index}`}
+              key={`empty-cell-${entry.timeMillis}`}
               points=""
             />
           ))
