@@ -3,6 +3,7 @@ import './UserTrackAnalysis.css';
 import * as R from 'ramda';
 
 import Form from 'react-bootstrap/Form';
+import Button from 'react-bootstrap/Button';
 import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
 
@@ -26,9 +27,9 @@ const userList = R.pipe(makeUserList, sortByName)(tracksData);
 
 // import { UserTrackAnalysisPropTypes } from '../../types';
 
-const speedLevels = [-60, -10, 0, 10, 60];
+const speedLevels = [-60, -10, -1, 0, 1, 10, 60];
 
-const timeShifts = [-600000, -60000, 60000, 600000];
+const timeShifts = [-6000, -60000, -600000, 6000, 60000, 600000];
 
 export class UserTrackAnalysis extends Component {
   // static propTypes = UserTrackAnalysisPropTypes;
@@ -40,10 +41,14 @@ export class UserTrackAnalysis extends Component {
       maxTime: null,
       timeDelta: null,
       speedLevel: 0,
+      showTable: true,
+      showMap: true,
     };
     this.onUserSelect = this.onUserSelect.bind(this);
     this.onTimeRangeChange = this.onTimeRangeChange.bind(this);
     this.onSpeedChange = this.onSpeedChange.bind(this);
+    this.onShowTable = this.onShowTable.bind(this);
+    this.onShowMap = this.onShowMap.bind(this);
   }
 
 
@@ -75,6 +80,18 @@ export class UserTrackAnalysis extends Component {
     this.setState({
       selectedUser: e.target.value,
     });
+  }
+
+  onShowMap(e) {
+    this.setState(({ showMap }) => ({
+      showMap: !showMap,
+    }));
+  }
+
+  onShowTable(e) {
+    this.setState(({ showTable }) => ({
+      showTable: !showTable,
+    }));
   }
 
   onTimeRangeChange(e) {
@@ -141,7 +158,7 @@ export class UserTrackAnalysis extends Component {
   // eslint-disable-next-line max-lines-per-function
   render() {
     const {
-      selectedUser, maxTime, timeDelta, maxTimeBoundary, minTimeBoundary, speedLevel,
+      selectedUser, maxTime, timeDelta, maxTimeBoundary, minTimeBoundary, speedLevel, showTable, showMap,
     } = this.state;
     if (!maxTime) {
       return null;
@@ -149,18 +166,28 @@ export class UserTrackAnalysis extends Component {
     const { drawMap } = this.props;
     let userData = R.pick([selectedUser], tracksData);
 
+    const isInTimeInterval = (time) => (time >= (maxTime - timeDelta)) && time <= maxTime;
+    const isMessageInTimeInterval = R.pipe(R.prop('timeMillis'), isInTimeInterval);
+    const filterMessageArr = R.filter(isMessageInTimeInterval);
+    const filterTrackArr = R.filter((arr) => R.any(isMessageInTimeInterval, arr));
+
+    // R.pipe(R.head, isMessageInTimeInterval)
+    // R.pipe(R.last, isMessageInTimeInterval)
+
     userData = R.mapObjIndexed((oneUserData) => {
       const data = {
         ...oneUserData,
       };
-      data.rawDataArr = data.rawDataArr.filter((el) => (el.timeMillis >= (maxTime - timeDelta))
-      && el.timeMillis <= maxTime);
+      data.rawDataArr = filterMessageArr(data.rawDataArr);
+      data.tracks = filterTrackArr(data.tracks).map(filterMessageArr);
+      // data.tracks = data.tracks.filter(R.pipe(R.prop('timeMillis'), isInTimeInterval));
       return data;
     }, { ...userData });
+
     const msgNumber = userData[selectedUser].rawDataArr.length;
     const sumBeaconSignals = R.pipe(R.map(R.pipe(R.prop('beacons'), R.length)), R.sum);
     const beaconSignals = sumBeaconSignals(userData[selectedUser].rawDataArr);
-    const common = 'font-bold py-2 px-4 focus:outline-none focus:shadow-outline';
+    const common = 'font-bold py-2 focus:outline-none focus:shadow-outline';
     const selectedButton = 'bg-blue-500 hover:bg-blue-700 text-white';
     const unselectedButton = 'bg-gray-300 hover:bg-gray-400 text-gray-800';
     return (
@@ -181,6 +208,8 @@ export class UserTrackAnalysis extends Component {
                 userList.map(({ userId, userName }) => <option value={userId}>{`${userName} (${tracksData[userId].rawDataArr.length} точек)`}</option>)
               }
             </Form.Control>
+            <Button className="ml-2" variant={showTable ? 'primary' : 'outline-primary'} onClick={this.onShowTable}>Показывать таблицу статистики</Button>
+            <Button className="ml-2" variant={showMap ? 'primary' : 'outline-primary'} onClick={this.onShowMap}>Показывать карту</Button>
           </Form.Group>
         </Form>
         <div className="m-8 flex items-center">
@@ -192,7 +221,7 @@ export class UserTrackAnalysis extends Component {
                 speedLevels.map((level, i) => (
                   <button
                     key={level}
-                    className={classNames(common, {
+                    className={classNames(common, 'px-3', {
                       [selectedButton]: level === speedLevel,
                       [unselectedButton]: level !== speedLevel,
                       'rounded-l': i === 0,
@@ -212,20 +241,23 @@ export class UserTrackAnalysis extends Component {
               <br />
               {
                 timeShifts.map((level, i) => (
-                  <button
-                    key={level}
-                    className={classNames(common, unselectedButton, {
+                  <>
+                    <button
+                      key={level}
+                      className={classNames(common, unselectedButton, 'w-24 px-2 ', {
                       // [selectedButton]: level === speedLevel,
                       // [unselectedButton]: level !== speedLevel,
-                      'rounded-l': i === 0,
-                      'rounded-r': i === 3,
-                    })}
-                    type="button"
-                    value={level}
-                    onClick={this.onManualShift(level)}
-                  >
-                    {`${level > 0 ? '+' : ''}${level / 60000} мин`}
-                  </button>
+                        // 'rounded-l': i === 0,
+                        // 'rounded-r': i === 3,
+                      })}
+                      type="button"
+                      value={level}
+                      onClick={this.onManualShift(level)}
+                    >
+                      {`${level > 0 ? '+' : ''}${level / 60000} мин`}
+                    </button>
+                    {i === 2 && <br />}
+                  </>
                 ))
               }
             </div>
@@ -243,7 +275,7 @@ export class UserTrackAnalysis extends Component {
           </div>
           <div className="ml-8">
 
-            {`Текущее время ${moment(maxTime).format('HH:mm_Do')}`}
+            {`Текущее время ${moment(maxTime).format('HH:mm:ss_Do')}`}
             <br />
             {`Временной интервал ${timeDelta / 60000}мин`}
             <br />
@@ -256,10 +288,17 @@ export class UserTrackAnalysis extends Component {
             {`Сигналов в сообщении в ср. ${msgNumber !== 0 ? (beaconSignals / msgNumber).toFixed(1) : ''}`}
           </div>
         </div>
-        <RealTrackStats tracksData={userData} initialPercentUsage={100} initialShowExtendedChart={false} />
-        <div style={{ height: '100vh' }}>
-          {drawMap({ userData })}
-        </div>
+        {
+          showTable && <RealTrackStats tracksData={userData} initialPercentUsage={100} initialShowExtendedChart={false} />
+        }
+        {
+          showMap && (
+            <div style={{ height: '100vh' }}>
+              {drawMap({ userData })}
+            </div>
+          )
+        }
+
       </div>
     );
   }
