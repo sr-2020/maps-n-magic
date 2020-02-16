@@ -26,12 +26,14 @@ const CustomTooltip = ({ active, payload, label }) => {
     const { beacon } = payload[1].payload;
     const date = new Date(payload[0].value);
     const { label } = beacon ? beaconIndex[beacon.beaconId] : '';
+    const { beacons = [] } = payload[0].payload;
 
     return (
       <div className="custom-tooltip bg-gray-200">
         <p className="label">{`Время : ${moment(date).format('D MMM YYYY HH:mm:ss')}`}</p>
         <p className="intro">{`Маяк : ${beacon ? beacon.beaconId : ''} ${label}`}</p>
         <p className="intro">{`Уровень сигнала : ${payload[1].payload.level}`}</p>
+        <p className="intro">{`Количество маяков в сообщении : ${beacons.length}`}</p>
       </div>
     );
   }
@@ -55,7 +57,8 @@ export class ScatterRow extends Component {
     } = this.props;
 
     const style = showExtendedChart ? {
-      width: 8000,
+      // width: 8000,
+      width: 16000,
       // width: '100%',
       // height: 600,
       height: 400,
