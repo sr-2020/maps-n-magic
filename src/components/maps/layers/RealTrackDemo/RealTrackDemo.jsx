@@ -12,6 +12,7 @@ import * as Hotline from 'leaflet-hotline';
 // import trackData from '../../../../dataAnalysis/playerTracks2.json';
 // import trackData from '../../../../dataAnalysis/data/pt3.json';
 import tracksData from '../../../../dataAnalysis/data/pt6.json';
+// import gpsTrack from '../../../../dataAnalysis/data/Radomir_15_sept_2019_11_12_14.json';
 import usersData from '../../../../dataAnalysis/data/usersData.json';
 import beaconLatlngs from '../../../../dataAnalysis/data/googleMapBeaconList.json';
 // import * as BeaconUtils from '../../../../dataAnalysis/beaconUtils';
@@ -103,6 +104,7 @@ export class RealTrackDemo extends Component {
 
   // eslint-disable-next-line max-lines-per-function
   // eslint-disable-next-line react/sort-comp
+  // eslint-disable-next-line max-lines-per-function
   populate(tracksData2) {
     // const {
     //   gameModel, translator,
@@ -147,6 +149,32 @@ export class RealTrackDemo extends Component {
 
       return [`${user.userData.name} (id ${userId}, ${points} points, ${tracks.length} tracks)`, group];
     });
+
+    const gpsTracks = R.toPairs(tracksData2).filter(([userId, user]) => !!user.gpsTrack && !R.isEmpty(user.gpsTrack)).map(([userId, user]) => {
+      const { gpsTrack } = user;
+      const group = L.layerGroup([]);
+      const min = R.head(gpsTrack).timeMillis;
+      const max = R.last(gpsTrack).timeMillis;
+      // gpsTrack
+      const track = L.hotline(gpsTrack.map((el) => ([el.lat, el.lng, el.timeMillis])), {
+        ...defaultOptions,
+        palette: {
+          0.0: '#0000ff',
+          0.25: '#000088',
+          0.5: '#00ffff',
+          0.75: '#00ff88',
+          1.0: '#ffffff',
+        },
+        min,
+        max,
+      });
+      group.addLayer(track);
+
+      return [`${user.userData.name} gps track`, group];
+    });
+
+    this.tracks = R.concat(this.tracks, gpsTracks);
+
     this.tracks = R.fromPairs(this.tracks);
   }
 

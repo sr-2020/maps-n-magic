@@ -14,8 +14,11 @@ import classNames from 'classnames';
 import { TimeRange } from './TimeRange';
 import { TimeRangeWrapper } from './TimeRangeWrapper';
 import tracksData from '../../dataAnalysis/data/pt6.json';
+import radomirGpsTrack from '../../dataAnalysis/data/Radomir_15_sept_2019_11_12_14.json';
 
 import { RealTrackStats } from '../RealTrackStats';
+
+tracksData['157'].gpsTrack = radomirGpsTrack;
 
 const makeUserList = R.pipe(
   R.mapObjIndexed(R.path(['userData', 'name'])),
@@ -53,7 +56,8 @@ export class UserTrackAnalysis extends Component {
 
 
   componentDidMount() {
-    const selectedUser = userList[10].userId;
+    // const selectedUser = userList[10].userId;
+    const selectedUser = userList[18].userId;
     const userData = tracksData[selectedUser];
     this.setState({
       selectedUser,
@@ -180,6 +184,9 @@ export class UserTrackAnalysis extends Component {
       };
       data.rawDataArr = filterMessageArr(data.rawDataArr);
       data.tracks = filterTrackArr(data.tracks).map(filterMessageArr);
+      if (data.gpsTrack) {
+        data.gpsTrack = filterMessageArr(data.gpsTrack);
+      }
       // data.tracks = data.tracks.filter(R.pipe(R.prop('timeMillis'), isInTimeInterval));
       return data;
     }, { ...userData });
@@ -236,7 +243,16 @@ export class UserTrackAnalysis extends Component {
                 ))
               }
             </div>
-            <div className="mt-2">
+            <div
+              className="mt-2"
+              style={{
+                position: 'fixed',
+                bottom: 0,
+                left: 0,
+                zIndex: 10000,
+                background: '#dddddd',
+              }}
+            >
               <label>Ручной сдвиг времени</label>
               <br />
               {

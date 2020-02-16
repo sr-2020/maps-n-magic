@@ -52,7 +52,8 @@
     "tailwindcss": "^1.1.4",
     "tailwindcss-enhanced-outlines-plugin": "^1.0.3",
     "tone": "^13.8.25",
-    "xml2js": "^0.4.22"
+    "xml2js": "^0.4.22",
+    "xmldom": "^0.2.1"
   },
   "scripts": {
     "tailwind:css": "./node_modules/.bin/tailwind build src/css/tailwind.src.css -c  tailwind.js -o src/css/tailwind.css",

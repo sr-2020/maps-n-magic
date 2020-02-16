@@ -44,6 +44,7 @@ export function cleanRawData({
 
   return {
     res: res2,
+    gpsTrack: trackData.gpsTrack,
     beaconIds: trackData.fullBeaconList,
   };
 }
