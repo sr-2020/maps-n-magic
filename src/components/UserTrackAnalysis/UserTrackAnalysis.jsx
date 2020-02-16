@@ -15,10 +15,14 @@ import { TimeRange } from './TimeRange';
 import { TimeRangeWrapper } from './TimeRangeWrapper';
 import tracksData from '../../dataAnalysis/data/pt6.json';
 import radomirGpsTrack from '../../dataAnalysis/data/Radomir_15_sept_2019_11_12_14.json';
+import ksotarGpsTrack from '../../dataAnalysis/data/Ksotar_gps_15_sept.json';
 
 import { RealTrackStats } from '../RealTrackStats';
 
+// inject Radomir gps data
 tracksData['157'].gpsTrack = radomirGpsTrack;
+// inject Ksotar gps data
+tracksData['160'].gpsTrack = ksotarGpsTrack;
 
 const makeUserList = R.pipe(
   R.mapObjIndexed(R.path(['userData', 'name'])),
@@ -52,6 +56,8 @@ export class UserTrackAnalysis extends Component {
     this.onSpeedChange = this.onSpeedChange.bind(this);
     this.onShowTable = this.onShowTable.bind(this);
     this.onShowMap = this.onShowMap.bind(this);
+    this.set10MinInterval = this.set10MinInterval.bind(this);
+    this.selectAllTime = this.selectAllTime.bind(this);
   }
 
 
@@ -140,6 +146,22 @@ export class UserTrackAnalysis extends Component {
   }
 
 
+  set10MinInterval() {
+    this.setState({
+      timeDelta: 600000,
+    });
+  }
+
+  selectAllTime() {
+    const {
+      maxTimeBoundary, minTimeBoundary,
+    } = this.state;
+    this.setState({
+      maxTime: maxTimeBoundary,
+      timeDelta: maxTimeBoundary - minTimeBoundary,
+    });
+  }
+
   moveTimeWindow(level) {
     clearInterval(this.moveTimeWindowInterval);
     if (level === 0) {
@@ -212,46 +234,54 @@ export class UserTrackAnalysis extends Component {
               className="inline"
             >
               {
-                userList.map(({ userId, userName }) => <option value={userId}>{`${userName} (${tracksData[userId].rawDataArr.length} точек)`}</option>)
+                userList.map(({ userId, userName }) => <option value={userId}>{`${userName} (id ${userId}, ${tracksData[userId].rawDataArr.length} точек)`}</option>)
               }
             </Form.Control>
             <Button className="ml-2" variant={showTable ? 'primary' : 'outline-primary'} onClick={this.onShowTable}>Показывать таблицу статистики</Button>
             <Button className="ml-2" variant={showMap ? 'primary' : 'outline-primary'} onClick={this.onShowMap}>Показывать карту</Button>
+            <Button className="ml-4" variant="outline-primary" onClick={this.set10MinInterval}>Поставить интервал 10 мин</Button>
+            <Button className="ml-2" variant="outline-primary" onClick={this.selectAllTime}>Выбрать все время</Button>
           </Form.Group>
         </Form>
         <div className="m-8 flex items-center">
-          <div className="mr-8">
+          <div
+            className="mr-8"
+            style={{
+              position: 'fixed',
+              bottom: 0,
+              left: 0,
+              zIndex: 10000,
+              background: '#dddddd',
+            }}
+          >
             <div>
               <label>Скорость времени</label>
               <br />
               {
                 speedLevels.map((level, i) => (
-                  <button
-                    key={level}
-                    className={classNames(common, 'px-3', {
-                      [selectedButton]: level === speedLevel,
-                      [unselectedButton]: level !== speedLevel,
-                      'rounded-l': i === 0,
-                      'rounded-r': i === 4,
-                    })}
-                    type="button"
-                    value={level}
-                    onClick={this.onSpeedChange(level)}
-                  >
-                    {level + (level === 0 ? '' : 'x')}
-                  </button>
+                  <>
+                    <button
+                      key={level}
+                      className={classNames(common, 'px-3', {
+                        [selectedButton]: level === speedLevel,
+                        [unselectedButton]: level !== speedLevel,
+                        'rounded-l': i === 0,
+                        'rounded-r': i === 4,
+                      })}
+                      type="button"
+                      value={level}
+                      onClick={this.onSpeedChange(level)}
+                    >
+                      {level + (level === 0 ? '' : 'x')}
+                    </button>
+                    {i === 3 && <br />}
+                  </>
                 ))
               }
             </div>
             <div
               className="mt-2"
-              style={{
-                position: 'fixed',
-                bottom: 0,
-                left: 0,
-                zIndex: 10000,
-                background: '#dddddd',
-              }}
+
             >
               <label>Ручной сдвиг времени</label>
               <br />
@@ -293,7 +323,7 @@ export class UserTrackAnalysis extends Component {
 
             {`Текущее время ${moment(maxTime).format('HH:mm:ss_Do')}`}
             <br />
-            {`Временной интервал ${timeDelta / 60000}мин`}
+            {`Временной интервал ${(timeDelta / 60000).toFixed(1)}мин`}
             <br />
             {`Сообщений в интервале ${msgNumber}`}
             <br />
