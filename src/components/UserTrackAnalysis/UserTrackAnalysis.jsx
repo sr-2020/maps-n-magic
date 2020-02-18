@@ -14,15 +14,21 @@ import classNames from 'classnames';
 import { TimeRange } from './TimeRange';
 import { TimeRangeWrapper } from './TimeRangeWrapper';
 import tracksData from '../../dataAnalysis/data/pt6.json';
-import radomirGpsTrack from '../../dataAnalysis/data/Radomir_15_sept_2019_11_12_14.json';
-import ksotarGpsTrack from '../../dataAnalysis/data/Ksotar_gps_15_sept.json';
+import {
+  Girt, Ksotar, Eremin_sync_Ksotar, Gurkalov_sync_Ksotar, Radomir,
+} from '../../dataAnalysis/data/gps_15_sept';
+
+// import radomirGpsTrack from '../../dataAnalysis/data/gps_15_sept/json/Radomir_15_sept_2019_11_12_14.json';
+// import ksotarGpsTrack from '../../dataAnalysis/data/gps_15_sept/json/Ksotar_gps_15_sept.json';
 
 import { RealTrackStats } from '../RealTrackStats';
 
-// inject Radomir gps data
-tracksData['157'].gpsTrack = radomirGpsTrack;
-// inject Ksotar gps data
-tracksData['160'].gpsTrack = ksotarGpsTrack;
+// inject gps data
+tracksData['157'].gpsTrack = Radomir;
+tracksData['160'].gpsTrack = Ksotar;
+tracksData['5'].gpsTrack = Girt;
+tracksData['130'].gpsTrack = Eremin_sync_Ksotar;
+tracksData['127'].gpsTrack = Gurkalov_sync_Ksotar;
 
 const makeUserList = R.pipe(
   R.mapObjIndexed(R.path(['userData', 'name'])),
