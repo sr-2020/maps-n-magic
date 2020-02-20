@@ -10,7 +10,7 @@ function getter(obj, prop) {
 
 if (Object.keys(R2).length === 1) {
   R = getter(R2, 'default');
-  R2.default;
+  // R2.default;
 } else {
   R = R2;
 }
