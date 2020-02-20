@@ -1,12 +1,20 @@
-const R = require('ramda');
-const beaconTable = require('./data/postgresBeaconTable');
-const beaconLatlngs = require('./data/googleMapBeaconList');
+import R from 'ramda';
+
+
+import beaconTable from './data/postgresBeaconTable.json';
+import beaconLatlngs from './data/googleMapBeaconList.json';
+
+// console.log(R);
+
+// const R = require('ramda');
+// const beaconTable = require('./data/postgresBeaconTable');
+// const beaconLatlngs = require('./data/googleMapBeaconList');
 
 console.log('beaconTable.length', beaconTable.length);
 
 // console.log(JSON.stringify(beacons));
 
-const beaconLatlngsIndex = R.indexBy(R.prop('id'), beaconLatlngs);
+export const beaconLatlngsIndex = R.indexBy(R.prop('id'), beaconLatlngs);
 
 const beaconTable2 = beaconTable.filter((beacon) => beaconLatlngsIndex[beacon.id]).map((beacon) => {
   const { lat, lng } = beaconLatlngsIndex[beacon.id];
@@ -14,18 +22,18 @@ const beaconTable2 = beaconTable.filter((beacon) => beaconLatlngsIndex[beacon.id
   return beacon;
 });
 
-const beaconIndex = R.indexBy(R.prop('bssid'), beaconTable2);
+export const beaconIndex = R.indexBy(R.prop('bssid'), beaconTable2);
 
 // console.log(beaconIndex);
 
-const bssid2id = beaconTable.reduce((acc, beacon) => {
+export const bssid2id = beaconTable.reduce((acc, beacon) => {
   acc[beacon.bssid] = beacon.id;
   return acc;
 }, {});
 
 // console.log('bssid2id', bssid2id);
 
-exports.calcDataBeaconStats = function (data) {
+export const calcDataBeaconStats = function (data) {
   const rawBssidList = R.flatten(data.map((item) => item.beacons.map(R.prop('bssid'))));
 
   const frequencyOfIds = rawBssidList.map((bssid) => bssid2id[bssid]).reduce((acc, id) => {
@@ -54,7 +62,7 @@ exports.calcDataBeaconStats = function (data) {
   console.log('Beacons with known coordinates meets these number of times', R.pick(coordKnowledge.known, frequencyOfIds));
 };
 
-function resolveBssidToId(bssid2id2, beacons) {
+export function resolveBssidToId(bssid2id2, beacons) {
   const unknownMacAddresses = {};
   const result = beacons.filter((beacon) => {
     if (!bssid2id2[beacon.bssid]) {
@@ -76,7 +84,7 @@ function resolveBssidToId(bssid2id2, beacons) {
 
 const sumBy = R.reduceBy(R.inc, 0);
 
-const countElsByType = sumBy((el) => {
+export const countElsByType = sumBy((el) => {
   if (el.loudestBeacon === null) {
     return 'emptyMessages';
   }
@@ -86,7 +94,7 @@ const countElsByType = sumBy((el) => {
   return 'knownBeaconLatlngs';
 });
 
-const getBeaconsListFromData = function (arr) {
+export function getBeaconsListFromData(arr) {
   const beaconIdList = arr.reduce((acc, el) => {
     const beaconsIds = el.beacons.map(R.prop('beaconId'));
     if (beaconsIds.includes(undefined)) {
@@ -96,12 +104,4 @@ const getBeaconsListFromData = function (arr) {
     return acc;
   }, []);
   return R.sortBy(Number, beaconIdList);
-};
-
-exports.beaconIndex = beaconIndex;
-exports.bssid2idSubset = bssid2id;
-exports.bssid2id = bssid2id;
-exports.resolveBssidToId = resolveBssidToId;
-exports.beaconLatlngsIndex = beaconLatlngsIndex;
-exports.countElsByType = countElsByType;
-exports.getBeaconsListFromData = getBeaconsListFromData;
+}

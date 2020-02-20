@@ -1,16 +1,18 @@
-const R = require('ramda');
-const rawData = require('./data/rawBeaconMessages');
-const { bssid2id, resolveBssidToId } = require('./beaconUtils');
+// const R = require('ramda');
+import R from 'ramda';
+// const { bssid2id, resolveBssidToId } = require('./beaconUtils');
+import {
+  bssid2id, resolveBssidToId,
+} from './beaconUtils.js';
+import {
+  dateStrToMillis, getLoudestBeacon,
+} from './utils.js';
 
-const { dateStrToMillis, getLoudestBeacon } = require('./utils');
-
-
-// const data = rawData.slice(0, 5);
-// const data = rawData;
+// const { dateStrToMillis, getLoudestBeacon } = require('./utils');
 
 const sortByTime = R.sortBy(R.prop('timeMillis'));
 
-function improveData(data) {
+export function improveData(data) {
   const data2 = data
     .map((el) => ({
       ...el,
@@ -18,13 +20,10 @@ function improveData(data) {
     }))
     .map((el) => ({
       ...el,
-      timeMillis: dateStrToMillis(el.created_at),
+      timeMillis: dateStrToMillis(el.created_at) + 60000 * 120,
       loudestBeacon: getLoudestBeacon(el.beacons),
     }));
   return sortByTime(data2);
 }
-
-exports.improveData = improveData;
-
 
 // console.log(JSON.stringify(sortByTime(data2), null, '  '));

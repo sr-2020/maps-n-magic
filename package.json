@@ -2,6 +2,7 @@
   "name": "acoustic-reality-poc",
   "version": "0.1.0",
   "private": true,
+  "type": "module",
   "dependencies": {
     "@fortawesome/fontawesome-free": "^5.11.2",
     "@fortawesome/fontawesome-svg-core": "^1.2.25",

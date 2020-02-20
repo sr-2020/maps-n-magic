@@ -1,10 +1,25 @@
-const R = require('ramda');
+// const R = require('ramda');
+// import R from 'ramda';
+import * as R2 from 'ramda';
 
-exports.removeAllEmptyMessages = function (data) {
+let R;
+
+function getter(obj, prop) {
+  return obj[prop];
+}
+
+if (Object.keys(R2).length === 1) {
+  R = getter(R2, 'default');
+  R2.default;
+} else {
+  R = R2;
+}
+
+export const removeAllEmptyMessages = function (data) {
   return data.filter((item) => item.beacons.length !== 0);
 };
 
-exports.getLoudestBeacon = function (beaconsArr) {
+export const getLoudestBeacon = function (beaconsArr) {
   if (beaconsArr.length === 0) {
     return null;
   }
@@ -14,11 +29,11 @@ exports.getLoudestBeacon = function (beaconsArr) {
   return beaconsArr.reduce((closest, beacon) => (closest.level > beacon.level ? closest : beacon), beaconsArr[0]);
 };
 
-exports.dateStrToMillis = function (dateStr) {
+export const dateStrToMillis = function (dateStr) {
   return new Date(dateStr).getTime();
 };
 
-exports.getTimeLimits = function (data2) {
+export const getTimeLimits = function (data2) {
   const stats = {
     minTime: R.head(data2).created_at,
     maxTime: R.last(data2).created_at,

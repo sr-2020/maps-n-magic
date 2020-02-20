@@ -1,17 +1,29 @@
 // build user tracks with all available information
-const R = require('ramda');
-const fs = require('fs');
-const {
-  beaconIndex, bssid2idSubset, beaconLatlngsIndex, countElsByType, calcDataBeaconStats,
-  getBeaconsListFromData,
-} = require('./beaconUtils');
-const { getTimeLimits } = require('./utils');
-// const data = require('./data/rawBeaconMessages_improved');
-// const rawData = require('./data/rawBeaconMessages');
-const rawData = require('./data/rawBeaconMessages2');
-const usersData = require('./data/usersData');
+// const R = require('ramda');
+import R from 'ramda';
+// import fs from 'fs';
 
-const improvedData = require('./improveRawData').improveData(rawData);
+// // const fs = require('fs');
+import {
+  beaconIndex, beaconLatlngsIndex, countElsByType, calcDataBeaconStats,
+  getBeaconsListFromData,
+} from './beaconUtils.js';
+
+import {
+  getTimeLimits,
+} from './utils.js';
+// // const data = require('./data/rawBeaconMessages_improved');
+// // const rawData = require('./data/rawBeaconMessages');
+// const rawData = require('./data/rawBeaconMessages2');
+// const usersData = require('./data/usersData');
+import rawData from './data/rawBeaconMessages2.json';
+import usersData from './data/usersData.json';
+
+import {
+  improveData,
+} from './improveRawData.js';
+
+const improvedData = improveData(rawData);
 
 const countDeltas = (arr) => R.aperture(2, arr).map(([p1, p2]) => p2.timeMillis - p1.timeMillis);
 const hist = R.pipe(countDeltas, R.groupBy(R.identity), R.mapObjIndexed((value) => value.length));
@@ -101,7 +113,7 @@ const fullBeaconList = getBeaconsListFromData(improvedData);
 
 // console.log(getBeaconsListFromData(improvedData));
 
-const userTracks = R.mapObjIndexed((dataArr, key) => ({
+export const userTracks = R.mapObjIndexed((dataArr, key) => ({
   userData: {
     id: Number(key),
     ...usersData[key],
@@ -116,9 +128,10 @@ const userTracks = R.mapObjIndexed((dataArr, key) => ({
 // console.log(JSON.stringify(userTracks, null, '  '));
 // console.log(JSON.stringify(R.keys(userTracks), null, '  '));
 
-exports.userTracks = userTracks;
 
-fs.writeFileSync('./data/pt6.json', JSON.stringify(userTracks, null, '  '), 'utf-8');
+// exports.userTracks = userTracks;
+
+// fs.writeFileSync('./data/pt6.json', JSON.stringify(userTracks, null, '  '), 'utf-8');
 
 
-// calcDataBeaconStats(data);
+// // calcDataBeaconStats(data);
