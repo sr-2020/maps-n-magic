@@ -1,5 +1,8 @@
 import R from 'ramda';
 
+import {
+  dateStrToMillis, getLoudestBeacon,
+} from './utils.js';
 
 import beaconTable from './data/postgresBeaconTable.json';
 import beaconLatlngs from './data/googleMapBeaconList.json';
@@ -85,10 +88,11 @@ export function resolveBssidToId(bssid2id2, beacons) {
 const sumBy = R.reduceBy(R.inc, 0);
 
 export const countElsByType = sumBy((el) => {
-  if (el.loudestBeacon === null) {
+  const loudestBeacon = getLoudestBeacon(el.beacons);
+  if (loudestBeacon === null) {
     return 'emptyMessages';
   }
-  if (!beaconLatlngsIndex[el.loudestBeacon.beaconId]) {
+  if (!beaconLatlngsIndex[loudestBeacon.beaconId]) {
     return 'unknownBeaconLatlngs';
   }
   return 'knownBeaconLatlngs';

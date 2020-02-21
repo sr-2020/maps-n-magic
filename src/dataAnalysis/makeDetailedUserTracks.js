@@ -1,7 +1,7 @@
 // build user tracks with all available information
 // const R = require('ramda');
 import R from 'ramda';
-// import fs from 'fs';
+import fs from 'fs';
 
 // // const fs = require('fs');
 import {
@@ -10,8 +10,11 @@ import {
 } from './beaconUtils.js';
 
 import {
-  getTimeLimits,
+  getTimeLimits, getLoudestBeacon,
 } from './utils.js';
+import {
+  AvgFilter2,
+} from '../dataUtils/AvgFilter2.js';
 // // const data = require('./data/rawBeaconMessages_improved');
 // // const rawData = require('./data/rawBeaconMessages');
 // const rawData = require('./data/rawBeaconMessages2');
@@ -20,10 +23,10 @@ import rawData from './data/rawBeaconMessages2.json';
 import usersData from './data/usersData.json';
 
 import {
-  improveData,
+  improveData, groupDataByUser,
 } from './improveRawData.js';
 
-const improvedData = improveData(rawData);
+const improvedData = improveData(rawData, 60000 * 60 * 3);
 
 const countDeltas = (arr) => R.aperture(2, arr).map(([p1, p2]) => p2.timeMillis - p1.timeMillis);
 const hist = R.pipe(countDeltas, R.groupBy(R.identity), R.mapObjIndexed((value) => value.length));
@@ -64,6 +67,7 @@ console.log(overallStats);
 
 const messagesByUser = R.groupBy(R.prop('user_id'), improvedData);
 
+groupDataByUser(improvedData);
 
 // exports.userTracks = userTracks;
 
@@ -72,30 +76,38 @@ const hasBeaconLatlngs = (beaconId) => !!beaconLatlngsIndex[beaconId];
 const getNoise = () => (Math.random() - 0.5) / 20000;
 
 const dataArrToTracks = function (dataArr) {
-  return dataArr.reduce((acc, el) => {
-    if (el.loudestBeacon === null) {
-      if (acc.curTrack != null) {
-        acc.curTrack = null;
-      }
-    } else if (!hasBeaconLatlngs(el.loudestBeacon.beaconId)) {
+  const avgFilter = new AvgFilter2(20, 60000, 'extrapolate');
+  // subArr = subArr.map(avgFilter2.filter.bind(avgFilter2));
+  return dataArr
+    .map(avgFilter.filter.bind(avgFilter))
+    .map((el) => ({
+      ...el,
+      loudestBeacon: getLoudestBeacon(el.beacons),
+    }))
+    .reduce((acc, el) => {
+      if (el.loudestBeacon === null) {
+        if (acc.curTrack != null) {
+          acc.curTrack = null;
+        }
+      } else if (!hasBeaconLatlngs(el.loudestBeacon.beaconId)) {
       // do nothing if we don't know latlng of beacon
-    } else {
-      const beaconData = beaconLatlngsIndex[el.loudestBeacon.beaconId];
-      if (acc.curTrack === null) {
-        acc.curTrack = [];
-        acc.tracks.push(acc.curTrack);
+      } else {
+        const beaconData = beaconLatlngsIndex[el.loudestBeacon.beaconId];
+        if (acc.curTrack === null) {
+          acc.curTrack = [];
+          acc.tracks.push(acc.curTrack);
+        }
+        acc.curTrack.push({
+          ...el,
+          lat: beaconData.lat + getNoise(),
+          lng: beaconData.lng + getNoise(),
+        });
       }
-      acc.curTrack.push({
-        ...el,
-        lat: beaconData.lat + getNoise(),
-        lng: beaconData.lng + getNoise(),
-      });
-    }
-    return acc;
-  }, {
-    tracks: [],
-    curTrack: null,
-  });
+      return acc;
+    }, {
+      tracks: [],
+      curTrack: null,
+    });
 };
 
 
@@ -131,7 +143,7 @@ export const userTracks = R.mapObjIndexed((dataArr, key) => ({
 
 // exports.userTracks = userTracks;
 
-// fs.writeFileSync('./data/pt6.json', JSON.stringify(userTracks, null, '  '), 'utf-8');
+fs.writeFileSync('./data/pt6.json', JSON.stringify(userTracks, null, '  '), 'utf-8');
 
 
 // // calcDataBeaconStats(data);
