@@ -67,10 +67,6 @@ export function CommonMap(props) {
               enableByDefault
               {...commonProps}
             />
-            {/* <RealTrackDemo
-                enableByDefault
-                {...commonProps}
-              /> */}
             <SoundDebug {...commonProps} />
           </>
         );

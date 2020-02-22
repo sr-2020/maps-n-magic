@@ -12,16 +12,16 @@ import {
 import { Scatters } from '../Scatters';
 
 import { cleanRawData } from '../../../dataUtils/prepareScatterData';
-import beaconTable from '../../../dataAnalysis/data/postgresBeaconTable.json';
 
-const beaconIndex = R.indexBy(R.prop('id'), beaconTable);
 // const beaconTable = require('../../../  ../../../data/postgresBeaconTable');
 // import * as BeaconUtils from '../../../dataAnalysis/beaconUtils';
 
 // console.log(BeaconUtils);
 // import { ScatterRowPropTypes } from '../../types';
 
-const CustomTooltip = ({ active, payload, label }) => {
+const CustomTooltip = ({
+  active, payload, label, beaconIndex,
+}) => {
   if (active) {
     const { beacon } = payload[1].payload;
     const date = new Date(payload[0].value);
@@ -53,7 +53,9 @@ export class ScatterRow extends Component {
   // eslint-disable-next-line max-lines-per-function
   render() {
     const {
-      trackData, beaconLatlngsIndex, filterChart, filterSize, percentUsage, showExtendedChart,
+      trackData, beaconLatlngsIndex, filterChart,
+      filterSize, percentUsage, showExtendedChart,
+      beaconIndex,
     } = this.props;
 
     const style = showExtendedChart ? {
@@ -103,7 +105,10 @@ export class ScatterRow extends Component {
                   name="Уровень сигнала"
                   domain={[-120, 'auto']}
                 />
-                <Tooltip cursor={{ strokeDasharray: '3 3' }} content={<CustomTooltip />} />
+                <Tooltip
+                  cursor={{ strokeDasharray: '3 3' }}
+                  content={<CustomTooltip beaconIndex={beaconIndex} />}
+                />
                 <Legend />
                 {Scatters(cleanRawData({
                   trackData,

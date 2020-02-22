@@ -1,0 +1,299 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<gpx xmlns="http://www.topografix.com/GPX/1/1" version="1.1" creator="Mobile Topographer Free">
+	<metadata>
+		<name>14-09-2019.gpx</name>
+		<author>
+			<name>S.F. Applicality Ltd.</name>
+			<email id="info" domain="applicality.com"/>
+			<link href="http://www.applicality.com"/>
+		</author>
+		<copyright author="Stathis D. Stathakis &amp; S.F. Applicality Ltd.">
+			<year>2019</year>
+		</copyright>
+	</metadata>
+	<wpt lat="54.92929096" lon="36.87293555">
+		<ele>152.02677595628415</ele>
+		<geoidheight>135.53721311475414</geoidheight>
+		<name>домик 1</name>
+		<src>Mobile Topographer Pro</src>
+	</wpt>
+	<wpt lat="54.92868870" lon="36.87261179">
+		<ele>151.38195105491525</ele>
+		<geoidheight>135.29988827993307</geoidheight>
+		<name>напротив мастерки</name>
+		<src>Mobile Topographer Pro</src>
+	</wpt>
+	<wpt lat="54.92857183" lon="36.87221695">
+		<ele>154.36926342734617</ele>
+		<geoidheight>138.5434943365757</geoidheight>
+		<name>Эдем. Угол </name>
+		<src>Mobile Topographer Pro</src>
+	</wpt>
+	<wpt lat="54.92857332" lon="36.87125451">
+		<ele>145.3008149552466</ele>
+		<geoidheight>129.3688035716405</geoidheight>
+		<name>VR угол</name>
+		<src>Mobile Topographer Pro</src>
+	</wpt>
+	<wpt lat="54.92834007" lon="36.87049071">
+		<ele>143.61544958054165</ele>
+		<geoidheight>127.60299532683976</geoidheight>
+		<name>яма рядом с VR</name>
+		<src>Mobile Topographer Pro</src>
+	</wpt>
+	<wpt lat="54.92743838" lon="36.87095603">
+		<ele>135.119906323185</ele>
+		<geoidheight>119.21175644028102</geoidheight>
+		<name>Газ</name>
+		<src>Mobile Topographer Pro</src>
+	</wpt>
+	<wpt lat="54.92706622" lon="36.87265041">
+		<ele>140.67900684718526</ele>
+		<geoidheight>124.55506717784831</geoidheight>
+		<name>Амфитеатр</name>
+		<src>Mobile Topographer Pro</src>
+	</wpt>
+	<wpt lat="54.92768063" lon="36.86960504">
+		<ele>140.88360191295956</ele>
+		<geoidheight>124.90711100805743</geoidheight>
+		<name>стена1</name>
+		<src>Mobile Topographer Pro</src>
+	</wpt>
+	<wpt lat="54.92801880" lon="36.86999555">
+		<ele>142.05495756868675</ele>
+		<geoidheight>126.11168906170025</geoidheight>
+		<name>развалины с кирпичём и плитами</name>
+		<src>Mobile Topographer Pro</src>
+	</wpt>
+	<wpt lat="54.92807120" lon="36.86922676">
+		<ele>136.2959747584605</ele>
+		<geoidheight>120.43938736677485</geoidheight>
+		<name>стена конец</name>
+		<src>Mobile Topographer Pro</src>
+	</wpt>
+	<wpt lat="54.92794500" lon="36.86882118">
+		<ele>141.88818340436814</ele>
+		<geoidheight>125.79403710302819</geoidheight>
+		<name>очистные 1</name>
+		<src>Mobile Topographer Pro</src>
+	</wpt>
+	<wpt lat="54.92763230" lon="36.86889149">
+		<ele>136.25413529147554</ele>
+		<geoidheight>120.43835833608381</geoidheight>
+		<name>завал </name>
+		<src>Mobile Topographer Pro</src>
+	</wpt>
+	<wpt lat="54.92804580" lon="36.86812801">
+		<ele>139.85614206243702</ele>
+		<geoidheight>123.4907611454766</geoidheight>
+		<name>поворот дороги </name>
+		<src>Mobile Topographer Pro</src>
+	</wpt>
+	<wpt lat="54.92823049" lon="36.86862387">
+		<ele>144.80118295469833</ele>
+		<geoidheight>128.3339897835731</geoidheight>
+		<name>Очистные2</name>
+		<src>Mobile Topographer Pro</src>
+	</wpt>
+	<wpt lat="54.92835596" lon="36.86885670">
+		<ele>141.65986339242158</ele>
+		<geoidheight>125.86550252073506</geoidheight>
+		<name>заезд</name>
+		<src>Mobile Topographer Pro</src>
+	</wpt>
+	<wpt lat="54.92839106" lon="36.86890529">
+		<ele>143.49038886433948</ele>
+		<geoidheight>127.52471277065848</geoidheight>
+		<name>траншея</name>
+		<src>Mobile Topographer Pro</src>
+	</wpt>
+	<wpt lat="54.92883067" lon="36.86952338">
+		<ele>145.93757620092663</ele>
+		<geoidheight>129.98351621555724</geoidheight>
+		<name>траншея конец</name>
+		<src>Mobile Topographer Pro</src>
+	</wpt>
+	<wpt lat="54.92877844" lon="36.87005051">
+		<ele>146.783777739185</ele>
+		<geoidheight>130.85108617520115</geoidheight>
+		<name>перекресток</name>
+		<src>Mobile Topographer Pro</src>
+	</wpt>
+	<wpt lat="54.92910945" lon="36.87004030">
+		<ele>150.08368007397138</ele>
+		<geoidheight>134.08263985205733</geoidheight>
+		<name>стена</name>
+		<src>Mobile Topographer Pro</src>
+	</wpt>
+	<wpt lat="54.92922639" lon="36.86980558">
+		<ele>150.00000000000009</ele>
+		<geoidheight>133.89737414366377</geoidheight>
+		<name>забор</name>
+		<src>Mobile Topographer Pro</src>
+	</wpt>
+	<wpt lat="54.92939281" lon="36.87064869">
+		<ele>151.6842154375591</ele>
+		<geoidheight>135.76641409992214</geoidheight>
+		<name>пвп здание</name>
+		<src>Mobile Topographer Pro</src>
+	</wpt>
+	<wpt lat="54.92970758" lon="36.87083036">
+		<ele>153.4604293381508</ele>
+		<geoidheight>137.39220249699545</geoidheight>
+		<name>пвп старая красная скважина</name>
+		<src>Mobile Topographer Pro</src>
+	</wpt>
+	<wpt lat="54.92905099" lon="36.87139086">
+		<ele>151.2205824088748</ele>
+		<geoidheight>135.02358359746435</geoidheight>
+		<name>вода</name>
+		<src>Mobile Topographer Pro</src>
+	</wpt>
+	<rte>
+		<name>route</name>
+		<rtept lat="54.92929096" lon="36.87293555">
+			<ele>152.02677595628415</ele>
+			<geoidheight>135.53721311475414</geoidheight>
+			<name>домик 1</name>
+			<src>Mobile Topographer Pro</src>
+		</rtept>
+		<rtept lat="54.92868870" lon="36.87261179">
+			<ele>151.38195105491525</ele>
+			<geoidheight>135.29988827993307</geoidheight>
+			<name>напротив мастерки</name>
+			<src>Mobile Topographer Pro</src>
+		</rtept>
+		<rtept lat="54.92857183" lon="36.87221695">
+			<ele>154.36926342734617</ele>
+			<geoidheight>138.5434943365757</geoidheight>
+			<name>Эдем. Угол </name>
+			<src>Mobile Topographer Pro</src>
+		</rtept>
+		<rtept lat="54.92857332" lon="36.87125451">
+			<ele>145.3008149552466</ele>
+			<geoidheight>129.3688035716405</geoidheight>
+			<name>VR угол</name>
+			<src>Mobile Topographer Pro</src>
+		</rtept>
+		<rtept lat="54.92834007" lon="36.87049071">
+			<ele>143.61544958054165</ele>
+			<geoidheight>127.60299532683976</geoidheight>
+			<name>яма рядом с VR</name>
+			<src>Mobile Topographer Pro</src>
+		</rtept>
+		<rtept lat="54.92743838" lon="36.87095603">
+			<ele>135.119906323185</ele>
+			<geoidheight>119.21175644028102</geoidheight>
+			<name>Газ</name>
+			<src>Mobile Topographer Pro</src>
+		</rtept>
+		<rtept lat="54.92706622" lon="36.87265041">
+			<ele>140.67900684718526</ele>
+			<geoidheight>124.55506717784831</geoidheight>
+			<name>Амфитеатр</name>
+			<src>Mobile Topographer Pro</src>
+		</rtept>
+		<rtept lat="54.92768063" lon="36.86960504">
+			<ele>140.88360191295956</ele>
+			<geoidheight>124.90711100805743</geoidheight>
+			<name>стена1</name>
+			<src>Mobile Topographer Pro</src>
+		</rtept>
+		<rtept lat="54.92801880" lon="36.86999555">
+			<ele>142.05495756868675</ele>
+			<geoidheight>126.11168906170025</geoidheight>
+			<name>развалины с кирпичём и плитами</name>
+			<src>Mobile Topographer Pro</src>
+		</rtept>
+		<rtept lat="54.92807120" lon="36.86922676">
+			<ele>136.2959747584605</ele>
+			<geoidheight>120.43938736677485</geoidheight>
+			<name>стена конец</name>
+			<src>Mobile Topographer Pro</src>
+		</rtept>
+		<rtept lat="54.92794500" lon="36.86882118">
+			<ele>141.88818340436814</ele>
+			<geoidheight>125.79403710302819</geoidheight>
+			<name>очистные 1</name>
+			<src>Mobile Topographer Pro</src>
+		</rtept>
+		<rtept lat="54.92763230" lon="36.86889149">
+			<ele>136.25413529147554</ele>
+			<geoidheight>120.43835833608381</geoidheight>
+			<name>завал </name>
+			<src>Mobile Topographer Pro</src>
+		</rtept>
+		<rtept lat="54.92804580" lon="36.86812801">
+			<ele>139.85614206243702</ele>
+			<geoidheight>123.4907611454766</geoidheight>
+			<name>поворот дороги </name>
+			<src>Mobile Topographer Pro</src>
+		</rtept>
+		<rtept lat="54.92823049" lon="36.86862387">
+			<ele>144.80118295469833</ele>
+			<geoidheight>128.3339897835731</geoidheight>
+			<name>Очистные2</name>
+			<src>Mobile Topographer Pro</src>
+		</rtept>
+		<rtept lat="54.92835596" lon="36.86885670">
+			<ele>141.65986339242158</ele>
+			<geoidheight>125.86550252073506</geoidheight>
+			<name>заезд</name>
+			<src>Mobile Topographer Pro</src>
+		</rtept>
+		<rtept lat="54.92839106" lon="36.86890529">
+			<ele>143.49038886433948</ele>
+			<geoidheight>127.52471277065848</geoidheight>
+			<name>траншея</name>
+			<src>Mobile Topographer Pro</src>
+		</rtept>
+		<rtept lat="54.92883067" lon="36.86952338">
+			<ele>145.93757620092663</ele>
+			<geoidheight>129.98351621555724</geoidheight>
+			<name>траншея конец</name>
+			<src>Mobile Topographer Pro</src>
+		</rtept>
+		<rtept lat="54.92877844" lon="36.87005051">
+			<ele>146.783777739185</ele>
+			<geoidheight>130.85108617520115</geoidheight>
+			<name>перекресток</name>
+			<src>Mobile Topographer Pro</src>
+		</rtept>
+		<rtept lat="54.92910945" lon="36.87004030">
+			<ele>150.08368007397138</ele>
+			<geoidheight>134.08263985205733</geoidheight>
+			<name>стена</name>
+			<src>Mobile Topographer Pro</src>
+		</rtept>
+		<rtept lat="54.92922639" lon="36.86980558">
+			<ele>150.00000000000009</ele>
+			<geoidheight>133.89737414366377</geoidheight>
+			<name>забор</name>
+			<src>Mobile Topographer Pro</src>
+		</rtept>
+		<rtept lat="54.92939281" lon="36.87064869">
+			<ele>151.6842154375591</ele>
+			<geoidheight>135.76641409992214</geoidheight>
+			<name>пвп здание</name>
+			<src>Mobile Topographer Pro</src>
+		</rtept>
+		<rtept lat="54.92970758" lon="36.87083036">
+			<ele>153.4604293381508</ele>
+			<geoidheight>137.39220249699545</geoidheight>
+			<name>пвп старая красная скважина</name>
+			<src>Mobile Topographer Pro</src>
+		</rtept>
+		<rtept lat="54.92905099" lon="36.87139086">
+			<ele>151.2205824088748</ele>
+			<geoidheight>135.02358359746435</geoidheight>
+			<name>вода</name>
+			<src>Mobile Topographer Pro</src>
+		</rtept>
+		<rtept lat="54.92929096" lon="36.87293555">
+			<ele>152.02677595628415</ele>
+			<geoidheight>135.53721311475414</geoidheight>
+			<name>домик 1</name>
+			<src>Mobile Topographer Pro</src>
+		</rtept>
+	</rte>
+</gpx>

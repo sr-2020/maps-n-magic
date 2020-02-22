@@ -4,14 +4,10 @@ import * as R from 'ramda';
 
 import Table from 'react-bootstrap/Table';
 
-import beaconLatlngs from '../../dataAnalysis/data/googleMapBeaconList.json';
-
 import { TableHead } from './TableHead';
 import { StatsRow } from './StatsRow';
 import { DownloadChartRow } from './DownloadChartRow';
 import { ScatterRow } from './ScatterRow';
-
-const beaconLatlngsIndex = R.indexBy(R.prop('id'), beaconLatlngs);
 
 // import { RealTrackStatsPropTypes } from '../../types';
 
@@ -80,7 +76,7 @@ export class RealTrackStats extends Component {
       selectedRow, filterChart, filterSize, percentUsage, showExtendedChart,
     } = this.state;
     const {
-      tracksData,
+      tracksData, beaconLatlngsIndex, beaconIndex,
     } = this.props;
 
     const sortByTotal = R.sortBy((el) => -el.stats.total);
@@ -102,6 +98,7 @@ export class RealTrackStats extends Component {
                       <>
                         <ScatterRow
                           trackData={trackData}
+                          beaconIndex={beaconIndex}
                           beaconLatlngsIndex={beaconLatlngsIndex}
                           filterChart={filterChart}
                           filterSize={filterSize}

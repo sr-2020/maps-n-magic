@@ -7,7 +7,6 @@ import { Map2 } from '../Map2';
 import { BaseContourLayer2 } from '../layers/BaseContourLayer2';
 import { SatelliteBackground } from '../layers/SatelliteBackground';
 import { ImageBackground } from '../layers/ImageBackground';
-import { RealTrackDemo } from '../layers/RealTrackDemo';
 
 // import { CommonMapPropTypes } from '../../types';
 
@@ -39,10 +38,6 @@ export function TrackDemoMap(props) {
               // enableByDefault,
               commonProps,
             })}
-            {/* <RealTrackDemo
-              enableByDefault
-              {...commonProps}
-            /> */}
           </>
         );
       }}

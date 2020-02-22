@@ -1,0 +1,69 @@
+<?xml version='1.0' encoding='UTF-8' standalone='yes' ?>
+<gpx version="1.1" xmlns="http://www.topografix.com/GPX/1/1" xmlns:geotracker="http://ilyabogdanovich.com/gpx/extensions/geotracker" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.topografix.com/GPX/1/1 http://www.topografix.com/GPX/1/1/gpx.xsd" creator="Geo Tracker 4.0.2.1750 for Android by Ilya Bogdanovich">
+  <metadata>
+    <name>14 сент. 2019 г. 18:30:12</name>
+    <author>
+      <name>Записано в Геотрекере для Android от Ильи Богдановича</name>
+      <link href="https://play.google.com/store/apps/details?id=com.ilyabogdanovich.geotracker" />
+    </author>
+    <link href="https://play.google.com/store/apps/details?id=com.ilyabogdanovich.geotracker" />
+    <time>2019-09-14T15:30:12.380Z</time>
+  </metadata>
+  <trk>
+    <name>14 сент. 2019 г. 18:30:12</name>
+    <src>Записано в Геотрекере для Android от Ильи Богдановича</src>
+    <link href="https://play.google.com/store/apps/details?id=com.ilyabogdanovich.geotracker" />
+    <extensions>
+      <geotracker:meta>
+        <length>55.68</length>
+        <duration>4650054</duration>
+        <creationtime>2019-09-14T15:30:12.380Z</creationtime>
+        <activity>0</activity>
+      </geotracker:meta>
+    </extensions>
+    <trkseg>
+      <trkpt lat="54.929355" lon="36.872608">
+        <ele>129</ele>
+        <time>2019-09-14T15:31:00.000Z</time>
+        <extensions>
+          <geotracker:meta s="0" />
+        </extensions>
+      </trkpt>
+      <trkpt lat="54.929449" lon="36.87252">
+        <ele>140</ele>
+        <time>2019-09-14T15:31:04.000Z</time>
+        <extensions>
+          <geotracker:meta s="0" />
+        </extensions>
+      </trkpt>
+      <trkpt lat="54.929447" lon="36.872677">
+        <ele>119</ele>
+        <time>2019-09-14T16:09:16.000Z</time>
+        <extensions>
+          <geotracker:meta s="0" />
+        </extensions>
+      </trkpt>
+      <trkpt lat="54.929353" lon="36.872634">
+        <ele>129</ele>
+        <time>2019-09-14T16:09:18.000Z</time>
+        <extensions>
+          <geotracker:meta s="0" />
+        </extensions>
+      </trkpt>
+      <trkpt lat="54.929463" lon="36.872702">
+        <ele>134</ele>
+        <time>2019-09-14T16:09:43.000Z</time>
+        <extensions>
+          <geotracker:meta c="6.11" s="0.77" />
+        </extensions>
+      </trkpt>
+      <trkpt lat="54.929551" lon="36.872671">
+        <ele>139</ele>
+        <time>2019-09-14T16:09:50.000Z</time>
+        <extensions>
+          <geotracker:meta s="0" />
+        </extensions>
+      </trkpt>
+    </trkseg>
+  </trk>
+</gpx>

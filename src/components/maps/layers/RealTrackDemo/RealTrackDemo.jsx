@@ -12,14 +12,6 @@ import { getIcon } from '../../../../utils/icons';
 
 // require('leaflet-hotline')(L);
 
-// import trackData from '../../../../dataAnalysis/playerTracks2.json';
-// import trackData from '../../../../dataAnalysis/data/pt3.json';
-import tracksData from '../../../../dataAnalysis/data/pt6.json';
-// import gpsTrack from '../../../../dataAnalysis/data/Radomir_15_sept_2019_11_12_14.json';
-import usersData from '../../../../dataAnalysis/data/usersData.json';
-import beaconLatlngs from '../../../../dataAnalysis/data/googleMapBeaconList.json';
-// import * as BeaconUtils from '../../../../dataAnalysis/beaconUtils';
-
 // import { userTracks } from '../../../../dataAnalysis/makeDetailedUserTracks';
 
 import { COLOR_PALETTE } from '../../../../utils/colorPalette';
@@ -64,10 +56,10 @@ export class RealTrackDemo extends Component {
 
   componentDidMount() {
     const {
-      enableByDefault, layerCommunicator, userData,
+      enableByDefault, layerCommunicator, userData, tracksData, beaconLatlngs,
     } = this.props;
     // this.subscribe('on', gameModel);
-    this.populate(userData || tracksData);
+    this.populate(userData || tracksData, beaconLatlngs);
     layerCommunicator.emit('setLayersMeta', {
       layersMeta: this.getLayersMeta(),
       enableByDefault,
@@ -77,14 +69,14 @@ export class RealTrackDemo extends Component {
 
   componentDidUpdate(prevProps) {
     const {
-      enableByDefault, layerCommunicator, userData,
+      enableByDefault, layerCommunicator, userData, tracksData, beaconLatlngs,
     } = this.props;
     if (prevProps.userData !== userData) {
       layerCommunicator.emit('removeLayersMeta', {
         layersMeta: this.getLayersMeta(),
       });
       this.clear();
-      this.populate(userData || tracksData);
+      this.populate(userData || tracksData, beaconLatlngs);
       layerCommunicator.emit('setLayersMeta', {
         layersMeta: this.getLayersMeta(),
         enableByDefault,
@@ -108,7 +100,7 @@ export class RealTrackDemo extends Component {
   // eslint-disable-next-line max-lines-per-function
   // eslint-disable-next-line react/sort-comp
   // eslint-disable-next-line max-lines-per-function
-  populate(tracksData2) {
+  populate(tracksData2, beaconLatlngs) {
     // const {
     //   gameModel, translator,
     // } = this.props;

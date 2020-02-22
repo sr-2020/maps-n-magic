@@ -13,7 +13,6 @@ import {
 } from 'react-router-dom';
 
 import { CommonMap } from '../maps/CommonMap';
-import { TrackDemoMap } from '../maps/TrackDemoMap';
 import { ErrorBoundry } from '../ErrorBoundry';
 import { SoundManager } from '../SoundManager';
 
@@ -42,18 +41,13 @@ import { AppHeader } from './AppHeader';
 import { SoundWatcher } from '../SoundWatcher';
 
 import { SoundStage } from './SoundStage';
-import { TrackAnalysisNav } from '../TrackAnalysisNav';
 
 import { Translator } from '../../utils/Translator';
 
 import { MockBeaconRecordCommunicator } from '../MockBeaconRecordCommunicator';
 import { BeaconRecordEditor } from '../BeaconRecordEditor';
-import { RealTrackStats } from '../RealTrackStats';
-import { UserTrackAnalysis } from '../UserTrackAnalysis';
 
-import { RealTrackDemo } from '../maps/layers/RealTrackDemo';
-
-import tracksData from '../../dataAnalysis/data/pt6.json';
+import { TrackAnalysis } from '../TrackAnalysis';
 
 const hardDispose = (obj) => Object.keys(obj).forEach((key) => { delete obj[key]; });
 
@@ -312,21 +306,6 @@ export class App extends Component {
                         translator={translator}
                       />
                     </Route>
-                    <Route path="/trackDemo">
-                      <TrackDemoMap
-                        curPosition={curPosition}
-                        gameModel={gameModel}
-                        mapConfig={mapConfig}
-                        translator={translator}
-                        externalRender={({ commonProps }) => (
-                          <RealTrackDemo
-                            enableByDefault
-                            // eslint-disable-next-line react/jsx-props-no-spreading
-                            {...commonProps}
-                          />
-                        )}
-                      />
-                    </Route>
                     <Route path="/spiritEditor">
                       <SpiritEditor spiritService={gameModel} />
                     </Route>
@@ -342,32 +321,13 @@ export class App extends Component {
                     <Route path="/beaconRecordEditor">
                       <BeaconRecordEditor gameModel={gameModel} />
                     </Route>
-                    <Route path="/realTrackStats">
-                      <RealTrackStats tracksData={tracksData} />
-                    </Route>
-                    <Route path="/trackAnalysisNav">
-                      <TrackAnalysisNav />
-                    </Route>
-                    <Route path="/userTrackAnalysis">
-                      <UserTrackAnalysis drawMap={({ userData }) => (
-                        <TrackDemoMap
-                          curPosition={curPosition}
-                          gameModel={gameModel}
-                          mapConfig={mapConfig}
-                          translator={translator}
-                          externalRender={({ commonProps }) => (
-                            <RealTrackDemo
-                              enableByDefault
-                              userData={userData}
-                              // eslint-disable-next-line react/jsx-props-no-spreading
-                              {...commonProps}
-                            />
-                          )}
-                        />
-                      )}
-                      />
-                    </Route>
 
+                    <TrackAnalysis
+                      curPosition={curPosition}
+                      gameModel={gameModel}
+                      mapConfig={mapConfig}
+                      translator={translator}
+                    />
                     <Route render={() => <Redirect to="/soundManager2" />} />
                   </Switch>
                   <GeoDataStreamSimulator

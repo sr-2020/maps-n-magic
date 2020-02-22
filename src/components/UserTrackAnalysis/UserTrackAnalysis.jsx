@@ -13,30 +13,8 @@ import classNames from 'classnames';
 
 import { TimeRange } from './TimeRange';
 import { TimeRangeWrapper } from './TimeRangeWrapper';
-import tracksData from '../../dataAnalysis/data/pt6.json';
-import {
-  Girt, Ksotar, Eremin_sync_Ksotar, Gurkalov_sync_Ksotar, Radomir,
-} from '../../dataAnalysis/data/gps_15_sept';
-
-// import radomirGpsTrack from '../../dataAnalysis/data/gps_15_sept/json/Radomir_15_sept_2019_11_12_14.json';
-// import ksotarGpsTrack from '../../dataAnalysis/data/gps_15_sept/json/Ksotar_gps_15_sept.json';
 
 import { RealTrackStats } from '../RealTrackStats';
-
-// inject gps data
-tracksData['157'].gpsTrack = Radomir;
-tracksData['160'].gpsTrack = Ksotar;
-tracksData['5'].gpsTrack = Girt;
-tracksData['130'].gpsTrack = Eremin_sync_Ksotar;
-tracksData['127'].gpsTrack = Gurkalov_sync_Ksotar;
-
-const makeUserList = R.pipe(
-  R.mapObjIndexed(R.path(['userData', 'name'])),
-  R.toPairs,
-  R.map(R.zipObj(['userId', 'userName'])),
-);
-const sortByName = R.sortBy(R.pipe(R.prop('userName'), R.toLower));
-const userList = R.pipe(makeUserList, sortByName)(tracksData);
 
 // import { UserTrackAnalysisPropTypes } from '../../types';
 
@@ -68,11 +46,10 @@ export class UserTrackAnalysis extends Component {
 
 
   componentDidMount() {
-    // const selectedUser = userList[10].userId;
-    const selectedUser = userList[18].userId;
-    const userData = tracksData[selectedUser];
+    const { tracksData, defaultSelectedUser } = this.props;
+    const userData = tracksData[defaultSelectedUser];
     this.setState({
-      selectedUser,
+      selectedUser: defaultSelectedUser,
       maxTimeBoundary: userData.stats.maxTimeMillis + (userData.stats.maxTimeMillis % 60000),
       minTimeBoundary: userData.stats.minTimeMillis - (userData.stats.minTimeMillis % 60000),
       // maxTime: userData.stats.maxTimeMillis,
@@ -195,16 +172,15 @@ export class UserTrackAnalysis extends Component {
     if (!maxTime) {
       return null;
     }
-    const { drawMap } = this.props;
+    const {
+      drawMap, tracksData, userList, beaconLatlngsIndex, beaconIndex,
+    } = this.props;
     let userData = R.pick([selectedUser], tracksData);
 
     const isInTimeInterval = (time) => (time >= (maxTime - timeDelta)) && time <= maxTime;
     const isMessageInTimeInterval = R.pipe(R.prop('timeMillis'), isInTimeInterval);
     const filterMessageArr = R.filter(isMessageInTimeInterval);
     const filterTrackArr = R.filter((arr) => R.any(isMessageInTimeInterval, arr));
-
-    // R.pipe(R.head, isMessageInTimeInterval)
-    // R.pipe(R.last, isMessageInTimeInterval)
 
     userData = R.mapObjIndexed((oneUserData) => {
       const data = {
@@ -287,7 +263,6 @@ export class UserTrackAnalysis extends Component {
             </div>
             <div
               className="mt-2"
-
             >
               <label>Ручной сдвиг времени</label>
               <br />
@@ -341,7 +316,15 @@ export class UserTrackAnalysis extends Component {
           </div>
         </div>
         {
-          showTable && <RealTrackStats tracksData={userData} initialPercentUsage={100} initialShowExtendedChart={false} />
+          showTable && (
+            <RealTrackStats
+              tracksData={userData}
+              beaconIndex={beaconIndex}
+              beaconLatlngsIndex={beaconLatlngsIndex}
+              initialPercentUsage={100}
+              initialShowExtendedChart={false}
+            />
+          )
         }
         {
           showMap && (

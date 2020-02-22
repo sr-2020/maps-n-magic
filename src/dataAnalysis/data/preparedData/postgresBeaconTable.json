@@ -1,0 +1,464 @@
+[
+	{
+		"bssid": "E9:DC:0E:20:E3:DC",
+		"id": 1,
+		"label": "1к, холл с диваном",
+		"location_id": 1,
+		"ssid": "E9:DC:0E:20:E3:DC"
+	},
+	{
+		"bssid": "D2:7E:91:02:AB:64",
+		"id": 2,
+		"label": "1к, 2 этаж, холл с кулером",
+		"location_id": 2,
+		"ssid": "D2:7E:91:02:AB:64"
+	},
+	{
+		"bssid": "F3:86:35:4C:6E:03",
+		"id": 3,
+		"label": "1к, 2 этаж, холл с телевизором",
+		"location_id": 3,
+		"ssid": "F3:86:35:4C:6E:03"
+	},
+	{
+		"bssid": "EA:93:BA:E7:99:82",
+		"id": 4,
+		"label": "1к, холл с доской",
+		"location_id": 4,
+		"ssid": "EA:93:BA:E7:99:82"
+	},
+	{
+		"bssid": "C0:DA:B3:09:A9:FB",
+		"id": 5,
+		"label": "Учебный корпус, холл слева",
+		"location_id": 5,
+		"ssid": "C0:DA:B3:09:A9:FB"
+	},
+	{
+		"bssid": "F6:A3:B4:E1:D1:15",
+		"id": 6,
+		"label": "Учебный корпус, холл справа",
+		"location_id": 6,
+		"ssid": "F6:A3:B4:E1:D1:15"
+	},
+	{
+		"bssid": "CA:18:A2:88:34:DE",
+		"id": 7,
+		"label": "Учебный корпус, у3",
+		"location_id": 7,
+		"ssid": "CA:18:A2:88:34:DE"
+	},
+	{
+		"bssid": "FA:86:25:BE:3C:21",
+		"id": 8,
+		"label": "8",
+		"location_id": 8,
+		"ssid": "FA:86:25:BE:3C:21"
+	},
+	{
+		"bssid": "F3:8F:DE:2F:66:C9",
+		"id": 9,
+		"label": "Беседка",
+		"location_id": 9,
+		"ssid": "F3:8F:DE:2F:66:C9"
+	},
+	{
+		"bssid": "EE:D2:A8:E2:1C:62",
+		"id": 10,
+		"label": "10",
+		"location_id": 10,
+		"ssid": "EE:D2:A8:E2:1C:62"
+	},
+	{
+		"bssid": "FE:B1:7B:B6:2B:4A",
+		"id": 11,
+		"label": "11",
+		"location_id": 11,
+		"ssid": "FE:B1:7B:B6:2B:4A"
+	},
+	{
+		"bssid": "FE:7B:B7:53:58:CB",
+		"id": 12,
+		"label": "12",
+		"location_id": 12,
+		"ssid": "FE:7B:B7:53:58:CB"
+	},
+	{
+		"bssid": "CE:1B:0B:7F:5A:78",
+		"id": 13,
+		"label": "13",
+		"location_id": 13,
+		"ssid": "CE:1B:0B:7F:5A:78"
+	},
+	{
+		"bssid": "DD:C3:4A:60:04:B2",
+		"id": 14,
+		"label": "14",
+		"location_id": 14,
+		"ssid": "DD:C3:4A:60:04:B2"
+	},
+	{
+		"bssid": "D2:28:CC:D7:E7:25",
+		"id": 15,
+		"label": "15",
+		"location_id": 15,
+		"ssid": "D2:28:CC:D7:E7:25"
+	},
+	{
+		"bssid": "C1:22:25:79:BF:01",
+		"id": 16,
+		"label": "Столовая, зал",
+		"location_id": 16,
+		"ssid": "C1:22:25:79:BF:01"
+	},
+	{
+		"bssid": "D8:BE:39:1F:C1:B9",
+		"id": 17,
+		"label": "Столовая, холл",
+		"location_id": 17,
+		"ssid": "D8:BE:39:1F:C1:B9"
+	},
+	{
+		"bssid": "FE:89:92:CF:68:DC",
+		"id": 18,
+		"label": "Столовая, зал2",
+		"location_id": 18,
+		"ssid": "FE:89:92:CF:68:DC"
+	},
+	{
+		"bssid": "C8:16:32:73:E6:12",
+		"id": 19,
+		"label": "19",
+		"location_id": 19,
+		"ssid": "C8:16:32:73:E6:12"
+	},
+	{
+		"bssid": "D7:FC:39:B0:C3:3F",
+		"id": 20,
+		"label": "20",
+		"location_id": 20,
+		"ssid": "D7:FC:39:B0:C3:3F"
+	},
+	{
+		"bssid": "F2:89:3D:99:E4:ED",
+		"id": 21,
+		"label": "21",
+		"location_id": 21,
+		"ssid": "F2:89:3D:99:E4:ED"
+	},
+	{
+		"bssid": "EF:CF:7F:3D:AC:BE",
+		"id": 22,
+		"label": "22",
+		"location_id": 22,
+		"ssid": "EF:CF:7F:3D:AC:BE"
+	},
+	{
+		"bssid": "F5:3F:62:31:D5:77",
+		"id": 23,
+		"label": "23",
+		"location_id": 23,
+		"ssid": "F5:3F:62:31:D5:77"
+	},
+	{
+		"bssid": "EA:0A:9D:97:5C:0B",
+		"id": 24,
+		"label": "24",
+		"location_id": 24,
+		"ssid": "EA:0A:9D:97:5C:0B"
+	},
+	{
+		"bssid": "F2:D0:8F:FB:03:13",
+		"id": 25,
+		"label": "25",
+		"location_id": 25,
+		"ssid": "F2:D0:8F:FB:03:13"
+	},
+	{
+		"bssid": "FC:07:F4:BD:CE:99",
+		"id": 26,
+		"label": "26",
+		"location_id": 26,
+		"ssid": "FC:07:F4:BD:CE:99"
+	},
+	{
+		"bssid": "D4:D4:99:45:85:62",
+		"id": 27,
+		"label": "27",
+		"location_id": 27,
+		"ssid": "D4:D4:99:45:85:62"
+	},
+	{
+		"bssid": "C7:50:4F:33:F8:A8",
+		"id": 28,
+		"label": "28",
+		"location_id": 28,
+		"ssid": "C7:50:4F:33:F8:A8"
+	},
+	{
+		"bssid": "D4:CA:FF:13:EC:66",
+		"id": 29,
+		"label": "29",
+		"location_id": 29,
+		"ssid": "D4:CA:FF:13:EC:66"
+	},
+	{
+		"bssid": "F9:D8:BB:48:39:85",
+		"id": 30,
+		"label": "30",
+		"location_id": 30,
+		"ssid": "F9:D8:BB:48:39:85"
+	},
+	{
+		"bssid": "C5:B8:18:6D:92:6C",
+		"id": 31,
+		"label": "31",
+		"location_id": 31,
+		"ssid": "C5:B8:18:6D:92:6C"
+	},
+	{
+		"bssid": "F1:20:B3:13:21:10",
+		"id": 32,
+		"label": "32",
+		"location_id": 32,
+		"ssid": "F1:20:B3:13:21:10"
+	},
+	{
+		"bssid": "E5:D4:15:A0:D7:53",
+		"id": 33,
+		"label": "33",
+		"location_id": 33,
+		"ssid": "E5:D4:15:A0:D7:53"
+	},
+	{
+		"bssid": "DF:8C:6D:50:E0:16",
+		"id": 34,
+		"label": "34",
+		"location_id": 34,
+		"ssid": "DF:8C:6D:50:E0:16"
+	},
+	{
+		"bssid": "EB:A9:56:03:77:B0",
+		"id": 35,
+		"label": "35",
+		"location_id": 35,
+		"ssid": "EB:A9:56:03:77:B0"
+	},
+	{
+		"bssid": "E9:FD:82:B3:F6:32",
+		"id": 36,
+		"label": "36",
+		"location_id": 36,
+		"ssid": "E9:FD:82:B3:F6:32"
+	},
+	{
+		"bssid": "E9:69:E1:63:07:52",
+		"id": 37,
+		"label": "37",
+		"location_id": 37,
+		"ssid": "E9:69:E1:63:07:52"
+	},
+	{
+		"bssid": "EA:13:F9:38:56:BA",
+		"id": 38,
+		"label": "38",
+		"location_id": 38,
+		"ssid": "EA:13:F9:38:56:BA"
+	},
+	{
+		"bssid": "C3:95:20:82:41:33",
+		"id": 39,
+		"label": "39",
+		"location_id": 39,
+		"ssid": "C3:95:20:82:41:33"
+	},
+	{
+		"bssid": "FE:7F:61:D0:1E:F1",
+		"id": 40,
+		"label": "40",
+		"location_id": 40,
+		"ssid": "FE:7F:61:D0:1E:F1"
+	},
+	{
+		"bssid": "E4:BA:D7:C6:09:B6",
+		"id": 41,
+		"label": "41",
+		"location_id": 41,
+		"ssid": "E4:BA:D7:C6:09:B6"
+	},
+	{
+		"bssid": "F1:73:DA:77:7F:7A",
+		"id": 42,
+		"label": "42",
+		"location_id": 42,
+		"ssid": "F1:73:DA:77:7F:7A"
+	},
+	{
+		"bssid": "DE:4E:8A:C7:44:28",
+		"id": 43,
+		"label": "43",
+		"location_id": 43,
+		"ssid": "DE:4E:8A:C7:44:28"
+	},
+	{
+		"bssid": "DF:64:7F:DE:2C:D1",
+		"id": 44,
+		"label": "44",
+		"location_id": 44,
+		"ssid": "DF:64:7F:DE:2C:D1"
+	},
+	{
+		"bssid": "F4:4B:23:B8:93:33",
+		"id": 45,
+		"label": "45",
+		"location_id": 45,
+		"ssid": "F4:4B:23:B8:93:33"
+	},
+	{
+		"bssid": "F6:72:08:A0:ED:A8",
+		"id": 46,
+		"label": "46",
+		"location_id": 46,
+		"ssid": "F6:72:08:A0:ED:A8"
+	},
+	{
+		"bssid": "F5:63:B4:C6:E9:69",
+		"id": 47,
+		"label": "47",
+		"location_id": 47,
+		"ssid": "F5:63:B4:C6:E9:69"
+	},
+	{
+		"bssid": "E6:62:DB:D9:79:D5",
+		"id": 48,
+		"label": "48",
+		"location_id": 48,
+		"ssid": "E6:62:DB:D9:79:D5"
+	},
+	{
+		"bssid": "DF:AE:D8:DD:4E:F9",
+		"id": 49,
+		"label": "49",
+		"location_id": 49,
+		"ssid": "DF:AE:D8:DD:4E:F9"
+	},
+	{
+		"bssid": "C1:FE:95:F1:D8:2D",
+		"id": 50,
+		"label": "50",
+		"location_id": 50,
+		"ssid": "C1:FE:95:F1:D8:2D"
+	},
+	{
+		"bssid": "F0:CB:52:9D:E6:28",
+		"id": 51,
+		"label": "51",
+		"location_id": 51,
+		"ssid": "F0:CB:52:9D:E6:28"
+	},
+	{
+		"bssid": "F5:FD:E6:A1:69:CB",
+		"id": 52,
+		"label": "52",
+		"location_id": 52,
+		"ssid": "F5:FD:E6:A1:69:CB"
+	},
+	{
+		"bssid": "F0:FA:77:98:B0:AA",
+		"id": 53,
+		"label": "53",
+		"location_id": 53,
+		"ssid": "F0:FA:77:98:B0:AA"
+	},
+	{
+		"bssid": "D8:28:B9:6B:CF:79",
+		"id": 54,
+		"label": "54",
+		"location_id": 54,
+		"ssid": "D8:28:B9:6B:CF:79"
+	},
+	{
+		"bssid": "D9:45:28:2C:C4:F9",
+		"id": 55,
+		"label": "55",
+		"location_id": 55,
+		"ssid": "D9:45:28:2C:C4:F9"
+	},
+	{
+		"bssid": "CC:B2:5C:1E:B2:7C",
+		"id": 56,
+		"label": "56",
+		"location_id": 56,
+		"ssid": "CC:B2:5C:1E:B2:7C"
+	},
+	{
+		"bssid": "D2:8B:6A:9C:30:AF",
+		"id": 57,
+		"label": "57",
+		"location_id": 57,
+		"ssid": "D2:8B:6A:9C:30:AF"
+	},
+	{
+		"bssid": "D3:1A:6C:B8:5F:CB",
+		"id": 58,
+		"label": "58",
+		"location_id": 58,
+		"ssid": "D3:1A:6C:B8:5F:CB"
+	},
+	{
+		"bssid": "DB:B8:FF:48:FC:E9",
+		"id": 999,
+		"label": "Вечеринка у ksotar'a дома",
+		"location_id": 999,
+		"ssid": "DB:B8:FF:48:FC:E9"
+	},
+	{
+		"bssid": "E8:3A:12:61:75:54",
+		"id": 1000,
+		"label": "Квартира Гирта",
+		"location_id": 1000,
+		"ssid": "E8:3A:12:61:75:54"
+	},
+	{
+		"bssid": "69:6F:93:C2:BA:1D",
+		"id": 1002,
+		"label": "Мобила Гирта 1",
+		"location_id": 1002,
+		"ssid": "69:6F:93:C2:BA:1D"
+	},
+	{
+		"bssid": "E9:67:F6:6A:D7:A0",
+		"id": 2001,
+		"label": "куртка Мэрфи",
+		"location_id": 2001,
+		"ssid": "E9:67:F6:6A:D7:A0"
+	},
+	{
+		"bssid": "CC:59:7D:37:FD:65",
+		"id": 2002,
+		"label": "штаны Мэрфи",
+		"location_id": 2002,
+		"ssid": "CC:59:7D:37:FD:65"
+	},
+	{
+		"bssid": "E3:06:91:EE:D9:23",
+		"id": 3000,
+		"label": "Берлога Еремина",
+		"location_id": 3000,
+		"ssid": "E3:06:91:EE:D9:23"
+	},
+	{
+		"bssid": "F3:3D:09:9F:E3:C8",
+		"id": 3001,
+		"label": "Зал Еремина",
+		"location_id": 3001,
+		"ssid": "F3:3D:09:9F:E3:C8"
+	},
+	{
+		"bssid": "F1:F8:80:18:C0:F2",
+		"id": 3002,
+		"label": "Работа Еремина",
+		"location_id": 3002,
+		"ssid": "F1:F8:80:18:C0:F2"
+	}
+]
