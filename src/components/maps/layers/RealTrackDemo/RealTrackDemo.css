@@ -1,0 +1,9 @@
+.real-track-marker {
+  background-color: rgb(43,131,203);
+  border-radius: 16px;
+  border-color: rgb(46,108,151);
+  color: white;
+  font-weight: 600;
+  font-size: 14px;
+  padding: 2px 5px;
+}

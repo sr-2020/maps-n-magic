@@ -7,6 +7,9 @@ import * as R from 'ramda';
 
 import * as Hotline from 'leaflet-hotline';
 
+import { classNames } from 'classnames';
+import { getIcon } from '../../../../utils/icons';
+
 // require('leaflet-hotline')(L);
 
 // import trackData from '../../../../dataAnalysis/playerTracks2.json';
@@ -20,6 +23,8 @@ import beaconLatlngs from '../../../../dataAnalysis/data/googleMapBeaconList.jso
 // import { userTracks } from '../../../../dataAnalysis/makeDetailedUserTracks';
 
 import { COLOR_PALETTE } from '../../../../utils/colorPalette';
+
+// import { RealTrackDemoPropTypes } from '../../types';
 
 // console.log('BeaconUtils', BeaconUtils);
 
@@ -43,8 +48,6 @@ const defaultOptions = {
   outlineColor: '#000000',
   outlineWidth: 1,
 };
-
-// import { RealTrackDemoPropTypes } from '../../types';
 
 export class RealTrackDemo extends Component {
   beaconGroup = L.layerGroup([]);
@@ -110,17 +113,42 @@ export class RealTrackDemo extends Component {
     //   gameModel, translator,
     // } = this.props;
 
-    beaconLatlngs.forEach((beacon) => {
+    beaconLatlngs.forEach((beacon, index) => {
+      // const myIcon = L.divIcon({className: 'my-div-icon'});
       const marker = L.marker({
         lat: beacon.lat,
         lng: beacon.lng,
       }, { id: beacon.id });
-      marker.on('mouseover', function (e) {
-        marker.bindPopup(`${beacon.id}`);
-        this.openPopup();
+      // const myIcon = L.divIcon({ className: 'my-div-icon' });
+      // const myIcon = L.divIcon({
+      //   iconSize: [25, 41],
+      //   iconAnchor: [12, 41],
+      //   popupAnchor: [1, -34],
+      //   shadowSize: [41, 41],
+      // });
+      // marker.setIcon(index % 2 ? myIcon : getIcon('green'));
+      // marker.setIcon(getIcon('green'));
+      marker.bindTooltip(`${beacon.id}`, {
+        direction: 'center',
+        // offset: L.point(0, 0),
+        permanent: true,
+        className: 'real-track-marker',
       });
-      marker.on('mouseout', function (e) {
-        this.closeTooltip();
+      marker.on('mouseover', (e) => {
+        // marker.bindPopup(`${beacon.id}`);
+        // this.openPopup();
+        // const tooltip = L.Tooltip();
+        // tooltip.setTooltipContent(`${beacon.id}`);
+        // marker.bindTooltip(`${beacon.id}`, {
+        //   direction: 'center',
+        //   permanent: true,
+        // });
+        // marker.bindTooltip(tooltip);
+        // this.openTooltip();
+      });
+      marker.on('mouseout', (e) => {
+        // this.closePopup();
+        // this.closeTooltip();
       });
       this.beaconGroup.addLayer(marker);
     });
