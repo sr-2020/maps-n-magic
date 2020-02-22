@@ -151,11 +151,12 @@ export class Map2 extends Component {
     const { map } = this.state;
 
     const {
-      render,
+      children, commonPropsExtension = {},
     } = this.props;
 
     const mapProps = {
       layerCommunicator: this.layerCommunicator,
+      ...commonPropsExtension,
     };
 
     return (
@@ -164,7 +165,9 @@ export class Map2 extends Component {
           className="Map2 h-full"
           ref={(map2) => (this.mapEl = map2)}
         />
-        {map && render(mapProps)}
+        {map && React.Children.map(children, (child) => React.cloneElement(child, {
+          ...mapProps,
+        }))}
       </>
     );
   }

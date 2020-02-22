@@ -56,10 +56,10 @@ export class RealTrackDemo extends Component {
 
   componentDidMount() {
     const {
-      enableByDefault, layerCommunicator, userData, tracksData, beaconLatlngs,
+      enableByDefault, layerCommunicator, tracksData, beaconLatlngs,
     } = this.props;
     // this.subscribe('on', gameModel);
-    this.populate(userData || tracksData, beaconLatlngs);
+    this.populate(tracksData, beaconLatlngs);
     layerCommunicator.emit('setLayersMeta', {
       layersMeta: this.getLayersMeta(),
       enableByDefault,
@@ -69,14 +69,14 @@ export class RealTrackDemo extends Component {
 
   componentDidUpdate(prevProps) {
     const {
-      enableByDefault, layerCommunicator, userData, tracksData, beaconLatlngs,
+      enableByDefault, layerCommunicator, tracksData, beaconLatlngs,
     } = this.props;
-    if (prevProps.userData !== userData) {
+    if (prevProps.tracksData !== tracksData) {
       layerCommunicator.emit('removeLayersMeta', {
         layersMeta: this.getLayersMeta(),
       });
       this.clear();
-      this.populate(userData || tracksData, beaconLatlngs);
+      this.populate(tracksData, beaconLatlngs);
       layerCommunicator.emit('setLayersMeta', {
         layersMeta: this.getLayersMeta(),
         enableByDefault,

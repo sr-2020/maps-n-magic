@@ -12,7 +12,7 @@ import { ImageBackground } from '../layers/ImageBackground';
 
 export function TrackDemoMap(props) {
   const {
-    curPosition, gameModel, mapConfig, translator, externalRender,
+    curPosition, gameModel, mapConfig, translator, children,
   } = props;
 
   return (
@@ -20,27 +20,17 @@ export function TrackDemoMap(props) {
       curPosition={curPosition}
       gameModel={gameModel}
       mapConfig={mapConfig}
-      render={(mapProps) => {
-        const commonProps = {
-          ...mapProps,
-          translator,
-          gameModel,
-        };
-        return (
-          <>
-            <SatelliteBackground {...commonProps} />
-            {/* <ImageBackground {...commonProps} /> */}
-            <BaseContourLayer2
-              enableByDefault
-              {...commonProps}
-            />
-            {externalRender({
-              // enableByDefault,
-              commonProps,
-            })}
-          </>
-        );
+      commonPropsExtension={{
+        translator,
+        gameModel,
       }}
-    />
+    >
+      <SatelliteBackground />
+      {/* <ImageBackground /> */}
+      <BaseContourLayer2
+        enableByDefault
+      />
+      {children}
+    </Map2>
   );
 }

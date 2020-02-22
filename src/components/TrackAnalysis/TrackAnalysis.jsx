@@ -48,16 +48,13 @@ export function TrackAnalysis(props) {
           gameModel={gameModel}
           mapConfig={mapConfig}
           translator={translator}
-          externalRender={({ commonProps }) => (
-            <RealTrackDemo
-              enableByDefault
-              tracksData={tracksData}
-              beaconLatlngs={beaconLatlngs}
-              // eslint-disable-next-line react/jsx-props-no-spreading
-              {...commonProps}
-            />
-          )}
-        />
+        >
+          <RealTrackDemo
+            enableByDefault
+            tracksData={tracksData}
+            beaconLatlngs={beaconLatlngs}
+          />
+        </TrackDemoMap>
       </Route>
 
       <Route path="/userTrackAnalysis">
@@ -73,17 +70,13 @@ export function TrackAnalysis(props) {
               gameModel={gameModel}
               mapConfig={mapConfig}
               translator={translator}
-              externalRender={({ commonProps }) => (
-                <RealTrackDemo
-                  enableByDefault
-                  userData={userData}
-                  tracksData={tracksData}
-                  beaconLatlngs={beaconLatlngs}
-                  // eslint-disable-next-line react/jsx-props-no-spreading
-                  {...commonProps}
-                />
-              )}
-            />
+            >
+              <RealTrackDemo
+                enableByDefault
+                tracksData={userData}
+                beaconLatlngs={beaconLatlngs}
+              />
+            </TrackDemoMap>
           )}
         />
       </Route>
