@@ -19,8 +19,8 @@ import {
 // // const rawData = require('./data/rawBeaconMessages');
 // const rawData = require('./data/rawBeaconMessages2');
 // const usersData = require('./data/usersData');
-import rawData from './data/rawBeaconMessages2.json';
-import usersData from './data/usersData.json';
+import rawData from './data/restOfAll/rawBeaconMessages2.json';
+import usersData from './data/restOfAll/usersData.json';
 
 import {
   improveData, groupDataByUser,
@@ -65,9 +65,9 @@ const countStats = function (data2) {
 const overallStats = countStats(improvedData);
 console.log(overallStats);
 
-const messagesByUser = R.groupBy(R.prop('user_id'), improvedData);
+// const messagesByUser = R.groupBy(R.prop('user_id'), improvedData);
 
-groupDataByUser(improvedData);
+const messagesByUser = groupDataByUser(improvedData);
 
 // exports.userTracks = userTracks;
 
@@ -140,10 +140,60 @@ export const userTracks = R.mapObjIndexed((dataArr, key) => ({
 // console.log(JSON.stringify(userTracks, null, '  '));
 // console.log(JSON.stringify(R.keys(userTracks), null, '  '));
 
+const isNotEmpty = R.pipe(R.isEmpty, R.not);
+const echo = R.curry((message, arg) => {
+  console.log(message, arg);
+  return arg;
+});
+const echoText = R.curry((message, arg) => {
+  console.log(message);
+  return arg;
+});
+const echoTextProp = R.curry((message, func, arg) => {
+  console.log(message, func(arg));
+  return arg;
+});
+
+const getTimeMillisRepetitionList = R.pipe(
+  // echo('before aperture'),
+  R.aperture(2), // generate pairs
+  R.filter(R.apply(R.eqBy(R.prop('timeMillis')))), // filter out pair with time repetition
+  // echo,
+  R.map( // extract repetition times to arr
+    R.pipe(
+      R.nth(0),
+      R.prop('timeMillis'),
+    ),
+  ),
+);
+
+R.pipe(
+  R.toPairs,
+  R.forEach(([userName, { tracks, rawDataArr }]) => {
+    R.pipe(
+      // echoTextProp('before filter', R.length),
+      // R.filter(R.pipe(R.length, R.lt(1))),
+      // echoTextProp('after filter', R.length),
+      R.map(getTimeMillisRepetitionList),
+      R.flatten,
+      R.when(isNotEmpty,
+        echo(`userName time repetitions in tracks ${userName}`)),
+    )(tracks);
+    R.pipe(
+      // echoTextProp('before filter', R.length),
+      // R.filter(R.pipe(R.length, R.lt(1))),
+      // echoTextProp('after filter', R.length),
+      getTimeMillisRepetitionList,
+      // R.flatten,
+      R.when(isNotEmpty,
+        echo(`userName time repetitions in rawDataArr ${userName}`)),
+    )(rawDataArr);
+  }),
+)(userTracks);
 
 // exports.userTracks = userTracks;
 
-fs.writeFileSync('./data/pt6.json', JSON.stringify(userTracks, null, '  '), 'utf-8');
+fs.writeFileSync('./data/preparedData/pt6.json', JSON.stringify(userTracks, null, '  '), 'utf-8');
 
 
 // // calcDataBeaconStats(data);

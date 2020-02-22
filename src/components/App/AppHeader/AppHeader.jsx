@@ -51,6 +51,9 @@ const navLinks = [{
 }, {
   to: '/trackAnalysisNav',
   tKey: 'trackAnalysisNav',
+}, {
+  to: '/beaconRecordEditor',
+  tKey: 'beaconRecordEditor',
 }];
 
 export class AppHeader extends Component {

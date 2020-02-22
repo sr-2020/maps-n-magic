@@ -4,8 +4,8 @@ import {
   dateStrToMillis, getLoudestBeacon,
 } from './utils.js';
 
-import beaconTable from './data/postgresBeaconTable.json';
-import beaconLatlngs from './data/googleMapBeaconList.json';
+import beaconTable from './data/preparedData/postgresBeaconTable.json';
+import beaconLatlngs from './data/preparedData/googleMapBeaconList.json';
 
 // console.log(R);
 

@@ -26,6 +26,7 @@ export const translations = {
       botLayer: 'Духи',
       userLayer: 'Пользователь',
       trackAnalysisNav: 'Анализ мастерки',
+      beaconRecordEditor: 'Словарь маяков',
 
       // Spirit Editor
       newSpirit: 'Новый дух',

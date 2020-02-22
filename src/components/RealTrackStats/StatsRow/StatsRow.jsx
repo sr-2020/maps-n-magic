@@ -55,7 +55,7 @@ const getModeFromHist = (val) => R.reduce(R.maxBy(R.nth(1)), [0, 0], (val));
 
 const printer = (func) => (...args) => {
   const res = func(...args);
-  console.log(res);
+  // console.log(res);
   return res;
 };
 

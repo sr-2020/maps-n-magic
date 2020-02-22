@@ -72,7 +72,7 @@ export class BeaconRecordEditor extends Component {
           beaconRecords.map((beacon) => (
             <div>
               <span className="mr-2">{beacon.id}</span>
-              <span className="mr-2">{beacon.ssid}</span>
+              {/* <span className="mr-2">{beacon.ssid}</span> */}
               <span className="mr-2">{beacon.bssid}</span>
               <span className="mr-2">{beacon.label}</span>
             </div>

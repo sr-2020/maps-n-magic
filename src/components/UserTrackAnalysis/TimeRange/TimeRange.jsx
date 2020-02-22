@@ -16,15 +16,15 @@ export function TimeRange(props) {
   // min
   // max
   // tickStep
-  let next = min + min % tickStep;
+  let next = min + (min % tickStep);
   const ticksAbs = [];
   while (next < max) {
     ticksAbs.push(next);
     next += tickStep;
   }
-  console.log(ticksAbs);
+  // console.log(ticksAbs);
   const ticks = ticksAbs.map((tick) => (tick - min) / (max - min));
-  console.log(ticks);
+  // console.log(ticks);
 
 
   return (
