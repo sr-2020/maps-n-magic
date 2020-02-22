@@ -99,6 +99,16 @@ export const translations = {
       trackDemo: 'Карта с треками пользователей',
       realTrackStats: 'Статистика по позиционированию пользователей',
       userTrackAnalysis: 'Анализ трека пользователя',
+
+      // Beacon record editor
+      newBeacon: 'Новый маяк',
+      createBeacon: 'Создать маяк',
+      // enterBeaconProperties: 'Введите свойства маяка',
+      enterBeaconProperties: 'Введите MAC адрес маяка',
+      beaconId: 'Id маяка',
+      beaconMacAddress: 'Mac адрес',
+      beaconLabel: 'Подпись',
+      beaconPlacement: 'Место установки',
     },
   },
 };

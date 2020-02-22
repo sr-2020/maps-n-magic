@@ -64,10 +64,10 @@ export class BeaconDictionaryService extends AbstractService {
     this.emit('deleteBeaconRecordRequested', { id });
   }
 
-  postBeaconRecordConfirmed({ beaconRecord }) {
+  putBeaconRecordConfirmed({ beaconRecord }) {
     const index = this.beaconRecords.findIndex((br) => br.id === beaconRecord.id);
     this.beaconRecords[index] = beaconRecord;
-    this.emit('postBeaconRecord', { beaconRecord });
+    this.emit('putBeaconRecord', { beaconRecord });
   }
 
   deleteBeaconRecordConfirmed({ beaconRecord }) {
@@ -75,8 +75,8 @@ export class BeaconDictionaryService extends AbstractService {
     this.emit('deleteBeaconRecord', { beaconRecord });
   }
 
-  putBeaconRecordConfirmed({ beaconRecord }) {
+  postBeaconRecordConfirmed({ beaconRecord }) {
     this.beaconRecords.push(beaconRecord);
-    this.emit('putBeaconRecord', { beaconRecord });
+    this.emit('postBeaconRecord', { beaconRecord });
   }
 }
