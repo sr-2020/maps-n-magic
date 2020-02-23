@@ -11,29 +11,77 @@ const defaultBeaconRecord = {
 };
 
 export class RemoteBeaconRecordHolder {
-  get() {
-    return fetch('http://position.evarun.ru/api/v1/beacons')
-      .then((response) => response.json());
-    // .catch((error) => console.log(error));
+  async get() {
+    const response = await fetch('http://position.evarun.ru/api/v1/beacons');
+    if (!response.ok) {
+      const text = await response.text();
+      throw new Error(`Network response was not ok ${text}`);
+    }
+
+    return response.json();
   }
 
-  post({ props }) {
-    return fetch('http://position.evarun.ru/api/v1/beacons', {
+  async post({ props }) {
+    const response = await fetch('http://position.evarun.ru/api/v1/beacons', {
       method: 'POST',
       headers: {
-        // 'Content-Type': 'application/json;charset=utf-8',
-        // 'Access-Control-Allow-Origin': '*',
-        // 'X-User-Id': 1,
-      // 'Access-Control-Allow-Origin': 'https://javascript.info',
-      // 'Access-Control-Allow-Origin': '*',
-      // Origin: '*',
+        'Content-Type': 'application/json;charset=utf-8',
+        'X-User-Id': 1,
       },
       body: JSON.stringify({
         ...defaultBeaconRecord,
         ...props,
       }),
-    })
-      .then((response) => response.json());
-    // .catch((error) => console.log(error));
+    });
+
+    if (!response.ok) {
+      const text = await response.text();
+      throw new Error(`Network response was not ok ${text}`);
+    }
+
+    return response.json();
+  }
+
+  async put({ id, props }) {
+    const response = await fetch(`http://position.evarun.ru/api/v1/beacons/${id}`, {
+      method: 'PUT',
+      headers: {
+        'Content-Type': 'application/json;charset=utf-8',
+        'X-User-Id': 1,
+      },
+      body: JSON.stringify({
+        // ...defaultBeaconRecord,
+        ...props,
+      }),
+    });
+
+    if (!response.ok) {
+      const text = await response.text();
+      throw new Error(`Network response was not ok ${text}`);
+    }
+
+    return response.json();
+  }
+
+  async delete({ id }) {
+    const response = await fetch(`http://position.evarun.ru/api/v1/beacons/${id}`, {
+      method: 'DELETE',
+      headers: {
+        'Content-Type': 'application/json;charset=utf-8',
+        'X-User-Id': 1,
+      },
+      // body: JSON.stringify({
+      //   // ...defaultBeaconRecord,
+      //   ...props,
+      // }),
+    });
+
+    if (!response.ok) {
+      const text = await response.text();
+      throw new Error(`Network response was not ok ${text}`);
+    }
+
+    // return response.json();
+    return response;
   }
 }

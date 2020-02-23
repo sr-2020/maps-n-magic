@@ -61,22 +61,27 @@ export class BeaconRecordCommunicator extends Component {
   }
 
   onPutBeaconRecordRequested({ id, props }) {
-    this.holder.put({ id, props }).then((beaconRecord) => {
-      const index = this.beaconRecords.findIndex((br) => br.id === id);
-      this.beaconRecords[index] = beaconRecord;
-      const {
-        gameModel,
-      } = this.props;
-      gameModel.execute({
-        type: 'putBeaconRecordConfirmed',
-        beaconRecord,
-      });
-    }).catch((err) => console.error(err));
+    clearTimeout(this.inputChangeTimeout);
+
+    this.inputChangeTimeout = setTimeout(() => {
+      this.holder.put({ id, props }).then((beaconRecord) => {
+        const index = this.beaconRecords.findIndex((br) => br.id === id);
+        this.beaconRecords[index] = beaconRecord;
+        const {
+          gameModel,
+        } = this.props;
+        gameModel.execute({
+          type: 'putBeaconRecordConfirmed',
+          beaconRecord,
+        });
+      }).catch((err) => console.error(err));
+    }, 500);
   }
 
   onDeleteBeaconRecordRequested({ id }) {
-    this.holder.delete({ id }).then((beaconRecord) => {
-      this.beaconRecords = this.beaconRecords.filter((br) => br.id !== beaconRecord.id);
+    this.holder.delete({ id }).then(() => {
+      const beaconRecord = this.beaconRecords.find((br) => br.id === id);
+      this.beaconRecords = this.beaconRecords.filter((br) => br.id !== id);
       const {
         gameModel,
       } = this.props;

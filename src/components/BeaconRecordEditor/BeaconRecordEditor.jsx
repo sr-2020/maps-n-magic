@@ -14,8 +14,10 @@ import Form from 'react-bootstrap/Form';
 
 import Dropdown from 'react-bootstrap/Dropdown';
 
-// import { BeaconRecordEditorPropTypes } from '../../types';
 import { classNames } from 'classnames';
+import { CreateBeaconPopover } from './CreateBeaconPopover';
+
+// import { BeaconRecordEditorPropTypes } from '../../types';
 
 const sort = R.sortBy(R.prop('id'));
 
@@ -27,11 +29,11 @@ export class BeaconRecordEditor extends Component {
     this.state = {
       beaconRecords: [],
     };
-    this.handleBeaconSubmit = this.handleBeaconSubmit.bind(this);
     this.onPostBeaconRecord = this.onPostBeaconRecord.bind(this);
     this.onPutBeaconRecord = this.onPutBeaconRecord.bind(this);
     this.onDeleteBeaconRecord = this.onDeleteBeaconRecord.bind(this);
     this.onBeaconRecordsChanged = this.onBeaconRecordsChanged.bind(this);
+    this.createBeacon = this.createBeacon.bind(this);
   }
 
   componentDidMount() {
@@ -101,6 +103,7 @@ export class BeaconRecordEditor extends Component {
   }
 
   onPostBeaconRecord({ beaconRecord }) {
+    console.log('onPostBeaconRecord', beaconRecord.id);
     this.setState((state) => {
       const beaconRecords = sort([...state.beaconRecords, beaconRecord]);
       return {
@@ -109,18 +112,12 @@ export class BeaconRecordEditor extends Component {
     });
   }
 
-  handleBeaconSubmit(event) {
-    const form = event.currentTarget;
-    event.preventDefault();
-    event.stopPropagation();
-    if (form.checkValidity() === true) {
-      const { gameModel } = this.props;
-      gameModel.execute({
-        type: 'postBeaconRecord',
-        props: { bssid: form.beaconMacAddress.value },
-      });
-      form.beaconMacAddress.value = '';
-    }
+  createBeacon(macAddress) {
+    const { gameModel } = this.props;
+    gameModel.execute({
+      type: 'postBeaconRecord',
+      props: { bssid: macAddress },
+    });
   }
 
   handleInputChange(id) {
@@ -130,6 +127,16 @@ export class BeaconRecordEditor extends Component {
       const { name } = target;
       const { gameModel } = this.props;
 
+      this.setState(({ beaconRecords }) => ({
+        beaconRecords: beaconRecords.map((br) => (br.id === id ? ({
+          ...br,
+          [name]: value,
+        }) : br)),
+      }));
+
+      // clearTimeout(this.inputChangeTimeout);
+
+      // this.inputChangeTimeout = setTimeout(() => {
       gameModel.execute({
         type: 'putBeaconRecord',
         id,
@@ -137,6 +144,7 @@ export class BeaconRecordEditor extends Component {
           [name]: value,
         },
       });
+      // }, 200);
     };
   }
 
@@ -162,40 +170,6 @@ export class BeaconRecordEditor extends Component {
     }
   }
 
-  getCreateBeaconPopover(t) {
-    return (
-      <Popover id="popover-basic">
-        <Popover.Title as="h3">{t('enterBeaconProperties')}</Popover.Title>
-        {/* <Popover.Title as="h3">{t('beaconMacAddress')}</Popover.Title> */}
-        <Popover.Content>
-          <Form onSubmit={this.handleBeaconSubmit}>
-            {/* <Form.Group controlId="beaconId">
-              <Form.Label>{t('beaconId')}</Form.Label>
-              <Form.Control
-                type="text"
-                required
-                ref={(el) => (this.newBeaconIdInput = el)}
-              />
-            </Form.Group> */}
-            <Form.Group controlId="beaconMacAddress">
-              {/* <Form.Label>{t('beaconMacAddress')}</Form.Label> */}
-              <Form.Control
-                type="text"
-                required
-                ref={(el) => (this.newBeaconMacInput = el)}
-              />
-            </Form.Group>
-            <div className="text-right">
-              <Button variant="primary" type="submit">
-                {t('createBeacon')}
-              </Button>
-            </div>
-          </Form>
-        </Popover.Content>
-      </Popover>
-    );
-  }
-
   // eslint-disable-next-line max-lines-per-function
   render() {
     const { beaconRecords } = this.state;
@@ -206,30 +180,7 @@ export class BeaconRecordEditor extends Component {
     }
     return (
       <div className="BeaconRecordEditor mx-8 my-4">
-        <OverlayTrigger
-          trigger="click"
-          placement="right"
-          overlay={this.getCreateBeaconPopover(t)}
-          rootClose
-          rootCloseEvent="click"
-        >
-          <button
-            type="button"
-            className="tw-btn tw-btn-blue whitespace-no-wrap flex-grow-0 newSpiritButton mb-2"
-            onClick={() => {
-              setTimeout(() => {
-                if (this.newBeaconMacInput) {
-                  this.newBeaconMacInput.focus();
-                }
-              }, 50);
-            }}
-          >
-            <FontAwesomeIcon className="fill-current w-4 h-4 mr-2" icon={faPlus} />
-            <span>
-              {t('newBeacon')}
-            </span>
-          </button>
-        </OverlayTrigger>
+        <CreateBeaconPopover createBeacon={this.createBeacon} />
 
         <Table
           // bordered
@@ -258,7 +209,7 @@ export class BeaconRecordEditor extends Component {
                     <Form.Control
                       name="bssid"
                       type="text"
-                      className="w-40"
+                      className="w-48 font-mono"
                       value={beacon.bssid}
                       onChange={this.handleInputChange(beacon.id)}
                     />
