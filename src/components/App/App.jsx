@@ -44,7 +44,7 @@ import { SoundStage } from './SoundStage';
 
 import { Translator } from '../../utils/Translator';
 
-import { MockBeaconRecordCommunicator } from '../MockBeaconRecordCommunicator';
+import { BeaconRecordCommunicator } from '../BeaconRecordCommunicator';
 import { BeaconRecordEditor } from '../BeaconRecordEditor';
 
 import { TrackAnalysis } from '../TrackAnalysis';
@@ -341,7 +341,7 @@ export class App extends Component {
                     gameModel={gameModel}
                     context={this.audioContextWrapper}
                   />
-                  <MockBeaconRecordCommunicator gameModel={gameModel} />
+                  <BeaconRecordCommunicator gameModel={gameModel} />
                 </main>
               </div>
             </Router>

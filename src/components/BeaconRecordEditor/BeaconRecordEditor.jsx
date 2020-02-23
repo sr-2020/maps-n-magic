@@ -31,6 +31,7 @@ export class BeaconRecordEditor extends Component {
     this.onPostBeaconRecord = this.onPostBeaconRecord.bind(this);
     this.onPutBeaconRecord = this.onPutBeaconRecord.bind(this);
     this.onDeleteBeaconRecord = this.onDeleteBeaconRecord.bind(this);
+    this.onBeaconRecordsChanged = this.onBeaconRecordsChanged.bind(this);
   }
 
   componentDidMount() {
@@ -72,10 +73,17 @@ export class BeaconRecordEditor extends Component {
     gameModel[action]('postBeaconRecord', this.onPostBeaconRecord);
     gameModel[action]('putBeaconRecord', this.onPutBeaconRecord);
     gameModel[action]('deleteBeaconRecord', this.onDeleteBeaconRecord);
+    gameModel[action]('beaconRecordsChanged', this.onBeaconRecordsChanged);
   }
 
   setBeaconRecords({ beaconRecords }) {
     this.setState({
+      beaconRecords,
+    });
+  }
+
+  onBeaconRecordsChanged({ beaconRecords }) {
+    this.setBeaconRecords({
       beaconRecords,
     });
   }
@@ -224,7 +232,7 @@ export class BeaconRecordEditor extends Component {
         </OverlayTrigger>
 
         <Table
-          bordered
+          // bordered
           hover
           size="sm"
           className="w-auto"
@@ -251,7 +259,6 @@ export class BeaconRecordEditor extends Component {
                       name="bssid"
                       type="text"
                       className="w-40"
-                      id="fractionInput"
                       value={beacon.bssid}
                       onChange={this.handleInputChange(beacon.id)}
                     />
@@ -262,7 +269,6 @@ export class BeaconRecordEditor extends Component {
                       name="label"
                       type="text"
                       style={{ width: '24rem' }}
-                      id="labelInput"
                       value={beacon.label}
                       onChange={this.handleInputChange(beacon.id)}
                     />
