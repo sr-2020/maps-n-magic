@@ -46,7 +46,6 @@ export class CreateBeaconPopover extends Component {
     super(props);
     this.state = {
       macAddress: '',
-      changePosition: 0,
     };
     this.handleBeaconSubmit = this.handleBeaconSubmit.bind(this);
     this.onMacAddressChange = this.onMacAddressChange.bind(this);
@@ -69,13 +68,11 @@ export class CreateBeaconPopover extends Component {
     const { value, selectionStart } = e.target;
     const cleanValue = value.replace(/(:|_)/g, '');
 
-    // if (!R.isEmpty(cleanValue)) {
     const isMatch = /^[0-9a-fA-F]*$/.test(cleanValue);
     if (!isMatch) {
       this.setMacAddressPosition(cleanValue.length, selectionStart - 1);
       return;
     }
-    // }
 
     this.setState(({ macAddress }) => {
       let changeIndex = -1;
@@ -162,8 +159,11 @@ export class CreateBeaconPopover extends Component {
       //   type: 'postBeaconRecord',
       //   props: { bssid: form.beaconMacAddress.value },
       // });
+      this.setState({
+        macAddress: '',
+      });
 
-      form.beaconMacAddress.value = '';
+      // form.beaconMacAddress.value = '';
     }
   }
 

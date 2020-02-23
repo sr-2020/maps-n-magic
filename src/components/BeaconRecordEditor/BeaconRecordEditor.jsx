@@ -32,7 +32,7 @@ export class BeaconRecordEditor extends Component {
     this.onPostBeaconRecord = this.onPostBeaconRecord.bind(this);
     this.onPutBeaconRecord = this.onPutBeaconRecord.bind(this);
     this.onDeleteBeaconRecord = this.onDeleteBeaconRecord.bind(this);
-    this.onBeaconRecordsChanged = this.onBeaconRecordsChanged.bind(this);
+    this.setBeaconRecords = this.setBeaconRecords.bind(this);
     this.createBeacon = this.createBeacon.bind(this);
   }
 
@@ -58,7 +58,6 @@ export class BeaconRecordEditor extends Component {
       this.setBeaconRecords({
         beaconRecords: sort(gameModel.get('beaconRecords')),
       });
-      // this.setBeaconRecords();
     }
     console.log('BeaconRecordEditor did update');
   }
@@ -75,37 +74,35 @@ export class BeaconRecordEditor extends Component {
     gameModel[action]('postBeaconRecord', this.onPostBeaconRecord);
     gameModel[action]('putBeaconRecord', this.onPutBeaconRecord);
     gameModel[action]('deleteBeaconRecord', this.onDeleteBeaconRecord);
-    gameModel[action]('beaconRecordsChanged', this.onBeaconRecordsChanged);
+    gameModel[action]('beaconRecordsChanged', this.setBeaconRecords);
   }
 
   setBeaconRecords({ beaconRecords }) {
+    console.log('setBeaconRecords');
     this.setState({
-      beaconRecords,
-    });
-  }
-
-  onBeaconRecordsChanged({ beaconRecords }) {
-    this.setBeaconRecords({
-      beaconRecords,
+      beaconRecords: [...beaconRecords],
     });
   }
 
   onPutBeaconRecord({ beaconRecord }) {
+    // console.log('onPutBeaconRecord', beaconRecord.id);
     this.setState((state) => ({
       beaconRecords: state.beaconRecords.map((br) => (br.id === beaconRecord.id ? beaconRecord : br)),
     }));
   }
 
   onDeleteBeaconRecord({ beaconRecord }) {
+    // console.log('onDeleteBeaconRecord', beaconRecord.id);
     this.setState((state) => ({
       beaconRecords: state.beaconRecords.filter((br) => (br.id !== beaconRecord.id)),
     }));
   }
 
   onPostBeaconRecord({ beaconRecord }) {
-    console.log('onPostBeaconRecord', beaconRecord.id);
+    // console.log('onPostBeaconRecord', beaconRecord.id);
     this.setState((state) => {
       const beaconRecords = sort([...state.beaconRecords, beaconRecord]);
+      // console.log('onPostBeaconRecord', 'before', state.beaconRecords.length, 'after', beaconRecords.length);
       return {
         beaconRecords,
       };
@@ -114,6 +111,7 @@ export class BeaconRecordEditor extends Component {
 
   createBeacon(macAddress) {
     const { gameModel } = this.props;
+    // console.log('createBeacon', this.state.beaconRecords.length);
     gameModel.execute({
       type: 'postBeaconRecord',
       props: { bssid: macAddress },
@@ -134,9 +132,6 @@ export class BeaconRecordEditor extends Component {
         }) : br)),
       }));
 
-      // clearTimeout(this.inputChangeTimeout);
-
-      // this.inputChangeTimeout = setTimeout(() => {
       gameModel.execute({
         type: 'putBeaconRecord',
         id,
@@ -144,7 +139,6 @@ export class BeaconRecordEditor extends Component {
           [name]: value,
         },
       });
-      // }, 200);
     };
   }
 
@@ -178,6 +172,7 @@ export class BeaconRecordEditor extends Component {
     if (!beaconRecords) {
       return null;
     }
+    // console.log(beaconRecords.length);
     return (
       <div className="BeaconRecordEditor mx-8 my-4">
         <CreateBeaconPopover createBeacon={this.createBeacon} />

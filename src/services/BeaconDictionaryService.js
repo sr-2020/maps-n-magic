@@ -42,7 +42,7 @@ export class BeaconDictionaryService extends AbstractService {
   }
 
   getBeaconRecords() {
-    return this.beaconRecords;
+    return [...this.beaconRecords];
   }
 
   setBeaconRecords({ beaconRecords }) {
@@ -77,6 +77,7 @@ export class BeaconDictionaryService extends AbstractService {
 
   postBeaconRecordConfirmed({ beaconRecord }) {
     this.beaconRecords.push(beaconRecord);
+    // console.log('postBeaconRecord');
     this.emit('postBeaconRecord', { beaconRecord });
   }
 }
