@@ -206,6 +206,7 @@ export class BeaconRecordEditor extends Component {
                       type="text"
                       className="w-48 font-mono"
                       value={beacon.bssid}
+                      readOnly
                       onChange={this.handleInputChange(beacon.id)}
                     />
 

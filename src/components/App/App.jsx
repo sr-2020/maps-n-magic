@@ -48,6 +48,7 @@ import { BeaconRecordCommunicator } from '../BeaconRecordCommunicator';
 import { BeaconRecordEditor } from '../BeaconRecordEditor';
 
 import { TrackAnalysis } from '../TrackAnalysis';
+import { NotificationWatcher } from '../NotificationWatcher';
 
 const hardDispose = (obj) => Object.keys(obj).forEach((key) => { delete obj[key]; });
 
@@ -342,6 +343,7 @@ export class App extends Component {
                     context={this.audioContextWrapper}
                   />
                   <BeaconRecordCommunicator gameModel={gameModel} />
+                  <NotificationWatcher gameModel={gameModel} />
                 </main>
               </div>
             </Router>

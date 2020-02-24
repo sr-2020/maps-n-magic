@@ -74,7 +74,7 @@ export class BeaconRecordCommunicator extends Component {
           type: 'putBeaconRecordConfirmed',
           beaconRecord,
         });
-      }).catch((err) => console.error(err));
+      }).catch(this.getErrorHandler('Error on beacon put'));
     }, 500);
   }
 
@@ -89,7 +89,7 @@ export class BeaconRecordCommunicator extends Component {
         type: 'deleteBeaconRecordConfirmed',
         beaconRecord,
       });
-    }).catch((err) => console.error(err));
+    }).catch(this.getErrorHandler('Error on beacon delete'));
   }
 
   onPostBeaconRequested({ props }) {
@@ -102,7 +102,7 @@ export class BeaconRecordCommunicator extends Component {
         type: 'postBeaconRecordConfirmed',
         beaconRecord,
       });
-    }).catch((err) => console.error(err));
+    }).catch(this.getErrorHandler('Error on beacon post'));
   }
 
   loadBeaconRecords() {
@@ -115,7 +115,22 @@ export class BeaconRecordCommunicator extends Component {
         type: 'setBeaconRecords',
         beaconRecords: R.clone(this.beaconRecords),
       });
-    }).catch((err) => console.error(err));
+    }).catch(this.getErrorHandler('Error on beacon loading'));
+  }
+
+  getErrorHandler(title) {
+    return (err) => {
+      console.error(err);
+      const {
+        gameModel,
+      } = this.props;
+      gameModel.execute({
+        type: 'postNotification',
+        title,
+        message: err.message || err,
+        kind: 'error',
+      });
+    };
   }
 
   render() {
