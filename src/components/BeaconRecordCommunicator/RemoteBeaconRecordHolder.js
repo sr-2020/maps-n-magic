@@ -1,6 +1,8 @@
 /* eslint-disable class-methods-use-this */
 import * as R from 'ramda';
 
+const url = 'https://position.evarun.ru/api/v1/beacons';
+
 const defaultBeaconRecord = {
   ssid: '',
   bssid: '',
@@ -12,7 +14,7 @@ const defaultBeaconRecord = {
 
 export class RemoteBeaconRecordHolder {
   async get() {
-    const response = await fetch('http://position.evarun.ru/api/v1/beacons');
+    const response = await fetch(url);
     if (!response.ok) {
       const text = await response.text();
       throw new Error(`Network response was not ok ${text}`);
@@ -22,7 +24,7 @@ export class RemoteBeaconRecordHolder {
   }
 
   async post({ props }) {
-    const response = await fetch('http://position.evarun.ru/api/v1/beacons', {
+    const response = await fetch(url, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json;charset=utf-8',
@@ -43,7 +45,7 @@ export class RemoteBeaconRecordHolder {
   }
 
   async put({ id, props }) {
-    const response = await fetch(`http://position.evarun.ru/api/v1/beacons/${id}`, {
+    const response = await fetch(`${url}/${id}`, {
       method: 'PUT',
       headers: {
         'Content-Type': 'application/json;charset=utf-8',
@@ -64,7 +66,7 @@ export class RemoteBeaconRecordHolder {
   }
 
   async delete({ id }) {
-    const response = await fetch(`http://position.evarun.ru/api/v1/beacons/${id}`, {
+    const response = await fetch(`${url}/${id}`, {
       method: 'DELETE',
       headers: {
         'Content-Type': 'application/json;charset=utf-8',

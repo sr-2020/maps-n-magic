@@ -80,7 +80,7 @@ export class BeaconRecordEditor extends Component {
   setBeaconRecords({ beaconRecords }) {
     console.log('setBeaconRecords');
     this.setState({
-      beaconRecords: [...beaconRecords],
+      beaconRecords: sort([...beaconRecords]),
     });
   }
 
