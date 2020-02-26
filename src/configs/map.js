@@ -34,6 +34,17 @@ const geomanConfig = {
   drawRectangle: false,
 };
 
+const backgroundEditorGeomanConfig = {
+  position: 'topleft',
+  drawMarker: false,
+  drawCircleMarker: false,
+  drawPolyline: false,
+  drawRectangle: true,
+  drawPolygon: false,
+  drawCircle: false,
+  cutPolygon: false,
+};
+
 // osmSettings
 // const getTileConfiguration = () => googleSettings;
 
@@ -41,5 +52,5 @@ const defaultTileLayer = googleTileLayer;
 
 
 export {
-  osmTileLayer, googleTileLayer, mapConfig, geomanConfig, defaultTileLayer,
+  osmTileLayer, googleTileLayer, mapConfig, geomanConfig, defaultTileLayer, backgroundEditorGeomanConfig,
 };

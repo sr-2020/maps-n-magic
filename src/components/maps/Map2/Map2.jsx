@@ -13,7 +13,7 @@ import { EventEmitter } from 'events';
 
 import { Map2PropTypes } from '../../../types';
 
-import { geomanConfig } from '../../../configs/map';
+// import { geomanConfig } from '../../../configs/map';
 
 import { applyLeafletGeomanTranslation, getZoomTranslation } from '../../../translations';
 
@@ -44,7 +44,7 @@ export class Map2 extends Component {
   // eslint-disable-next-line max-lines-per-function
   componentDidMount() {
     const {
-      mapConfig,
+      mapConfig, geomanConfig,
     } = this.props;
     const { center, zoom } = mapConfig;
 
@@ -64,12 +64,15 @@ export class Map2 extends Component {
     this.layerControl = L.control.layers();
     this.layerControl.addTo(this.map);
 
-    this.map.pm.addControls(geomanConfig);
-    applyLeafletGeomanTranslation(this.map);
-    // applyZoomTranslation(this.map);
+    if (geomanConfig) {
+      this.map.pm.addControls(geomanConfig);
+      applyLeafletGeomanTranslation(this.map);
+      // applyZoomTranslation(this.map);
 
-    this.map.on('pm:create', this.onCreateLayer);
-    this.map.on('pm:remove', this.onRemoveLayer);
+      this.map.on('pm:create', this.onCreateLayer);
+      this.map.on('pm:remove', this.onRemoveLayer);
+    }
+
 
     this.setState({
       map: this.map,

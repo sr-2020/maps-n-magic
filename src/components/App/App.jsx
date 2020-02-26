@@ -13,6 +13,7 @@ import {
 } from 'react-router-dom';
 
 import { CommonMap } from '../maps/CommonMap';
+import { BackgroundEditorMap } from '../maps/BackgroundEditorMap';
 import { ErrorBoundry } from '../ErrorBoundry';
 import { SoundManager } from '../SoundManager';
 
@@ -30,7 +31,7 @@ import { services } from '../../services/GameModelServices';
 
 import { fillGameModelWithBots } from '../../services/GameModelFiller';
 
-import { mapConfig } from '../../configs/map';
+import { mapConfig, backgroundEditorGeomanConfig, geomanConfig } from '../../configs/map';
 
 import { GeoDataStreamSimulator } from '../GeoDataStreamSimulator';
 
@@ -305,6 +306,16 @@ export class App extends Component {
                         gameModel={gameModel}
                         mapConfig={mapConfig}
                         translator={translator}
+                        geomanConfig={geomanConfig}
+                      />
+                    </Route>
+                    <Route path="/backgroundEditorMap">
+                      <BackgroundEditorMap
+                        curPosition={curPosition}
+                        gameModel={gameModel}
+                        mapConfig={mapConfig}
+                        translator={translator}
+                        geomanConfig={backgroundEditorGeomanConfig}
                       />
                     </Route>
                     <Route path="/spiritEditor">

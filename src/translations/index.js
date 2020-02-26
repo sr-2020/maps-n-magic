@@ -27,6 +27,7 @@ export const translations = {
       userLayer: 'Пользователь',
       trackAnalysisNav: 'Анализ мастерки',
       beaconRecordEditor: 'Словарь маяков',
+      backgroundEditorMap: 'Редактор подложки карты',
 
       // Spirit Editor
       newSpirit: 'Новый дух',

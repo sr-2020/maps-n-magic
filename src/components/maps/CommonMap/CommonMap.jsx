@@ -21,7 +21,7 @@ import { RealTrackDemo } from '../layers/RealTrackDemo';
 // eslint-disable-next-line max-lines-per-function
 export function CommonMap(props) {
   const {
-    curPosition, gameModel, mapConfig, translator,
+    curPosition, gameModel, mapConfig, translator, geomanConfig,
   } = props;
 
   return (
@@ -29,6 +29,7 @@ export function CommonMap(props) {
       curPosition={curPosition}
       gameModel={gameModel}
       mapConfig={mapConfig}
+      geomanConfig={geomanConfig}
       commonPropsExtension={{
         translator,
         gameModel,
