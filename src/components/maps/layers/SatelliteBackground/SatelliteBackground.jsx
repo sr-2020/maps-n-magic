@@ -9,6 +9,9 @@ import { defaultTileLayer } from '../../../../configs/map';
 
 export class SatelliteBackground extends Component {
   // static propTypes = SatelliteBackgroundPropTypes;
+  group = L.layerGroup([]);
+
+  nameKey = 'satelliteLayer';
 
   constructor(props) {
     super(props);
@@ -18,21 +21,38 @@ export class SatelliteBackground extends Component {
 
   componentDidMount() {
     const {
-      layerCommunicator,
+      enableByDefault, layerCommunicator,
     } = this.props;
-    const { urlTemplate, options } = defaultTileLayer;
-    layerCommunicator.emit('addToMap', {
-      control: L.tileLayer(urlTemplate, options),
+    layerCommunicator.emit('setLayersMeta', {
+      layersMeta: this.getLayersMeta(),
+      enableByDefault,
     });
+    this.populate();
     console.log('SatelliteBackground mounted');
   }
 
-  componentDidUpdate() {
+  componentDidUpdate(prevProps) {
     console.log('SatelliteBackground did update');
   }
 
+  getLayersMeta() {
+    return {
+      [this.nameKey]: this.group,
+    };
+  }
+
   componentWillUnmount() {
+    this.clear();
     console.log('SatelliteBackground will unmount');
+  }
+
+  populate() {
+    const { urlTemplate, options } = defaultTileLayer;
+    this.group.addLayer(L.tileLayer(urlTemplate, options));
+  }
+
+  clear() {
+    this.group.clearLayers();
   }
 
   render() {

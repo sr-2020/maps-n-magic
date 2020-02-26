@@ -25,7 +25,7 @@ export function TrackDemoMap(props) {
         gameModel,
       }}
     >
-      <SatelliteBackground />
+      <SatelliteBackground enableByDefault />
       {/* <ImageBackground /> */}
       <BaseContourLayer2
         enableByDefault

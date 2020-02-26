@@ -34,7 +34,7 @@ export function CommonMap(props) {
         gameModel,
       }}
     >
-      <SatelliteBackground />
+      <SatelliteBackground enableByDefault />
       {/* <ImageBackground  /> */}
       <BaseContourLayer2
         enableByDefault
