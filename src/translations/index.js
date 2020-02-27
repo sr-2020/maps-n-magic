@@ -28,6 +28,8 @@ export const translations = {
       trackAnalysisNav: 'Анализ мастерки',
       beaconRecordEditor: 'Словарь маяков',
       backgroundEditorMap: 'Редактор подложки карты',
+      imageGroupLayer: 'Изображения',
+      rectangleGroupLayer: 'Области изображений',
 
       // Spirit Editor
       newSpirit: 'Новый дух',

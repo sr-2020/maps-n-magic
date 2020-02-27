@@ -12,14 +12,6 @@ export class LocationsLayer {
     };
   }
 
-  getGroup() {
-    return this.group;
-  }
-
-  getNameKey() {
-    return this.nameKey;
-  }
-
   clear() {
     this.group.clearLayers();
   }

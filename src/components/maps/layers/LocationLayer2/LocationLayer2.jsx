@@ -70,6 +70,7 @@ export class LocationLayer2 extends Component {
     console.log('LocationLayer2 will unmount');
   }
 
+  // eslint-disable-next-line react/sort-comp
   populate() {
     const {
       gameModel, t, translator,

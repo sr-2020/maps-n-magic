@@ -5,6 +5,7 @@ import { Map2 } from '../Map2';
 
 import { SatelliteBackground } from '../layers/SatelliteBackground';
 import { BaseContourLayer2 } from '../layers/BaseContourLayer2';
+import { BackgroundImageLayer } from '../layers/BackgroundImageLayer';
 
 // import { BackgroundEditorMapPropTypes } from '../../types';
 
@@ -26,6 +27,9 @@ export function BackgroundEditorMap(props) {
     >
       <SatelliteBackground enableByDefault />
       <BaseContourLayer2
+        enableByDefault
+      />
+      <BackgroundImageLayer
         enableByDefault
       />
     </Map2>
