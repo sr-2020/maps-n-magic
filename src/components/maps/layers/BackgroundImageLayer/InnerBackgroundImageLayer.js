@@ -22,7 +22,7 @@ export class InnerBackgroundImageLayer {
     this.rectangleGroup.clearLayers();
   }
 
-  populate(gameModel, translator) {
+  populate(gameModel, translator, setRectangleEventHandlers) {
     const imagesData = gameModel.get('backgroundImages').map(translator.moveTo);
 
     const images = imagesData.map(({
@@ -32,7 +32,7 @@ export class InnerBackgroundImageLayer {
       id, name, image,
     }));
     images.forEach((image) => {
-      // setLocationEventHandlers(loc);
+      setRectangleEventHandlers(image);
       // loc.on('mouseover', function (e) {
       //   loc.bindTooltip(t('locationTooltip', { name: this.options.name }));
       //   this.openTooltip();
@@ -46,7 +46,7 @@ export class InnerBackgroundImageLayer {
   }
 
   // onCreateLocation(location, gameModel, translator, setLocationEventHandlers) {
-  onCreateImage(rect, gameModel, translator, setLocationEventHandlers) {
+  onCreateImage(rect, gameModel, translator, setRectangleEventHandlers) {
     const latlngs = translator.moveFrom({
       latlngs: rect.getLatLngs(),
     });
@@ -56,7 +56,7 @@ export class InnerBackgroundImageLayer {
     });
     L.setOptions(rect, { id, name, image });
     this.rectangleGroup.addLayer(rect);
-    // setLocationEventHandlers(location);
+    setRectangleEventHandlers(rect);
     // this.updateLocationsView();
   }
 

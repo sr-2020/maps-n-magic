@@ -18,6 +18,8 @@ export class BackgroundImageLayer extends Component {
     };
     this.onCreateLayer = this.onCreateLayer.bind(this);
     this.onRemoveLayer = this.onRemoveLayer.bind(this);
+    this.setRectangleEventHandlers = this.setRectangleEventHandlers.bind(this);
+    this.onRectangleEdit = this.onRectangleEdit.bind(this);
   }
 
   componentDidMount() {
@@ -66,7 +68,7 @@ export class BackgroundImageLayer extends Component {
     } = this.props;
       // this.imageLayer.populate(gameModel, translator, t, this.setMarkerEventHandlers);
     // this.imageLayer.populate(gameModel, translator, this.setLocationEventHandlers, t);
-    this.imageLayer.populate(gameModel, translator);
+    this.imageLayer.populate(gameModel, translator, this.setRectangleEventHandlers);
   }
 
   clear() {
@@ -86,7 +88,7 @@ export class BackgroundImageLayer extends Component {
     if (event.layer instanceof L.Rectangle) {
       console.log('rectangle created');
       // this.imageLayer.onCreateImage(event.layer, gameModel, translator, this.setLocationEventHandlers);
-      this.imageLayer.onCreateImage(event.layer, gameModel, translator);
+      this.imageLayer.onCreateImage(event.layer, gameModel, translator, this.setRectangleEventHandlers);
     }
   }
 
@@ -103,14 +105,14 @@ export class BackgroundImageLayer extends Component {
     }
   }
 
-  //   setLocationEventHandlers = (location) => {
-  //     location.on({
-  //       click: this.onLocationClick,
-  //       mouseover: this.highlightLocation,
-  //       mouseout: this.resetLocationHighlight,
-  //       'pm:edit': this.onLocationEdit,
-  //     });
-  //   }
+  setRectangleEventHandlers = (rect) => {
+    rect.on({
+      // click: this.onLocationClick,
+      // mouseover: this.highlightLocation,
+      // mouseout: this.resetLocationHighlight,
+      'pm:edit': this.onRectangleEdit,
+    });
+  }
 
   //   onLocationClick = (e) => {
   //     const { layerCommunicator } = this.props;
@@ -130,22 +132,23 @@ export class BackgroundImageLayer extends Component {
   //     });
   //   }
 
-  //   onLocationEdit = (e) => {
-  //     const {
-  //       gameModel, translator, closePopup, layerCommunicator,
-  //     } = this.props;
-  //     const location = e.target;
-  //     gameModel.execute({
-  //       type: 'putLocation',
-  //       id: location.options.id,
-  //       props: {
-  //         ...translator.moveFrom({
-  //           latlngs: location.getLatLngs(),
-  //         }),
-  //       },
-  //     });
-  //     layerCommunicator.emit('closePopup');
-  //   }
+  onRectangleEdit = (e) => {
+    const {
+      gameModel, translator, closePopup, layerCommunicator,
+    } = this.props;
+    const rectangle = e.target;
+    gameModel.execute({
+      type: 'putBackgroundImage',
+      id: rectangle.options.id,
+      props: {
+        ...translator.moveFrom({
+          latlngs: rectangle.getLatLngs(),
+        }),
+      },
+    });
+    layerCommunicator.emit('closePopup');
+  }
+
 
   //   onLocationChange = (prop) => (e) => {
   //     const { value } = e.target;
