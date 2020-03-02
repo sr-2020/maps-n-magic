@@ -4,35 +4,44 @@ import * as R from 'ramda';
 export class InnerBackgroundImageLayer {
   imageGroup = L.layerGroup([]);
 
+  titleGroup = L.layerGroup([]);
+
   rectangleGroup = L.layerGroup([]);
 
   imageGroupNameKey = 'imageGroupLayer';
+
+  titleGroupNameKey = 'titleGroupLayer';
 
   rectangleGroupNameKey = 'rectangleGroupLayer';
 
   getLayersMeta() {
     return {
-      // [this.imageGroupNameKey]: this.imageGroup,
       [this.rectangleGroupNameKey]: this.rectangleGroup,
+      [this.imageGroupNameKey]: this.imageGroup,
+      [this.titleGroupNameKey]: this.titleGroup,
     };
   }
 
   clear() {
     this.imageGroup.clearLayers();
+    this.titleGroup.clearLayers();
     this.rectangleGroup.clearLayers();
   }
 
   populate(gameModel, translator, setRectangleEventHandlers) {
     const imagesData = gameModel.get('backgroundImages').map(translator.moveTo);
 
-    const images = imagesData.map(({
+    const rectangles = imagesData.map(({
       // eslint-disable-next-line no-shadow
       latlngs, name, id, image,
     }) => L.rectangle(latlngs, {
       id, name, image,
     }));
-    images.forEach((image) => {
-      setRectangleEventHandlers(image);
+    rectangles.forEach((rectangle) => {
+      setRectangleEventHandlers(rectangle);
+
+      // this.updateImageTooltip(image);
+
       // loc.on('mouseover', function (e) {
       //   loc.bindTooltip(t('locationTooltip', { name: this.options.name }));
       //   this.openTooltip();
@@ -40,29 +49,58 @@ export class InnerBackgroundImageLayer {
       // loc.on('mouseout', function (e) {
       //   this.closeTooltip();
       // });
-      this.rectangleGroup.addLayer(image);
+      this.rectangleGroup.addLayer(rectangle);
     });
+    const images = imagesData.map(({
+      // eslint-disable-next-line no-shadow
+      latlngs, name, id, image,
+    }) => L.imageOverlay(image, latlngs, {
+      id,
+    }));
+    images.forEach((image) => {
+      this.imageGroup.addLayer(image);
+    });
+    // L.rectangle(latlngs, {
+    //   id, name, image,
+    // }));
     // this.updateLocationsView();
   }
 
+  // // eslint-disable-next-line class-methods-use-this
+  // updateImageTooltip(image) {
+  //   image.bindTooltip(`${image.options.name}`, {
+  //     direction: 'center',
+  //     // offset: L.point(50, 100),
+  //     // offset: image.getBounds().getTopLeft(),
+  //     offset: image.getBounds().getNorthWest(),
+  //     permanent: true,
+  //     className: 'image-title-tooltip',
+  //   });
+  // }
+
   // onCreateLocation(location, gameModel, translator, setLocationEventHandlers) {
   onCreateImage(rect, gameModel, translator, setRectangleEventHandlers) {
-    const latlngs = translator.moveFrom({
-      latlngs: rect.getLatLngs(),
-    });
+    const latlngs = translator.moveFrom(rect.getLatLngs());
     const { id, name, image } = gameModel.execute({
       type: 'postBackgroundImage',
-      props: { ...latlngs },
+      props: { latlngs },
     });
     L.setOptions(rect, { id, name, image });
     this.rectangleGroup.addLayer(rect);
     setRectangleEventHandlers(rect);
+    this.imageGroup.addLayer(L.imageOverlay(image, latlngs, {
+      id,
+    }));
     // this.updateLocationsView();
   }
 
   // onRemoveLocation(location, gameModel) {
   onRemoveImage(rect, gameModel) {
     this.rectangleGroup.removeLayer(rect);
+    const { id } = rect.options;
+    const image = this.imageGroup.getLayers().find((image2) => image2.options.id === id);
+
+    this.imageGroup.removeLayer(image);
     gameModel.execute({
       type: 'deleteBackgroundImage',
       id: rect.options.id,
@@ -109,19 +147,20 @@ export class InnerBackgroundImageLayer {
   //   return props;
   // }
 
-  // onLocationChange(prop, value, gameModel, id) {
-  //   const location = this.group.getLayers().find((loc) => loc.options.id === id);
-  //   if (prop === 'name' || prop === 'manaLevel') {
-  //     location.options[prop] = value;
-  //     gameModel.execute({
-  //       type: 'putLocation',
-  //       id,
-  //       props: {
-  //         [prop]: value,
-  //       },
-  //     });
-  //   }
-  // }
+  onBackgroundImageChange(prop, value, gameModel, id) {
+    const rectangle = this.rectangleGroup.getLayers().find((rect) => rect.options.id === id);
+    // if (prop === 'name' || prop === 'manaLevel') {
+    if (prop === 'name' || prop === 'image') {
+      rectangle.options[prop] = value;
+      gameModel.execute({
+        type: 'putBackgroundImage',
+        id,
+        props: {
+          [prop]: value,
+        },
+      });
+    }
+  }
 
   // updateLocationsView() {
   //   this.group.getLayers().forEach((loc, i) => {

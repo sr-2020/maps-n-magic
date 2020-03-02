@@ -53,7 +53,7 @@ export class MapImageService extends AbstractService {
     this.maxBackgroundImageId++;
     const backgroundImage = {
       ...props,
-      image: null,
+      image: 'images/noImage.svg',
       id: this.maxBackgroundImageId,
       name: `Image ${String(this.maxBackgroundImageId)}`,
     };

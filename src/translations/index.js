@@ -30,6 +30,7 @@ export const translations = {
       backgroundEditorMap: 'Редактор подложки карты',
       imageGroupLayer: 'Изображения',
       rectangleGroupLayer: 'Области изображений',
+      titleGroupLayer: 'Подписи',
 
       // Spirit Editor
       newSpirit: 'Новый дух',
@@ -114,6 +115,10 @@ export const translations = {
       beaconMacAddress: 'Mac адрес',
       beaconLabel: 'Подпись',
       beaconPlacement: 'Место установки',
+
+      backgroundImageName: 'Название изображения',
+      backgroundImageUrl: 'Изображение',
+      backgroundImagePreview: 'Превью',
     },
   },
 };

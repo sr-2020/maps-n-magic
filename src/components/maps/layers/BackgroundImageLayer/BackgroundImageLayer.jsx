@@ -5,6 +5,7 @@ import L from 'leaflet/dist/leaflet-src';
 import * as R from 'ramda';
 
 import { InnerBackgroundImageLayer } from './InnerBackgroundImageLayer';
+import { BackgroundImagePopup } from '../BackgroundImagePopup';
 
 // import { BackgroundImageLayerPropTypes } from '../../types';
 
@@ -20,14 +21,16 @@ export class BackgroundImageLayer extends Component {
     this.onRemoveLayer = this.onRemoveLayer.bind(this);
     this.setRectangleEventHandlers = this.setRectangleEventHandlers.bind(this);
     this.onRectangleEdit = this.onRectangleEdit.bind(this);
+    this.closePopup = this.closePopup.bind(this);
   }
 
   componentDidMount() {
     const {
       gameModel, enableByDefault, layerCommunicator,
     } = this.props;
+    this.imagePopupDom = document.createElement('div');
     this.communicatorSubscribe('on');
-    // this.locationPopup = L.popup();
+    this.imagePopup = L.popup();
     this.imageLayer = new InnerBackgroundImageLayer();
     layerCommunicator.emit('setLayersMeta', {
       layersMeta: this.imageLayer.getLayersMeta(),
@@ -57,6 +60,9 @@ export class BackgroundImageLayer extends Component {
       gameModel,
     } = this.props;
     this.communicatorSubscribe('off');
+    // while (this.imagePopupDom.firstChild) {
+    //   this.imagePopupDom.removeChild(this.imagePopupDom.lastChild);
+    // }
     // this.clear();
     console.log('BackgroundImageLayer will unmount');
   }
@@ -107,30 +113,29 @@ export class BackgroundImageLayer extends Component {
 
   setRectangleEventHandlers = (rect) => {
     rect.on({
-      // click: this.onLocationClick,
+      click: this.onRectangleClick,
       // mouseover: this.highlightLocation,
       // mouseout: this.resetLocationHighlight,
       'pm:edit': this.onRectangleEdit,
     });
   }
 
-  //   onLocationClick = (e) => {
-  //     const { layerCommunicator } = this.props;
-  //     const {
-  //       name, id, markers, manaLevel,
-  //     } = e.target.options;
-  //     this.setState({
-  //       curLocation: {
-  //         id,
-  //         name,
-  //         markers,
-  //         manaLevel,
-  //       },
-  //     });
-  //     layerCommunicator.emit('openPopup', {
-  //       popup: this.locationPopup.setLatLng(e.latlng).setContent(locationPopupDom),
-  //     });
-  //   }
+  onRectangleClick = (e) => {
+    const { layerCommunicator } = this.props;
+    const {
+      name, id, image,
+    } = e.target.options;
+    this.setState({
+      curBackgroundImage: {
+        id,
+        name,
+        image,
+      },
+    });
+    layerCommunicator.emit('openPopup', {
+      popup: this.imagePopup.setLatLng(e.latlng).setContent(this.imagePopupDom),
+    });
+  }
 
   onRectangleEdit = (e) => {
     const {
@@ -150,55 +155,72 @@ export class BackgroundImageLayer extends Component {
   }
 
 
-  //   onLocationChange = (prop) => (e) => {
-  //     const { value } = e.target;
-  //     const { gameModel } = this.props;
-  //     const { id } = this.state.curLocation;
-  //     this.imageLayer.onLocationChange(prop, value, gameModel, id);
-  //     this.setState((state) => {
-  //       const curLocation = { ...state.curLocation, [prop]: value };
-  //       return ({
-  //         curLocation,
-  //       });
-  //     });
-  //     this.imageLayer.updateLocationsView();
-  //   }
+  onBackgroundImageChange = (prop) => (e) => {
+    const { value } = e.target;
+    const { gameModel } = this.props;
+    const { id } = this.state.curBackgroundImage;
+    // this.imageLayer.onLocationChange(prop, value, gameModel, id);
+    this.imageLayer.onBackgroundImageChange(prop, value, gameModel, id);
+    this.setState((state) => {
+      const curBackgroundImage = { ...state.curBackgroundImage, [prop]: value };
+      return ({
+        curBackgroundImage,
+      });
+    });
+    // this.imageLayer.updateLocationsView();
+  }
 
-  //   getLocationPopup() {
-  //     const {
-  //       curLocation,
-  //     } = this.state;
-  //     const {
-  //       gameModel,
-  //     } = this.props;
-  //     if (!curLocation) {
-  //       return null;
-  //     }
-  //     const allBeacons = R.clone(gameModel.get('beacons'));
-  //     const allLocations = R.clone(gameModel.get('locations'));
-  //     return (
-  //       <LocationPopup
-  //         name={curLocation.name}
-  //         id={curLocation.id}
-  //         manaLevel={curLocation.manaLevel}
-  //         attachedMarkers={curLocation.markers}
-  //         allBeacons={allBeacons}
-  //         allLocations={allLocations}
-  //         onChange={this.onLocationChange}
-  //         onLocMarkerChange={this.onLocMarkerChange}
-  //         onClose={this.closePopup}
-  //       />
-  //     );
-  //   }
+  // eslint-disable-next-line class-methods-use-this
+  closePopup() {
+    const {
+      layerCommunicator,
+    } = this.props;
+    layerCommunicator.emit('closePopup');
+  }
+
+  getRectanglePopup() {
+    // return null;
+    const {
+      curBackgroundImage,
+    } = this.state;
+    const {
+      gameModel,
+    } = this.props;
+    if (!curBackgroundImage) {
+      return null;
+    }
+    // const allBeacons = R.clone(gameModel.get('beacons'));
+    // const allLocations = R.clone(gameModel.get('locations'));
+    return (
+      <BackgroundImagePopup
+        imagePopupDom={this.imagePopupDom}
+        name={curBackgroundImage.name}
+        id={curBackgroundImage.id}
+        image={curBackgroundImage.image}
+        onClose={this.closePopup}
+        onChange={this.onBackgroundImageChange}
+      />
+      // <LocationPopup
+      //   name={curLocation.name}
+      //   id={curLocation.id}
+      //   manaLevel={curLocation.manaLevel}
+      //   attachedMarkers={curLocation.markers}
+      //   allBeacons={allBeacons}
+      //   allLocations={allLocations}
+      //   onChange={this.onLocationChange}
+      //   onLocMarkerChange={this.onLocMarkerChange}
+      //   onClose={this.closePopup}
+      // />
+    );
+  }
 
   render() {
-    return null;
-    // return (
-    //   <>
-    //     {
-    //       this.getLocationPopup()
-    //     }
-    //   </>
-    // );
+    return (
+      <>
+        {
+          this.getRectanglePopup()
+        }
+      </>
+    );
   }
 }

@@ -25,6 +25,7 @@ export class LocationLayer2 extends Component {
     this.onResetHighlightLocation_locations = this.onResetHighlightLocation_locations.bind(this);
     this.onCreateLayer = this.onCreateLayer.bind(this);
     this.onRemoveLayer = this.onRemoveLayer.bind(this);
+    this.closePopup = this.closePopup.bind(this);
   }
 
   componentDidMount() {
@@ -155,7 +156,7 @@ export class LocationLayer2 extends Component {
 
   onLocationEdit = (e) => {
     const {
-      gameModel, translator, closePopup, layerCommunicator,
+      gameModel, translator, layerCommunicator,
     } = this.props;
     const location = e.target;
     gameModel.execute({
@@ -167,6 +168,14 @@ export class LocationLayer2 extends Component {
         }),
       },
     });
+    this.closePopup();
+  }
+
+  // eslint-disable-next-line class-methods-use-this
+  closePopup() {
+    const {
+      layerCommunicator,
+    } = this.props;
     layerCommunicator.emit('closePopup');
   }
 
