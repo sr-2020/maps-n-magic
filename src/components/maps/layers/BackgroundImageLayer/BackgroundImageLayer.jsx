@@ -22,6 +22,7 @@ export class BackgroundImageLayer extends Component {
     this.setRectangleEventHandlers = this.setRectangleEventHandlers.bind(this);
     this.onRectangleEdit = this.onRectangleEdit.bind(this);
     this.closePopup = this.closePopup.bind(this);
+    this.onPutBackgroundImage = this.onPutBackgroundImage.bind(this);
   }
 
   componentDidMount() {
@@ -29,6 +30,7 @@ export class BackgroundImageLayer extends Component {
       gameModel, enableByDefault, layerCommunicator,
     } = this.props;
     this.imagePopupDom = document.createElement('div');
+    this.subscribe('on', gameModel);
     this.communicatorSubscribe('on');
     this.imagePopup = L.popup();
     this.imageLayer = new InnerBackgroundImageLayer();
@@ -45,6 +47,8 @@ export class BackgroundImageLayer extends Component {
       gameModel, translator,
     } = this.props;
     if (prevProps.gameModel !== gameModel) {
+      this.subscribe('off', prevProps.gameModel);
+      this.subscribe('on', gameModel);
       this.clear();
       this.populate();
     }
@@ -59,6 +63,7 @@ export class BackgroundImageLayer extends Component {
     const {
       gameModel,
     } = this.props;
+    this.subscribe('off', gameModel);
     this.communicatorSubscribe('off');
     // while (this.imagePopupDom.firstChild) {
     //   this.imagePopupDom.removeChild(this.imagePopupDom.lastChild);
@@ -79,6 +84,10 @@ export class BackgroundImageLayer extends Component {
 
   clear() {
     this.imageLayer.clear();
+  }
+
+  subscribe(action, gameModel) {
+    gameModel[action]('putBackgroundImage', this.onPutBackgroundImage);
   }
 
   communicatorSubscribe(action) {
@@ -109,6 +118,10 @@ export class BackgroundImageLayer extends Component {
       this.imageLayer.onRemoveImage(event.layer, gameModel);
       layerCommunicator.emit('closePopup');
     }
+  }
+
+  onPutBackgroundImage({ backgroundImage }) {
+    this.imageLayer.onPutBackgroundImage({ backgroundImage });
   }
 
   setRectangleEventHandlers = (rect) => {

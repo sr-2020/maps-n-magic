@@ -51,7 +51,7 @@ export class BackgroundImagePopup extends Component {
     const unselectedButton = 'bg-gray-300 hover:bg-gray-400 text-gray-800';
     return (
       <div className="LocationPopup">
-        <div className="mb-4">
+        <div className="mb-3">
           <label
             className="block text-gray-700 text-sm font-bold mb-2"
             htmlFor="backgroundImageName"
@@ -67,7 +67,7 @@ export class BackgroundImagePopup extends Component {
             onKeyPress={this._handleKeyDown}
           />
         </div>
-        <div className="mb-4">
+        <div className="mb-3">
           <label
             className="block text-gray-700 text-sm font-bold mb-2"
             htmlFor="backgroundImageUrl"
@@ -83,7 +83,7 @@ export class BackgroundImagePopup extends Component {
             onKeyPress={this._handleKeyDown}
           />
         </div>
-        <div className="mb-4">
+        <div>
           <label
             className="block text-gray-700 text-sm font-bold mb-2"
             htmlFor="backgroundImagePreview"
@@ -92,8 +92,8 @@ export class BackgroundImagePopup extends Component {
           </label>
           <img
             style={{
-              maxHeight: '150px',
-              maxWidth: '150px',
+              maxHeight: '100px',
+              maxWidth: '100px',
             }}
             className="fit-picture"
             src={image}

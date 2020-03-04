@@ -46,7 +46,9 @@ export class MapImageService extends AbstractService {
       ...props,
       id,
     };
-    this.emit('putBackgroundImage', this.backgroundImages[index]);
+    this.emit('putBackgroundImage', {
+      backgroundImage: this.backgroundImages[index],
+    });
   }
 
   postBackgroundImage({ props }) {
@@ -58,7 +60,7 @@ export class MapImageService extends AbstractService {
       name: `Image ${String(this.maxBackgroundImageId)}`,
     };
     this.backgroundImages.push(backgroundImage);
-    this.emit('postBackgroundImage', backgroundImage);
+    this.emit('postBackgroundImage', { backgroundImage });
     return backgroundImage;
   }
 
@@ -66,7 +68,7 @@ export class MapImageService extends AbstractService {
     const index = this.backgroundImages.findIndex((bi) => bi.id === id);
     const backgroundImage = this.backgroundImages[index];
     this.backgroundImages = R.remove(index, 1, this.backgroundImages);
-    this.emit('deleteBackgroundImage', backgroundImage);
+    this.emit('deleteBackgroundImage', { backgroundImage });
     return backgroundImage;
   }
 }

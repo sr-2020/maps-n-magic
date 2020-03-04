@@ -51,11 +51,28 @@ export class InnerBackgroundImageLayer {
       // });
       this.rectangleGroup.addLayer(rectangle);
     });
+    rectangles.forEach((rectangle) => {
+      const titleRect = this.createTitle(rectangle);
+      this.titleGroup.addLayer(titleRect);
+      // setRectangleEventHandlers(rectangle);
+
+      // this.updateImageTooltip(image);
+
+      // loc.on('mouseover', function (e) {
+      //   loc.bindTooltip(t('locationTooltip', { name: this.options.name }));
+      //   this.openTooltip();
+      // });
+      // loc.on('mouseout', function (e) {
+      //   this.closeTooltip();
+      // });
+      // this.rectangleGroup.addLayer(rectangle);
+    });
     const images = imagesData.map(({
       // eslint-disable-next-line no-shadow
       latlngs, name, id, image,
     }) => L.imageOverlay(image, latlngs, {
       id,
+      errorOverlayUrl: 'images/noImage.svg',
     }));
     images.forEach((image) => {
       this.imageGroup.addLayer(image);
@@ -66,17 +83,46 @@ export class InnerBackgroundImageLayer {
     // this.updateLocationsView();
   }
 
-  // // eslint-disable-next-line class-methods-use-this
-  // updateImageTooltip(image) {
-  //   image.bindTooltip(`${image.options.name}`, {
-  //     direction: 'center',
-  //     // offset: L.point(50, 100),
-  //     // offset: image.getBounds().getTopLeft(),
-  //     offset: image.getBounds().getNorthWest(),
-  //     permanent: true,
-  //     className: 'image-title-tooltip',
-  //   });
-  // }
+  // eslint-disable-next-line class-methods-use-this
+  createTitle(rectangle) {
+    const { id, name } = rectangle.options;
+    const bounds = this.getTitleLatLngBounds(rectangle);
+    const titleRect = L.rectangle(bounds, {
+      id,
+      interactive: false,
+      pmIgnore: true,
+      opacity: 0,
+      fill: false,
+    });
+    this.updateImageTooltip(titleRect, name);
+    return titleRect;
+  }
+
+  // eslint-disable-next-line class-methods-use-this
+  getTitleLatLngBounds(rectangle) {
+    const bounds = rectangle.getBounds();
+    const nw = bounds.getNorthWest();
+    const ne = L.latLng({
+      lat: nw.lat + 0.0005 / 2,
+      // lng: nw.lng + 0.01,
+      lng: nw.lng + 0.0001,
+      // lng: nw.lng,
+    });
+    return L.latLngBounds(nw, ne);
+  }
+
+  // eslint-disable-next-line class-methods-use-this
+  updateImageTooltip(titleRect, name) {
+    titleRect.unbindTooltip();
+    titleRect.bindTooltip(`${name}`, {
+      direction: 'right',
+      // offset: L.point(50, 100),
+      // offset: image.getBounds().getTopLeft(),
+      // offset: image.getBounds().getNorthWest(),
+      permanent: true,
+      className: 'image-title-tooltip',
+    });
+  }
 
   // onCreateLocation(location, gameModel, translator, setLocationEventHandlers) {
   onCreateImage(rect, gameModel, translator, setRectangleEventHandlers) {
@@ -91,6 +137,8 @@ export class InnerBackgroundImageLayer {
     this.imageGroup.addLayer(L.imageOverlay(image, latlngs, {
       id,
     }));
+    const titleRect = this.createTitle(rect);
+    this.titleGroup.addLayer(titleRect);
     // this.updateLocationsView();
   }
 
@@ -99,13 +147,29 @@ export class InnerBackgroundImageLayer {
     this.rectangleGroup.removeLayer(rect);
     const { id } = rect.options;
     const image = this.imageGroup.getLayers().find((image2) => image2.options.id === id);
-
     this.imageGroup.removeLayer(image);
+    const title = this.titleGroup.getLayers().find((title2) => title2.options.id === id);
+    this.titleGroup.removeLayer(title);
     gameModel.execute({
       type: 'deleteBackgroundImage',
       id: rect.options.id,
     });
     // this.updateLocationsView();
+  }
+
+  onPutBackgroundImage({ backgroundImage }) {
+    const {
+      id, latlngs, name, image,
+    } = backgroundImage;
+    const imageLayer = this.imageGroup.getLayers().find((image2) => image2.options.id === id);
+    imageLayer.setBounds(latlngs);
+    imageLayer.setUrl(image);
+    const rect = this.rectangleGroup.getLayers().find((rect2) => rect2.options.id === id);
+    const title = this.titleGroup.getLayers().find((title2) => title2.options.id === id);
+    const bounds = this.getTitleLatLngBounds(rect);
+    title.setBounds(bounds);
+    this.updateImageTooltip(title, name);
+    // this.titleGroup.removeLayer(title);
   }
 
   // removeMarkerFromLocations(markerId, gameModel) {

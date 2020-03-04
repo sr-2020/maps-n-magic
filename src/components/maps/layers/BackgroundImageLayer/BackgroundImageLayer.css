@@ -1,3 +1,7 @@
 .image-title-tooltip {
-  
+  margin-left: -4px;
+}
+
+.image-title-tooltip::before {
+  display: none;
 }
