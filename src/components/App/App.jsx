@@ -12,8 +12,6 @@ import {
   BrowserRouter as Router, Switch, Route, Redirect, NavLink,
 } from 'react-router-dom';
 
-import { CommonMap } from '../maps/CommonMap';
-import { BackgroundEditorMap } from '../maps/BackgroundEditorMap';
 import { ErrorBoundry } from '../ErrorBoundry';
 import { SoundManager } from '../SoundManager';
 
@@ -50,6 +48,8 @@ import { BeaconRecordEditor } from '../BeaconRecordEditor';
 
 import { TrackAnalysis } from '../TrackAnalysis';
 import { NotificationWatcher } from '../NotificationWatcher';
+
+import { MapRoutes } from '../MapRoutes';
 
 const hardDispose = (obj) => Object.keys(obj).forEach((key) => { delete obj[key]; });
 
@@ -300,24 +300,6 @@ export class App extends Component {
 
                 <main className="flex-1-1-auto h-full">
                   <Switch>
-                    <Route path="/map2">
-                      <CommonMap
-                        curPosition={curPosition}
-                        gameModel={gameModel}
-                        mapConfig={mapConfig}
-                        translator={translator}
-                        geomanConfig={geomanConfig}
-                      />
-                    </Route>
-                    <Route path="/backgroundEditorMap">
-                      <BackgroundEditorMap
-                        curPosition={curPosition}
-                        gameModel={gameModel}
-                        mapConfig={mapConfig}
-                        translator={translator}
-                        geomanConfig={backgroundEditorGeomanConfig}
-                      />
-                    </Route>
                     <Route path="/spiritEditor">
                       <SpiritEditor spiritService={gameModel} />
                     </Route>
@@ -334,13 +316,21 @@ export class App extends Component {
                       <BeaconRecordEditor gameModel={gameModel} />
                     </Route>
 
-                    <TrackAnalysis
-                      curPosition={curPosition}
-                      gameModel={gameModel}
-                      mapConfig={mapConfig}
-                      translator={translator}
-                    />
-                    <Route render={() => <Redirect to="/soundManager2" />} />
+                    {TrackAnalysis({
+                      curPosition,
+                      gameModel,
+                      mapConfig,
+                      translator,
+                    })}
+                    {MapRoutes({
+                      curPosition,
+                      gameModel,
+                      mapConfig,
+                      translator,
+                      geomanConfig,
+                      backgroundEditorGeomanConfig,
+                    })}
+                    <Route render={() => <Redirect to="/mapsNav" />} />
                   </Switch>
                   <GeoDataStreamSimulator
                     simulateGeoDataStream={simulateGeoDataStream}

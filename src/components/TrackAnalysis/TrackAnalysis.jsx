@@ -29,57 +29,55 @@ export function TrackAnalysis(props) {
     curPosition, gameModel, mapConfig, translator,
   } = props;
 
-  return (
-    <>
-      <Route path="/trackAnalysisNav">
-        <TrackAnalysisNav />
-      </Route>
-      <Route path="/realTrackStats">
-        <RealTrackStats
-          tracksData={tracksData}
-          beaconIndex={beaconIndex}
-          beaconLatlngsIndex={beaconLatlngsIndex}
-        />
-      </Route>
+  return [
+    <Route path="/trackAnalysisNav">
+      <TrackAnalysisNav />
+    </Route>,
+    <Route path="/realTrackStats">
+      <RealTrackStats
+        tracksData={tracksData}
+        beaconIndex={beaconIndex}
+        beaconLatlngsIndex={beaconLatlngsIndex}
+      />
+    </Route>,
 
-      <Route path="/trackDemo">
-        <TrackDemoMap
-          curPosition={curPosition}
-          gameModel={gameModel}
-          mapConfig={mapConfig}
-          translator={translator}
-        >
-          <RealTrackDemo
-            enableByDefault
-            tracksData={tracksData}
-            beaconLatlngs={beaconLatlngs}
-          />
-        </TrackDemoMap>
-      </Route>
-
-      <Route path="/userTrackAnalysis">
-        <UserTrackAnalysis
+    <Route path="/trackDemo">
+      <TrackDemoMap
+        curPosition={curPosition}
+        gameModel={gameModel}
+        mapConfig={mapConfig}
+        translator={translator}
+      >
+        <RealTrackDemo
+          enableByDefault
           tracksData={tracksData}
-          beaconIndex={beaconIndex}
-          beaconLatlngsIndex={beaconLatlngsIndex}
-          defaultSelectedUser={userList[18].userId}
-          userList={userList}
-          drawMap={({ userData }) => (
-            <TrackDemoMap
-              curPosition={curPosition}
-              gameModel={gameModel}
-              mapConfig={mapConfig}
-              translator={translator}
-            >
-              <RealTrackDemo
-                enableByDefault
-                tracksData={userData}
-                beaconLatlngs={beaconLatlngs}
-              />
-            </TrackDemoMap>
-          )}
+          beaconLatlngs={beaconLatlngs}
         />
-      </Route>
-    </>
-  );
+      </TrackDemoMap>
+    </Route>,
+
+    <Route path="/userTrackAnalysis">
+      <UserTrackAnalysis
+        tracksData={tracksData}
+        beaconIndex={beaconIndex}
+        beaconLatlngsIndex={beaconLatlngsIndex}
+        defaultSelectedUser={userList[18].userId}
+        userList={userList}
+        drawMap={({ userData }) => (
+          <TrackDemoMap
+            curPosition={curPosition}
+            gameModel={gameModel}
+            mapConfig={mapConfig}
+            translator={translator}
+          >
+            <RealTrackDemo
+              enableByDefault
+              tracksData={userData}
+              beaconLatlngs={beaconLatlngs}
+            />
+          </TrackDemoMap>
+        )}
+      />
+    </Route>,
+  ];
 }

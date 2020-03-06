@@ -31,6 +31,10 @@ export const translations = {
       imageGroupLayer: 'Изображения',
       rectangleGroupLayer: 'Области изображений',
       titleGroupLayer: 'Подписи',
+      mapsNav: 'Карты',
+      buildingPlansEditor: 'Здания',
+      locationsAndBeaconsEditor: 'Локации и маяки',
+      mapEditors: 'Редакторы карт',
 
       // Spirit Editor
       newSpirit: 'Новый дух',

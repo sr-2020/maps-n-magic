@@ -37,8 +37,8 @@ import { ModelRunSelector } from '../ModelRunSelector';
 
 
 const navLinks = [{
-  to: '/map2',
-  tKey: 'map2',
+  to: '/mapsNav',
+  tKey: 'mapsNav',
 }, {
   to: '/spiritEditor',
   tKey: 'spiritEditor',
