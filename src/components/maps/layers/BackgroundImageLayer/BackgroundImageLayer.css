@@ -5,3 +5,17 @@
 .image-title-tooltip::before {
   display: none;
 }
+
+.svg-title-text {
+  font-size: 6rem;
+  paint-order: stroke;
+  stroke: black;
+  stroke-width: 10px;
+  stroke-linecap: butt;
+  stroke-linejoin: round;
+  fill:white;
+}
+
+.svg-title-rect {
+  fill:rgb(104,119,135);
+}

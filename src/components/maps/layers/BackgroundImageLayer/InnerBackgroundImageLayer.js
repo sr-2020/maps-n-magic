@@ -54,18 +54,6 @@ export class InnerBackgroundImageLayer {
     rectangles.forEach((rectangle) => {
       const titleRect = this.createTitle(rectangle);
       this.titleGroup.addLayer(titleRect);
-      // setRectangleEventHandlers(rectangle);
-
-      // this.updateImageTooltip(image);
-
-      // loc.on('mouseover', function (e) {
-      //   loc.bindTooltip(t('locationTooltip', { name: this.options.name }));
-      //   this.openTooltip();
-      // });
-      // loc.on('mouseout', function (e) {
-      //   this.closeTooltip();
-      // });
-      // this.rectangleGroup.addLayer(rectangle);
     });
     const images = imagesData.map(({
       // eslint-disable-next-line no-shadow
@@ -87,15 +75,48 @@ export class InnerBackgroundImageLayer {
   createTitle(rectangle) {
     const { id, name } = rectangle.options;
     const bounds = this.getTitleLatLngBounds(rectangle);
-    const titleRect = L.rectangle(bounds, {
-      id,
-      interactive: false,
-      pmIgnore: true,
-      opacity: 0,
-      fill: false,
-    });
-    this.updateImageTooltip(titleRect, name);
+    const svgElement = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+    svgElement.setAttribute('xmlns', 'http://www.w3.org/2000/svg');
+    // svgElement.setAttribute('viewBox', '0 0 200 200');
+    svgElement.setAttribute('viewBox', '0 0 800 100');
+    // <rect width="800" height="100" style="fill:white"/>
+    // <rect height="100" class="svg-title-rect"/>
+    svgElement.innerHTML = `
+    <text x="0" y="80" class="svg-title-text">${name}</text>
+    `;
+    // <rect x="75" y="23" width="50" height="50" style="fill:red"/>
+    // <rect x="75" y="123" width="50" height="50" style="fill:#0013ff"/>
+    // const svgElementBounds = [[32, -130], [13, -100]];
+    const svgElementBounds = bounds;
+    const titleRect = L.svgOverlay(svgElement, svgElementBounds, { id });
     return titleRect;
+
+    // const bounds = rectangle.getBounds();
+    // const nw = bounds.getNorthWest();
+    // const marker = L.marker(nw, { id });
+    // // const myIcon = L.divIcon({ className: 'my-div-icon' });
+    // const myIcon = L.divIcon({
+    //   iconSize: [200, 40],
+    //   iconAnchor: [0, 40],
+    //   html: name,
+    //   // popupAnchor: [1, -34],
+    //   // shadowSize: [41, 41],
+    // });
+    // // marker.setIcon(index % 2 ? myIcon : getIcon('green'));
+    // // marker.setIcon(getIcon('green'));
+    // marker.setIcon(myIcon);
+    // return marker;
+
+    // const bounds = this.getTitleLatLngBounds(rectangle);
+    // const titleRect = L.rectangle(bounds, {
+    //   id,
+    //   interactive: false,
+    //   pmIgnore: true,
+    //   opacity: 0,
+    //   fill: false,
+    // });
+    // this.updateImageTooltip(titleRect, name);
+    // return titleRect;
   }
 
   // eslint-disable-next-line class-methods-use-this
@@ -103,9 +124,11 @@ export class InnerBackgroundImageLayer {
     const bounds = rectangle.getBounds();
     const nw = bounds.getNorthWest();
     const ne = L.latLng({
+      // lat: nw.lat + 0.0005 / 2,
+      // lng: nw.lng + 0.0001,
       lat: nw.lat + 0.0005 / 2,
+      lng: nw.lng + 0.0032,
       // lng: nw.lng + 0.01,
-      lng: nw.lng + 0.0001,
       // lng: nw.lng,
     });
     return L.latLngBounds(nw, ne);
@@ -113,15 +136,17 @@ export class InnerBackgroundImageLayer {
 
   // eslint-disable-next-line class-methods-use-this
   updateImageTooltip(titleRect, name) {
-    titleRect.unbindTooltip();
-    titleRect.bindTooltip(`${name}`, {
-      direction: 'right',
-      // offset: L.point(50, 100),
-      // offset: image.getBounds().getTopLeft(),
-      // offset: image.getBounds().getNorthWest(),
-      permanent: true,
-      className: 'image-title-tooltip',
-    });
+    const element = titleRect.getElement();
+    element.innerHTML = `<text x="0" y="80" class="svg-title-text">${name}</text>`;
+    // titleRect.unbindTooltip();
+    // titleRect.bindTooltip(`${name}`, {
+    //   direction: 'right',
+    //   // offset: L.point(50, 100),
+    //   // offset: image.getBounds().getTopLeft(),
+    //   // offset: image.getBounds().getNorthWest(),
+    //   permanent: true,
+    //   className: 'image-title-tooltip',
+    // });
   }
 
   // onCreateLocation(location, gameModel, translator, setLocationEventHandlers) {
