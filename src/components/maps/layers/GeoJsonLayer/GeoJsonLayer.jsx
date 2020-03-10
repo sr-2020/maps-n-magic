@@ -1,11 +1,51 @@
 import React, { Component } from 'react';
 import './GeoJsonLayer.css';
+import * as R from 'ramda';
 
 import L from 'leaflet/dist/leaflet-src';
 
 // import { GeoJsonLayerPropTypes } from '../../types';
 
 import staticGeoData from '../../../../dataAnalysis/data/kml/izumrud_socgorod.json';
+
+console.log(staticGeoData);
+
+const types = R.pipe(
+  R.map(R.path(['geometry', 'type'])),
+  R.uniq,
+)(staticGeoData.features);
+console.log('types', types);
+
+types.forEach((type) => {
+  const propList = staticGeoData.features.filter((feature) => feature.geometry.type === type).reduce((acc, feature) => {
+    acc = R.uniq(R.concat(acc, R.keys(feature.properties)));
+    return acc;
+  }, []);
+  console.log(`${type} props`, propList);
+});
+
+// "stroke": "#ffd600",
+// "stroke-opacity": 1,
+// "stroke-width": 3.001,
+// "fill": "#ffd600",
+// "fill-opacity": 0.16862745098039217
+
+const styleProps = ['stroke', 'stroke-opacity', 'stroke-width', 'fill', 'fill-opacity'];
+
+const transformName = (name) => {
+  if (name === 'stroke') return 'color';
+  if (name === 'fill') return 'fillColor';
+  return camelize(name);
+};
+
+function camelize(str) {
+  return str;
+  // const arr = str.split('-');
+  // const capital = arr.map((item, index) => (index ? item.charAt(0).toUpperCase() + item.slice(1).toLowerCase() : item));
+  // // ^-- change here.
+  // const capitalString = capital.join('');
+  // return capitalString;
+}
 
 export class GeoJsonLayer extends Component {
   // static propTypes = GeoJsonLayerPropTypes;
@@ -54,12 +94,22 @@ export class GeoJsonLayer extends Component {
   populate() {
     const { translator } = this.props;
 
-    console.log(staticGeoData);
-
     staticGeoData.features.forEach((feature) => {
       const geoJsonObj = L.geoJSON(feature, {
         style(feature2) {
-          return { color: feature2.properties.color };
+          const { properties } = feature2;
+          const makeStyles = R.pipe(
+            R.keys,
+            R.filter(R.includes(R.__, styleProps)),
+            R.reduce((acc, prop) => {
+              acc[transformName(prop)] = properties[prop];
+              return acc;
+            }, {}),
+          );
+          console.log(properties.name, makeStyles(properties));
+          return makeStyles(properties);
+          // feature2.properties;
+          // return { color: feature2.properties.color };
         },
       })
         .bindPopup((layer) => layer.feature.properties.description || '')
