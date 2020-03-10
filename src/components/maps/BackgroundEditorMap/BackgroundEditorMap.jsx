@@ -6,6 +6,7 @@ import { Map2 } from '../Map2';
 import { SatelliteBackground } from '../layers/SatelliteBackground';
 import { BaseContourLayer2 } from '../layers/BaseContourLayer2';
 import { BackgroundImageLayer } from '../layers/BackgroundImageLayer';
+import { GeoJsonLayer } from '../layers/GeoJsonLayer';
 
 // import { BackgroundEditorMapPropTypes } from '../../types';
 
@@ -30,6 +31,9 @@ export function BackgroundEditorMap(props) {
         enableByDefault
       />
       <BackgroundImageLayer
+        enableByDefault
+      />
+      <GeoJsonLayer
         enableByDefault
       />
     </Map2>
