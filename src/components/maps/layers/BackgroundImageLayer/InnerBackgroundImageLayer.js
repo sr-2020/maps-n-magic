@@ -14,9 +14,16 @@ export class InnerBackgroundImageLayer {
 
   rectangleGroupNameKey = 'rectangleGroupLayer';
 
-  getLayersMeta() {
+  getLayersMeta(editable) {
+    if (editable) {
+      return {
+        [this.rectangleGroupNameKey]: this.rectangleGroup,
+        [this.imageGroupNameKey]: this.imageGroup,
+        [this.titleGroupNameKey]: this.titleGroup,
+      };
+    }
     return {
-      [this.rectangleGroupNameKey]: this.rectangleGroup,
+      // [this.rectangleGroupNameKey]: this.rectangleGroup,
       [this.imageGroupNameKey]: this.imageGroup,
       [this.titleGroupNameKey]: this.titleGroup,
     };

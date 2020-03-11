@@ -28,12 +28,13 @@ export const translations = {
       trackAnalysisNav: 'Анализ мастерки',
       beaconRecordEditor: 'Словарь маяков',
       backgroundEditorMap: 'Редактор подложки карты',
-      imageGroupLayer: 'Изображения',
-      rectangleGroupLayer: 'Области изображений',
-      titleGroupLayer: 'Подписи',
+      imageGroupLayer: 'Здания',
+      rectangleGroupLayer: 'Области зданий',
+      titleGroupLayer: 'Подписи к зданиям',
       mapsNav: 'Карты',
       buildingPlansEditor: 'Здания',
-      locationsAndBeaconsEditor: 'Локации и маяки',
+      locationsAndBeaconsEditor: 'Локации и маяки - 1',
+      locationsEditor2: 'Локации',
       mapEditors: 'Редакторы карт',
 
       // Spirit Editor

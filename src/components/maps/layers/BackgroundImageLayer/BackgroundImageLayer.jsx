@@ -27,7 +27,7 @@ export class BackgroundImageLayer extends Component {
 
   componentDidMount() {
     const {
-      gameModel, enableByDefault, layerCommunicator,
+      gameModel, enableByDefault, layerCommunicator, editable,
     } = this.props;
     this.imagePopupDom = document.createElement('div');
     this.subscribe('on', gameModel);
@@ -35,7 +35,7 @@ export class BackgroundImageLayer extends Component {
     this.imagePopup = L.popup();
     this.imageLayer = new InnerBackgroundImageLayer();
     layerCommunicator.emit('setLayersMeta', {
-      layersMeta: this.imageLayer.getLayersMeta(),
+      layersMeta: this.imageLayer.getLayersMeta(editable),
       enableByDefault,
     });
     this.populate();
@@ -91,7 +91,10 @@ export class BackgroundImageLayer extends Component {
   }
 
   communicatorSubscribe(action) {
-    const { layerCommunicator } = this.props;
+    const { layerCommunicator, editable } = this.props;
+    if (!editable) {
+      return;
+    }
     // layerCommunicator[action]('highlightLocation', this.onHighlightLocation_locations);
     // layerCommunicator[action]('resetLocationHighlight', this.onResetHighlightLocation_locations);
     layerCommunicator[action]('onCreateLayer', this.onCreateLayer);

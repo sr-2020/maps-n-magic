@@ -7,6 +7,9 @@ const navLinks = [{
   to: '/backgroundEditorMap',
   tKey: 'buildingPlansEditor',
 }, {
+  to: '/locationsEditor2',
+  tKey: 'locationsEditor2',
+}, {
   to: '/map2',
   tKey: 'locationsAndBeaconsEditor',
 }];

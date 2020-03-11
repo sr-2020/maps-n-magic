@@ -8,7 +8,7 @@ import {
 
 import { CommonMap } from '../maps/CommonMap';
 import { BackgroundEditorMap } from '../maps/BackgroundEditorMap';
-
+import { LocationEditorMap } from '../maps/LocationEditorMap';
 
 import { MapsNav } from '../MapsNav';
 
@@ -28,6 +28,15 @@ export function MapRoutes(props) {
         mapConfig={mapConfig}
         translator={translator}
         geomanConfig={geomanConfig}
+      />
+    </Route>,
+    <Route path="/locationsEditor2">
+      <LocationEditorMap
+        curPosition={curPosition}
+        gameModel={gameModel}
+        mapConfig={mapConfig}
+        translator={translator}
+        geomanConfig={backgroundEditorGeomanConfig}
       />
     </Route>,
     <Route path="/backgroundEditorMap">
