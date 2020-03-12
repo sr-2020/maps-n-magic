@@ -237,17 +237,18 @@ export class LocationLayer3 extends Component {
     const allBeacons = R.clone(gameModel.get('beacons'));
     const allLocations = R.clone(gameModel.get('locations'));
     return (
-      <LocationPopup
-        name={curLocation.name}
-        id={curLocation.id}
-        manaLevel={curLocation.manaLevel}
-        attachedMarkers={curLocation.markers}
-        allBeacons={allBeacons}
-        allLocations={allLocations}
-        onChange={this.onLocationChange}
-        onLocMarkerChange={this.onLocMarkerChange}
-        onClose={this.closePopup}
-      />
+      null
+      // <LocationPopup
+      //   name={curLocation.name}
+      //   id={curLocation.id}
+      //   manaLevel={curLocation.manaLevel}
+      //   attachedMarkers={curLocation.markers}
+      //   allBeacons={allBeacons}
+      //   allLocations={allLocations}
+      //   onChange={this.onLocationChange}
+      //   onLocMarkerChange={this.onLocMarkerChange}
+      //   onClose={this.closePopup}
+      // />
     );
   }
 
