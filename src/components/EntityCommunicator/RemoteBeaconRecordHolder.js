@@ -1,6 +1,6 @@
 import * as R from 'ramda';
 
-import { RemoteHolder } from '../../utils/RemoteHolder';
+import { RemoteHolder } from './RemoteHolder';
 
 const url = 'https://position.evarun.ru/api/v1/beacons';
 

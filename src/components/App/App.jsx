@@ -43,7 +43,10 @@ import { SoundStage } from './SoundStage';
 
 import { Translator } from '../../utils/Translator';
 
-import { BeaconRecordCommunicator } from '../BeaconRecordCommunicator';
+import { EntityCommunicator } from '../EntityCommunicator';
+import { RemoteBeaconRecordHolder } from '../EntityCommunicator/RemoteBeaconRecordHolder';
+import { LocationHolder } from '../EntityCommunicator/LocationHolder';
+
 import { BeaconRecordEditor } from '../BeaconRecordEditor';
 
 import { TrackAnalysis } from '../TrackAnalysis';
@@ -343,7 +346,16 @@ export class App extends Component {
                     gameModel={gameModel}
                     context={this.audioContextWrapper}
                   />
-                  <BeaconRecordCommunicator gameModel={gameModel} />
+                  <EntityCommunicator
+                    gameModel={gameModel}
+                    EntityHolder={RemoteBeaconRecordHolder}
+                    entityName="beaconRecord"
+                  />
+                  <EntityCommunicator
+                    gameModel={gameModel}
+                    EntityHolder={LocationHolder}
+                    entityName="locationRecord"
+                  />
                   <NotificationWatcher gameModel={gameModel} />
                 </main>
               </div>

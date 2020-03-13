@@ -5,79 +5,79 @@ import { AbstractService } from './AbstractService';
 export class LocationService2 extends AbstractService {
   metadata = {
     actions: [
-      'postLocation2',
-      'deleteLocation2',
-      'putLocation2',
-      'postLocation2Confirmed',
-      'deleteLocation2Confirmed',
-      'putLocation2Confirmed',
-      'setLocations2',
+      'postLocationRecord',
+      'deleteLocationRecord',
+      'putLocationRecord',
+      'postLocationRecordConfirmed',
+      'deleteLocationRecordConfirmed',
+      'putLocationRecordConfirmed',
+      'setLocationRecords',
     ],
-    requests: ['locations2'],
+    requests: ['locationRecords'],
     emitEvents: [
-      'postLocation2',
-      'deleteLocation2',
-      'putLocation2',
-      'postLocation2Requested',
-      'deleteLocation2Requested',
-      'putLocation2Requested',
-      'locations2Changed',
+      'postLocationRecord',
+      'deleteLocationRecord',
+      'putLocationRecord',
+      'postLocationRecordRequested',
+      'deleteLocationRecordRequested',
+      'putLocationRecordRequested',
+      'locationRecordsChanged',
     ],
     listenEvents: [],
   };
 
   constructor() {
     super();
-    this.locations2 = [];
+    this.locationRecords = [];
   }
 
-  setData({ locations2 } = {}) {
-    this.locations2 = locations2 || [];
+  setData({ locationRecords } = {}) {
+    this.locationRecords = locationRecords || [];
   }
 
   getData() {
     return {
-      locations2: this.getLocations2(),
+      locationRecords: this.getLocationRecords(),
     };
   }
 
-  getLocations2() {
-    return [...this.locations2];
+  getLocationRecords() {
+    return [...this.locationRecords];
   }
 
-  setLocations2({ locations2 }) {
-    this.locations2 = locations2;
-    this.emit('locations2Changed', {
-      locations2,
+  setLocationRecords({ locationRecords }) {
+    this.locationRecords = locationRecords;
+    this.emit('locationRecordsChanged', {
+      locationRecords,
     });
   }
 
-  putLocation2({ id, props }) {
-    this.emit('putLocation2Requested', { id, props });
+  putLocationRecord({ id, props }) {
+    this.emit('putLocationRecordRequested', { id, props });
   }
 
-  postLocation2 = ({ props }) => {
-    this.emit('postLocation2Requested', { props });
+  postLocationRecord = ({ props }) => {
+    this.emit('postLocationRecordRequested', { props });
   }
 
-  deleteLocation2 = ({ id }) => {
-    this.emit('deleteLocation2Requested', { id });
+  deleteLocationRecord = ({ id }) => {
+    this.emit('deleteLocationRecordRequested', { id });
   }
 
-  putLocation2Confirmed({ location2 }) {
-    const index = this.locations2.findIndex((br) => br.id === location2.id);
-    this.locations2[index] = location2;
-    this.emit('putLocation2', { location2 });
+  putLocationRecordConfirmed({ location2 }) {
+    const index = this.locationRecords.findIndex((br) => br.id === location2.id);
+    this.locationRecords[index] = location2;
+    this.emit('putLocationRecord', { location2 });
   }
 
-  deleteLocation2Confirmed({ location2 }) {
-    this.locations2 = this.locations2.filter((br) => br.id !== location2.id);
-    this.emit('deleteLocation2', { location2 });
+  deleteLocationRecordConfirmed({ location2 }) {
+    this.locationRecords = this.locationRecords.filter((br) => br.id !== location2.id);
+    this.emit('deleteLocationRecord', { location2 });
   }
 
-  postLocation2Confirmed({ location2 }) {
-    this.locations2.push(location2);
+  postLocationRecordConfirmed({ location2 }) {
+    this.locationRecords.push(location2);
     // console.log('postBeaconRecord');
-    this.emit('postLocation2', { location2 });
+    this.emit('postLocationRecord', { location2 });
   }
 }
