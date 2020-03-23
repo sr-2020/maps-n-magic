@@ -29,7 +29,7 @@ import { services } from '../../services/GameModelServices';
 
 import { fillGameModelWithBots } from '../../services/GameModelFiller';
 
-import { mapConfig, backgroundEditorGeomanConfig, geomanConfig } from '../../configs/map';
+import { mapConfig } from '../../configs/map';
 
 import { GeoDataStreamSimulator } from '../GeoDataStreamSimulator';
 
@@ -328,10 +328,7 @@ export class App extends Component {
                     {MapRoutes({
                       curPosition,
                       gameModel,
-                      mapConfig,
                       translator,
-                      geomanConfig,
-                      backgroundEditorGeomanConfig,
                     })}
                     <Route render={() => <Redirect to="/mapsNav" />} />
                   </Switch>

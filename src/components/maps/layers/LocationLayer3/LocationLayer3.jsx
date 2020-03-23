@@ -20,7 +20,7 @@ export class LocationLayer3 extends Component {
     this.state = {
       curLocation: null,
     };
-    this.onRemoveBeacon = this.onRemoveBeacon.bind(this);
+    // this.onRemoveBeacon = this.onRemoveBeacon.bind(this);
     this.onHighlightLocation_locations = this.onHighlightLocation_locations.bind(this);
     this.onResetHighlightLocation_locations = this.onResetHighlightLocation_locations.bind(this);
     this.onCreateLayer = this.onCreateLayer.bind(this);
@@ -85,13 +85,13 @@ export class LocationLayer3 extends Component {
   }
 
   subscribe(action, gameModel) {
-    gameModel[action]('deleteBeacon', this.onRemoveBeacon);
+    // gameModel[action]('deleteBeacon', this.onRemoveBeacon);
   }
 
   communicatorSubscribe(action) {
     const { layerCommunicator } = this.props;
-    layerCommunicator[action]('highlightLocation', this.onHighlightLocation_locations);
-    layerCommunicator[action]('resetLocationHighlight', this.onResetHighlightLocation_locations);
+    // layerCommunicator[action]('highlightLocation', this.onHighlightLocation_locations);
+    // layerCommunicator[action]('resetLocationHighlight', this.onResetHighlightLocation_locations);
     layerCommunicator[action]('onCreateLayer', this.onCreateLayer);
     layerCommunicator[action]('onRemoveLayer', this.onRemoveLayer);
   }
@@ -99,7 +99,6 @@ export class LocationLayer3 extends Component {
   onCreateLayer(event) {
     const { gameModel, translator } = this.props;
     if (event.layer instanceof L.Polygon) {
-      // this.markerLayer.onCreateMarker(event.layer, gameModel, translator, this.setMarkerEventHandlers);
       this.locationsLayer.onCreateLocation(event.layer, gameModel, translator, this.setLocationEventHandlers);
     }
   }
@@ -115,19 +114,19 @@ export class LocationLayer3 extends Component {
     }
   }
 
-  onRemoveBeacon({ beacon }) {
-    const { gameModel } = this.props;
-    this.locationsLayer.removeMarkerFromLocations(beacon.id, gameModel);
-    this.locationsLayer.updateLocationsView();
-  }
+  // onRemoveBeacon({ beacon }) {
+  //   const { gameModel } = this.props;
+  //   this.locationsLayer.removeMarkerFromLocations(beacon.id, gameModel);
+  //   this.locationsLayer.updateLocationsView();
+  // }
 
   setLocationEventHandlers = (location) => {
-    location.on({
-      click: this.onLocationClick,
-      mouseover: this.highlightLocation,
-      mouseout: this.resetLocationHighlight,
-      'pm:edit': this.onLocationEdit,
-    });
+    // location.on({
+    //   click: this.onLocationClick,
+    //   mouseover: this.highlightLocation,
+    //   mouseout: this.resetLocationHighlight,
+    //   'pm:edit': this.onLocationEdit,
+    // });
   }
 
   highlightLocation = (e) => {

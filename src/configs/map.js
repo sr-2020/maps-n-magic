@@ -25,24 +25,53 @@ const mapConfig = {
 
 mapConfig.center = [mapConfig.lat, mapConfig.lng];
 
-const geomanConfig = {
-  position: 'topleft',
-  drawCircleMarker: false,
-  drawPolyline: false,
-  cutPolygon: false,
-  drawCircle: false,
-  drawRectangle: false,
-};
-
-const backgroundEditorGeomanConfig = {
+const defaultGeomanFeatures = {
   position: 'topleft',
   drawMarker: false,
   drawCircleMarker: false,
   drawPolyline: false,
-  drawRectangle: true,
+  drawRectangle: false,
   drawPolygon: false,
   drawCircle: false,
+  editMode: false,
+  dragMode: false,
   cutPolygon: false,
+  removalMode: false,
+  pinningOption: false,
+  snappingOption: false,
+};
+
+const markerEditorGeomanFeatures = {
+  drawMarker: true,
+  editMode: true,
+  dragMode: true,
+  removalMode: true,
+};
+
+const locationEditorGeomanFeatures = {
+  drawPolygon: true,
+  editMode: true,
+  dragMode: true,
+  removalMode: true,
+};
+
+const oldLocationAndMarkerGeomanConfig = {
+  ...defaultGeomanFeatures,
+  ...markerEditorGeomanFeatures,
+  ...locationEditorGeomanFeatures,
+};
+
+const backgroundEditorGeomanConfig = {
+  ...defaultGeomanFeatures,
+  drawRectangle: true,
+  editMode: true,
+  dragMode: true,
+  removalMode: true,
+};
+
+const locationsEditor2GeomanConfig = {
+  ...defaultGeomanFeatures,
+  ...locationEditorGeomanFeatures,
 };
 
 // osmSettings
@@ -52,5 +81,6 @@ const defaultTileLayer = googleTileLayer;
 
 
 export {
-  osmTileLayer, googleTileLayer, mapConfig, geomanConfig, defaultTileLayer, backgroundEditorGeomanConfig,
+  osmTileLayer, googleTileLayer, mapConfig, defaultTileLayer, backgroundEditorGeomanConfig,
+  oldLocationAndMarkerGeomanConfig, locationsEditor2GeomanConfig,
 };

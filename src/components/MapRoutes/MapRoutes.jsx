@@ -10,11 +10,15 @@ import { CommonMap } from '../maps/CommonMap';
 import { BackgroundEditorMap } from '../maps/BackgroundEditorMap';
 import { LocationEditorMap } from '../maps/LocationEditorMap';
 
+import {
+  mapConfig, backgroundEditorGeomanConfig, oldLocationAndMarkerGeomanConfig, locationsEditor2GeomanConfig,
+} from '../../configs/map';
+
 import { MapsNav } from '../MapsNav';
 
 export function MapRoutes(props) {
   const {
-    curPosition, gameModel, mapConfig, translator, geomanConfig, backgroundEditorGeomanConfig,
+    curPosition, gameModel, translator,
   } = props;
 
   return [
@@ -27,7 +31,7 @@ export function MapRoutes(props) {
         gameModel={gameModel}
         mapConfig={mapConfig}
         translator={translator}
-        geomanConfig={geomanConfig}
+        geomanConfig={oldLocationAndMarkerGeomanConfig}
       />
     </Route>,
     <Route path="/locationsEditor2">
@@ -36,7 +40,7 @@ export function MapRoutes(props) {
         gameModel={gameModel}
         mapConfig={mapConfig}
         translator={translator}
-        geomanConfig={backgroundEditorGeomanConfig}
+        geomanConfig={locationsEditor2GeomanConfig}
       />
     </Route>,
     <Route path="/backgroundEditorMap">

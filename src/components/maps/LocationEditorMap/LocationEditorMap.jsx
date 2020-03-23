@@ -21,7 +21,7 @@ export function LocationEditorMap(props) {
       curPosition={curPosition}
       gameModel={gameModel}
       mapConfig={mapConfig}
-      // geomanConfig={geomanConfig}
+      geomanConfig={geomanConfig}
       commonPropsExtension={{
         translator,
         gameModel,
@@ -36,7 +36,7 @@ export function LocationEditorMap(props) {
         editable={false}
       />
       <GeoJsonLayer
-        enableByDefault
+        enableByDefault={false}
       />
       <LocationLayer3
         enableByDefault

@@ -17,18 +17,28 @@ export class InnerLocationLayer3 {
   }
 
   populate(gameModel, translator, setLocationEventHandlers, t) {
-    const locationsData = gameModel.get('locations').map(translator.moveTo);
-
+    // const locationsData = gameModel.get('locations').map(translator.moveTo);
+    const isNotEmptyPolygon = R.pipe(
+      R.prop('polygon'),
+      R.equals({}),
+      R.not,
+    );
+    const prepareArray = R.pipe(
+      R.filter(isNotEmptyPolygon),
+      R.map(translator.moveTo),
+    );
+    const locationsData = prepareArray(gameModel.get('locationRecords'));
+    // console.log(this);
     const locations = locationsData.map(({
       // eslint-disable-next-line no-shadow
-      latlngs, name, id, markers, manaLevel,
-    }) => L.polygon(latlngs, {
-      id, name, markers, manaLevel,
+      polygon, label, id,
+    }) => L.polygon([polygon[0]], {
+      id, label,
     }));
     locations.forEach((loc) => {
-      setLocationEventHandlers(loc);
+      // setLocationEventHandlers(loc);
       loc.on('mouseover', function (e) {
-        loc.bindTooltip(t('locationTooltip', { name: this.options.name }));
+        loc.bindTooltip(t('locationTooltip', { name: this.options.label }));
         this.openTooltip();
       });
       loc.on('mouseout', function (e) {
@@ -36,30 +46,32 @@ export class InnerLocationLayer3 {
       });
       this.group.addLayer(loc);
     });
-    this.updateLocationsView();
+    // this.updateLocationsView();
   }
 
+  // eslint-disable-next-line class-methods-use-this
   onCreateLocation(location, gameModel, translator, setLocationEventHandlers) {
     const latlngs = translator.moveFrom({
       latlngs: location.getLatLngs(),
     });
-    const { id, name, markers } = gameModel.execute({
-      type: 'postLocation',
-      props: { ...latlngs },
+    // const { id, name, markers } =
+    gameModel.execute({
+      type: 'postLocationRecord',
+      props: { polygon: latlngs.latlngs },
     });
-    L.setOptions(location, { id, name, markers });
-    this.group.addLayer(location);
-    setLocationEventHandlers(location);
-    this.updateLocationsView();
+    // L.setOptions(location, { id, name, markers });
+    // this.group.addLayer(location);
+    // setLocationEventHandlers(location);
+    // // this.updateLocationsView();
   }
 
   onRemoveLocation(location, gameModel) {
     this.group.removeLayer(location);
     gameModel.execute({
-      type: 'deleteLocation',
+      type: 'deleteLocationRecord',
       id: location.options.id,
     });
-    this.updateLocationsView();
+    // this.updateLocationsView();
   }
 
   removeMarkerFromLocations(markerId, gameModel) {
@@ -97,7 +109,7 @@ export class InnerLocationLayer3 {
         markers: R.clone(props.markers),
       },
     });
-    this.updateLocationsView();
+    // this.updateLocationsView();
     return props;
   }
 
@@ -115,29 +127,29 @@ export class InnerLocationLayer3 {
     }
   }
 
-  updateLocationsView() {
-    this.group.getLayers().forEach((loc, i) => {
-      const { markers, manaLevel } = loc.options;
-      loc.setStyle({
-        color: markers.length > 0 ? 'blue' : 'red',
-        // fillColor: COLOR_PALETTE[i % COLOR_PALETTE.length].color.background,
-        // fillOpacity: 0.5,
-        fillOpacity: 0.8,
-        // eslint-disable-next-line no-nested-ternary
-        // fillColor: COLOR_PALETTE[manaLevel === 'low' ? 0
-        //   : (manaLevel === 'normal' ? 12
-        //     : 16)].color.background,
-        // eslint-disable-next-line no-nested-ternary
-        fillColor: manaLevel === 'low' ? 'hsla(233, 0%, 50%, 1)'
-          : (manaLevel === 'normal' ? 'hsla(233, 50%, 50%, 1)'
-            : 'hsla(233, 100%, 50%, 1)'),
-        // fillOpacity:
-        //   // eslint-disable-next-line no-nested-ternary
-        //   manaLevel === 'low' ? 0.2
-        //     : (manaLevel === 'normal' ? 0.6
-        //       : 1)
-        // ,
-      });
-    });
-  }
+  // updateLocationsView() {
+  //   this.group.getLayers().forEach((loc, i) => {
+  //     const { markers, manaLevel } = loc.options;
+  //     loc.setStyle({
+  //       color: markers.length > 0 ? 'blue' : 'red',
+  //       // fillColor: COLOR_PALETTE[i % COLOR_PALETTE.length].color.background,
+  //       // fillOpacity: 0.5,
+  //       fillOpacity: 0.8,
+  //       // eslint-disable-next-line no-nested-ternary
+  //       // fillColor: COLOR_PALETTE[manaLevel === 'low' ? 0
+  //       //   : (manaLevel === 'normal' ? 12
+  //       //     : 16)].color.background,
+  //       // eslint-disable-next-line no-nested-ternary
+  //       fillColor: manaLevel === 'low' ? 'hsla(233, 0%, 50%, 1)'
+  //         : (manaLevel === 'normal' ? 'hsla(233, 50%, 50%, 1)'
+  //           : 'hsla(233, 100%, 50%, 1)'),
+  //       // fillOpacity:
+  //       //   // eslint-disable-next-line no-nested-ternary
+  //       //   manaLevel === 'low' ? 0.2
+  //       //     : (manaLevel === 'normal' ? 0.6
+  //       //       : 1)
+  //       // ,
+  //     });
+  //   });
+  // }
 }

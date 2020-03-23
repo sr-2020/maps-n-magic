@@ -64,20 +64,20 @@ export class LocationService2 extends AbstractService {
     this.emit('deleteLocationRecordRequested', { id });
   }
 
-  putLocationRecordConfirmed({ location2 }) {
-    const index = this.locationRecords.findIndex((br) => br.id === location2.id);
-    this.locationRecords[index] = location2;
-    this.emit('putLocationRecord', { location2 });
+  putLocationRecordConfirmed({ locationRecord }) {
+    const index = this.locationRecords.findIndex((br) => br.id === locationRecord.id);
+    this.locationRecords[index] = locationRecord;
+    this.emit('putLocationRecord', { locationRecord });
   }
 
-  deleteLocationRecordConfirmed({ location2 }) {
-    this.locationRecords = this.locationRecords.filter((br) => br.id !== location2.id);
-    this.emit('deleteLocationRecord', { location2 });
+  deleteLocationRecordConfirmed({ locationRecord }) {
+    this.locationRecords = this.locationRecords.filter((br) => br.id !== locationRecord.id);
+    this.emit('deleteLocationRecord', { locationRecord });
   }
 
-  postLocationRecordConfirmed({ location2 }) {
-    this.locationRecords.push(location2);
+  postLocationRecordConfirmed({ locationRecord }) {
+    this.locationRecords.push(locationRecord);
     // console.log('postBeaconRecord');
-    this.emit('postLocationRecord', { location2 });
+    this.emit('postLocationRecord', { locationRecord });
   }
 }
