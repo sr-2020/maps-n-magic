@@ -2,7 +2,9 @@ import * as R from 'ramda';
 
 import { AbstractService } from './AbstractService';
 
-export class MapImageService extends AbstractService {
+import { defaultBackgroundImages } from './DefaultBackgroundImages';
+
+export class BackgroundImageService extends AbstractService {
   metadata = {
     actions: [
       'putBackgroundImage',
@@ -20,12 +22,12 @@ export class MapImageService extends AbstractService {
 
   constructor() {
     super();
-    this.backgroundImages = [];
+    this.backgroundImages = R.clone(defaultBackgroundImages);
     this.maxBackgroundImageId = 1;
   }
 
   setData({ backgroundImages } = {}) {
-    this.backgroundImages = backgroundImages || [];
+    this.backgroundImages = backgroundImages || R.clone(defaultBackgroundImages);
     this.maxBackgroundImageId = R.reduce(R.max, 1, R.pluck('id', this.backgroundImages));
   }
 

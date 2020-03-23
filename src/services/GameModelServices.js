@@ -12,7 +12,7 @@ import { UserWatcher } from './UserWatcher';
 import { BaseVersion } from './BaseVersion';
 import { BeaconDictionaryService } from './BeaconDictionaryService';
 import { NotificationService } from './NotificationService';
-import { MapImageService } from './MapImageService';
+import { BackgroundImageService } from './BackgroundImageService';
 
 export const services = [
   UserService,
@@ -29,5 +29,5 @@ export const services = [
   BaseVersion,
   BeaconDictionaryService,
   NotificationService,
-  MapImageService,
+  BackgroundImageService,
 ];
