@@ -28,41 +28,38 @@ export class InnerLocationLayer3 {
       R.map(translator.moveTo),
     );
     const locationsData = prepareArray(gameModel.get('locationRecords'));
-    // console.log(this);
-    const locations = locationsData.map(({
-      // eslint-disable-next-line no-shadow
-      polygon, label, id,
-    }) => L.polygon([polygon[0]], {
-      id, label,
-    }));
-    locations.forEach((loc) => {
-      // setLocationEventHandlers(loc);
-      loc.on('mouseover', function (e) {
-        loc.bindTooltip(t('locationTooltip', { name: this.options.label }));
-        this.openTooltip();
-      });
-      loc.on('mouseout', function (e) {
-        this.closeTooltip();
-      });
-      this.group.addLayer(loc);
-    });
+    R.map(this.createAndAddLocation(setLocationEventHandlers, t), locationsData);
     // this.updateLocationsView();
   }
 
+  createAndAddLocation = (setLocationEventHandlers, t) => R.pipe(
+    this.createLocation(t),
+    setLocationEventHandlers,
+    this.group.addLayer.bind(this.group),
+  );
+
   // eslint-disable-next-line class-methods-use-this
-  onCreateLocation(location, gameModel, translator, setLocationEventHandlers) {
-    const latlngs = translator.moveFrom({
-      latlngs: location.getLatLngs(),
+  createLocation = R.curry((t, { polygon, label, id }) => {
+    const loc = L.polygon([polygon[0]], {
+      id, label,
     });
-    // const { id, name, markers } =
-    gameModel.execute({
-      type: 'postLocationRecord',
-      props: { polygon: latlngs.latlngs },
+    loc.on('mouseover', function (e) {
+      loc.bindTooltip(t('locationTooltip', { name: this.options.label }));
+      this.openTooltip();
     });
-    // L.setOptions(location, { id, name, markers });
-    // this.group.addLayer(location);
-    // setLocationEventHandlers(location);
-    // // this.updateLocationsView();
+    loc.on('mouseout', function (e) {
+      this.closeTooltip();
+    });
+    return loc;
+  })
+
+  onPostLocationRecord(locationRecord, setLocationEventHandlers, t) {
+    this.createAndAddLocation(setLocationEventHandlers, t)(locationRecord);
+  }
+
+  onPutLocationRecord(locationRecord) {
+    const loc = this.group.getLayers().find((loc2) => loc2.options.id === locationRecord.id);
+    loc.setLatLngs([locationRecord.polygon[0]]);
   }
 
   onRemoveLocation(location, gameModel) {
@@ -115,10 +112,10 @@ export class InnerLocationLayer3 {
 
   onLocationChange(prop, value, gameModel, id) {
     const location = this.group.getLayers().find((loc) => loc.options.id === id);
-    if (prop === 'name' || prop === 'manaLevel') {
+    if (prop === 'label') {
       location.options[prop] = value;
       gameModel.execute({
-        type: 'putLocation',
+        type: 'putLocationRecord',
         id,
         props: {
           [prop]: value,

@@ -6,9 +6,9 @@ import * as R from 'ramda';
 
 import { InnerLocationLayer3 } from './InnerLocationLayer3';
 
-import { locationPopupDom } from '../../../../utils/domUtils';
+// import { locationPopupDom } from '../../../../utils/domUtils';
 
-import { LocationPopup } from '../LocationPopup';
+import { LocationPopup3 } from '../LocationPopup3';
 
 // import { LocationLayer3PropTypes } from '../../types';
 
@@ -20,11 +20,12 @@ export class LocationLayer3 extends Component {
     this.state = {
       curLocation: null,
     };
-    // this.onRemoveBeacon = this.onRemoveBeacon.bind(this);
-    this.onHighlightLocation_locations = this.onHighlightLocation_locations.bind(this);
-    this.onResetHighlightLocation_locations = this.onResetHighlightLocation_locations.bind(this);
+    // this.onHighlightLocation_locations = this.onHighlightLocation_locations.bind(this);
+    // this.onResetHighlightLocation_locations = this.onResetHighlightLocation_locations.bind(this);
     this.onCreateLayer = this.onCreateLayer.bind(this);
     this.onRemoveLayer = this.onRemoveLayer.bind(this);
+    this.onPostLocationRecord = this.onPostLocationRecord.bind(this);
+    this.onPutLocationRecord = this.onPutLocationRecord.bind(this);
     this.closePopup = this.closePopup.bind(this);
   }
 
@@ -32,6 +33,7 @@ export class LocationLayer3 extends Component {
     const {
       gameModel, enableByDefault, layerCommunicator,
     } = this.props;
+    this.locationPopupDom = document.createElement('div');
     this.subscribe('on', gameModel);
     this.communicatorSubscribe('on');
     this.locationPopup = L.popup();
@@ -85,7 +87,8 @@ export class LocationLayer3 extends Component {
   }
 
   subscribe(action, gameModel) {
-    // gameModel[action]('deleteBeacon', this.onRemoveBeacon);
+    gameModel[action]('postLocationRecord', this.onPostLocationRecord);
+    gameModel[action]('putLocationRecord', this.onPutLocationRecord);
   }
 
   communicatorSubscribe(action) {
@@ -99,8 +102,27 @@ export class LocationLayer3 extends Component {
   onCreateLayer(event) {
     const { gameModel, translator } = this.props;
     if (event.layer instanceof L.Polygon) {
-      this.locationsLayer.onCreateLocation(event.layer, gameModel, translator, this.setLocationEventHandlers);
+      const location = event.layer;
+      // this.locationsLayer.onCreateLocation(event.layer, gameModel, translator);
+      const latlngs = translator.moveFrom({
+        latlngs: location.getLatLngs(),
+      });
+      gameModel.execute({
+        type: 'postLocationRecord',
+        props: { polygon: latlngs.latlngs },
+      });
+      location.remove();
     }
+  }
+
+  onPostLocationRecord({ locationRecord }) {
+    const { t } = this.props;
+    this.locationsLayer.onPostLocationRecord(locationRecord, this.setLocationEventHandlers, t);
+  }
+
+  onPutLocationRecord({ locationRecord }) {
+    // const { t } = this.props;
+    this.locationsLayer.onPutLocationRecord(locationRecord);
   }
 
   onRemoveLayer(event) {
@@ -114,42 +136,37 @@ export class LocationLayer3 extends Component {
     }
   }
 
-  // onRemoveBeacon({ beacon }) {
-  //   const { gameModel } = this.props;
-  //   this.locationsLayer.removeMarkerFromLocations(beacon.id, gameModel);
-  //   this.locationsLayer.updateLocationsView();
-  // }
-
   setLocationEventHandlers = (location) => {
-    // location.on({
-    //   click: this.onLocationClick,
-    //   mouseover: this.highlightLocation,
-    //   mouseout: this.resetLocationHighlight,
-    //   'pm:edit': this.onLocationEdit,
-    // });
+    location.on({
+      click: this.onLocationClick,
+      //   mouseover: this.highlightLocation,
+      //   mouseout: this.resetLocationHighlight,
+      'pm:edit': this.onLocationEdit,
+    });
+    return location;
   }
 
-  highlightLocation = (e) => {
-    const { layerCommunicator } = this.props;
-    const layer = e.target;
-    layerCommunicator.emit('highlightLocation', { location: layer });
-  }
+  // highlightLocation = (e) => {
+  //   const { layerCommunicator } = this.props;
+  //   const layer = e.target;
+  //   layerCommunicator.emit('highlightLocation', { location: layer });
+  // }
 
   onLocationClick = (e) => {
     const { layerCommunicator } = this.props;
     const {
-      name, id, markers, manaLevel,
+      label, id, markers, manaLevel,
     } = e.target.options;
     this.setState({
       curLocation: {
         id,
-        name,
+        label,
         markers,
         manaLevel,
       },
     });
     layerCommunicator.emit('openPopup', {
-      popup: this.locationPopup.setLatLng(e.latlng).setContent(locationPopupDom),
+      popup: this.locationPopup.setLatLng(e.latlng).setContent(this.locationPopupDom),
     });
   }
 
@@ -158,13 +175,14 @@ export class LocationLayer3 extends Component {
       gameModel, translator, layerCommunicator,
     } = this.props;
     const location = e.target;
+    const latlngs = translator.moveFrom({
+      latlngs: location.getLatLngs(),
+    });
     gameModel.execute({
-      type: 'putLocation',
+      type: 'putLocationRecord',
       id: location.options.id,
       props: {
-        ...translator.moveFrom({
-          latlngs: location.getLatLngs(),
-        }),
+        polygon: latlngs.latlngs,
       },
     });
     this.closePopup();
@@ -183,31 +201,31 @@ export class LocationLayer3 extends Component {
     layerCommunicator.emit('resetLocationHighlight');
   }
 
-  onHighlightLocation_locations({ location }) {
-    location.setStyle({
-      weight: 5,
-      color: 'green',
-      dashArray: '',
-      fillOpacity: 1,
-    });
-  }
+  // onHighlightLocation_locations({ location }) {
+  //   location.setStyle({
+  //     weight: 5,
+  //     color: 'green',
+  //     dashArray: '',
+  //     fillOpacity: 1,
+  //   });
+  // }
 
-  onResetHighlightLocation_locations() {
-    this.locationsLayer.updateLocationsView();
-  }
+  // onResetHighlightLocation_locations() {
+  //   this.locationsLayer.updateLocationsView();
+  // }
 
-  onLocMarkerChange = ({ action, markerId }) => {
-    const { gameModel } = this.props;
-    const locId = this.state.curLocation.id;
-    const props = this.locationsLayer.onLocMarkerChange(action, markerId, gameModel, locId);
+  // onLocMarkerChange = ({ action, markerId }) => {
+  //   const { gameModel } = this.props;
+  //   const locId = this.state.curLocation.id;
+  //   const props = this.locationsLayer.onLocMarkerChange(action, markerId, gameModel, locId);
 
-    this.setState((state) => {
-      const curLocation = { ...state.curLocation, markers: props.markers };
-      return ({
-        curLocation,
-      });
-    });
-  }
+  //   this.setState((state) => {
+  //     const curLocation = { ...state.curLocation, markers: props.markers };
+  //     return ({
+  //       curLocation,
+  //     });
+  //   });
+  // }
 
   onLocationChange = (prop) => (e) => {
     const { value } = e.target;
@@ -220,7 +238,7 @@ export class LocationLayer3 extends Component {
         curLocation,
       });
     });
-    this.locationsLayer.updateLocationsView();
+    // this.locationsLayer.updateLocationsView();
   }
 
   getLocationPopup() {
@@ -233,21 +251,22 @@ export class LocationLayer3 extends Component {
     if (!curLocation) {
       return null;
     }
-    const allBeacons = R.clone(gameModel.get('beacons'));
-    const allLocations = R.clone(gameModel.get('locations'));
+    // const allBeacons = R.clone(gameModel.get('beacons'));
+    // const allLocations = R.clone(gameModel.get('locations'));
     return (
-      null
-      // <LocationPopup
-      //   name={curLocation.name}
-      //   id={curLocation.id}
-      //   manaLevel={curLocation.manaLevel}
-      //   attachedMarkers={curLocation.markers}
-      //   allBeacons={allBeacons}
-      //   allLocations={allLocations}
-      //   onChange={this.onLocationChange}
-      //   onLocMarkerChange={this.onLocMarkerChange}
-      //   onClose={this.closePopup}
-      // />
+      // null
+      <LocationPopup3
+        label={curLocation.label}
+        id={curLocation.id}
+        // manaLevel={curLocation.manaLevel}
+        // attachedMarkers={curLocation.markers}
+        // allBeacons={allBeacons}
+        // allLocations={allLocations}
+        onChange={this.onLocationChange}
+        // onLocMarkerChange={this.onLocMarkerChange}
+        onClose={this.closePopup}
+        locationPopupDom={this.locationPopupDom}
+      />
     );
   }
 
