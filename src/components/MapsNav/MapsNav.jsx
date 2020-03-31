@@ -10,6 +10,9 @@ const navLinks = [{
   to: '/locationsEditor2',
   tKey: 'locationsEditor2',
 }, {
+  to: '/beaconEditor2',
+  tKey: 'beaconEditor2',
+}, {
   to: '/map2',
   tKey: 'locationsAndBeaconsEditor',
 }];

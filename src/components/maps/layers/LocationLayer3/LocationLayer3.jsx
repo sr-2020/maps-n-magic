@@ -196,10 +196,10 @@ export class LocationLayer3 extends Component {
     layerCommunicator.emit('closePopup');
   }
 
-  resetLocationHighlight = () => {
-    const { layerCommunicator } = this.props;
-    layerCommunicator.emit('resetLocationHighlight');
-  }
+  // resetLocationHighlight = () => {
+  //   const { layerCommunicator } = this.props;
+  //   layerCommunicator.emit('resetLocationHighlight');
+  // }
 
   // onHighlightLocation_locations({ location }) {
   //   location.setStyle({

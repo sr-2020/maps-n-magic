@@ -74,6 +74,11 @@ const locationsEditor2GeomanConfig = {
   ...locationEditorGeomanFeatures,
 };
 
+const beaconEditor2GeomanConfig = {
+  ...defaultGeomanFeatures,
+  ...markerEditorGeomanFeatures,
+};
+
 // osmSettings
 // const getTileConfiguration = () => googleSettings;
 
@@ -82,5 +87,5 @@ const defaultTileLayer = googleTileLayer;
 
 export {
   osmTileLayer, googleTileLayer, mapConfig, defaultTileLayer, backgroundEditorGeomanConfig,
-  oldLocationAndMarkerGeomanConfig, locationsEditor2GeomanConfig,
+  oldLocationAndMarkerGeomanConfig, locationsEditor2GeomanConfig, beaconEditor2GeomanConfig,
 };

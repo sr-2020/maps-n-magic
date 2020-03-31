@@ -9,9 +9,10 @@ import {
 import { CommonMap } from '../maps/CommonMap';
 import { BackgroundEditorMap } from '../maps/BackgroundEditorMap';
 import { LocationEditorMap } from '../maps/LocationEditorMap';
+import { BeaconEditorMap } from '../maps/BeaconEditorMap';
 
 import {
-  mapConfig, backgroundEditorGeomanConfig, oldLocationAndMarkerGeomanConfig, locationsEditor2GeomanConfig,
+  mapConfig, backgroundEditorGeomanConfig, oldLocationAndMarkerGeomanConfig, locationsEditor2GeomanConfig, beaconEditor2GeomanConfig,
 } from '../../configs/map';
 
 import { MapsNav } from '../MapsNav';
@@ -41,6 +42,15 @@ export function MapRoutes(props) {
         mapConfig={mapConfig}
         translator={translator}
         geomanConfig={locationsEditor2GeomanConfig}
+      />
+    </Route>,
+    <Route path="/beaconEditor2">
+      <BeaconEditorMap
+        curPosition={curPosition}
+        gameModel={gameModel}
+        mapConfig={mapConfig}
+        translator={translator}
+        geomanConfig={beaconEditor2GeomanConfig}
       />
     </Route>,
     <Route path="/backgroundEditorMap">

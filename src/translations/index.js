@@ -35,7 +35,9 @@ export const translations = {
       buildingPlansEditor: 'Здания',
       locationsAndBeaconsEditor: 'Локации и маяки - 1',
       locationsEditor2: 'Локации',
+      beaconEditor2: 'Маяки',
       mapEditors: 'Редакторы карт',
+      geoJsonLayer: 'Данные из Google Maps',
 
       // Spirit Editor
       newSpirit: 'Новый дух',
