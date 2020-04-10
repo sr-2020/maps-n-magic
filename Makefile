@@ -10,7 +10,7 @@ cest := $(or ${cest},${cest},)
 current_dir = $(shell pwd)
 
 build:
-	docker build -t ${NAMESPACE}/${IMAGE}${TAG} .
+	docker build -t ${NAMESPACE}/${IMAGE}${TAG} -t ${NAMESPACE}/${IMAGE}:latest .
 
 push:
 	docker push ${NAMESPACE}/${IMAGE}

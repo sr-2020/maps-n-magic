@@ -3,23 +3,27 @@ language: python
 python:
   - "2.7"
 
+env:
+  global:
+    - CLOUDSDK_CORE_DISABLE_PROMPTS=1
 jobs:
   include:
-  - stage: build and push docker image
-    script:
-    - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin
-    - make build
-    - make push
-
-  - stage: deploy production
-    script:
-      - make deploy server=instance.evarun.ru password=$USER_PASSWORD
-    if: branch = master
-
-addons:
-  ssh_known_hosts:
-  - instance.evarun.ru
-  apt:
-    packages:
-    - sshpass
-    - sox
+    - stage: build and push docker image
+      script:
+        - export IMAGE_TAG=$(echo "$TRAVIS_COMMIT" | head -c7)
+        - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin
+        - make build tag=$IMAGE_TAG
+        - make push
+    - stage: deploy production
+      install:
+        - export IMAGE_TAG=$(echo "$TRAVIS_COMMIT" | head -c7)
+        - echo "$SERVICE_ACCOUNT_KEY" | base64 --decode > ${HOME}/service-account-key.json
+        - curl https://sdk.cloud.google.com | bash > /dev/null
+        - source $HOME/google-cloud-sdk/path.bash.inc
+        - gcloud components install kubectl
+        - gcloud auth activate-service-account $SERVICE_ACCOUNT --key-file=${HOME}/service-account-key.json
+        - gcloud container clusters get-credentials prod --project $PROJECT --zone $ZONE
+        - kubectl config set-context --current --namespace=production
+      script:
+        - kubectl set image deployment/admin-client admin-client=sr2020/admin-client:$IMAGE_TAG --record
+        - kubectl rollout status deployment/admin-client
