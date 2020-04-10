@@ -38,6 +38,8 @@ export const translations = {
       beaconEditor2: 'Маяки',
       mapEditors: 'Редакторы карт',
       geoJsonLayer: 'Данные из Google Maps',
+      cancel: 'Отмена',
+      selectBeaconId: 'Выберите Id маяка',
 
       // Spirit Editor
       newSpirit: 'Новый дух',

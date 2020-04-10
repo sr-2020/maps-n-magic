@@ -19,7 +19,7 @@ import { CreateBeaconPopover } from './CreateBeaconPopover';
 
 // import { BeaconRecordEditorPropTypes } from '../../types';
 
-const sort = R.sortBy(R.prop('id'));
+const sortById = R.sortBy(R.prop('id'));
 
 export class BeaconRecordEditor extends Component {
   // static propTypes = BeaconRecordEditorPropTypes;
@@ -43,7 +43,7 @@ export class BeaconRecordEditor extends Component {
     this.subscribe('on', gameModel);
 
     this.setBeaconRecords({
-      beaconRecords: sort(gameModel.get('beaconRecords')),
+      beaconRecords: sortById(gameModel.get('beaconRecords')),
     });
     console.log('BeaconRecordEditor mounted');
   }
@@ -56,7 +56,7 @@ export class BeaconRecordEditor extends Component {
       this.subscribe('off', prevProps.gameModel);
       this.subscribe('on', gameModel);
       this.setBeaconRecords({
-        beaconRecords: sort(gameModel.get('beaconRecords')),
+        beaconRecords: sortById(gameModel.get('beaconRecords')),
       });
     }
     console.log('BeaconRecordEditor did update');
@@ -80,7 +80,7 @@ export class BeaconRecordEditor extends Component {
   setBeaconRecords({ beaconRecords }) {
     console.log('setBeaconRecords');
     this.setState({
-      beaconRecords: sort([...beaconRecords]),
+      beaconRecords: sortById([...beaconRecords]),
     });
   }
 
@@ -101,7 +101,7 @@ export class BeaconRecordEditor extends Component {
   onPostBeaconRecord({ beaconRecord }) {
     // console.log('onPostBeaconRecord', beaconRecord.id);
     this.setState((state) => {
-      const beaconRecords = sort([...state.beaconRecords, beaconRecord]);
+      const beaconRecords = sortById([...state.beaconRecords, beaconRecord]);
       // console.log('onPostBeaconRecord', 'before', state.beaconRecords.length, 'after', beaconRecords.length);
       return {
         beaconRecords,

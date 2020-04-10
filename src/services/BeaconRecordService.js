@@ -2,7 +2,7 @@ import * as R from 'ramda';
 
 import { AbstractService } from './AbstractService';
 
-export class BeaconDictionaryService extends AbstractService {
+export class BeaconRecordService extends AbstractService {
   metadata = {
     actions: [
       'postBeaconRecord',

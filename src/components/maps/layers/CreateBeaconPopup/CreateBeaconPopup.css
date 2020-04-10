@@ -1,0 +1,11 @@
+.idSelectButton + .idSelectButton {
+  margin-left: 0.5rem;
+}
+.idSelectRow + .idSelectRow {
+  margin-top: 0.5rem;
+}
+
+.idSelectContainer {
+  height: 15rem;
+  overflow: auto;
+}

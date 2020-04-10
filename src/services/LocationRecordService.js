@@ -2,7 +2,7 @@ import * as R from 'ramda';
 
 import { AbstractService } from './AbstractService';
 
-export class LocationService2 extends AbstractService {
+export class LocationRecordService extends AbstractService {
   metadata = {
     actions: [
       'postLocationRecord',

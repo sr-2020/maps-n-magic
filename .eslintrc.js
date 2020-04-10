@@ -6,7 +6,8 @@ module.exports = {
         "es6": true
     },
     "plugins": [
-      "ramda"
+      "ramda",
+      "sonarjs"
     ],
 //    "extends": "eslint:recommended",
     "extends": [
@@ -75,7 +76,7 @@ module.exports = {
         // 'react/jsx-filename-extension': 'off',
         // 'react/jsx-one-expression-per-line':'off',
         // 'react/state-in-constructor': 'off',
-        // 'react/prop-types': 'off',
+        'react/prop-types': 'off',
         "react/static-property-placement": ["error",  'static public field', {
           "propTypes": 'static public field'
         }],
