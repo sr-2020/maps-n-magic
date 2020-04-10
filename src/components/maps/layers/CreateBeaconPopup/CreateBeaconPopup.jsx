@@ -30,7 +30,7 @@ export class CreateBeaconPopup extends Component {
 
   makeContent() {
     const {
-      t, onClose, freeBeaconIds, onSelect, latLng,
+      t, onClose, freeBeaconIds, onSelect, latLng, curBeacon,
     } = this.props;
 
     const common = 'font-bold py-2 focus:outline-none focus:shadow-outline rounded';
@@ -43,7 +43,9 @@ export class CreateBeaconPopup extends Component {
             className="block text-gray-700 text-sm font-bold mb-2"
             htmlFor="locationName"
           >
-            {t('selectBeaconId')}
+            {curBeacon
+              ? t('selectBeaconIdForReplacing', { id: curBeacon.id })
+              : t('selectBeaconId')}
           </label>
           <div className="idSelectContainer">
             {

@@ -1,3 +1,7 @@
+import { withTranslation } from 'react-i18next';
+import { pipe } from 'ramda';
 import { BeaconLayer3 } from './BeaconLayer3.jsx';
 
-export { BeaconLayer3 };
+const tmp = pipe(withTranslation())(BeaconLayer3);
+
+export { tmp as BeaconLayer3 };

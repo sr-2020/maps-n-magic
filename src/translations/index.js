@@ -40,6 +40,7 @@ export const translations = {
       geoJsonLayer: 'Данные из Google Maps',
       cancel: 'Отмена',
       selectBeaconId: 'Выберите Id маяка',
+      selectBeaconIdForReplacing: 'Выберите Id для замены маяка {{id}}',
 
       // Spirit Editor
       newSpirit: 'Новый дух',
