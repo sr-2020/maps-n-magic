@@ -5,7 +5,10 @@ import * as R from 'ramda';
 import ReactDOM from 'react-dom';
 import classNames from 'classnames';
 
+import { layerNameToLayerId, locationTypes } from '../LocationLayer3/LocationLayerTypes';
+
 // import { LocationPopup3PropTypes } from '../../types';
+// import { LocationLayer3 } from '../LocationLayer3/LocationLayer3';
 
 export class LocationPopup3 extends Component {
   // static propTypes = LocationPopup3PropTypes;
@@ -28,13 +31,13 @@ export class LocationPopup3 extends Component {
     const {
       label, allBeacons, attachedMarkers, manaLevel,
     } = this.props;
-    if (label === prevProps.label
-    // && manaLevel === prevProps.manaLevel
-    // && R.equals(attachedMarkers, prevProps.attachedMarkers)
-    // && R.equals(allBeacons, prevProps.allBeacons)
-    ) {
+    // if (label === prevProps.label
+    // // && manaLevel === prevProps.manaLevel
+    // // && R.equals(attachedMarkers, prevProps.attachedMarkers)
+    // // && R.equals(allBeacons, prevProps.allBeacons)
+    // ) {
 
-    }
+    // }
     // this.updateComponentState();
   }
 
@@ -46,11 +49,11 @@ export class LocationPopup3 extends Component {
 
   // eslint-disable-next-line max-lines-per-function
   makeContent() {
+    // const {
+    //   // unattachedList, attachedList, selectedAddMarker, selectedRemoveMarker,
+    // } = this.state;
     const {
-      // unattachedList, attachedList, selectedAddMarker, selectedRemoveMarker,
-    } = this.state;
-    const {
-      label, onChange, t, manaLevel,
+      label, onChange, t, manaLevel, layer_id,
     } = this.props;
 
     const common = 'w-33p font-bold py-2 px-4 focus:outline-none focus:shadow-outline';
@@ -73,6 +76,35 @@ export class LocationPopup3 extends Component {
             onChange={onChange('label')}
             onKeyPress={this._handleKeyDown}
           />
+        </div>
+        <div className="mb-4">
+          <label
+            className="block text-gray-700 text-sm font-bold mb-2"
+            htmlFor="layer_id"
+          >
+            {t('locationType')}
+          </label>
+
+          <div className="flex">
+            {
+              locationTypes.map((locationType, i) => (
+                <button
+                  key={locationType}
+                  className={classNames(common,
+                    layerNameToLayerId[locationType] === String(layer_id) ? selectedButton : unselectedButton,
+                    {
+                      'rounded-l': i === 0,
+                      'rounded-r': i === 2,
+                    })}
+                  type="button"
+                  value={layerNameToLayerId[locationType]}
+                  onClick={onChange('layer_id')}
+                >
+                  {t(`locationType_${locationType}`)}
+                </button>
+              ))
+            }
+          </div>
         </div>
       </div>
     );

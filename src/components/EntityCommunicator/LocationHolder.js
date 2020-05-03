@@ -10,6 +10,7 @@ const defaultLocation = {
   updated_at: null,
   polygon: [],
   options: {},
+  layer_id: 1,
 };
 
 export class LocationHolder extends RemoteHolder {

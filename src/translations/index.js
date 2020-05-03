@@ -91,6 +91,13 @@ export const translations = {
       voronoiPolygonsLayer: 'Полигоны Вороного',
       signalRadiusesLayer: 'Радиус сигналов маяков',
       locationsLayer: 'Локации',
+      locationsLayer_region: 'Регионы',
+      locationsLayer_geoLocation: 'Гео-локации',
+      locationsLayer_gameLocation: 'Игровые локации',
+      locationType_region: 'Регион',
+      locationType_geoLocation: 'Гео-локация',
+      locationType_gameLocation: 'Игровая локация',
+      locationType: 'Тип локации',
 
       locationName: 'Название локации',
       markers: 'Маяки локации',

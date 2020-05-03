@@ -155,7 +155,7 @@ export class LocationLayer3 extends Component {
   onLocationClick = (e) => {
     const { layerCommunicator } = this.props;
     const {
-      label, id, markers, manaLevel,
+      label, id, markers, manaLevel, layer_id,
     } = e.target.options;
     this.setState({
       curLocation: {
@@ -163,6 +163,7 @@ export class LocationLayer3 extends Component {
         label,
         markers,
         manaLevel,
+        layer_id,
       },
     });
     layerCommunicator.emit('openPopup', {
@@ -258,6 +259,7 @@ export class LocationLayer3 extends Component {
       <LocationPopup3
         label={curLocation.label}
         id={curLocation.id}
+        layer_id={curLocation.layer_id}
         // manaLevel={curLocation.manaLevel}
         // attachedMarkers={curLocation.markers}
         // allBeacons={allBeacons}
