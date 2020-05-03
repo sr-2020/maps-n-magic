@@ -9,7 +9,7 @@ import L from 'leaflet/dist/leaflet-src';
 // import staticGeoData from '../../../../dataAnalysis/data/kml/izumrud_socgorod.json';
 import staticGeoData from '../../../../dataAnalysis/data/kml/aggregatedKml.json';
 
-console.log(staticGeoData);
+// console.log('staticGeoData', staticGeoData);
 
 const types = R.pipe(
   R.map(R.path(['geometry', 'type'])),
@@ -17,13 +17,14 @@ const types = R.pipe(
 )(staticGeoData.features);
 console.log('types', types);
 
-types.forEach((type) => {
-  const propList = staticGeoData.features.filter((feature) => feature.geometry.type === type).reduce((acc, feature) => {
-    acc = R.uniq(R.concat(acc, R.keys(feature.properties)));
-    return acc;
-  }, []);
-  console.log(`${type} props`, propList);
-});
+// get used type props for mapping Google map props to Leaflet object properties
+// types.forEach((type) => {
+//   const propList = staticGeoData.features.filter((feature) => feature.geometry.type === type).reduce((acc, feature) => {
+//     acc = R.uniq(R.concat(acc, R.keys(feature.properties)));
+//     return acc;
+//   }, []);
+//   console.log(`${type} props`, propList);
+// });
 
 // "stroke": "#ffd600",
 // "stroke-opacity": 1,
@@ -50,7 +51,11 @@ function camelize(str) {
 
 export class GeoJsonLayer extends Component {
   // static propTypes = GeoJsonLayerPropTypes;
-  group = L.layerGroup([]);
+
+  groups = types.reduce((acc, type) => {
+    acc[type] = L.layerGroup([]);
+    return acc;
+  }, {});
 
   nameKey = 'geoJsonLayer';
 
@@ -87,8 +92,13 @@ export class GeoJsonLayer extends Component {
   }
 
   getLayersMeta() {
+    const prepareGroupList = R.pipe(
+      R.toPairs,
+      R.map(([typeName, layer]) => ([`geoJsonLayer_${typeName}`, layer])),
+      R.fromPairs,
+    );
     return {
-      [this.nameKey]: this.group,
+      ...prepareGroupList(this.groups),
     };
   }
 
@@ -96,31 +106,37 @@ export class GeoJsonLayer extends Component {
     const { translator } = this.props;
 
     staticGeoData.features.forEach((feature) => {
+      const style = function (feature2) {
+        const { properties } = feature2;
+        const makeStyles = R.pipe(
+          R.keys,
+          R.filter(R.includes(R.__, styleProps)),
+          R.reduce((acc, prop) => {
+            acc[transformName(prop)] = properties[prop];
+            return acc;
+          }, {}),
+        );
+        // console.log(properties.name, makeStyles(properties));
+        return makeStyles(properties);
+        // feature2.properties;
+        // return { color: feature2.properties.color };
+      };
       const geoJsonObj = L.geoJSON(feature, {
-        style(feature2) {
-          const { properties } = feature2;
-          const makeStyles = R.pipe(
-            R.keys,
-            R.filter(R.includes(R.__, styleProps)),
-            R.reduce((acc, prop) => {
-              acc[transformName(prop)] = properties[prop];
-              return acc;
-            }, {}),
-          );
-          console.log(properties.name, makeStyles(properties));
-          return makeStyles(properties);
-          // feature2.properties;
-          // return { color: feature2.properties.color };
-        },
+        style,
       })
         .bindPopup((layer) => layer.feature.properties.description || '')
         .bindTooltip((layer) => layer.feature.properties.name || '');
-      this.group.addLayer(geoJsonObj);
+      const { type: featureType } = feature.geometry;
+      if (this.groups[featureType]) {
+        this.groups[featureType].addLayer(geoJsonObj);
+      } else {
+        console.error(`Unexpected feature type ${featureType}`);
+      }
     });
   }
 
   clear() {
-    this.group.clearLayers();
+    R.values(this.groups).forEach((val) => val.clearLayers());
   }
 
   render() {

@@ -70,6 +70,7 @@ export class BeaconRecordEditor extends Component {
     console.log('BeaconRecordEditor will unmount');
   }
 
+  // eslint-disable-next-line react/sort-comp
   subscribe(action, gameModel) {
     gameModel[action]('postBeaconRecord', this.onPostBeaconRecord);
     gameModel[action]('putBeaconRecord', this.onPutBeaconRecord);
