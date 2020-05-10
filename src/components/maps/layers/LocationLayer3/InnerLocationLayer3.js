@@ -60,10 +60,10 @@ export class InnerLocationLayer3 {
 
   // eslint-disable-next-line class-methods-use-this
   createLocation = R.curry((t, {
-    polygon, label, id, layer_id,
+    polygon, label, id, layer_id, options,
   }) => {
     const loc = L.polygon([polygon[0]], {
-      id, label, layer_id,
+      id, label, layer_id, color: options.color, weight: options.weight, fillOpacity: options.fillOpacity,
     });
     loc.on('mouseover', function (e) {
       loc.bindTooltip(t('locationTooltip', { name: this.options.label }));

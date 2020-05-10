@@ -53,7 +53,7 @@ export class LocationPopup3 extends Component {
     //   // unattachedList, attachedList, selectedAddMarker, selectedRemoveMarker,
     // } = this.state;
     const {
-      label, onChange, t, manaLevel, layer_id,
+      label, onChange, t, manaLevel, layer_id, color, weight, fillOpacity,
     } = this.props;
 
     const common = 'w-33p font-bold py-2 px-4 focus:outline-none focus:shadow-outline';
@@ -104,6 +104,35 @@ export class LocationPopup3 extends Component {
                 </button>
               ))
             }
+          </div>
+        </div>
+        <div className="mb-4">
+          <label
+            className="block text-gray-700 text-sm font-bold mb-2"
+            htmlFor="layer_id"
+          >
+            {t('borderWidth')}
+          </label>
+
+          <div>
+            {/* {
+              locationTypes.map((locationType, i) => (
+                <button
+                  key={locationType}
+                  className={classNames(common,
+                    layerNameToLayerId[locationType] === String(layer_id) ? selectedButton : unselectedButton,
+                    {
+                      'rounded-l': i === 0,
+                      'rounded-r': i === 2,
+                    })}
+                  type="button"
+                  value={layerNameToLayerId[locationType]}
+                  onClick={onChange('layer_id')}
+                >
+                  {t(`locationType_${locationType}`)}
+                </button>
+              ))
+            } */}
           </div>
         </div>
       </div>

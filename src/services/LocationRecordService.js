@@ -33,6 +33,14 @@ export class LocationRecordService extends AbstractService {
 
   setData({ locationRecords } = {}) {
     this.locationRecords = locationRecords || [];
+    this.locationRecords.forEach((loc) => {
+      loc.options = {
+        color: '#3388ff',
+        weight: 3,
+        fillOpacity: 0.2,
+        ...loc.options,
+      };
+    });
   }
 
   getData() {
@@ -46,7 +54,8 @@ export class LocationRecordService extends AbstractService {
   }
 
   setLocationRecords({ locationRecords }) {
-    this.locationRecords = locationRecords;
+    this.setData({ locationRecords });
+    // this.locationRecords = locationRecords;
     this.emit('locationRecordsChanged', {
       locationRecords,
     });
