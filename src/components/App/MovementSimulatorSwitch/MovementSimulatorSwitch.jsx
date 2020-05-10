@@ -16,7 +16,7 @@ export function MovementSimulatorSwitch(props) {
         id="movementSimulatorSwitch"
         label={t('simulateMovement')}
         checked={simulateGeoDataStream}
-        className="py-3 text-lg"
+        className="tw-py-3 tw-text-lg"
       />
     </Dropdown.Item>
   );

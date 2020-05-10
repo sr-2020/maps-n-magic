@@ -289,7 +289,7 @@ export class App extends Component {
         <ErrorBoundry>
           <DocumentTitle title={t('appTitle')}>
             <Router>
-              <div className="App flex flex-col h-screen">
+              <div className="App tw-flex tw-flex-col tw-h-screen">
                 <AppHeader
                   gameModel={gameModel}
                   waitingForGeolocation={waitingForGeolocation}
@@ -301,7 +301,7 @@ export class App extends Component {
                   switchMovementMode={this.switchMovementMode}
                 />
 
-                <main className="flex-1-1-auto h-full">
+                <main className="tw-flex-auto tw-h-full">
                   <Switch>
                     <Route path="/spiritEditor">
                       <SpiritEditor spiritService={gameModel} />

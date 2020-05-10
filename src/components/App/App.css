@@ -52,9 +52,9 @@
   margin-right: 2px;
 } 
 
-.display-none {
+/* .display-none {
   display: none;
-}
+} */
 
 .icon-button {
   background-color: #ddd;
@@ -103,9 +103,9 @@
   margin-bottom: 1rem;
 }
 
-.flex-1-1-auto {
+/* .flex-1-1-auto {
   flex: 1 1 auto;
-}
+} */
 
 .flex-0-0-auto {
   flex: 0 0 auto;

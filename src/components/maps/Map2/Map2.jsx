@@ -165,7 +165,7 @@ export class Map2 extends Component {
     return (
       <>
         <div
-          className="Map2 h-full"
+          className="Map2 tw-h-full"
           ref={(map2) => (this.mapEl = map2)}
         />
         {map && React.Children.map(children, (child) => React.cloneElement(child, {

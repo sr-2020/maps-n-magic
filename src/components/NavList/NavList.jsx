@@ -13,12 +13,12 @@ export function NavList(props) {
   const { t, navLinks, className } = props;
 
   return (
-    <Nav as="ul" className={classNames(className, 'NavList flex-col')}>
+    <Nav as="ul" className={classNames(className, 'NavList tw-flex-col')}>
       {
         navLinks.map((navLink) => (
-          <Nav.Item as="li" key={navLink.to} className="mb-3 flex">
+          <Nav.Item as="li" key={navLink.to} className="tw-mb-3 tw-flex">
             <NavLink
-              className="px-3 py-3 text-lg bg-gray-300"
+              className="tw-px-3 tw-py-3 tw-text-lg tw-bg-gray-300"
               to={navLink.to}
             // onClick={this.onToggle}
             >

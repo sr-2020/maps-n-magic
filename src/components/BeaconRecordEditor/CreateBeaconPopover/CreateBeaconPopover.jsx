@@ -127,7 +127,7 @@ export class CreateBeaconPopover extends Component {
               <Form.Control
                 type="text"
                 required
-                className="font-mono"
+                className="tw-font-mono"
                 pattern={macAddressPattern}
                 value={formatMacValue(macAddress)}
                 onChange={this.onMacAddressChange}
@@ -137,7 +137,7 @@ export class CreateBeaconPopover extends Component {
                 {t('macAddressInfoAdvice')}
               </Form.Text> */}
             </Form.Group>
-            <div className="text-right">
+            <div className="tw-text-right">
               <Button variant="primary" type="submit">
                 {t('createBeacon')}
               </Button>
@@ -186,7 +186,7 @@ export class CreateBeaconPopover extends Component {
       >
         <button
           type="button"
-          className="tw-btn tw-btn-blue whitespace-no-wrap flex-grow-0 newSpiritButton mb-2"
+          className="tw-btn tw-btn-blue tw-whitespace-no-wrap tw-flex-grow-0 newSpiritButton tw-mb-2"
           onClick={() => {
             setTimeout(() => {
               if (this.newBeaconMacInput) {
@@ -196,7 +196,7 @@ export class CreateBeaconPopover extends Component {
             }, 50);
           }}
         >
-          <FontAwesomeIcon className="fill-current w-4 h-4 mr-2" icon={faPlus} />
+          <FontAwesomeIcon className="tw-fill-current tw-w-4 tw-h-4 tw-mr-2" icon={faPlus} />
           <span>
             {t('newBeacon')}
           </span>

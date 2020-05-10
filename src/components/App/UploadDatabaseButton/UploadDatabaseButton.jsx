@@ -23,11 +23,11 @@ export function UploadDatabaseButton(props) {
       data-original-title=""
       title={t('uploadDatabase')}
       onClick={uploadDatabaseFile}
-      className="py-3 text-lg"
+      className="tw-py-3 tw-text-lg"
     >
       <input
         type="file"
-        className="display-none"
+        className="tw-hidden"
         tabIndex="-1"
         onChange={onChange}
       />

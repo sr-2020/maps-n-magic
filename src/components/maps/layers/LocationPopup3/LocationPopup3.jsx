@@ -56,20 +56,20 @@ export class LocationPopup3 extends Component {
       label, onChange, t, manaLevel, layer_id, color, weight, fillOpacity,
     } = this.props;
 
-    const common = 'w-33p font-bold py-2 px-4 focus:outline-none focus:shadow-outline';
-    const selectedButton = 'bg-blue-500 hover:bg-blue-700 text-white';
-    const unselectedButton = 'bg-gray-300 hover:bg-gray-400 text-gray-800';
+    const common = 'w-33p tw-font-bold tw-py-2 tw-px-4 focus:tw-outline-none focus:tw-shadow-outline';
+    const selectedButton = 'tw-bg-blue-500 hover:tw-bg-blue-700 tw-text-white';
+    const unselectedButton = 'tw-bg-gray-300 hover:tw-bg-gray-400 tw-text-gray-800';
     return (
       <div className="LocationPopup">
-        <div className="mb-4">
+        <div className="tw-mb-4">
           <label
-            className="block text-gray-700 text-sm font-bold mb-2"
+            className="tw-block tw-text-gray-700 tw-text-sm tw-font-bold tw-mb-2"
             htmlFor="locationName"
           >
             {t('locationName')}
           </label>
           <input
-            className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+            className="tw-shadow tw-appearance-none tw-border tw-rounded tw-w-full tw-py-2 tw-px-3 tw-text-gray-700 tw-leading-tight focus:tw-outline-none focus:tw-shadow-outline"
             id="locationName"
             type="text"
             value={label}
@@ -77,15 +77,15 @@ export class LocationPopup3 extends Component {
             onKeyPress={this._handleKeyDown}
           />
         </div>
-        <div className="mb-4">
+        <div className="tw-mb-4">
           <label
-            className="block text-gray-700 text-sm font-bold mb-2"
+            className="tw-block tw-text-gray-700 tw-text-sm tw-font-bold tw-mb-2"
             htmlFor="layer_id"
           >
             {t('locationType')}
           </label>
 
-          <div className="flex">
+          <div className="tw-flex">
             {
               locationTypes.map((locationType, i) => (
                 <button
@@ -93,8 +93,8 @@ export class LocationPopup3 extends Component {
                   className={classNames(common,
                     layerNameToLayerId[locationType] === String(layer_id) ? selectedButton : unselectedButton,
                     {
-                      'rounded-l': i === 0,
-                      'rounded-r': i === 2,
+                      'tw-rounded-l': i === 0,
+                      'tw-rounded-r': i === 2,
                     })}
                   type="button"
                   value={layerNameToLayerId[locationType]}
@@ -106,9 +106,9 @@ export class LocationPopup3 extends Component {
             }
           </div>
         </div>
-        <div className="mb-4">
+        <div className="tw-mb-4">
           <label
-            className="block text-gray-700 text-sm font-bold mb-2"
+            className="tw-block tw-text-gray-700 tw-text-sm tw-font-bold tw-mb-2"
             htmlFor="layer_id"
           >
             {t('borderWidth')}

@@ -33,14 +33,14 @@ export class CreateBeaconPopup extends Component {
       t, onClose, freeBeaconIds, onSelect, latLng, curBeacon,
     } = this.props;
 
-    const common = 'font-bold py-2 focus:outline-none focus:shadow-outline rounded';
-    const selectedButton = 'bg-blue-500 hover:bg-blue-700 text-white';
-    const unselectedButton = 'bg-gray-300 hover:bg-gray-400 text-gray-800';
+    const common = 'tw-font-bold tw-py-2 focus:tw-outline-none focus:tw-shadow-outline tw-rounded';
+    const selectedButton = 'tw-bg-blue-500 hover:tw-bg-blue-700 tw-text-white';
+    const unselectedButton = 'tw-bg-gray-300 hover:tw-bg-gray-400 tw-text-gray-800';
     return (
       <div className="CreateBeaconPopup">
-        <div className="mb-4">
+        <div className="tw-mb-4">
           <label
-            className="block text-gray-700 text-sm font-bold mb-2"
+            className="tw-block tw-text-gray-700 tw-text-sm tw-font-bold tw-mb-2"
             htmlFor="locationName"
           >
             {curBeacon
@@ -54,7 +54,7 @@ export class CreateBeaconPopup extends Component {
                 <button
                   type="button"
                   onClick={() => onSelect(latLng, id)}
-                  className={classNames(common, unselectedButton, 'w-12 px-2 idSelectButton')}
+                  className={classNames(common, unselectedButton, 'tw-w-12 tw-px-2 idSelectButton')}
                 >
                   {id}
                 </button>
@@ -74,7 +74,7 @@ export class CreateBeaconPopup extends Component {
             <button
               // className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
               type="button"
-              className={classNames('px-4', common, unselectedButton)}
+              className={classNames('tw-px-4', common, unselectedButton)}
               onClick={onClose}
             >
               {t('cancel')}

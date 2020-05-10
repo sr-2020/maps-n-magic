@@ -73,10 +73,10 @@ export class ModelRunSelector extends Component {
           type="button"
           data-original-title=""
           onClick={this.onClick('stopModel')}
-          className="ModelRunSelector py-3 text-lg"
+          className="ModelRunSelector tw-py-3 tw-text-lg"
         >
           <FontAwesomeIcon
-            className={classNames('mr-1 text-base w-4 h-4 ', {
+            className={classNames('tw-mr-1 tw-text-base tw-w-4 tw-h-4 ', {
               invisible: isModelRunning,
             })}
             fixedWidth
@@ -93,10 +93,10 @@ export class ModelRunSelector extends Component {
               type="button"
               data-original-title=""
               onClick={this.onClick('runModel', speed2)}
-              className="ModelRunSelector py-3 text-lg"
+              className="ModelRunSelector tw-py-3 tw-text-lg"
             >
               <FontAwesomeIcon
-                className={classNames('mr-1 text-base w-4 h-4 ', {
+                className={classNames('tw-mr-1 tw-text-base tw-w-4 tw-h-4 ', {
                   invisible: !isModelRunning || speed2 !== speed,
                 })}
                 fixedWidth

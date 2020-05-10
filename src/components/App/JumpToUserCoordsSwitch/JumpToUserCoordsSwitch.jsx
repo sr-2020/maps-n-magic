@@ -23,14 +23,13 @@ export function JumpToUserCoordsSwitch(props) {
         label={t('jumpToUserCoords')}
         checked={curPosition !== null}
         disabled={waitingForGeolocation}
-        className="py-3 text-lg"
+        className="tw-py-3 tw-text-lg"
         style={{ display: 'inline-block' }}
-      >
-      </Form.Check>
+      />
       {
         waitingForGeolocation && (
           <FontAwesomeIcon
-            className="ml-2 text-2xl text-gray-700"
+            className="tw-ml-2 tw-text-2xl tw-text-gray-700"
             icon={faSpinner}
             spin
           />

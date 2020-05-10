@@ -175,19 +175,19 @@ export class BeaconRecordEditor extends Component {
     }
     // console.log(beaconRecords.length);
     return (
-      <div className="BeaconRecordEditor mx-8 my-4">
+      <div className="BeaconRecordEditor tw-mx-8 tw-my-4">
         <CreateBeaconPopover createBeacon={this.createBeacon} />
 
         <Table
           // bordered
           hover
           size="sm"
-          className="w-auto"
+          className="tw-w-auto"
           // style={{ width: '40rem' }}
         >
           <thead>
             <tr>
-              <th className="text-right">{t('beaconId')}</th>
+              <th className="tw-text-right">{t('beaconId')}</th>
               <th>{t('beaconMacAddress')}</th>
               <th>{t('beaconLabel')}</th>
               {/* <th>{t('beaconPlacement')}</th> */}
@@ -199,13 +199,13 @@ export class BeaconRecordEditor extends Component {
               // eslint-disable-next-line max-lines-per-function
               beaconRecords.map((beacon) => (
                 <tr>
-                  <td className="text-right">{beacon.id}</td>
+                  <td className="tw-text-right">{beacon.id}</td>
                   {/* <td>{beacon.bssid}</td> */}
                   <td>
                     <Form.Control
                       name="bssid"
                       type="text"
-                      className="w-48 font-mono"
+                      className="tw-w-48 tw-font-mono"
                       value={beacon.bssid}
                       readOnly
                       onChange={this.handleInputChange(beacon.id)}
@@ -223,7 +223,7 @@ export class BeaconRecordEditor extends Component {
                   </td>
                   {/* <td>{}</td> */}
                   <td>
-                    <div className="menu float-right">
+                    <div className="menu tw-float-right">
                       <Dropdown
                         onToggle={(isOpen, e) => {
                           if (e.stopPropagation) e.stopPropagation();
@@ -234,14 +234,14 @@ export class BeaconRecordEditor extends Component {
                             tw-btn
                             tw-btn-ghost
                             SpiritMenuButton
-                            h-8
-                            hover:bg-indigo-300
-                            active:bg-indigo-600
-                            focus:outline-none
-                            focus:shadow-outline
-                            active:bg-indigo-600
-                            hover:opacity-100
-                            focus:opacity-100
+                            tw-h-8
+                            hover:tw-bg-indigo-300
+                            active:tw-bg-indigo-600
+                            focus:tw-outline-none
+                            focus:tw-shadow-outline
+                            active:tw-bg-indigo-600
+                            hover:tw-opacity-100
+                            focus:tw-opacity-100
                             tw-dropdown-toggle
                           "
                         >

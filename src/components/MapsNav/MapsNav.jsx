@@ -24,8 +24,8 @@ export function MapsNav(props) {
 
   return (
     <div className="MapsNav">
-      <div className="mx-8 my-4">
-        <h2 className="mt-8 mb-4 font-medium text-2xl">{t('mapEditors')}</h2>
+      <div className="tw-mx-8 tw-my-4">
+        <h2 className="tw-mt-8 tw-mb-4 tw-font-medium tw-text-2xl">{t('mapEditors')}</h2>
         <NavList navLinks={navLinks} />
       </div>
     </div>

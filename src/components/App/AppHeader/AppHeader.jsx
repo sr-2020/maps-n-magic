@@ -99,7 +99,7 @@ export class AppHeader extends Component {
       <header className="AppHeader flex-0-0-auto">
         <Navbar
           expand="md"
-          className="view-switch pb-0"
+          className="view-switch tw-pb-0"
           // collapseOnSelect
           // expanded={expanded}
           // onToggle={this.onToggle}
@@ -112,7 +112,7 @@ export class AppHeader extends Component {
                 navLinks.map((navLink) => (
                   <Nav.Item as="li" key={navLink.to}>
                     <NavLink
-                      className="px-3 py-2 text-lg"
+                      className="tw-px-3 tw-py-2 tw-text-lg"
                       to={navLink.to}
                       // onClick={this.onToggle}
                     >
@@ -122,12 +122,12 @@ export class AppHeader extends Component {
                 ))
               }
               {/* <Dropdown as="li">
-                <Dropdown.Toggle as="a" className="px-3 py-2 text-xl" href="#">{t('prevPrototypes')}</Dropdown.Toggle>
+                <Dropdown.Toggle as="a" className="tw-px-3 tw-py-2 tw-text-xl" href="#">{t('prevPrototypes')}</Dropdown.Toggle>
                 <Dropdown.Menu>
                   {
                     oldNavLinks.map((navLink) => (
                       <Nav.Item as="li" key={navLink.to}>
-                        <NavLink className="px-3 py-2 text-xl" to={navLink.to}>{t(navLink.tKey)}</NavLink>
+                        <NavLink className="tw-px-3 tw-py-2 tw-text-xl" to={navLink.to}>{t(navLink.tKey)}</NavLink>
                       </Nav.Item>
                     ))
                   }
@@ -138,7 +138,7 @@ export class AppHeader extends Component {
 
           {/* <ModelRunControl gameModel={gameModel} /> */}
           <Dropdown as={Nav.Item} alignRight>
-            <Dropdown.Toggle as={Nav.Link} className="text-lg">{t('actionMenu')}</Dropdown.Toggle>
+            <Dropdown.Toggle as={Nav.Link} className="tw-text-lg">{t('actionMenu')}</Dropdown.Toggle>
             <Dropdown.Menu style={{ zIndex: 2000 }}>
               <UploadDatabaseButton onChange={onUploadFileSelected} />
               <DownloadDatabaseButton onClick={downloadDatabaseAsFile} />
