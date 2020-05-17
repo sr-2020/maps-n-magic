@@ -98,6 +98,9 @@ export const translations = {
       locationType_geoLocation: 'Гео-локация',
       locationType_gameLocation: 'Игровая локация',
       locationType: 'Тип локации',
+      borderWidth: 'Ширина границы',
+      opacity: 'Прозрачность',
+      color: 'Цвет',
 
       locationName: 'Название локации',
       markers: 'Маяки локации',

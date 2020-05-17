@@ -13,7 +13,7 @@ export class LocationRecordService extends AbstractService {
       'putLocationRecordConfirmed',
       'setLocationRecords',
     ],
-    requests: ['locationRecords'],
+    requests: ['locationRecord', 'locationRecords'],
     emitEvents: [
       'postLocationRecord',
       'deleteLocationRecord',
@@ -51,6 +51,11 @@ export class LocationRecordService extends AbstractService {
 
   getLocationRecords() {
     return [...this.locationRecords];
+  }
+
+  getLocationRecord({ id }) {
+    const locationRecord = this.locationRecords.find((br) => br.id === id);
+    return R.clone(locationRecord);
   }
 
   setLocationRecords({ locationRecords }) {

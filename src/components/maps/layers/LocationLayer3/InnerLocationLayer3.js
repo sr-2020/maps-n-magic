@@ -119,6 +119,25 @@ export class InnerLocationLayer3 {
         },
       });
     }
+    if (prop === 'weight' || prop === 'fillOpacity' || prop === 'color') {
+      const locationRecord = gameModel.get({
+        type: 'locationRecord',
+        id,
+      });
+      location.setStyle({
+        [prop]: value,
+      });
+      gameModel.execute({
+        type: 'putLocationRecord',
+        id,
+        props: {
+          options: {
+            ...locationRecord.options,
+            [prop]: value,
+          },
+        },
+      });
+    }
   }
 
   getGroupByLayerId(layer_id) {

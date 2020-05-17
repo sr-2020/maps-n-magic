@@ -232,9 +232,22 @@ export class LocationLayer3 extends Component {
   // }
 
   onLocationChange = (prop) => (e) => {
-    const { value } = e.target;
+    let { value } = e.target;
     const { gameModel } = this.props;
     const { id } = this.state.curLocation;
+    if (prop === 'weight') {
+      value = Number(value);
+      if (value < 0 || value > 20) {
+        return;
+      }
+    }
+    if (prop === 'fillOpacity') {
+      value = Number(value);
+      if (value < 0 || value > 100) {
+        return;
+      }
+      value = 1 - value / 100;
+    }
     this.locationsLayer.onLocationChange(prop, value, gameModel, id);
     this.setState((state) => {
       const curLocation = { ...state.curLocation, [prop]: value };

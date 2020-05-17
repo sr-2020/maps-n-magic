@@ -5,8 +5,13 @@ import * as R from 'ramda';
 import ReactDOM from 'react-dom';
 import classNames from 'classnames';
 
+import FormControl from 'react-bootstrap/FormControl';
 import { layerNameToLayerId, locationTypes } from '../LocationLayer3/LocationLayerTypes';
 
+import { GOOGLE_MAPS_COLOR_PALETTE as COLOR_PALETTE } from '../../../../utils/googleMapsColorPalette';
+
+
+// console.log('COLOR_PALETTE', COLOR_PALETTE);
 // import { LocationPopup3PropTypes } from '../../types';
 // import { LocationLayer3 } from '../LocationLayer3/LocationLayer3';
 
@@ -111,28 +116,90 @@ export class LocationPopup3 extends Component {
             className="tw-block tw-text-gray-700 tw-text-sm tw-font-bold tw-mb-2"
             htmlFor="layer_id"
           >
+            {t('color')}
+          </label>
+          <div>
+            <div className="tw-flex flex-wrap">
+              {
+                COLOR_PALETTE.map((colorObj) => (
+                  // eslint-disable-next-line jsx-a11y/control-has-associated-label
+                  <button
+                    className={classNames('tw-relative color-button tw-w-4 tw-h-4 tw-flex-shrink-0 tw-border-transparent tw-border-2 tw-border-white', {
+                      selected: colorObj.hex === color,
+                    })}
+                    style={{ backgroundColor: colorObj.hex }}
+                    type="button"
+                    onClick={() => onChange('color')({ target: { value: colorObj.hex } })}
+                  />
+                ))
+              }
+              {/* <FormControl
+                type="range"
+                value={Math.round((1 - fillOpacity) * 100)}
+                min="0"
+                max="100"
+                step="1"
+                onChange={onChange('fillOpacity')}
+              />
+              <FormControl
+                type="number"
+                className="tw-ml-4 tw-w-20"
+                value={Math.round((1 - fillOpacity) * 100)}
+                onChange={onChange('fillOpacity')}
+              /> */}
+            </div>
+          </div>
+        </div>
+        <div className="tw-mb-4">
+          <label
+            className="tw-block tw-text-gray-700 tw-text-sm tw-font-bold tw-mb-2"
+            htmlFor="layer_id"
+          >
+            {t('opacity')}
+          </label>
+          <div>
+            <div className="tw-flex">
+              <FormControl
+                type="range"
+                value={Math.round((1 - fillOpacity) * 100)}
+                min="0"
+                max="100"
+                step="1"
+                onChange={onChange('fillOpacity')}
+              />
+              <FormControl
+                type="number"
+                className="tw-ml-4 tw-w-20"
+                value={Math.round((1 - fillOpacity) * 100)}
+                onChange={onChange('fillOpacity')}
+              />
+            </div>
+          </div>
+        </div>
+        <div className="tw-mb-4">
+          <label
+            className="tw-block tw-text-gray-700 tw-text-sm tw-font-bold tw-mb-2"
+            htmlFor="layer_id"
+          >
             {t('borderWidth')}
           </label>
-
           <div>
-            {/* {
-              locationTypes.map((locationType, i) => (
-                <button
-                  key={locationType}
-                  className={classNames(common,
-                    layerNameToLayerId[locationType] === String(layer_id) ? selectedButton : unselectedButton,
-                    {
-                      'rounded-l': i === 0,
-                      'rounded-r': i === 2,
-                    })}
-                  type="button"
-                  value={layerNameToLayerId[locationType]}
-                  onClick={onChange('layer_id')}
-                >
-                  {t(`locationType_${locationType}`)}
-                </button>
-              ))
-            } */}
+            <div className="tw-flex">
+              <FormControl
+                type="range"
+                value={weight}
+                min="0"
+                max="20"
+                step="1"
+                onChange={onChange('weight')}
+              />
+              <FormControl
+                type="number"
+                className="tw-ml-4 tw-w-20"
+                value={weight}
+                onChange={onChange('weight')}
+              />
+            </div>
           </div>
         </div>
       </div>
