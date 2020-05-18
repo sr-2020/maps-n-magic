@@ -37,6 +37,8 @@ export const translations = {
       locationsEditor2: 'Локации',
       beaconEditor2: 'Маяки',
       mapEditors: 'Редакторы карт',
+      manaOceanSettings: 'Настройки океана маны',
+      specificMaps: 'Конечные карты',
       geoJsonLayer: 'Данные из Google Maps',
       geoJsonLayer_Polygon: 'Многоугольники из Google Maps',
       geoJsonLayer_Point: 'Маркеры из Google Maps',
