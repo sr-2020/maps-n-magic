@@ -19,7 +19,8 @@ const googleTileLayer = {
 
 const mapConfig = {
   lat: 54.92822999834723,
-  lng: 36.87105243803666,
+  // lng: 36.87105243803666,
+  lng: 36.87455243803666,
   zoom: 17,
 };
 

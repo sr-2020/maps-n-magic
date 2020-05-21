@@ -13,6 +13,7 @@ import { BaseVersion } from './BaseVersion';
 import { BeaconRecordService } from './BeaconRecordService';
 import { NotificationService } from './NotificationService';
 import { BackgroundImageService } from './BackgroundImageService';
+import { CharacterHealthStateService } from './CharacterHealthStateService';
 
 export const services = [
   UserService,
@@ -30,4 +31,5 @@ export const services = [
   BeaconRecordService,
   NotificationService,
   BackgroundImageService,
+  CharacterHealthStateService,
 ];

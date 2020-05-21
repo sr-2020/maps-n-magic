@@ -32,6 +32,7 @@ import { fillGameModelWithBots } from '../../services/GameModelFiller';
 import { mapConfig } from '../../configs/map';
 
 import { GeoDataStreamSimulator } from '../GeoDataStreamSimulator';
+import { CharacterHealthStateSimulator } from '../CharacterHealthStateSimulator';
 
 import { SoundMapper } from '../SoundMapper';
 
@@ -354,6 +355,7 @@ export class App extends Component {
                     entityName="locationRecord"
                   />
                   <NotificationWatcher gameModel={gameModel} />
+                  <CharacterHealthStateSimulator gameModel={gameModel} />
                 </main>
               </div>
             </Router>

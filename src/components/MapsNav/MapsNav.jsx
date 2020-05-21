@@ -18,8 +18,11 @@ const navLinks = [{
 }];
 
 const navLinks2 = [{
-  to: '/manaOceanSettings',
-  tKey: 'manaOceanSettings',
+//   to: '/manaOceanSettings',
+//   tKey: 'manaOceanSettings',
+// }, {
+  to: '/rescueService',
+  tKey: 'rescueService',
 }];
 
 // import { MapsNavPropTypes } from '../../types';

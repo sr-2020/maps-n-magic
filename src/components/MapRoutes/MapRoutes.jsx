@@ -10,6 +10,7 @@ import { CommonMap } from '../maps/CommonMap';
 import { BackgroundEditorMap } from '../maps/BackgroundEditorMap';
 import { LocationEditorMap } from '../maps/LocationEditorMap';
 import { BeaconEditorMap } from '../maps/BeaconEditorMap';
+import { RescueServiceMap } from '../maps/RescueServiceMap';
 
 import {
   mapConfig, backgroundEditorGeomanConfig, oldLocationAndMarkerGeomanConfig, locationsEditor2GeomanConfig, beaconEditor2GeomanConfig,
@@ -17,6 +18,7 @@ import {
 
 import { MapsNav } from '../MapsNav';
 
+// eslint-disable-next-line max-lines-per-function
 export function MapRoutes(props) {
   const {
     curPosition, gameModel, translator,
@@ -60,6 +62,14 @@ export function MapRoutes(props) {
         mapConfig={mapConfig}
         translator={translator}
         geomanConfig={backgroundEditorGeomanConfig}
+      />
+    </Route>,
+    <Route path="/rescueService">
+      <RescueServiceMap
+        curPosition={curPosition}
+        gameModel={gameModel}
+        mapConfig={mapConfig}
+        translator={translator}
       />
     </Route>,
   ];

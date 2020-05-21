@@ -38,6 +38,7 @@ export const translations = {
       beaconEditor2: 'Маяки',
       mapEditors: 'Редакторы карт',
       manaOceanSettings: 'Настройки океана маны',
+      rescueService: 'МЧС - карта клинических смертей',
       specificMaps: 'Конечные карты',
       geoJsonLayer: 'Данные из Google Maps',
       geoJsonLayer_Polygon: 'Многоугольники из Google Maps',
