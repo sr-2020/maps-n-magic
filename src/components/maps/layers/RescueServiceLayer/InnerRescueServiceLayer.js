@@ -101,10 +101,11 @@ export class InnerRescueServiceLayer {
       return;
     }
     marker.options.clinicalDeathIds = R.without([characterId], marker.options.clinicalDeathIds);
+    this.updateMarkerTooltip(marker);
     if (R.isEmpty(marker.options.clinicalDeathIds)) {
+      marker.unbindTooltip();
       this.group.removeLayer(marker);
     }
-    this.updateMarkerTooltip(marker);
   }
 
   getMarker(locationId, gameModel, createIfAbsent) {
@@ -131,13 +132,19 @@ export class InnerRescueServiceLayer {
 
   // eslint-disable-next-line class-methods-use-this
   updateMarkerTooltip(marker) {
-    marker.on('mouseover', function (e) {
-      // beacon.bindTooltip(t('markerTooltip', { name: this.options.label }));
-      marker.bindTooltip(marker.options.clinicalDeathIds.join(', '));
-      this.openTooltip();
+    // marker.bindPopup(`id персонажей: ${marker.options.clinicalDeathIds.join(', ')}`).openPopup();
+    marker.unbindTooltip();
+    marker.bindTooltip(`id персонажей: ${marker.options.clinicalDeathIds.join(', ')}`, {
+      permanent: true,
     });
-    marker.on('mouseout', function (e) {
-      this.closeTooltip();
-    });
+    // marker.openTooltip();
+    // marker.on('mouseover', function (e) {
+    //   // beacon.bindTooltip(t('markerTooltip', { name: this.options.label }));
+    //   marker.bindTooltip(`id персонажей: ${marker.options.clinicalDeathIds.join(', ')}`);
+    //   this.openTooltip();
+    // });
+    // marker.on('mouseout', function (e) {
+    //   this.closeTooltip();
+    // });
   }
 }
