@@ -7,6 +7,7 @@ const logger = require('morgan');
 const cors = require('cors');
 const indexRouter = require('./routes/index');
 const fileListRouter = require('./routes/fileList');
+const characterStatesRouter = require('./routes/characterStates');
 const fileRouter = require('./routes/file');
 const usersRouter = require('./routes/users');
 
@@ -36,6 +37,7 @@ app.use(cookieParser());
 
 app.get('/fileList', fileListRouter);
 app.get('/file/:name', fileRouter);
+app.get('/characterStates', characterStatesRouter);
 
 app.use(express.static(path.join(__dirname, '../build')));
 

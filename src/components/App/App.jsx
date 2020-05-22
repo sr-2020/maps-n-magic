@@ -33,6 +33,7 @@ import { mapConfig } from '../../configs/map';
 
 import { GeoDataStreamSimulator } from '../GeoDataStreamSimulator';
 import { CharacterHealthStateSimulator } from '../CharacterHealthStateSimulator';
+import { CharacterHealthListener } from '../CharacterHealthListener';
 
 import { SoundMapper } from '../SoundMapper';
 
@@ -356,6 +357,7 @@ export class App extends Component {
                   />
                   <NotificationWatcher gameModel={gameModel} />
                   <CharacterHealthStateSimulator gameModel={gameModel} />
+                  <CharacterHealthListener gameModel={gameModel} />
                 </main>
               </div>
             </Router>
