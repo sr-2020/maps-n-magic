@@ -25,6 +25,14 @@ const navLinks2 = [{
   tKey: 'rescueService',
 }];
 
+const navLinks3 = [{
+//   to: '/manaOceanSettings',
+//   tKey: 'manaOceanSettings',
+// }, {
+  to: '/characterPositions',
+  tKey: 'characterPositions',
+}];
+
 // import { MapsNavPropTypes } from '../../types';
 
 export function MapsNav(props) {
@@ -39,6 +47,10 @@ export function MapsNav(props) {
       <div className="tw-mx-8 tw-my-4">
         <h2 className="tw-mt-8 tw-mb-4 tw-font-medium tw-text-2xl">{t('specificMaps')}</h2>
         <NavList navLinks={navLinks2} />
+      </div>
+      <div className="tw-mx-8 tw-my-4">
+        <h2 className="tw-mt-8 tw-mb-4 tw-font-medium tw-text-2xl">{t('debuggingTools')}</h2>
+        <NavList navLinks={navLinks3} />
       </div>
     </div>
   );

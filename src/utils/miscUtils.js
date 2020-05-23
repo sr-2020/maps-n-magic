@@ -1,3 +1,5 @@
+import * as R from 'ramda';
+
 export function formatBytes(bytes, decimals = 2) {
   if (bytes === 0) return '0 Bytes';
 
@@ -51,4 +53,8 @@ export function shuffle(array) {
   }
 
   return array;
+}
+
+export function isGeoLocation(location) {
+  return location.layer_id === 1 && !R.isEmpty(location.polygon);
 }

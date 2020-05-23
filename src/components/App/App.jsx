@@ -34,6 +34,7 @@ import { mapConfig } from '../../configs/map';
 import { GeoDataStreamSimulator } from '../GeoDataStreamSimulator';
 import { CharacterHealthStateSimulator } from '../CharacterHealthStateSimulator';
 import { CharacterHealthListener } from '../CharacterHealthListener';
+import { CharacterPositions } from '../CharacterPositions';
 
 import { SoundMapper } from '../SoundMapper';
 
@@ -319,6 +320,9 @@ export class App extends Component {
                     </Route>
                     <Route path="/beaconRecordEditor">
                       <BeaconRecordEditor gameModel={gameModel} />
+                    </Route>
+                    <Route path="/characterPositions">
+                      <CharacterPositions />
                     </Route>
 
                     {TrackAnalysis({

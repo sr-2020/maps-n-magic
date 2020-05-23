@@ -40,7 +40,9 @@ export const translations = {
       manaOceanSettings: 'Настройки океана маны',
       rescueService: 'МЧС - карта клинических смертей',
       specificMaps: 'Конечные карты',
+      debuggingTools: 'Инструменты отладки',
       geoJsonLayer: 'Данные из Google Maps',
+      characterPositions: 'Позиции персонажей',
       geoJsonLayer_Polygon: 'Многоугольники из Google Maps',
       geoJsonLayer_Point: 'Маркеры из Google Maps',
       geoJsonLayer_LineString: 'Линии из Google Maps',
@@ -145,6 +147,12 @@ export const translations = {
       backgroundImageName: 'Название изображения',
       backgroundImageUrl: 'Изображение',
       backgroundImagePreview: 'Превью',
+
+
+      // misc
+      location: 'Локация',
+      characterId: 'Id персонажа',
+      moveCharacterToLocation: 'Переместить персонажа в локацию',
     },
   },
 };

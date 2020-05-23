@@ -3,10 +3,6 @@ import * as R from 'ramda';
 
 import { getIcon } from '../../../../utils/icons';
 
-// this function is duplicated
-function isGeoLocation(location) {
-  return location.layer_id === 1 && !R.isEmpty(location.polygon);
-}
 // based on Leaflet implementation
 // https://github.com/Leaflet/Leaflet/blob/37d2fd15ad6518c254fae3e033177e96c48b5012/src/layer/vector/Polygon.js#L76
 function getPolygonCentroid(polygon) {

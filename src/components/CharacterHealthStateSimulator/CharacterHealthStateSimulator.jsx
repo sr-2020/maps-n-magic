@@ -3,16 +3,13 @@ import './CharacterHealthStateSimulator.css';
 
 import * as R from 'ramda';
 
+import { isGeoLocation } from '../../utils/miscUtils';
+
 // import { CharacterHealthStateSimulatorPropTypes } from '../../types';
 
 const healthStates = ['healthy', 'wounded', 'clinically_dead', 'biologically_dead'];
 
 const CHARACTER_CHANGE_TIMEOUT = 1000;
-
-// this function is duplicated
-function isGeoLocation(location) {
-  return location.layer_id === 1 && !R.isEmpty(location.polygon);
-}
 
 
 // random number from min to (max+1)

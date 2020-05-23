@@ -33,29 +33,12 @@ export class CharacterHealthListener extends Component {
   }
 
   loadCharacterStates() {
-    // const { gameModel } = this.props;
-    // const characterId = randomInteger(1, 10);
-
-    // const locations = gameModel.get('locationRecords').filter(isGeoLocation);
-    // // console.log(locations);
-
-    // gameModel.execute({
-    //   type: 'setCharacterHealthState',
-    //   characterId,
-    //   characterHealthState: {
-    //     locationId: getRandomEl(locations).id,
-    //     healthState: getRandomEl(healthStates),
-    //   },
-    // });
     // fetch('http://localhost:3001/characterStates')
     fetch('/characterStates')
       .then((result) => {
         if (!result.ok) throw new Error(result);
         return result.json();
       }).then((result) => {
-        // console.log(result);
-        // console.log(`Sound list fetched ${result.entries.length}`);
-        // this._updateSounds(result);
         this.updateCharacterStates(result);
       }).catch((error) => {
         console.error(error);
