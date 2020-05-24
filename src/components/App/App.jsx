@@ -322,7 +322,7 @@ export class App extends Component {
                       <BeaconRecordEditor gameModel={gameModel} />
                     </Route>
                     <Route path="/characterPositions">
-                      <CharacterPositions />
+                      <CharacterPositions gameModel={gameModel} />
                     </Route>
 
                     {TrackAnalysis({

@@ -27,24 +27,58 @@ export class CharacterPositions extends Component {
       locations: null,
     };
     this.onSubmit = this.onSubmit.bind(this);
+    this.setLocationRecords = this.setLocationRecords.bind(this);
   }
 
   componentDidMount() {
+    const {
+      gameModel,
+    } = this.props;
+    this.subscribe('on', gameModel);
+
+    this.setLocationRecords({
+      locationRecords: (gameModel.get('locationRecords')),
+    });
+
     this.characterChangeIntervalId = setInterval(() => {
       this.loadUsers();
     }, REQUEST_TIMEOUT);
     this.loadUsers();
-    this.loadLocations();
     console.log('CharacterPositions mounted');
   }
 
-  componentDidUpdate() {
+  componentDidUpdate(prevProps) {
+    const {
+      gameModel,
+    } = this.props;
+    if (prevProps.gameModel !== gameModel) {
+      this.subscribe('off', prevProps.gameModel);
+      this.subscribe('on', gameModel);
+      this.setLocationRecords({
+        locationRecords: (gameModel.get('locationRecords')),
+      });
+    }
     console.log('CharacterPositions did update');
   }
 
   componentWillUnmount() {
+    const {
+      gameModel,
+    } = this.props;
+    this.subscribe('off', gameModel);
     clearInterval(this.characterChangeIntervalId);
     console.log('CharacterPositions will unmount');
+  }
+
+  // eslint-disable-next-line react/sort-comp
+  subscribe(action, gameModel) {
+    gameModel[action]('locationRecordsChanged', this.setLocationRecords);
+  }
+
+  setLocationRecords({ locationRecords }) {
+    this.setState({
+      locations: R.indexBy(R.prop('id'), locationRecords.filter(isGeoLocation)),
+    });
   }
 
   onSubmit(e) {
@@ -89,27 +123,9 @@ export class CharacterPositions extends Component {
       });
   }
 
-  loadLocations() {
-    fetch(locationUrl)
-      .then((result) => {
-        if (!result.ok) throw new Error(result);
-        return result.json();
-      }).then((result) => {
-        this.updateLocations(result);
-      }).catch((error) => {
-        console.error(error);
-      });
-  }
-
   updateUsers(users) {
     this.setState({
       users: R.sortBy(R.prop('id'), users),
-    });
-  }
-
-  updateLocations(locations) {
-    this.setState({
-      locations: R.indexBy(R.prop('id'), locations.filter(isGeoLocation)),
     });
   }
 

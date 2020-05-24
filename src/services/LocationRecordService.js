@@ -2,6 +2,13 @@ import * as R from 'ramda';
 
 import { AbstractService } from './AbstractService';
 
+// duplicated in LocationHolder
+const defaultStyleOptions = {
+  color: '#3388ff',
+  weight: 3,
+  fillOpacity: 0.2,
+};
+
 export class LocationRecordService extends AbstractService {
   metadata = {
     actions: [
@@ -35,9 +42,7 @@ export class LocationRecordService extends AbstractService {
     this.locationRecords = locationRecords || [];
     this.locationRecords.forEach((loc) => {
       loc.options = {
-        color: '#3388ff',
-        weight: 3,
-        fillOpacity: 0.2,
+        ...defaultStyleOptions,
         ...loc.options,
       };
     });

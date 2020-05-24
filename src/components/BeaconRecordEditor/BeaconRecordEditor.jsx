@@ -43,7 +43,7 @@ export class BeaconRecordEditor extends Component {
     this.subscribe('on', gameModel);
 
     this.setBeaconRecords({
-      beaconRecords: sortById(gameModel.get('beaconRecords')),
+      beaconRecords: (gameModel.get('beaconRecords')),
     });
     console.log('BeaconRecordEditor mounted');
   }
@@ -56,7 +56,7 @@ export class BeaconRecordEditor extends Component {
       this.subscribe('off', prevProps.gameModel);
       this.subscribe('on', gameModel);
       this.setBeaconRecords({
-        beaconRecords: sortById(gameModel.get('beaconRecords')),
+        beaconRecords: (gameModel.get('beaconRecords')),
       });
     }
     console.log('BeaconRecordEditor did update');
@@ -190,6 +190,7 @@ export class BeaconRecordEditor extends Component {
               <th className="tw-text-right">{t('beaconId')}</th>
               <th>{t('beaconMacAddress')}</th>
               <th>{t('beaconLabel')}</th>
+              <th>{t('location')}</th>
               {/* <th>{t('beaconPlacement')}</th> */}
             </tr>
           </thead>
@@ -221,7 +222,7 @@ export class BeaconRecordEditor extends Component {
                       onChange={this.handleInputChange(beacon.id)}
                     />
                   </td>
-                  {/* <td>{}</td> */}
+                  <td>{}</td>
                   <td>
                     <div className="menu tw-float-right">
                       <Dropdown
