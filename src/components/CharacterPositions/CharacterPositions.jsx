@@ -14,8 +14,6 @@ import { isGeoLocation } from '../../utils/miscUtils';
 const REQUEST_TIMEOUT = 15000;
 
 const userUrl = 'https://position.evarun.ru/api/v1/users';
-const locationUrl = 'https://position.evarun.ru/api/v1/locations';
-
 
 export class CharacterPositions extends Component {
   // static propTypes = CharacterPositionsPropTypes;
@@ -24,7 +22,8 @@ export class CharacterPositions extends Component {
     super(props);
     this.state = {
       users: null,
-      locations: null,
+      locationIndex: null,
+      sortedLocationList: null,
     };
     this.onSubmit = this.onSubmit.bind(this);
     this.setLocationRecords = this.setLocationRecords.bind(this);
@@ -76,8 +75,10 @@ export class CharacterPositions extends Component {
   }
 
   setLocationRecords({ locationRecords }) {
+    const geoLocations = locationRecords.filter(isGeoLocation);
     this.setState({
-      locations: R.indexBy(R.prop('id'), locationRecords.filter(isGeoLocation)),
+      locationIndex: R.indexBy(R.prop('id'), geoLocations),
+      sortedLocationList: R.sortBy(R.prop('label'), geoLocations),
     });
   }
 
@@ -130,21 +131,19 @@ export class CharacterPositions extends Component {
   }
 
   getLocationText(locationId) {
-    const { locations } = this.state;
-    if (locations[locationId]) {
-      return `${locations[locationId].label}(${locationId})`;
+    const { locationIndex } = this.state;
+    if (locationIndex[locationId]) {
+      return `${locationIndex[locationId].label}(${locationId})`;
     }
     return 'N/A';
   }
 
   // eslint-disable-next-line max-lines-per-function
   render() {
-    const { users, locations } = this.state;
+    const { users, locationIndex, sortedLocationList } = this.state;
     const { t } = this.props;
 
-    const locations2 = R.sortBy(R.prop('label'), R.values(locations));
-
-    if (!users || !locations) {
+    if (!users || !locationIndex) {
       return <div> Loading data... </div>;
     }
     return (
@@ -160,7 +159,7 @@ export class CharacterPositions extends Component {
             <Form.Label>{t('location')}</Form.Label>
             <Form.Control as="select">
               {
-                locations2.map((location) => (
+                sortedLocationList.map((location) => (
                   <option
                     key={location.id}
                     value={location.id}

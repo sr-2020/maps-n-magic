@@ -153,6 +153,8 @@ export const translations = {
       location: 'Локация',
       characterId: 'Id персонажа',
       moveCharacterToLocation: 'Переместить персонажа в локацию',
+
+      beaconHasNoLocation: 'Нет привязки к локации',
     },
   },
 };
