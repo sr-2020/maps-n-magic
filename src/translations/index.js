@@ -155,6 +155,8 @@ export const translations = {
       moveCharacterToLocation: 'Переместить персонажа в локацию',
 
       beaconHasNoLocation: 'Нет привязки к локации',
+
+      locationHasNoBeaconsError: 'Перемещение игрока в следующие геолокации недоступно, потому что в них нет маяков.',
     },
   },
 };

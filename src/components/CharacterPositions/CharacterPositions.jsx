@@ -1,3 +1,4 @@
+/* eslint-disable react/sort-comp */
 import React, { Component } from 'react';
 import './CharacterPositions.css';
 
@@ -6,6 +7,7 @@ import * as R from 'ramda';
 import Table from 'react-bootstrap/Table';
 import Form from 'react-bootstrap/Form';
 import Button from 'react-bootstrap/Button';
+import Alert from 'react-bootstrap/Alert';
 
 import { isGeoLocation } from '../../utils/miscUtils';
 
@@ -14,6 +16,8 @@ import { isGeoLocation } from '../../utils/miscUtils';
 const REQUEST_TIMEOUT = 15000;
 
 const userUrl = 'https://position.evarun.ru/api/v1/users';
+
+const positionUrl = 'http://position.evarun.ru/api/v1/positions';
 
 export class CharacterPositions extends Component {
   // static propTypes = CharacterPositionsPropTypes;
@@ -24,9 +28,11 @@ export class CharacterPositions extends Component {
       users: null,
       locationIndex: null,
       sortedLocationList: null,
+      beaconIndex: null,
     };
     this.onSubmit = this.onSubmit.bind(this);
     this.setLocationRecords = this.setLocationRecords.bind(this);
+    this.setBeaconRecords = this.setBeaconRecords.bind(this);
   }
 
   componentDidMount() {
@@ -35,6 +41,9 @@ export class CharacterPositions extends Component {
     } = this.props;
     this.subscribe('on', gameModel);
 
+    this.setBeaconRecords({
+      beaconRecords: (gameModel.get('beaconRecords')),
+    });
     this.setLocationRecords({
       locationRecords: (gameModel.get('locationRecords')),
     });
@@ -53,6 +62,9 @@ export class CharacterPositions extends Component {
     if (prevProps.gameModel !== gameModel) {
       this.subscribe('off', prevProps.gameModel);
       this.subscribe('on', gameModel);
+      this.setBeaconRecords({
+        beaconRecords: (gameModel.get('beaconRecords')),
+      });
       this.setLocationRecords({
         locationRecords: (gameModel.get('locationRecords')),
       });
@@ -71,6 +83,7 @@ export class CharacterPositions extends Component {
 
   // eslint-disable-next-line react/sort-comp
   subscribe(action, gameModel) {
+    gameModel[action]('beaconRecordsChanged', this.setBeaconRecords);
     gameModel[action]('locationRecordsChanged', this.setLocationRecords);
   }
 
@@ -82,7 +95,21 @@ export class CharacterPositions extends Component {
     });
   }
 
+  // eslint-disable-next-line react/sort-comp
+  setBeaconRecords({ beaconRecords }) {
+    const makeIndex = R.pipe(
+      R.filter(R.pipe(R.prop('location_id'), R.isNil, R.not)),
+      R.indexBy(R.prop('location_id')),
+    );
+    const beaconIndex = makeIndex(beaconRecords);
+    // console.log(beaconIndex);
+    this.setState({
+      beaconIndex,
+    });
+  }
+
   onSubmit(e) {
+    const { beaconIndex } = this.state;
     const form = e.currentTarget;
     e.stopPropagation();
     e.preventDefault();
@@ -94,22 +121,31 @@ export class CharacterPositions extends Component {
     const characterId = Number(rawCharacterId);
     const locationId = Number(form.locationId.value.trim());
 
-    if (isNaN(characterId) || isNaN(locationId)) {
+    if (Number.isNaN(characterId) || Number.isNaN(locationId) || !beaconIndex[locationId]) {
       return;
     }
 
-    console.log(characterId, locationId);
+    const beacon = beaconIndex[locationId];
 
-    // const response = await fetch(`${this.url}/${id}`, {
-    //   method: 'PUT',
-    //   headers: {
-    //     'Content-Type': 'application/json;charset=utf-8',
-    //     'X-User-Id': 1,
-    //   },
-    //   body: JSON.stringify({
-    //     ...props,
-    //   }),
-    // });
+    fetch(positionUrl, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json;charset=utf-8',
+        'X-User-Id': characterId,
+      },
+      body: JSON.stringify({
+        beacons: [{
+          ssid: beacon.ssid,
+          bssid: beacon.bssid,
+          level: -10,
+        }],
+      }),
+    }).then((result) => {
+      if (!result.ok) throw new Error(result);
+      this.loadUsers();
+    }).catch((error) => {
+      console.error(error);
+    });
   }
 
   loadUsers() {
@@ -140,75 +176,96 @@ export class CharacterPositions extends Component {
 
   // eslint-disable-next-line max-lines-per-function
   render() {
-    const { users, locationIndex, sortedLocationList } = this.state;
+    const {
+      users, locationIndex, sortedLocationList, beaconIndex,
+    } = this.state;
     const { t } = this.props;
 
-    if (!users || !locationIndex) {
+    if (!users || !locationIndex || !beaconIndex) {
       return <div> Loading data... </div>;
     }
+
+    const groupByHasBeacons = R.groupBy((loc) => (beaconIndex[loc.id] ? 'hasBeacons' : 'hasNoBeacons'));
+    const { hasBeacons = [], hasNoBeacons = [] } = groupByHasBeacons(sortedLocationList);
+
     return (
       <div className="CharacterPositions  tw-mx-8 tw-my-4">
+        <div className="tw-flex tw-items-start">
 
-        <Form onSubmit={this.onSubmit}>
-          <Form.Group controlId="characterId">
-            <Form.Label>{t('characterId')}</Form.Label>
-            <Form.Control list="characterIdList" />
-          </Form.Group>
 
-          <Form.Group controlId="locationId">
-            <Form.Label>{t('location')}</Form.Label>
-            <Form.Control as="select">
+          <div>
+            <Form
+              className=""
+              style={{ width: '30rem' }}
+              onSubmit={this.onSubmit}
+            >
+              <Form.Group controlId="characterId">
+                <Form.Label>{t('characterId')}</Form.Label>
+                <Form.Control list="characterIdList" />
+              </Form.Group>
+
+              <Form.Group controlId="locationId">
+                <Form.Label>{t('location')}</Form.Label>
+                <Form.Control as="select">
+                  {
+                    hasBeacons.map((location) => (
+                      <option
+                        key={location.id}
+                        value={location.id}
+                      >
+                        {`${location.label} (${location.id})`}
+                      </option>
+                    ))
+                  }
+                </Form.Control>
+              </Form.Group>
+              <div className="tw-text-right">
+                <Button variant="primary" type="submit">
+                  {t('moveCharacterToLocation')}
+                </Button>
+              </div>
+            </Form>
+            <Table
+              // bordered
+              hover
+              size="sm"
+              className="tw-w-auto"
+              // style={{ width: '40rem' }}
+            >
+              <thead>
+                <tr>
+                  <th>{t('characterId')}</th>
+                  <th>{t('location')}</th>
+                </tr>
+              </thead>
+              <tbody>
+                {
+                  users.map((user) => (
+                    <tr>
+                      <td>{user.id}</td>
+                      <td>{this.getLocationText(user.location_id)}</td>
+                    </tr>
+                  ))
+                }
+              </tbody>
+            </Table>
+
+            <datalist className="CharacterIdList" id="characterIdList">
               {
-                sortedLocationList.map((location) => (
-                  <option
-                    key={location.id}
-                    value={location.id}
-                  >
-                    {`${location.label} (${location.id})`}
-                  </option>
-                ))
-              }
-            </Form.Control>
-          </Form.Group>
-          <div className="tw-text-right">
-            <Button variant="primary" type="submit">
-              {t('moveCharacterToLocation')}
-            </Button>
-          </div>
-        </Form>
-        <div>
-          <Table
-          // bordered
-            hover
-            size="sm"
-            className="tw-w-auto"
-          // style={{ width: '40rem' }}
-          >
-            <thead>
-              <tr>
-                <th>{t('characterId')}</th>
-                <th>{t('location')}</th>
-              </tr>
-            </thead>
-            <tbody>
-              {
-                users.map((user) => (
-                  <tr>
-                    <td>{user.id}</td>
-                    <td>{this.getLocationText(user.location_id)}</td>
-                  </tr>
-                ))
-              }
-            </tbody>
-          </Table>
-
-          <datalist className="CharacterIdList" id="characterIdList">
-            {
               // eslint-disable-next-line jsx-a11y/control-has-associated-label
-              users.map((user) => <option key={user.id} value={user.id} />)
-            }
-          </datalist>
+                users.map((user) => <option key={user.id} value={user.id} />)
+              }
+            </datalist>
+          </div>
 
+          <Alert className="tw-ml-8" variant="warning">
+            {t('locationHasNoBeaconsError')}
+            <ul className="tw-list-disc tw-pl-8">
+              {
+                hasNoBeacons.map((loc) => <li key={loc.id}>{loc.label}</li>)
+              }
+            </ul>
+          </Alert>
         </div>
       </div>
     );
