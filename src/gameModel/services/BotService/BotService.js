@@ -2,7 +2,7 @@ import * as R from 'ramda';
 
 import { ActiveBot } from './ActiveBot';
 
-import { AbstractService } from './AbstractService';
+import { AbstractService } from '../../core/AbstractService';
 
 export class BotService extends AbstractService {
   metadata = {

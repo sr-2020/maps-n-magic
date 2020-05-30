@@ -1,8 +1,8 @@
 import * as R from 'ramda';
 
-import { GettableEntity } from './GettableEntity';
+import { ReadDataManager } from './ReadDataManager';
 
-export class ManageableEntity extends GettableEntity {
+export class CrudDataManager extends ReadDataManager {
   constructor() {
     super();
     this.onPostEntityRequested = this.onPostEntityRequested.bind(this);

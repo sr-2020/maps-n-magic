@@ -1,9 +1,9 @@
 import * as R from 'ramda';
 
-import { defaultSpirit } from '../types/primitives';
-import { getEeStats } from '../utils/miscUtils';
+import { defaultSpirit } from '../../types/primitives';
+import { getEeStats } from '../../utils/miscUtils';
 
-import { AbstractService } from './AbstractService';
+import { AbstractService } from '../core/AbstractService';
 
 export class SpiritService extends AbstractService {
   metadata = {

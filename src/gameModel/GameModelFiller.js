@@ -1,5 +1,5 @@
 import L from 'leaflet/dist/leaflet-src';
-import { Bot } from './Bot';
+import { Bot } from './services/BotService/Bot';
 
 function latLngsToBounds(latLngs) {
   const bounds = new L.LatLngBounds();

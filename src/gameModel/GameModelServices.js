@@ -1,19 +1,19 @@
-import { UserService } from './UserService';
-import { BotService } from './BotService';
-import { TickerService } from './TickerService';
-import { SpiritService } from './SpiritService';
-import { SoundService2 } from './SoundService2';
-import { SoundStageService } from './SoundStageService';
-import { BeaconService } from './BeaconService';
-import { LocationService } from './LocationService';
-import { LocationRecordService } from './LocationRecordService';
-import { SoundMappingService } from './SoundMappingService';
-import { UserWatcher } from './UserWatcher';
-import { BaseVersion } from './BaseVersion';
-import { BeaconRecordService } from './BeaconRecordService';
-import { NotificationService } from './NotificationService';
-import { BackgroundImageService } from './BackgroundImageService';
-import { CharacterHealthStateService } from './CharacterHealthStateService';
+import { UserService } from './services/UserService';
+import { BotService } from './services/BotService/BotService';
+import { TickerService } from './services/TickerService';
+import { SpiritService } from './services/SpiritService';
+import { SoundService2 } from './services/SoundService2';
+import { SoundStageService } from './services/SoundStageService';
+import { BeaconService } from './services/BeaconService';
+import { LocationService } from './services/LocationService';
+import { LocationRecordService } from './services/LocationRecordService';
+import { SoundMappingService } from './services/SoundMappingService';
+import { UserWatcher } from './services/UserWatcher';
+import { BaseVersion } from './services/BaseVersion';
+import { BeaconRecordService } from './services/BeaconRecordService';
+import { NotificationService } from './services/NotificationService';
+import { BackgroundImageService } from './services/BackgroundImageService';
+import { CharacterHealthStateService } from './services/CharacterHealthStateService';
 
 export const services = [
   UserService,

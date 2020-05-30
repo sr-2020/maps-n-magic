@@ -2,13 +2,12 @@
 import React, { Component } from 'react';
 import * as R from 'ramda';
 
-import './EntityCommunicator.css';
-import { ManageableEntity } from './ManageableEntity';
+import './DataBinding.css';
 
-// import { EntityCommunicatorPropTypes } from '../../types';
+// import { DataBindingPropTypes } from '../../types';
 
-export class EntityCommunicator extends Component {
-  // static propTypes = EntityCommunicatorPropTypes;
+export class DataBinding extends Component {
+  // static propTypes = DataBindingPropTypes;
 
   constructor(props) {
     super(props);
@@ -18,28 +17,28 @@ export class EntityCommunicator extends Component {
 
   componentDidMount() {
     const {
-      gameModel, DataProvider, entityName,
+      gameModel, DataProvider, DataManager, entityName,
     } = this.props;
-    this.innerCommunicator = new ManageableEntity();
+    this.innerCommunicator = new DataManager();
     this.innerCommunicator.initialize(gameModel, DataProvider, entityName);
-    console.log('EntityCommunicator mounted');
+    console.log('DataBinding mounted');
   }
 
   componentDidUpdate(prevProps) {
     const {
-      gameModel, DataProvider, entityName,
+      gameModel, DataProvider, DataManager, entityName,
     } = this.props;
     if (prevProps.gameModel !== gameModel) {
       this.innerCommunicator.dispose();
-      this.innerCommunicator = new ManageableEntity();
+      this.innerCommunicator = new DataManager();
       this.innerCommunicator.initialize(gameModel, DataProvider, entityName);
     }
-    console.log('EntityCommunicator did update');
+    console.log('DataBinding did update');
   }
 
   componentWillUnmount() {
     this.innerCommunicator.dispose();
-    console.log('EntityCommunicator will unmount');
+    console.log('DataBinding will unmount');
   }
 
   render() {

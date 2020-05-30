@@ -22,12 +22,16 @@ import { SpiritEditor } from '../SpiritEditor';
 
 import { AppPropTypes } from '../../types';
 
-import { GameModel } from '../../gameModel/GameModel';
-import { Migrator } from '../../gameModel/Migrator';
+import {
+  GameModel, Migrator, services, fillGameModelWithBots, CrudDataManager,
+} from '../../gameModel';
 
-import { services } from '../../gameModel/GameModelServices';
+import { DataBinding } from '../DataBinding';
 
-import { fillGameModelWithBots } from '../../gameModel/GameModelFiller';
+import {
+  RemoteLocationRecordProvider as LocationRecordProvider,
+  RemoteBeaconRecordProvider as BeaconRecordProvider,
+} from '../../api/position';
 
 import { mapConfig } from '../../configs/map';
 
@@ -45,12 +49,6 @@ import { SoundWatcher } from '../SoundWatcher';
 import { SoundStage } from './SoundStage';
 
 import { Translator } from '../../utils/Translator';
-
-import { EntityCommunicator } from '../EntityCommunicator';
-import {
-  RemoteLocationRecordProvider as LocationRecordProvider,
-  RemoteBeaconRecordProvider as BeaconRecordProvider,
-} from '../../api/position';
 
 import { BeaconRecordEditor } from '../BeaconRecordEditor';
 import { RescueServiceMessageSender } from '../RescueServiceMessageSender';
@@ -355,15 +353,17 @@ export class App extends Component {
                     gameModel={gameModel}
                     context={this.audioContextWrapper}
                   />
-                  <EntityCommunicator
+                  <DataBinding
                     gameModel={gameModel}
-                    DataProvider={BeaconRecordProvider}
                     entityName="beaconRecord"
+                    DataProvider={BeaconRecordProvider}
+                    DataManager={CrudDataManager}
                   />
-                  <EntityCommunicator
+                  <DataBinding
                     gameModel={gameModel}
-                    DataProvider={LocationRecordProvider}
                     entityName="locationRecord"
+                    DataProvider={LocationRecordProvider}
+                    DataManager={CrudDataManager}
                   />
                   <NotificationWatcher gameModel={gameModel} />
                   <CharacterHealthStateSimulator gameModel={gameModel} />

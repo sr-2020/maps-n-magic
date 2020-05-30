@@ -1,5 +1,5 @@
 import * as R from 'ramda';
-import { AbstractService } from './AbstractService';
+import { AbstractService } from '../core/AbstractService';
 
 const defaultSoundMapping = {
   manaLevels: {

@@ -1,8 +1,8 @@
 import * as R from 'ramda';
 
-import { initialLocations } from '../data/locations';
+import { initialLocations } from '../../data/locations';
 
-import { AbstractService } from './AbstractService';
+import { AbstractService } from '../core/AbstractService';
 
 export class LocationService extends AbstractService {
   metadata = {

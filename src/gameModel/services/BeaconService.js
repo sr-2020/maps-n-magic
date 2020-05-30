@@ -1,13 +1,13 @@
 import * as R from 'ramda';
-import { getBeacons2 } from '../data/beacons';
-import { getBoundingRect, scaleRect } from '../utils/polygonUtils';
+import { getBeacons2 } from '../../data/beacons';
+import { getBoundingRect, scaleRect } from '../../utils/polygonUtils';
 
-import { baseCommonLLs } from '../data/baseContours';
+import { baseCommonLLs } from '../../data/baseContours';
 
-import { getPolygons2 } from '../utils/polygonGenerator';
-import { getEeStats } from '../utils/miscUtils';
+import { getPolygons2 } from '../../utils/polygonGenerator';
+import { getEeStats } from '../../utils/miscUtils';
 
-import { AbstractService } from './AbstractService';
+import { AbstractService } from '../core/AbstractService';
 
 export class BeaconService extends AbstractService {
   metadata = {

@@ -2,7 +2,7 @@ import * as R from 'ramda';
 import * as gi from '@thi.ng/geom-isec';
 
 import L from 'leaflet/dist/leaflet-src';
-import { AbstractService } from './AbstractService';
+import { AbstractService } from '../core/AbstractService';
 
 
 const latlngs2arr = R.map((el) => [el.lat, el.lng]);

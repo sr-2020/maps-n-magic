@@ -1,4 +1,4 @@
-import { AbstractService } from './AbstractService';
+import { AbstractService } from '../core/AbstractService';
 
 export class UserService extends AbstractService {
   metadata = {

@@ -1,6 +1,6 @@
 import * as R from 'ramda';
 
-import { AbstractService } from './AbstractService';
+import { AbstractService } from '../core/AbstractService';
 
 // duplicated in LocationHolder
 const defaultStyleOptions = {
