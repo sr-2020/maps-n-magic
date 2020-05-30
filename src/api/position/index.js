@@ -12,19 +12,19 @@ import {
   defaultLocationRecord,
 } from './constants';
 
-export class RemoteBeaconRecordHolder extends ManageableEndpoint {
+export class RemoteBeaconRecordProvider extends ManageableResourceProvider {
   constructor() {
     super(beaconsUrl, defaultBeaconRecord);
   }
 }
 
-export class RemoteLocationRecordHolder extends ManageableEndpoint {
+export class RemoteLocationRecordProvider extends ManageableResourceProvider {
   constructor() {
     super(locationsUrl, defaultLocationRecord);
   }
 }
 
-export class RemoteUsersRecordHolder extends GettableEndpoint {
+export class RemoteUsersRecordHolder extends GettableResourceProvider {
   constructor() {
     super(usersUrl);
   }
@@ -47,7 +47,7 @@ export async function postUserPosition(characterId, beacon) {
   });
 }
 
-function ManageableEndpoint(url, defaultObject) {
+function ManageableResourceProvider(url, defaultObject) {
   this.url = url;
   this.defaultObject = defaultObject;
 
@@ -60,7 +60,7 @@ function ManageableEndpoint(url, defaultObject) {
   );
 }
 
-function GettableEndpoint(url) {
+function GettableResourceProvider(url) {
   this.url = url;
 
   return Object.assign(

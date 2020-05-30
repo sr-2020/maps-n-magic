@@ -22,12 +22,12 @@ import { SpiritEditor } from '../SpiritEditor';
 
 import { AppPropTypes } from '../../types';
 
-import { GameModel } from '../../services/GameModel';
-import { Migrator } from '../../services/Migrator';
+import { GameModel } from '../../gameModel/GameModel';
+import { Migrator } from '../../gameModel/Migrator';
 
-import { services } from '../../services/GameModelServices';
+import { services } from '../../gameModel/GameModelServices';
 
-import { fillGameModelWithBots } from '../../services/GameModelFiller';
+import { fillGameModelWithBots } from '../../gameModel/GameModelFiller';
 
 import { mapConfig } from '../../configs/map';
 
@@ -47,7 +47,10 @@ import { SoundStage } from './SoundStage';
 import { Translator } from '../../utils/Translator';
 
 import { EntityCommunicator } from '../EntityCommunicator';
-import { RemoteLocationRecordHolder, RemoteBeaconRecordHolder } from '../../api/position';
+import {
+  RemoteLocationRecordProvider as LocationRecordProvider,
+  RemoteBeaconRecordProvider as BeaconRecordProvider,
+} from '../../api/position';
 
 import { BeaconRecordEditor } from '../BeaconRecordEditor';
 import { RescueServiceMessageSender } from '../RescueServiceMessageSender';
@@ -354,12 +357,12 @@ export class App extends Component {
                   />
                   <EntityCommunicator
                     gameModel={gameModel}
-                    EntityHolder={RemoteBeaconRecordHolder}
+                    DataProvider={BeaconRecordProvider}
                     entityName="beaconRecord"
                   />
                   <EntityCommunicator
                     gameModel={gameModel}
-                    EntityHolder={RemoteLocationRecordHolder}
+                    DataProvider={LocationRecordProvider}
                     entityName="locationRecord"
                   />
                   <NotificationWatcher gameModel={gameModel} />
