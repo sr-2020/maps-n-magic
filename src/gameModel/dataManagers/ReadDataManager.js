@@ -1,3 +1,4 @@
+// eslint-disable-next-line max-classes-per-file
 import * as R from 'ramda';
 
 function capitalizeFirstLetter(string) {
@@ -5,24 +6,31 @@ function capitalizeFirstLetter(string) {
 }
 
 export class ReadDataManager {
-  constructor() {
+  constructor(gameModel, dataProvider, entityName, readStrategy) {
     this.entities = [];
-  }
-
-  initialize(gameModel, EntityHolder, entityName) {
     this.gameModel = gameModel;
     this.entityName = entityName;
     this.plural = `${entityName}s`;
     this.ccEntityName = capitalizeFirstLetter(entityName);
-    this.holder = new EntityHolder();
-    this.loadEntities();
+    this.dataProvider = dataProvider;
+    this.readStrategy = readStrategy;
+  }
+
+  initialize() {
+    this.readStrategy.initialize(this);
   }
 
   // eslint-disable-next-line class-methods-use-this
-  dispose() {}
+  dispose() {
+    this.readStrategy.dispose();
+  }
 
   loadEntities() {
-    this.holder.get().then((entities) => {
+    this.dataProvider.get().then((entities) => {
+      if (R.equals(this.entities, entities)) {
+        // console.log('no changes', this.ccEntityName);
+        return;
+      }
       this.entities = entities;
       this.gameModel.execute({
         type: `set${this.ccEntityName}s`,

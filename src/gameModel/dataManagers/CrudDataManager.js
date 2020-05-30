@@ -3,16 +3,16 @@ import * as R from 'ramda';
 import { ReadDataManager } from './ReadDataManager';
 
 export class CrudDataManager extends ReadDataManager {
-  constructor() {
-    super();
+  constructor(...args) {
+    super(...args);
     this.onPostEntityRequested = this.onPostEntityRequested.bind(this);
     this.onPutEntityRequested = this.onPutEntityRequested.bind(this);
     this.onDeleteEntityRequested = this.onDeleteEntityRequested.bind(this);
   }
 
-  initialize(gameModel, EntityHolder, entityName) {
-    super.initialize(gameModel, EntityHolder, entityName);
-    this.subscribe('on', gameModel);
+  initialize() {
+    super.initialize();
+    this.subscribe('on', this.gameModel);
   }
 
   dispose() {
@@ -31,7 +31,7 @@ export class CrudDataManager extends ReadDataManager {
     clearTimeout(this.inputChangeTimeout);
 
     this.inputChangeTimeout = setTimeout(() => {
-      this.holder.put({ id, props }).then((entity) => {
+      this.dataProvider.put({ id, props }).then((entity) => {
         const index = this.entities.findIndex((br) => br.id === id);
         this.entities[index] = entity;
         this.gameModel.execute({
@@ -43,7 +43,7 @@ export class CrudDataManager extends ReadDataManager {
   }
 
   onDeleteEntityRequested({ id }) {
-    this.holder.delete({ id }).then(() => {
+    this.dataProvider.delete({ id }).then(() => {
       const entity = this.entities.find((br) => br.id === id);
       this.entities = this.entities.filter((br) => br.id !== id);
       this.gameModel.execute({
@@ -54,7 +54,7 @@ export class CrudDataManager extends ReadDataManager {
   }
 
   onPostEntityRequested({ props }) {
-    this.holder.post({ props }).then((entity) => {
+    this.dataProvider.post({ props }).then((entity) => {
       this.entities.push(entity);
       this.gameModel.execute({
         type: `post${this.ccEntityName}Confirmed`,

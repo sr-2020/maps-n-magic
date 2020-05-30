@@ -14,6 +14,7 @@ import { BeaconRecordService } from './services/BeaconRecordService';
 import { NotificationService } from './services/NotificationService';
 import { BackgroundImageService } from './services/BackgroundImageService';
 import { CharacterHealthStateService } from './services/CharacterHealthStateService';
+import { UserRecordService } from './services/UserRecordService';
 
 export const services = [
   UserService,
@@ -32,4 +33,5 @@ export const services = [
   NotificationService,
   BackgroundImageService,
   CharacterHealthStateService,
+  UserRecordService,
 ];

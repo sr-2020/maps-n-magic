@@ -17,27 +17,39 @@ export class DataBinding extends Component {
 
   componentDidMount() {
     const {
-      gameModel, DataProvider, DataManager, entityName,
+      gameModel, DataProvider, DataManager, entityName, ReadStrategy, ReadStrategyArgs = [],
+
+
     } = this.props;
-    this.innerCommunicator = new DataManager();
-    this.innerCommunicator.initialize(gameModel, DataProvider, entityName);
+    this.dataManager = new DataManager(
+      gameModel,
+      new DataProvider(),
+      entityName,
+      new ReadStrategy(gameModel, ...ReadStrategyArgs),
+    );
+    this.dataManager.initialize();
     console.log('DataBinding mounted');
   }
 
   componentDidUpdate(prevProps) {
     const {
-      gameModel, DataProvider, DataManager, entityName,
+      gameModel, DataProvider, DataManager, entityName, ReadStrategy, ReadStrategyArgs = [],
     } = this.props;
     if (prevProps.gameModel !== gameModel) {
-      this.innerCommunicator.dispose();
-      this.innerCommunicator = new DataManager();
-      this.innerCommunicator.initialize(gameModel, DataProvider, entityName);
+      this.dataManager.dispose();
+      this.dataManager = new DataManager(
+        gameModel,
+        new DataProvider(),
+        entityName,
+        new ReadStrategy(gameModel, ...ReadStrategyArgs),
+      );
+      this.dataManager.initialize();
     }
     console.log('DataBinding did update');
   }
 
   componentWillUnmount() {
-    this.innerCommunicator.dispose();
+    this.dataManager.dispose();
     console.log('DataBinding will unmount');
   }
 

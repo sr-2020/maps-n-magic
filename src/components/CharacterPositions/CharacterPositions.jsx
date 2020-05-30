@@ -11,11 +11,9 @@ import Alert from 'react-bootstrap/Alert';
 
 import { isGeoLocation } from '../../utils/miscUtils';
 
-import { RemoteUsersRecordHolder, postUserPosition } from '../../api/position';
+import { RemoteUsersRecordProvider, postUserPosition } from '../../api/position';
 
 // import { CharacterPositionsPropTypes } from '../../types';
-
-const REQUEST_TIMEOUT = 15000;
 
 export class CharacterPositions extends Component {
   // static propTypes = CharacterPositionsPropTypes;
@@ -31,6 +29,7 @@ export class CharacterPositions extends Component {
     this.onSubmit = this.onSubmit.bind(this);
     this.setLocationRecords = this.setLocationRecords.bind(this);
     this.setBeaconRecords = this.setBeaconRecords.bind(this);
+    this.setUserRecords = this.setUserRecords.bind(this);
   }
 
   componentDidMount() {
@@ -39,19 +38,18 @@ export class CharacterPositions extends Component {
     } = this.props;
     this.subscribe('on', gameModel);
 
-    this.users = new RemoteUsersRecordHolder();
+    this.users = new RemoteUsersRecordProvider();
 
     this.setBeaconRecords({
-      beaconRecords: (gameModel.get('beaconRecords')),
+      beaconRecords: gameModel.get('beaconRecords'),
     });
     this.setLocationRecords({
-      locationRecords: (gameModel.get('locationRecords')),
+      locationRecords: gameModel.get('locationRecords'),
+    });
+    this.setUserRecords({
+      userRecords: gameModel.get('userRecords'),
     });
 
-    this.characterChangeIntervalId = setInterval(() => {
-      this.loadUsers();
-    }, REQUEST_TIMEOUT);
-    this.loadUsers();
     console.log('CharacterPositions mounted');
   }
 
@@ -63,10 +61,13 @@ export class CharacterPositions extends Component {
       this.subscribe('off', prevProps.gameModel);
       this.subscribe('on', gameModel);
       this.setBeaconRecords({
-        beaconRecords: (gameModel.get('beaconRecords')),
+        beaconRecords: gameModel.get('beaconRecords'),
       });
       this.setLocationRecords({
-        locationRecords: (gameModel.get('locationRecords')),
+        locationRecords: gameModel.get('locationRecords'),
+      });
+      this.setUserRecords({
+        userRecords: gameModel.get('userRecords'),
       });
     }
     console.log('CharacterPositions did update');
@@ -77,7 +78,6 @@ export class CharacterPositions extends Component {
       gameModel,
     } = this.props;
     this.subscribe('off', gameModel);
-    clearInterval(this.characterChangeIntervalId);
     console.log('CharacterPositions will unmount');
   }
 
@@ -85,6 +85,7 @@ export class CharacterPositions extends Component {
   subscribe(action, gameModel) {
     gameModel[action]('beaconRecordsChanged', this.setBeaconRecords);
     gameModel[action]('locationRecordsChanged', this.setLocationRecords);
+    gameModel[action]('userRecordsChanged', this.setUserRecords);
   }
 
   setLocationRecords({ locationRecords }) {
@@ -108,7 +109,16 @@ export class CharacterPositions extends Component {
     });
   }
 
+  setUserRecords({ userRecords }) {
+    this.setState({
+      users: R.sortBy(R.prop('id'), userRecords),
+    });
+  }
+
   onSubmit(e) {
+    const {
+      gameModel,
+    } = this.props;
     const { beaconIndex } = this.state;
     const form = e.currentTarget;
     e.stopPropagation();
@@ -129,24 +139,9 @@ export class CharacterPositions extends Component {
 
     postUserPosition(characterId, beacon).then((result) => {
       if (!result.ok) throw new Error(result);
-      this.loadUsers();
+      gameModel.emit('reloadUserRecords');
     }).catch((error) => {
       console.error(error);
-    });
-  }
-
-  loadUsers() {
-    this.users.get()
-      .then((result) => {
-        this.updateUsers(result);
-      }).catch((error) => {
-        console.error(error);
-      });
-  }
-
-  updateUsers(users) {
-    this.setState({
-      users: R.sortBy(R.prop('id'), users),
     });
   }
 

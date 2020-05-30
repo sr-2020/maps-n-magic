@@ -23,14 +23,23 @@ import { SpiritEditor } from '../SpiritEditor';
 import { AppPropTypes } from '../../types';
 
 import {
-  GameModel, Migrator, services, fillGameModelWithBots, CrudDataManager,
+  GameModel,
+  Migrator,
+  services,
+  fillGameModelWithBots,
+  CrudDataManager,
+  ReadDataManager,
+  SingleReadStrategy,
+  PollingReadStrategy,
 } from '../../gameModel';
+
 
 import { DataBinding } from '../DataBinding';
 
 import {
   RemoteLocationRecordProvider as LocationRecordProvider,
   RemoteBeaconRecordProvider as BeaconRecordProvider,
+  RemoteUsersRecordProvider as UserRecordProvider,
 } from '../../api/position';
 
 import { mapConfig } from '../../configs/map';
@@ -358,12 +367,24 @@ export class App extends Component {
                     entityName="beaconRecord"
                     DataProvider={BeaconRecordProvider}
                     DataManager={CrudDataManager}
+                    ReadStrategy={PollingReadStrategy}
+                    ReadStrategyArgs={[15000]}
                   />
                   <DataBinding
                     gameModel={gameModel}
                     entityName="locationRecord"
                     DataProvider={LocationRecordProvider}
                     DataManager={CrudDataManager}
+                    ReadStrategy={PollingReadStrategy}
+                    ReadStrategyArgs={[15000]}
+                  />
+                  <DataBinding
+                    gameModel={gameModel}
+                    entityName="userRecord"
+                    DataProvider={UserRecordProvider}
+                    DataManager={ReadDataManager}
+                    ReadStrategy={PollingReadStrategy}
+                    ReadStrategyArgs={[15000, 'reloadUserRecords']}
                   />
                   <NotificationWatcher gameModel={gameModel} />
                   <CharacterHealthStateSimulator gameModel={gameModel} />

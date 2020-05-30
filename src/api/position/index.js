@@ -24,7 +24,7 @@ export class RemoteLocationRecordProvider extends ManageableResourceProvider {
   }
 }
 
-export class RemoteUsersRecordHolder extends GettableResourceProvider {
+export class RemoteUsersRecordProvider extends GettableResourceProvider {
   constructor() {
     super(usersUrl);
   }
