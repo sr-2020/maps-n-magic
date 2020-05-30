@@ -47,10 +47,10 @@ import { SoundStage } from './SoundStage';
 import { Translator } from '../../utils/Translator';
 
 import { EntityCommunicator } from '../EntityCommunicator';
-import { RemoteBeaconRecordHolder } from '../EntityCommunicator/RemoteBeaconRecordHolder';
-import { LocationHolder } from '../EntityCommunicator/LocationHolder';
+import { RemoteLocationRecordHolder, RemoteBeaconRecordHolder } from '../../api/position';
 
 import { BeaconRecordEditor } from '../BeaconRecordEditor';
+import { RescueServiceMessageSender } from '../RescueServiceMessageSender';
 
 import { TrackAnalysis } from '../TrackAnalysis';
 import { NotificationWatcher } from '../NotificationWatcher';
@@ -321,6 +321,9 @@ export class App extends Component {
                     <Route path="/beaconRecordEditor">
                       <BeaconRecordEditor gameModel={gameModel} />
                     </Route>
+                    <Route path="/rescueServiceMessageSender">
+                      <RescueServiceMessageSender gameModel={gameModel} />
+                    </Route>
                     <Route path="/characterPositions">
                       <CharacterPositions gameModel={gameModel} />
                     </Route>
@@ -356,7 +359,7 @@ export class App extends Component {
                   />
                   <EntityCommunicator
                     gameModel={gameModel}
-                    EntityHolder={LocationHolder}
+                    EntityHolder={RemoteLocationRecordHolder}
                     entityName="locationRecord"
                   />
                   <NotificationWatcher gameModel={gameModel} />

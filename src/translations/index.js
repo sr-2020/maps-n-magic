@@ -157,6 +157,8 @@ export const translations = {
       beaconHasNoLocation: 'Нет привязки к локации',
 
       locationHasNoBeaconsError: 'Перемещение игрока в следующие геолокации недоступно, потому что в них нет маяков.',
+
+      rescueServiceMessageSender: 'Отправка сообщений МЧС о КС',
     },
   },
 };

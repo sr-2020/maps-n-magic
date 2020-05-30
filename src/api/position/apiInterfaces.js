@@ -1,28 +1,26 @@
-export class RemoteHolder {
-  constructor(url, defaultObject) {
-    this.url = url;
-    this.defaultObject = defaultObject;
-  }
 
+export const gettable = (state) => ({
   async get() {
-    const response = await fetch(this.url);
+    const response = await fetch(state.url);
     if (!response.ok) {
       const text = await response.text();
       throw new Error(`Network response was not ok ${text}`);
     }
 
     return response.json();
-  }
+  },
+});
 
+export const postable = (state) => ({
   async post({ props }) {
-    const response = await fetch(this.url, {
+    const response = await fetch(state.url, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json;charset=utf-8',
         'X-User-Id': 1,
       },
       body: JSON.stringify({
-        ...this.defaultObject,
+        ...state.defaultObject,
         ...props,
       }),
     });
@@ -33,10 +31,12 @@ export class RemoteHolder {
     }
 
     return response.json();
-  }
+  },
+});
 
+export const puttable = (state) => ({
   async put({ id, props }) {
-    const response = await fetch(`${this.url}/${id}`, {
+    const response = await fetch(`${state.url}/${id}`, {
       method: 'PUT',
       headers: {
         'Content-Type': 'application/json;charset=utf-8',
@@ -53,19 +53,17 @@ export class RemoteHolder {
     }
 
     return response.json();
-  }
+  },
+});
 
+export const deletable = (state) => ({
   async delete({ id }) {
-    const response = await fetch(`${this.url}/${id}`, {
+    const response = await fetch(`${state.url}/${id}`, {
       method: 'DELETE',
       headers: {
         'Content-Type': 'application/json;charset=utf-8',
         'X-User-Id': 1,
       },
-      // body: JSON.stringify({
-      //   // ...defaultBeaconRecord,
-      //   ...props,
-      // }),
     });
 
     if (!response.ok) {
@@ -73,7 +71,6 @@ export class RemoteHolder {
       throw new Error(`Network response was not ok ${text}`);
     }
 
-    // return response.json();
     return response;
-  }
-}
+  },
+});

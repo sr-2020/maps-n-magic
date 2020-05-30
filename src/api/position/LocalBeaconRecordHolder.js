@@ -7,7 +7,7 @@ const defaultBeaconRecord = {
   label: '',
 };
 
-export class BeaconRecordHolder {
+export class LocalBeaconRecordHolder {
   timeoutSize = 4000;
 
   beaconRecords = [

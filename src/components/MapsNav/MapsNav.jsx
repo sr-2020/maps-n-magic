@@ -31,6 +31,9 @@ const navLinks3 = [{
 // }, {
   to: '/characterPositions',
   tKey: 'characterPositions',
+}, {
+  to: '/rescueServiceMessageSender',
+  tKey: 'rescueServiceMessageSender',
 }];
 
 // import { MapsNavPropTypes } from '../../types';
