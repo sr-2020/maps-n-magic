@@ -1,18 +1,10 @@
 import * as R from 'ramda';
-import React, { Component } from 'react';
+import { Component } from 'react';
 import './SoundWatcher.css';
 
-// import { EventEmitter } from 'events';
+import { getSound, getSoundList } from '../../api/sounds';
 
-import { AUDIO_RETRANSLATOR } from '../../settings';
-
-const {
-  POLL_INTERVAL, SOUND_URL, SOUND_LIST_ROUTE, SOUND_ROUTE,
-} = AUDIO_RETRANSLATOR;
-
-function getUrl(...args) {
-  return SOUND_URL + args.join('');
-}
+const POLL_INTERVAL = 15000; // ms
 
 const indexByName = R.indexBy(R.prop('name'));
 
@@ -59,18 +51,12 @@ export class SoundWatcher extends Component {
 
   // eslint-disable-next-line react/sort-comp
   _getSoundList() {
-    fetch(getUrl(SOUND_LIST_ROUTE), {
-      signal: this.abortController.signal,
-    })
-      .then((result) => {
-        if (!result.ok) throw new Error(result);
-        return result.json();
-      }).then((result) => {
-        console.log(`Sound list fetched ${result.entries.length}`);
-        this._updateSounds(result);
-      }).catch((error) => {
-        console.error(error);
-      });
+    getSoundList(this.abortController).then((result) => {
+      console.log(`Sound list fetched ${result.entries.length}`);
+      this._updateSounds(result);
+    }).catch((error) => {
+      console.error(error);
+    });
   }
 
   // eslint-disable-next-line max-lines-per-function
@@ -152,21 +138,10 @@ export class SoundWatcher extends Component {
       return;
     }
     sound.status = 'loading';
-    // this.disposeController.isDisposedCheck();
-    // this.emit('soundStatusChange', {
-    //   name,
-    //   status: sound.status,
-    // });
-    fetch(getUrl(SOUND_ROUTE, '/', name), {
-      signal: this.abortController.signal,
+    getSound(name, this.abortController).then((result) => this.props.context.makeAudioBuffer(result)).then((result) => {
+      // console.log(result);
+      this.soundLoaded(name, result);
     })
-      .then((result) => {
-        if (!result.ok) throw new Error(result);
-        return result.arrayBuffer();
-      }).then((result) => this.props.context.makeAudioBuffer(result)).then((result) => {
-        // console.log(result);
-        this.soundLoaded(name, result);
-      })
       .catch((error) => {
         console.error(error);
       });

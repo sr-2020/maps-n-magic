@@ -4,7 +4,12 @@ import {
 } from './apiInterfaces';
 
 import {
-  locationsUrl, beaconsUrl, defaultBeaconRecord, defaultLocationRecord,
+  locationsUrl,
+  beaconsUrl,
+  usersUrl,
+  positionUrl,
+  defaultBeaconRecord,
+  defaultLocationRecord,
 } from './constants';
 
 export class RemoteBeaconRecordHolder extends ManageableEndpoint {
@@ -19,6 +24,29 @@ export class RemoteLocationRecordHolder extends ManageableEndpoint {
   }
 }
 
+export class RemoteUsersRecordHolder extends GettableEndpoint {
+  constructor() {
+    super(usersUrl);
+  }
+}
+
+export async function postUserPosition(characterId, beacon) {
+  return fetch(positionUrl, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json;charset=utf-8',
+      'X-User-Id': characterId,
+    },
+    body: JSON.stringify({
+      beacons: [{
+        ssid: beacon.ssid,
+        bssid: beacon.bssid,
+        level: -10,
+      }],
+    }),
+  });
+}
+
 function ManageableEndpoint(url, defaultObject) {
   this.url = url;
   this.defaultObject = defaultObject;
@@ -29,5 +57,14 @@ function ManageableEndpoint(url, defaultObject) {
     postable(this),
     puttable(this),
     deletable(this),
+  );
+}
+
+function GettableEndpoint(url) {
+  this.url = url;
+
+  return Object.assign(
+    this,
+    gettable(this),
   );
 }

@@ -3,6 +3,8 @@ import './CharacterHealthListener.css';
 
 import * as R from 'ramda';
 
+import { getCharacterStates } from '../../api/characterStates';
+
 // import { CharacterHealthListenerPropTypes } from '../../types';
 
 const REQUEST_TIMEOUT = 5000;
@@ -33,16 +35,11 @@ export class CharacterHealthListener extends Component {
   }
 
   loadCharacterStates() {
-    // fetch('http://localhost:3001/characterStates')
-    fetch('/characterStates')
-      .then((result) => {
-        if (!result.ok) throw new Error(result);
-        return result.json();
-      }).then((result) => {
-        this.updateCharacterStates(result);
-      }).catch((error) => {
-        console.error(error);
-      });
+    getCharacterStates().then((result) => {
+      this.updateCharacterStates(result);
+    }).catch((error) => {
+      console.error(error);
+    });
   }
 
   updateCharacterStates(newStates) {

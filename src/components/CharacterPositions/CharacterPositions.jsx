@@ -11,13 +11,11 @@ import Alert from 'react-bootstrap/Alert';
 
 import { isGeoLocation } from '../../utils/miscUtils';
 
+import { RemoteUsersRecordHolder, postUserPosition } from '../../api/position';
+
 // import { CharacterPositionsPropTypes } from '../../types';
 
 const REQUEST_TIMEOUT = 15000;
-
-const userUrl = 'https://position.evarun.ru/api/v1/users';
-
-const positionUrl = 'http://position.evarun.ru/api/v1/positions';
 
 export class CharacterPositions extends Component {
   // static propTypes = CharacterPositionsPropTypes;
@@ -40,6 +38,8 @@ export class CharacterPositions extends Component {
       gameModel,
     } = this.props;
     this.subscribe('on', gameModel);
+
+    this.users = new RemoteUsersRecordHolder();
 
     this.setBeaconRecords({
       beaconRecords: (gameModel.get('beaconRecords')),
@@ -127,20 +127,7 @@ export class CharacterPositions extends Component {
 
     const beacon = beaconIndex[locationId];
 
-    fetch(positionUrl, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json;charset=utf-8',
-        'X-User-Id': characterId,
-      },
-      body: JSON.stringify({
-        beacons: [{
-          ssid: beacon.ssid,
-          bssid: beacon.bssid,
-          level: -10,
-        }],
-      }),
-    }).then((result) => {
+    postUserPosition(characterId, beacon).then((result) => {
       if (!result.ok) throw new Error(result);
       this.loadUsers();
     }).catch((error) => {
@@ -149,11 +136,8 @@ export class CharacterPositions extends Component {
   }
 
   loadUsers() {
-    fetch(userUrl)
+    this.users.get()
       .then((result) => {
-        if (!result.ok) throw new Error(result);
-        return result.json();
-      }).then((result) => {
         this.updateUsers(result);
       }).catch((error) => {
         console.error(error);
