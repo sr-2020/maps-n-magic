@@ -1,10 +1,10 @@
 // eslint-disable-next-line max-classes-per-file
 import * as R from 'ramda';
 import { EventEmitter } from 'events';
-import { getEeStats } from '../utils/miscUtils';
-import { DisposeController } from '../utils/DisposeController';
+import { getEeStats } from '../../utils/miscUtils';
+import { DisposeController } from '../../utils/DisposeController';
 
-import { SoundMappingService } from './SoundMappingService';
+import { SoundMappingService } from '../services/SoundMappingService';
 
 // sound statuses:
 // sound data
