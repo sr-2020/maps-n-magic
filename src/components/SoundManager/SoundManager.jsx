@@ -165,7 +165,7 @@ export class SoundManager extends Component {
           </Card>
         </Accordion>
 
-        <div className="px-3">
+        <div className="tw-px-3">
           {
             sounds.map((sound) => (
               <SoundRow

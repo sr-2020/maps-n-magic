@@ -19,7 +19,7 @@ export class SpiritEditor extends Component {
     const { spiritService } = this.props;
 
     return (
-      <div className="SpiritEditor h-full flex">
+      <div className="SpiritEditor tw-h-full tw-flex">
         <SpiritList spiritService={spiritService} />
         <Route
           path="/spiritEditor/:id"

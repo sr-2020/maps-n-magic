@@ -144,7 +144,7 @@ export class SoundSettingsForm extends Component {
     const { t } = this.props;
     return (
       <div className="SoundSettingsForm">
-        <div className="mb-4">
+        <div className="tw-mb-4">
           <InputLabel translationKey="rotationSoundTimeout" htmlFor="rotationSoundTimeout" />
           <TimeoutInput
             inputId="rotationSoundTimeout"
@@ -156,7 +156,7 @@ export class SoundSettingsForm extends Component {
             decrementKey="decrementSoundTimeout"
           />
         </div>
-        <div className="mb-4">
+        <div className="tw-mb-4">
           <InputLabel translationKey="rotationTimeout" htmlFor="rotationTimeout" />
           <TimeoutInput
             inputId="rotationTimeout"
@@ -168,7 +168,7 @@ export class SoundSettingsForm extends Component {
             decrementKey="decrementSoundTimeout"
           />
         </div>
-        <div className="mb-4">
+        <div className="tw-mb-4">
           <InputLabel translationKey="backgroundVolume" htmlFor="backgroundVolume" />
           <TimeoutInput
             inputId="backgroundVolume"
@@ -180,7 +180,7 @@ export class SoundSettingsForm extends Component {
             decrementKey="decrementVolume"
           />
         </div>
-        <div className="mb-4">
+        <div className="tw-mb-4">
           <InputLabel translationKey="rotationVolume" htmlFor="rotationVolume" />
           <TimeoutInput
             inputId="rotationVolume"

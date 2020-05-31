@@ -104,7 +104,7 @@ export class SpiritContent extends Component {
 
     if (!id) {
       return (
-        <div className="SpiritContent flex-grow">
+        <div className="SpiritContent tw-flex-grow">
           {t('youHaveNoSpirits')}
         </div>
       );
@@ -113,20 +113,20 @@ export class SpiritContent extends Component {
     return (
       <DocumentTitle title={name}>
 
-        <div className="SpiritContent flex-grow px-16 py-8 overflow-auto">
+        <div className="SpiritContent tw-flex-grow tw-px-16 tw-py-8 tw-overflow-auto">
           <div className="SpiritContentWorkspace">
-            <h2 className="mb-8 w-50p">
+            <h2 className="tw-mb-8 tw-w-2/4">
               <Form.Control
                 name="name"
                 type="text"
-                className="text-3xl"
+                className="tw-text-3xl"
                 value={name}
                 onChange={this.handleInputChange}
               />
             </h2>
 
-            <div className="table">
-              <div className="table-column w-1_6p" />
+            <div className="tw-table">
+              <div className="tw-table-column tw-w-1/6" />
               {/* <h3 className="table-caption">Spirit info</h3> */}
               {/* <div className="table-row">
                 <div className="table-cell">Aura</div>
@@ -134,13 +134,13 @@ export class SpiritContent extends Component {
                   {aura}
                 </div>
               </div> */}
-              <div className="table-row">
-                <label htmlFor="fractionInput" className="table-cell">{t('fraction')}</label>
-                <div className="table-cell">
+              <div className="tw-table-row">
+                <label htmlFor="fractionInput" className="tw-table-cell">{t('fraction')}</label>
+                <div className="tw-table-cell">
                   <Form.Control
                     name="fraction"
                     type="text"
-                    className="w-50p"
+                    className="tw-w-2/4"
                     id="fractionInput"
                     value={fraction}
                     onChange={this.handleInputChange}
@@ -148,13 +148,13 @@ export class SpiritContent extends Component {
                   />
                 </div>
               </div>
-              <div className="table-row">
-                <label htmlFor="maxHitPointsInput" className="table-cell">{t('maxHitPoints')}</label>
-                <div className="table-cell">
+              <div className="tw-table-row">
+                <label htmlFor="maxHitPointsInput" className="tw-table-cell">{t('maxHitPoints')}</label>
+                <div className="tw-table-cell">
                   <Form.Control
                     name="maxHitPoints"
                     type="number"
-                    className="w-25p"
+                    className="tw-w-1/4"
                     id="maxHitPointsInput"
                     value={maxHitPoints}
                     onChange={this.handleInputChange}
@@ -162,9 +162,9 @@ export class SpiritContent extends Component {
                   />
                 </div>
               </div>
-              <div className="table-row">
-                <label htmlFor="storyInput" className="table-cell">{t('story')}</label>
-                <div className="table-cell">
+              <div className="tw-table-row">
+                <label htmlFor="storyInput" className="tw-table-cell">{t('story')}</label>
+                <div className="tw-table-cell">
                   <Form.Control
                     name="story"
                     as="textarea"
@@ -175,10 +175,10 @@ export class SpiritContent extends Component {
                   />
                 </div>
               </div>
-              <div className="table-row">
-                <label htmlFor="newAbility" className="table-cell">{t('abilities')}</label>
+              <div className="tw-table-row">
+                <label htmlFor="newAbility" className="tw-table-cell">{t('abilities')}</label>
                 {/* <div className="table-cell">{abilities.join(', ') || 'None'}</div> */}
-                <div className="table-cell">
+                <div className="tw-table-cell">
                   <AbilitiesInput
                     spiritService={spiritService}
                     id={id}

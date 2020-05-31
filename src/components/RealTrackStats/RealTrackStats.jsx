@@ -81,7 +81,7 @@ export class RealTrackStats extends Component {
 
     const sortByTotal = R.sortBy((el) => -el.stats.total);
     return (
-      <div className="RealTrackStats mx-auto p-4">
+      <div className="RealTrackStats tw-mx-auto tw-p-4">
         <Table
           bordered
           hover

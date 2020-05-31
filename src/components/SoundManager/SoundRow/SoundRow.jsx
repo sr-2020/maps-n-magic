@@ -55,33 +55,33 @@ export class SoundRow extends Component {
     //   // return null;
     // }
     return (
-      <div className="SoundRow flex">
+      <div className="SoundRow tw-flex">
         <button
           type="button"
           className={
-            classNames('rounded my-1 h-12 flex music-control-button hover:bg-gray-200 w-full flex items-center', {
+            classNames('tw-rounded tw-my-1 tw-h-12 tw-flex music-control-button hover:tw-bg-gray-200 tw-w-full tw-flex tw-items-center', {
               selected: isSelected,
             })
           }
 
           onClick={() => selectBackgroundSound(sound.name)}
         >
-          <div className="w-10 h-10 ml-1 bg-gray-300 rounded flex icon-container">
-            <FontAwesomeIcon className="text-gray-600 music-icon m-auto text-2xl" icon={faMusic} />
+          <div className="tw-w-10 tw-h-10 tw-ml-1 tw-bg-gray-300 tw-rounded tw-flex icon-container">
+            <FontAwesomeIcon className="tw-text-gray-600 music-icon tw-m-auto tw-text-2xl" icon={faMusic} />
             <FontAwesomeIcon
-              className="text-gray-600 play-icon m-auto text-2xl text-white"
+              className="tw-text-gray-600 play-icon tw-m-auto tw-text-2xl tw-text-white"
               icon={this.getActiveIcon(sound)}
               spin={sound.status === 'loading'}
             />
           </div>
-          <div className="text-left">
-            <div className="leading-none">
-              <span className="ml-2 pt-1 font-medium text-sm">{sound.name}</span>
+          <div className="tw-text-left">
+            <div className="tw-leading-none">
+              <span className="tw-ml-2 tw-pt-1 tw-font-medium tw-text-sm">{sound.name}</span>
             </div>
             <div>
-              <span className="ml-2 pt-1 text-sm text-gray-600">{formatBytes(sound.size)}</span>
-              <span className="ml-2 pt-1 text-sm text-gray-600">{sound.buffer && formatDuration(sound.buffer.duration)}</span>
-              <span className="ml-2 pt-1 text-sm text-gray-600">{sound.status}</span>
+              <span className="tw-ml-2 tw-pt-1 tw-text-sm tw-text-gray-600">{formatBytes(sound.size)}</span>
+              <span className="tw-ml-2 tw-pt-1 tw-text-sm tw-text-gray-600">{sound.buffer && formatDuration(sound.buffer.duration)}</span>
+              <span className="tw-ml-2 tw-pt-1 tw-text-sm tw-text-gray-600">{sound.status}</span>
             </div>
           </div>
         </button>
@@ -89,7 +89,7 @@ export class SoundRow extends Component {
         <button
           type="button"
           className={
-            classNames('rounded my-1 h-12 flex music-control-button hover:bg-gray-200 w-full flex items-center', {
+            classNames('tw-rounded tw-my-1 tw-h-12 tw-flex music-control-button hover:tw-bg-gray-200 tw-w-full tw-flex tw-items-center', {
               selected: isSelected,
             })
           }
@@ -105,20 +105,20 @@ export class SoundRow extends Component {
               spin={sound.status === 'loading'}
             />
           </div> */}
-          <div className="text-left">
-            <div className="leading-none">
-              <span className="ml-2 pt-1 font-medium text-sm">{t(isBackground ? 'isBackground' : 'setToBackground')}</span>
+          <div className="tw-text-left">
+            <div className="tw-leading-none">
+              <span className="tw-ml-2 tw-pt-1 tw-font-medium tw-text-sm">{t(isBackground ? 'isBackground' : 'setToBackground')}</span>
             </div>
             <div>
               {/* <span className="ml-2 pt-1 text-sm text-gray-600">{formatBytes(sound.size)}</span> */}
-              <span className="ml-2 pt-1 text-sm text-gray-600" />
+              <span className="tw-ml-2 tw-pt-1 tw-text-sm tw-text-gray-600" />
             </div>
           </div>
         </button>
         <button
           type="button"
           className={
-            classNames('rounded my-1 h-12 flex music-control-button hover:bg-gray-200 w-full flex items-center', {
+            classNames('tw-rounded tw-my-1 tw-h-12 tw-flex music-control-button hover:tw-bg-gray-200 tw-w-full tw-flex tw-items-center', {
               selected: isSelected,
             })
           }
@@ -134,13 +134,13 @@ export class SoundRow extends Component {
               spin={sound.status === 'loading'}
             />
           </div> */}
-          <div className="text-left">
-            <div className="leading-none">
-              <span className="ml-2 pt-1 font-medium text-sm">{t(isInRotation ? 'inRotation' : 'addToRotation')}</span>
+          <div className="tw-text-left">
+            <div className="tw-leading-none">
+              <span className="tw-ml-2 tw-pt-1 tw-font-medium tw-text-sm">{t(isInRotation ? 'inRotation' : 'addToRotation')}</span>
             </div>
             <div>
               {/* <span className="ml-2 pt-1 text-sm text-gray-600">{formatBytes(sound.size)}</span> */}
-              <span className="ml-2 pt-1 text-sm text-gray-600">
+              <span className="tw-ml-2 tw-pt-1 tw-text-sm tw-text-gray-600">
                 {playbackIndex !== -1 && t(playbackIndex === 0 ? 'playingNow' : 'queuePlace', {
                   index: playbackIndex,
                 })}

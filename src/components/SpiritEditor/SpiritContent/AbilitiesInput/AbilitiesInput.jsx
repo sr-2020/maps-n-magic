@@ -108,7 +108,6 @@ export class AbilitiesInput extends Component {
     });
     this.setState(({ abilities: prevAbilities }) => ({
       abilities: prevAbilities.filter((ab) => ab !== ability),
-      // allAbilities: spiritService.getSpiritAbilitiesList(),
       allAbilities: spiritService.get('spiritAbilitiesList'),
     }));
   }
@@ -127,7 +126,7 @@ export class AbilitiesInput extends Component {
     return (
       <div className={className2}>
         <Form onSubmit={this.onSubmit}>
-          <InputGroup className="mb-3">
+          <InputGroup className="tw-mb-3">
             <FormControl required id="newAbility" list="abilities-datalist" />
             <InputGroup.Append>
               <Button type="submit" variant="outline-secondary">{t('addAbility')}</Button>
@@ -136,7 +135,7 @@ export class AbilitiesInput extends Component {
         </Form>
         <div>
           {abilities.map((ability) => (
-            <ButtonGroup key={ability} className="mr-2 mb-2">
+            <ButtonGroup key={ability} className="tw-mr-2 tw-mb-2">
               <Button variant="secondary">{ability}</Button>
               <Button variant="secondary" onClick={(e) => this.removeAbility(e, ability)}><FontAwesomeIcon icon={faTimes} /></Button>
             </ButtonGroup>

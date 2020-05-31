@@ -40,26 +40,26 @@ export class BackgroundImagePopup extends Component {
   // eslint-disable-next-line max-lines-per-function
   makeContent() {
     const {
-      unattachedList, attachedList, selectedAddMarker, selectedRemoveMarker,
+      // unattachedList, attachedList, selectedAddMarker, selectedRemoveMarker,
     } = this.state;
     const {
       name, onChange, t, image,
     } = this.props;
 
-    const common = 'w-33p font-bold py-2 px-4 focus:outline-none focus:shadow-outline';
-    const selectedButton = 'bg-blue-500 hover:bg-blue-700 text-white';
-    const unselectedButton = 'bg-gray-300 hover:bg-gray-400 text-gray-800';
+    // const common = 'tw-w-1/3 tw-font-bold tw-py-2 tw-px-4 focus:tw-outline-none focus:tw-shadow-outline';
+    // const selectedButton = 'bg-blue-500 hover:bg-blue-700 text-white';
+    // const unselectedButton = 'bg-gray-300 hover:bg-gray-400 text-gray-800';
     return (
       <div className="LocationPopup">
-        <div className="mb-3">
+        <div className="tw-mb-3">
           <label
-            className="block text-gray-700 text-sm font-bold mb-2"
+            className="tw-block tw-text-gray-700 tw-text-sm tw-font-bold tw-mb-2"
             htmlFor="backgroundImageName"
           >
             {t('backgroundImageName')}
           </label>
           <input
-            className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+            className="tw-shadow tw-appearance-none tw-border tw-rounded tw-w-full tw-py-2 tw-px-3 tw-text-gray-700 tw-leading-tight focus:tw-outline-none focus:tw-shadow-outline"
             id="locationName"
             type="text"
             value={name}
@@ -67,15 +67,15 @@ export class BackgroundImagePopup extends Component {
             onKeyPress={this._handleKeyDown}
           />
         </div>
-        <div className="mb-3">
+        <div className="tw-mb-3">
           <label
-            className="block text-gray-700 text-sm font-bold mb-2"
+            className="tw-block tw-text-gray-700 tw-text-sm tw-font-bold tw-mb-2"
             htmlFor="backgroundImageUrl"
           >
             {t('backgroundImageUrl')}
           </label>
           <input
-            className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+            className="tw-shadow tw-appearance-none tw-border tw-rounded tw-w-full tw-py-2 tw-px-3 tw-text-gray-700 tw-leading-tight focus:tw-outline-none focus:tw-shadow-outline"
             id="backgroundImageUrl"
             type="text"
             value={image}
@@ -85,7 +85,7 @@ export class BackgroundImagePopup extends Component {
         </div>
         <div>
           <label
-            className="block text-gray-700 text-sm font-bold mb-2"
+            className="tw-block tw-text-gray-700 tw-text-sm tw-font-bold tw-mb-2"
             htmlFor="backgroundImagePreview"
           >
             {t('backgroundImagePreview')}

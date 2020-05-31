@@ -36,18 +36,18 @@ export class InPlaceInput extends Component {
       <span
         className="
             view-container
-            outline-gray-500
-            outline-2
-            hover:outline-solid
-            cursor-text
+            tw-outline-gray-500
+            tw-outline-2
+            hover:tw-outline-solid
+            tw-cursor-text
             "
         title="Click to edit"
         onClick={this.editModeOn}
       >
         {value}
-        <span className="button-container bg-gray-500 ml-2 opacity-0">
-          <button type="button" className="bg-gray-500">
-            <FontAwesomeIcon className="w-4 h-6" icon={faEdit} />
+        <span className="button-container tw-bg-gray-500 tw-ml-2 tw-opacity-0">
+          <button type="button" className="tw-bg-gray-500">
+            <FontAwesomeIcon className="tw-w-4 tw-h-6" icon={faEdit} />
           </button>
         </span>
       </span>
@@ -58,7 +58,7 @@ export class InPlaceInput extends Component {
     return (
       <form>
         <input />
-        <button onClick={this.editModeOff}>Cancel</button>
+        <button type="button" onClick={this.editModeOff}>Cancel</button>
         <button type="submit">OK</button>
       </form>
     );

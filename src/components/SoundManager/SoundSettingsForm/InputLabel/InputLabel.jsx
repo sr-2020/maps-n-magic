@@ -8,7 +8,7 @@ export function InputLabel(props) {
 
   return (
     <label
-      className="InputLabel block text-gray-700 text-sm font-bold mb-2"
+      className="InputLabel tw-block tw-text-gray-700 tw-text-sm tw-font-bold tw-mb-2"
       htmlFor={htmlFor}
     >
       {t(translationKey)}

@@ -144,12 +144,12 @@ export class MusicSelectControl extends Component {
         {
           values.map((value, i) => (
             <Card kay={value.key}>
-              <Accordion.Toggle as={Card.Header} eventKey={String(i)} className="text-base">
-                <span className="text-gray-600">{`${t('manaLevel')}:`}</span>
+              <Accordion.Toggle as={Card.Header} eventKey={String(i)} className="tw-text-base">
+                <span className="tw-text-gray-600">{`${t('manaLevel')}:`}</span>
                 {' '}
                 {t(value.name)}
                 <br />
-                {manaLevels[value.key] || <span className="text-gray-600">{t('noSound')}</span>}
+                {manaLevels[value.key] || <span className="tw-text-gray-600">{t('noSound')}</span>}
               </Accordion.Toggle>
               <Accordion.Collapse eventKey={String(i)}>
                 <Card.Body style={{ maxHeight: '20rem', overflow: 'auto' }} onScroll={(e) => e.stopPropagation()}>
@@ -159,11 +159,11 @@ export class MusicSelectControl extends Component {
                         <li key={sound.name}>
                           <Button
                             variant="outline-dark"
-                            className="w-full text-left mb-2"
+                            className="tw-w-full tw-text-left tw-mb-2"
                             onClick={() => this.mapSoundToKey(value.key, sound.name, 'manaLevels')}
                           >
                             <FontAwesomeIcon
-                              className={classNames('mr-1 text-base w-4 h-4 ', {
+                              className={classNames('tw-mr-1 tw-text-base tw-w-4 tw-h-4 ', {
                                 invisible: manaLevels[value.key] !== sound.name,
                               })}
                               fixedWidth
@@ -185,11 +185,11 @@ export class MusicSelectControl extends Component {
           fractions.map((fraction, i) => (
             <Card kay={fraction}>
               <Accordion.Toggle as={Card.Header} eventKey={String(i + values.length)} className="text-base">
-                <span className="text-gray-600">{`${t('spiritFraction')}:`}</span>
+                <span className="tw-text-gray-600">{`${t('spiritFraction')}:`}</span>
                 {' '}
                 {t(fraction)}
                 <br />
-                {spiritFractions[fraction] || <span className="text-gray-600">{t('noSound')}</span>}
+                {spiritFractions[fraction] || <span className="tw-text-gray-600">{t('noSound')}</span>}
               </Accordion.Toggle>
               <Accordion.Collapse eventKey={String(i + values.length)}>
                 <Card.Body style={{ maxHeight: '20rem', overflow: 'auto' }} onScroll={(e) => e.stopPropagation()}>
@@ -199,11 +199,11 @@ export class MusicSelectControl extends Component {
                         <li key={sound.name}>
                           <Button
                             variant="outline-dark"
-                            className="w-full text-left mb-2"
+                            className="tw-w-full tw-text-left tw-mb-2"
                             onClick={() => this.mapSoundToKey(fraction, sound.name, 'spiritFractions')}
                           >
                             <FontAwesomeIcon
-                              className={classNames('mr-1 text-base w-4 h-4 ', {
+                              className={classNames('tw-mr-1 tw-text-base tw-w-4 tw-h-4 ', {
                                 invisible: spiritFractions[fraction] !== sound.name,
                               })}
                               fixedWidth

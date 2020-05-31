@@ -31,8 +31,8 @@ export function DownloadChartRow(props) {
   return (
     <tr>
       <td colSpan="12">
-        <div className="text-right flex justify-end items-center">
-          <Form.Group className="mr-4">
+        <div className="tw-text-right tw-flex tw-justify-end tw-items-center">
+          <Form.Group className="tw-mr-4">
             <Form.Label>Процент показываемых точек</Form.Label>
             <Form.Control
               type="number"
@@ -40,7 +40,7 @@ export function DownloadChartRow(props) {
               onChange={(e) => onChange(e, 'percentUsage')}
             />
           </Form.Group>
-          <Form.Group className="mr-4">
+          <Form.Group className="tw-mr-4">
             <Form.Check
               type="checkbox"
               id="showExtendedChartInput"
@@ -49,7 +49,7 @@ export function DownloadChartRow(props) {
               onChange={(e) => onChange(e, 'showExtendedChart')}
             />
           </Form.Group>
-          <Form.Group className="mr-4">
+          <Form.Group className="tw-mr-4">
             <Form.Check
               type="checkbox"
               id="filterChartInput"
@@ -58,7 +58,7 @@ export function DownloadChartRow(props) {
               onChange={(e) => onChange(e, 'filterChart')}
             />
           </Form.Group>
-          <Form.Group className="mr-4">
+          <Form.Group className="tw-mr-4">
             <Form.Label>Количество точек для усреднения</Form.Label>
             <Form.Control
               type="number"
@@ -72,7 +72,7 @@ export function DownloadChartRow(props) {
               variant="primary"
               onClick={() => onDownloadChart(props)}
             >
-            Скачать график
+              Скачать график
             </Button>
           </Form.Group>
         </div>

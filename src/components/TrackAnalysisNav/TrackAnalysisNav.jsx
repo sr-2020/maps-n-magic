@@ -18,7 +18,7 @@ const navLinks = [{
 
 export function TrackAnalysisNav() {
   return (
-    <div className="TrackAnalysisNav mx-8 my-4">
+    <div className="TrackAnalysisNav tw-mx-8 tw-my-4">
       <NavList navLinks={navLinks} />
     </div>
   );

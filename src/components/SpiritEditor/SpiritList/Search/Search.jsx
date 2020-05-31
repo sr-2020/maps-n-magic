@@ -86,7 +86,7 @@ export class Search extends Component {
       focused: isInputFocused || isClearFocused || searchStr.length > 0,
     });
     const clearClassName = classNames('clear-search',
-      searchStr.length > 0 ? 'opacity-100' : 'opacity-0');
+      searchStr.length > 0 ? 'tw-opacity-100' : 'tw-opacity-0');
     return (
 
       <div data-search="" role="search" className={className2}>

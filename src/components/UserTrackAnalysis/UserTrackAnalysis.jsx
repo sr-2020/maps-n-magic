@@ -198,14 +198,14 @@ export class UserTrackAnalysis extends Component {
     const msgNumber = userData[selectedUser].rawDataArr.length;
     const sumBeaconSignals = R.pipe(R.map(R.pipe(R.prop('beacons'), R.length)), R.sum);
     const beaconSignals = sumBeaconSignals(userData[selectedUser].rawDataArr);
-    const common = 'font-bold py-2 focus:outline-none focus:shadow-outline';
-    const selectedButton = 'bg-blue-500 hover:bg-blue-700 text-white';
-    const unselectedButton = 'bg-gray-300 hover:bg-gray-400 text-gray-800';
+    const common = 'tw-font-bold tw-py-2 focus:tw-outline-none focus:tw-shadow-outline';
+    const selectedButton = 'tw-bg-blue-500 hover:tw-bg-blue-700 tw-text-white';
+    const unselectedButton = 'tw-bg-gray-300 hover:tw-bg-gray-400 tw-text-gray-800';
     return (
       <div className="UserTrackAnalysis">
         <Form>
-          <Form.Group className="px-4 py-2">
-            <Form.Label className="text-right inline mr-2">
+          <Form.Group className="tw-px-4 tw-py-2">
+            <Form.Label className="tw-text-right tw-inline tw-mr-2">
               Пользователь
             </Form.Label>
             <Form.Control
@@ -213,21 +213,21 @@ export class UserTrackAnalysis extends Component {
               value={selectedUser}
               onChange={this.onUserSelect}
               style={{ width: '15rem' }}
-              className="inline"
+              className="tw-inline"
             >
               {
                 userList.map(({ userId, userName }) => <option value={userId}>{`${userName} (id ${userId}, ${tracksData[userId].rawDataArr.length} точек)`}</option>)
               }
             </Form.Control>
-            <Button className="ml-2" variant={showTable ? 'primary' : 'outline-primary'} onClick={this.onShowTable}>Показывать таблицу статистики</Button>
-            <Button className="ml-2" variant={showMap ? 'primary' : 'outline-primary'} onClick={this.onShowMap}>Показывать карту</Button>
-            <Button className="ml-4" variant="outline-primary" onClick={this.set10MinInterval}>Поставить интервал 10 мин</Button>
-            <Button className="ml-2" variant="outline-primary" onClick={this.selectAllTime}>Выбрать все время</Button>
+            <Button className="tw-ml-2" variant={showTable ? 'primary' : 'outline-primary'} onClick={this.onShowTable}>Показывать таблицу статистики</Button>
+            <Button className="tw-ml-2" variant={showMap ? 'primary' : 'outline-primary'} onClick={this.onShowMap}>Показывать карту</Button>
+            <Button className="tw-ml-4" variant="outline-primary" onClick={this.set10MinInterval}>Поставить интервал 10 мин</Button>
+            <Button className="tw-ml-2" variant="outline-primary" onClick={this.selectAllTime}>Выбрать все время</Button>
           </Form.Group>
         </Form>
-        <div className="m-8 flex items-center">
+        <div className="tw-m-8 tw-flex tw-items-center">
           <div
-            className="mr-8"
+            className="tw-mr-8"
             style={{
               position: 'fixed',
               bottom: 0,
@@ -244,11 +244,11 @@ export class UserTrackAnalysis extends Component {
                   <>
                     <button
                       key={level}
-                      className={classNames(common, 'px-3', {
+                      className={classNames(common, 'tw-px-3', {
                         [selectedButton]: level === speedLevel,
                         [unselectedButton]: level !== speedLevel,
-                        'rounded-l': i === 0,
-                        'rounded-r': i === 4,
+                        'tw-rounded-l': i === 0,
+                        'tw-rounded-r': i === 4,
                       })}
                       type="button"
                       value={level}
@@ -262,7 +262,7 @@ export class UserTrackAnalysis extends Component {
               }
             </div>
             <div
-              className="mt-2"
+              className="tw-mt-2"
             >
               <label>Ручной сдвиг времени</label>
               <br />
@@ -271,7 +271,7 @@ export class UserTrackAnalysis extends Component {
                   <>
                     <button
                       key={level}
-                      className={classNames(common, unselectedButton, 'w-24 px-2 ', {
+                      className={classNames(common, unselectedButton, 'tw-w-24 tw-px-2 ', {
                       // [selectedButton]: level === speedLevel,
                       // [unselectedButton]: level !== speedLevel,
                         // 'rounded-l': i === 0,
@@ -289,7 +289,7 @@ export class UserTrackAnalysis extends Component {
               }
             </div>
           </div>
-          <div className="flex-1">
+          <div className="tw-flex-1">
 
             <TimeRangeWrapper
               values={[maxTime - timeDelta, maxTime]}
@@ -300,7 +300,7 @@ export class UserTrackAnalysis extends Component {
               tickStep={60000 * 60}
             />
           </div>
-          <div className="ml-8">
+          <div className="tw-ml-8">
 
             {`Текущее время ${moment(maxTime).format('HH:mm:ss_Do')}`}
             <br />

@@ -55,14 +55,6 @@ export class FractionList extends Component {
   }
 
   onFractionChange({ fractions }) {
-    // const { spirits } = this.state;
-    // const newSpirits = spirits.map((spirit) => {
-    //   if (changedSpirit.id !== spirit.id) {
-    //     return spirit;
-    //   }
-    //   return changedSpirit;
-    // });
-
     this.setState({
       fractions: sort(fractions),
     });

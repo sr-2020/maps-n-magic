@@ -76,11 +76,11 @@ export function StatsRow(props) {
   console.log(getMode(trackData.stats.messageIntervalHist));
 
   return (
-    <tr onClick={onSelectRow} className="StatsRow cursor-pointer">
+    <tr onClick={onSelectRow} className="StatsRow tw-cursor-pointer">
       <td>{trackData.userData.name}</td>
-      <td className="text-right">{trackData.stats.emptyMessages}</td>
+      <td className="tw-text-right">{trackData.stats.emptyMessages}</td>
       <td
-        className="text-right"
+        className="tw-text-right"
         style={
           {
             backgroundColor: getCompletenessColor(1 - trackData.stats.emptyMessagesFraction, 1),
@@ -89,9 +89,9 @@ export function StatsRow(props) {
       >
         {formatPercent(trackData.stats.emptyMessagesFraction)}
       </td>
-      <td className="text-right">{trackData.stats.unknownBeaconLatlngs + trackData.stats.knownBeaconLatlngs}</td>
+      <td className="tw-text-right">{trackData.stats.unknownBeaconLatlngs + trackData.stats.knownBeaconLatlngs}</td>
       <td
-        className="text-right"
+        className="tw-text-right"
         style={
           {
             backgroundColor: getCompletenessColor(trackData.stats.unknownBeaconLatlngsFraction
@@ -102,18 +102,18 @@ export function StatsRow(props) {
         {formatPercent(trackData.stats.unknownBeaconLatlngsFraction
         + trackData.stats.knownBeaconLatlngsFraction)}
       </td>
-      <td className="text-right">{trackData.stats.total}</td>
+      <td className="tw-text-right">{trackData.stats.total}</td>
 
-      <td className="text-right">{trackData.stats.knownBeaconLatlngs}</td>
-      <td className="text-right">
+      <td className="tw-text-right">{trackData.stats.knownBeaconLatlngs}</td>
+      <td className="tw-text-right">
         {formatPercent(trackData.stats.knownBeaconLatlngsFraction)}
       </td>
 
-      <td className="text-right">{trackData.stats.unknownBeaconLatlngs}</td>
-      <td className="text-right">
+      <td className="tw-text-right">{trackData.stats.unknownBeaconLatlngs}</td>
+      <td className="tw-text-right">
         {formatPercent(trackData.stats.unknownBeaconLatlngsFraction)}
       </td>
-      <td className="text-right">{`${(trackData.stats.avgMessageInterval / 1000).toFixed(2)}, мода ${getMode(trackData.stats.messageIntervalHist)}`}</td>
+      <td className="tw-text-right">{`${(trackData.stats.avgMessageInterval / 1000).toFixed(2)}, мода ${getMode(trackData.stats.messageIntervalHist)}`}</td>
       <td>
 
         {/* <ResponsiveContainer> */}
