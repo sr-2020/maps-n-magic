@@ -1,7 +1,7 @@
 export const beaconsUrl = 'https://position.evarun.ru/api/v1/beacons';
 export const locationsUrl = 'https://position.evarun.ru/api/v1/locations';
 export const usersUrl = 'https://position.evarun.ru/api/v1/users';
-export const positionUrl = 'http://position.evarun.ru/api/v1/positions';
+export const positionUrl = 'https://position.evarun.ru/api/v1/positions';
 
 export const defaultBeaconRecord = {
   ssid: '',

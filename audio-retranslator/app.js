@@ -37,7 +37,7 @@ app.use(cookieParser());
 
 app.get('/fileList', fileListRouter);
 app.get('/file/:name', fileRouter);
-app.get('/characterStates', characterStatesRouter);
+app.all('/characterStates', characterStatesRouter);
 
 app.use(express.static(path.join(__dirname, '../build')));
 

@@ -159,6 +159,15 @@ export const translations = {
       locationHasNoBeaconsError: 'Перемещение игрока в следующие геолокации недоступно, потому что в них нет маяков.',
 
       rescueServiceMessageSender: 'Отправка сообщений МЧС о КС',
+      warningRescueServiceSenderIsSimulator: 'Внимание! Данный инструмент симулирует сообщения об изменении состояния персонажей. Реального изменения состояния или локации персонажей не происходит.',
+
+      physicalBodyCondition: 'Состояние физического тела',
+      physicalBodyCondition_healthy: 'Здоров',
+      physicalBodyCondition_wounded: 'Ранен',
+      physicalBodyCondition_clinically_dead: 'Клиническая смерть',
+      physicalBodyCondition_biologically_dead: 'Биологическая смерть',
+
+      sendRescueServiceMessage: 'Отправить сообщение в МЧС',
     },
   },
 };

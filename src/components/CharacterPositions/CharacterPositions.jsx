@@ -11,7 +11,7 @@ import Alert from 'react-bootstrap/Alert';
 
 import { isGeoLocation } from '../../utils/miscUtils';
 
-import { RemoteUsersRecordProvider, postUserPosition } from '../../api/position';
+import { postUserPosition } from '../../api/position';
 
 // import { CharacterPositionsPropTypes } from '../../types';
 
@@ -37,8 +37,6 @@ export class CharacterPositions extends Component {
       gameModel,
     } = this.props;
     this.subscribe('on', gameModel);
-
-    this.users = new RemoteUsersRecordProvider();
 
     this.setBeaconRecords({
       beaconRecords: gameModel.get('beaconRecords'),

@@ -351,6 +351,7 @@ export class App extends Component {
                     })}
                     <Route render={() => <Redirect to="/mapsNav" />} />
                   </Switch>
+                  {/* { refactor as GeoDataStreamSimulator } */}
                   <GeoDataStreamSimulator
                     simulateGeoDataStream={simulateGeoDataStream}
                     gameModel={gameModel}
@@ -358,6 +359,7 @@ export class App extends Component {
                     center={mapConfig.center}
                     translator={translator}
                   />
+                  {/* { refactor as SoundManager and SoundProvider } */}
                   <SoundWatcher
                     gameModel={gameModel}
                     context={this.audioContextWrapper}
@@ -387,7 +389,9 @@ export class App extends Component {
                     ReadStrategyArgs={[15000, 'reloadUserRecords']}
                   />
                   <NotificationWatcher gameModel={gameModel} />
+                  {/* { refactor as CharacterHealthStateSimulator } */}
                   <CharacterHealthStateSimulator gameModel={gameModel} />
+                  {/* { refactor as CharacterHealthStateManager and CharacterHealthStateProvider } */}
                   <CharacterHealthListener gameModel={gameModel} />
                 </main>
               </div>
