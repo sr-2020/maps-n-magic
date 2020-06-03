@@ -151,6 +151,11 @@ export class CharacterPositions extends Component {
     return 'N/A';
   }
 
+  // eslint-disable-next-line class-methods-use-this
+  getUserNameStr(user) {
+    return user.name !== '' ? ` (${user.name})` : '';
+  }
+
   // eslint-disable-next-line max-lines-per-function
   render() {
     const {
@@ -219,7 +224,7 @@ export class CharacterPositions extends Component {
                 {
                   users.map((user) => (
                     <tr>
-                      <td>{user.id}</td>
+                      <td>{user.id + this.getUserNameStr(user)}</td>
                       <td>{this.getLocationText(user.location_id)}</td>
                     </tr>
                   ))
@@ -230,7 +235,14 @@ export class CharacterPositions extends Component {
             <datalist className="CharacterIdList" id="characterIdList">
               {
               // eslint-disable-next-line jsx-a11y/control-has-associated-label
-                users.map((user) => <option key={user.id} value={user.id} />)
+                users.map((user) => (
+                  <option
+                    key={user.id}
+                    value={user.id}
+                  >
+                    {user.id + this.getUserNameStr(user)}
+                  </option>
+                ))
               }
             </datalist>
           </div>

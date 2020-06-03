@@ -390,7 +390,7 @@ export class App extends Component {
                   />
                   <NotificationWatcher gameModel={gameModel} />
                   {/* { refactor as CharacterHealthStateSimulator } */}
-                  <CharacterHealthStateSimulator gameModel={gameModel} />
+                  {/* <CharacterHealthStateSimulator gameModel={gameModel} /> */}
                   {/* { refactor as CharacterHealthStateManager and CharacterHealthStateProvider } */}
                   <CharacterHealthListener gameModel={gameModel} />
                 </main>

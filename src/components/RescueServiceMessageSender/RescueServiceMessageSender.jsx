@@ -129,6 +129,11 @@ export class RescueServiceMessageSender extends Component {
     });
   }
 
+  // eslint-disable-next-line class-methods-use-this
+  getUserNameStr(user) {
+    return user.name !== '' ? ` (${user.name})` : '';
+  }
+
   // eslint-disable-next-line max-lines-per-function
   render() {
     const {
@@ -197,7 +202,14 @@ export class RescueServiceMessageSender extends Component {
         <datalist className="CharacterIdList" id="characterIdList">
           {
             // eslint-disable-next-line jsx-a11y/control-has-associated-label
-            users.map((user) => <option key={user.id} value={user.id} />)
+            users.map((user) => (
+              <option
+                key={user.id}
+                value={user.id}
+              >
+                {user.id + this.getUserNameStr(user)}
+              </option>
+            ))
           }
         </datalist>
       </div>

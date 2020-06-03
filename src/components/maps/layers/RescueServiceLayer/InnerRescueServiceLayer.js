@@ -73,12 +73,12 @@ export class InnerRescueServiceLayer {
   onСharacterHealthStateChanged(data, gameModel) {
     const { characterId, characterHealthState, prevCharacterHealthState } = data;
     if (prevCharacterHealthState) {
-      this.removeCharacterFromMarker(characterId, prevCharacterHealthState.locationId);
+      this.removeCharacterFromMarker(characterId, prevCharacterHealthState.locationId, gameModel);
     }
     if (isClinicallyDead(characterHealthState)) {
       this.addCharacterToMarker(characterId, characterHealthState.locationId, gameModel);
     } else if (!isClinicallyDead(characterHealthState)) {
-      this.removeCharacterFromMarker(characterId, characterHealthState.locationId);
+      this.removeCharacterFromMarker(characterId, characterHealthState.locationId, gameModel);
     }
   }
 
@@ -88,16 +88,16 @@ export class InnerRescueServiceLayer {
       return;
     }
     marker.options.clinicalDeathIds = R.uniq([...marker.options.clinicalDeathIds, characterId]);
-    this.updateMarkerTooltip(marker);
+    this.updateMarkerTooltip(marker, gameModel);
   }
 
-  removeCharacterFromMarker(characterId, locationId) {
+  removeCharacterFromMarker(characterId, locationId, gameModel) {
     const marker = this.getMarker(locationId, null, false);
     if (R.isNil(marker)) {
       return;
     }
     marker.options.clinicalDeathIds = R.without([characterId], marker.options.clinicalDeathIds);
-    this.updateMarkerTooltip(marker);
+    this.updateMarkerTooltip(marker, gameModel);
     if (R.isEmpty(marker.options.clinicalDeathIds)) {
       marker.unbindTooltip();
       this.group.removeLayer(marker);
@@ -127,10 +127,19 @@ export class InnerRescueServiceLayer {
   }
 
   // eslint-disable-next-line class-methods-use-this
-  updateMarkerTooltip(marker) {
+  getUserNameStr(user) {
+    return user && user.name !== '' ? ` (${user.name})` : '';
+  }
+
+  // eslint-disable-next-line class-methods-use-this
+  updateMarkerTooltip(marker, gameModel) {
     // marker.bindPopup(`id персонажей: ${marker.options.clinicalDeathIds.join(', ')}`).openPopup();
     marker.unbindTooltip();
-    marker.bindTooltip(`id персонажей: ${marker.options.clinicalDeathIds.join(', ')}`, {
+    const labels = marker.options.clinicalDeathIds.map((id) => id + this.getUserNameStr(gameModel.get({
+      type: 'userRecord',
+      id: Number(id),
+    })));
+    marker.bindTooltip(`id персонажей: ${labels.join(', ')}`, {
       permanent: true,
     });
     // marker.openTooltip();
