@@ -9,7 +9,7 @@ import Alert from 'react-bootstrap/Alert';
 import ToggleButtonGroup from 'react-bootstrap/ToggleButtonGroup';
 import ToggleButton from 'react-bootstrap/ToggleButton';
 
-import { putCharacterState } from '../../api/characterStates';
+import { putCharacterState } from '../../gameModel/api/characterStates';
 
 import { isGeoLocation } from '../../utils/miscUtils';
 

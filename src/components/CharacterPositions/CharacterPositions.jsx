@@ -11,7 +11,7 @@ import Alert from 'react-bootstrap/Alert';
 
 import { isGeoLocation } from '../../utils/miscUtils';
 
-import { postUserPosition } from '../../api/position';
+import { postUserPosition } from '../../gameModel/api/position';
 
 // import { CharacterPositionsPropTypes } from '../../types';
 

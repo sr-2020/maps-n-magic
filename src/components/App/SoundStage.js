@@ -50,7 +50,7 @@ export class SoundStage extends EventEmitter {
 
   dispose() {
     if (this.gameModel) {
-      this.unsubscribe(this.gameModel);
+      this.subscribe('off', this.gameModel);
     }
     this.rotationSounds = [];
     // this.playbackRotation = [];
@@ -59,28 +59,19 @@ export class SoundStage extends EventEmitter {
     clearTimeout(this.rotationTimeoutId);
   }
 
-  subscribe(gameModel) {
-    gameModel.on('backgroundSoundUpdate', this.onBackgroundSoundUpdate);
-    gameModel.on('rotationSoundsUpdate', this.onRotationSoundsUpdate);
-    gameModel.on('rotationTimeoutUpdate', this.onRotationTimeoutUpdate);
-    gameModel.on('rotationSoundTimeoutUpdate', this.onRotationSoundTimeoutUpdate);
-    gameModel.on('backgroundVolumeUpdate', this.onBackgroundVolumeUpdate);
-    gameModel.on('rotationVolumeUpdate', this.onRotationVolumeUpdate);
-  }
-
-  unsubscribe(gameModel) {
-    gameModel.off('backgroundSoundUpdate', this.onBackgroundSoundUpdate);
-    gameModel.off('rotationSoundsUpdate', this.onRotationSoundsUpdate);
-    gameModel.off('rotationTimeoutUpdate', this.onRotationTimeoutUpdate);
-    gameModel.off('rotationSoundTimeoutUpdate', this.onRotationSoundTimeoutUpdate);
-    gameModel.off('backgroundVolumeUpdate', this.onBackgroundVolumeUpdate);
-    gameModel.off('rotationVolumeUpdate', this.onRotationVolumeUpdate);
+  subscribe(action, gameModel) {
+    gameModel[action]('backgroundSoundUpdate', this.onBackgroundSoundUpdate);
+    gameModel[action]('rotationSoundsUpdate', this.onRotationSoundsUpdate);
+    gameModel[action]('rotationTimeoutUpdate', this.onRotationTimeoutUpdate);
+    gameModel[action]('rotationSoundTimeoutUpdate', this.onRotationSoundTimeoutUpdate);
+    gameModel[action]('backgroundVolumeUpdate', this.onBackgroundVolumeUpdate);
+    gameModel[action]('rotationVolumeUpdate', this.onRotationVolumeUpdate);
   }
 
   subscribeOnModel(gameModel) {
     if (this.gameModel !== gameModel) {
       if (this.gameModel) {
-        this.unsubscribe(this.gameModel);
+        this.subscribe('off', this.gameModel);
       }
       this.gameModel = gameModel;
       this.initialize();
@@ -97,7 +88,7 @@ export class SoundStage extends EventEmitter {
     this.onRotationVolumeUpdate(soundStage);
     // this.backgroundSound = soundStage.backgroundSound;
     // this.rotationSounds = [...soundStage.rotationSounds];
-    this.subscribe(this.gameModel);
+    this.subscribe('on', this.gameModel);
     console.log('SoundStage initialize');
   }
 

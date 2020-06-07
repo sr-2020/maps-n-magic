@@ -9,6 +9,14 @@ import { ReadDataManager } from './dataManagers/ReadDataManager';
 import { SingleReadStrategy } from './dataManagers/SingleReadStrategy';
 import { PollingReadStrategy } from './dataManagers/PollingReadStrategy';
 
+export function makeGameModel(database) {
+  const gameModel = new GameModel();
+  gameModel.init(services, Migrator);
+  gameModel.setData(database);
+  fillGameModelWithBots(gameModel);
+  return { gameModel };
+}
+
 export {
   GameModel,
   Migrator,

@@ -2,7 +2,7 @@ import * as R from 'ramda';
 import { Component } from 'react';
 import './SoundWatcher.css';
 
-import { getSound, getSoundList } from '../../api/sounds';
+import { getSound, getSoundList } from '../../gameModel/api/sounds';
 
 const POLL_INTERVAL = 15000; // ms
 

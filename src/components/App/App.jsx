@@ -23,14 +23,11 @@ import { SpiritEditor } from '../SpiritEditor';
 import { AppPropTypes } from '../../types';
 
 import {
-  GameModel,
-  Migrator,
-  services,
-  fillGameModelWithBots,
   CrudDataManager,
   ReadDataManager,
   SingleReadStrategy,
   PollingReadStrategy,
+  makeGameModel,
 } from '../../gameModel';
 
 
@@ -40,7 +37,7 @@ import {
   RemoteLocationRecordProvider as LocationRecordProvider,
   RemoteBeaconRecordProvider as BeaconRecordProvider,
   RemoteUsersRecordProvider as UserRecordProvider,
-} from '../../api/position';
+} from '../../gameModel/api/position';
 
 import { mapConfig } from '../../configs/map';
 
@@ -80,11 +77,11 @@ const TEST_POSITION = {
   },
 };
 
-let database = localStorage.getItem(STORAGE_KEY);
-if (database) {
-  database = JSON.parse(database);
+let initialDatabase = localStorage.getItem(STORAGE_KEY);
+if (initialDatabase) {
+  initialDatabase = JSON.parse(initialDatabase);
 } else {
-  database = {};
+  initialDatabase = {};
 }
 
 export class App extends Component {
@@ -115,13 +112,9 @@ export class App extends Component {
     funcs.forEach((funcName) => (this[funcName] = this[funcName].bind(this)));
   }
 
+
   componentDidMount() {
-    const gameModel = new GameModel();
-    gameModel.init(services, Migrator);
-    gameModel.setData(database);
-
-    fillGameModelWithBots(gameModel);
-
+    const { gameModel } = makeGameModel(initialDatabase);
     this.soundStage.subscribeOnModel(gameModel);
     this.setState({
       gameModel,
@@ -200,10 +193,7 @@ export class App extends Component {
         state.gameModel.dispose();
         hardDispose(state.gameModel);
 
-        const gameModel = new GameModel();
-        gameModel.init(services, Migrator);
-        gameModel.setData(database2);
-        fillGameModelWithBots(gameModel);
+        const { gameModel } = makeGameModel(database2);
         this.soundStage.subscribeOnModel(gameModel);
         return {
           gameModel,
