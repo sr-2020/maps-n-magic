@@ -1,33 +1,34 @@
-// const subscriptionName = 'rescue-service';
-// const timeout = 60;
+const subscriptionName = 'rescue-service';
+const timeout = 60;
 
-// // Imports the Google Cloud client library
-// const { PubSub } = require('@google-cloud/pubsub');
+// Imports the Google Cloud client library
+const { PubSub } = require('@google-cloud/pubsub');
 
-// // Creates a client; cache this for further use
-// const pubSubClient = new PubSub();
+// Creates a client; cache this for further use
+const pubSubClient = new PubSub();
 
 function listenHealthChanges(callback, simulateMessages = false) {
   // References an existing subscription
-  // const subscription = pubSubClient.subscription(subscriptionName);
+  const subscription = pubSubClient.subscription(subscriptionName);
 
-  // // Create an event handler to handle messages
-  // let messageCount = 0;
-  // const messageHandler = (message) => {
-  //   console.log(`Received message ${message.id}:`);
-  //   // console.log(`\tData: ${message.data}`);
-  //   const parsedData = JSON.parse(message.data);
-  //   console.log(`\tData: ${JSON.stringify(parsedData, null, '  ')}`);
-  //   console.log(`\tAttributes: ${message.attributes}`);
-  //   messageCount += 1;
+  // Create an event handler to handle messages
+  let messageCount = 0;
+  const messageHandler = (message) => {
+    // console.log(`Received message ${message.id}:`);
+    // console.log(`\tData: ${message.data}`);
+    const parsedData = JSON.parse(message.data);
+    console.log(`Data: ${JSON.stringify(parsedData, null, '  ')}`);
+    // console.log(`\tAttributes: ${message.attributes}`);
+    messageCount += 1;
 
-  //   // "Ack" (acknowledge receipt of) the message
-  //   message.ack();
-  // };
+    // "Ack" (acknowledge receipt of) the message
+    message.ack();
+    callback(parsedData);
+  };
 
 
-  // // Listen for new messages until timeout is hit
-  // subscription.on('message', messageHandler);
+  // Listen for new messages until timeout is hit
+  subscription.on('message', messageHandler);
 
   // if (simulateMessages) {
   //   let flag = true;
