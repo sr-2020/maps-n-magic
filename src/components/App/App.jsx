@@ -23,21 +23,8 @@ import { SpiritEditor } from '../SpiritEditor';
 import { AppPropTypes } from '../../types';
 
 import {
-  CrudDataManager,
-  ReadDataManager,
-  SingleReadStrategy,
-  PollingReadStrategy,
   makeGameModel,
 } from '../../gameModel';
-
-
-import { DataBinding } from '../DataBinding';
-
-import {
-  RemoteLocationRecordProvider as LocationRecordProvider,
-  RemoteBeaconRecordProvider as BeaconRecordProvider,
-  RemoteUsersRecordProvider as UserRecordProvider,
-} from '../../gameModel/api/position';
 
 import { mapConfig } from '../../configs/map';
 
@@ -64,7 +51,6 @@ import { NotificationWatcher } from '../NotificationWatcher';
 
 import { MapRoutes } from '../MapRoutes';
 
-const hardDispose = (obj) => Object.keys(obj).forEach((key) => { delete obj[key]; });
 
 const STORAGE_KEY = 'AR_POC';
 
@@ -114,9 +100,10 @@ export class App extends Component {
 
 
   componentDidMount() {
-    const { gameModel } = makeGameModel(initialDatabase);
+    const { gameModel, gameServer } = makeGameModel(initialDatabase);
     this.soundStage.subscribeOnModel(gameModel);
     this.setState({
+      gameServer,
       gameModel,
       translator: new Translator(mapConfig.center, null),
       initialized: true,
@@ -190,12 +177,12 @@ export class App extends Component {
     readJsonFile(evt).then((database2) => {
       // console.log(database2.appState);
       this.setState((state) => {
-        state.gameModel.dispose();
-        hardDispose(state.gameModel);
+        state.gameServer.dispose();
 
-        const { gameModel } = makeGameModel(database2);
+        const { gameModel, gameServer } = makeGameModel(database2);
         this.soundStage.subscribeOnModel(gameModel);
         return {
+          gameServer,
           gameModel,
         };
       });
@@ -353,30 +340,6 @@ export class App extends Component {
                   <SoundWatcher
                     gameModel={gameModel}
                     context={this.audioContextWrapper}
-                  />
-                  <DataBinding
-                    gameModel={gameModel}
-                    entityName="beaconRecord"
-                    DataProvider={BeaconRecordProvider}
-                    DataManager={CrudDataManager}
-                    ReadStrategy={PollingReadStrategy}
-                    ReadStrategyArgs={[15000]}
-                  />
-                  <DataBinding
-                    gameModel={gameModel}
-                    entityName="locationRecord"
-                    DataProvider={LocationRecordProvider}
-                    DataManager={CrudDataManager}
-                    ReadStrategy={PollingReadStrategy}
-                    ReadStrategyArgs={[15000]}
-                  />
-                  <DataBinding
-                    gameModel={gameModel}
-                    entityName="userRecord"
-                    DataProvider={UserRecordProvider}
-                    DataManager={ReadDataManager}
-                    ReadStrategy={PollingReadStrategy}
-                    ReadStrategyArgs={[15000, 'reloadUserRecords']}
                   />
                   <NotificationWatcher gameModel={gameModel} />
                   {/* { refactor as CharacterHealthStateSimulator } */}

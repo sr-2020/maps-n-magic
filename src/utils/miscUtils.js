@@ -58,3 +58,7 @@ export function shuffle(array) {
 export function isGeoLocation(location) {
   return location.layer_id === 1 && !R.isEmpty(location.polygon);
 }
+
+export function hardDispose(obj) {
+  return Object.keys(obj).forEach((key) => { delete obj[key]; });
+}
