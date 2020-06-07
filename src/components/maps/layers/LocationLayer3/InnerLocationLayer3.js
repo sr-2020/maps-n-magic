@@ -66,7 +66,21 @@ export class InnerLocationLayer3 {
       id, label, layer_id, color: options.color, weight: options.weight, fillOpacity: options.fillOpacity,
     });
     loc.on('mouseover', function (e) {
-      loc.bindTooltip(t('locationTooltip', { name: this.options.label }));
+      let tooltipTemplate;
+      switch (layer_id) {
+      case 1:
+        tooltipTemplate = 'geoLocationTooltip';
+        break;
+      case 2:
+        tooltipTemplate = 'regionTooltip';
+        break;
+      case 3:
+        tooltipTemplate = 'gameLocationTooltip';
+        break;
+      default:
+        tooltipTemplate = 'unknownLocationTypeTooltip';
+      }
+      loc.bindTooltip(t(tooltipTemplate, { name: this.options.label }));
       this.openTooltip();
     });
     loc.on('mouseout', function (e) {

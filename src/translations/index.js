@@ -111,6 +111,12 @@ export const translations = {
       markers: 'Маяки локации',
       markerTooltip: 'Маяк "{{name}}"',
       locationTooltip: 'Локация "{{name}}"',
+
+      geoLocationTooltip: 'Геолокация "{{name}}"',
+      regionTooltip: 'Регион "{{name}}"',
+      gameLocationTooltip: 'Игровая локация "{{name}}"',
+      unknownLocationTypeTooltip: 'Локация неизвестного типа "{{name}}"',
+
       noMarkers: 'Нет маяков',
       addMarker: 'Добавить',
       removeMarker: 'Удалить',
