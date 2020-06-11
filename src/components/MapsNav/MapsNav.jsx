@@ -26,9 +26,9 @@ const navLinks2 = [{
 }];
 
 const navLinks3 = [{
-//   to: '/manaOceanSettings',
-//   tKey: 'manaOceanSettings',
-// }, {
+  to: '/manaOceanSettings',
+  tKey: 'manaOceanSettings',
+}, {
   to: '/characterPositions',
   tKey: 'characterPositions',
 }, {

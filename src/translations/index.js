@@ -174,6 +174,15 @@ export const translations = {
       physicalBodyCondition_biologically_dead: 'Биологическая смерть',
 
       sendRescueServiceMessage: 'Отправить сообщение в МЧС',
+
+      // mana settings
+      neutralManaLevel: 'Фоновый уровень маны',
+      moonName: 'Название',
+      moonPeriod_min: 'Период, шаг 10 мин',
+      newMoonTime_min: 'Время новолуния (начало цикла), шаг 10 мин',
+      manaTideHeight: 'Высота прилива',
+      visibleMoon: 'Видимая луна',
+      invisibleMoon: 'Невидимая луна',
     },
   },
 };

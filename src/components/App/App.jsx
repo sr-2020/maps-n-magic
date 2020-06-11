@@ -32,6 +32,7 @@ import { GeoDataStreamSimulator } from '../GeoDataStreamSimulator';
 import { CharacterHealthStateSimulator } from '../CharacterHealthStateSimulator';
 import { CharacterHealthListener } from '../CharacterHealthListener';
 import { CharacterPositions } from '../CharacterPositions';
+import { ManaOceanSettings } from '../ManaOceanSettings';
 
 import { SoundMapper } from '../SoundMapper';
 
@@ -313,6 +314,9 @@ export class App extends Component {
                     </Route>
                     <Route path="/characterPositions">
                       <CharacterPositions gameModel={gameModel} />
+                    </Route>
+                    <Route path="/manaOceanSettings">
+                      <ManaOceanSettings gameModel={gameModel} />
                     </Route>
 
                     {TrackAnalysis({
