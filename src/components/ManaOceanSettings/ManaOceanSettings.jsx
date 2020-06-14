@@ -1,5 +1,7 @@
 import React, { Component } from 'react';
 import './ManaOceanSettings.css';
+import * as R from 'ramda';
+import * as moment from 'moment-timezone';
 
 // import { ManaOceanSettingsPropTypes } from '../../types';
 
@@ -8,36 +10,17 @@ import Form from 'react-bootstrap/Form';
 import Table from 'react-bootstrap/Table';
 import { prop } from 'ramda';
 
-import {
-  LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend,
-} from 'recharts';
+import { TideChart } from './TideChart';
 
-const data = [
-  { name: 1, cost: 4.11, impression: 100 },
-  { name: 2, cost: 2.39, impression: 120 },
-  { name: 3, cost: 1.37, impression: 150 },
-  { name: 4, cost: 1.16, impression: 180 },
-  { name: 5, cost: 2.29, impression: 200 },
-  { name: 6, cost: 3, impression: 499 },
-  { name: 7, cost: 0.53, impression: 50 },
-  { name: 8, cost: 2.52, impression: 100 },
-  { name: 9, cost: 1.79, impression: 200 },
-  { name: 10, cost: 2.94, impression: 222 },
-  { name: 11, cost: 4.3, impression: 210 },
-  { name: 12, cost: 4.41, impression: 300 },
-  { name: 13, cost: 2.1, impression: 50 },
-  { name: 14, cost: 8, impression: 190 },
-  { name: 15, cost: 0, impression: 300 },
-  { name: 16, cost: 9, impression: 400 },
-  { name: 17, cost: 3, impression: 200 },
-  { name: 18, cost: 2, impression: 50 },
-  { name: 19, cost: 3, impression: 100 },
-  { name: 20, cost: 7, impression: 100 },
-  { name: 21, cost: 7 },
-  { name: 22, impression: 100 },
-];
+import {
+  getMoonActivity, mergeActivities, fullDay, collectStatistics,
+} from './moonActivityUtils';
 
 const TIME_STEP = 10;
+
+function formatMinutesStats(minutes) {
+  return (minutes / 60).toFixed(1);
+}
 
 export class ManaOceanSettings extends Component {
   // static propTypes = ManaOceanSettingsPropTypes;
@@ -50,13 +33,17 @@ export class ManaOceanSettings extends Component {
       visibleMoonNewMoonTime: 0,
       visibleMoonManaTideHeight: 1,
       invisibleMoonPeriod: 270,
-      invisibleMoonNewMoonTime: 0,
+      invisibleMoonNewMoonTime: 120,
       invisibleMoonManaTideHeight: 1,
+      moscowTime: 0,
     };
     this.onChange = this.onChange.bind(this);
+    this.onUpdateMoscowTime = this.onUpdateMoscowTime.bind(this);
   }
 
   componentDidMount() {
+    this.moscowTimeUpdater = setInterval(this.onUpdateMoscowTime, 1000);
+    // this.moscowTimeUpdater = setInterval(this.onUpdateMoscowTime, 100);
     console.log('ManaOceanSettings mounted');
   }
 
@@ -65,7 +52,19 @@ export class ManaOceanSettings extends Component {
   }
 
   componentWillUnmount() {
+    clearInterval(this.moscowTimeUpdater);
     console.log('ManaOceanSettings will unmount');
+  }
+
+  onUpdateMoscowTime() {
+    const msk = moment().tz('Europe/Moscow');
+
+    const newMoscowTime = msk.hour() * 60 + msk.minute();
+
+    this.setState((prevState) => (prevState.moscowTime === newMoscowTime ? null : {
+      moscowTime: msk.hour() * 60 + msk.minute(),
+      // moscowTime: (((msk.minute() * 60) + msk.seconds()) * 10) % fullDay,
+    }));
   }
 
   onChange(e, propName) {
@@ -109,8 +108,37 @@ export class ManaOceanSettings extends Component {
       invisibleMoonPeriod,
       invisibleMoonNewMoonTime,
       invisibleMoonManaTideHeight,
+      moscowTime,
     } = this.state;
     const { t } = this.props;
+
+    const visibleMoonActivity = getMoonActivity(visibleMoonPeriod, visibleMoonNewMoonTime);
+    const invisibleMoonActivity = getMoonActivity(invisibleMoonPeriod, invisibleMoonNewMoonTime);
+    const mergedActivities = mergeActivities(visibleMoonActivity, invisibleMoonActivity);
+
+    const series = [{
+      chartName: t('tideTimetable'),
+      seriesName: t('tideHeight'),
+      data: mergedActivities,
+      yDomain: [-2, 2],
+      yTicks: R.range(-2, 3),
+    }, {
+      chartName: t('visibleMoon'),
+      seriesName: t('tideHeight'),
+      data: visibleMoonActivity,
+      yDomain: [-1, 1],
+      yTicks: R.range(-1, 2),
+    }, {
+      chartName: t('invisibleMoon'),
+      seriesName: t('tideHeight'),
+      data: invisibleMoonActivity,
+      yDomain: [-1, 1],
+      yTicks: R.range(-1, 2),
+    }];
+
+    const statistics = collectStatistics(mergedActivities);
+
+    const timeSum = R.sum(R.values(statistics));
 
     return (
       <div className="ManaOceanSettings">
@@ -124,13 +152,13 @@ export class ManaOceanSettings extends Component {
             />
           </Form.Group>
 
-          <Table className="tw-m-4" size="sm">
+          <Table className="tw-m-4 tw-w-auto" size="sm">
             <thead>
               <tr>
                 <th>{t('moonName')}</th>
-                <th>{t('moonPeriod_min')}</th>
-                <th>{t('newMoonTime_min')}</th>
-                <th>{t('manaTideHeight')}</th>
+                <th className="tw-text-right">{t('moonPeriod_min')}</th>
+                <th style={{ maxWidth: '14rem' }} className="tw-text-right">{t('newMoonTime_min')}</th>
+                {/* <th>{t('manaTideHeight')}</th> */}
               </tr>
             </thead>
             <tbody>
@@ -138,104 +166,104 @@ export class ManaOceanSettings extends Component {
                 <td>
                   {t('visibleMoon')}
                 </td>
-                <td>
+                <td align="right">
                   <Form.Control
                     type="number"
                     step={TIME_STEP}
                     value={visibleMoonPeriod}
+                    className="tw-w-24 tw-text-right"
                     onChange={(e) => this.onChange(e, 'visibleMoonPeriod')}
                   />
                 </td>
-                <td>
+                <td align="right">
                   <Form.Control
                     type="number"
                     step={TIME_STEP}
                     value={visibleMoonNewMoonTime}
+                    className="tw-w-24 tw-text-right"
                     onChange={(e) => this.onChange(e, 'visibleMoonNewMoonTime')}
                   />
                 </td>
-                <td>
+                {/* <td>
                   <Form.Control
                     type="number"
                     value={visibleMoonManaTideHeight}
                     onChange={(e) => this.onChange(e, 'visibleMoonManaTideHeight')}
                   />
-                </td>
+                </td> */}
               </tr>
               <tr>
                 <td>
                   {t('invisibleMoon')}
                 </td>
-                <td>
+                <td align="right">
                   <Form.Control
                     type="number"
                     step={TIME_STEP}
                     value={invisibleMoonPeriod}
+                    className="tw-w-24 tw-text-right"
                     onChange={(e) => this.onChange(e, 'invisibleMoonPeriod')}
                   />
                 </td>
-                <td>
+                <td align="right">
                   <Form.Control
                     type="number"
                     step={TIME_STEP}
                     value={invisibleMoonNewMoonTime}
+                    className="tw-w-24 tw-text-right"
                     onChange={(e) => this.onChange(e, 'invisibleMoonNewMoonTime')}
                   />
                 </td>
-                <td>
+                {/* <td>
                   <Form.Control
                     type="number"
                     value={invisibleMoonManaTideHeight}
                     onChange={(e) => this.onChange(e, 'invisibleMoonManaTideHeight')}
                   />
-                </td>
+                </td> */}
               </tr>
             </tbody>
           </Table>
+          <div>
+            <h2 className="tw-text-xl tw-m-4">{t('statisticsByTime')}</h2>
+            <Table className="tw-m-4 tw-w-auto" size="sm">
+              <tbody>
+                <tr>
+                  <td>{t('tideLevel')}</td>
+                  <td className="tw-w-8 tw-text-right">-2</td>
+                  <td className="tw-w-8 tw-text-right">-1</td>
+                  <td className="tw-w-8 tw-text-right">0</td>
+                  <td className="tw-w-8 tw-text-right">1</td>
+                  <td className="tw-w-8 tw-text-right">2</td>
+                </tr>
+                <tr>
+                  <td>{t('timeSum')}</td>
+                  <td className="tw-w-4 tw-text-right">{formatMinutesStats(statistics[-2])}</td>
+                  <td className="tw-w-4 tw-text-right">{formatMinutesStats(statistics[-1])}</td>
+                  <td className="tw-w-4 tw-text-right">{formatMinutesStats(statistics[0])}</td>
+                  <td className="tw-w-4 tw-text-right">{formatMinutesStats(statistics[1])}</td>
+                  <td className="tw-w-4 tw-text-right">{formatMinutesStats(statistics[2])}</td>
+                </tr>
+                <tr>
+                  <td>{t('timeSumTotal')}</td>
+                  <td>{formatMinutesStats(timeSum)}</td>
+                </tr>
+              </tbody>
+            </Table>
+          </div>
         </div>
         <div>
-          <LineChart
-            width={800}
-            height={400}
-            data={data}
-          >
-            <CartesianGrid strokeDasharray="3 3" />
-            {/* <XAxis dataKey="category" type="category" allowDuplicatedCategory={false} />
-            <YAxis dataKey="value" /> */}
-
-            <XAxis
-              // allowDataOverflow
-              dataKey="name"
-              // domain={[left, right]}
-              type="number"
+          {series.map((s) => (
+            <TideChart
+              yDomain={s.yDomain}
+              yTicks={s.yTicks}
+              data={s.data}
+              chartName={s.chartName}
+              seriesName={s.seriesName}
+              className="tw-mb-8"
+              moscowTime={moscowTime}
             />
-            <YAxis
-              // allowDataOverflow
-              // domain={[bottom, top]}
-              type="number"
-              // yAxisId="1"
-            />
-            <Tooltip />
-            <Legend />
-            <Line
-              // yAxisId="1"
-              type="natural"
-              dataKey="cost"
-              stroke="#8884d8"
-              // animationDuration={300}
-            />
-            <Line
-              // yAxisId="2"
-              type="natural"
-              dataKey="impression"
-              stroke="#82ca9d"
-              // animationDuration={300}
-            />
-
-            {/* {series.map((s) => (
-              <Line dataKey="value" data={s.data} name={s.name} key={s.name} />
-            ))} */}
-          </LineChart>
+          ))}
         </div>
       </div>
     );

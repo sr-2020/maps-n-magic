@@ -30,6 +30,7 @@
     "leaflet-hotline": "^0.4.0",
     "leaflet.locatecontrol": "^0.72.0",
     "moment": "^2.25.3",
+    "moment-timezone": "^0.5.31",
     "npm": "^6.14.5",
     "polygon-clipping": "^0.14.3",
     "prop-types": "^15.7.2",
