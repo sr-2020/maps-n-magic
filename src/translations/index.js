@@ -197,6 +197,7 @@ export const translations = {
       timeSum: 'Сумма времени, час',
       timeSumTotal: 'Всего времени (контроль), час',
       moonParameters: 'Параметры лун',
+      dailyBlackout: 'Еженочный блэкаут',
     },
   },
 };

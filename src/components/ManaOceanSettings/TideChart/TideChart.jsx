@@ -6,7 +6,7 @@ import * as R from 'ramda';
 import {
   LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip,
   Legend, AreaChart, Area, ResponsiveContainer, Label,
-  ReferenceLine,
+  ReferenceLine, ReferenceArea,
 } from 'recharts';
 
 import { fullDay } from '../moonActivityUtils';
@@ -121,6 +121,17 @@ export function TideChart(props) {
             <ReferenceLine x={moscowTime} stroke="red">
               <Label value={`${t('moscowTime')} ${formatMinutes(moscowTime)}`} position="top" />
             </ReferenceLine>
+
+            <ReferenceArea
+              x1={2 * 60}
+              x2={8 * 60}
+              y1={R.head(yTicks)}
+              y2={R.last(yTicks)}
+              // stroke="red"
+              strokeOpacity={0.3}
+            >
+              <Label value={t('dailyBlackout')} position="bottomInside" />
+            </ReferenceArea>
           </AreaChart>
         </ResponsiveContainer>
       </div>
