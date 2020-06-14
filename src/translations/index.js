@@ -196,6 +196,7 @@ export const translations = {
       tideLevel: 'Уровень прилива',
       timeSum: 'Сумма времени, час',
       timeSumTotal: 'Всего времени (контроль), час',
+      moonParameters: 'Параметры лун',
     },
   },
 };

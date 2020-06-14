@@ -110,6 +110,7 @@ export function TideChart(props) {
             </defs>
             <Area
               type="stepAfter"
+              // type="monotone"
               dataKey="value"
               data={data}
               name={seriesName}

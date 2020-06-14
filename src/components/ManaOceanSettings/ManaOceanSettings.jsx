@@ -143,87 +143,89 @@ export class ManaOceanSettings extends Component {
     return (
       <div className="ManaOceanSettings">
         <div className="tw-flex">
-          <Form.Group className="tw-m-4">
+          {/* <Form.Group className="tw-m-4">
             <Form.Label>{t('neutralManaLevel')}</Form.Label>
             <Form.Control
               type="number"
               value={neutralManaLevel}
               onChange={(e) => this.onChange(e, 'neutralManaLevel')}
             />
-          </Form.Group>
-
-          <Table className="tw-m-4 tw-w-auto" size="sm">
-            <thead>
-              <tr>
-                <th>{t('moonName')}</th>
-                <th className="tw-text-right">{t('moonPeriod_min')}</th>
-                <th style={{ maxWidth: '14rem' }} className="tw-text-right">{t('newMoonTime_min')}</th>
-                {/* <th>{t('manaTideHeight')}</th> */}
-              </tr>
-            </thead>
-            <tbody>
-              <tr>
-                <td>
-                  {t('visibleMoon')}
-                </td>
-                <td align="right">
-                  <Form.Control
-                    type="number"
-                    step={TIME_STEP}
-                    value={visibleMoonPeriod}
-                    className="tw-w-24 tw-text-right"
-                    onChange={(e) => this.onChange(e, 'visibleMoonPeriod')}
-                  />
-                </td>
-                <td align="right">
-                  <Form.Control
-                    type="number"
-                    step={TIME_STEP}
-                    value={visibleMoonNewMoonTime}
-                    className="tw-w-24 tw-text-right"
-                    onChange={(e) => this.onChange(e, 'visibleMoonNewMoonTime')}
-                  />
-                </td>
-                {/* <td>
+          </Form.Group> */}
+          <div>
+            <h2 className="tw-text-xl tw-m-4">{t('moonParameters')}</h2>
+            <Table className="tw-m-4 tw-w-auto" size="sm">
+              <thead>
+                <tr>
+                  <th>{t('moonName')}</th>
+                  <th className="tw-text-right">{t('moonPeriod_min')}</th>
+                  <th style={{ maxWidth: '14rem' }} className="tw-text-right">{t('newMoonTime_min')}</th>
+                  {/* <th>{t('manaTideHeight')}</th> */}
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>
+                    {t('visibleMoon')}
+                  </td>
+                  <td align="right">
+                    <Form.Control
+                      type="number"
+                      step={TIME_STEP}
+                      value={visibleMoonPeriod}
+                      className="tw-w-24 tw-text-right"
+                      onChange={(e) => this.onChange(e, 'visibleMoonPeriod')}
+                    />
+                  </td>
+                  <td align="right">
+                    <Form.Control
+                      type="number"
+                      step={TIME_STEP}
+                      value={visibleMoonNewMoonTime}
+                      className="tw-w-24 tw-text-right"
+                      onChange={(e) => this.onChange(e, 'visibleMoonNewMoonTime')}
+                    />
+                  </td>
+                  {/* <td>
                   <Form.Control
                     type="number"
                     value={visibleMoonManaTideHeight}
                     onChange={(e) => this.onChange(e, 'visibleMoonManaTideHeight')}
                   />
                 </td> */}
-              </tr>
-              <tr>
-                <td>
-                  {t('invisibleMoon')}
-                </td>
-                <td align="right">
-                  <Form.Control
-                    type="number"
-                    step={TIME_STEP}
-                    value={invisibleMoonPeriod}
-                    className="tw-w-24 tw-text-right"
-                    onChange={(e) => this.onChange(e, 'invisibleMoonPeriod')}
-                  />
-                </td>
-                <td align="right">
-                  <Form.Control
-                    type="number"
-                    step={TIME_STEP}
-                    value={invisibleMoonNewMoonTime}
-                    className="tw-w-24 tw-text-right"
-                    onChange={(e) => this.onChange(e, 'invisibleMoonNewMoonTime')}
-                  />
-                </td>
-                {/* <td>
+                </tr>
+                <tr>
+                  <td>
+                    {t('invisibleMoon')}
+                  </td>
+                  <td align="right">
+                    <Form.Control
+                      type="number"
+                      step={TIME_STEP}
+                      value={invisibleMoonPeriod}
+                      className="tw-w-24 tw-text-right"
+                      onChange={(e) => this.onChange(e, 'invisibleMoonPeriod')}
+                    />
+                  </td>
+                  <td align="right">
+                    <Form.Control
+                      type="number"
+                      step={TIME_STEP}
+                      value={invisibleMoonNewMoonTime}
+                      className="tw-w-24 tw-text-right"
+                      onChange={(e) => this.onChange(e, 'invisibleMoonNewMoonTime')}
+                    />
+                  </td>
+                  {/* <td>
                   <Form.Control
                     type="number"
                     value={invisibleMoonManaTideHeight}
                     onChange={(e) => this.onChange(e, 'invisibleMoonManaTideHeight')}
                   />
                 </td> */}
-              </tr>
-            </tbody>
-          </Table>
+                </tr>
+              </tbody>
+            </Table>
+          </div>
           <div>
             <h2 className="tw-text-xl tw-m-4">{t('statisticsByTime')}</h2>
             <Table className="tw-m-4 tw-w-auto" size="sm">
