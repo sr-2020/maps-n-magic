@@ -1,4 +1,5 @@
 import * as R from 'ramda';
+// import R from 'ramda';
 
 export const fullDay = 24 * 60; // minutes in full day
 
@@ -19,7 +20,7 @@ export function getMoonActivity(period, offset) {
     periodStarts.push(index);
     index += period;
   }
-  console.log(periodStarts);
+  // console.log(periodStarts);
 
   const pattern = periodToPattern(period);
   const addTimeToPattern = R.curry((pattern2, time) => pattern2.map((point) => ({ ...point, startTime: point.startTime + time })));
@@ -126,3 +127,87 @@ export function collectStatistics(activity) {
 
   return R.mapObjIndexed((arr) => R.sum(R.pluck('intervalDuration', arr)), els);
 }
+
+const hitStat = {
+  hitFirst: 0,
+  hitLast: 0,
+  hitMid: 0,
+  hitSmallestInterval: 0,
+};
+
+function getTideHeightRef(time, moonPropsList) {
+  const activity = makeActivityArr(moonPropsList);
+  console.log(`find ${time}`);
+  if (R.isEmpty(activity)) {
+    return 0;
+  }
+  if (R.length(activity) === 1) {
+    return activity[0].value;
+  }
+  let first = 0;
+  let last = activity.length - 1;
+
+  let iterationCount = 0;
+
+  while (iterationCount < activity.length) {
+    console.log(first, activity[first].startTime, activity[first].value, '-', last, activity[last].startTime, activity[last].value);
+    if (time === activity[first].startTime) {
+      console.log('hit first');
+      hitStat.hitFirst++;
+      return activity[first].value;
+    }
+    if (time === activity[last].startTime) {
+      console.log('hit last');
+      hitStat.hitLast++;
+      return activity[last].value;
+    }
+    if ((last - first) === 1) {
+      console.log('hit smallest interval');
+      hitStat.hitSmallestInterval++;
+      return activity[first].value;
+    }
+    const mid = Math.floor((first + last) / 2);
+    if (time === activity[mid].startTime) {
+      console.log('hit mid');
+      hitStat.hitMid++;
+      return activity[mid].value;
+    }
+    if (time > activity[mid].startTime) {
+      first = mid;
+    } else {
+      last = mid;
+    }
+    iterationCount++;
+  }
+
+  throw new Error(`Too much iterations in tide height search ${time} ${JSON.stringify(activity)}`);
+}
+
+function getTideHeight(time, moonPropsList) {
+  return 0;
+}
+
+
+const moonPropsList = [{
+  period: 180,
+  offset: 180,
+}, {
+  period: 270,
+  offset: 120,
+}];
+
+function makeActivityArr(moonPropsList2) {
+  return moonPropsList2.reduce((acc, moonProps) => {
+    const newActivity = getMoonActivity(moonProps.period, moonProps.offset);
+    return mergeActivities(acc, newActivity);
+  }, []);
+}
+
+// const activity = makeActivityArr(moonPropsList);
+// console.log(activity);
+
+// // R.range(0, fullDay + 1).forEach((num) => console.log(`${getTideHeightRef(num, moonPropsList)}\n`));
+// R.range(0, fullDay + 1).forEach((num) => console.log(`${getTideHeight(num, moonPropsList)}\n`));
+// // console.log(getTideHeight(720, activity));
+// console.log('activity', activity.length);
+// console.log(JSON.stringify(hitStat, null, '  '));
