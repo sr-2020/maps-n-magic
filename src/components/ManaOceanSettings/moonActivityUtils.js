@@ -3,13 +3,27 @@ import * as R from 'ramda';
 
 export const fullDay = 24 * 60; // minutes in full day
 
+// const periodToPattern = (period) => ([
+//   { startTime: Math.floor((period / 8) * 0), value: -1 },
+//   { startTime: Math.floor((period / 8) * 1), value: 0 },
+//   { startTime: Math.floor((period / 8) * 3), value: 1 },
+//   { startTime: Math.floor((period / 8) * 5), value: 0 },
+//   { startTime: Math.floor((period / 8) * 7), value: -1 },
+// ]);
 const periodToPattern = (period) => ([
-  { startTime: Math.floor((period / 8) * 0), value: -1 },
-  { startTime: Math.floor((period / 8) * 1), value: 0 },
-  { startTime: Math.floor((period / 8) * 3), value: 1 },
-  { startTime: Math.floor((period / 8) * 5), value: 0 },
-  { startTime: Math.floor((period / 8) * 7), value: -1 },
+  { startTime: 0, value: -1 },
+  { startTime: Math.ceil((period / 8) * 1), value: 0 },
+  { startTime: Math.ceil((period / 8) * 3), value: 1 },
+  { startTime: Math.ceil((period / 8) * 5), value: 0 },
+  { startTime: Math.ceil((period / 8) * 7), value: -1 },
 ]);
+// const periodToPattern2 = (period) => ([
+//   { startTime: ((period / 8) * 0), value: -1 },
+//   { startTime: ((period / 8) * 1), value: 0 },
+//   { startTime: ((period / 8) * 3), value: 1 },
+//   { startTime: ((period / 8) * 5), value: 0 },
+//   { startTime: ((period / 8) * 7), value: -1 },
+// ]);
 
 export function getMoonActivity(period, offset) {
   let index = 0;
@@ -23,6 +37,8 @@ export function getMoonActivity(period, offset) {
   // console.log(periodStarts);
 
   const pattern = periodToPattern(period);
+  // console.log('pattern', pattern);
+  // console.log('pattern2', periodToPattern2(period));
   const addTimeToPattern = R.curry((pattern2, time) => pattern2.map((point) => ({ ...point, startTime: point.startTime + time })));
   const fullActivity = R.flatten(periodStarts.map(addTimeToPattern(pattern)));
 
@@ -68,7 +84,7 @@ function compactifyActivity(activity) {
     return el.value !== arr[index - 1].value;
   });
 
-  console.log('compactify effect', 'before', activity.length, 'after', compactActivity.length);
+  // console.log('compactify effect', 'before', activity.length, 'after', compactActivity.length);
   return compactActivity;
 }
 
@@ -135,9 +151,9 @@ const hitStat = {
   hitSmallestInterval: 0,
 };
 
-function getTideHeightRef(time, moonPropsList) {
+function getTideHeightRef(time, moonPropsList, log = false) {
   const activity = makeActivityArr(moonPropsList);
-  console.log(`find ${time}`);
+  if (log) console.log(`find ${time}`);
   if (R.isEmpty(activity)) {
     return 0;
   }
@@ -150,25 +166,25 @@ function getTideHeightRef(time, moonPropsList) {
   let iterationCount = 0;
 
   while (iterationCount < activity.length) {
-    console.log(first, activity[first].startTime, activity[first].value, '-', last, activity[last].startTime, activity[last].value);
+    if (log) console.log(first, activity[first].startTime, activity[first].value, '-', last, activity[last].startTime, activity[last].value);
     if (time === activity[first].startTime) {
-      console.log('hit first');
+      if (log) console.log('hit first');
       hitStat.hitFirst++;
       return activity[first].value;
     }
     if (time === activity[last].startTime) {
-      console.log('hit last');
+      if (log) console.log('hit last');
       hitStat.hitLast++;
       return activity[last].value;
     }
     if ((last - first) === 1) {
-      console.log('hit smallest interval');
+      if (log) console.log('hit smallest interval');
       hitStat.hitSmallestInterval++;
       return activity[first].value;
     }
     const mid = Math.floor((first + last) / 2);
     if (time === activity[mid].startTime) {
-      console.log('hit mid');
+      if (log) console.log('hit mid');
       hitStat.hitMid++;
       return activity[mid].value;
     }
@@ -183,14 +199,62 @@ function getTideHeightRef(time, moonPropsList) {
   throw new Error(`Too much iterations in tide height search ${time} ${JSON.stringify(activity)}`);
 }
 
+function getTideLevelByPeriodPart(periodPart) {
+  switch (periodPart) {
+  case 0: case 7:
+    return -1;
+  case 1: case 2: case 5: case 6:
+    return 0;
+  case 3: case 4:
+    return 1;
+  default:
+    throw new Error(`Unexpected period part ${periodPart}`);
+  }
+}
+
 function getTideHeight(time, moonPropsList) {
-  return 0;
+  // console.log(time);
+
+  return R.sum(moonPropsList.map((moonProps) => {
+    let time2 = time - moonProps.offset;
+    // let offset2 = moonProps.offset % moonProps.period;
+    if (time2 < 0) {
+      time2 += moonProps.period;
+    }
+    // const remTime = (time - offset2) % moonProps.period;
+    const remTime = time2 % moonProps.period;
+    const periodPart = Math.floor((remTime / moonProps.period) * 8);
+    const effect = getTideLevelByPeriodPart(periodPart);
+    // console.log('time', time, 'periodPart', periodPart, 'rawPeriodPart', ((remTime / moonProps.period) * 8).toFixed(2), 'effect', effect);
+    return effect;
+  }));
 }
 
 
+// const moonPropsList = [{
+//   period: 180,
+//   offset: 0,
+// // }, {
+// //   period: 270,
+// //   offset: 0,
+// }];
+// const moonPropsList = [{
+//   period: 180,
+//   offset: 0,
+// }, {
+//   period: 270,
+//   offset: 0,
+// }];
+// const moonPropsList = [{
+//   period: 180,
+//   offset: 60,
+// // }, {
+// //   period: 270,
+// //   offset: 0,
+// }];
 const moonPropsList = [{
   period: 180,
-  offset: 180,
+  offset: 120,
 }, {
   period: 270,
   offset: 120,
@@ -203,11 +267,43 @@ function makeActivityArr(moonPropsList2) {
   }, []);
 }
 
+function manaHeightStats(manaHeightList) {
+  return manaHeightList.reduce((acc, num) => {
+    const key = Number(num);
+    if (acc[key] === undefined) {
+      acc[key] = 0;
+    } else {
+      acc[key]++;
+    }
+    return acc;
+  }, {});
+}
+
 // const activity = makeActivityArr(moonPropsList);
 // console.log(activity);
 
+// const range = R.range(0, fullDay + 1);
+// // const range = R.range(0, 35 + 1);
+// const manaHeightListRef = range.map((num) => getTideHeightRef(num, moonPropsList));
+// console.log(manaHeightStats(manaHeightListRef));
+// const manaHeightList = range.map((num) => getTideHeight(num, moonPropsList));
+// console.log(manaHeightStats(manaHeightList));
+
+// const diffArr = range.filter((time) => manaHeightListRef[time] !== manaHeightList[time]).map((time) => ({
+//   time, refVal: manaHeightListRef[time], val: manaHeightList[time],
+// }));
+
+// if (diffArr.length === 0) {
+//   console.log('No difference between ref array and single point calc value');
+// } else {
+//   diffArr.forEach(({ time, refVal, val }) => {
+//     console.log(`difference in time ${time}, refVal ${refVal}, val ${val}`);
+//   });
+// }
+
 // // R.range(0, fullDay + 1).forEach((num) => console.log(`${getTideHeightRef(num, moonPropsList)}\n`));
-// R.range(0, fullDay + 1).forEach((num) => console.log(`${getTideHeight(num, moonPropsList)}\n`));
+// // R.range(0, fullDay + 1).forEach((num) => console.log(`${getTideHeight(num, moonPropsList)}\n`));
+// R.range(0, 15).map(R.multiply(100)).forEach((num) => console.log(`${getTideHeight(num, moonPropsList)}\n`));
 // // console.log(getTideHeight(720, activity));
 // console.log('activity', activity.length);
 // console.log(JSON.stringify(hitStat, null, '  '));
