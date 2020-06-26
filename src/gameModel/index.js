@@ -7,6 +7,7 @@ import { services } from './GameModelServices';
 import { fillGameModelWithBots } from './GameModelFiller';
 import { CrudDataManager } from './dataManagers/CrudDataManager';
 import { ReadDataManager } from './dataManagers/ReadDataManager';
+import { ReadWriteDataManager } from './dataManagers/ReadWriteDataManager';
 import { SingleReadStrategy } from './dataManagers/SingleReadStrategy';
 import { PollingReadStrategy } from './dataManagers/PollingReadStrategy';
 
@@ -14,6 +15,7 @@ import {
   RemoteLocationRecordProvider as LocationRecordProvider,
   RemoteBeaconRecordProvider as BeaconRecordProvider,
   RemoteUsersRecordProvider as UserRecordProvider,
+  ManaOceanSettingsProvider,
 } from './api/position';
 
 import { hardDispose } from '../utils/miscUtils';
@@ -91,6 +93,14 @@ export function makeGameModel(database) {
     DataManager: ReadDataManager,
     ReadStrategy: PollingReadStrategy,
     ReadStrategyArgs: [15000, 'reloadUserRecords'],
+  }));
+  gameServer.addDataBinding(new DataBinding({
+    gameModel,
+    entityName: 'manaOceanSetting',
+    DataProvider: ManaOceanSettingsProvider,
+    DataManager: ReadWriteDataManager,
+    ReadStrategy: PollingReadStrategy,
+    ReadStrategyArgs: [15000],
   }));
   return { gameModel, gameServer };
 }

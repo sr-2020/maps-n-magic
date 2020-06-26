@@ -15,6 +15,7 @@ import { NotificationService } from './services/NotificationService';
 import { BackgroundImageService } from './services/BackgroundImageService';
 import { CharacterHealthStateService } from './services/CharacterHealthStateService';
 import { UserRecordService } from './services/UserRecordService';
+import { ManaOceanSettingsService } from './services/ManaOceanSettingsService';
 
 export const services = [
   UserService,
@@ -34,4 +35,5 @@ export const services = [
   BackgroundImageService,
   CharacterHealthStateService,
   UserRecordService,
+  ManaOceanSettingsService,
 ];

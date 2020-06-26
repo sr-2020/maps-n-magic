@@ -8,6 +8,7 @@ import {
   beaconsUrl,
   usersUrl,
   positionUrl,
+  manaOceanConfigUrl,
   defaultBeaconRecord,
   defaultLocationRecord,
 } from './constants';
@@ -27,6 +28,12 @@ export class RemoteLocationRecordProvider extends ManageableResourceProvider {
 export class RemoteUsersRecordProvider extends GettableResourceProvider {
   constructor() {
     super(usersUrl);
+  }
+}
+
+export class ManaOceanSettingsProvider extends ReadWriteResourceProvider {
+  constructor() {
+    super(manaOceanConfigUrl);
   }
 }
 
@@ -57,6 +64,16 @@ function ManageableResourceProvider(url, defaultObject) {
     postable(this),
     puttable(this),
     deletable(this),
+  );
+}
+
+function ReadWriteResourceProvider(url) {
+  this.url = url;
+
+  return Object.assign(
+    this,
+    gettable(this),
+    postable(this),
   );
 }
 
