@@ -7,5 +7,5 @@ export const AUDIO_RETRANSLATOR = {
   SOUND_ROUTE: '/file',
 };
 
-// export const CHARACTER_STATES_URL = 'http://localhost:3001';
-export const CHARACTER_STATES_URL = '';
+export const CHARACTER_STATES_URL = 'http://localhost:3001';
+// export const CHARACTER_STATES_URL = '';

@@ -51,9 +51,9 @@ export class ManaOceanSettingsService extends AbstractService {
   }
 
   setManaOceanSettings({ manaOceanSettings }) {
-    const hasDifference = R.equals(this.manaOceanSettings, manaOceanSettings);
+    const areEqual = R.equals(this.manaOceanSettings, manaOceanSettings);
     this.setData({ manaOceanSettings });
-    if (hasDifference) {
+    if (!areEqual) {
       this.emit('manaOceanSettingsChanged', {
         manaOceanSettings,
       });

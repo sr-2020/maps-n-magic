@@ -28,32 +28,71 @@ export class ManaOceanSettings extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      neutralManaLevel: 3,
-      visibleMoonPeriod: 180, // minutes
-      visibleMoonNewMoonTime: 0,
-      visibleMoonManaTideHeight: 1,
-      invisibleMoonPeriod: 270,
-      invisibleMoonNewMoonTime: 120,
-      invisibleMoonManaTideHeight: 1,
+      // neutralManaLevel: 3,
+      // visibleMoonPeriod: 180, // minutes
+      // visibleMoonNewMoonTime: 0,
+      // visibleMoonManaTideHeight: 1,
+      // invisibleMoonPeriod: 270,
+      // invisibleMoonNewMoonTime: 120,
+      // invisibleMoonManaTideHeight: 1,
       moscowTime: 0,
     };
     this.onChange = this.onChange.bind(this);
     this.onUpdateMoscowTime = this.onUpdateMoscowTime.bind(this);
+    this.setManaOceanSettings = this.setManaOceanSettings.bind(this);
   }
 
   componentDidMount() {
+    const {
+      gameModel,
+    } = this.props;
+    this.subscribe('on', gameModel);
+    this.setManaOceanSettings({
+      manaOceanSettings: (gameModel.get('manaOceanSettings')),
+    });
+
     this.moscowTimeUpdater = setInterval(this.onUpdateMoscowTime, 1000);
     // this.moscowTimeUpdater = setInterval(this.onUpdateMoscowTime, 100);
     console.log('ManaOceanSettings mounted');
   }
 
-  componentDidUpdate() {
+  componentDidUpdate(prevProps) {
+    const {
+      gameModel,
+    } = this.props;
+    if (prevProps.gameModel !== gameModel) {
+      this.subscribe('off', prevProps.gameModel);
+      this.subscribe('on', gameModel);
+      this.setManaOceanSettings({
+        manaOceanSettings: (gameModel.get('manaOceanSettings')),
+      });
+    }
     console.log('ManaOceanSettings did update');
   }
 
   componentWillUnmount() {
+    const {
+      gameModel,
+    } = this.props;
+    this.subscribe('off', gameModel);
     clearInterval(this.moscowTimeUpdater);
     console.log('ManaOceanSettings will unmount');
+  }
+
+  subscribe(action, gameModel) {
+    gameModel[action]('postManaOceanSettings', this.setManaOceanSettings);
+    gameModel[action]('manaOceanSettingsChanged', this.setManaOceanSettings);
+    // gameModel[action]('postBeaconRecord', this.onPostBeaconRecord);
+    // gameModel[action]('putBeaconRecord', this.onPutBeaconRecord);
+    // gameModel[action]('deleteBeaconRecord', this.onDeleteBeaconRecord);
+    // gameModel[action]('beaconRecordsChanged', this.setBeaconRecords);
+    // gameModel[action]('locationRecordsChanged', this.setLocationRecords);
+  }
+
+  setManaOceanSettings({ manaOceanSettings }) {
+    this.setState({
+      ...manaOceanSettings,
+    });
   }
 
   onUpdateMoscowTime() {
@@ -93,8 +132,20 @@ export class ManaOceanSettings extends Component {
     default:
       throw new Error(`Unexpected propName: ${propName}`);
     }
-    this.setState({
-      [propName]: value,
+
+    this.setState((prevState) => {
+      const {
+        gameModel,
+      } = this.props;
+      const newState = {
+        ...prevState,
+        [propName]: value,
+      };
+      gameModel.execute({
+        type: 'postManaOceanSettings',
+        manaOceanSettings: R.omit(['moscowTime'], newState),
+      });
+      return newState;
     });
   }
 
@@ -111,6 +162,9 @@ export class ManaOceanSettings extends Component {
       moscowTime,
     } = this.state;
     const { t } = this.props;
+    if (neutralManaLevel === undefined) {
+      return null;
+    }
 
     const visibleMoonActivity = getMoonActivity(visibleMoonPeriod, visibleMoonNewMoonTime);
     const invisibleMoonActivity = getMoonActivity(invisibleMoonPeriod, invisibleMoonNewMoonTime);

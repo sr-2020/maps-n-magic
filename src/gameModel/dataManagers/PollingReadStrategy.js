@@ -3,7 +3,7 @@ export class PollingReadStrategy {
     this.gameModel = gameModel;
     this.timeout = timeout;
     this.reloadEventName = reloadEventName;
-    this.loadEntities = this.loadEntities.bind(this);
+    this.load = this.load.bind(this);
   }
 
   // eslint-disable-next-line class-methods-use-this
@@ -11,18 +11,18 @@ export class PollingReadStrategy {
     this.dataManager = dataManager;
     this.subscribe('on');
     this.loadEntityIntervalId = setInterval(() => {
-      this.loadEntities();
+      this.load();
     }, this.timeout);
-    this.loadEntities();
+    this.load();
   }
 
-  loadEntities() {
-    this.dataManager.loadEntities();
+  load() {
+    this.dataManager.load();
   }
 
   subscribe(action) {
     if (this.reloadEventName) {
-      this.gameModel[action](this.reloadEventName, this.loadEntities);
+      this.gameModel[action](this.reloadEventName, this.load);
     }
   }
 

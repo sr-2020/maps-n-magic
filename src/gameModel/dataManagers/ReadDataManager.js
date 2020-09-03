@@ -1,7 +1,7 @@
 // eslint-disable-next-line max-classes-per-file
 import * as R from 'ramda';
 
-function capitalizeFirstLetter(string) {
+export function capitalizeFirstLetter(string) {
   return string.charAt(0).toUpperCase() + string.slice(1);
 }
 
@@ -25,7 +25,7 @@ export class ReadDataManager {
     this.readStrategy.dispose();
   }
 
-  loadEntities() {
+  load() {
     this.dataProvider.get().then((entities) => {
       if (R.equals(this.entities, entities)) {
         // console.log('no changes', this.ccEntityName);

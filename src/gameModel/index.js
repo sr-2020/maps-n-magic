@@ -7,7 +7,7 @@ import { services } from './GameModelServices';
 import { fillGameModelWithBots } from './GameModelFiller';
 import { CrudDataManager } from './dataManagers/CrudDataManager';
 import { ReadDataManager } from './dataManagers/ReadDataManager';
-import { ReadWriteDataManager } from './dataManagers/ReadWriteDataManager';
+import { ReadWriteSettingsDataManager } from './dataManagers/SettingsDataManagers';
 import { SingleReadStrategy } from './dataManagers/SingleReadStrategy';
 import { PollingReadStrategy } from './dataManagers/PollingReadStrategy';
 
@@ -96,9 +96,9 @@ export function makeGameModel(database) {
   }));
   gameServer.addDataBinding(new DataBinding({
     gameModel,
-    entityName: 'manaOceanSetting',
+    entityName: 'manaOceanSettings',
     DataProvider: ManaOceanSettingsProvider,
-    DataManager: ReadWriteDataManager,
+    DataManager: ReadWriteSettingsDataManager,
     ReadStrategy: PollingReadStrategy,
     ReadStrategyArgs: [15000],
   }));

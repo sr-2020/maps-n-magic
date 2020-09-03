@@ -95,5 +95,6 @@ module.exports = {
             "css": "always",
           }
         ],
+        "react/sort-comp": 'off'
     }
 };
