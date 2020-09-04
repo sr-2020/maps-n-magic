@@ -20,15 +20,16 @@
 .env.test.local
 .env.production.local
 
+shadowrun.code-workspace
+.vscode/launch.json
+
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
 packages/sr2020-mm-client/src/css/tailwind.css
-packages/sr2020-mm-client/audio-retranslator/settings-real.js
 packages/sr2020-mm-client/src/dataAnalysis/data/restOfAll/
 packages/sr2020-mm-client/pubSubTest/
-shadowrun.code-workspace
-.vscode/launch.json
-
 packages/sr2020-mm-client/src/dataAnalysis/data/kml/otherKml
 packages/sr2020-mm-client/public/images/nonIndexedImages/
+
+packages/sr2020-mm-server/settings-real.js
