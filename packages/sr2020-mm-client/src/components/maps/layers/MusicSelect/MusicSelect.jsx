@@ -12,14 +12,14 @@ import classNames from 'classnames';
 import Accordion from 'react-bootstrap/Accordion';
 import Card from 'react-bootstrap/Card';
 
-import { MusicSelectPropTypes } from '../../../../types';
+// import { MusicSelectPropTypes } from '../../../../types';
 
 import { musicSelectDom } from '../../../../utils/domUtils';
 
 import { MusicSelectControl } from '../../../MusicSelectControl';
 
 export class MusicSelect extends Component {
-  static propTypes = MusicSelectPropTypes;
+  // static propTypes = MusicSelectPropTypes;
 
   constructor(props) {
     super(props);

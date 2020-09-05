@@ -1,6 +1,6 @@
 import React from 'react';
 import './MapMarker.css';
-import { MapMarkerPropTypes } from '../../types';
+// import { MapMarkerPropTypes } from '../../types';
 
 export function MapMarker(props) {
   const {
@@ -40,4 +40,4 @@ export function MapMarker(props) {
   );
 }
 
-MapMarker.propTypes = MapMarkerPropTypes;
+// MapMarker.propTypes = MapMarkerPropTypes;

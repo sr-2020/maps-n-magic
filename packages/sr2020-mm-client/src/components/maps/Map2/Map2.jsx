@@ -11,7 +11,7 @@ import '@geoman-io/leaflet-geoman-free/dist/leaflet-geoman.css';
 
 import { EventEmitter } from 'events';
 
-import { Map2PropTypes } from '../../../types';
+// import { Map2PropTypes } from '../../../types';
 
 // import { geomanConfig } from '../../../configs/map';
 
@@ -27,7 +27,7 @@ import './Map2.css';
 L.Icon.Default.imagePath = './images/leafletImages/';
 
 export class Map2 extends Component {
-  static propTypes = Map2PropTypes;
+  // static propTypes = Map2PropTypes;
 
   constructor(props) {
     super(props);

@@ -19,12 +19,12 @@ import { COLOR_PALETTE } from '../../utils/colorPalette';
 
 import { polygon2polyline, euDist } from '../../utils/polygonUtils';
 
-import { BeaconsPropTypes } from '../../types';
+// import { BeaconsPropTypes } from '../../types';
 
 let tracks = [];
 
 export class Beacons extends Component {
-  static propTypes = BeaconsPropTypes;
+  // static propTypes = BeaconsPropTypes;
 
   constructor(props) {
     super(props);

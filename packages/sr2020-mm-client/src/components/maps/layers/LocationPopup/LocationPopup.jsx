@@ -4,13 +4,14 @@ import './LocationPopup.css';
 
 import ReactDOM from 'react-dom';
 import classNames from 'classnames';
-import { LocationPopupPropTypes, manaLevels } from '../../../../types';
+// import { LocationPopupPropTypes, manaLevels } from '../../../../types';
 
 import { locationPopupDom } from '../../../../utils/domUtils';
 
+const manaLevels = (['low', 'normal', 'high']);
 
 export class LocationPopup extends Component {
-  static propTypes = LocationPopupPropTypes;
+  // static propTypes = LocationPopupPropTypes;
 
   constructor(props) {
     super(props);

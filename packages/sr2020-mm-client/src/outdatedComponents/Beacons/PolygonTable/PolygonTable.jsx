@@ -1,6 +1,6 @@
 import React from 'react';
 import './PolygonTable.css';
-import { PolygonTablePropTypes } from '../../../types';
+// import { PolygonTablePropTypes } from '../../../types';
 
 export function PolygonTable(props) {
   const { mainPolygon, onPointChange } = props;
@@ -33,4 +33,4 @@ export function PolygonTable(props) {
   );
 }
 
-PolygonTable.propTypes = PolygonTablePropTypes;
+// PolygonTable.propTypes = PolygonTablePropTypes;

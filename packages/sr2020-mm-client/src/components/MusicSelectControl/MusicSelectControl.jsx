@@ -11,7 +11,7 @@ import {
 } from '@fortawesome/free-solid-svg-icons';
 import Button from 'react-bootstrap/Button';
 import classNames from 'classnames';
-import { MusicSelectControlPropTypes } from '../../types';
+// import { MusicSelectControlPropTypes } from '../../types';
 
 const values = [{
   key: 'high',
@@ -27,7 +27,7 @@ const values = [{
 const sort = R.sortBy(R.toLower);
 
 export class MusicSelectControl extends Component {
-  static propTypes = MusicSelectControlPropTypes;
+  // static propTypes = MusicSelectControlPropTypes;
 
   constructor(props) {
     super(props);

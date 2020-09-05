@@ -4,7 +4,7 @@ import './SoundManager.css';
 
 import Accordion from 'react-bootstrap/Accordion';
 import Card from 'react-bootstrap/Card';
-import { SoundManagerPropTypes } from '../../types';
+// import { SoundManagerPropTypes } from '../../types';
 import { SoundStageEcho } from './SoundStageEcho';
 
 
@@ -13,7 +13,7 @@ import { SoundSettingsForm } from './SoundSettingsForm';
 import { SoundRow } from './SoundRow';
 
 export class SoundManager extends Component {
-  static propTypes = SoundManagerPropTypes;
+  // static propTypes = SoundManagerPropTypes;
 
   constructor(props) {
     super(props);

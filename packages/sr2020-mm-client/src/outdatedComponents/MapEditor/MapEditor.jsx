@@ -10,11 +10,11 @@ import Col from 'react-bootstrap/Col';
 import { MainPolygon } from '../MainPolygon';
 
 import { Map } from '../Map';
-import { MapEditorPropTypes } from '../../types';
+// import { MapEditorPropTypes } from '../../types';
 
 
 export class MapEditor extends Component {
-  static propTypes = MapEditorPropTypes;
+  // static propTypes = MapEditorPropTypes;
 
   onFileUpload = (evt) => {
     const {

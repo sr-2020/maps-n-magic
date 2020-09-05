@@ -1,9 +1,25 @@
 import * as R from 'ramda';
 
-import { defaultSpirit } from '../../types/primitives';
-import { getEeStats } from '../../utils/miscUtils';
+// import { defaultSpirit } from '../../types/primitives';
+// import { getEeStats } from '../../utils/miscUtils';
 
 import { AbstractService } from '../core/AbstractService';
+
+const defaultSpirit = {
+  name: '',
+  aura: '',
+  fraction: '',
+  story: '',
+  abilities: [],
+
+  latLng: {
+    lat: 0,
+    lng: 0,
+  },
+  plane: 'subastral',
+  hitPoints: 10,
+  maxHitPoints: 10,
+};
 
 export class SpiritService extends AbstractService {
   metadata = {

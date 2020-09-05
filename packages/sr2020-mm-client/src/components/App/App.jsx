@@ -20,11 +20,12 @@ import { AudioContextWrapper } from '../../utils/AudioContextWrapper';
 
 import { SpiritEditor } from '../SpiritEditor';
 
-import { AppPropTypes } from '../../types';
+// import { AppPropTypes } from '../../types';
 
 import {
   makeGameModel,
-} from '../../eventEngine/configs/clientEventEngine';
+} from 'sr2020-mm-event-engine/configs/clientEventEngine';
+
 
 import { mapConfig } from '../../configs/map';
 
@@ -76,7 +77,7 @@ export class App extends Component {
 
   soundStage = new SoundStage(this.audioContextWrapper);
 
-  static propTypes = AppPropTypes;
+  // static propTypes = AppPropTypes;
 
   constructor(props) {
     super(props);
@@ -349,6 +350,10 @@ export class App extends Component {
                   {/* { refactor as CharacterHealthStateSimulator } */}
                   {/* <CharacterHealthStateSimulator gameModel={gameModel} /> */}
                   {/* { refactor as CharacterHealthStateManager and CharacterHealthStateProvider } */}
+
+                  {/* TODO CharacterHealthListener should be in event engine 
+                    This is a fictive component for polling character health status
+                  */}
                   <CharacterHealthListener gameModel={gameModel} />
                 </main>
               </div>

@@ -1,7 +1,7 @@
 import React from 'react';
 import './Map.css';
 
-import { MapPropTypes } from '../../types';
+// import { MapPropTypes } from '../../types';
 
 export function Map(props) {
   const {
@@ -32,4 +32,4 @@ export function Map(props) {
   );
 }
 
-Map.propTypes = MapPropTypes;
+// Map.propTypes = MapPropTypes;

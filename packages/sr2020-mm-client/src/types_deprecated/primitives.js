@@ -74,22 +74,6 @@ export const spiritPropTypes = shape({
   maxHitPoints: number.isRequired,
 });
 
-export const defaultSpirit = {
-  name: '',
-  aura: '',
-  fraction: '',
-  story: '',
-  abilities: [],
-
-  latLng: {
-    lat: 0,
-    lng: 0,
-  },
-  plane: 'subastral',
-  hitPoints: 10,
-  maxHitPoints: 10,
-};
-
 //   properties: {
 //     name: { type: 'string', title: 'Name', default: '' },
 //     story: { type: 'string', title: 'Story', default: '' },

@@ -3,12 +3,12 @@ import './FractionList.css';
 
 import * as R from 'ramda';
 
-import { FractionListPropTypes } from '../../../types';
+// import { FractionListPropTypes } from '../../../types';
 
 const sort = R.sortBy(R.toLower);
 
 export class FractionList extends Component {
-  static propTypes = FractionListPropTypes;
+  // static propTypes = FractionListPropTypes;
 
   constructor(props) {
     super(props);

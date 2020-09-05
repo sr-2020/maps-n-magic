@@ -4,10 +4,10 @@ import './ModelRunControl.css';
 import Button from 'react-bootstrap/Button';
 import Dropdown from 'react-bootstrap/Dropdown';
 
-import { ModelRunControlPropTypes } from '../../types';
+// import { ModelRunControlPropTypes } from '../../types';
 
 export class ModelRunControl extends Component {
-  static propTypes = ModelRunControlPropTypes;
+  // static propTypes = ModelRunControlPropTypes;
 
   constructor() {
     super();

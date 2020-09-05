@@ -1,10 +1,10 @@
 import React, { Component } from 'react';
 import './ErrorBoundry.css';
 
-import { ErrorBoundryPropTypes } from '../../types';
+// import { ErrorBoundryPropTypes } from '../../types';
 
 export class ErrorBoundry extends Component {
-  static propTypes = ErrorBoundryPropTypes;
+  // static propTypes = ErrorBoundryPropTypes;
 
   constructor(props) {
     super(props);

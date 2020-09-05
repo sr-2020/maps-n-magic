@@ -16,14 +16,14 @@ import Highlight from 'react-highlighter';
 
 import { Search } from './Search';
 
-import { SpiritListPropTypes } from '../../../types';
+// import { SpiritListPropTypes } from '../../../types';
 
 const sort = R.sortBy(R.pipe(R.prop('name'), R.toLower));
 
 const spiritLink = (spirit) => `/spiritEditor/${spirit.id}#${spirit.name}`;
 
 export class SpiritList extends Component {
-  static propTypes = SpiritListPropTypes;
+  // static propTypes = SpiritListPropTypes;
 
   constructor(props) {
     super(props);

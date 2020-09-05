@@ -9,7 +9,8 @@ import Alert from 'react-bootstrap/Alert';
 import ToggleButtonGroup from 'react-bootstrap/ToggleButtonGroup';
 import ToggleButton from 'react-bootstrap/ToggleButton';
 
-import { putCharacterState } from '../../eventEngine/api/characterStates';
+// TODO this call should be moved in event engine service
+import { putCharacterState } from 'sr2020-mm-event-engine/api/characterStates';
 
 import { isGeoLocation } from '../../utils/miscUtils';
 

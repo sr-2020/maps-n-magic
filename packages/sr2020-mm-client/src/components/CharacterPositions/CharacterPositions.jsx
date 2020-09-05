@@ -11,7 +11,8 @@ import Alert from 'react-bootstrap/Alert';
 
 import { isGeoLocation } from '../../utils/miscUtils';
 
-import { postUserPosition } from '../../eventEngine/api/position';
+// TODO this call should be moved in event engine service
+import { postUserPosition } from 'sr2020-mm-event-engine/api/position';
 
 // import { CharacterPositionsPropTypes } from '../../types';
 

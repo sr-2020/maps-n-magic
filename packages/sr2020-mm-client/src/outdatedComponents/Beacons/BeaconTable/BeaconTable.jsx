@@ -1,6 +1,6 @@
 import React from 'react';
 import './BeaconTable.css';
-import { BeaconTablePropTypes } from '../../../types';
+// import { BeaconTablePropTypes } from '../../../types';
 
 // class BeaconTable extends Component {
 // eslint-disable-next-line max-lines-per-function
@@ -64,4 +64,4 @@ export function BeaconTable(props) {
   );
 }
 
-BeaconTable.propTypes = BeaconTablePropTypes;
+// BeaconTable.propTypes = BeaconTablePropTypes;

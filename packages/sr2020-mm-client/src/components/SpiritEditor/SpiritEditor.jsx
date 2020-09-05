@@ -4,7 +4,7 @@ import './SpiritEditor.css';
 import {
   Route,
 } from 'react-router-dom';
-import { SpiritEditorPropTypes } from '../../types';
+// import { SpiritEditorPropTypes } from '../../types';
 
 import { SpiritList } from './SpiritList';
 import { SpiritContent } from './SpiritContent';
@@ -12,7 +12,7 @@ import { FractionList } from './FractionList';
 
 // eslint-disable-next-line react/prefer-stateless-function
 export class SpiritEditor extends Component {
-  static propTypes = SpiritEditorPropTypes;
+  // static propTypes = SpiritEditorPropTypes;
 
   // eslint-disable-next-line max-lines-per-function
   render() {

@@ -3,13 +3,13 @@ import './SpiritContent.css';
 
 import Form from 'react-bootstrap/Form';
 import DocumentTitle from 'react-document-title';
-import { SpiritContentPropTypes } from '../../../types';
+// import { SpiritContentPropTypes } from '../../../types';
 
 import { AbilitiesInput } from './AbilitiesInput';
 
 
 export class SpiritContent extends Component {
-  static propTypes = SpiritContentPropTypes;
+  // static propTypes = SpiritContentPropTypes;
 
   constructor(props) {
     super(props);

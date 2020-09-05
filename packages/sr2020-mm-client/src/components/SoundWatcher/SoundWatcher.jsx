@@ -2,7 +2,8 @@ import * as R from 'ramda';
 import { Component } from 'react';
 import './SoundWatcher.css';
 
-import { getSound, getSoundList } from '../../eventEngine/api/sounds';
+// TODO this call should be moved in event engine service
+import { getSound, getSoundList } from 'sr2020-mm-event-engine/api/sounds';
 
 const POLL_INTERVAL = 15000; // ms
 

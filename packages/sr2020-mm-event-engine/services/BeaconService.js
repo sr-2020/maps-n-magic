@@ -1,11 +1,10 @@
 import * as R from 'ramda';
 import { getBeacons2 } from 'sr2020-mm-data/assets/beacons';
-import { getBoundingRect, scaleRect } from '../../utils/polygonUtils';
-
 import { baseCommonLLs } from 'sr2020-mm-data/assets/baseContours';
+import { getBoundingRect, scaleRect } from 'sr2020-mm-data/utils/polygonUtils';
 
-import { getPolygons2 } from '../../utils/polygonGenerator';
-import { getEeStats } from '../../utils/miscUtils';
+import { getPolygons2 } from 'sr2020-mm-data/utils/polygonGenerator';
+// import { getEeStats } from '../../utils/miscUtils';
 
 import { AbstractService } from '../core/AbstractService';
 

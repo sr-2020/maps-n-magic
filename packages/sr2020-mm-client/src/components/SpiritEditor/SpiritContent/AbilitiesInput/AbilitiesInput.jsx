@@ -12,12 +12,12 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faTimes } from '@fortawesome/free-solid-svg-icons';
 import * as R from 'ramda';
 
-import { AbilitiesInputPropTypes } from '../../../../types';
+// import { AbilitiesInputPropTypes } from '../../../../types';
 
 const sort = R.sortBy(R.toLower);
 
 export class AbilitiesInput extends Component {
-  static propTypes = AbilitiesInputPropTypes;
+  // static propTypes = AbilitiesInputPropTypes;
 
   constructor(props) {
     super(props);

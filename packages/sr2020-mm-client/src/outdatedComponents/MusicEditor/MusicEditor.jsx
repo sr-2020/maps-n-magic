@@ -4,10 +4,10 @@ import './MusicEditor.css';
 import * as R from 'ramda';
 
 import { readBinaryFile } from '../../utils/fileUtils';
-import { MusicEditorPropTypes } from '../../types';
+// import { MusicEditorPropTypes } from '../../types';
 
 export class MusicEditor extends Component {
-  static propTypes = MusicEditorPropTypes;
+  // static propTypes = MusicEditorPropTypes;
 
   constructor(props) {
     super(props);

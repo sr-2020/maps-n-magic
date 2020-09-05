@@ -14,7 +14,7 @@ import { getPolygons } from '../../utils/polygonGenerator';
 import { MapMarker } from '../MapMarker';
 import { MapPoint } from '../MapPoint';
 
-import { Prototype1PropTypes } from '../../types';
+// import { Prototype1PropTypes } from '../../types';
 
 // const SVG_WIDTH = 500;
 // const SVG_HEIGHT = 400;
@@ -43,7 +43,7 @@ import { Prototype1PropTypes } from '../../types';
 // const sortBeacons = R.pipe(R.sortBy(R.prop('x')), R.sortBy(R.prop('y')));
 
 export class Prototype1 extends Component {
-  static propTypes = Prototype1PropTypes;
+  // static propTypes = Prototype1PropTypes;
 
   constructor(props) {
     super(props);

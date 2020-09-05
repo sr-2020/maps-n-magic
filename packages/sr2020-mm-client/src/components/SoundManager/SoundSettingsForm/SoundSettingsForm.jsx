@@ -6,13 +6,13 @@ import classNames from 'classnames';
 import { TimeoutInput } from './TimeoutInput';
 import { InputLabel } from './InputLabel';
 
-import { SoundSettingsFormPropTypes } from '../../../types';
+// import { SoundSettingsFormPropTypes } from '../../../types';
 
 const e2Timeout = R.pipe(parseInt, R.multiply(1000));
 const e2Volume = parseInt;
 
 export class SoundSettingsForm extends Component {
-  static propTypes = SoundSettingsFormPropTypes;
+  // static propTypes = SoundSettingsFormPropTypes;
 
   constructor(props) {
     super(props);

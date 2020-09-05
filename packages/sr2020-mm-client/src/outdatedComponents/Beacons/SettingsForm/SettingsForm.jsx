@@ -4,7 +4,7 @@ import './SettingsForm.css';
 
 import Button from 'react-bootstrap/Button';
 
-import { SettingsFormPropTypes } from '../../../types';
+// import { SettingsFormPropTypes } from '../../../types';
 
 // eslint-disable-next-line max-lines-per-function
 export function SettingsForm(props) {
@@ -133,4 +133,4 @@ export function SettingsForm(props) {
   );
 }
 
-SettingsForm.propTypes = SettingsFormPropTypes;
+// SettingsForm.propTypes = SettingsFormPropTypes;

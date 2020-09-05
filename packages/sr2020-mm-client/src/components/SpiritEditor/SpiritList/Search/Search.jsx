@@ -5,10 +5,10 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faSearch, faTimes } from '@fortawesome/free-solid-svg-icons';
 
 import classNames from 'classnames';
-import { SearchPropTypes } from '../../../../types';
+// import { SearchPropTypes } from '../../../../types';
 
 export class Search extends Component {
-  static propTypes = SearchPropTypes;
+  // static propTypes = SearchPropTypes;
 
   constructor(props) {
     super(props);

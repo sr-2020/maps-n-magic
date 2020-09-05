@@ -3,10 +3,10 @@ import './GeoDataStreamSimulator.css';
 
 import { animate, Timing } from '../../utils/animation';
 
-import { GeoDataStreamSimulatorPropTypes } from '../../types';
+// import { GeoDataStreamSimulatorPropTypes } from '../../types';
 
 export class GeoDataStreamSimulator extends Component {
-  static propTypes = GeoDataStreamSimulatorPropTypes;
+  // static propTypes = GeoDataStreamSimulatorPropTypes;
 
   constructor() {
     super();

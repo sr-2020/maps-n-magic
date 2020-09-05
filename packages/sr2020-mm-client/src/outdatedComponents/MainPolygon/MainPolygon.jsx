@@ -2,7 +2,7 @@ import React, { } from 'react';
 import './MainPolygon.css';
 import { polygon2polyline } from '../../utils/polygonUtils';
 import { MapPoint } from '../MapPoint';
-import { MainPolygonPropTypes } from '../../types';
+// import { MainPolygonPropTypes } from '../../types';
 
 
 export function MainPolygon(props) {
@@ -25,4 +25,4 @@ export function MainPolygon(props) {
   );
 }
 
-MainPolygon.propTypes = MainPolygonPropTypes;
+// MainPolygon.propTypes = MainPolygonPropTypes;

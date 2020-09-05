@@ -1,10 +1,10 @@
 import React, { Component } from 'react';
 import './SoundStageEcho.css';
 
-import { SoundStageEchoPropTypes } from '../../../types';
+// import { SoundStageEchoPropTypes } from '../../../types';
 
 export class SoundStageEcho extends Component {
-  static propTypes = SoundStageEchoPropTypes;
+  // static propTypes = SoundStageEchoPropTypes;
 
   constructor(props) {
     super(props);

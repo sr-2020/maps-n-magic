@@ -1,6 +1,6 @@
 import React from 'react';
 import './MapPoint.css';
-import { MapPointPropTypes } from '../../types';
+// import { MapPointPropTypes } from '../../types';
 
 export function MapPoint(props) {
   const {
@@ -12,4 +12,4 @@ export function MapPoint(props) {
   );
 }
 
-MapPoint.propTypes = MapPointPropTypes;
+// MapPoint.propTypes = MapPointPropTypes;
