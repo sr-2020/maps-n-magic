@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import './AppHeader.css';
 
 import {
-  BrowserRouter as Router, Switch, Route, Redirect, NavLink,
+  NavLink,
 } from 'react-router-dom';
 
 import Navbar from 'react-bootstrap/Navbar';

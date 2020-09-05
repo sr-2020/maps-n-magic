@@ -9,7 +9,7 @@ import * as R from 'ramda';
 import DocumentTitle from 'react-document-title';
 
 import {
-  BrowserRouter as Router, Switch, Route, Redirect, NavLink,
+  HashRouter as Router, Switch, Route, Redirect, NavLink, 
 } from 'react-router-dom';
 
 import { ErrorBoundry } from '../ErrorBoundry';

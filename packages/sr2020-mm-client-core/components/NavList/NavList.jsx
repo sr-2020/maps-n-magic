@@ -2,7 +2,7 @@ import React from 'react';
 import './NavList.css';
 
 import {
-  BrowserRouter as Router, Switch, Route, Redirect, NavLink,
+  NavLink,
 } from 'react-router-dom';
 import Nav from 'react-bootstrap/Nav';
 import classNames from 'classnames';
