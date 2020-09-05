@@ -3,7 +3,7 @@ import './CharacterHealthListener.css';
 
 import * as R from 'ramda';
 
-import { getCharacterStates } from '../../gameModel/api/characterStates';
+import { getCharacterStates } from '../../eventEngine/api/characterStates';
 
 // import { CharacterHealthListenerPropTypes } from '../../types';
 

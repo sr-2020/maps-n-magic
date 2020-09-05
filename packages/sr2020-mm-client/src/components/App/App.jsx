@@ -24,7 +24,7 @@ import { AppPropTypes } from '../../types';
 
 import {
   makeGameModel,
-} from '../../gameModel';
+} from '../../eventEngine';
 
 import { mapConfig } from '../../configs/map';
 
