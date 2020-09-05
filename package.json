@@ -1,7 +1,25 @@
 {
   "name": "root",
+  "author": "Timofey Rechkalov (NtsDK)",
+  "license": "Apache-2.0",
   "private": true,
+  "scripts": {
+    "bootstrap": "lerna bootstrap",
+    "start": "lerna run start --stream"
+  },
   "devDependencies": {
-    "lerna": "^3.22.1"
-  }
+    "lerna": "^3.22.1",
+    "autoprefixer": "^9.8.6",
+    "eslint-plugin-ramda": "^2.5.1",
+    "eslint-plugin-sonarjs": "^0.5.0",
+    "postcss-cli": "^7.1.2",
+    "eslint": "^7.8.1",
+    "eslint-config-airbnb": "^18.2.0",
+    "eslint-plugin-import": "^2.22.0",
+    "eslint-plugin-jsx-a11y": "^6.3.1",
+    "eslint-plugin-react": "^7.20.6",
+    "tailwindcss": "^1.8.2",
+    "tailwindcss-enhanced-outlines-plugin": "^1.1.0"
+  },
+  "dependencies": {}
 }
