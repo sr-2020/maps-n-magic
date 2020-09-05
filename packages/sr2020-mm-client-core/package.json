@@ -9,7 +9,17 @@
     "react-dom": "^16.13.1",
     "react-router-dom": "^5.2.0",
     "react-i18next": "^11.7.2",
-    "ramda": "^0.27.1"
+    "ramda": "^0.27.1",
+    "autoprefixer": "^9.8.6",
+    "postcss-cli": "^7.1.2",
+    "tailwindcss": "^1.8.2",
+    "tailwindcss-enhanced-outlines-plugin": "^1.1.0"
   },
-  "dependencies": {}
+  "dependencies": {
+  },
+  "scripts": {
+    "tailwind:css": "./node_modules/.bin/tailwind build css/tailwind.src.css -c  tailwind.js -o css/tailwind.css",
+    "build:css": "postcss css/tailwind.src.css -o css/tailwind.css",
+    "start:css": "postcss css/tailwind.src.css -o css/tailwind.css -w"
+  }
 }

@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import 'bootstrap/dist/css/bootstrap.min.css';
-import '../../css/tailwind.css';
+import 'sr2020-mm-client-core/css/tailwind.css';
 import './App.css';
 // import './Icons.css';
 // import '@fortawesome/fontawesome-free/css/all.css';
