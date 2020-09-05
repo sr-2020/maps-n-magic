@@ -27,9 +27,11 @@ npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
 packages/sr2020-mm-client/src/css/tailwind.css
-packages/sr2020-mm-client/src/dataAnalysis/data/restOfAll/
-packages/pubSubTest/
-packages/sr2020-mm-client/src/dataAnalysis/data/kml/otherKml
 packages/sr2020-mm-client/public/images/nonIndexedImages/
 
 packages/sr2020-mm-server/settings-real.js
+
+packages/sr2020-mm-data/analysis/data/restOfAll/
+packages/sr2020-mm-data/analysis/data/kml/otherKml
+
+packages/pubSubTest/

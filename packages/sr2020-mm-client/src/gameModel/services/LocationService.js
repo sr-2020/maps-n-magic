@@ -1,6 +1,6 @@
 import * as R from 'ramda';
 
-import { initialLocations } from '../../data/locations';
+import { initialLocations } from 'sr2020-mm-data/assets/locations';
 
 import { AbstractService } from '../core/AbstractService';
 

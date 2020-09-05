@@ -1,8 +1,8 @@
 import * as R from 'ramda';
-import { getBeacons2 } from '../../data/beacons';
+import { getBeacons2 } from 'sr2020-mm-data/assets/beacons';
 import { getBoundingRect, scaleRect } from '../../utils/polygonUtils';
 
-import { baseCommonLLs } from '../../data/baseContours';
+import { baseCommonLLs } from 'sr2020-mm-data/assets/baseContours';
 
 import { getPolygons2 } from '../../utils/polygonGenerator';
 import { getEeStats } from '../../utils/miscUtils';

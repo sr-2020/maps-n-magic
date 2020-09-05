@@ -3,7 +3,7 @@ import * as R from 'ramda';
 import { AvgFilter } from './AvgFilter';
 import { AvgFilter2 } from './AvgFilter2';
 
-import { getLoudestBeacon } from '../dataAnalysis/utils';
+import { getLoudestBeacon } from '../analysis/utils';
 
 // const hasBeacon = R.pipe(R.prop('loudestBeacon'), R.isNil, R.not);
 const hasBeacon = R.pipe(R.prop('beacon'), R.isNil, R.not);
@@ -38,7 +38,7 @@ export function cleanRawData({
 
   // const makeIndex = R.indexBy(R.path(['loudestBeacon', 'beaconId']));
   const makeIndex = R.indexBy(R.path(['beacon', 'beaconId']));
-  const getBeaconIds = R.pipe(R.filter(hasBeacon), makeIndex, R.keys);
+  // const getBeaconIds = R.pipe(R.filter(hasBeacon), makeIndex, R.keys);
 
   // const beaconIds = getBeaconIds(res);
 

@@ -1,4 +1,4 @@
-const data = require('./data/rawBeaconMessages');
+const data = require('./data/restOfAll/rawBeaconMessages');
 const { removeAllEmptyMessages } = require('./utils');
 
 // remove all empty beacon messages

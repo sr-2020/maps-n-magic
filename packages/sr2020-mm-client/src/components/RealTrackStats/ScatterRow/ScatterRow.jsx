@@ -11,13 +11,7 @@ import {
 
 import { Scatters } from '../Scatters';
 
-import { cleanRawData } from '../../../dataUtils/prepareScatterData';
-
-// const beaconTable = require('../../../  ../../../data/postgresBeaconTable');
-// import * as BeaconUtils from '../../../dataAnalysis/beaconUtils';
-
-// console.log(BeaconUtils);
-// import { ScatterRowPropTypes } from '../../types';
+import { cleanRawData } from 'sr2020-mm-data/utils/prepareScatterData';
 
 const CustomTooltip = ({
   active, payload, label, beaconIndex,

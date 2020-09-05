@@ -7,14 +7,14 @@ import fs from 'fs';
 import {
   beaconIndex, beaconLatlngsIndex, countElsByType, calcDataBeaconStats,
   getBeaconsListFromData,
-} from './beaconUtils.js';
+} from './beaconUtils';
 
 import {
   getTimeLimits, getLoudestBeacon,
-} from './utils.js';
+} from './utils';
 import {
   AvgFilter2,
-} from '../dataUtils/AvgFilter2.js';
+} from '../utils/AvgFilter2';
 // // const data = require('./data/rawBeaconMessages_improved');
 // // const rawData = require('./data/rawBeaconMessages');
 // const rawData = require('./data/rawBeaconMessages2');
@@ -24,7 +24,7 @@ import usersData from './data/restOfAll/usersData.json';
 
 import {
   improveData, groupDataByUser,
-} from './improveRawData.js';
+} from './improveRawData';
 
 const improvedData = improveData(rawData, 60000 * 60 * 3);
 
@@ -110,7 +110,6 @@ const dataArrToTracks = function (dataArr) {
     });
 };
 
-
 // console.log(messagesByUser['5'].map(R.prop('timeMillis')));
 
 // const deltas = countDeltas(messagesByUser['5']);
@@ -194,6 +193,5 @@ R.pipe(
 // exports.userTracks = userTracks;
 
 fs.writeFileSync('./data/preparedData/pt6.json', JSON.stringify(userTracks, null, '  '), 'utf-8');
-
 
 // // calcDataBeaconStats(data);

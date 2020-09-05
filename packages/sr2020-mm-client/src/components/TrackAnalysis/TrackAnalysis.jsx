@@ -17,7 +17,7 @@ import { UserTrackAnalysis } from '../UserTrackAnalysis';
 
 import {
   tracksData, beaconLatlngs, userList, beaconLatlngsIndex, beaconIndex,
-} from '../../dataAnalysis/data/preparedData';
+} from 'sr2020-mm-data/analysis/data/preparedData';
 
 // import { TrackAnalysisPropTypes } from '../../types';
 

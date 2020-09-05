@@ -2,7 +2,7 @@ import R from 'ramda';
 
 import {
   dateStrToMillis, getLoudestBeacon,
-} from './utils.js';
+} from './utils';
 
 import beaconTable from './data/preparedData/postgresBeaconTable.json';
 import beaconLatlngs from './data/preparedData/googleMapBeaconList.json';

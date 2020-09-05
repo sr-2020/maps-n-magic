@@ -2,9 +2,8 @@
 const R = require('ramda');
 const { beaconIndex, bssid2idSubset } = require('./beaconUtils');
 const { getLoudestBeacon } = require('./utils');
-const data = require('./data/rawBeaconMessages_notEmpty');
+const data = require('./data/restOfAll/rawBeaconMessages_notEmpty');
 // const data = require('./rawBeaconMessages');
-
 
 // const data2 = data.filter((item) => beaconIndex[item.beacons[0].bssid]);
 
@@ -16,7 +15,6 @@ const data2 = data.map((item) => ({
 
 // console.log(data2);
 // console.log(JSON.stringify(data2, null, '  '));
-
 
 const userTracks = data2.reduce((acc, item) => {
   if (!acc[item.user_id]) {

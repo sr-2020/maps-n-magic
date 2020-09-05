@@ -12,15 +12,13 @@ import { getIcon } from '../../../../utils/icons';
 
 // require('leaflet-hotline')(L);
 
-// import { userTracks } from '../../../../dataAnalysis/makeDetailedUserTracks';
-
 import { COLOR_PALETTE } from '../../../../utils/colorPalette';
 
 // import { RealTrackDemoPropTypes } from '../../types';
 
 // console.log('BeaconUtils', BeaconUtils);
 
-console.log('Hotline', Hotline);
+// console.log('Hotline', Hotline);
 
 const defaultOptions = {
   // id: userName,

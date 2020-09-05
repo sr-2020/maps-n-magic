@@ -1,0 +1,13 @@
+{
+  "name": "sr2020-mm-data",
+  "description": "Data processing code",
+  "version": "1.0.0",
+  "peerDependencies": {
+    "ramda": "^0.27.1"
+  },
+  "dependencies": {
+    "xmldom": "^0.3.0",
+    "csv-parse": "^4.12.0",
+    "@tmcw/togeojson": "^4.1.0"
+  }
+}

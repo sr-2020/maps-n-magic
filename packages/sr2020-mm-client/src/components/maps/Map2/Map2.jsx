@@ -2,7 +2,7 @@
 import React, { Component } from 'react';
 import * as R from 'ramda';
 
-import '../../../utils/gpxConverter';
+// import '../../../utils/gpxConverter';
 
 import L from 'leaflet/dist/leaflet-src';
 import 'leaflet/dist/leaflet.css';

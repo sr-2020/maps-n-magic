@@ -3,10 +3,10 @@ import R from 'ramda';
 // const { bssid2id, resolveBssidToId } = require('./beaconUtils');
 import {
   bssid2id, resolveBssidToId,
-} from './beaconUtils.js';
+} from './beaconUtils';
 import {
   dateStrToMillis, getLoudestBeacon,
-} from './utils.js';
+} from './utils';
 
 // const { dateStrToMillis, getLoudestBeacon } = require('./utils');
 

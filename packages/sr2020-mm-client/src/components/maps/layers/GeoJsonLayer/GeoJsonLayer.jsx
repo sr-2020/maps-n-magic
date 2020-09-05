@@ -7,7 +7,7 @@ import L from 'leaflet/dist/leaflet-src';
 // import { GeoJsonLayerPropTypes } from '../../types';
 
 // import staticGeoData from '../../../../dataAnalysis/data/kml/izumrud_socgorod.json';
-import staticGeoData from '../../../../dataAnalysis/data/kml/aggregatedKml.json';
+import staticGeoData from 'sr2020-mm-data/analysis/data/kml/aggregatedKml.json';
 
 // console.log('staticGeoData', staticGeoData);
 
