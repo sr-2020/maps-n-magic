@@ -1,7 +1,8 @@
 import React from 'react';
 import './MapsNav.css';
 
-import { NavList } from '../NavList';
+import { NavList } from 'sr2020-mm-client-core/components/NavList';
+// import { NavList } from '../NavList';
 
 const navLinks = [{
   to: '/backgroundEditorMap',

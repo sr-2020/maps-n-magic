@@ -8,18 +8,27 @@
     "start": "lerna run start --stream"
   },
   "devDependencies": {
-    "lerna": "^3.22.1",
     "autoprefixer": "^9.8.6",
-    "eslint-plugin-ramda": "^2.5.1",
-    "eslint-plugin-sonarjs": "^0.5.0",
-    "postcss-cli": "^7.1.2",
+    "babel-eslint": "^10.1.0",
     "eslint": "^7.8.1",
     "eslint-config-airbnb": "^18.2.0",
+    "eslint-plugin-flowtype": "^5.2.0",
     "eslint-plugin-import": "^2.22.0",
     "eslint-plugin-jsx-a11y": "^6.3.1",
+    "eslint-plugin-ramda": "^2.5.1",
     "eslint-plugin-react": "^7.20.6",
+    "eslint-plugin-react-hooks": "^4.1.0",
+    "eslint-plugin-sonarjs": "^0.5.0",
+    "lerna": "^3.22.1",
+    "postcss-cli": "^7.1.2",
     "tailwindcss": "^1.8.2",
     "tailwindcss-enhanced-outlines-plugin": "^1.1.0"
   },
-  "dependencies": {}
+  "dependencies": {
+    "classnames": "^2.2.6",
+    "react": "^16.13.1",
+    "react-bootstrap": "^1.3.0",
+    "react-dom": "^16.13.1",
+    "react-router-dom": "^5.2.0"
+  }
 }
