@@ -88,6 +88,8 @@ export class App extends Component {
       simulateGeoDataStream: false,
       translator: new Translator(mapDefaults.defaultCenter, null),
       waitingForGeolocation: false,
+      gameServer: null,
+      gameModel: null,
       initialized: false,
     };
     const funcs = `
@@ -107,6 +109,7 @@ export class App extends Component {
     const { gameModel, gameServer } = makeGameModel(initialDatabase);
     this.soundStage.subscribeOnModel(gameModel);
     this.setState({
+      translator: new Translator(mapDefaults.defaultCenter, null),
       gameServer,
       gameModel,
       initialized: true,
