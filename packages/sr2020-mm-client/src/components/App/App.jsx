@@ -324,9 +324,7 @@ export class App extends Component {
                           <ManaOceanSettings gameModel={gameModel} />
                         </Route>
 
-                        {TrackAnalysis({
-                          gameModel,
-                        })}
+                        {TrackAnalysis({})}
                         {MapRoutes({
                           gameModel,
                         })}

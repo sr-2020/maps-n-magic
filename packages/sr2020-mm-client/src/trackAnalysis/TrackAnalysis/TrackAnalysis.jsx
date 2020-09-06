@@ -25,10 +25,6 @@ import {
 export function TrackAnalysis(props) {
   // static propTypes = TrackAnalysisPropTypes;
 
-  const {
-    gameModel
-  } = props;
-
   return [
     <Route path="/trackAnalysisNav">
       <TrackAnalysisNav />
@@ -42,9 +38,7 @@ export function TrackAnalysis(props) {
     </Route>,
 
     <Route path="/trackDemo">
-      <TrackDemoMap
-        gameModel={gameModel}
-      >
+      <TrackDemoMap>
         <RealTrackLayer
           enableByDefault
           tracksData={tracksData}
@@ -61,9 +55,7 @@ export function TrackAnalysis(props) {
         defaultSelectedUser={userList[18].userId}
         userList={userList}
         drawMap={({ userData }) => (
-          <TrackDemoMap
-            gameModel={gameModel}
-          >
+          <TrackDemoMap>
             <RealTrackLayer
               enableByDefault
               tracksData={userData}

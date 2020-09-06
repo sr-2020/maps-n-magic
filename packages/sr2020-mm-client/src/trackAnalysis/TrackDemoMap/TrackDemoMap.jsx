@@ -12,14 +12,12 @@ import { ImageBackground } from '../../layers/ImageBackground';
 
 export function TrackDemoMap(props) {
   const {
-    gameModel, children,
+    children,
   } = props;
 
   return (
     <Map
-      gameModel={gameModel}
       commonPropsExtension={{
-        gameModel,
       }}
     >
       <SatelliteBackground enableByDefault />
