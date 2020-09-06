@@ -7,8 +7,8 @@ import * as R from 'ramda';
 
 import * as Hotline from 'leaflet-hotline';
 
-import { classNames } from 'classnames';
-import { getIcon } from '../../../../utils/icons';
+// import { classNames } from 'classnames';
+// import { getIcon } from '../../utils/icons';
 
 // require('leaflet-hotline')(L);
 

@@ -49,7 +49,7 @@ import { Translator } from '../../utils/Translator';
 import { BeaconRecordEditor } from '../BeaconRecordEditor';
 import { RescueServiceMessageSender } from '../RescueServiceMessageSender';
 
-import { TrackAnalysis } from '../TrackAnalysis';
+import { TrackAnalysis } from '../../trackAnalysis/TrackAnalysis';
 
 
 import { MapRoutes } from '../MapRoutes';

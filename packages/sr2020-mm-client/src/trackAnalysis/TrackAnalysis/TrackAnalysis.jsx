@@ -9,9 +9,9 @@ import { TrackAnalysisNav } from '../TrackAnalysisNav';
 
 import { RealTrackStats } from '../RealTrackStats';
 
-import { RealTrackDemo } from '../maps/layers/RealTrackDemo';
+import { RealTrackDemo } from '../RealTrackDemo';
 
-import { TrackDemoMap } from '../maps/TrackDemoMap';
+import { TrackDemoMap } from '../TrackDemoMap';
 
 import { UserTrackAnalysis } from '../UserTrackAnalysis';
 
