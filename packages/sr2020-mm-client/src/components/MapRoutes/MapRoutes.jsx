@@ -6,11 +6,11 @@ import {
 } from 'react-router-dom';
 // import { MapRoutesPropTypes } from '../../types';
 
-import { CommonMap } from '../maps/CommonMap';
-import { BackgroundEditorMap } from '../maps/BackgroundEditorMap';
-import { LocationEditorMap } from '../maps/LocationEditorMap';
-import { BeaconEditorMap } from '../maps/BeaconEditorMap';
-import { RescueServiceMap } from '../maps/RescueServiceMap';
+import { CommonMap } from '../../maps/CommonMap';
+import { BackgroundEditorMap } from '../../maps/BackgroundEditorMap';
+import { LocationEditorMap } from '../../maps/LocationEditorMap';
+import { BeaconEditorMap } from '../../maps/BeaconEditorMap';
+import { RescueServiceMap } from '../../maps/RescueServiceMap';
 
 import {
   mapConfig, backgroundEditorGeomanConfig, oldLocationAndMarkerGeomanConfig, locationsEditor2GeomanConfig, beaconEditor2GeomanConfig,

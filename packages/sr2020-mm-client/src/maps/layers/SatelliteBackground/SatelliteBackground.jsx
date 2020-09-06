@@ -3,7 +3,7 @@ import './SatelliteBackground.css';
 
 import L from 'leaflet/dist/leaflet-src';
 
-import { defaultTileLayer } from '../../../../configs/map';
+import { defaultTileLayer } from '../../../configs/map';
 
 // import { SatelliteBackgroundPropTypes } from '../../types';
 

@@ -15,7 +15,7 @@ import { EventEmitter } from 'events';
 
 // import { geomanConfig } from '../../../configs/map';
 
-import { applyLeafletGeomanTranslation, getZoomTranslation } from '../../../translations';
+import { applyLeafletGeomanTranslation, getZoomTranslation } from '../../translations';
 
 // eslint-disable-next-line import/extensions
 import 'leaflet.locatecontrol/dist/L.Control.Locate.min.js';

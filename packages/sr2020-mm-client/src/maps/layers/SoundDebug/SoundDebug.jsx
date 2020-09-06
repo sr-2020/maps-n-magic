@@ -3,9 +3,9 @@ import './SoundDebug.css';
 
 import L from 'leaflet/dist/leaflet-src';
 
-import { musicSelectDom } from '../../../../utils/domUtils';
+import { musicSelectDom } from '../../../utils/domUtils';
 
-import { SoundStageEcho } from '../../../SoundManager/SoundStageEcho';
+import { SoundStageEcho } from '../../../components/SoundManager/SoundStageEcho';
 
 // import { SoundDebugPropTypes } from '../../types';
 

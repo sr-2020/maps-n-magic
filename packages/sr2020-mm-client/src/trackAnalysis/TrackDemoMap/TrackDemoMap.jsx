@@ -2,11 +2,11 @@
 import React, { Component } from 'react';
 import './TrackDemoMap.css';
 
-import { Map } from '../../components/maps/Map';
+import { Map } from '../../maps/Map';
 
-import { BaseContourLayer2 } from '../../components/maps/layers/BaseContourLayer2';
-import { SatelliteBackground } from '../../components/maps/layers/SatelliteBackground';
-import { ImageBackground } from '../../components/maps/layers/ImageBackground';
+import { BaseContourLayer2 } from '../../maps/layers/BaseContourLayer2';
+import { SatelliteBackground } from '../../maps/layers/SatelliteBackground';
+import { ImageBackground } from '../../maps/layers/ImageBackground';
 
 // import { CommonMapPropTypes } from '../../types';
 

@@ -6,7 +6,7 @@ import ReactDOM from 'react-dom';
 import classNames from 'classnames';
 // import { LocationPopupPropTypes, manaLevels } from '../../../../types';
 
-import { locationPopupDom } from '../../../../utils/domUtils';
+import { locationPopupDom } from '../../../utils/domUtils';
 
 const manaLevels = (['low', 'normal', 'high']);
 

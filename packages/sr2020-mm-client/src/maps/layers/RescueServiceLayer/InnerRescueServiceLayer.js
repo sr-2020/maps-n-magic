@@ -1,7 +1,7 @@
 import L from 'leaflet/dist/leaflet-src';
 import * as R from 'ramda';
 
-import { getIcon } from '../../../../utils/icons';
+import { getIcon } from '../../../utils/icons';
 
 // based on Leaflet implementation
 // https://github.com/Leaflet/Leaflet/blob/37d2fd15ad6518c254fae3e033177e96c48b5012/src/layer/vector/Polygon.js#L76
