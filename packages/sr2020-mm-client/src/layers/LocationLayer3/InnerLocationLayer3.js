@@ -42,7 +42,11 @@ export class InnerLocationLayer3 {
     );
     const prepareArray = R.pipe(
       R.filter(isNotEmptyPolygon),
-      R.map(translator.moveTo),
+      R.map(location => {
+        const copy = {...location};
+        copy.polygon[0] = translator.moveTo(location.polygon[0]);
+        return copy;
+      }),
     );
     const locationsData = prepareArray(gameModel.get('locationRecords'));
     R.map(this.createAndAddLocation(setLocationEventHandlers, t), locationsData);
