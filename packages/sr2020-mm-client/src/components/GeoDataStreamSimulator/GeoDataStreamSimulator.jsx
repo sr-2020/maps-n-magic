@@ -76,9 +76,9 @@ export class GeoDataStreamSimulator extends Component {
   }
 
   refreshUserMovementSimulation() {
-    const { simulateGeoDataStream, curPosition, defaultCenter } = this.props;
+    const { simulateGeoDataStream, translator, defaultCenter } = this.props;
     if (simulateGeoDataStream) {
-      this.simulateUserMovement(curPosition || defaultCenter);
+      this.simulateUserMovement(translator.getVirtualCenter() || defaultCenter);
     } else {
       this.stopUserMovement();
     }
