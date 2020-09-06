@@ -6,7 +6,7 @@ import * as R from 'ramda';
 
 import { LocationsLayer } from './LocationsLayer';
 
-import { locationPopupDom } from '../../../utils/domUtils';
+import { locationPopupDom } from '../../utils/domUtils';
 
 import { LocationPopup } from '../LocationPopup';
 

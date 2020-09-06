@@ -4,12 +4,12 @@ import './BeaconEditorMap.css';
 
 import { Map } from '../Map';
 
-import { SatelliteBackground } from '../layers/SatelliteBackground';
-import { BaseContourLayer2 } from '../layers/BaseContourLayer2';
-import { BackgroundImageLayer } from '../layers/BackgroundImageLayer';
-import { GeoJsonLayer } from '../layers/GeoJsonLayer';
-import { LocationLayer3 } from '../layers/LocationLayer3';
-import { BeaconLayer3 } from '../layers/BeaconLayer3';
+import { SatelliteBackground } from '../../layers/SatelliteBackground';
+import { BaseContourLayer2 } from '../../layers/BaseContourLayer2';
+import { BackgroundImageLayer } from '../../layers/BackgroundImageLayer';
+import { GeoJsonLayer } from '../../layers/GeoJsonLayer';
+import { LocationLayer3 } from '../../layers/LocationLayer3';
+import { BeaconLayer3 } from '../../layers/BeaconLayer3';
 
 // import { BeaconEditorMapPropTypes } from '../../types';
 

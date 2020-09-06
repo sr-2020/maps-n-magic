@@ -3,10 +3,10 @@ import './BackgroundEditorMap.css';
 
 import { Map } from '../Map';
 
-import { SatelliteBackground } from '../layers/SatelliteBackground';
-import { BaseContourLayer2 } from '../layers/BaseContourLayer2';
-import { BackgroundImageLayer } from '../layers/BackgroundImageLayer';
-import { GeoJsonLayer } from '../layers/GeoJsonLayer';
+import { SatelliteBackground } from '../../layers/SatelliteBackground';
+import { BaseContourLayer2 } from '../../layers/BaseContourLayer2';
+import { BackgroundImageLayer } from '../../layers/BackgroundImageLayer';
+import { GeoJsonLayer } from '../../layers/GeoJsonLayer';
 
 // import { BackgroundEditorMapPropTypes } from '../../types';
 

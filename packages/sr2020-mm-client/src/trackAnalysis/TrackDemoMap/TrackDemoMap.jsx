@@ -4,9 +4,9 @@ import './TrackDemoMap.css';
 
 import { Map } from '../../maps/Map';
 
-import { BaseContourLayer2 } from '../../maps/layers/BaseContourLayer2';
-import { SatelliteBackground } from '../../maps/layers/SatelliteBackground';
-import { ImageBackground } from '../../maps/layers/ImageBackground';
+import { BaseContourLayer2 } from '../../layers/BaseContourLayer2';
+import { SatelliteBackground } from '../../layers/SatelliteBackground';
+import { ImageBackground } from '../../layers/ImageBackground';
 
 // import { CommonMapPropTypes } from '../../types';
 
