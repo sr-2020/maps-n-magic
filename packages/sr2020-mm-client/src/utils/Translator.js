@@ -1,20 +1,28 @@
 import * as R from 'ramda';
 
 export class Translator {
-  constructor(center, userCoords) {
-    this.center = center; // [lat, lng]
-    this.userCoords = userCoords; // [lat, lng]
-    if (userCoords) {
-      this.deltaLat = this.userCoords[0] - this.center[0];
-      this.deltaLng = this.userCoords[1] - this.center[1];
+  constructor(defaultCenter, virtualCenter) {
+    this.defaultCenter = defaultCenter; // [lat, lng]
+    this.virtualCenter = virtualCenter; // [lat, lng]
+    if (virtualCenter) {
+      this.deltaLat = this.virtualCenter[0] - this.defaultCenter[0];
+      this.deltaLng = this.virtualCenter[1] - this.defaultCenter[1];
     }
 
     this.moveTo = this.moveTo.bind(this);
     this.moveFrom = this.moveFrom.bind(this);
   }
 
+  getDefaultCenter() {
+    return this.defaultCenter;
+  }
+
+  getVirtualCenter() {
+    return this.virtualCenter;
+  }
+
   _move(obj, func) {
-    if (this.userCoords === null) {
+    if (this.virtualCenter === null) {
       return obj;
     }
     if (R.is(Object, obj) && obj.lat && obj.lng) { // beacon
