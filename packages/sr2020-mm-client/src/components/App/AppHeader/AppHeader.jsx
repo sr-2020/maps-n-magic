@@ -59,8 +59,8 @@ const navLinks = [{
 export class AppHeader extends Component {
   // static propTypes = AppHeaderPropTypes;
 
-  constructor() {
-    super();
+  constructor(props) {
+    super(props);
     this.state = {
       // expanded: false,
     };

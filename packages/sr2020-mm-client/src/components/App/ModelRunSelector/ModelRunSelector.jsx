@@ -15,8 +15,8 @@ const speeds = [0.1, 1, 10, 20];
 export class ModelRunSelector extends Component {
   // static propTypes = ModelRunSelectorPropTypes;
 
-  constructor() {
-    super();
+  constructor(props) {
+    super(props);
     this.state = {
       isModelRunning: false,
       speed: null,

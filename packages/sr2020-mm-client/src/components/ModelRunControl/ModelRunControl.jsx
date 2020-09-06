@@ -9,8 +9,8 @@ import Dropdown from 'react-bootstrap/Dropdown';
 export class ModelRunControl extends Component {
   // static propTypes = ModelRunControlPropTypes;
 
-  constructor() {
-    super();
+  constructor(props) {
+    super(props);
     this.state = {
       isModelRunning: false,
     };

@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
 import './NotificationWatcher.css';
 
-
 // import { ErrorWatcherPropTypes } from '../../types';
 import { ToastWrapper } from './ToastWrapper';
 

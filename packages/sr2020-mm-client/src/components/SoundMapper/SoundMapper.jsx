@@ -8,8 +8,8 @@ import { MusicSelectControl } from '../MusicSelectControl';
 export class SoundMapper extends Component {
   // static propTypes = SoundMapperPropTypes;
 
-  constructor() {
-    super();
+  constructor(props) {
+    super(props);
     this.state = {
     };
   }

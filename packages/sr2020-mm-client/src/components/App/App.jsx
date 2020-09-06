@@ -12,9 +12,13 @@ import {
   HashRouter as Router, Switch, Route, Redirect, NavLink, 
 } from 'react-router-dom';
 
-import { ErrorBoundry } from '../ErrorBoundry';
-import { SoundManager } from '../SoundManager';
+import { ErrorBoundry } from 'sr2020-mm-client-core/components/ErrorBoundry';
 
+import {
+  makeGameModel,
+} from 'sr2020-mm-event-engine/configs/clientEventEngine';
+
+import { NotificationWatcher } from 'sr2020-mm-client-core/components/NotificationWatcher';
 import { json2File, makeFileName, readJsonFile } from 'sr2020-mm-client-core/utils/fileUtils';
 import { AudioContextWrapper } from '../../utils/AudioContextWrapper';
 
@@ -22,10 +26,7 @@ import { SpiritEditor } from '../SpiritEditor';
 
 // import { AppPropTypes } from '../../types';
 
-import {
-  makeGameModel,
-} from 'sr2020-mm-event-engine/configs/clientEventEngine';
-
+import { SoundManager } from '../SoundManager';
 
 import { mapConfig } from '../../configs/map';
 
@@ -49,7 +50,7 @@ import { BeaconRecordEditor } from '../BeaconRecordEditor';
 import { RescueServiceMessageSender } from '../RescueServiceMessageSender';
 
 import { TrackAnalysis } from '../TrackAnalysis';
-import { NotificationWatcher } from '../NotificationWatcher';
+
 
 import { MapRoutes } from '../MapRoutes';
 
