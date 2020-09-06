@@ -13,7 +13,7 @@ import { LocationLayer3 } from '../../layers/LocationLayer3';
 
 export function LocationEditorMap(props) {
   const {
-    gameModel, translator, geomanConfig,
+    gameModel, geomanConfig,
   } = props;
 
   return (
@@ -21,7 +21,6 @@ export function LocationEditorMap(props) {
       gameModel={gameModel}
       geomanConfig={geomanConfig}
       commonPropsExtension={{
-        translator,
         gameModel,
       }}
     >

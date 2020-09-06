@@ -323,11 +323,9 @@ export class App extends Component {
 
                         {TrackAnalysis({
                           gameModel,
-                          translator,
                         })}
                         {MapRoutes({
                           gameModel,
-                          translator,
                         })}
                         <Route render={() => <Redirect to="/mapsNav" />} />
                       </Switch>

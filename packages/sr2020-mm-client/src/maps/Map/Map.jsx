@@ -150,11 +150,12 @@ export class Map extends Component {
     const { map } = this.state;
 
     const {
-      children, commonPropsExtension = {},
+      children, commonPropsExtension = {}, translator
     } = this.props;
 
     const mapProps = {
-      layerCommunicator: this.layerCommunicator,
+      layerCommunicator: this.layerCommunicator, 
+      translator,
       ...commonPropsExtension,
     };
 

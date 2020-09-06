@@ -20,7 +20,7 @@ import { ImageBackground } from '../../layers/ImageBackground';
 // eslint-disable-next-line max-lines-per-function
 export function CommonMap(props) {
   const {
-    gameModel, translator, geomanConfig,
+    gameModel, geomanConfig,
   } = props;
 
   return (
@@ -28,7 +28,6 @@ export function CommonMap(props) {
       gameModel={gameModel}
       geomanConfig={geomanConfig}
       commonPropsExtension={{
-        translator,
         gameModel,
       }}
     >

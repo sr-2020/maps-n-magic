@@ -17,7 +17,7 @@ import { MapsNav } from '../MapsNav';
 // eslint-disable-next-line max-lines-per-function
 export function MapRoutes(props) {
   const {
-    gameModel, translator, mapDefaults
+    gameModel, mapDefaults
   } = props;
   const {
     backgroundEditorGeomanConfig, oldLocationAndMarkerGeomanConfig, locationsEditor2GeomanConfig, beaconEditor2GeomanConfig,
@@ -30,35 +30,30 @@ export function MapRoutes(props) {
     <Route path="/map2">
       <CommonMap
         gameModel={gameModel}
-        translator={translator}
         geomanConfig={oldLocationAndMarkerGeomanConfig}
       />
     </Route>,
     <Route path="/locationsEditor2">
       <LocationEditorMap
         gameModel={gameModel}
-        translator={translator}
         geomanConfig={locationsEditor2GeomanConfig}
       />
     </Route>,
     <Route path="/beaconEditor2">
       <BeaconEditorMap
         gameModel={gameModel}
-        translator={translator}
         geomanConfig={beaconEditor2GeomanConfig}
       />
     </Route>,
     <Route path="/backgroundEditorMap">
       <BackgroundEditorMap
         gameModel={gameModel}
-        translator={translator}
         geomanConfig={backgroundEditorGeomanConfig}
       />
     </Route>,
     <Route path="/rescueService">
       <RescueServiceMap
         gameModel={gameModel}
-        translator={translator}
       />
     </Route>,
   ];

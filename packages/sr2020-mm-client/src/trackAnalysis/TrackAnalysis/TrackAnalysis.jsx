@@ -26,7 +26,7 @@ export function TrackAnalysis(props) {
   // static propTypes = TrackAnalysisPropTypes;
 
   const {
-    gameModel, translator,
+    gameModel
   } = props;
 
   return [
@@ -44,7 +44,6 @@ export function TrackAnalysis(props) {
     <Route path="/trackDemo">
       <TrackDemoMap
         gameModel={gameModel}
-        translator={translator}
       >
         <RealTrackLayer
           enableByDefault
@@ -64,7 +63,6 @@ export function TrackAnalysis(props) {
         drawMap={({ userData }) => (
           <TrackDemoMap
             gameModel={gameModel}
-            translator={translator}
           >
             <RealTrackLayer
               enableByDefault

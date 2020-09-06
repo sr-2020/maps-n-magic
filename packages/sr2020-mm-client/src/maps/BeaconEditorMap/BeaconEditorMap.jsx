@@ -15,7 +15,7 @@ import { BeaconLayer3 } from '../../layers/BeaconLayer3';
 
 export function BeaconEditorMap(props) {
   const {
-    gameModel, translator, geomanConfig,
+    gameModel, geomanConfig,
   } = props;
 
   return (
@@ -23,7 +23,6 @@ export function BeaconEditorMap(props) {
       gameModel={gameModel}
       geomanConfig={geomanConfig}
       commonPropsExtension={{
-        translator,
         gameModel,
       }}
     >
