@@ -12,17 +12,16 @@ import { LocationEditorMap } from '../../maps/LocationEditorMap';
 import { BeaconEditorMap } from '../../maps/BeaconEditorMap';
 import { RescueServiceMap } from '../../maps/RescueServiceMap';
 
-import {
-  backgroundEditorGeomanConfig, oldLocationAndMarkerGeomanConfig, locationsEditor2GeomanConfig, beaconEditor2GeomanConfig,
-} from '../../configs/map';
-
 import { MapsNav } from '../MapsNav';
 
 // eslint-disable-next-line max-lines-per-function
 export function MapRoutes(props) {
   const {
-    curPosition, gameModel, translator,
+    curPosition, gameModel, translator, mapDefaults
   } = props;
+  const {
+    backgroundEditorGeomanConfig, oldLocationAndMarkerGeomanConfig, locationsEditor2GeomanConfig, beaconEditor2GeomanConfig,
+  } = mapDefaults;
 
   return [
     <Route path="/mapsNav">

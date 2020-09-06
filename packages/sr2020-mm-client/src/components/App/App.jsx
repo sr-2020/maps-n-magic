@@ -29,8 +29,6 @@ import { SpiritEditor } from '../SpiritEditor';
 
 import { SoundManager } from '../SoundManager';
 
-import { mapConfig, defaultCenter } from '../../configs/map';
-
 import * as mapDefaults from '../../configs/map';
 
 import { GeoDataStreamSimulator } from '../GeoDataStreamSimulator';
@@ -69,11 +67,10 @@ const TEST_POSITION = {
   },
 };
 
-let initialDatabase = localStorage.getItem(STORAGE_KEY);
-if (initialDatabase) {
-  initialDatabase = JSON.parse(initialDatabase);
-} else {
-  initialDatabase = {};
+const initialDatabaseStr = localStorage.getItem(STORAGE_KEY);
+let initialDatabase = {};
+if (initialDatabaseStr) {
+  initialDatabase = JSON.parse(initialDatabaseStr);
 }
 
 export class App extends Component {
@@ -111,7 +108,7 @@ export class App extends Component {
     this.setState({
       gameServer,
       gameModel,
-      translator: new Translator(defaultCenter, null),
+      translator: new Translator(mapDefaults.defaultCenter, null),
       initialized: true,
     });
     this.saveDataInLsId = setInterval(this.onSaveDataInLs, 10000);
@@ -122,6 +119,7 @@ export class App extends Component {
 
   componentWillUnmount() {
     clearInterval(this.saveDataInLsId);
+    // @ts-ignore
     // eslint-disable-next-line no-undef
     clearWatch(this.watchGeolocationId);
     this.soundStage.dispose();
@@ -144,7 +142,7 @@ export class App extends Component {
     // position = TEST_POSITION;
 
     // eslint-disable-next-line react/destructuring-assignment
-    const translator = new Translator(defaultCenter, this.state.curPosition);
+    const translator = new Translator(mapDefaults.defaultCenter, this.state.curPosition);
 
     const coords = translator.moveFrom({
       lat: position.coords.latitude,
@@ -220,7 +218,7 @@ export class App extends Component {
       if (curPosition) {
         return {
           curPosition: null,
-          translator: new Translator(defaultCenter, null),
+          translator: new Translator(mapDefaults.defaultCenter, null),
         };
       }
       this.jumpToUserCoords2();
@@ -250,7 +248,7 @@ export class App extends Component {
 
       this.setState({
         curPosition: [latitude, longitude],
-        translator: new Translator(defaultCenter, [latitude, longitude]),
+        translator: new Translator(mapDefaults.defaultCenter, [latitude, longitude]),
         waitingForGeolocation: false,
       });
     };
