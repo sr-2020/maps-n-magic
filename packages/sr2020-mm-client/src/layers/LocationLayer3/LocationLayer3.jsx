@@ -8,7 +8,7 @@ import { InnerLocationLayer3 } from './InnerLocationLayer3';
 
 // import { locationPopupDom } from '../../../../utils/domUtils';
 
-import { LocationPopup3 } from '../LocationPopup3';
+import { LocationPopup3 } from './LocationPopup3';
 
 // import { LocationLayer3PropTypes } from '../../types';
 

@@ -4,7 +4,7 @@ import './BeaconLayer3.css';
 import L from 'leaflet/dist/leaflet-src';
 import * as R from 'ramda';
 
-import { CreateBeaconPopup } from '../CreateBeaconPopup';
+import { CreateBeaconPopup } from './CreateBeaconPopup';
 import { InnerBeaconLayer3 } from './InnerBeaconLayer3';
 
 import { getFreeBeaconIds } from './beaconUtils';

@@ -5,7 +5,7 @@ import L from 'leaflet/dist/leaflet-src';
 import * as R from 'ramda';
 
 import { InnerBackgroundImageLayer } from './InnerBackgroundImageLayer';
-import { BackgroundImagePopup } from '../BackgroundImagePopup';
+import { BackgroundImagePopup } from './BackgroundImagePopup';
 
 // import { BackgroundImageLayerPropTypes } from '../../types';
 

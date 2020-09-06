@@ -7,7 +7,7 @@ import { MarkerLayer } from './MarkerLayer';
 
 import { markerPopupDom } from '../../utils/domUtils';
 
-import { MarkerPopup } from '../MarkerPopup';
+import { MarkerPopup } from './MarkerPopup';
 
 // import { MarkerLayer2PropTypes } from '../../types';
 

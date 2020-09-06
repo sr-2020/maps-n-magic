@@ -8,7 +8,7 @@ import { LocationsLayer } from './LocationsLayer';
 
 import { locationPopupDom } from '../../utils/domUtils';
 
-import { LocationPopup } from '../LocationPopup';
+import { LocationPopup } from './LocationPopup';
 
 // import { LocationLayer2PropTypes } from '../../types';
 

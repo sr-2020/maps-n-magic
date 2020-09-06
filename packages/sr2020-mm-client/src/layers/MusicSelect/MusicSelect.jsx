@@ -14,9 +14,9 @@ import Card from 'react-bootstrap/Card';
 
 // import { MusicSelectPropTypes } from '../../../../types';
 
-import { musicSelectDom } from '../../../../utils/domUtils';
+import { musicSelectDom } from '../../utils/domUtils';
 
-import { MusicSelectControl } from '../../../MusicSelectControl';
+import { MusicSelectControl } from '../../components/MusicSelectControl';
 
 export class MusicSelect extends Component {
   // static propTypes = MusicSelectPropTypes;
