@@ -17,7 +17,7 @@ import { MapsNav } from '../MapsNav';
 // eslint-disable-next-line max-lines-per-function
 export function MapRoutes(props) {
   const {
-    curPosition, gameModel, translator, mapDefaults
+    gameModel, translator, mapDefaults
   } = props;
   const {
     backgroundEditorGeomanConfig, oldLocationAndMarkerGeomanConfig, locationsEditor2GeomanConfig, beaconEditor2GeomanConfig,
@@ -29,7 +29,6 @@ export function MapRoutes(props) {
     </Route>,
     <Route path="/map2">
       <CommonMap
-        curPosition={curPosition}
         gameModel={gameModel}
         translator={translator}
         geomanConfig={oldLocationAndMarkerGeomanConfig}
@@ -37,7 +36,6 @@ export function MapRoutes(props) {
     </Route>,
     <Route path="/locationsEditor2">
       <LocationEditorMap
-        curPosition={curPosition}
         gameModel={gameModel}
         translator={translator}
         geomanConfig={locationsEditor2GeomanConfig}
@@ -45,7 +43,6 @@ export function MapRoutes(props) {
     </Route>,
     <Route path="/beaconEditor2">
       <BeaconEditorMap
-        curPosition={curPosition}
         gameModel={gameModel}
         translator={translator}
         geomanConfig={beaconEditor2GeomanConfig}
@@ -53,7 +50,6 @@ export function MapRoutes(props) {
     </Route>,
     <Route path="/backgroundEditorMap">
       <BackgroundEditorMap
-        curPosition={curPosition}
         gameModel={gameModel}
         translator={translator}
         geomanConfig={backgroundEditorGeomanConfig}
@@ -61,7 +57,6 @@ export function MapRoutes(props) {
     </Route>,
     <Route path="/rescueService">
       <RescueServiceMap
-        curPosition={curPosition}
         gameModel={gameModel}
         translator={translator}
       />

@@ -272,8 +272,6 @@ export class App extends Component {
       simulateGeoDataStream, waitingForGeolocation, gameModel, translator,
     } = this.state;
 
-    const curPosition = translator.getVirtualCenter();
-
     const {
       t,
     } = this.props;
@@ -289,7 +287,6 @@ export class App extends Component {
                     <AppHeader
                       gameModel={gameModel}
                       waitingForGeolocation={waitingForGeolocation}
-                      curPosition={curPosition}
                       simulateGeoDataStream={simulateGeoDataStream}
                       onUploadFileSelected={this.onUploadFileSelected}
                       downloadDatabaseAsFile={this.downloadDatabaseAsFile}
@@ -325,12 +322,10 @@ export class App extends Component {
                         </Route>
 
                         {TrackAnalysis({
-                          curPosition,
                           gameModel,
                           translator,
                         })}
                         {MapRoutes({
-                          curPosition,
                           gameModel,
                           translator,
                         })}

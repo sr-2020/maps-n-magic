@@ -85,10 +85,10 @@ export class Map extends Component {
 
   componentDidUpdate(prevProps) {
     const {
-      curPosition, defaultCenter
+      translator, defaultCenter
     } = this.props;
-    if (prevProps.curPosition !== curPosition) {
-      this.map.panTo(curPosition || defaultCenter);
+    if (prevProps.translator !== translator) {
+      this.map.panTo(translator.getVirtualCenter() || defaultCenter);
       console.log('position changed');
     }
     // console.log('Map did update');

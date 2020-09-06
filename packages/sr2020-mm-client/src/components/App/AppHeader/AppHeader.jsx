@@ -87,7 +87,7 @@ export class AppHeader extends Component {
   render() {
     const { expanded } = this.state;
     const {
-      t, gameModel, waitingForGeolocation, curPosition, simulateGeoDataStream,
+      t, gameModel, waitingForGeolocation, simulateGeoDataStream,
       onUploadFileSelected, downloadDatabaseAsFile, jumpToUserCoords, switchMovementMode,
     } = this.props;
 
@@ -146,7 +146,6 @@ export class AppHeader extends Component {
               <JumpToUserCoordsSwitch
                 onClick={jumpToUserCoords}
                 waitingForGeolocation={waitingForGeolocation}
-                curPosition={curPosition}
               />
               <MovementSimulatorSwitch
                 onClick={switchMovementMode}

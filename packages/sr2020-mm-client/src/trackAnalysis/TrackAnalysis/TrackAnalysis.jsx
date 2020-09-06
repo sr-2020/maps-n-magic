@@ -26,7 +26,7 @@ export function TrackAnalysis(props) {
   // static propTypes = TrackAnalysisPropTypes;
 
   const {
-    curPosition, gameModel, translator,
+    gameModel, translator,
   } = props;
 
   return [
@@ -43,7 +43,6 @@ export function TrackAnalysis(props) {
 
     <Route path="/trackDemo">
       <TrackDemoMap
-        curPosition={curPosition}
         gameModel={gameModel}
         translator={translator}
       >
@@ -64,7 +63,6 @@ export function TrackAnalysis(props) {
         userList={userList}
         drawMap={({ userData }) => (
           <TrackDemoMap
-            curPosition={curPosition}
             gameModel={gameModel}
             translator={translator}
           >

@@ -12,12 +12,11 @@ import { ImageBackground } from '../../layers/ImageBackground';
 
 export function TrackDemoMap(props) {
   const {
-    curPosition, gameModel, translator, children,
+    gameModel, translator, children,
   } = props;
 
   return (
     <Map
-      curPosition={curPosition}
       gameModel={gameModel}
       commonPropsExtension={{
         translator,

@@ -13,7 +13,7 @@ import {
 
 export function JumpToUserCoordsSwitch(props) {
   const {
-    t, onClick, waitingForGeolocation, curPosition,
+    t, onClick, waitingForGeolocation, translator,
   } = props;
   return (
     <Dropdown.Item as="button" onClick={onClick}>
@@ -21,7 +21,7 @@ export function JumpToUserCoordsSwitch(props) {
         type="switch"
         id="jumpToUserCoordsSwitch"
         label={t('jumpToUserCoords')}
-        checked={curPosition !== null}
+        checked={translator.getVirtualCenter() !== null}
         disabled={waitingForGeolocation}
         className="tw-py-3 tw-text-lg"
         style={{ display: 'inline-block' }}
