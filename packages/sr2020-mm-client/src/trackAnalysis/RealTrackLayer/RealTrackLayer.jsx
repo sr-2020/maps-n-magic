@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import './RealTrackDemo.css';
+import './RealTrackLayer.css';
 
 
 import L from 'leaflet/dist/leaflet-src';
@@ -39,7 +39,7 @@ const defaultOptions = {
   outlineWidth: 1,
 };
 
-export class RealTrackDemo extends Component {
+export class RealTrackLayer extends Component {
   beaconGroup = L.layerGroup([]);
 
   beaconNameKey = 'beaconGroup';
@@ -62,7 +62,7 @@ export class RealTrackDemo extends Component {
       layersMeta: this.getLayersMeta(),
       enableByDefault,
     });
-    console.log('RealTrackDemo mounted');
+    console.log('RealTrackLayer mounted');
   }
 
   componentDidUpdate(prevProps) {
@@ -80,12 +80,12 @@ export class RealTrackDemo extends Component {
         enableByDefault,
       });
     }
-    console.log('RealTrackDemo did update');
+    console.log('RealTrackLayer did update');
   }
 
   componentWillUnmount() {
     this.clear();
-    console.log('RealTrackDemo will unmount');
+    console.log('RealTrackLayer will unmount');
   }
 
   getLayersMeta() {

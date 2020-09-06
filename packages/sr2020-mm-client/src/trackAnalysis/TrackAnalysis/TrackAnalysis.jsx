@@ -9,7 +9,7 @@ import { TrackAnalysisNav } from '../TrackAnalysisNav';
 
 import { RealTrackStats } from '../RealTrackStats';
 
-import { RealTrackDemo } from '../RealTrackDemo';
+import { RealTrackLayer } from '../RealTrackLayer';
 
 import { TrackDemoMap } from '../TrackDemoMap';
 
@@ -48,7 +48,7 @@ export function TrackAnalysis(props) {
         mapConfig={mapConfig}
         translator={translator}
       >
-        <RealTrackDemo
+        <RealTrackLayer
           enableByDefault
           tracksData={tracksData}
           beaconLatlngs={beaconLatlngs}
@@ -70,7 +70,7 @@ export function TrackAnalysis(props) {
             mapConfig={mapConfig}
             translator={translator}
           >
-            <RealTrackDemo
+            <RealTrackLayer
               enableByDefault
               tracksData={userData}
               beaconLatlngs={beaconLatlngs}
