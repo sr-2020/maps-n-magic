@@ -12,14 +12,13 @@ import { GeoJsonLayer } from '../../layers/GeoJsonLayer';
 
 export function BackgroundEditorMap(props) {
   const {
-    curPosition, gameModel, mapConfig, translator, geomanConfig,
+    curPosition, gameModel, translator, geomanConfig,
   } = props;
 
   return (
     <Map
       curPosition={curPosition}
       gameModel={gameModel}
-      mapConfig={mapConfig}
       geomanConfig={geomanConfig}
       commonPropsExtension={{
         translator,

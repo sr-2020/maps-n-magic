@@ -26,6 +26,9 @@ const mapConfig = {
 
 mapConfig.center = [mapConfig.lat, mapConfig.lng];
 
+export const defaultCenter = mapConfig.center;
+export const defaultZoom = mapConfig.zoom;
+
 const defaultGeomanFeatures = {
   position: 'topleft',
   drawMarker: false,

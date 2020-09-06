@@ -3,8 +3,6 @@ import './SatelliteBackground.css';
 
 import L from 'leaflet/dist/leaflet-src';
 
-import { defaultTileLayer } from '../../configs/map';
-
 // import { SatelliteBackgroundPropTypes } from '../../types';
 
 export class SatelliteBackground extends Component {
@@ -47,7 +45,8 @@ export class SatelliteBackground extends Component {
   }
 
   populate() {
-    const { urlTemplate, options } = defaultTileLayer;
+    const { mapDefaults } = this.props;
+    const { urlTemplate, options } = mapDefaults.defaultTileLayer;
     this.group.addLayer(L.tileLayer(urlTemplate, options));
   }
 

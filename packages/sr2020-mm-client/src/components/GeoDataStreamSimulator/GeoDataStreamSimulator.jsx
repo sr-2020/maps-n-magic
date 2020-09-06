@@ -16,11 +16,11 @@ export class GeoDataStreamSimulator extends Component {
 
   componentDidMount = () => {
     const {
-      simulateGeoDataStream, center,
+      simulateGeoDataStream, defaultCenter
     } = this.props;
 
     if (simulateGeoDataStream) {
-      this.simulateUserMovement(center);
+      this.simulateUserMovement(defaultCenter);
     }
     console.log('GeoDataStreamSimulator mounted');
   }
@@ -76,10 +76,9 @@ export class GeoDataStreamSimulator extends Component {
   }
 
   refreshUserMovementSimulation() {
-    const { simulateGeoDataStream, curPosition, center } = this.props;
+    const { simulateGeoDataStream, curPosition, defaultCenter } = this.props;
     if (simulateGeoDataStream) {
-      // const { center } = mapConfig;
-      this.simulateUserMovement(curPosition || center);
+      this.simulateUserMovement(curPosition || defaultCenter);
     } else {
       this.stopUserMovement();
     }

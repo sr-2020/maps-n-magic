@@ -20,6 +20,7 @@ import {
 
 import { NotificationWatcher } from 'sr2020-mm-client-core/components/NotificationWatcher';
 import { json2File, makeFileName, readJsonFile } from 'sr2020-mm-client-core/utils/fileUtils';
+import { MapDefaultsProvider } from 'sr2020-mm-client-core/mapDefaultsContext';
 import { AudioContextWrapper } from '../../utils/AudioContextWrapper';
 
 import { SpiritEditor } from '../SpiritEditor';
@@ -28,7 +29,9 @@ import { SpiritEditor } from '../SpiritEditor';
 
 import { SoundManager } from '../SoundManager';
 
-import { mapConfig } from '../../configs/map';
+import { mapConfig, defaultCenter } from '../../configs/map';
+
+import * as mapDefaults from '../../configs/map';
 
 import { GeoDataStreamSimulator } from '../GeoDataStreamSimulator';
 import { CharacterHealthStateSimulator } from '../CharacterHealthStateSimulator';
@@ -108,7 +111,7 @@ export class App extends Component {
     this.setState({
       gameServer,
       gameModel,
-      translator: new Translator(mapConfig.center, null),
+      translator: new Translator(defaultCenter, null),
       initialized: true,
     });
     this.saveDataInLsId = setInterval(this.onSaveDataInLs, 10000);
@@ -141,7 +144,7 @@ export class App extends Component {
     // position = TEST_POSITION;
 
     // eslint-disable-next-line react/destructuring-assignment
-    const translator = new Translator(mapConfig.center, this.state.curPosition);
+    const translator = new Translator(defaultCenter, this.state.curPosition);
 
     const coords = translator.moveFrom({
       lat: position.coords.latitude,
@@ -217,7 +220,7 @@ export class App extends Component {
       if (curPosition) {
         return {
           curPosition: null,
-          translator: new Translator(mapConfig.center, null),
+          translator: new Translator(defaultCenter, null),
         };
       }
       this.jumpToUserCoords2();
@@ -247,7 +250,7 @@ export class App extends Component {
 
       this.setState({
         curPosition: [latitude, longitude],
-        translator: new Translator(mapConfig.center, [latitude, longitude]),
+        translator: new Translator(defaultCenter, [latitude, longitude]),
         waitingForGeolocation: false,
       });
     };
@@ -281,84 +284,85 @@ export class App extends Component {
       <React.StrictMode>
         <ErrorBoundry>
           <DocumentTitle title={t('appTitle')}>
-            <Router>
-              <div className="App tw-flex tw-flex-col tw-h-screen">
-                <AppHeader
-                  gameModel={gameModel}
-                  waitingForGeolocation={waitingForGeolocation}
-                  curPosition={curPosition}
-                  simulateGeoDataStream={simulateGeoDataStream}
-                  onUploadFileSelected={this.onUploadFileSelected}
-                  downloadDatabaseAsFile={this.downloadDatabaseAsFile}
-                  jumpToUserCoords={this.jumpToUserCoords}
-                  switchMovementMode={this.switchMovementMode}
-                />
-
-                <main className="tw-flex-auto tw-h-full">
-                  <Switch>
-                    <Route path="/spiritEditor">
-                      <SpiritEditor spiritService={gameModel} />
-                    </Route>
-                    <Route path="/soundManager2">
-                      <SoundManager
-                        gameModel={gameModel}
-                        soundStage={this.soundStage}
-                      />
-                    </Route>
-                    <Route path="/soundMapping">
-                      <SoundMapper gameModel={gameModel} />
-                    </Route>
-                    <Route path="/beaconRecordEditor">
-                      <BeaconRecordEditor gameModel={gameModel} />
-                    </Route>
-                    <Route path="/rescueServiceMessageSender">
-                      <RescueServiceMessageSender gameModel={gameModel} />
-                    </Route>
-                    <Route path="/characterPositions">
-                      <CharacterPositions gameModel={gameModel} />
-                    </Route>
-                    <Route path="/manaOceanSettings">
-                      <ManaOceanSettings gameModel={gameModel} />
-                    </Route>
-
-                    {TrackAnalysis({
-                      curPosition,
-                      gameModel,
-                      mapConfig,
-                      translator,
-                    })}
-                    {MapRoutes({
-                      curPosition,
-                      gameModel,
-                      translator,
-                    })}
-                    <Route render={() => <Redirect to="/mapsNav" />} />
-                  </Switch>
-                  {/* { refactor as GeoDataStreamSimulator } */}
-                  <GeoDataStreamSimulator
-                    simulateGeoDataStream={simulateGeoDataStream}
+            <MapDefaultsProvider value={mapDefaults}>
+              <Router>
+                <div className="App tw-flex tw-flex-col tw-h-screen">
+                  <AppHeader
                     gameModel={gameModel}
+                    waitingForGeolocation={waitingForGeolocation}
                     curPosition={curPosition}
-                    center={mapConfig.center}
-                    translator={translator}
+                    simulateGeoDataStream={simulateGeoDataStream}
+                    onUploadFileSelected={this.onUploadFileSelected}
+                    downloadDatabaseAsFile={this.downloadDatabaseAsFile}
+                    jumpToUserCoords={this.jumpToUserCoords}
+                    switchMovementMode={this.switchMovementMode}
                   />
-                  {/* { refactor as SoundManager and SoundProvider } */}
-                  <SoundWatcher
-                    gameModel={gameModel}
-                    context={this.audioContextWrapper}
-                  />
-                  <NotificationWatcher gameModel={gameModel} />
-                  {/* { refactor as CharacterHealthStateSimulator } */}
-                  {/* <CharacterHealthStateSimulator gameModel={gameModel} /> */}
-                  {/* { refactor as CharacterHealthStateManager and CharacterHealthStateProvider } */}
 
-                  {/* TODO CharacterHealthListener should be in event engine 
-                    This is a fictive component for polling character health status
-                  */}
-                  <CharacterHealthListener gameModel={gameModel} />
-                </main>
-              </div>
-            </Router>
+                  <main className="tw-flex-auto tw-h-full">
+                    <Switch>
+                      <Route path="/spiritEditor">
+                        <SpiritEditor spiritService={gameModel} />
+                      </Route>
+                      <Route path="/soundManager2">
+                        <SoundManager
+                          gameModel={gameModel}
+                          soundStage={this.soundStage}
+                        />
+                      </Route>
+                      <Route path="/soundMapping">
+                        <SoundMapper gameModel={gameModel} />
+                      </Route>
+                      <Route path="/beaconRecordEditor">
+                        <BeaconRecordEditor gameModel={gameModel} />
+                      </Route>
+                      <Route path="/rescueServiceMessageSender">
+                        <RescueServiceMessageSender gameModel={gameModel} />
+                      </Route>
+                      <Route path="/characterPositions">
+                        <CharacterPositions gameModel={gameModel} />
+                      </Route>
+                      <Route path="/manaOceanSettings">
+                        <ManaOceanSettings gameModel={gameModel} />
+                      </Route>
+
+                      {TrackAnalysis({
+                        curPosition,
+                        gameModel,
+                        translator,
+                      })}
+                      {MapRoutes({
+                        curPosition,
+                        gameModel,
+                        translator,
+                      })}
+                      <Route render={() => <Redirect to="/mapsNav" />} />
+                    </Switch>
+                    {/* { refactor as GeoDataStreamSimulator } */}
+                    <GeoDataStreamSimulator
+                      simulateGeoDataStream={simulateGeoDataStream}
+                      gameModel={gameModel}
+                      curPosition={curPosition}
+                      // center={mapConfig.center}
+                      translator={translator}
+                    />
+                    {/* { refactor as SoundManager and SoundProvider } */}
+                    <SoundWatcher
+                      gameModel={gameModel}
+                      context={this.audioContextWrapper}
+                    />
+                    <NotificationWatcher gameModel={gameModel} />
+                    {/* { refactor as CharacterHealthStateSimulator } */}
+                    {/* <CharacterHealthStateSimulator gameModel={gameModel} /> */}
+                    {/* { refactor as CharacterHealthStateManager and CharacterHealthStateProvider } */}
+
+                    {/* TODO CharacterHealthListener should be in event engine 
+                      This is a fictive component for polling character health status
+                    */}
+                    <CharacterHealthListener gameModel={gameModel} />
+                  </main>
+                </div>
+              </Router>
+            </MapDefaultsProvider>
           </DocumentTitle>
         </ErrorBoundry>
       </React.StrictMode>

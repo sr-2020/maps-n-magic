@@ -26,7 +26,7 @@ export function TrackAnalysis(props) {
   // static propTypes = TrackAnalysisPropTypes;
 
   const {
-    curPosition, gameModel, mapConfig, translator,
+    curPosition, gameModel, translator,
   } = props;
 
   return [
@@ -45,7 +45,6 @@ export function TrackAnalysis(props) {
       <TrackDemoMap
         curPosition={curPosition}
         gameModel={gameModel}
-        mapConfig={mapConfig}
         translator={translator}
       >
         <RealTrackLayer
@@ -67,7 +66,6 @@ export function TrackAnalysis(props) {
           <TrackDemoMap
             curPosition={curPosition}
             gameModel={gameModel}
-            mapConfig={mapConfig}
             translator={translator}
           >
             <RealTrackLayer

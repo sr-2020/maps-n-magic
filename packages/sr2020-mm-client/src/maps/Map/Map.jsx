@@ -13,8 +13,6 @@ import { EventEmitter } from 'events';
 
 // import { Map2PropTypes } from '../../../types';
 
-// import { geomanConfig } from '../../../configs/map';
-
 import { applyLeafletGeomanTranslation, getZoomTranslation } from '../../translations';
 
 // eslint-disable-next-line import/extensions
@@ -44,15 +42,14 @@ export class Map extends Component {
   // eslint-disable-next-line max-lines-per-function
   componentDidMount() {
     const {
-      mapConfig, geomanConfig,
+      geomanConfig, defaultCenter, defaultZoom
     } = this.props;
-    const { center, zoom } = mapConfig;
 
     this.layerCommunicator = new EventEmitter();
 
     this.map = L.map(this.mapEl, {
-      center,
-      zoom,
+      center: defaultCenter,
+      zoom: defaultZoom,
       zoomControl: false,
     });
 
@@ -88,11 +85,10 @@ export class Map extends Component {
 
   componentDidUpdate(prevProps) {
     const {
-      curPosition, mapConfig,
+      curPosition, defaultCenter
     } = this.props;
     if (prevProps.curPosition !== curPosition) {
-      const { center } = mapConfig;
-      this.map.panTo(curPosition || center);
+      this.map.panTo(curPosition || defaultCenter);
       console.log('position changed');
     }
     // console.log('Map did update');

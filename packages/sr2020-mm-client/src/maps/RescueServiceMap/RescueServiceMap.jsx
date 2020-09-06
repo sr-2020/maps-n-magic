@@ -13,14 +13,13 @@ import { RescueServiceLayer } from '../../layers/RescueServiceLayer';
 
 export function RescueServiceMap(props) {
   const {
-    curPosition, gameModel, mapConfig, translator,
+    curPosition, gameModel, translator,
   } = props;
 
   return (
     <Map
       curPosition={curPosition}
       gameModel={gameModel}
-      mapConfig={mapConfig}
       commonPropsExtension={{
         translator,
         gameModel,

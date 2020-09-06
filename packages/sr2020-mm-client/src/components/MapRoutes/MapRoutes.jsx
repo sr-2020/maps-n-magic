@@ -13,7 +13,7 @@ import { BeaconEditorMap } from '../../maps/BeaconEditorMap';
 import { RescueServiceMap } from '../../maps/RescueServiceMap';
 
 import {
-  mapConfig, backgroundEditorGeomanConfig, oldLocationAndMarkerGeomanConfig, locationsEditor2GeomanConfig, beaconEditor2GeomanConfig,
+  backgroundEditorGeomanConfig, oldLocationAndMarkerGeomanConfig, locationsEditor2GeomanConfig, beaconEditor2GeomanConfig,
 } from '../../configs/map';
 
 import { MapsNav } from '../MapsNav';
@@ -32,7 +32,6 @@ export function MapRoutes(props) {
       <CommonMap
         curPosition={curPosition}
         gameModel={gameModel}
-        mapConfig={mapConfig}
         translator={translator}
         geomanConfig={oldLocationAndMarkerGeomanConfig}
       />
@@ -41,7 +40,6 @@ export function MapRoutes(props) {
       <LocationEditorMap
         curPosition={curPosition}
         gameModel={gameModel}
-        mapConfig={mapConfig}
         translator={translator}
         geomanConfig={locationsEditor2GeomanConfig}
       />
@@ -50,7 +48,6 @@ export function MapRoutes(props) {
       <BeaconEditorMap
         curPosition={curPosition}
         gameModel={gameModel}
-        mapConfig={mapConfig}
         translator={translator}
         geomanConfig={beaconEditor2GeomanConfig}
       />
@@ -59,7 +56,6 @@ export function MapRoutes(props) {
       <BackgroundEditorMap
         curPosition={curPosition}
         gameModel={gameModel}
-        mapConfig={mapConfig}
         translator={translator}
         geomanConfig={backgroundEditorGeomanConfig}
       />
@@ -68,7 +64,6 @@ export function MapRoutes(props) {
       <RescueServiceMap
         curPosition={curPosition}
         gameModel={gameModel}
-        mapConfig={mapConfig}
         translator={translator}
       />
     </Route>,
