@@ -1,7 +1,7 @@
 import React from 'react';
 import './RescueServiceMap.css';
 
-import { Map2 } from '../Map2';
+import { Map } from '../Map';
 
 import { SatelliteBackground } from '../layers/SatelliteBackground';
 import { BaseContourLayer2 } from '../layers/BaseContourLayer2';
@@ -17,7 +17,7 @@ export function RescueServiceMap(props) {
   } = props;
 
   return (
-    <Map2
+    <Map
       curPosition={curPosition}
       gameModel={gameModel}
       mapConfig={mapConfig}
@@ -40,7 +40,7 @@ export function RescueServiceMap(props) {
       <RescueServiceLayer
         enableByDefault
       />
-    </Map2>
+    </Map>
   );
 }
 

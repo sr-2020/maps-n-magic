@@ -2,7 +2,7 @@
 import React, { Component } from 'react';
 import './TrackDemoMap.css';
 
-import { Map2 } from '../../components/maps/Map2';
+import { Map } from '../../components/maps/Map';
 
 import { BaseContourLayer2 } from '../../components/maps/layers/BaseContourLayer2';
 import { SatelliteBackground } from '../../components/maps/layers/SatelliteBackground';
@@ -16,7 +16,7 @@ export function TrackDemoMap(props) {
   } = props;
 
   return (
-    <Map2
+    <Map
       curPosition={curPosition}
       gameModel={gameModel}
       mapConfig={mapConfig}
@@ -31,6 +31,6 @@ export function TrackDemoMap(props) {
         enableByDefault
       />
       {children}
-    </Map2>
+    </Map>
   );
 }

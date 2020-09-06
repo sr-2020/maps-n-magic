@@ -2,7 +2,7 @@
 import React, { Component } from 'react';
 import './CommonMap.css';
 
-import { Map2 } from '../Map2';
+import { Map } from '../Map';
 
 import { BotLayer2 } from '../layers/BotLayer2';
 import { UserLayer2 } from '../layers/UserLayer2';
@@ -25,7 +25,7 @@ export function CommonMap(props) {
   } = props;
 
   return (
-    <Map2
+    <Map
       curPosition={curPosition}
       gameModel={gameModel}
       mapConfig={mapConfig}
@@ -55,6 +55,6 @@ export function CommonMap(props) {
         enableByDefault
       />
       <SoundDebug />
-    </Map2>
+    </Map>
   );
 }

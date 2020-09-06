@@ -89,7 +89,7 @@ export const translations = {
       rotationVolume: 'Громкость ротации, от 0 до 100%',
       soundSettings: 'Настройки звука',
 
-      // Map2
+      // Map
       baseContourLayer: 'Контуры базы',
       beaconsLayer: 'Маяки',
       massCentersLayer: 'Центры масс',

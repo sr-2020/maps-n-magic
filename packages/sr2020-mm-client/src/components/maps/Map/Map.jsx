@@ -21,12 +21,12 @@ import { applyLeafletGeomanTranslation, getZoomTranslation } from '../../../tran
 import 'leaflet.locatecontrol/dist/L.Control.Locate.min.js';
 import 'leaflet.locatecontrol/dist/L.Control.Locate.min.css';
 
-import './Map2.css';
+import './Map.css';
 
 // console.log(L);
 L.Icon.Default.imagePath = './images/leafletImages/';
 
-export class Map2 extends Component {
+export class Map extends Component {
   // static propTypes = Map2PropTypes;
 
   constructor(props) {
@@ -95,7 +95,7 @@ export class Map2 extends Component {
       this.map.panTo(curPosition || center);
       console.log('position changed');
     }
-    // console.log('Map2 did update');
+    // console.log('Map did update');
   }
 
   componentWillUnmount() {
@@ -165,7 +165,7 @@ export class Map2 extends Component {
     return (
       <>
         <div
-          className="Map2 tw-h-full"
+          className="Map tw-h-full"
           ref={(map2) => (this.mapEl = map2)}
         />
         {map && React.Children.map(children, (child) => React.cloneElement(child, {
