@@ -4,7 +4,7 @@ import './DownloadChartRow.css';
 import Button from 'react-bootstrap/Button';
 import Form from 'react-bootstrap/Form';
 
-import { makeFileName, str2File } from '../../../utils/fileUtils';
+import { makeFileName, str2File } from 'sr2020-mm-client-core/utils/fileUtils';
 // import { DownloadChartRowPropTypes } from '../../types';
 
 const onDownloadChart = function ({

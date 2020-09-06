@@ -1,15 +1,15 @@
 import React, { Component } from 'react';
 import './GeoDataStreamSimulator.css';
 
-import { animate, Timing } from '../../utils/animation';
+import { animate, Timing } from 'sr2020-mm-client-core/utils/animation';
 
 // import { GeoDataStreamSimulatorPropTypes } from '../../types';
 
 export class GeoDataStreamSimulator extends Component {
   // static propTypes = GeoDataStreamSimulatorPropTypes;
 
-  constructor() {
-    super();
+  constructor(props) {
+    super(props);
     this.state = {
     };
   }

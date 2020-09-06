@@ -4,7 +4,7 @@ import './VoronoiPolygonsLayer2.css';
 import L from 'leaflet/dist/leaflet-src';
 import * as R from 'ramda';
 
-import { COLOR_PALETTE } from '../../../../utils/colorPalette';
+import { COLOR_PALETTE } from 'sr2020-mm-client-core/utils/colorPalette';
 
 // import { VoronoiPolygonsLayer2PropTypes } from '../../types';
 

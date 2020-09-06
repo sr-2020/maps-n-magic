@@ -12,7 +12,7 @@ import { getIcon } from '../../../../utils/icons';
 
 // require('leaflet-hotline')(L);
 
-import { COLOR_PALETTE } from '../../../../utils/colorPalette';
+import { COLOR_PALETTE } from 'sr2020-mm-client-core/utils/colorPalette';
 
 // import { RealTrackDemoPropTypes } from '../../types';
 

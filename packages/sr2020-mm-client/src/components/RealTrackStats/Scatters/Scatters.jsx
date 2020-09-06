@@ -8,7 +8,7 @@ import * as moment from 'moment';
 import {
   BarChart, Bar, Cell, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer, PieChart, Pie, ScatterChart, Scatter,
 } from 'recharts';
-import { COLOR_PALETTE } from '../../../utils/colorPalette';
+import { COLOR_PALETTE } from 'sr2020-mm-client-core/utils/colorPalette';
 
 // import { ScattersPropTypes } from '../../types';
 

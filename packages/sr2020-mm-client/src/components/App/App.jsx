@@ -15,7 +15,7 @@ import {
 import { ErrorBoundry } from '../ErrorBoundry';
 import { SoundManager } from '../SoundManager';
 
-import { json2File, makeFileName, readJsonFile } from '../../utils/fileUtils';
+import { json2File, makeFileName, readJsonFile } from 'sr2020-mm-client-core/utils/fileUtils';
 import { AudioContextWrapper } from '../../utils/AudioContextWrapper';
 
 import { SpiritEditor } from '../SpiritEditor';

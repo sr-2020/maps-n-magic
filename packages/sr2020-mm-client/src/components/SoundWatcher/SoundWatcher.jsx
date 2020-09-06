@@ -14,8 +14,8 @@ const indexByName = R.indexBy(R.prop('name'));
 export class SoundWatcher extends Component {
   // static propTypes = SoundWatcherPropTypes;
 
-  constructor() {
-    super();
+  constructor(props) {
+    super(props);
     this.sounds = [];
     this.abortController = new AbortController();
     this.state = {

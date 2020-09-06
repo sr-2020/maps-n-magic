@@ -8,7 +8,7 @@ import classNames from 'classnames';
 import FormControl from 'react-bootstrap/FormControl';
 import { layerNameToLayerId, locationTypes } from '../LocationLayer3/LocationLayerTypes';
 
-import { GOOGLE_MAPS_COLOR_PALETTE as COLOR_PALETTE } from '../../../../utils/googleMapsColorPalette';
+import { GOOGLE_MAPS_COLOR_PALETTE as COLOR_PALETTE } from 'sr2020-mm-client-core/utils/googleMapsColorPalette';
 
 
 // console.log('COLOR_PALETTE', COLOR_PALETTE);
