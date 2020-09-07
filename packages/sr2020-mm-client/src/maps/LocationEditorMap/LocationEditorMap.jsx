@@ -3,7 +3,7 @@ import './LocationEditorMap.css';
 
 import { Map } from '../Map';
 
-import { SatelliteBackground } from '../../layers/SatelliteBackground';
+import { DefaultSatelliteBackground } from '../../layers/DefaultSatelliteBackground';
 import { BaseContourLayer2 } from '../../layers/BaseContourLayer2';
 import { BackgroundImageLayer } from '../../layers/BackgroundImageLayer';
 import { GeoJsonLayer } from '../../layers/GeoJsonLayer';
@@ -24,7 +24,7 @@ export function LocationEditorMap(props) {
         gameModel,
       }}
     >
-      <SatelliteBackground enableByDefault />
+      <DefaultSatelliteBackground enableByDefault />
       <BaseContourLayer2
         enableByDefault
       />

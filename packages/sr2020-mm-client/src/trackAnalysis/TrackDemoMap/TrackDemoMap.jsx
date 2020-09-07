@@ -5,8 +5,7 @@ import './TrackDemoMap.css';
 import { Map } from '../../maps/Map';
 
 import { BaseContourLayer2 } from '../../layers/BaseContourLayer2';
-import { SatelliteBackground } from '../../layers/SatelliteBackground';
-import { ImageBackground } from '../../layers/ImageBackground';
+import { DefaultSatelliteBackground } from '../../layers/DefaultSatelliteBackground';
 
 // import { CommonMapPropTypes } from '../../types';
 
@@ -20,8 +19,7 @@ export function TrackDemoMap(props) {
       commonPropsExtension={{
       }}
     >
-      <SatelliteBackground enableByDefault />
-      {/* <ImageBackground /> */}
+      <DefaultSatelliteBackground enableByDefault />
       <BaseContourLayer2
         enableByDefault
       />

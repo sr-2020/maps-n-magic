@@ -1,60 +1,82 @@
-import React, { Component } from 'react';
+import React, {
+  Component, useState, useEffect, useContext,
+} from 'react';
 import './SatelliteBackground.css';
 
 import L from 'leaflet/dist/leaflet-src';
 
-// import { SatelliteBackgroundPropTypes } from '../../types';
+export function SatelliteBackground(props) {
+  const [group] = useState(L.layerGroup([]));
+  const {
+    enableByDefault, layerCommunicator, layerNameKey, tileLayerUrlTemplate, tileLayerOptions,
+  } = props;
 
-export class SatelliteBackground extends Component {
-  // static propTypes = SatelliteBackgroundPropTypes;
-  group = L.layerGroup([]);
-
-  nameKey = 'satelliteLayer';
-
-  constructor(props) {
-    super(props);
-    this.state = {
-    };
-  }
-
-  componentDidMount() {
-    const {
-      enableByDefault, layerCommunicator,
-    } = this.props;
+  useEffect(() => {
     layerCommunicator.emit('setLayersMeta', {
-      layersMeta: this.getLayersMeta(),
+      layersMeta: {
+        [layerNameKey]: group,
+      },
       enableByDefault,
     });
-    this.populate();
-    console.log('SatelliteBackground mounted');
-  }
-
-  componentDidUpdate(prevProps) {
-    console.log('SatelliteBackground did update');
-  }
-
-  getLayersMeta() {
-    return {
-      [this.nameKey]: this.group,
+    group.addLayer(L.tileLayer(tileLayerUrlTemplate, tileLayerOptions));
+    return () => {
+      group.clearLayers();
     };
-  }
+  }, []);
 
-  componentWillUnmount() {
-    this.clear();
-    console.log('SatelliteBackground will unmount');
-  }
-
-  populate() {
-    const { mapDefaults } = this.props;
-    const { urlTemplate, options } = mapDefaults.defaultTileLayer;
-    this.group.addLayer(L.tileLayer(urlTemplate, options));
-  }
-
-  clear() {
-    this.group.clearLayers();
-  }
-
-  render() {
-    return null;
-  }
+  return null;
 }
+
+// export class SatelliteBackground2 extends Component {
+//   // static propTypes = SatelliteBackgroundPropTypes;
+//   group = L.layerGroup([]);
+
+//   nameKey = 'satelliteLayer';
+
+//   constructor(props) {
+//     super(props);
+//     this.state = {
+//     };
+//   }
+
+//   componentDidMount() {
+//     const {
+//       enableByDefault, layerCommunicator,
+//     } = this.props;
+//     layerCommunicator.emit('setLayersMeta', {
+//       layersMeta: this.getLayersMeta(),
+//       enableByDefault,
+//     });
+//     this.populate();
+//     console.log('SatelliteBackground mounted');
+//   }
+
+//   componentDidUpdate(prevProps) {
+//     console.log('SatelliteBackground did update');
+//   }
+
+//   getLayersMeta() {
+//     return {
+//       [this.nameKey]: this.group,
+//     };
+//   }
+
+//   componentWillUnmount() {
+//     this.clear();
+//     console.log('SatelliteBackground will unmount');
+//   }
+
+//   populate() {
+//     const { mapDefaults } = this.props;
+//     const { urlTemplate, options } = mapDefaults.defaultTileLayer;
+//     this.group.addLayer(L.tileLayer(urlTemplate, options));
+//   }
+
+//   clear() {
+//     this.group.clearLayers();
+//   }
+
+//   render() {
+//     return null;
+//   }
+// }

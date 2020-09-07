@@ -12,7 +12,7 @@ import { BaseContourLayer2 } from '../../layers/BaseContourLayer2';
 import { MarkerLayer2 } from '../../layers/MarkerLayer2';
 import { LocationLayer2 } from '../../layers/LocationLayer2';
 import { SoundDebug } from '../../layers/SoundDebug';
-import { SatelliteBackground } from '../../layers/SatelliteBackground';
+import { DefaultSatelliteBackground } from '../../layers/DefaultSatelliteBackground';
 import { ImageBackground } from '../../layers/ImageBackground';
 
 // import { CommonMapPropTypes } from '../../types';
@@ -31,7 +31,7 @@ export function CommonMap(props) {
         gameModel,
       }}
     >
-      <SatelliteBackground enableByDefault />
+      <DefaultSatelliteBackground enableByDefault />
       {/* <ImageBackground  /> */}
       <BaseContourLayer2
         enableByDefault

@@ -133,7 +133,7 @@ export const translations = {
 
       botTooltip: 'Дух "{{name}}"<br>Скорость {{speed}} м/с<br>Фракция {{fraction}}<br>Время остановки {{waitTime}}с',
 
-      satelliteLayer: 'Спутниковая карта',
+      defaultSatelliteLayer: 'Спутниковая карта',
 
       // track analysis
       trackDemo: 'Карта с треками пользователей',
@@ -153,7 +153,6 @@ export const translations = {
       backgroundImageName: 'Название изображения',
       backgroundImageUrl: 'Изображение',
       backgroundImagePreview: 'Превью',
-
 
       // misc
       location: 'Локация',
