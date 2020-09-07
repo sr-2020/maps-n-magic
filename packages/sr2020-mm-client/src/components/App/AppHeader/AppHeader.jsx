@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import './AppHeader.css';
 
 import {
-  NavLink,
+  NavLink, Route
 } from 'react-router-dom';
 
 import Navbar from 'react-bootstrap/Navbar';
@@ -152,7 +152,9 @@ export class AppHeader extends Component {
                 simulateGeoDataStream={simulateGeoDataStream}
               />
               <Dropdown.Divider />
-              <ModelRunSelector gameModel={gameModel} />
+              <Route path="/map2">
+                <ModelRunSelector gameModel={gameModel} />
+              </Route>
             </Dropdown.Menu>
           </Dropdown>
         </Navbar>

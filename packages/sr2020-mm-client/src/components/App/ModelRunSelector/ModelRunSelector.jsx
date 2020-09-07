@@ -1,4 +1,5 @@
-import React, { Component } from 'react';
+import React, { Component, useState, useEffect } from 'react';
+import { useTranslation } from 'react-i18next';
 import './ModelRunSelector.css';
 
 import Dropdown from 'react-bootstrap/Dropdown';
@@ -12,50 +13,36 @@ import classNames from 'classnames';
 
 const speeds = [0.1, 1, 10, 20];
 
-export class ModelRunSelector extends Component {
-  // static propTypes = ModelRunSelectorPropTypes;
+export function ModelRunSelector (props) {
 
-  constructor(props) {
-    super(props);
-    this.state = {
-      isModelRunning: false,
-      speed: null,
-    };
+  const { t } = useTranslation();
+  const { gameModel } = props;
 
-    this.onModelRunningChange = this.onModelRunningChange.bind(this);
-    this.onClick = this.onClick.bind(this);
-  }
+  const [runState, setRunState] = useState({
+    isModelRunning: false,
+    speed: null,
+  });
 
-  componentDidMount = () => {
-    const { gameModel } = this.props;
-    this.setState({
+  function refresh() {
+    setRunState({
       isModelRunning: gameModel.get('isModelRunning'),
       speed: gameModel.get('modelSpeed'),
     });
-    gameModel.on('modelRunningChange', this.onModelRunningChange);
-    console.log('ModelRunSelector mounted');
   }
 
-  componentDidUpdate = () => {
-    console.log('ModelRunSelector did update');
-  }
+  useEffect(refresh, [gameModel]);
 
-  componentWillUnmount = () => {
-    console.log('ModelRunSelector will unmount');
-    this.props.gameModel.off('modelRunningChange', this.onModelRunningChange);
-  }
-
-  onModelRunningChange({ isModelRunning, speed }) {
-    this.setState({
-      isModelRunning,
-      speed,
-    });
-  }
-
-  onClick(type, speed) {
+  useEffect(() => {
+    console.log("on subscribe ModelRunSelector");
+    gameModel.on('modelRunningChange', refresh);
     return () => {
-      // const { isModelRunning } = this.state;
-      const { gameModel } = this.props;
+      console.log("off subscribe ModelRunSelector");
+      gameModel.off('modelRunningChange', refresh);
+    };
+  }, []);
+
+  function onClick(type, speed) {
+    return () => {
       gameModel.execute({
         type,
         speed,
@@ -63,50 +50,46 @@ export class ModelRunSelector extends Component {
     };
   }
 
-  render() {
-    const { isModelRunning, speed } = this.state;
-    const { t } = this.props;
-    return (
-      <>
-        <Dropdown.Item
-          as="button"
-          type="button"
-          data-original-title=""
-          onClick={this.onClick('stopModel')}
-          className="ModelRunSelector tw-py-3 tw-text-lg"
-        >
-          <FontAwesomeIcon
-            className={classNames('tw-mr-1 tw-text-base tw-w-4 tw-h-4 ', {
-              invisible: isModelRunning,
-            })}
-            fixedWidth
-            icon={faCheck}
-          />
-          {t('stopModelRun')}
-        </Dropdown.Item>
-        {
-          speeds.map((speed2) => (
+  return (
+    <>
+      <Dropdown.Item
+        as="button"
+        type="button"
+        data-original-title=""
+        onClick={onClick('stopModel')}
+        className="ModelRunSelector tw-py-3 tw-text-lg"
+      >
+        <FontAwesomeIcon
+          className={classNames('tw-mr-1 tw-text-base tw-w-4 tw-h-4 ', {
+            invisible: runState.isModelRunning,
+          })}
+          fixedWidth
+          icon={faCheck}
+        />
+        {t('stopModelRun')}
+      </Dropdown.Item>
+      {
+        speeds.map((speed2) => (
 
-            <Dropdown.Item
-              key={speed2}
-              as="button"
-              type="button"
-              data-original-title=""
-              onClick={this.onClick('runModel', speed2)}
-              className="ModelRunSelector tw-py-3 tw-text-lg"
-            >
-              <FontAwesomeIcon
-                className={classNames('tw-mr-1 tw-text-base tw-w-4 tw-h-4 ', {
-                  invisible: !isModelRunning || speed2 !== speed,
-                })}
-                fixedWidth
-                icon={faCheck}
-              />
-              {t('startModelRun', { speed: speed2 })}
-            </Dropdown.Item>
-          ))
-        }
-      </>
-    );
-  }
+          <Dropdown.Item
+            key={speed2}
+            as="button"
+            type="button"
+            data-original-title=""
+            onClick={onClick('runModel', speed2)}
+            className="ModelRunSelector tw-py-3 tw-text-lg"
+          >
+            <FontAwesomeIcon
+              className={classNames('tw-mr-1 tw-text-base tw-w-4 tw-h-4 ', {
+                invisible: !runState.isModelRunning || speed2 !== runState.speed,
+              })}
+              fixedWidth
+              icon={faCheck}
+            />
+            {t('startModelRun', { speed: speed2 })}
+          </Dropdown.Item>
+        ))
+      }
+    </>
+  );
 }
