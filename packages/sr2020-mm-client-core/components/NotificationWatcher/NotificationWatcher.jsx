@@ -91,7 +91,7 @@ export class NotificationWatcher extends Component {
         aria-atomic="true"
         style={{
           position: 'relative',
-          minHeight: '200px',
+          // minHeight: '200px',
         }}
       >
         <div
@@ -100,6 +100,7 @@ export class NotificationWatcher extends Component {
             top: '1rem',
             right: '1rem',
             minWidth: '18rem',
+            zIndex: 1000,
           }}
         >
           {

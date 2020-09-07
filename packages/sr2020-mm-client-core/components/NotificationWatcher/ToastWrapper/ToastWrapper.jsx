@@ -9,10 +9,10 @@ import Toast from 'react-bootstrap/Toast';
 
 function kindToColor(kind) {
   switch (kind) {
-  case 'error': return 'border-red-500';
-  case 'success': return 'border-green-500';
-  case 'info': return 'border-blue-500';
-  case 'warning': return 'border-yellow-500';
+  case 'error': return 'tw-border-red-500';
+  case 'success': return 'tw-border-green-500';
+  case 'info': return 'tw-border-blue-500';
+  case 'warning': return 'tw-border-yellow-500';
   default:
     return 'white';
   }
@@ -28,7 +28,7 @@ export function ToastWrapper(props) {
     <Toast
       show={showA}
       onClose={toggleShowA}
-      className={classNames('border-l-4 border-r-0 border-t-0 border-b-0 rounded-none',
+      className={classNames('tw-border-l-4 tw-border-r-0 tw-border-t-0 tw-border-b-0 tw-rounded-none tw-bg-white',
         kindToColor(notification.kind))}
     >
       <Toast.Header>
@@ -37,7 +37,7 @@ export function ToastWrapper(props) {
           className="rounded mr-2"
           alt=""
         /> */}
-        <strong className="mr-auto">{notification.title}</strong>
+        <strong className="tw-mr-auto">{notification.title}</strong>
 
       </Toast.Header>
       <Toast.Body style={{ padding: '0.5rem 0.75rem' }}>{notification.message}</Toast.Body>
