@@ -42,7 +42,7 @@ export class Map extends Component {
   // eslint-disable-next-line max-lines-per-function
   componentDidMount() {
     const {
-      geomanConfig, defaultCenter, defaultZoom
+      geomanConfig, defaultCenter, defaultZoom,
     } = this.props;
 
     this.layerCommunicator = new EventEmitter();
@@ -70,7 +70,6 @@ export class Map extends Component {
       this.map.on('pm:remove', this.onRemoveLayer);
     }
 
-
     this.setState({
       map: this.map,
     });
@@ -85,7 +84,7 @@ export class Map extends Component {
 
   componentDidUpdate(prevProps) {
     const {
-      translator, defaultCenter
+      translator, defaultCenter,
     } = this.props;
     if (prevProps.translator !== translator) {
       this.map.panTo(translator.getVirtualCenter() || defaultCenter);
@@ -150,11 +149,11 @@ export class Map extends Component {
     const { map } = this.state;
 
     const {
-      children, commonPropsExtension = {}, translator
+      children, commonPropsExtension = {}, translator,
     } = this.props;
 
     const mapProps = {
-      layerCommunicator: this.layerCommunicator, 
+      layerCommunicator: this.layerCommunicator,
       translator,
       ...commonPropsExtension,
     };

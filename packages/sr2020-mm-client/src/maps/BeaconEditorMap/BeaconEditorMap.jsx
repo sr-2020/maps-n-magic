@@ -1,7 +1,6 @@
 import React from 'react';
 import './BeaconEditorMap.css';
 
-
 import { Map } from '../Map';
 
 import { SatelliteBackground } from '../../layers/SatelliteBackground';

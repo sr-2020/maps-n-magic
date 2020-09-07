@@ -17,7 +17,7 @@ import { MapsNav } from '../MapsNav';
 // eslint-disable-next-line max-lines-per-function
 export function MapRoutes(props) {
   const {
-    gameModel, mapDefaults
+    gameModel, mapDefaults,
   } = props;
   const {
     backgroundEditorGeomanConfig, oldLocationAndMarkerGeomanConfig, locationsEditor2GeomanConfig, beaconEditor2GeomanConfig,

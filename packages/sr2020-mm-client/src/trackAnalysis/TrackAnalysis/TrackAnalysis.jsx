@@ -5,6 +5,9 @@ import {
   Route,
 } from 'react-router-dom';
 
+import {
+  tracksData, beaconLatlngs, userList, beaconLatlngsIndex, beaconIndex,
+} from 'sr2020-mm-data/analysis/data/preparedData';
 import { TrackAnalysisNav } from '../TrackAnalysisNav';
 
 import { RealTrackStats } from '../RealTrackStats';
@@ -14,10 +17,6 @@ import { RealTrackLayer } from '../RealTrackLayer';
 import { TrackDemoMap } from '../TrackDemoMap';
 
 import { UserTrackAnalysis } from '../UserTrackAnalysis';
-
-import {
-  tracksData, beaconLatlngs, userList, beaconLatlngsIndex, beaconIndex,
-} from 'sr2020-mm-data/analysis/data/preparedData';
 
 // import { TrackAnalysisPropTypes } from '../../types';
 

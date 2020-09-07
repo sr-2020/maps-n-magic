@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import './AppHeader.css';
 
 import {
-  NavLink, Route
+  NavLink, Route,
 } from 'react-router-dom';
 
 import Navbar from 'react-bootstrap/Navbar';
@@ -17,7 +17,6 @@ import { UploadDatabaseButton } from '../UploadDatabaseButton';
 import { JumpToUserCoordsSwitch } from '../JumpToUserCoordsSwitch';
 import { MovementSimulatorSwitch } from '../MovementSimulatorSwitch';
 import { ModelRunSelector } from '../ModelRunSelector';
-
 
 // import { AppHeaderPropTypes } from '../../types';
 
@@ -34,7 +33,6 @@ import { ModelRunSelector } from '../ModelRunSelector';
 //   to: '/demo',
 //   tKey: 'demo',
 // }];
-
 
 const navLinks = [{
   to: '/mapsNav',

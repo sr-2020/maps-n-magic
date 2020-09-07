@@ -9,7 +9,7 @@ import * as R from 'ramda';
 import DocumentTitle from 'react-document-title';
 
 import {
-  HashRouter as Router, Switch, Route, Redirect, NavLink, 
+  HashRouter as Router, Switch, Route, Redirect, NavLink,
 } from 'react-router-dom';
 
 import { ErrorBoundry } from 'sr2020-mm-client-core/components/ErrorBoundry';
@@ -54,9 +54,7 @@ import { RescueServiceMessageSender } from '../RescueServiceMessageSender';
 
 import { TrackAnalysis } from '../../trackAnalysis/TrackAnalysis';
 
-
 import { MapRoutes } from '../MapRoutes';
-
 
 const STORAGE_KEY = 'AR_POC';
 
@@ -103,7 +101,6 @@ export class App extends Component {
 
     funcs.forEach((funcName) => (this[funcName] = this[funcName].bind(this)));
   }
-
 
   componentDidMount() {
     const { gameModel, gameServer } = makeGameModel(initialDatabase);
@@ -345,7 +342,7 @@ export class App extends Component {
                       {/* <CharacterHealthStateSimulator gameModel={gameModel} /> */}
                       {/* { refactor as CharacterHealthStateManager and CharacterHealthStateProvider } */}
 
-                      {/* TODO CharacterHealthListener should be in event engine 
+                      {/* TODO CharacterHealthListener should be in event engine
                         This is a fictive component for polling character health status
                       */}
                       <CharacterHealthListener gameModel={gameModel} />

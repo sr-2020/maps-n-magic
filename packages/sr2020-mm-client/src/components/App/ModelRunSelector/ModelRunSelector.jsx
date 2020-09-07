@@ -13,43 +13,9 @@ import classNames from 'classnames';
 
 const speeds = [0.1, 1, 10, 20];
 
-export function ModelRunSelector (props) {
-
+export function ModelRunSelector(props) {
+  const { isModelRunning, speed, onClick } = props;
   const { t } = useTranslation();
-  const { gameModel } = props;
-
-  const [runState, setRunState] = useState({
-    isModelRunning: false,
-    speed: null,
-  });
-
-  function refresh() {
-    setRunState({
-      isModelRunning: gameModel.get('isModelRunning'),
-      speed: gameModel.get('modelSpeed'),
-    });
-  }
-
-  useEffect(refresh, [gameModel]);
-
-  useEffect(() => {
-    console.log("on subscribe ModelRunSelector");
-    gameModel.on('modelRunningChange', refresh);
-    return () => {
-      console.log("off subscribe ModelRunSelector");
-      gameModel.off('modelRunningChange', refresh);
-    };
-  }, []);
-
-  function onClick(type, speed) {
-    return () => {
-      gameModel.execute({
-        type,
-        speed,
-      });
-    };
-  }
-
   return (
     <>
       <Dropdown.Item
@@ -61,7 +27,7 @@ export function ModelRunSelector (props) {
       >
         <FontAwesomeIcon
           className={classNames('tw-mr-1 tw-text-base tw-w-4 tw-h-4 ', {
-            invisible: runState.isModelRunning,
+            invisible: isModelRunning,
           })}
           fixedWidth
           icon={faCheck}
@@ -81,7 +47,7 @@ export function ModelRunSelector (props) {
           >
             <FontAwesomeIcon
               className={classNames('tw-mr-1 tw-text-base tw-w-4 tw-h-4 ', {
-                invisible: !runState.isModelRunning || speed2 !== runState.speed,
+                invisible: !isModelRunning || speed2 !== speed,
               })}
               fixedWidth
               icon={faCheck}

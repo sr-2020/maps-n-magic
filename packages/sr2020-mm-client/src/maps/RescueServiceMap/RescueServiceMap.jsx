@@ -13,7 +13,7 @@ import { RescueServiceLayer } from '../../layers/RescueServiceLayer';
 
 export function RescueServiceMap(props) {
   const {
-    gameModel
+    gameModel,
   } = props;
 
   return (
