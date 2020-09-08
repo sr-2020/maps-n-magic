@@ -51,4 +51,46 @@ const baseCommonLLs = [
   [36.8706891, 54.9300497],
 ].map(R.reverse);
 
-export { baseClosedLLs, baseCommonLLs, baseLLs };
+const initialLineString = {
+  type: 'Feature',
+  geometry: {
+    type: 'LineString',
+    coordinates: [],
+  },
+  properties: {
+    name: '',
+    stroke: '#ffd600',
+    'stroke-opacity': 1,
+    'stroke-width': 3.001,
+    // fill: '#ffd600',
+    // 'fill-opacity': 0.16862745098039217,
+  },
+};
+
+function contourToFeature(contour, props) {
+  const lineString = R.clone(initialLineString);
+  lineString.geometry.coordinates = contour.map(([t1, t2]) => [t2, t1, 0]);
+  lineString.properties = {
+    ...lineString.properties,
+    ...props,
+  };
+  return lineString;
+}
+
+const contourGeoJson = {
+  type: 'FeatureCollection',
+  features: [
+    contourToFeature(baseClosedLLs, {
+      name: 'Закрытая территория',
+      stroke: 'darkviolet',
+    }),
+    contourToFeature(baseLLs, {
+      name: 'Территория игры',
+      stroke: 'green',
+    }),
+  ],
+};
+
+export {
+  baseClosedLLs, baseCommonLLs, baseLLs, contourGeoJson,
+};

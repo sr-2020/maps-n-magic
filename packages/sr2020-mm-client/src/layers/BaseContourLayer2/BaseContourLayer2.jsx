@@ -1,78 +1,16 @@
 import React, { Component } from 'react';
 import './BaseContourLayer2.css';
 
-import L from 'leaflet/dist/leaflet-src';
-import * as R from 'ramda';
+import { contourGeoJson } from 'sr2020-mm-data/assets/baseContours';
 
-import { baseClosedLLs, baseLLs } from 'sr2020-mm-data/assets/baseContours';
+import { GeoJsonLayer } from '../GeoJsonLayer';
 
-// import { BaseContourLayer2PropTypes } from '../../types';
-
-export class BaseContourLayer2 extends Component {
-  // static propTypes = BaseContourLayer2PropTypes;
-  group = L.layerGroup([]);
-
-  nameKey = 'baseContourLayer';
-
-  constructor(props) {
-    super(props);
-    this.state = {
-    };
-  }
-
-  componentDidMount() {
-    const {
-      enableByDefault, layerCommunicator,
-    } = this.props;
-    layerCommunicator.emit('setLayersMeta', {
-      layersMeta: this.getLayersMeta(),
-      enableByDefault,
-    });
-    this.populate();
-    console.log('BaseContourLayer2 mounted');
-  }
-
-  componentDidUpdate(prevProps) {
-    const { translator } = this.props;
-    if (prevProps.translator !== translator) {
-      this.clear();
-      this.populate();
-    }
-    console.log('BaseContourLayer2 did update');
-  }
-
-  componentWillUnmount() {
-    this.clear();
-    console.log('BaseContourLayer2 will unmount');
-  }
-
-  getLayersMeta() {
-    return {
-      [this.nameKey]: this.group,
-    };
-  }
-
-  populate() {
-    const { translator } = this.props;
-    // console.log('was ', baseLLs);
-    // console.log('new ', translator.moveTo(baseLLs));
-    const baseLine = L.polyline(translator.moveTo(baseLLs), {
-      color: 'green',
-      pmIgnore: true,
-    });
-    const baseClosedLine = L.polyline(translator.moveTo(baseClosedLLs), {
-      color: 'darkviolet',
-      pmIgnore: true,
-    });
-    this.group.addLayer(baseLine);
-    this.group.addLayer(baseClosedLine);
-  }
-
-  clear() {
-    this.group.clearLayers();
-  }
-
-  render() {
-    return null;
-  }
+export function BaseContourLayer2(props) {
+  return (
+    <GeoJsonLayer
+      {...props}
+      layerNameKey="baseContourLayer"
+      geoData={contourGeoJson}
+    />
+  );
 }
