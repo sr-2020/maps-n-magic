@@ -6,7 +6,7 @@ import { Map } from '../Map';
 import { DefaultSatelliteBackground } from '../../layers/DefaultSatelliteBackground';
 import { BaseContourLayer2 } from '../../layers/BaseContourLayer2';
 import { BackgroundImageLayer } from '../../layers/BackgroundImageLayer';
-import { GeoJsonLayer } from '../../layers/GeoJsonLayer';
+import { GoogleMapsExportedDataLayer } from '../../layers/GoogleMapsExportedDataLayer';
 import { LocationLayer3 } from '../../layers/LocationLayer3';
 import { BeaconLayer3 } from '../../layers/BeaconLayer3';
 
@@ -33,7 +33,7 @@ export function BeaconEditorMap(props) {
         enableByDefault
         editable={false}
       />
-      <GeoJsonLayer
+      <GoogleMapsExportedDataLayer
         enableByDefault={false}
       />
       <BeaconLayer3

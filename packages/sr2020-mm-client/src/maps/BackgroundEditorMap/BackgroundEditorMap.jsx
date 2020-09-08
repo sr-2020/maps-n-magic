@@ -6,9 +6,7 @@ import { Map } from '../Map';
 import { DefaultSatelliteBackground } from '../../layers/DefaultSatelliteBackground';
 import { BaseContourLayer2 } from '../../layers/BaseContourLayer2';
 import { BackgroundImageLayer } from '../../layers/BackgroundImageLayer';
-import { GeoJsonLayer } from '../../layers/GeoJsonLayer';
-
-// import { BackgroundEditorMapPropTypes } from '../../types';
+import { GoogleMapsExportedDataLayer } from '../../layers/GoogleMapsExportedDataLayer';
 
 export function BackgroundEditorMap(props) {
   const {
@@ -31,11 +29,9 @@ export function BackgroundEditorMap(props) {
         enableByDefault
         editable
       />
-      <GeoJsonLayer
+      <GoogleMapsExportedDataLayer
         enableByDefault
       />
     </Map>
   );
 }
-
-// BackgroundEditorMap.propTypes = BackgroundEditorMapPropTypes;
