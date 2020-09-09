@@ -44,7 +44,8 @@
     "tone": "^14.7.39",
     "sr2020-mm-client-core": "*",
     "sr2020-mm-data": "*",
-    "sr2020-mm-event-engine": "*"
+    "sr2020-mm-event-engine": "*",
+    "sr2020-mm-translations": "*"
   },
   "scripts": {
     "start": "react-app-rewired start",

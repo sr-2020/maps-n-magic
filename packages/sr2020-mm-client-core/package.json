@@ -20,7 +20,8 @@
     "sr2020-mm-data": "*",
     "@geoman-io/leaflet-geoman-free": "^2.7.0",
     "leaflet": "^1.7.1",
-    "leaflet.locatecontrol": "^0.72.0"
+    "leaflet.locatecontrol": "^0.72.0",
+    "sr2020-mm-translations": "*"
   },
   "scripts": {
     "tailwind:css": "./node_modules/.bin/tailwind build css/tailwind.src.css -c  tailwind.js -o css/tailwind.css",
