@@ -1,7 +1,7 @@
 import React, {
   useContext,
 } from 'react';
-import { MapDefaultsContext } from 'sr2020-mm-client-core/mapDefaultsContext';
+import { MapDefaultsContext } from '../../mapDefaultsContext';
 import { SatelliteBackground } from '../SatelliteBackground';
 
 import './DefaultSatelliteBackground.css';

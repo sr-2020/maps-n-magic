@@ -16,7 +16,11 @@
     "tailwindcss-enhanced-outlines-plugin": "^1.1.0"
   },
   "dependencies": {
-    "moment": "^2.27.0"
+    "moment": "^2.27.0",
+    "sr2020-mm-data": "*",
+    "@geoman-io/leaflet-geoman-free": "^2.7.0",
+    "leaflet": "^1.7.1",
+    "leaflet.locatecontrol": "^0.72.0"
   },
   "scripts": {
     "tailwind:css": "./node_modules/.bin/tailwind build css/tailwind.src.css -c  tailwind.js -o css/tailwind.css",

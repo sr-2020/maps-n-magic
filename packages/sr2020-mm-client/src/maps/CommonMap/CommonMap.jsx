@@ -2,17 +2,17 @@
 import React, { Component } from 'react';
 import './CommonMap.css';
 
-import { Map } from '../Map';
+import { BaseContourLayer2 } from 'sr2020-mm-client-core/layers/BaseContourLayer2';
+import { DefaultSatelliteBackground } from 'sr2020-mm-client-core/layers/DefaultSatelliteBackground';
+import { Map } from 'sr2020-mm-client-core/maps/Map';
 
 import { BotLayer2 } from '../../layers/BotLayer2';
 import { UserLayer2 } from '../../layers/UserLayer2';
 import { SignalRadiusesLayer2 } from '../../layers/SignalRadiusesLayer2';
 import { VoronoiPolygonsLayer2 } from '../../layers/VoronoiPolygonsLayer2';
-import { BaseContourLayer2 } from '../../layers/BaseContourLayer2';
 import { MarkerLayer2 } from '../../layers/MarkerLayer2';
 import { LocationLayer2 } from '../../layers/LocationLayer2';
 import { SoundDebug } from '../../layers/SoundDebug';
-import { DefaultSatelliteBackground } from '../../layers/DefaultSatelliteBackground';
 import { ImageBackground } from '../../layers/ImageBackground';
 
 // import { CommonMapPropTypes } from '../../types';

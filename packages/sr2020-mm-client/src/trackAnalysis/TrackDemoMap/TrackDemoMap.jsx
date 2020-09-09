@@ -2,10 +2,9 @@
 import React, { Component } from 'react';
 import './TrackDemoMap.css';
 
-import { Map } from '../../maps/Map';
-
-import { BaseContourLayer2 } from '../../layers/BaseContourLayer2';
-import { DefaultSatelliteBackground } from '../../layers/DefaultSatelliteBackground';
+import { BaseContourLayer2 } from 'sr2020-mm-client-core/layers/BaseContourLayer2';
+import { DefaultSatelliteBackground } from 'sr2020-mm-client-core/layers/DefaultSatelliteBackground';
+import { Map } from 'sr2020-mm-client-core/maps/Map';
 
 // import { CommonMapPropTypes } from '../../types';
 

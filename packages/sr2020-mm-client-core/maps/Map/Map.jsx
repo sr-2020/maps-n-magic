@@ -13,7 +13,7 @@ import { EventEmitter } from 'events';
 
 // import { Map2PropTypes } from '../../../types';
 
-import { applyLeafletGeomanTranslation, getZoomTranslation } from '../../translations';
+import { applyLeafletGeomanTranslation, getZoomTranslation } from './leafletTranslations';
 
 // eslint-disable-next-line import/extensions
 import 'leaflet.locatecontrol/dist/L.Control.Locate.min.js';

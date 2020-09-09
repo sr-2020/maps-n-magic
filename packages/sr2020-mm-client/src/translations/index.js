@@ -1,5 +1,3 @@
-export * from './leaflet';
-
 export const translations = {
   ru: {
     translation: {

@@ -1,10 +1,10 @@
 import React from 'react';
 import './BeaconEditorMap.css';
 
-import { Map } from '../Map';
+import { Map } from 'sr2020-mm-client-core/maps/Map';
 
-import { DefaultSatelliteBackground } from '../../layers/DefaultSatelliteBackground';
-import { BaseContourLayer2 } from '../../layers/BaseContourLayer2';
+import { DefaultSatelliteBackground } from 'sr2020-mm-client-core/layers/DefaultSatelliteBackground';
+import { BaseContourLayer2 } from 'sr2020-mm-client-core/layers/BaseContourLayer2';
 import { BackgroundImageLayer } from '../../layers/BackgroundImageLayer';
 import { GoogleMapsExportedDataLayer } from '../../layers/GoogleMapsExportedDataLayer';
 import { LocationLayer3 } from '../../layers/LocationLayer3';
