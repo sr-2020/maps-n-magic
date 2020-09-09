@@ -23,6 +23,7 @@ import { json2File, makeFileName, readJsonFile } from 'sr2020-mm-client-core/uti
 import { MapDefaultsProvider } from 'sr2020-mm-client-core/mapDefaultsContext';
 import { TranslatorProvider } from 'sr2020-mm-client-core/translatorContext';
 
+import { Translator } from 'sr2020-mm-client-core/utils/Translator';
 import { AudioContextWrapper } from '../../utils/AudioContextWrapper';
 
 import { SpiritEditor } from '../SpiritEditor';
@@ -47,12 +48,8 @@ import { SoundWatcher } from '../SoundWatcher';
 
 import { SoundStage } from './SoundStage';
 
-import { Translator } from '../../utils/Translator';
-
 import { BeaconRecordEditor } from '../BeaconRecordEditor';
 import { RescueServiceMessageSender } from '../RescueServiceMessageSender';
-
-import { TrackAnalysis } from '../../trackAnalysis/TrackAnalysis';
 
 import { MapRoutes } from '../MapRoutes';
 
@@ -321,7 +318,6 @@ export class App extends Component {
                           <ManaOceanSettings gameModel={gameModel} />
                         </Route>
 
-                        {TrackAnalysis({})}
                         {MapRoutes({
                           gameModel,
                         })}

@@ -1,7 +1,7 @@
 import L from 'leaflet/dist/leaflet-src';
 import * as R from 'ramda';
 
-import { getIcon } from '../../utils/icons';
+import { getIcon } from 'sr2020-mm-client-core/utils/icons';
 
 export class MarkerLayer {
   group = L.layerGroup([]);

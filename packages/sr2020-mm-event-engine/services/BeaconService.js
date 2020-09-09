@@ -4,7 +4,6 @@ import { baseCommonLLs } from 'sr2020-mm-data/assets/baseContours';
 import { getBoundingRect, scaleRect } from 'sr2020-mm-data/utils/polygonUtils';
 
 import { getPolygons2 } from 'sr2020-mm-data/utils/polygonGenerator';
-// import { getEeStats } from '../../utils/miscUtils';
 
 import { AbstractService } from '../core/AbstractService';
 

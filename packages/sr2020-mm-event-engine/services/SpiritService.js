@@ -1,7 +1,6 @@
 import * as R from 'ramda';
 
 // import { defaultSpirit } from '../../types/primitives';
-// import { getEeStats } from '../../utils/miscUtils';
 
 import { AbstractService } from '../core/AbstractService';
 

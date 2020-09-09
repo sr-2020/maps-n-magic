@@ -1,14 +1,12 @@
 import React, { Component } from 'react';
 import './RealTrackLayer.css';
 
-
 import L from 'leaflet/dist/leaflet-src';
 import * as R from 'ramda';
 
 import * as Hotline from 'leaflet-hotline';
 
 // import { classNames } from 'classnames';
-// import { getIcon } from '../../utils/icons';
 
 // require('leaflet-hotline')(L);
 

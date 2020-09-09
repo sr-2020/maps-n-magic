@@ -1,8 +1,6 @@
 // eslint-disable-next-line max-classes-per-file
 import { GameModel } from './GameModel';
 
-// import { hardDispose } from '../utils/miscUtils';
-
 function hardDispose(obj) {
   return Object.keys(obj).forEach((key) => { delete obj[key]; });
 }
@@ -32,5 +30,3 @@ export class EventEngine {
     this.dataBindings.push(dataBinding);
   }
 }
-
-
