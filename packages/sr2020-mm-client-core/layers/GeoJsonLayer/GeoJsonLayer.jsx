@@ -1,8 +1,11 @@
-import React, { Component, useState, useEffect } from 'react';
+import React, {
+  Component, useState, useEffect, useContext,
+} from 'react';
 import './GeoJsonLayer.css';
 import * as R from 'ramda';
 
 import L from 'leaflet/dist/leaflet-src';
+import { TranslatorContext } from '../../translatorContext';
 
 // "stroke": "#ffd600",
 // "stroke-opacity": 1,
@@ -30,8 +33,9 @@ function camelize(str) {
 export function GeoJsonLayer(props) {
   const [group] = useState(L.layerGroup([]));
   const {
-    enableByDefault, layerCommunicator, layerNameKey, geoData, translator,
+    enableByDefault, layerCommunicator, layerNameKey, geoData,
   } = props;
+  const translator = useContext(TranslatorContext);
 
   useEffect(() => {
     layerCommunicator.emit('setLayersMeta', {
@@ -41,7 +45,14 @@ export function GeoJsonLayer(props) {
       enableByDefault,
     });
 
+    return () => {
+      group.clearLayers();
+    };
+  }, []);
+
+  useEffect(() => {
     geoData.features.forEach((feature) => {
+      feature = translator.geoJsonMoveTo(feature);
       const style = function (feature2) {
         const { properties } = feature2;
         const makeStyles = R.pipe(
@@ -66,7 +77,7 @@ export function GeoJsonLayer(props) {
     return () => {
       group.clearLayers();
     };
-  }, []);
+  }, [translator]);
 
   return null;
 }

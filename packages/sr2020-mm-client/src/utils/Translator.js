@@ -91,4 +91,62 @@ export class Translator {
   moveFrom(obj) {
     return this._move(obj, R.subtract);
   }
+
+  geoJsonMoveTo(obj) {
+    return this._moveGeoJson(obj, R.add);
+  }
+
+  geoJsonMoveFrom(obj) {
+    return this._moveGeoJson(obj, R.subtract);
+  }
+
+  _moveGeoJson(feature, func) {
+    if (this.virtualCenter === null) {
+      return feature;
+    }
+    if (feature.geometry.type === 'Polygon') {
+      return this._moveGeoJsonPolygon(feature, func);
+    }
+    if (feature.geometry.type === 'Point') {
+      return this._moveGeoJsonPoint(feature, func);
+    }
+    if (feature.geometry.type === 'LineString') {
+      return this._moveGeoJsonLineString(feature, func);
+    }
+    return feature;
+  }
+
+  _moveGeoJsonPolygon(feature, func) {
+    const clone = R.clone(feature);
+
+    clone.geometry.coordinates[0] = clone.geometry.coordinates[0].map((el) => ([
+      func(el[0], this.deltaLng),
+      func(el[1], this.deltaLat),
+      el[2],
+    ]));
+    return clone;
+  }
+
+  _moveGeoJsonLineString(feature, func) {
+    const clone = R.clone(feature);
+
+    clone.geometry.coordinates = clone.geometry.coordinates.map((el) => ([
+      func(el[0], this.deltaLng),
+      func(el[1], this.deltaLat),
+      el[2],
+    ]));
+    return clone;
+  }
+
+  _moveGeoJsonPoint(feature, func) {
+    const clone = R.clone(feature);
+    const { coordinates } = clone.geometry;
+
+    clone.geometry.coordinates = [
+      func(coordinates[0], this.deltaLng),
+      func(coordinates[1], this.deltaLat),
+      coordinates[2],
+    ];
+    return clone;
+  }
 }
