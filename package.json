@@ -4,8 +4,9 @@
   "license": "Apache-2.0",
   "private": true,
   "scripts": {
-    "bootstrap": "lerna bootstrap",
-    "start": "lerna run start --stream"
+    "bootstrap": "lerna bootstrap --hoist",
+    "start": "lerna run start --stream",
+    "build-and-deploy": "lerna run build && lerna run deploy"
   },
   "devDependencies": {
     "autoprefixer": "^9.8.6",

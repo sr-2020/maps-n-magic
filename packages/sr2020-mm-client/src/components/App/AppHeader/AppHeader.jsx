@@ -47,8 +47,9 @@ const navLinks = [{
   to: '/soundMapping',
   tKey: 'soundMapping',
 }, {
-  to: '/trackAnalysisNav',
+  to: '/trackAnalysis/index.html',
   tKey: 'trackAnalysisNav',
+  rawLink: true,
 }, {
   to: '/beaconRecordEditor',
   tKey: 'beaconRecordEditor',
@@ -81,6 +82,30 @@ export class AppHeader extends Component {
   //   this.setState(({ expanded }) => this.setState({ expanded: !expanded }));
   // }
 
+  getLink(navLink) {
+    const {
+      t,
+    } = this.props;
+    if (navLink.rawLink) {
+      return (
+        <a
+          className="tw-px-3 tw-py-2 tw-text-lg"
+          href={navLink.to}
+        >
+          {t(navLink.tKey)}
+        </a>
+      );
+    }
+    return (
+      <NavLink
+        className="tw-px-3 tw-py-2 tw-text-lg"
+        to={navLink.to}
+      >
+        {t(navLink.tKey)}
+      </NavLink>
+    );
+  }
+
   // eslint-disable-next-line max-lines-per-function
   render() {
     const { expanded } = this.state;
@@ -109,13 +134,7 @@ export class AppHeader extends Component {
               {
                 navLinks.map((navLink) => (
                   <Nav.Item as="li" key={navLink.to}>
-                    <NavLink
-                      className="tw-px-3 tw-py-2 tw-text-lg"
-                      to={navLink.to}
-                      // onClick={this.onToggle}
-                    >
-                      {t(navLink.tKey)}
-                    </NavLink>
+                    {this.getLink(navLink)}
                   </Nav.Item>
                 ))
               }

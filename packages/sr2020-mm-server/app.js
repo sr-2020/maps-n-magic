@@ -11,7 +11,6 @@ const characterStatesRouter = require('./routes/characterStates');
 const fileRouter = require('./routes/file');
 const usersRouter = require('./routes/users');
 
-
 const app = express();
 
 // https://medium.com/@alexishevia/using-cors-in-express-cac7e29b005b
@@ -31,7 +30,6 @@ app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 // app.use(express.static(path.join(__dirname, 'public')));
 
-
 // app.use('/', indexRouter);
 // app.use('/users', usersRouter);
 
@@ -39,12 +37,12 @@ app.get('/fileList', fileListRouter);
 app.get('/file/:name', fileRouter);
 app.all('/characterStates', characterStatesRouter);
 
-app.use(express.static(path.join(__dirname, '../build')));
+app.use(express.static(path.join(__dirname, './static')));
 
 // catch 404 and forward to error handler
 app.use((req, res, next) => {
   // next(createError(404));
-  res.sendFile(path.join(__dirname, '../build', '/index.html'));
+  res.sendFile(path.join(__dirname, './static', '/index.html'));
 });
 
 // error handler
