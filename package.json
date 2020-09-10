@@ -6,6 +6,7 @@
   "scripts": {
     "bootstrap": "lerna bootstrap --hoist",
     "start": "lerna run start --stream",
+    "start:server": "lerna run start:server",
     "build-and-deploy": "lerna run build && lerna run deploy"
   },
   "devDependencies": {
