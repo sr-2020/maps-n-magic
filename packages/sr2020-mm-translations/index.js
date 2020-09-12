@@ -1,91 +1,38 @@
+import { appDictionary } from './app';
+import { spiritDictionary } from './spirits';
+import { manaOceanDictionary } from './manaOcean';
+import { soundDictionary } from './sounds';
+
 export const translations = {
   ru: {
     translation: {
 
-      // App
-      appTitle: 'SR2020 Карта и магия',
-      mapEditor: 'Редактор карты - 1',
-      beacons: 'Маяки - 1',
-      soundManager: 'Звуки',
-      soundManager2: 'Звуки',
-      demo: 'Демо - 1',
-      map2: 'Редактор карты',
-      spiritEditor: 'Редактор духов',
-      uploadDatabase: 'Загрузить базу',
-      downloadDatabase: 'Скачать базу',
-      simulateMovement: 'Симулировать ходьбу',
-      jumpToUserCoords: 'Перенос карты к пользователю',
-      actionMenu: 'Меню действий',
-      prevPrototypes: 'Др. страницы',
-      startModelRun: 'Запустить духов, скорость {{speed}}x',
-      stopModelRun: 'Остановить духов',
-      soundMapping: 'Сопоставление звука',
+      ...appDictionary,
+      ...spiritDictionary,
+      ...soundDictionary,
+      ...manaOceanDictionary,
+
+      // layers
       botTrackLayer: 'Треки движения духов',
       botLayer: 'Духи',
       userLayer: 'Пользователь',
-      trackAnalysisNav: 'Анализ мастерки',
-      beaconRecordEditor: 'Словарь маяков',
-      backgroundEditorMap: 'Редактор подложки карты',
       imageGroupLayer: 'Здания',
       rectangleGroupLayer: 'Области зданий',
       titleGroupLayer: 'Подписи к зданиям',
-      mapsNav: 'Карты',
-      buildingPlansEditor: 'Здания',
-      locationsAndBeaconsEditor: 'Локации и маяки - 1',
-      locationsEditor2: 'Локации',
-      beaconEditor2: 'Маяки',
-      mapEditors: 'Редакторы карт',
-      manaOceanSettings: 'Настройки океана маны',
-      rescueService: 'МЧС - карта клинических смертей',
-      specificMaps: 'Конечные карты',
-      debuggingTools: 'Инструменты отладки',
       geoJsonLayer: 'Данные из Google Maps',
-      characterPositions: 'Позиции персонажей',
       geoJsonLayer_Polygon: 'Многоугольники из Google Maps',
       geoJsonLayer_Point: 'Маркеры из Google Maps',
       geoJsonLayer_LineString: 'Линии из Google Maps',
-      cancel: 'Отмена',
-      selectBeaconId: 'Выберите Id маяка',
-      selectBeaconIdForReplacing: 'Выберите Id для замены маяка {{id}}',
 
-      // Spirit Editor
-      newSpirit: 'Новый дух',
+      // common
+      cancel: 'Отмена',
       clone: 'Клонировать',
       delete: 'Удалить',
-      noFraction: 'Без фракции',
-      nameless: 'Безымянный',
       clearSearchInput: 'Очистить поиск',
-      findSpirit: 'Найти духов',
-      enterSpiritName: 'Введите имя духа',
-      createSpirit: 'Создать духа',
-      createSpirits: 'Создайте духов',
 
-      youHaveNoSpirits: 'У вас нет духов',
-      fraction: 'Фракция',
-      story: 'История',
-      abilities: 'Способности',
-      addAbility: 'Добавить способность',
-
-      maxHitPoints: 'Максимум HP',
-
-      // SoundManager
-      setToBackground: 'Поставить на фон',
-      isBackground: 'Текущий фон',
-      addToRotation: 'Добавить в ротацию',
-      inRotation: 'В ротации',
-      playingNow: 'Играет сейчас',
-      queuePlace: '{{index}} в очереди',
-      nextSpiritIn: 'Следующий дух через {{timeout}}',
-      nextRotationIn: 'Следующая ротация через {{timeout}}',
-      incrementSoundTimeout: '+1 секунда',
-      decrementSoundTimeout: '-1 секунда',
-      incrementVolume: '+10% громкости',
-      decrementVolume: '-10% громкости',
-      rotationSoundTimeout: 'Интервал между ротациями, от 0 до 30 секунд',
-      rotationTimeout: 'Интервал между звуками в ротации, от 0 до 30 секунд',
-      backgroundVolume: 'Громкость фона, от 0 до 100%',
-      rotationVolume: 'Громкость ротации, от 0 до 100%',
-      soundSettings: 'Настройки звука',
+      // beacon popup
+      selectBeaconId: 'Выберите Id маяка',
+      selectBeaconIdForReplacing: 'Выберите Id для замены маяка {{id}}',
 
       // Map
       baseContourLayer: 'Контуры базы',
@@ -172,29 +119,6 @@ export const translations = {
 
       sendRescueServiceMessage: 'Отправить сообщение в МЧС',
 
-      // mana settings
-      neutralManaLevel: 'Фоновый уровень маны',
-      moonName: 'Название',
-      moonPeriod_min: 'Период, шаг 10 мин',
-      newMoonTime_min: 'Время новолуния (начало цикла), шаг 10 мин',
-      manaTideHeight: 'Высота прилива',
-      visibleMoon: 'Видимая луна',
-      invisibleMoon: 'Невидимая луна',
-      tideTimetable: 'Расписание приливов',
-      tideHeight: 'Высота прилива',
-      tLabel_tideHeight: 'Изменение уровня маны, уровень',
-      time_hour: 'Время суток, час',
-      time: 'Время',
-      minute: 'минут',
-      intervalDuration: 'Длительность интервала',
-      moscowTime: 'Московское время',
-
-      statisticsByTime: 'Статистика по времени',
-      tideLevel: 'Уровень прилива',
-      timeSum: 'Сумма времени, час',
-      timeSumTotal: 'Всего времени (контроль), час',
-      moonParameters: 'Параметры лун',
-      dailyBlackout: 'Еженочный блэкаут',
     },
   },
 };
