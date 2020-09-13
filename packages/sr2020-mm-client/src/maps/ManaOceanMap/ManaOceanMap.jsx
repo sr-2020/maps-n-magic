@@ -24,6 +24,7 @@ export function ManaOceanMap(props) {
       <DefaultSatelliteBackground enableByDefault={false} />
       <BaseContourLayer2
         enableByDefault
+        grayscale
       />
       <BackgroundImageLayer
         enableByDefault

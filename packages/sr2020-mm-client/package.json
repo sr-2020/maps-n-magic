@@ -41,11 +41,11 @@
     "react-scripts": "3.4.0",
     "recharts": "^2.0.0-beta.1",
     "shortid": "^2.2.15",
-    "tone": "^14.7.39",
     "sr2020-mm-client-core": "*",
     "sr2020-mm-data": "*",
     "sr2020-mm-event-engine": "*",
-    "sr2020-mm-translations": "*"
+    "sr2020-mm-translations": "*",
+    "tone": "^14.7.39"
   },
   "scripts": {
     "start": "react-app-rewired start",
