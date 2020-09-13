@@ -6,15 +6,9 @@ import * as R from 'ramda';
 
 import { InnerLocationLayer3 } from './InnerLocationLayer3';
 
-// import { locationPopupDom } from '../../../../utils/domUtils';
-
 import { LocationPopup3 } from './LocationPopup3';
 
-// import { LocationLayer3PropTypes } from '../../types';
-
 export class LocationLayer3 extends Component {
-  // static propTypes = LocationLayer3PropTypes;
-
   constructor(props) {
     super(props);
     this.state = {
@@ -290,7 +284,6 @@ export class LocationLayer3 extends Component {
       />
     );
   }
-
 
   render() {
     return (

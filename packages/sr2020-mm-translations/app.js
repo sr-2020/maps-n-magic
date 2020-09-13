@@ -23,6 +23,7 @@ export const appDictionary = {
   debuggingTools: 'Инструменты отладки',
   characterPositions: 'Позиции персонажей',
   manaOcean: 'Океан маны',
+  manaOceanLayer: 'Океан маны',
 
   // App actions
   uploadDatabase: 'Загрузить базу',

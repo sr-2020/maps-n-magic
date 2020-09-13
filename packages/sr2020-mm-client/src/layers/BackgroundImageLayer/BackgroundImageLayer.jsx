@@ -27,13 +27,13 @@ export class BackgroundImageLayer extends Component {
 
   componentDidMount() {
     const {
-      gameModel, enableByDefault, layerCommunicator, editable,
+      gameModel, enableByDefault, layerCommunicator, editable, imageClassName,
     } = this.props;
     this.imagePopupDom = document.createElement('div');
     this.subscribe('on', gameModel);
     this.communicatorSubscribe('on');
     this.imagePopup = L.popup();
-    this.imageLayer = new InnerBackgroundImageLayer();
+    this.imageLayer = new InnerBackgroundImageLayer(imageClassName);
     layerCommunicator.emit('setLayersMeta', {
       layersMeta: this.imageLayer.getLayersMeta(editable),
       enableByDefault,
@@ -169,7 +169,6 @@ export class BackgroundImageLayer extends Component {
     });
     layerCommunicator.emit('closePopup');
   }
-
 
   onBackgroundImageChange = (prop) => (e) => {
     const { value } = e.target;

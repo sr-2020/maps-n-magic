@@ -318,10 +318,16 @@ export class App extends Component {
                           <ManaOceanSettings gameModel={gameModel} />
                         </Route>
 
+                        {/* MapRoutes is NOT a component. This is a function which returns array.
+                        It is necessary to extract routes from switch to separate component.
+                        This is problem of router implementation */}
                         {MapRoutes({
                           gameModel,
+                          mapDefaults,
                         })}
-                        <Route render={() => <Redirect to="/mapsNav" />} />
+                        <Route path="/">
+                          <Redirect to="/mapsNav" />
+                        </Route>
                       </Switch>
                       {/* { refactor as GeoDataStreamSimulator } */}
                       <GeoDataStreamSimulator

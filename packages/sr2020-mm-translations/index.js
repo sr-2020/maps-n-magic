@@ -58,6 +58,7 @@ export const translations = {
       locationTooltip: 'Локация "{{name}}"',
 
       geoLocationTooltip: 'Геолокация "{{name}}"',
+      manaGeoLocationTooltip: '{{name}}<br/>Уровень маны <b>{{manaLevel}}</b>',
       regionTooltip: 'Регион "{{name}}"',
       gameLocationTooltip: 'Игровая локация "{{name}}"',
       unknownLocationTypeTooltip: 'Локация неизвестного типа "{{name}}"',

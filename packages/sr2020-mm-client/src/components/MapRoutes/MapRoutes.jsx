@@ -4,13 +4,13 @@ import './MapRoutes.css';
 import {
   Route,
 } from 'react-router-dom';
-// import { MapRoutesPropTypes } from '../../types';
 
 import { CommonMap } from '../../maps/CommonMap';
 import { BackgroundEditorMap } from '../../maps/BackgroundEditorMap';
 import { LocationEditorMap } from '../../maps/LocationEditorMap';
 import { BeaconEditorMap } from '../../maps/BeaconEditorMap';
 import { RescueServiceMap } from '../../maps/RescueServiceMap';
+import { ManaOceanMap } from '../../maps/ManaOceanMap';
 
 import { MapsNav } from '../MapsNav';
 
@@ -56,7 +56,10 @@ export function MapRoutes(props) {
         gameModel={gameModel}
       />
     </Route>,
+    <Route path="/manaOcean">
+      <ManaOceanMap
+        gameModel={gameModel}
+      />
+    </Route>,
   ];
 }
-
-// MapRoutes.propTypes = MapRoutesPropTypes;

@@ -9,7 +9,7 @@ import Form from 'react-bootstrap/Form';
 import Button from 'react-bootstrap/Button';
 import Alert from 'react-bootstrap/Alert';
 
-import { isGeoLocation } from '../../utils/miscUtils';
+import { isGeoLocation } from 'sr2020-mm-event-engine/utils';
 
 // TODO this call should be moved in event engine service
 import { postUserPosition } from 'sr2020-mm-event-engine/api/position';
@@ -174,7 +174,6 @@ export class CharacterPositions extends Component {
     return (
       <div className="CharacterPositions  tw-mx-8 tw-my-4">
         <div className="tw-flex tw-items-start">
-
 
           <div>
             <Form

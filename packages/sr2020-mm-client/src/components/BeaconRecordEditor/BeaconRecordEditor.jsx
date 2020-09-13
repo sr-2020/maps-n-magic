@@ -15,9 +15,8 @@ import Form from 'react-bootstrap/Form';
 import Dropdown from 'react-bootstrap/Dropdown';
 
 import { classNames } from 'classnames';
+import { isGeoLocation } from 'sr2020-mm-event-engine/utils';
 import { CreateBeaconPopover } from './CreateBeaconPopover';
-
-import { isGeoLocation } from '../../utils/miscUtils';
 
 // import { BeaconRecordEditorPropTypes } from '../../types';
 
@@ -194,7 +193,6 @@ export class BeaconRecordEditor extends Component {
       return target.value;
     }
   }
-
 
   // eslint-disable-next-line max-lines-per-function
   render() {

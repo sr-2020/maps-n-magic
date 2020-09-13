@@ -1,15 +1,12 @@
 const fetch = require('node-fetch');
 const R = require('ramda');
+const { isGeoLocation } = require('sr2020-mm-event-engine/utils');
 
 // /api/v1/users/{id}
 const url = 'https://position.evarun.ru/api/v1/users';
 const locationUrl = 'https://position.evarun.ru/api/v1/locations';
 
 let locations = null;
-
-function isGeoLocation(location) {
-  return location.layer_id === 1 && !R.isEmpty(location.polygon);
-}
 
 function randomInteger(min, max) {
   const rand = min + Math.random() * (max + 1 - min);
@@ -60,7 +57,6 @@ async function getLocations() {
 
   return response.json();
 }
-
 
 // getCharacterLocation(10198, true).then(console.log).catch(console.log);
 // getCharacterLocation(10198).then((data) => console.log(R.pluck('id', data))).catch(console.log);

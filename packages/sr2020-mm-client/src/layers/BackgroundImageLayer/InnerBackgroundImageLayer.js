@@ -1,5 +1,6 @@
 import L from 'leaflet/dist/leaflet-src';
 import * as R from 'ramda';
+import { classNames } from 'classnames';
 
 export class InnerBackgroundImageLayer {
   imageGroup = L.layerGroup([]);
@@ -13,6 +14,10 @@ export class InnerBackgroundImageLayer {
   titleGroupNameKey = 'titleGroupLayer';
 
   rectangleGroupNameKey = 'rectangleGroupLayer';
+
+  constructor(imageClassName = '') {
+    this.imageClassName = imageClassName;
+  }
 
   getLayersMeta(editable) {
     if (editable) {
@@ -67,6 +72,7 @@ export class InnerBackgroundImageLayer {
       latlngs, name, id, image,
     }) => L.imageOverlay(image, latlngs, {
       id,
+      className: this.imageClassName,
       errorOverlayUrl: 'images/noImage.svg',
     }));
     images.forEach((image) => {
@@ -168,6 +174,7 @@ export class InnerBackgroundImageLayer {
     setRectangleEventHandlers(rect);
     this.imageGroup.addLayer(L.imageOverlay(image, latlngs, {
       id,
+      className: this.imageClassName,
     }));
     const titleRect = this.createTitle(rect);
     this.titleGroup.addLayer(titleRect);
