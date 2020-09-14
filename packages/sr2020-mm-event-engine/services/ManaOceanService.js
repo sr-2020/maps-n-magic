@@ -39,7 +39,7 @@ export class ManaOceanService extends AbstractService {
 
   constructor() {
     super();
-    this.prevManaLevel = null;
+    this.prevTideHeight = null;
     this.tideLevelTimerId = null;
     this.onTideLevelUpdate = this.onTideLevelUpdate.bind(this);
     // this.manaOceanSettings = R.clone(defaultManaOceanSettings);
@@ -64,6 +64,7 @@ export class ManaOceanService extends AbstractService {
   onTideLevelUpdate() {
     const manaOceanSettings = this.getFromModel('manaOceanSettings');
     const locationRecords = this.getFromModel('locationRecords');
+    const { neutralManaLevel } = manaOceanSettings;
 
     const firstLocation = locationRecords.find(isGeoLocation);
 
@@ -71,6 +72,13 @@ export class ManaOceanService extends AbstractService {
     // speed up time
     moscowTimeInMinutes = (moscowTime.minute() * 60 + moscowTime.second()) % 1440;
     const tideHeight = getTideHeight2(moscowTimeInMinutes, manaOceanSettings);
+
+    if (this.prevTideHeight === tideHeight) {
+      console.log('Tide height not changed, skip mana level update');
+      return;
+    }
+
+    this.prevTideHeight = tideHeight;
 
     console.log('onTideLevelUpdate', moscowTimeInMinutes, tideHeight, firstLocation, manaOceanSettings);
 
@@ -80,17 +88,20 @@ export class ManaOceanService extends AbstractService {
       props: {
         options: {
           ...firstLocation.options,
-          manaLevel: tideHeight,
+          manaLevel: this.calcManaLevel([neutralManaLevel, tideHeight]),
+          manaLevelModifiers: {
+            neutralManaLevel,
+            tideHeight,
+          },
         },
       },
     });
-
-    // this.executeOnModel({
-    //   type: 'setBackgroundSound',
-    //   name: soundName,
-    // });
   }
 
+  calcManaLevel(arr) {
+    const sum = R.sum(arr);
+    return R.max(R.min(5, sum), 1);
+  }
   // getManaOceanSettings() {
   //   return R.clone(this.manaOceanSettings);
   // }
