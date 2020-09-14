@@ -91,7 +91,7 @@ export class AbstractService {
   getFromModel(...args) {
     const request = stringToType(args[0]);
 
-    const includes = this.metadata.needRequests.includes(request.type);
+    const includes = this.metadata.needRequests?.includes(request.type);
     if (!includes) {
       throw new Error(`Request ${request.type} is not expected from ${this.constructor.name}`);
     }
@@ -102,7 +102,7 @@ export class AbstractService {
   executeOnModel(...args) {
     const action = stringToType(args[0]);
 
-    const includes = this.metadata.needActions.includes(action.type);
+    const includes = this.metadata.needActions?.includes(action.type);
     if (!includes) {
       throw new Error(`Action ${action.type} is not expected from ${this.constructor.name}`);
     }

@@ -1,5 +1,6 @@
 import * as R from 'ramda';
 // import R from 'ramda';
+import * as moment from 'moment-timezone';
 
 export const fullDay = 24 * 60; // minutes in full day
 
@@ -24,6 +25,16 @@ const periodToPattern = (period) => ([
 //   { startTime: ((period / 8) * 5), value: 0 },
 //   { startTime: ((period / 8) * 7), value: -1 },
 // ]);
+
+export function getMoscowTime() {
+  const moscowTime = moment().tz('Europe/Moscow');
+
+  const moscowTimeInMinutes = moscowTime.hour() * 60 + moscowTime.minute();
+  return {
+    moscowTime,
+    moscowTimeInMinutes,
+  };
+}
 
 export function getMoonActivity(period, offset) {
   let index = 0;
@@ -212,6 +223,16 @@ function getTideLevelByPeriodPart(periodPart) {
   }
 }
 
+export function getTideHeight2(time, manaOceanSettings) {
+  return getTideHeight(time, [{
+    period: manaOceanSettings.visibleMoonPeriod,
+    offset: manaOceanSettings.visibleMoonNewMoonTime,
+  }, {
+    period: manaOceanSettings.invisibleMoonPeriod,
+    offset: manaOceanSettings.invisibleMoonNewMoonTime,
+  }]);
+}
+
 function getTideHeight(time, moonPropsList) {
   // console.log(time);
 
@@ -229,7 +250,6 @@ function getTideHeight(time, moonPropsList) {
     return effect;
   }));
 }
-
 
 // const moonPropsList = [{
 //   period: 180,

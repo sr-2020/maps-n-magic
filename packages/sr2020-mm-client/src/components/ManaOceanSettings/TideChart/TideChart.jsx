@@ -9,7 +9,7 @@ import {
   ReferenceLine, ReferenceArea,
 } from 'recharts';
 
-import { fullDay } from '../moonActivityUtils';
+import { fullDay } from 'sr2020-mm-event-engine/utils/moonActivityUtils';
 
 const ticks = R.range(1, 24).map(R.multiply(60));
 
@@ -39,7 +39,6 @@ function formatMinutes(minutes) {
   minute = (minute < 10 ? '0' : '') + minute;
   return `${hour}:${minute}`;
 }
-
 
 function CustomizedAxisTick(props) {
   const {

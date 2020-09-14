@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
 import './ManaOceanSettings.css';
 import * as R from 'ramda';
-import * as moment from 'moment-timezone';
 
 // import { ManaOceanSettingsPropTypes } from '../../types';
 
@@ -13,8 +12,8 @@ import { prop } from 'ramda';
 import { TideChart } from './TideChart';
 
 import {
-  getMoonActivity, mergeActivities, fullDay, collectStatistics,
-} from './moonActivityUtils';
+  getMoonActivity, mergeActivities, collectStatistics, getMoscowTime,
+} from 'sr2020-mm-event-engine/utils/moonActivityUtils';
 
 const TIME_STEP = 10;
 
@@ -96,12 +95,9 @@ export class ManaOceanSettings extends Component {
   }
 
   onUpdateMoscowTime() {
-    const msk = moment().tz('Europe/Moscow');
-
-    const newMoscowTime = msk.hour() * 60 + msk.minute();
-
-    this.setState((prevState) => (prevState.moscowTime === newMoscowTime ? null : {
-      moscowTime: msk.hour() * 60 + msk.minute(),
+    const { moscowTimeInMinutes } = getMoscowTime();
+    this.setState((prevState) => (prevState.moscowTime === moscowTimeInMinutes ? null : {
+      moscowTime: moscowTimeInMinutes,
       // moscowTime: (((msk.minute() * 60) + msk.seconds()) * 10) % fullDay,
     }));
   }

@@ -18,7 +18,7 @@ import { BackgroundImageService } from '../../services/BackgroundImageService';
 import { CharacterHealthStateService } from '../../services/CharacterHealthStateService';
 import { UserRecordService } from '../../services/UserRecordService';
 import { ManaOceanSettingsService } from '../../services/ManaOceanSettingsService';
-
+import { ManaOceanService } from '../../services/ManaOceanService';
 
 import { fillGameModelWithBots } from './GameModelFiller';
 import { CrudDataManager } from '../../dataManagers/CrudDataManager';
@@ -35,7 +35,7 @@ import {
   ManaOceanSettingsProvider,
 } from '../../api/position';
 
-import { EventEngine } from "../../core/EventEngine";
+import { EventEngine } from '../../core/EventEngine';
 
 const services = [
   UserService,
@@ -56,6 +56,7 @@ const services = [
   CharacterHealthStateService,
   UserRecordService,
   ManaOceanSettingsService,
+  ManaOceanService,
 ];
 
 export function makeGameModel(database) {
