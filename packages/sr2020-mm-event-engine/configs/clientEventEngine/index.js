@@ -22,6 +22,7 @@ import { ManaOceanService } from '../../services/ManaOceanService';
 
 import { fillGameModelWithBots } from './GameModelFiller';
 import { CrudDataManager } from '../../dataManagers/CrudDataManager';
+import { LocationDataManager } from '../../dataManagers/LocationDataManager';
 import { ReadDataManager } from '../../dataManagers/ReadDataManager';
 import { ReadWriteSettingsDataManager } from '../../dataManagers/SettingsDataManagers';
 import { SingleReadStrategy } from '../../dataManagers/SingleReadStrategy';
@@ -77,7 +78,7 @@ export function makeGameModel(database) {
     gameModel,
     entityName: 'locationRecord',
     DataProvider: LocationRecordProvider,
-    DataManager: CrudDataManager,
+    DataManager: LocationDataManager,
     ReadStrategy: PollingReadStrategy,
     ReadStrategyArgs: [15000],
   }));

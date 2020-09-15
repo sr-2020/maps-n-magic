@@ -15,7 +15,7 @@ import { isGeoLocation } from '../utils';
 //   invisibleMoonManaTideHeight: 1,
 //   moscowTime: 0,
 // };
-const TIDE_LEVEL_UPDATE_INTERVAL = 3000; // millis
+const TIDE_LEVEL_UPDATE_INTERVAL = 5000; // millis
 
 export class ManaOceanService extends AbstractService {
   metadata = {
@@ -32,7 +32,7 @@ export class ManaOceanService extends AbstractService {
       // 'postManaOceanSettingsRequested',
       // 'manaOceanSettingsChanged',
     ],
-    needActions: ['putLocationRecord'],
+    needActions: ['putLocationRecord', 'putLocationRecords'],
     needRequests: ['manaOceanSettings', 'locationRecords'],
     listenEvents: [],
   };
@@ -84,19 +84,35 @@ export class ManaOceanService extends AbstractService {
     console.log('onTideLevelUpdate', 'moscowTimeInMinutes', moscowTimeInMinutes, 'tideHeight', tideHeight, firstLocation);
 
     this.executeOnModel({
-      type: 'putLocationRecord',
-      id: firstLocation.id,
-      props: {
-        options: {
-          ...firstLocation.options,
-          manaLevel: this.calcManaLevel([neutralManaLevel, tideHeight]),
-          manaLevelModifiers: {
-            neutralManaLevel,
-            tideHeight,
+      type: 'putLocationRecords',
+      updates: [{
+        id: firstLocation.id,
+        body: {
+          options: {
+            ...firstLocation.options,
+            manaLevel: this.calcManaLevel([neutralManaLevel, tideHeight]),
+            manaLevelModifiers: {
+              neutralManaLevel,
+              tideHeight,
+            },
           },
         },
-      },
+      }],
     });
+    // this.executeOnModel({
+    //   type: 'putLocationRecord',
+    //   id: firstLocation.id,
+    //   props: {
+    //     options: {
+    //       ...firstLocation.options,
+    //       manaLevel: this.calcManaLevel([neutralManaLevel, tideHeight]),
+    //       manaLevelModifiers: {
+    //         neutralManaLevel,
+    //         tideHeight,
+    //       },
+    //     },
+    //   },
+    // });
   }
 
   calcManaLevel(arr) {

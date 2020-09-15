@@ -15,9 +15,11 @@ export class LocationRecordService extends AbstractService {
       'postLocationRecord',
       'deleteLocationRecord',
       'putLocationRecord',
+      'putLocationRecords',
       'postLocationRecordConfirmed',
       'deleteLocationRecordConfirmed',
       'putLocationRecordConfirmed',
+      'putLocationRecordsConfirmed',
       'setLocationRecords',
     ],
     requests: ['locationRecord', 'locationRecords'],
@@ -25,9 +27,11 @@ export class LocationRecordService extends AbstractService {
       'postLocationRecord',
       'deleteLocationRecord',
       'putLocationRecord',
+      'putLocationRecords',
       'postLocationRecordRequested',
       'deleteLocationRecordRequested',
       'putLocationRecordRequested',
+      'putLocationRecordsRequested',
       'locationRecordsChanged',
     ],
     listenEvents: [],
@@ -75,6 +79,10 @@ export class LocationRecordService extends AbstractService {
     this.emit('putLocationRecordRequested', { id, props });
   }
 
+  putLocationRecords({ updates }) {
+    this.emit('putLocationRecordsRequested', { updates });
+  }
+
   postLocationRecord = ({ props }) => {
     this.emit('postLocationRecordRequested', { props });
   }
@@ -87,6 +95,15 @@ export class LocationRecordService extends AbstractService {
     const index = this.locationRecords.findIndex((br) => br.id === locationRecord.id);
     this.locationRecords[index] = locationRecord;
     this.emit('putLocationRecord', { locationRecord });
+  }
+
+  putLocationRecordsConfirmed({ locationRecords }) {
+    console.log(locationRecords);
+    // locationRecords.forEach((locationRecord) => {
+    //   const index = this.locationRecords.findIndex((br) => br.id === locationRecord.id);
+    //   this.locationRecords[index] = locationRecord;
+    // });
+    // this.emit('putLocationRecords', { locationRecords });
   }
 
   deleteLocationRecordConfirmed({ locationRecord }) {
