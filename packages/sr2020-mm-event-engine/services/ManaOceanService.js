@@ -15,7 +15,7 @@ import { isGeoLocation } from '../utils';
 //   invisibleMoonManaTideHeight: 1,
 //   moscowTime: 0,
 // };
-const TIDE_LEVEL_UPDATE_INTERVAL = 5000; // millis
+const TIDE_LEVEL_UPDATE_INTERVAL = 3000; // millis
 
 export class ManaOceanService extends AbstractService {
   metadata = {
@@ -71,16 +71,17 @@ export class ManaOceanService extends AbstractService {
     let { moscowTimeInMinutes, moscowTime } = getMoscowTime();
     // speed up time
     moscowTimeInMinutes = (moscowTime.minute() * 60 + moscowTime.second()) % 1440;
-    const tideHeight = getTideHeight2(moscowTimeInMinutes, manaOceanSettings);
+    // const tideHeight = getTideHeight2(moscowTimeInMinutes, manaOceanSettings);
 
-    if (this.prevTideHeight === tideHeight) {
-      console.log('Tide height not changed, skip mana level update');
-      return;
-    }
+    // if (this.prevTideHeight === tideHeight) {
+    //   console.log('Tide height not changed, skip mana level update');
+    //   return;
+    // }
+    const tideHeight = this.prevTideHeight === null ? -2 : (this.prevTideHeight === 2 ? -2 : (this.prevTideHeight + 1));
 
     this.prevTideHeight = tideHeight;
 
-    console.log('onTideLevelUpdate', moscowTimeInMinutes, tideHeight, firstLocation, manaOceanSettings);
+    console.log('onTideLevelUpdate', 'moscowTimeInMinutes', moscowTimeInMinutes, 'tideHeight', tideHeight, firstLocation);
 
     this.executeOnModel({
       type: 'putLocationRecord',
