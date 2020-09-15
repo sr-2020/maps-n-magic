@@ -8,6 +8,7 @@ export class ManaOceanLayer extends Component {
     super(props);
     this.state = {
     };
+    this.onPutLocationRecord = this.onPutLocationRecord.bind(this);
   }
 
   componentDidMount() {
@@ -65,7 +66,12 @@ export class ManaOceanLayer extends Component {
 
   subscribe(action, gameModel) {
     // gameModel[action]('postLocationRecord', this.onPostLocationRecord);
-    // gameModel[action]('putLocationRecord', this.onPutLocationRecord);
+    gameModel[action]('putLocationRecord', this.onPutLocationRecord);
+  }
+
+  onPutLocationRecord({ locationRecord }) {
+    const { t } = this.props;
+    this.manaOceanLayer.onPutLocationRecord(locationRecord, t);
   }
 
   render() {

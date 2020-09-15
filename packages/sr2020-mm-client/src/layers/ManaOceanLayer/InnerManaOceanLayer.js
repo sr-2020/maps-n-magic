@@ -120,7 +120,7 @@ export class InnerManaOceanLayer {
     const loc = L.polygon([polygon[0]], {
       // id, label, layer_id, color: options.color, weight: options.weight, fillOpacity: options.fillOpacity,
       // id, label, layer_id, color: '#2d3748', weight: 2, dashArray: [10], fillColor: manaFillColors[manaLevel], fillOpacity: 1,
-      id, label, layer_id, color: '#1a202c', weight: 2, dashArray: [7], fillColor: manaFillColors[manaLevel], fillOpacity: 1,
+      id, label, layer_id, color: '#1a202c', weight: 2, dashArray: [7], fillColor: manaFillColors[options.manaLevel], fillOpacity: 1,
     });
     loc.on('mouseover', function (e) {
       loc.bindTooltip(t('manaGeoLocationTooltip', { name: this.options.label, manaLevel }));
@@ -136,9 +136,15 @@ export class InnerManaOceanLayer {
     this.createAndAddLocation(setLocationEventHandlers, t)(locationRecord);
   }
 
-  onPutLocationRecord(locationRecord) {
+  onPutLocationRecord(locationRecord, t) {
+    const { manaLevel } = locationRecord.options;
     const loc = this.group.getLayers().find((loc2) => loc2.options.id === locationRecord.id);
     loc.setLatLngs([locationRecord.polygon[0]]);
+    loc.setStyle({ fillColor: manaFillColors[manaLevel] });
+    loc.on('mouseover', function (e) {
+      loc.bindTooltip(t('manaGeoLocationTooltip', { name: this.options.label, manaLevel }));
+      this.openTooltip();
+    });
   }
 
   onRemoveLocation(location, gameModel) {
