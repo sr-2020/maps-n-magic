@@ -97,6 +97,7 @@ export class LocationRecordService extends AbstractService {
 
   putLocationRecordConfirmed({ locationRecord }) {
     const index = this.locationRecords.findIndex((br) => br.id === locationRecord.id);
+    this.locationRecords = [...this.locationRecords];
     this.locationRecords[index] = locationRecord;
     this.emit('putLocationRecord', { locationRecord });
     this.emit('locationRecordsChanged2', {
@@ -122,7 +123,7 @@ export class LocationRecordService extends AbstractService {
   }
 
   postLocationRecordConfirmed({ locationRecord }) {
-    this.locationRecords.push(locationRecord);
+    this.locationRecords = [...this.locationRecords, locationRecord];
     // console.log('postBeaconRecord');
     this.emit('postLocationRecord', { locationRecord });
     this.emit('locationRecordsChanged2', {
