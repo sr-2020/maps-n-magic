@@ -5,9 +5,6 @@ import { DefaultSatelliteBackground } from 'sr2020-mm-client-core/layers/Default
 import { BaseContourLayer2 } from 'sr2020-mm-client-core/layers/BaseContourLayer2';
 import { Map } from 'sr2020-mm-client-core/maps/Map';
 import { BackgroundImageLayer } from '../../layers/BackgroundImageLayer';
-import { LocationLayer3 } from '../../layers/LocationLayer3';
-import { ManaOceanLayer } from '../../layers/ManaOceanLayer';
-import { ManaOceanLayer2 } from '../../layers/ManaOceanLayer2';
 import { InnerManaOceanLayer2 } from '../../layers/InnerManaOceanLayer2';
 // import { RescueServiceLayer } from '../../layers/RescueServiceLayer';
 
