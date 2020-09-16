@@ -44,15 +44,6 @@ function getArrDiff(arr, prevArr, getKey, hasDifference) {
     updated: [],
     removed: [],
   });
-  // const addedKeys = R.difference(arrKeys, prevArrKeys);
-  // const removedKeys = R.difference(prevArrKeys, arrKeys);
-  // const usedKeys = R.intersection(arrKeys, prevArrKeys);
-  // const updatedKeys = usedKeys.filter((key) => hasDifference(arrIndex[key], prevArrIndex[key]));
-  // return {
-  //   added: R.values(R.pick(addedKeys, arrIndex)),
-  //   removed: R.values(R.pick(removedKeys, prevArrIndex)),
-  //   updated: R.values(R.pick(updatedKeys, arrIndex)),
-  // };
 }
 
 const isNotEmptyPolygon = R.pipe(
@@ -148,35 +139,6 @@ export class InnerManaOceanLayer2 extends Component {
     this.group.clearLayers();
   }
 
-  // populate(gameModel, translator, t) {
-  //   const prepareArray = R.pipe(
-  //     R.filter(isGeoLocation),
-  //     R.filter(isNotEmptyPolygon),
-  //     R.map((location) => {
-  //       const copy = { ...location };
-  //       copy.polygon[0] = translator.moveTo(location.polygon[0]);
-  //       return copy;
-  //     }),
-  //   );
-  //   const locationsData = prepareArray(gameModel.get('locationRecords'));
-  //   R.map(this.createAndAddLocation(t), locationsData);
-
-  //   // const characterHealthStates = gameModel.get('characterHealthStates');
-  //   // const isClinicallyDead2 = (charId) => isClinicallyDead(characterHealthStates[charId]);
-  //   // R.keys(characterHealthStates).filter(isClinicallyDead2).forEach((characterId) => {
-  //   //   this.addCharacterToMarker(characterId, characterHealthStates[characterId].locationId, gameModel);
-  //   // });
-  // }
-
-  // createAndAddLocation = (t) => R.pipe(
-  //   this.createLocation(t),
-  //   // setLocationEventHandlers,
-  //   (location) => {
-  //     this.group.addLayer(location);
-  //     // this.getGroupByLayerId(location.options.layer_id).addLayer(location);
-  //   },
-  // );
-
   updateLocation({ item }) {
     const { t } = this.props;
     const loc = this.group.getLayers().find((loc2) => loc2.options.id === item.id);
@@ -210,7 +172,6 @@ export class InnerManaOceanLayer2 extends Component {
     loc.on('mouseout', function (e) {
       this.closeTooltip();
     });
-    // return loc;
     this.group.addLayer(loc);
   }
 
@@ -218,31 +179,6 @@ export class InnerManaOceanLayer2 extends Component {
     const location = this.group.getLayers().find((loc2) => loc2.options.id === locationData.id);
     this.group.removeLayer(location);
   }
-
-  // onPostLocationRecord(locationRecord, setLocationEventHandlers, t) {
-  //   this.createAndAddLocation(setLocationEventHandlers, t)(locationRecord);
-  // }
-
-  // onPutLocationRecord(locationRecord, t) {
-  //   const { manaLevel } = locationRecord.options;
-  //   const loc = this.group.getLayers().find((loc2) => loc2.options.id === locationRecord.id);
-  //   loc.setLatLngs([locationRecord.polygon[0]]);
-  //   loc.setStyle({ fillColor: manaFillColors[manaLevel] });
-  //   loc.on('mouseover', function (e) {
-  //     loc.bindTooltip(t('manaGeoLocationTooltip', { name: this.options.label, manaLevel }));
-  //     this.openTooltip();
-  //   });
-  // }
-
-  // onRemoveLocation(location, gameModel) {
-  //   // this.group.removeLayer(location);
-  //   // R.values(this.groups).forEach((group) => group.removeLayer(location));
-  //   // gameModel.execute({
-  //   //   type: 'deleteLocationRecord',
-  //   //   id: location.options.id,
-  //   // });
-  //   // this.updateLocationsView();
-  // }
 
   render() {
     return null;

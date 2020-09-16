@@ -8,6 +8,7 @@ import { BackgroundImageLayer } from '../../layers/BackgroundImageLayer';
 import { LocationLayer3 } from '../../layers/LocationLayer3';
 import { ManaOceanLayer } from '../../layers/ManaOceanLayer';
 import { ManaOceanLayer2 } from '../../layers/ManaOceanLayer2';
+import { InnerManaOceanLayer2 } from '../../layers/ManaOceanLayer2/InnerManaOceanLayer2';
 // import { RescueServiceLayer } from '../../layers/RescueServiceLayer';
 
 export function ManaOceanMap(props) {
@@ -35,7 +36,10 @@ export function ManaOceanMap(props) {
       {/* <ManaOceanLayer
         enableByDefault
       /> */}
-      <ManaOceanLayer2
+      {/* <ManaOceanLayer2
+        enableByDefault
+      /> */}
+      <InnerManaOceanLayer2
         enableByDefault
       />
     </Map>
