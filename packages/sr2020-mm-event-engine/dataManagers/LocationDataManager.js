@@ -22,6 +22,7 @@ export class LocationDataManager extends CrudDataManager {
 
   // eslint-disable-next-line react/sort-comp
   subscribe(action, gameModel) {
+    super.subscribe(action, gameModel);
     // gameModel[action](`post${this.ccEntityName}Requested`, this.onPostEntityRequested);
     gameModel[action](`put${this.ccEntityName}sRequested`, this.onPutEntitiesRequested);
     // gameModel[action](`delete${this.ccEntityName}Requested`, this.onDeleteEntityRequested);

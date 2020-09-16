@@ -114,7 +114,7 @@ export class InnerManaOceanLayer {
   createLocation = R.curry((t, {
     polygon, label, id, layer_id, options,
   }) => {
-    const manaLevel = (id % 5) + 1;
+    // const manaLevel = (id % 5) + 1;
     // const manaLevel = 5;
     // const manaLevel = 1;
     const loc = L.polygon([polygon[0]], {
@@ -123,7 +123,7 @@ export class InnerManaOceanLayer {
       id, label, layer_id, color: '#1a202c', weight: 2, dashArray: [7], fillColor: manaFillColors[options.manaLevel], fillOpacity: 1,
     });
     loc.on('mouseover', function (e) {
-      loc.bindTooltip(t('manaGeoLocationTooltip', { name: this.options.label, manaLevel }));
+      loc.bindTooltip(t('manaGeoLocationTooltip', { name: this.options.label, manaLevel: options.manaLevel }));
       this.openTooltip();
     });
     loc.on('mouseout', function (e) {

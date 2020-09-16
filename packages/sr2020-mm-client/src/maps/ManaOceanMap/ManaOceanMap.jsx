@@ -7,6 +7,7 @@ import { Map } from 'sr2020-mm-client-core/maps/Map';
 import { BackgroundImageLayer } from '../../layers/BackgroundImageLayer';
 import { LocationLayer3 } from '../../layers/LocationLayer3';
 import { ManaOceanLayer } from '../../layers/ManaOceanLayer';
+import { ManaOceanLayer2 } from '../../layers/ManaOceanLayer2';
 // import { RescueServiceLayer } from '../../layers/RescueServiceLayer';
 
 export function ManaOceanMap(props) {
@@ -31,7 +32,10 @@ export function ManaOceanMap(props) {
         editable={false}
         imageClassName="grayscale tw-opacity-20"
       />
-      <ManaOceanLayer
+      {/* <ManaOceanLayer
+        enableByDefault
+      /> */}
+      <ManaOceanLayer2
         enableByDefault
       />
     </Map>
