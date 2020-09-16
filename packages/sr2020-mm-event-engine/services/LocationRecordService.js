@@ -33,6 +33,7 @@ export class LocationRecordService extends AbstractService {
       'putLocationRecordRequested',
       'putLocationRecordsRequested',
       'locationRecordsChanged',
+      'locationRecordsChanged2',
     ],
     listenEvents: [],
   };
@@ -73,6 +74,9 @@ export class LocationRecordService extends AbstractService {
     this.emit('locationRecordsChanged', {
       locationRecords,
     });
+    this.emit('locationRecordsChanged2', {
+      locationRecords,
+    });
   }
 
   putLocationRecord({ id, props }) {
@@ -95,6 +99,9 @@ export class LocationRecordService extends AbstractService {
     const index = this.locationRecords.findIndex((br) => br.id === locationRecord.id);
     this.locationRecords[index] = locationRecord;
     this.emit('putLocationRecord', { locationRecord });
+    this.emit('locationRecordsChanged2', {
+      locationRecords: this.locationRecords,
+    });
   }
 
   putLocationRecordsConfirmed({ locationRecords }) {
@@ -109,11 +116,17 @@ export class LocationRecordService extends AbstractService {
   deleteLocationRecordConfirmed({ locationRecord }) {
     this.locationRecords = this.locationRecords.filter((br) => br.id !== locationRecord.id);
     this.emit('deleteLocationRecord', { locationRecord });
+    this.emit('locationRecordsChanged2', {
+      locationRecords: this.locationRecords,
+    });
   }
 
   postLocationRecordConfirmed({ locationRecord }) {
     this.locationRecords.push(locationRecord);
     // console.log('postBeaconRecord');
     this.emit('postLocationRecord', { locationRecord });
+    this.emit('locationRecordsChanged2', {
+      locationRecords: this.locationRecords,
+    });
   }
 }

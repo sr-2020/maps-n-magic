@@ -1,6 +1,6 @@
 export const gettable = (state) => ({
   async get() {
-    const response = await fetch(state.url);
+    const response = await fetch(`${state.url}?limit=200`);
     if (!response.ok) {
       const text = await response.text();
       throw new Error(`Network response was not ok ${text}`);

@@ -10,16 +10,6 @@ export class LocationDataManager extends CrudDataManager {
     // this.onDeleteEntityRequested = this.onDeleteEntityRequested.bind(this);
   }
 
-  initialize() {
-    super.initialize();
-    this.subscribe('on', this.gameModel);
-  }
-
-  dispose() {
-    super.dispose();
-    this.subscribe('off', this.gameModel);
-  }
-
   // eslint-disable-next-line react/sort-comp
   subscribe(action, gameModel) {
     super.subscribe(action, gameModel);
@@ -44,25 +34,4 @@ export class LocationDataManager extends CrudDataManager {
       }).catch(this.getErrorHandler(`Error on ${this.entityName}s put`));
     }, 500);
   }
-
-  // onDeleteEntityRequested({ id }) {
-  //   this.dataProvider.delete({ id }).then(() => {
-  //     const entity = this.entities.find((br) => br.id === id);
-  //     this.entities = this.entities.filter((br) => br.id !== id);
-  //     this.gameModel.execute({
-  //       type: `delete${this.ccEntityName}Confirmed`,
-  //       [this.entityName]: entity,
-  //     });
-  //   }).catch(this.getErrorHandler(`Error on ${this.entityName} delete`));
-  // }
-
-  // onPostEntityRequested({ props }) {
-  //   this.dataProvider.post({ props }).then((entity) => {
-  //     this.entities.push(entity);
-  //     this.gameModel.execute({
-  //       type: `post${this.ccEntityName}Confirmed`,
-  //       [this.entityName]: entity,
-  //     });
-  //   }).catch(this.getErrorHandler(`Error on ${this.entityName} post`));
-  // }
 }

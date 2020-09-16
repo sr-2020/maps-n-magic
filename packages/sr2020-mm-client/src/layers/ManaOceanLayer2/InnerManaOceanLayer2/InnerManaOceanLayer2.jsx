@@ -128,6 +128,7 @@ export class InnerManaOceanLayer2 extends Component {
   }
 
   componentWillUnmount() {
+    this.clear();
     console.log('InnerManaOceanLayer2 will unmount');
   }
 
@@ -193,7 +194,7 @@ export class InnerManaOceanLayer2 extends Component {
     const {
       polygon, label, id, layer_id, options,
     } = locationData;
-    const { t } = this.props;
+    const { t, translator } = this.props;
     // const manaLevel = (id % 5) + 1;
     // const manaLevel = 5;
     // const manaLevel = 1;
@@ -215,14 +216,6 @@ export class InnerManaOceanLayer2 extends Component {
 
   removeLocation(locationData) {
     const location = this.group.getLayers().find((loc2) => loc2.options.id === locationData.id);
-    // if (!beacon) { // put beacon
-    //   this.createAndAddBeacon(setBeaconEventHandlers, t)(beaconRecord);
-    // } else if (hasLatLng(beaconRecord)) { // post beacon
-    //   beacon.setLatLng({
-    //     lat: beaconRecord.lat,
-    //     lng: beaconRecord.lng,
-    //   });
-    // } else { // remove beacon
     this.group.removeLayer(location);
   }
 
