@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import './ManaOceanLayer2.css';
-import { InnerManaOceanLayer2 } from './InnerManaOceanLayer2';
+import { InnerManaOceanLayer2 } from '../InnerManaOceanLayer2';
 
 export class ManaOceanLayer2 extends Component {
   constructor(props) {
