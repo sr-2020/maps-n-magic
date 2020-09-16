@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import L from 'leaflet/dist/leaflet-src';
 import * as R from 'ramda';
-import './InnerManaOceanLayer2.css';
+import './ManaOceanLayer.css';
 
 import { isGeoLocation } from 'sr2020-mm-event-engine/utils';
 
@@ -64,7 +64,7 @@ function hasLocationDifference(item, prevItem) {
     || item.options.manaLevel !== prevItem.options.manaLevel;
 }
 
-export class InnerManaOceanLayer2 extends Component {
+export class ManaOceanLayer extends Component {
   group = L.layerGroup([]);
 
   nameKey = 'manaOceanLayer';
