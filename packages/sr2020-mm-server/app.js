@@ -5,11 +5,15 @@ const cookieParser = require('cookie-parser');
 const logger = require('morgan');
 
 const cors = require('cors');
+const { makeGameModel } = require('sr2020-mm-event-engine/configs/serverEventEngine');
+
 const indexRouter = require('./routes/index');
 const fileListRouter = require('./routes/fileList');
 const characterStatesRouter = require('./routes/characterStates');
 const fileRouter = require('./routes/file');
 const usersRouter = require('./routes/users');
+
+makeGameModel({});
 
 const app = express();
 
