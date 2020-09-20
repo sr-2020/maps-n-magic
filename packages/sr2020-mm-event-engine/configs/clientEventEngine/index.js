@@ -28,6 +28,7 @@ import { ReadWriteSettingsDataManager } from '../../dataManagers/SettingsDataMan
 import { SingleReadStrategy } from '../../dataManagers/SingleReadStrategy';
 import { PollingReadStrategy } from '../../dataManagers/PollingReadStrategy';
 import { DataBinding } from '../../dataManagers/DataBinding';
+import { WsDataBinding } from '../../dataManagers/WsDataBinding';
 
 import {
   RemoteLocationRecordProvider as LocationRecordProvider,
@@ -35,6 +36,8 @@ import {
   RemoteUsersRecordProvider as UserRecordProvider,
   ManaOceanSettingsProvider,
 } from '../../api/position';
+
+import { WSConnector } from '../../api/wsConnection';
 
 import { EventEngine } from '../../core/EventEngine';
 
@@ -66,6 +69,8 @@ export function makeGameModel(database) {
   const gameModel = gameServer.getGameModel();
   fillGameModelWithBots(gameModel);
 
+  const wsConnection = new WSConnector(gameModel);
+
   gameServer.addDataBinding(new DataBinding({
     gameModel,
     entityName: 'beaconRecord',
@@ -74,14 +79,14 @@ export function makeGameModel(database) {
     ReadStrategy: PollingReadStrategy,
     ReadStrategyArgs: [15000],
   }));
-  gameServer.addDataBinding(new DataBinding({
-    gameModel,
-    entityName: 'locationRecord',
-    DataProvider: LocationRecordProvider,
-    DataManager: LocationDataManager,
-    ReadStrategy: PollingReadStrategy,
-    ReadStrategyArgs: [15000],
-  }));
+  // gameServer.addDataBinding(new DataBinding({
+  //   gameModel,
+  //   entityName: 'locationRecord',
+  //   DataProvider: LocationRecordProvider,
+  //   DataManager: LocationDataManager,
+  //   ReadStrategy: PollingReadStrategy,
+  //   ReadStrategyArgs: [15000],
+  // }));
   gameServer.addDataBinding(new DataBinding({
     gameModel,
     entityName: 'userRecord',
@@ -90,13 +95,16 @@ export function makeGameModel(database) {
     ReadStrategy: PollingReadStrategy,
     ReadStrategyArgs: [15000, 'reloadUserRecords'],
   }));
-  gameServer.addDataBinding(new DataBinding({
-    gameModel,
-    entityName: 'manaOceanSettings',
-    DataProvider: ManaOceanSettingsProvider,
-    DataManager: ReadWriteSettingsDataManager,
-    ReadStrategy: PollingReadStrategy,
-    ReadStrategyArgs: [15000],
+  gameServer.addDataBinding(new WsDataBinding({
+    gameModel, entityName: 'locationRecord', wsConnection,
   }));
+  // gameServer.addDataBinding(new DataBinding({
+  //   gameModel,
+  //   entityName: 'manaOceanSettings',
+  //   DataProvider: ManaOceanSettingsProvider,
+  //   DataManager: ReadWriteSettingsDataManager,
+  //   ReadStrategy: PollingReadStrategy,
+  //   ReadStrategyArgs: [15000],
+  // }));
   return { gameModel, gameServer };
 }

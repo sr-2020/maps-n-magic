@@ -75,24 +75,25 @@ export class LocationRecordService extends AbstractService {
       locationRecords,
     });
     this.emit('locationRecordsChanged2', {
+      type: 'locationRecordsChanged2',
       locationRecords,
     });
   }
 
-  putLocationRecord({ id, props }) {
-    this.emit('putLocationRecordRequested', { id, props });
+  putLocationRecord(action) {
+    this.emit('putLocationRecordRequested', action);
   }
 
-  putLocationRecords({ updates }) {
-    this.emit('putLocationRecordsRequested', { updates });
+  putLocationRecords(action) {
+    this.emit('putLocationRecordsRequested', action);
   }
 
-  postLocationRecord = ({ props }) => {
-    this.emit('postLocationRecordRequested', { props });
+  postLocationRecord = (action) => {
+    this.emit('postLocationRecordRequested', action);
   }
 
-  deleteLocationRecord = ({ id }) => {
-    this.emit('deleteLocationRecordRequested', { id });
+  deleteLocationRecord = (action) => {
+    this.emit('deleteLocationRecordRequested', action);
   }
 
   putLocationRecordConfirmed({ locationRecord }) {
@@ -101,6 +102,7 @@ export class LocationRecordService extends AbstractService {
     this.locationRecords[index] = locationRecord;
     this.emit('putLocationRecord', { locationRecord });
     this.emit('locationRecordsChanged2', {
+      type: 'locationRecordsChanged2',
       locationRecords: this.locationRecords,
     });
   }
@@ -118,6 +120,7 @@ export class LocationRecordService extends AbstractService {
     this.locationRecords = this.locationRecords.filter((br) => br.id !== locationRecord.id);
     this.emit('deleteLocationRecord', { locationRecord });
     this.emit('locationRecordsChanged2', {
+      type: 'locationRecordsChanged2',
       locationRecords: this.locationRecords,
     });
   }
@@ -127,6 +130,7 @@ export class LocationRecordService extends AbstractService {
     // console.log('postBeaconRecord');
     this.emit('postLocationRecord', { locationRecord });
     this.emit('locationRecordsChanged2', {
+      type: 'locationRecordsChanged2',
       locationRecords: this.locationRecords,
     });
   }
