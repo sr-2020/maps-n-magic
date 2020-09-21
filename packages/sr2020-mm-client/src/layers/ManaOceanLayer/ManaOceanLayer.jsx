@@ -3,7 +3,7 @@ import L from 'leaflet/dist/leaflet-src';
 import * as R from 'ramda';
 import './ManaOceanLayer.css';
 
-import { isGeoLocation } from 'sr2020-mm-event-engine/utils';
+import { isGeoLocation, getArrDiff } from 'sr2020-mm-event-engine/utils';
 
 const manaFillColors = { // based on h202
   1: 'white', // hsla(202, 60%, 90%, 1)
@@ -12,39 +12,6 @@ const manaFillColors = { // based on h202
   4: '#2ba6ee', // hsla(202, 85%, 55%, 1)
   5: '#0081cc', // hsla(202, 100%, 40%, 1)
 };
-
-function getArrDiff(arr, prevArr, getKey, hasDifference) {
-  const arrIndex = R.indexBy(getKey, arr);
-  const prevArrIndex = R.indexBy(getKey, prevArr);
-  const arrKeys = R.keys(arrIndex);
-  if (arrKeys.length !== arr.length) {
-    console.error('arr keys are not unique');
-  }
-  const prevArrKeys = R.keys(prevArrIndex);
-  if (prevArrKeys.length !== prevArr.length) {
-    console.error('prevArr keys are not unique');
-  }
-  return R.union(arrKeys, prevArrKeys).reduce((acc, key) => {
-    if (!!arrIndex[key] && !!prevArrIndex[key]) {
-      if (hasDifference(arrIndex[key], prevArrIndex[key])) {
-        acc.updated.push({
-          item: arrIndex[key],
-          prevItem: prevArrIndex[key],
-        });
-      }
-    } else if (arrIndex[key]) {
-      acc.added.push(arrIndex[key]);
-    } else { // !!prevArrIndex[key]
-      acc.removed.push(prevArrIndex[key]);
-    }
-
-    return acc;
-  }, {
-    added: [],
-    updated: [],
-    removed: [],
-  });
-}
 
 const isNotEmptyPolygon = R.pipe(
   R.prop('polygon'),

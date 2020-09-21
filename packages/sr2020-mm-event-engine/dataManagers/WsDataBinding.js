@@ -44,6 +44,7 @@ export class WsDataBinding {
   subscribe(action, gameModel) {
     gameModel[action](`post${this.ccEntityName}Requested`, this.emit);
     gameModel[action](`put${this.ccEntityName}Requested`, this.emit);
+    gameModel[action](`put${this.ccEntityName}sRequested`, this.emit);
     gameModel[action](`delete${this.ccEntityName}Requested`, this.emit);
   }
 
