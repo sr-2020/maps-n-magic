@@ -3,8 +3,46 @@ import L from 'leaflet/dist/leaflet-src';
 import * as R from 'ramda';
 import './BackgroundImageLayer2.css';
 
-import { getArrDiff } from 'sr2020-mm-event-engine/utils';
+import { getArrDiff, latLngsToBounds } from 'sr2020-mm-event-engine/utils';
 import { BackgroundImagePopup } from '../BackgroundImageLayer/BackgroundImagePopup';
+
+function getTitleLatLngBounds(latlngs) {
+  const bounds = latLngsToBounds(latlngs);
+  const nw = bounds.getNorthWest();
+  const ne = L.latLng({
+    // lat: nw.lat + 0.0005 / 2,
+    // lng: nw.lng + 0.0001,
+    lat: nw.lat + 0.0005 / 2,
+    lng: nw.lng + 0.0032,
+    // lng: nw.lng + 0.01,
+    // lng: nw.lng,
+  });
+  return L.latLngBounds(nw, ne);
+}
+
+function createTitle(imageData) {
+  const { id, name, latlngs } = imageData;
+  const svgElement = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+  svgElement.setAttribute('xmlns', 'http://www.w3.org/2000/svg');
+  // svgElement.setAttribute('viewBox', '0 0 200 200');
+  svgElement.setAttribute('viewBox', '0 0 800 100');
+  // <rect width="800" height="100" style="fill:white"/>
+  // <rect height="100" class="svg-title-rect"/>
+  // svgElement.innerHTML = `
+  //   <text x="0" y="80" class="svg-title-text">${name}</text>
+  //   `;
+  // <rect x="75" y="23" width="50" height="50" style="fill:red"/>
+  // <rect x="75" y="123" width="50" height="50" style="fill:#0013ff"/>
+  // const svgElementBounds = [[32, -130], [13, -100]];
+  const svgElementBounds = getTitleLatLngBounds(latlngs);
+  const titleRect = L.svgOverlay(svgElement, svgElementBounds, { id });
+  setTitleText(svgElement, name);
+  return titleRect;
+}
+
+function setTitleText(svgElement, text) {
+  svgElement.innerHTML = `<text x="0" y="80" class="svg-title-text">${text}</text>`;
+}
 
 export class BackgroundImageLayer2 extends Component {
   imageGroup = L.layerGroup([]);
@@ -30,8 +68,6 @@ export class BackgroundImageLayer2 extends Component {
     this.createBackgroundImage = this.createBackgroundImage.bind(this);
     this.updateBackgroundImage = this.updateBackgroundImage.bind(this);
     this.removeBackgroundImage = this.removeBackgroundImage.bind(this);
-    // this.updateLocation = this.updateLocation.bind(this);
-    // this.removeLocation = this.removeLocation.bind(this);
   }
 
   componentDidMount() {
@@ -40,7 +76,6 @@ export class BackgroundImageLayer2 extends Component {
     } = this.props;
     this.imagePopupDom = document.createElement('div');
     // this.subscribe('on', gameModel);
-    // this.manaOceanLayer = new InnerManaOceanLayer();
     this.communicatorSubscribe('on');
     this.imagePopup = L.popup();
     layerCommunicator.emit('setLayersMeta', {
@@ -100,7 +135,7 @@ export class BackgroundImageLayer2 extends Component {
 
   updateBackgroundImages({ added = [], removed = [], updated = [] }) {
     R.map(this.createBackgroundImage, added);
-    // R.map(this.updateLocation, updated);
+    R.map(this.updateBackgroundImage, updated);
     R.map(this.removeBackgroundImage, removed);
   }
 
@@ -124,9 +159,8 @@ export class BackgroundImageLayer2 extends Component {
       click: this.onRectangleClick,
       'pm:edit': this.onRectangleEdit,
     });
-    // this.updateImageTooltip(image);
     this.rectangleGroup.addLayer(rectangle);
-    const titleRect = this.createTitle(rectangle);
+    const titleRect = createTitle(imageData);
     this.titleGroup.addLayer(titleRect);
     const imageLayer = L.imageOverlay(image, latlngs, {
       id,
@@ -134,28 +168,6 @@ export class BackgroundImageLayer2 extends Component {
       errorOverlayUrl: 'images/noImage.svg',
     });
     this.imageGroup.addLayer(imageLayer);
-    // this.updateLocationsView();
-
-    // const {
-    //   polygon, label, id, layer_id, options,
-    // } = locationData;
-    // const { t, translator } = this.props;
-    // // const manaLevel = (id % 5) + 1;
-    // // const manaLevel = 5;
-    // // const manaLevel = 1;
-    // const loc = L.polygon([polygon[0]], {
-    //   // id, label, layer_id, color: options.color, weight: options.weight, fillOpacity: options.fillOpacity,
-    //   // id, label, layer_id, color: '#2d3748', weight: 2, dashArray: [10], fillColor: manaFillColors[manaLevel], fillOpacity: 1,
-    //   id, label, layer_id, color: '#1a202c', weight: 2, dashArray: [7], fillColor: manaFillColors[options.manaLevel], fillOpacity: 1,
-    // });
-    // loc.on('mouseover', function (e) {
-    //   loc.bindTooltip(t('manaGeoLocationTooltip', { name: this.options.label, manaLevel: options.manaLevel }));
-    //   this.openTooltip();
-    // });
-    // loc.on('mouseout', function (e) {
-    //   this.closeTooltip();
-    // });
-    // this.group.addLayer(loc);
   }
 
   updateBackgroundImage({ item }) {
@@ -165,22 +177,12 @@ export class BackgroundImageLayer2 extends Component {
     const rect = this.rectangleGroup.getLayers().find((rect2) => rect2.options.id === id);
     rect.setLatLngs(latlngs);
     L.setOptions(rect, { name, image });
-    // this.imageGroup.removeLayer(rect);
     const imageLayer = this.imageGroup.getLayers().find((image2) => image2.options.id === id);
-    // this.imageGroup.removeLayer(image);
-    imageLayer.setLatLngs(latlngs);
+    imageLayer.setBounds(latlngs);
     imageLayer.setUrl(image);
     const title = this.titleGroup.getLayers().find((title2) => title2.options.id === id);
-    // this.titleGroup.removeLayer(title);
-    // const loc = this.group.getLayers().find((loc2) => loc2.options.id === item.id);
-    // loc.setLatLngs([item.polygon[0]]);
-    // const { manaLevel } = item.options;
-    // loc.setStyle({ fillColor: manaFillColors[manaLevel] });
-    // L.setOptions(loc, { label: item.label });
-    // loc.on('mouseover', function (e) {
-    //   loc.bindTooltip(t('manaGeoLocationTooltip', { name: this.options.label, manaLevel }));
-    //   this.openTooltip();
-    // });
+    setTitleText(title.getElement(), name);
+    title.setBounds(getTitleLatLngBounds(latlngs));
   }
 
   removeBackgroundImage(imageData) {
@@ -191,69 +193,6 @@ export class BackgroundImageLayer2 extends Component {
     this.imageGroup.removeLayer(image);
     const title = this.titleGroup.getLayers().find((title2) => title2.options.id === id);
     this.titleGroup.removeLayer(title);
-  }
-
-  // eslint-disable-next-line class-methods-use-this
-  createTitle(rectangle) {
-    const { id, name } = rectangle.options;
-    const bounds = this.getTitleLatLngBounds(rectangle);
-    const svgElement = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
-    svgElement.setAttribute('xmlns', 'http://www.w3.org/2000/svg');
-    // svgElement.setAttribute('viewBox', '0 0 200 200');
-    svgElement.setAttribute('viewBox', '0 0 800 100');
-    // <rect width="800" height="100" style="fill:white"/>
-    // <rect height="100" class="svg-title-rect"/>
-    svgElement.innerHTML = `
-      <text x="0" y="80" class="svg-title-text">${name}</text>
-      `;
-    // <rect x="75" y="23" width="50" height="50" style="fill:red"/>
-    // <rect x="75" y="123" width="50" height="50" style="fill:#0013ff"/>
-    // const svgElementBounds = [[32, -130], [13, -100]];
-    const svgElementBounds = bounds;
-    const titleRect = L.svgOverlay(svgElement, svgElementBounds, { id });
-    return titleRect;
-
-    // const bounds = rectangle.getBounds();
-    // const nw = bounds.getNorthWest();
-    // const marker = L.marker(nw, { id });
-    // // const myIcon = L.divIcon({ className: 'my-div-icon' });
-    // const myIcon = L.divIcon({
-    //   iconSize: [200, 40],
-    //   iconAnchor: [0, 40],
-    //   html: name,
-    //   // popupAnchor: [1, -34],
-    //   // shadowSize: [41, 41],
-    // });
-    // // marker.setIcon(index % 2 ? myIcon : getIcon('green'));
-    // // marker.setIcon(getIcon('green'));
-    // marker.setIcon(myIcon);
-    // return marker;
-
-    // const bounds = this.getTitleLatLngBounds(rectangle);
-    // const titleRect = L.rectangle(bounds, {
-    //   id,
-    //   interactive: false,
-    //   pmIgnore: true,
-    //   opacity: 0,
-    //   fill: false,
-    // });
-    // this.updateImageTooltip(titleRect, name);
-    // return titleRect;
-  }
-
-  // eslint-disable-next-line class-methods-use-this
-  getTitleLatLngBounds(rectangle) {
-    const bounds = rectangle.getBounds();
-    const nw = bounds.getNorthWest();
-    const ne = L.latLng({
-      // lat: nw.lat + 0.0005 / 2,
-      // lng: nw.lng + 0.0001,
-      lat: nw.lat + 0.0005 / 2,
-      lng: nw.lng + 0.0032,
-      // lng: nw.lng + 0.01,
-      // lng: nw.lng,
-    });
-    return L.latLngBounds(nw, ne);
   }
 
   communicatorSubscribe(action) {
@@ -270,7 +209,6 @@ export class BackgroundImageLayer2 extends Component {
     if (event.layer instanceof L.Rectangle) {
       const rect = event.layer;
       console.log('rectangle created');
-      // this.imageLayer.onCreateImage(event.layer, gameModel, translator, this.setLocationEventHandlers);
       const latlngs = translator.moveFrom(rect.getLatLngs());
       gameModel.execute({
         type: 'postBackgroundImage',
@@ -342,11 +280,7 @@ export class BackgroundImageLayer2 extends Component {
     const { value } = e.target;
     const { gameModel } = this.props;
     const { id } = this.state.curBackgroundImage;
-    // this.imageLayer.onLocationChange(prop, value, gameModel, id);
-    // this.imageLayer.onBackgroundImageChange(prop, value, gameModel, id);
 
-    // const rectangle = this.rectangleGroup.getLayers().find((rect) => rect.options.id === id);
-    // if (prop === 'name' || prop === 'manaLevel') {
     if (prop === 'name' || prop === 'image') {
       // rectangle.options[prop] = value;
       gameModel.execute({
@@ -364,13 +298,7 @@ export class BackgroundImageLayer2 extends Component {
         curBackgroundImage,
       });
     });
-    // this.imageLayer.updateLocationsView();
   }
-
-  // removeLocation(locationData) {
-  //   const location = this.group.getLayers().find((loc2) => loc2.options.id === locationData.id);
-  //   this.group.removeLayer(location);
-  // }
 
   render() {
     const {
@@ -379,7 +307,6 @@ export class BackgroundImageLayer2 extends Component {
     if (!curBackgroundImage) {
       return null;
     }
-    // return null;
     return (
       <BackgroundImagePopup
         imagePopupDom={this.imagePopupDom}

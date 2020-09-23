@@ -1,4 +1,6 @@
 import * as R from 'ramda';
+import 'sr2020-mm-hacks-n-fixes/leafletWindowMP';
+import { LatLngBounds } from 'leaflet/src/geo/LatLngBounds';
 
 export function isGeoLocation(location) {
   return location.layer_id === 1 && !R.isEmpty(location.polygon);
@@ -37,4 +39,10 @@ export function getArrDiff(arr, prevArr, getKey, hasDifference = notEquals) {
     updated: [],
     removed: [],
   });
+}
+
+export function latLngsToBounds(latLngs) {
+  const bounds = new LatLngBounds();
+  latLngs.forEach(bounds.extend.bind(bounds));
+  return bounds;
 }

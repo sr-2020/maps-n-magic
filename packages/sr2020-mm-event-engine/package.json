@@ -7,8 +7,10 @@
   },
   "dependencies": {
     "sr2020-mm-data": "*",
+    "sr2020-mm-hacks-n-fixes": "*",
     "@thi.ng/geom-isec": "^0.5.7",
     "moment": "^2.27.0",
-    "moment-timezone": "^0.5.31"
+    "moment-timezone": "^0.5.31",
+    "leaflet": "^1.7.1"
   }
 }

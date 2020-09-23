@@ -1,0 +1,10 @@
+{
+  "name": "sr2020-mm-hacks-n-fixes",
+  "description": "Monkey patching, dirty hacks and other bad things",
+  "version": "1.0.0",
+  "peerDependencies": {
+    "ramda": "^0.27.1"
+  },
+  "dependencies": {
+  }
+}
