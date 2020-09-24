@@ -4,11 +4,9 @@ import './RescueServiceMap.css';
 import { DefaultSatelliteBackground } from 'sr2020-mm-client-core/layers/DefaultSatelliteBackground';
 import { BaseContourLayer2 } from 'sr2020-mm-client-core/layers/BaseContourLayer2';
 import { Map } from 'sr2020-mm-client-core/maps/Map';
-import { BackgroundImageLayer } from '../../layers/BackgroundImageLayer';
+import { BackgroundImageDisplayLayer } from '../../layers/BackgroundImageDisplayLayer';
 import { LocationLayer3 } from '../../layers/LocationLayer3';
 import { RescueServiceLayer } from '../../layers/RescueServiceLayer';
-
-// import { RescueServiceMapPropTypes } from '../../types';
 
 export function RescueServiceMap(props) {
   const {
@@ -26,9 +24,8 @@ export function RescueServiceMap(props) {
       <BaseContourLayer2
         enableByDefault
       />
-      <BackgroundImageLayer
+      <BackgroundImageDisplayLayer
         enableByDefault
-        editable={false}
       />
       <LocationLayer3
         enableByDefault
@@ -39,5 +36,3 @@ export function RescueServiceMap(props) {
     </Map>
   );
 }
-
-// RescueServiceMap.propTypes = RescueServiceMapPropTypes;

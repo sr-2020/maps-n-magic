@@ -4,7 +4,7 @@ import * as R from 'ramda';
 import './BackgroundImageLayer2.css';
 
 import { getArrDiff, latLngsToBounds } from 'sr2020-mm-event-engine/utils';
-import { BackgroundImagePopup } from '../BackgroundImageLayer/BackgroundImagePopup';
+import { BackgroundImagePopup } from '../BackgroundImageEditLayer/BackgroundImagePopup';
 
 function getTitleLatLngBounds(latlngs) {
   const bounds = latLngsToBounds(latlngs);

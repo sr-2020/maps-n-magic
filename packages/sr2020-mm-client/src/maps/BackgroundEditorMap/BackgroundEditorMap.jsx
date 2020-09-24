@@ -5,7 +5,7 @@ import { Map } from 'sr2020-mm-client-core/maps/Map';
 
 import { DefaultSatelliteBackground } from 'sr2020-mm-client-core/layers/DefaultSatelliteBackground';
 import { BaseContourLayer2 } from 'sr2020-mm-client-core/layers/BaseContourLayer2';
-import { BackgroundImageLayer } from '../../layers/BackgroundImageLayer';
+import { BackgroundImageEditLayer } from '../../layers/BackgroundImageEditLayer';
 import { GoogleMapsExportedDataLayer } from '../../layers/GoogleMapsExportedDataLayer';
 
 export function BackgroundEditorMap(props) {
@@ -25,12 +25,11 @@ export function BackgroundEditorMap(props) {
       <BaseContourLayer2
         enableByDefault
       />
-      <BackgroundImageLayer
+      <BackgroundImageEditLayer
         enableByDefault
-        editable
       />
       <GoogleMapsExportedDataLayer
-        enableByDefault
+        enableByDefault={false}
       />
     </Map>
   );

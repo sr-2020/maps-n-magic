@@ -4,7 +4,7 @@ import * as R from 'ramda';
 import './BackgroundImageEditLayer.css';
 
 import { getArrDiff } from 'sr2020-mm-event-engine/utils';
-import { BackgroundImagePopup } from '../BackgroundImageLayer/BackgroundImagePopup';
+import { BackgroundImagePopup } from './BackgroundImagePopup';
 
 import { BackgroundImageDisplayLayer } from '../BackgroundImageDisplayLayer';
 
