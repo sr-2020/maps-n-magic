@@ -13,7 +13,6 @@ import { VoronoiPolygonsLayer2 } from '../../layers/VoronoiPolygonsLayer2';
 import { MarkerLayer2 } from '../../layers/MarkerLayer2';
 import { LocationLayer2 } from '../../layers/LocationLayer2';
 import { SoundDebug } from '../../layers/SoundDebug';
-import { ImageBackground } from '../../layers/ImageBackground';
 
 // import { CommonMapPropTypes } from '../../types';
 
@@ -32,7 +31,6 @@ export function CommonMap(props) {
       }}
     >
       <DefaultSatelliteBackground enableByDefault />
-      {/* <ImageBackground  /> */}
       <BaseContourLayer2
         enableByDefault
       />
