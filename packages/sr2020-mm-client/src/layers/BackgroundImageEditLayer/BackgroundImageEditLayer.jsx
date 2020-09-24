@@ -7,12 +7,9 @@ import { getArrDiff } from 'sr2020-mm-event-engine/utils';
 import { BackgroundImagePopup } from './BackgroundImagePopup';
 
 import { BackgroundImageDisplayLayer } from '../BackgroundImageDisplayLayer';
+import { InnerBgImageDisplayLayer } from './InnerBgImageDisplayLayer.jsx';
 
 export class BackgroundImageEditLayer extends Component {
-  rectangleGroup = L.layerGroup([]);
-
-  rectangleGroupNameKey = 'rectangleGroupLayer';
-
   constructor(props) {
     super(props);
     this.state = {
@@ -21,9 +18,6 @@ export class BackgroundImageEditLayer extends Component {
     this.onCreateLayer = this.onCreateLayer.bind(this);
     this.onRemoveLayer = this.onRemoveLayer.bind(this);
     this.closePopup = this.closePopup.bind(this);
-    this.createBackgroundImage = this.createBackgroundImage.bind(this);
-    this.updateBackgroundImage = this.updateBackgroundImage.bind(this);
-    this.removeBackgroundImage = this.removeBackgroundImage.bind(this);
   }
 
   componentDidMount() {
@@ -34,13 +28,6 @@ export class BackgroundImageEditLayer extends Component {
     // this.subscribe('on', gameModel);
     this.communicatorSubscribe('on');
     this.imagePopup = L.popup();
-    layerCommunicator.emit('setLayersMeta', {
-      layersMeta: this.getLayersMeta(),
-      enableByDefault,
-    });
-    this.updateBackgroundImages({
-      added: (backgroundImages),
-    });
     console.log('InnerManaOceanLayer2 mounted');
   }
 
@@ -49,12 +36,6 @@ export class BackgroundImageEditLayer extends Component {
       translator, backgroundImages,
     } = this.props;
     if (prevProps.backgroundImages !== backgroundImages) {
-      const diff = getArrDiff(
-        (backgroundImages),
-        (prevProps.backgroundImages),
-        R.prop('id'),
-      );
-      this.updateBackgroundImages(diff);
     //   this.subscribe('off', prevProps.gameModel);
     //   this.subscribe('on', gameModel);
     //   this.clear();
@@ -68,57 +49,8 @@ export class BackgroundImageEditLayer extends Component {
   }
 
   componentWillUnmount() {
-    this.clear();
     this.communicatorSubscribe('off');
     console.log('InnerManaOceanLayer2 will unmount');
-  }
-
-  getLayersMeta() {
-    return {
-      [this.rectangleGroupNameKey]: this.rectangleGroup,
-    };
-  }
-
-  updateBackgroundImages({ added = [], removed = [], updated = [] }) {
-    R.map(this.createBackgroundImage, added);
-    R.map(this.updateBackgroundImage, updated);
-    R.map(this.removeBackgroundImage, removed);
-  }
-
-  clear() {
-    this.rectangleGroup.clearLayers();
-  }
-
-  createBackgroundImage(imageData) {
-    const { imageClassName = '' } = this.props;
-    // const imagesData = gameModel.get('backgroundImages').map(translator.moveTo);
-
-    const {
-      latlngs, name, id, image,
-    } = imageData;
-    const rectangle = L.rectangle(latlngs, {
-      id, name, image,
-    });
-    rectangle.on({
-      click: this.onRectangleClick,
-      'pm:edit': this.onRectangleEdit,
-    });
-    this.rectangleGroup.addLayer(rectangle);
-  }
-
-  updateBackgroundImage({ item }) {
-    const {
-      latlngs, name, id, image,
-    } = item;
-    const rect = this.rectangleGroup.getLayers().find((rect2) => rect2.options.id === id);
-    rect.setLatLngs(latlngs);
-    L.setOptions(rect, { name, image });
-  }
-
-  removeBackgroundImage(imageData) {
-    const { id } = imageData;
-    const rect = this.rectangleGroup.getLayers().find((rect2) => rect2.options.id === id);
-    this.rectangleGroup.removeLayer(rect);
   }
 
   communicatorSubscribe(action) {
@@ -230,6 +162,11 @@ export class BackgroundImageEditLayer extends Component {
     return (
       <>
         <BackgroundImageDisplayLayer {...this.props} />
+        <InnerBgImageDisplayLayer
+          onRectangleClick={this.onRectangleClick}
+          onRectangleEdit={this.onRectangleEdit}
+          {...this.props}
+        />
         {
           !!curBackgroundImage
         && (
