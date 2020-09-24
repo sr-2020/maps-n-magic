@@ -22,6 +22,7 @@ export class BeaconRecordService extends AbstractService {
       'deleteBeaconRecordRequested',
       'putBeaconRecordRequested',
       'beaconRecordsChanged',
+      'beaconRecordsChanged2',
     ],
     listenEvents: [],
   };
@@ -46,38 +47,55 @@ export class BeaconRecordService extends AbstractService {
   }
 
   setBeaconRecords({ beaconRecords }) {
-    this.beaconRecords = beaconRecords;
+    this.setData({ beaconRecords });
     this.emit('beaconRecordsChanged', {
+      beaconRecords,
+    });
+    this.emit('beaconRecordsChanged2', {
+      type: 'beaconRecordsChanged2',
       beaconRecords,
     });
   }
 
-  putBeaconRecord({ id, props }) {
-    this.emit('putBeaconRecordRequested', { id, props });
+  putBeaconRecord(action) {
+    this.emit('putBeaconRecordRequested', action);
   }
 
-  postBeaconRecord = ({ props }) => {
-    this.emit('postBeaconRecordRequested', { props });
+  postBeaconRecord = (action) => {
+    this.emit('postBeaconRecordRequested', action);
   }
 
-  deleteBeaconRecord = ({ id }) => {
-    this.emit('deleteBeaconRecordRequested', { id });
+  deleteBeaconRecord = (action) => {
+    this.emit('deleteBeaconRecordRequested', action);
   }
 
   putBeaconRecordConfirmed({ beaconRecord }) {
     const index = this.beaconRecords.findIndex((br) => br.id === beaconRecord.id);
+    this.beaconRecords = [...this.beaconRecords];
     this.beaconRecords[index] = beaconRecord;
     this.emit('putBeaconRecord', { beaconRecord });
+    this.emit('beaconRecordsChanged2', {
+      type: 'beaconRecordsChanged2',
+      beaconRecords: this.beaconRecords,
+    });
   }
 
   deleteBeaconRecordConfirmed({ beaconRecord }) {
     this.beaconRecords = this.beaconRecords.filter((br) => br.id !== beaconRecord.id);
     this.emit('deleteBeaconRecord', { beaconRecord });
+    this.emit('beaconRecordsChanged2', {
+      type: 'beaconRecordsChanged2',
+      beaconRecords: this.beaconRecords,
+    });
   }
 
   postBeaconRecordConfirmed({ beaconRecord }) {
-    this.beaconRecords.push(beaconRecord);
+    this.beaconRecords = [...this.beaconRecords, beaconRecord];
     // console.log('postBeaconRecord');
     this.emit('postBeaconRecord', { beaconRecord });
+    this.emit('beaconRecordsChanged2', {
+      type: 'beaconRecordsChanged2',
+      beaconRecords: this.beaconRecords,
+    });
   }
 }

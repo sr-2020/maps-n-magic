@@ -15,118 +15,15 @@ import Form from 'react-bootstrap/Form';
 import Dropdown from 'react-bootstrap/Dropdown';
 
 import { classNames } from 'classnames';
-import { isGeoLocation } from 'sr2020-mm-event-engine/utils';
 import { CreateBeaconPopover } from './CreateBeaconPopover';
 
-// import { BeaconRecordEditorPropTypes } from '../../types';
-
-const sortById = R.sortBy(R.prop('id'));
-
 export class BeaconRecordEditor extends Component {
-  // static propTypes = BeaconRecordEditorPropTypes;
-
   constructor(props) {
     super(props);
     this.state = {
-      beaconRecords: [],
-      sortedLocationList: null,
     };
-    this.onPostBeaconRecord = this.onPostBeaconRecord.bind(this);
-    this.onPutBeaconRecord = this.onPutBeaconRecord.bind(this);
-    this.onDeleteBeaconRecord = this.onDeleteBeaconRecord.bind(this);
-    this.setBeaconRecords = this.setBeaconRecords.bind(this);
-    this.setLocationRecords = this.setLocationRecords.bind(this);
     this.createBeacon = this.createBeacon.bind(this);
     this.onLocationSelect = this.onLocationSelect.bind(this);
-  }
-
-  componentDidMount() {
-    const {
-      gameModel,
-    } = this.props;
-    this.subscribe('on', gameModel);
-
-    this.setBeaconRecords({
-      beaconRecords: (gameModel.get('beaconRecords')),
-    });
-    this.setLocationRecords({
-      locationRecords: (gameModel.get('locationRecords')),
-    });
-    console.log('BeaconRecordEditor mounted');
-  }
-
-  componentDidUpdate(prevProps) {
-    const {
-      gameModel,
-    } = this.props;
-    if (prevProps.gameModel !== gameModel) {
-      this.subscribe('off', prevProps.gameModel);
-      this.subscribe('on', gameModel);
-      this.setBeaconRecords({
-        beaconRecords: (gameModel.get('beaconRecords')),
-      });
-      this.setLocationRecords({
-        locationRecords: (gameModel.get('locationRecords')),
-      });
-    }
-    console.log('BeaconRecordEditor did update');
-  }
-
-  componentWillUnmount() {
-    const {
-      gameModel,
-    } = this.props;
-    this.subscribe('off', gameModel);
-    console.log('BeaconRecordEditor will unmount');
-  }
-
-  // eslint-disable-next-line react/sort-comp
-  subscribe(action, gameModel) {
-    gameModel[action]('postBeaconRecord', this.onPostBeaconRecord);
-    gameModel[action]('putBeaconRecord', this.onPutBeaconRecord);
-    gameModel[action]('deleteBeaconRecord', this.onDeleteBeaconRecord);
-    gameModel[action]('beaconRecordsChanged', this.setBeaconRecords);
-    gameModel[action]('locationRecordsChanged', this.setLocationRecords);
-  }
-
-  // eslint-disable-next-line react/sort-comp
-  setBeaconRecords({ beaconRecords }) {
-    // console.log('setBeaconRecords');
-    this.setState({
-      beaconRecords: sortById([...beaconRecords]),
-    });
-  }
-
-  setLocationRecords({ locationRecords }) {
-    const geoLocations = locationRecords.filter(isGeoLocation);
-    this.setState({
-      sortedLocationList: R.sortBy(R.prop('label'), geoLocations),
-    });
-  }
-
-  onPutBeaconRecord({ beaconRecord }) {
-    // console.log('onPutBeaconRecord', beaconRecord.id);
-    this.setState((state) => ({
-      beaconRecords: state.beaconRecords.map((br) => (br.id === beaconRecord.id ? beaconRecord : br)),
-    }));
-  }
-
-  onDeleteBeaconRecord({ beaconRecord }) {
-    // console.log('onDeleteBeaconRecord', beaconRecord.id);
-    this.setState((state) => ({
-      beaconRecords: state.beaconRecords.filter((br) => (br.id !== beaconRecord.id)),
-    }));
-  }
-
-  onPostBeaconRecord({ beaconRecord }) {
-    // console.log('onPostBeaconRecord', beaconRecord.id);
-    this.setState((state) => {
-      const beaconRecords = sortById([...state.beaconRecords, beaconRecord]);
-      // console.log('onPostBeaconRecord', 'before', state.beaconRecords.length, 'after', beaconRecords.length);
-      return {
-        beaconRecords,
-      };
-    });
   }
 
   createBeacon(macAddress) {
@@ -155,13 +52,6 @@ export class BeaconRecordEditor extends Component {
 
   putBeaconRecord(id, name, value) {
     const { gameModel } = this.props;
-
-    this.setState(({ beaconRecords }) => ({
-      beaconRecords: beaconRecords.map((br) => (br.id === id ? ({
-        ...br,
-        [name]: value,
-      }) : br)),
-    }));
 
     gameModel.execute({
       type: 'putBeaconRecord',
@@ -196,8 +86,7 @@ export class BeaconRecordEditor extends Component {
 
   // eslint-disable-next-line max-lines-per-function
   render() {
-    const { beaconRecords, sortedLocationList } = this.state;
-    const { t } = this.props;
+    const { t, beaconRecords, sortedLocationList } = this.props;
 
     if (!beaconRecords || !sortedLocationList) {
       return null;
@@ -236,7 +125,7 @@ export class BeaconRecordEditor extends Component {
                       name="bssid"
                       type="text"
                       className="tw-w-48 tw-font-mono"
-                      value={beacon.bssid}
+                      defaultValue={beacon.bssid}
                       readOnly
                       onChange={this.handleInputChange(beacon.id)}
                     />
@@ -247,12 +136,12 @@ export class BeaconRecordEditor extends Component {
                       name="label"
                       type="text"
                       style={{ width: '24rem' }}
-                      value={beacon.label}
+                      defaultValue={beacon.label}
                       onChange={this.handleInputChange(beacon.id)}
                     />
                   </td>
                   <td>
-                    <Form.Control as="select" value={beacon.location_id} onChange={(e) => this.onLocationSelect(beacon.id, e)}>
+                    <Form.Control as="select" defaultValue={beacon.location_id} onChange={(e) => this.onLocationSelect(beacon.id, e)}>
                       <option value="beaconHasNoLocation">{t('beaconHasNoLocation')}</option>
                       {
                         sortedLocationList.map((location) => (
