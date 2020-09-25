@@ -7,7 +7,6 @@ import { DefaultSatelliteBackground } from 'sr2020-mm-client-core/layers/Default
 import { BaseContourLayer2 } from 'sr2020-mm-client-core/layers/BaseContourLayer2';
 import { BackgroundImageDisplayLayer } from '../../layers/BackgroundImageDisplayLayer';
 import { GoogleMapsExportedDataLayer } from '../../layers/GoogleMapsExportedDataLayer';
-import { BeaconLayer3 } from '../../layers/BeaconLayer3';
 import { BeaconLayer4 } from '../../layers/BeaconLayer4';
 
 // import { BeaconEditorMapPropTypes } from '../../types';
@@ -35,9 +34,6 @@ export function BeaconEditorMap(props) {
       <GoogleMapsExportedDataLayer
         enableByDefault={false}
       />
-      {/* <BeaconLayer3
-        enableByDefault
-      /> */}
       <BeaconLayer4
         enableByDefault
       />
