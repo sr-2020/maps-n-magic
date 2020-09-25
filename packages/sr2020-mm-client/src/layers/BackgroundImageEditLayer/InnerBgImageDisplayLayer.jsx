@@ -23,7 +23,6 @@ export class InnerBgImageDisplayLayer extends Component {
     const {
       enableByDefault, layerCommunicator, backgroundImages,
     } = this.props;
-    this.imagePopupDom = document.createElement('div');
     layerCommunicator.emit('setLayersMeta', {
       layersMeta: this.getLayersMeta(),
       enableByDefault,

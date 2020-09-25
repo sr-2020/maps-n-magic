@@ -1,19 +1,15 @@
 import React, { Component } from 'react';
-import './BeaconLayer3.css';
+import './BeaconLayer4.css';
 
 import L from 'leaflet/dist/leaflet-src';
 import * as R from 'ramda';
 
-import { CreateBeaconPopup } from '../BeaconLayer4/CreateBeaconPopup';
-import { InnerBeaconLayer3 } from './InnerBeaconLayer3';
+import { CreateBeaconPopup } from './CreateBeaconPopup';
 
-import { getFreeBeaconIds } from '../BeaconLayer4/beaconUtils';
+import { getFreeBeaconIds } from './beaconUtils';
+import { InnerBeaconLayer } from './InnerBeaconLayer.jsx';
 
-// import { BeaconLayer3PropTypes } from '../../types';
-
-export class BeaconLayer3 extends Component {
-  // static propTypes = BeaconLayer3PropTypes;
-
+export class BeaconLayer4 extends Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -22,69 +18,25 @@ export class BeaconLayer3 extends Component {
     };
     this.onCreateLayer = this.onCreateLayer.bind(this);
     this.onRemoveLayer = this.onRemoveLayer.bind(this);
-    this.onPutBeaconRecord = this.onPutBeaconRecord.bind(this);
+    // this.onPutBeaconRecord = this.onPutBeaconRecord.bind(this);
     this.onSelectBeacon = this.onSelectBeacon.bind(this);
     this.closePopup = this.closePopup.bind(this);
   }
 
   componentDidMount() {
-    const {
-      gameModel, enableByDefault, layerCommunicator,
-    } = this.props;
     this.beaconPopupContainer = document.createElement('div');
-    this.subscribe('on', gameModel);
     this.communicatorSubscribe('on');
     this.createBeaconPopup = L.popup();
-    this.beaconLayer = new InnerBeaconLayer3();
-    layerCommunicator.emit('setLayersMeta', {
-      layersMeta: this.beaconLayer.getLayersMeta(),
-      enableByDefault,
-    });
-    this.populate();
-    console.log('BeaconLayer3 mounted');
+    console.log('BeaconLayer4 mounted');
   }
 
-  componentDidUpdate(prevProps) {
-    const {
-      gameModel, translator,
-    } = this.props;
-    if (prevProps.gameModel !== gameModel) {
-      this.subscribe('off', prevProps.gameModel);
-      this.subscribe('on', gameModel);
-      this.clear();
-      this.populate();
-    }
-    if (prevProps.translator !== translator) {
-      this.clear();
-      this.populate();
-    }
-    console.log('BeaconLayer3 did update');
+  componentDidUpdate() {
+    console.log('BeaconLayer4 did update');
   }
 
   componentWillUnmount() {
-    const {
-      gameModel,
-    } = this.props;
-    this.subscribe('off', gameModel);
     this.communicatorSubscribe('off');
-    this.clear();
-    console.log('BeaconLayer3 will unmount');
-  }
-
-  // eslint-disable-next-line react/sort-comp
-  populate() {
-    const {
-      gameModel, t, translator,
-    } = this.props;
-    this.beaconLayer.populate(gameModel, translator, this.setBeaconEventHandlers, t);
-  }
-
-  clear() {
-    this.beaconLayer.clear();
-  }
-
-  subscribe(action, gameModel) {
-    gameModel[action]('putBeaconRecord', this.onPutBeaconRecord);
+    console.log('BeaconLayer4 will unmount');
   }
 
   // eslint-disable-next-line react/sort-comp
@@ -109,27 +61,23 @@ export class BeaconLayer3 extends Component {
     }
   }
 
-  onPutBeaconRecord({ beaconRecord }) {
-    const { t } = this.props;
-    this.beaconLayer.onPutBeaconRecord(beaconRecord, this.setBeaconEventHandlers, t);
-  }
-
   onRemoveLayer(event) {
     const {
       gameModel, translator, closePopup, layerCommunicator,
     } = this.props;
     if (event.layer instanceof L.Marker) {
-      this.beaconLayer.onRemoveBeacon(event.layer, gameModel);
+      const beacon = event.layer;
+      gameModel.execute({
+        type: 'putBeaconRecord',
+        id: beacon.options.id,
+        props: {
+          lat: null,
+          lng: null,
+        },
+      });
+      // this.beaconLayer.onRemoveBeacon(event.layer, gameModel);
       layerCommunicator.emit('closePopup');
     }
-  }
-
-  setBeaconEventHandlers = (beacon) => {
-    beacon.on({
-      click: this.onBeaconClick,
-      'pm:edit': this.onBeaconEdit,
-    });
-    return beacon;
   }
 
   onBeaconClick = (e) => {
@@ -152,7 +100,7 @@ export class BeaconLayer3 extends Component {
 
   onBeaconEdit = (e) => {
     const {
-      gameModel, translator, layerCommunicator,
+      gameModel, translator,
     } = this.props;
     const beacon = e.target;
     const latlng = translator.moveFrom(beacon.getLatLng());
@@ -166,7 +114,6 @@ export class BeaconLayer3 extends Component {
     this.closePopup();
   }
 
-  // eslint-disable-next-line class-methods-use-this
   closePopup() {
     const {
       layerCommunicator,
@@ -182,6 +129,9 @@ export class BeaconLayer3 extends Component {
     const {
       gameModel,
     } = this.props;
+    const {
+      curBeacon,
+    } = this.state;
     this.setState({
       beaconLatLng: null,
     });
@@ -192,37 +142,51 @@ export class BeaconLayer3 extends Component {
         ...latLng,
       },
     });
+    if (curBeacon) {
+      gameModel.execute({
+        type: 'putBeaconRecord',
+        id: curBeacon.id,
+        props: {
+          lat: null,
+          lng: null,
+        },
+      });
+      this.setState({
+        curBeacon: null,
+      });
+    }
     this.closePopup();
   }
 
-  getCreateBeaconPopup() {
+  render() {
     const {
       beaconLatLng, curBeacon,
     } = this.state;
     const {
-      gameModel,
+      beaconRecords,
     } = this.props;
-    if (!beaconLatLng) {
-      return null;
-    }
-    const freeBeaconIds = getFreeBeaconIds(gameModel.get('beaconRecords'));
-    return (
-      <CreateBeaconPopup
-        latLng={beaconLatLng}
-        curBeacon={curBeacon}
-        freeBeaconIds={freeBeaconIds}
-        onSelect={this.onSelectBeacon}
-        onClose={this.closePopup}
-        domContainer={this.beaconPopupContainer}
-      />
-    );
-  }
-
-  render() {
+    const freeBeaconIds = getFreeBeaconIds(beaconRecords);
     return (
       <>
+        <InnerBeaconLayer
+          // onRectangleClick={this.onRectangleClick}
+          // onRectangleEdit={this.onRectangleEdit}
+          onBeaconClick={this.onBeaconClick}
+          onBeaconEdit={this.onBeaconEdit}
+          {...this.props}
+        />
         {
-          this.getCreateBeaconPopup()
+          !!beaconLatLng
+          && (
+            <CreateBeaconPopup
+              latLng={beaconLatLng}
+              curBeacon={curBeacon}
+              freeBeaconIds={freeBeaconIds}
+              onSelect={this.onSelectBeacon}
+              onClose={this.closePopup}
+              domContainer={this.beaconPopupContainer}
+            />
+          )
         }
       </>
     );

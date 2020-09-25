@@ -262,10 +262,7 @@ export class LocationLayer3 extends Component {
     if (!curLocation) {
       return null;
     }
-    // const allBeacons = R.clone(gameModel.get('beacons'));
-    // const allLocations = R.clone(gameModel.get('locations'));
     return (
-      // null
       <LocationPopup3
         label={curLocation.label}
         id={curLocation.id}

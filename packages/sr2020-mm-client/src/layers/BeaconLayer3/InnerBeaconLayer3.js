@@ -1,8 +1,7 @@
 import L from 'leaflet/dist/leaflet-src';
 import * as R from 'ramda';
 
-
-import { hasLatLng } from './beaconUtils';
+import { hasLatLng } from '../BeaconLayer4/beaconUtils';
 
 export class InnerBeaconLayer3 {
   group = L.layerGroup([]);

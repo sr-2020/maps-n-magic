@@ -204,8 +204,6 @@ export class BackgroundImageLayer extends Component {
     if (!curBackgroundImage) {
       return null;
     }
-    // const allBeacons = R.clone(gameModel.get('beacons'));
-    // const allLocations = R.clone(gameModel.get('locations'));
     return (
       <BackgroundImagePopup
         imagePopupDom={this.imagePopupDom}
@@ -215,17 +213,6 @@ export class BackgroundImageLayer extends Component {
         onClose={this.closePopup}
         onChange={this.onBackgroundImageChange}
       />
-      // <LocationPopup
-      //   name={curLocation.name}
-      //   id={curLocation.id}
-      //   manaLevel={curLocation.manaLevel}
-      //   attachedMarkers={curLocation.markers}
-      //   allBeacons={allBeacons}
-      //   allLocations={allLocations}
-      //   onChange={this.onLocationChange}
-      //   onLocMarkerChange={this.onLocMarkerChange}
-      //   onClose={this.closePopup}
-      // />
     );
   }
 
