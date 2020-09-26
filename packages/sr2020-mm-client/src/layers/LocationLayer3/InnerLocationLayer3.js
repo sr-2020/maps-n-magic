@@ -1,7 +1,7 @@
 import L from 'leaflet/dist/leaflet-src';
 import * as R from 'ramda';
 
-import { layerIdToLayerName, locationTypes } from './LocationLayerTypes';
+import { layerIdToLayerName, locationTypes } from '../LocationLayer4/LocationLayerTypes';
 
 export class InnerLocationLayer3 {
   // This is a metalayer. It is not visible but includes all locations.
@@ -14,7 +14,6 @@ export class InnerLocationLayer3 {
     acc[type] = L.layerGroup([]);
     return acc;
   }, {});
-
 
   getLayersMeta() {
     const prepareGroupList = R.pipe(
@@ -42,8 +41,8 @@ export class InnerLocationLayer3 {
     );
     const prepareArray = R.pipe(
       R.filter(isNotEmptyPolygon),
-      R.map(location => {
-        const copy = {...location};
+      R.map((location) => {
+        const copy = { ...location };
         copy.polygon[0] = translator.moveTo(location.polygon[0]);
         return copy;
       }),

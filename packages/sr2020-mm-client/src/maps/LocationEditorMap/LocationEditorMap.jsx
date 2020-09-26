@@ -8,6 +8,7 @@ import { BaseContourLayer2 } from 'sr2020-mm-client-core/layers/BaseContourLayer
 import { BackgroundImageDisplayLayer } from '../../layers/BackgroundImageDisplayLayer';
 import { GoogleMapsExportedDataLayer } from '../../layers/GoogleMapsExportedDataLayer';
 import { LocationLayer3 } from '../../layers/LocationLayer3';
+import { LocationLayer4 } from '../../layers/LocationLayer4';
 
 export function LocationEditorMap(props) {
   const {
@@ -32,7 +33,10 @@ export function LocationEditorMap(props) {
       <GoogleMapsExportedDataLayer
         enableByDefault={false}
       />
-      <LocationLayer3
+      {/* <LocationLayer3
+        enableByDefault
+      /> */}
+      <LocationLayer4
         enableByDefault
       />
     </Map>

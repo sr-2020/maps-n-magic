@@ -6,7 +6,7 @@ import * as R from 'ramda';
 
 import { InnerLocationLayer3 } from './InnerLocationLayer3';
 
-import { LocationPopup3 } from './LocationPopup3';
+import { LocationPopup3 } from '../LocationLayer4/LocationPopup3';
 
 export class LocationLayer3 extends Component {
   constructor(props) {

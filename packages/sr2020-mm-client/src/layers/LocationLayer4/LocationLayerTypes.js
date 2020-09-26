@@ -4,6 +4,7 @@ import * as R from 'ramda';
 // 'region' layer_id = 2
 // 'gamelocation' layer_id = 3
 export const locationTypes = ['region', 'geoLocation', 'gameLocation'];
+export const locationTypeSequence = [2, 1, 3];
 
 export const layerIdToLayerName = {
   2: 'region',

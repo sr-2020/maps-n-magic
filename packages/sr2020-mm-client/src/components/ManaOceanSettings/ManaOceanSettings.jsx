@@ -9,11 +9,10 @@ import Form from 'react-bootstrap/Form';
 import Table from 'react-bootstrap/Table';
 import { prop } from 'ramda';
 
-import { TideChart } from './TideChart';
-
 import {
   getMoonActivity, mergeActivities, collectStatistics, getMoscowTime,
 } from 'sr2020-mm-event-engine/utils/moonActivityUtils';
+import { TideChart } from './TideChart';
 
 const TIME_STEP = 10;
 
@@ -81,11 +80,6 @@ export class ManaOceanSettings extends Component {
   subscribe(action, gameModel) {
     gameModel[action]('postManaOceanSettings', this.setManaOceanSettings);
     gameModel[action]('manaOceanSettingsChanged', this.setManaOceanSettings);
-    // gameModel[action]('postBeaconRecord', this.onPostBeaconRecord);
-    // gameModel[action]('putBeaconRecord', this.onPutBeaconRecord);
-    // gameModel[action]('deleteBeaconRecord', this.onDeleteBeaconRecord);
-    // gameModel[action]('beaconRecordsChanged', this.setBeaconRecords);
-    // gameModel[action]('locationRecordsChanged', this.setLocationRecords);
   }
 
   setManaOceanSettings({ manaOceanSettings }) {
