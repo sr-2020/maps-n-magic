@@ -24,39 +24,39 @@ export function MapRoutes(props) {
   } = mapDefaults;
 
   return [
-    <Route path="/mapsNav">
+    <Route path="/mapsNav" key="mapsNav">
       <MapsNav />
     </Route>,
-    <Route path="/map2">
+    <Route path="/map2" key="map2">
       <CommonMap
         gameModel={gameModel}
         geomanConfig={oldLocationAndMarkerGeomanConfig}
       />
     </Route>,
-    <Route path="/locationsEditor2">
+    <Route path="/locationsEditor2" key="locationsEditor2">
       <LocationEditorMap
         gameModel={gameModel}
         geomanConfig={locationsEditor2GeomanConfig}
       />
     </Route>,
-    <Route path="/beaconEditor2">
+    <Route path="/beaconEditor2" key="beaconEditor2">
       <BeaconEditorMap
         gameModel={gameModel}
         geomanConfig={beaconEditor2GeomanConfig}
       />
     </Route>,
-    <Route path="/backgroundEditorMap">
+    <Route path="/backgroundEditorMap" key="backgroundEditorMap">
       <BackgroundEditorMap
         gameModel={gameModel}
         geomanConfig={backgroundEditorGeomanConfig}
       />
     </Route>,
-    <Route path="/rescueService">
+    <Route path="/rescueService" key="rescueService">
       <RescueServiceMap
         gameModel={gameModel}
       />
     </Route>,
-    <Route path="/manaOcean">
+    <Route path="/manaOcean" key="manaOcean">
       <ManaOceanMap
         gameModel={gameModel}
       />

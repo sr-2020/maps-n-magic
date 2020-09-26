@@ -2,6 +2,8 @@ import * as R from 'ramda';
 
 import { AbstractService } from '../core/AbstractService';
 
+import { getArrDiff } from '../utils';
+
 export class BeaconRecordService extends AbstractService {
   metadata = {
     actions: [
@@ -32,8 +34,12 @@ export class BeaconRecordService extends AbstractService {
     this.beaconRecords = [];
   }
 
-  setData({ beaconRecords } = {}) {
-    this.beaconRecords = beaconRecords || [];
+  setData({ beaconRecords = [] } = {}) {
+    // better data reuse
+    const { updated, added, unchanged } = getArrDiff(beaconRecords, this.beaconRecords, R.prop('id'));
+    this.beaconRecords = [...unchanged, ...updated, ...added];
+    return beaconRecords.length === this.beaconRecords && unchanged.length === beaconRecords.length;
+    // this.beaconRecords = beaconRecords;
   }
 
   getData() {
@@ -47,7 +53,10 @@ export class BeaconRecordService extends AbstractService {
   }
 
   setBeaconRecords({ beaconRecords }) {
-    this.setData({ beaconRecords });
+    const hasChanges = this.setData({ beaconRecords });
+    if (!hasChanges) {
+      return;
+    }
     this.emit('beaconRecordsChanged', {
       beaconRecords,
     });
@@ -58,6 +67,15 @@ export class BeaconRecordService extends AbstractService {
   }
 
   putBeaconRecord(action) {
+    // try to speedup put changes. It is still slow, so commented it out.
+    // const { id, props } = action;
+    // const index = this.beaconRecords.findIndex((br) => br.id === id);
+    // this.beaconRecords = [...this.beaconRecords];
+    // this.beaconRecords[index] = { ...this.beaconRecords[index], ...props };
+    // this.emit('beaconRecordsChanged2', {
+    //   type: 'beaconRecordsChanged2',
+    //   beaconRecords: this.beaconRecords,
+    // });
     this.emit('putBeaconRecordRequested', action);
   }
 

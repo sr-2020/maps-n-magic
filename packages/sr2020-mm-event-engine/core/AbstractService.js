@@ -68,6 +68,7 @@ export class AbstractService {
   }
 
   emit(...args) {
+    // console.log('emit', args[0]);
     if (!this.metadata.emitEvents.includes(args[0])) {
       throw new Error(`Event ${args[0]} is not in emit events list of ${this.constructor.name}`);
     }

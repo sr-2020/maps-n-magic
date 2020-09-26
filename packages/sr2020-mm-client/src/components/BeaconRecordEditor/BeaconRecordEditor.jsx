@@ -24,6 +24,7 @@ export class BeaconRecordEditor extends Component {
     };
     this.createBeacon = this.createBeacon.bind(this);
     this.onLocationSelect = this.onLocationSelect.bind(this);
+    this.handleInputChange = this.handleInputChange.bind(this);
   }
 
   createBeacon(macAddress) {
@@ -35,19 +36,19 @@ export class BeaconRecordEditor extends Component {
     });
   }
 
-  handleInputChange(id) {
-    return (event) => {
-      const { target } = event;
-      const value = this.getTargetValue(target);
-      const { name } = target;
-      this.putBeaconRecord(id, name, value);
-    };
+  handleInputChange(event) {
+    const { target } = event;
+    const { idStr } = event.target.dataset;
+    const value = this.getTargetValue(target);
+    const { name } = target;
+    this.putBeaconRecord(Number(idStr), name, value);
   }
 
-  onLocationSelect(beaconId, e) {
-    const { value } = e.target;
+  onLocationSelect(event) {
+    const { value } = event.target;
+    const { idStr } = event.target.dataset;
     const newValue = value === 'beaconHasNoLocation' ? null : Number(value);
-    this.putBeaconRecord(beaconId, 'location_id', newValue);
+    this.putBeaconRecord(Number(idStr), 'location_id', newValue);
   }
 
   putBeaconRecord(id, name, value) {
@@ -117,7 +118,7 @@ export class BeaconRecordEditor extends Component {
             {
               // eslint-disable-next-line max-lines-per-function
               beaconRecords.map((beacon) => (
-                <tr>
+                <tr key={beacon.id}>
                   <td className="tw-text-right">{beacon.id}</td>
                   {/* <td>{beacon.bssid}</td> */}
                   <td>
@@ -127,7 +128,8 @@ export class BeaconRecordEditor extends Component {
                       className="tw-w-48 tw-font-mono"
                       defaultValue={beacon.bssid}
                       readOnly
-                      onChange={this.handleInputChange(beacon.id)}
+                      data-id-str={beacon.id}
+                      onChange={this.handleInputChange}
                     />
 
                   </td>
@@ -137,11 +139,12 @@ export class BeaconRecordEditor extends Component {
                       type="text"
                       style={{ width: '24rem' }}
                       defaultValue={beacon.label}
-                      onChange={this.handleInputChange(beacon.id)}
+                      data-id-str={beacon.id}
+                      onChange={this.handleInputChange}
                     />
                   </td>
                   <td>
-                    <Form.Control as="select" defaultValue={beacon.location_id} onChange={(e) => this.onLocationSelect(beacon.id, e)}>
+                    <Form.Control as="select" defaultValue={beacon.location_id} data-id-str={beacon.id} onChange={this.onLocationSelect}>
                       <option value="beaconHasNoLocation">{t('beaconHasNoLocation')}</option>
                       {
                         sortedLocationList.map((location) => (

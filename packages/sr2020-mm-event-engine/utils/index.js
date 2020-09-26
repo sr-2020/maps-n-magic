@@ -26,6 +26,8 @@ export function getArrDiff(arr, prevArr, getKey, hasDifference = notEquals) {
           item: arrIndex[key],
           prevItem: prevArrIndex[key],
         });
+      } else {
+        acc.unchanged.push(prevArrIndex[key]);
       }
     } else if (arrIndex[key]) {
       acc.added.push(arrIndex[key]);
@@ -38,6 +40,7 @@ export function getArrDiff(arr, prevArr, getKey, hasDifference = notEquals) {
     added: [],
     updated: [],
     removed: [],
+    unchanged: [],
   });
 }
 
