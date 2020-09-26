@@ -2,7 +2,11 @@ export function capitalizeFirstLetter(string) {
   return string.charAt(0).toUpperCase() + string.slice(1);
 }
 
-const forwardActions = ['locationRecordsChanged2', 'beaconRecordsChanged2'];
+const forwardActions = [
+  'locationRecordsChanged2',
+  'beaconRecordsChanged2',
+  'manaOceanSettingsChanged',
+];
 
 export class WsDataBinding {
   constructor({
@@ -30,6 +34,9 @@ export class WsDataBinding {
       }, {
         type: 'beaconRecordsChanged2',
         payload: 'beaconRecords',
+      }, {
+        type: 'manaOceanSettingsChanged',
+        payload: 'manaOceanSettings',
       }],
       forwardActions,
     });
@@ -53,6 +60,7 @@ export class WsDataBinding {
       'postBeaconRecordRequested',
       'putBeaconRecordRequested',
       'deleteBeaconRecordRequested',
+      'postManaOceanSettingsRequested',
     ];
     arrList.forEach((eventName) => gameModel[action](eventName, this.emit));
   }
@@ -80,6 +88,13 @@ export class WsDataBinding {
       this.gameModel.execute({
         ...data,
         type: 'setBeaconRecords',
+      });
+    }
+
+    if (type === 'manaOceanSettingsChanged') {
+      this.gameModel.execute({
+        ...data,
+        type: 'setManaOceanSettings',
       });
     }
 

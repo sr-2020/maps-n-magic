@@ -83,36 +83,36 @@ export class ManaOceanService extends AbstractService {
 
     console.log('onTideLevelUpdate', 'moscowTimeInMinutes', moscowTimeInMinutes, 'tideHeight', tideHeight, firstLocation);
 
-    this.executeOnModel({
-      type: 'putLocationRecords',
-      updates: [{
-        id: firstLocation.id,
-        body: {
-          options: {
-            ...firstLocation.options,
-            manaLevel: this.calcManaLevel([neutralManaLevel, tideHeight]),
-            manaLevelModifiers: {
-              neutralManaLevel,
-              tideHeight,
-            },
-          },
-        },
-      }],
-    });
     // this.executeOnModel({
-    //   type: 'putLocationRecord',
-    //   id: firstLocation.id,
-    //   props: {
-    //     options: {
-    //       ...firstLocation.options,
-    //       manaLevel: this.calcManaLevel([neutralManaLevel, tideHeight]),
-    //       manaLevelModifiers: {
-    //         neutralManaLevel,
-    //         tideHeight,
+    //   type: 'putLocationRecords',
+    //   updates: [{
+    //     id: firstLocation.id,
+    //     body: {
+    //       options: {
+    //         ...firstLocation.options,
+    //         manaLevel: this.calcManaLevel([neutralManaLevel, tideHeight]),
+    //         manaLevelModifiers: {
+    //           neutralManaLevel,
+    //           tideHeight,
+    //         },
     //       },
     //     },
-    //   },
+    //   }],
     // });
+    this.executeOnModel({
+      type: 'putLocationRecord',
+      id: firstLocation.id,
+      props: {
+        options: {
+          ...firstLocation.options,
+          manaLevel: this.calcManaLevel([neutralManaLevel, tideHeight]),
+          manaLevelModifiers: {
+            neutralManaLevel,
+            tideHeight,
+          },
+        },
+      },
+    });
   }
 
   calcManaLevel(arr) {
