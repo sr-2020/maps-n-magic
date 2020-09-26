@@ -68,5 +68,8 @@ export class ManaOceanSettingsService extends AbstractService {
     this.manaOceanSettings = R.clone(manaOceanSettings);
     // console.log('postBeaconRecord');
     this.emit('postManaOceanSettings', { manaOceanSettings });
+    this.emit('manaOceanSettingsChanged', {
+      manaOceanSettings,
+    });
   }
 }

@@ -21,8 +21,6 @@ function formatMinutesStats(minutes) {
 }
 
 export class ManaOceanSettings extends Component {
-  // static propTypes = ManaOceanSettingsPropTypes;
-
   constructor(props) {
     super(props);
     this.state = {
@@ -37,55 +35,21 @@ export class ManaOceanSettings extends Component {
     };
     this.onChange = this.onChange.bind(this);
     this.onUpdateMoscowTime = this.onUpdateMoscowTime.bind(this);
-    this.setManaOceanSettings = this.setManaOceanSettings.bind(this);
   }
 
   componentDidMount() {
-    const {
-      gameModel,
-    } = this.props;
-    this.subscribe('on', gameModel);
-    this.setManaOceanSettings({
-      manaOceanSettings: (gameModel.get('manaOceanSettings')),
-    });
-
     this.moscowTimeUpdater = setInterval(this.onUpdateMoscowTime, 1000);
     // this.moscowTimeUpdater = setInterval(this.onUpdateMoscowTime, 100);
     console.log('ManaOceanSettings mounted');
   }
 
   componentDidUpdate(prevProps) {
-    const {
-      gameModel,
-    } = this.props;
-    if (prevProps.gameModel !== gameModel) {
-      this.subscribe('off', prevProps.gameModel);
-      this.subscribe('on', gameModel);
-      this.setManaOceanSettings({
-        manaOceanSettings: (gameModel.get('manaOceanSettings')),
-      });
-    }
     console.log('ManaOceanSettings did update');
   }
 
   componentWillUnmount() {
-    const {
-      gameModel,
-    } = this.props;
-    this.subscribe('off', gameModel);
     clearInterval(this.moscowTimeUpdater);
     console.log('ManaOceanSettings will unmount');
-  }
-
-  subscribe(action, gameModel) {
-    gameModel[action]('postManaOceanSettings', this.setManaOceanSettings);
-    gameModel[action]('manaOceanSettingsChanged', this.setManaOceanSettings);
-  }
-
-  setManaOceanSettings({ manaOceanSettings }) {
-    this.setState({
-      ...manaOceanSettings,
-    });
   }
 
   onUpdateMoscowTime() {
@@ -96,8 +60,9 @@ export class ManaOceanSettings extends Component {
     }));
   }
 
-  onChange(e, propName) {
-    let { value } = e.target;
+  onChange(event) {
+    let { value } = event.target;
+    const { propName } = event.target.dataset;
     value = Number(value);
     if (Number.isNaN(value)) {
       return;
@@ -123,24 +88,25 @@ export class ManaOceanSettings extends Component {
       throw new Error(`Unexpected propName: ${propName}`);
     }
 
-    this.setState((prevState) => {
-      const {
-        gameModel,
-      } = this.props;
-      const newState = {
-        ...prevState,
+    const { manaOceanSettings, gameModel } = this.props;
+    gameModel.execute({
+      type: 'postManaOceanSettings',
+      manaOceanSettings: {
+        ...manaOceanSettings,
         [propName]: value,
-      };
-      gameModel.execute({
-        type: 'postManaOceanSettings',
-        manaOceanSettings: R.omit(['moscowTime'], newState),
-      });
-      return newState;
+      },
     });
   }
 
   // eslint-disable-next-line max-lines-per-function
   render() {
+    const {
+      moscowTime,
+    } = this.state;
+    const { t, manaOceanSettings } = this.props;
+    if (manaOceanSettings === undefined || manaOceanSettings.visibleMoonPeriod === undefined) {
+      return null;
+    }
     const {
       neutralManaLevel,
       visibleMoonPeriod,
@@ -149,12 +115,7 @@ export class ManaOceanSettings extends Component {
       invisibleMoonPeriod,
       invisibleMoonNewMoonTime,
       invisibleMoonManaTideHeight,
-      moscowTime,
-    } = this.state;
-    const { t } = this.props;
-    if (neutralManaLevel === undefined) {
-      return null;
-    }
+    } = manaOceanSettings;
 
     const visibleMoonActivity = getMoonActivity(visibleMoonPeriod, visibleMoonNewMoonTime);
     const invisibleMoonActivity = getMoonActivity(invisibleMoonPeriod, invisibleMoonNewMoonTime);
@@ -217,7 +178,8 @@ export class ManaOceanSettings extends Component {
                       step={TIME_STEP}
                       value={visibleMoonPeriod}
                       className="tw-w-24 tw-text-right"
-                      onChange={(e) => this.onChange(e, 'visibleMoonPeriod')}
+                      data-prop-name="visibleMoonPeriod"
+                      onChange={this.onChange}
                     />
                   </td>
                   <td align="right">
@@ -226,7 +188,8 @@ export class ManaOceanSettings extends Component {
                       step={TIME_STEP}
                       value={visibleMoonNewMoonTime}
                       className="tw-w-24 tw-text-right"
-                      onChange={(e) => this.onChange(e, 'visibleMoonNewMoonTime')}
+                      data-prop-name="visibleMoonNewMoonTime"
+                      onChange={this.onChange}
                     />
                   </td>
                   {/* <td>
@@ -247,7 +210,8 @@ export class ManaOceanSettings extends Component {
                       step={TIME_STEP}
                       value={invisibleMoonPeriod}
                       className="tw-w-24 tw-text-right"
-                      onChange={(e) => this.onChange(e, 'invisibleMoonPeriod')}
+                      data-prop-name="invisibleMoonPeriod"
+                      onChange={this.onChange}
                     />
                   </td>
                   <td align="right">
@@ -256,7 +220,8 @@ export class ManaOceanSettings extends Component {
                       step={TIME_STEP}
                       value={invisibleMoonNewMoonTime}
                       className="tw-w-24 tw-text-right"
-                      onChange={(e) => this.onChange(e, 'invisibleMoonNewMoonTime')}
+                      data-prop-name="invisibleMoonNewMoonTime"
+                      onChange={this.onChange}
                     />
                   </td>
                   {/* <td>

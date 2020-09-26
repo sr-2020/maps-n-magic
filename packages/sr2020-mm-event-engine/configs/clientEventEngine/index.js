@@ -98,13 +98,13 @@ export function makeGameModel(database) {
   gameServer.addDataBinding(new WsDataBinding({
     gameModel, entityName: 'locationRecord', wsConnection,
   }));
-  // gameServer.addDataBinding(new DataBinding({
-  //   gameModel,
-  //   entityName: 'manaOceanSettings',
-  //   DataProvider: ManaOceanSettingsProvider,
-  //   DataManager: ReadWriteSettingsDataManager,
-  //   ReadStrategy: PollingReadStrategy,
-  //   ReadStrategyArgs: [15000],
-  // }));
+  gameServer.addDataBinding(new DataBinding({
+    gameModel,
+    entityName: 'manaOceanSettings',
+    DataProvider: ManaOceanSettingsProvider,
+    DataManager: ReadWriteSettingsDataManager,
+    ReadStrategy: PollingReadStrategy,
+    ReadStrategyArgs: [15000],
+  }));
   return { gameModel, gameServer };
 }
