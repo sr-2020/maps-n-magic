@@ -14,10 +14,12 @@ class WebSocketWrapper {
 
   innerInit() {
     const { data } = this.initConfig;
-    this.ws.send(JSON.stringify({
-      type: data.type,
-      [data.payload]: this.gameModel.get(data.payload),
-    }));
+    data.forEach((item) => {
+      this.ws.send(JSON.stringify({
+        type: item.type,
+        [item.payload]: this.gameModel.get(item.payload),
+      }));
+    });
   }
 
   onMessage(msgStr) {

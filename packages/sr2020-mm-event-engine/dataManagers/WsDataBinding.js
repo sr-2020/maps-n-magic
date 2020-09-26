@@ -2,7 +2,7 @@ export function capitalizeFirstLetter(string) {
   return string.charAt(0).toUpperCase() + string.slice(1);
 }
 
-const forwardActions = ['locationRecordsChanged2'];
+const forwardActions = ['locationRecordsChanged2', 'beaconRecordsChanged2'];
 
 export class WsDataBinding {
   constructor({
@@ -10,9 +10,9 @@ export class WsDataBinding {
   }) {
     this.gameModel = gameModel;
     this.wsConnection = wsConnection;
-    this.entityName = entityName;
-    this.plural = `${entityName}s`;
-    this.ccEntityName = capitalizeFirstLetter(entityName);
+    // this.entityName = entityName;
+    // this.plural = `${entityName}s`;
+    // this.ccEntityName = capitalizeFirstLetter(entityName);
     this.emit = this.emit.bind(this);
     this.initClientConfig = this.initClientConfig.bind(this);
     this.onMessage = this.onMessage.bind(this);
@@ -24,10 +24,13 @@ export class WsDataBinding {
   initClientConfig() {
     const hasError = this.wsConnection.send({
       message: 'initClientConfig',
-      data: {
+      data: [{
         type: 'locationRecordsChanged2',
         payload: 'locationRecords',
-      },
+      }, {
+        type: 'beaconRecordsChanged2',
+        payload: 'beaconRecords',
+      }],
       forwardActions,
     });
     // if (hasError) {
@@ -42,10 +45,16 @@ export class WsDataBinding {
   }
 
   subscribe(action, gameModel) {
-    gameModel[action](`post${this.ccEntityName}Requested`, this.emit);
-    gameModel[action](`put${this.ccEntityName}Requested`, this.emit);
-    gameModel[action](`put${this.ccEntityName}sRequested`, this.emit);
-    gameModel[action](`delete${this.ccEntityName}Requested`, this.emit);
+    const arrList = [
+      'postLocationRecordRequested',
+      'putLocationRecordRequested',
+      'putLocationRecordsRequested',
+      'deleteLocationRecordRequested',
+      'postBeaconRecordRequested',
+      'putBeaconRecordRequested',
+      'deleteBeaconRecordRequested',
+    ];
+    arrList.forEach((eventName) => gameModel[action](eventName, this.emit));
   }
 
   subscribeWsConnection(action, wsConnection) {
@@ -64,6 +73,13 @@ export class WsDataBinding {
       this.gameModel.execute({
         ...data,
         type: 'setLocationRecords',
+      });
+    }
+
+    if (type === 'beaconRecordsChanged2') {
+      this.gameModel.execute({
+        ...data,
+        type: 'setBeaconRecords',
       });
     }
 

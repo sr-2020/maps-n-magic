@@ -12,19 +12,19 @@ import { LocationRecordService } from '../../services/LocationRecordService';
 // import { SoundMappingService } from '../../services/SoundMappingService';
 // import { UserWatcher } from '../../services/UserWatcher';
 // import { BaseVersion } from '../../services/BaseVersion';
-// import { BeaconRecordService } from '../../services/BeaconRecordService';
+import { BeaconRecordService } from '../../services/BeaconRecordService';
 // import { NotificationService } from '../../services/NotificationService';
 // import { BackgroundImageService } from '../../services/BackgroundImageService';
 // import { CharacterHealthStateService } from '../../services/CharacterHealthStateService';
 // import { UserRecordService } from '../../services/UserRecordService';
-// import { ManaOceanSettingsService } from '../../services/ManaOceanSettingsService';
+import { ManaOceanSettingsService } from '../../services/ManaOceanSettingsService';
 // import { ManaOceanService } from '../../services/ManaOceanService';
 
 // // import { fillGameModelWithBots } from './GameModelFiller';
-// import { CrudDataManager } from '../../dataManagers/CrudDataManager';
+import { CrudDataManager } from '../../dataManagers/CrudDataManager';
 import { LocationDataManager } from '../../dataManagers/LocationDataManager';
 // import { ReadDataManager } from '../../dataManagers/ReadDataManager';
-// import { ReadWriteSettingsDataManager } from '../../dataManagers/SettingsDataManagers';
+import { ReadWriteSettingsDataManager } from '../../dataManagers/SettingsDataManagers';
 // import { SingleReadStrategy } from '../../dataManagers/SingleReadStrategy';
 import { PollingReadStrategy } from '../../dataManagers/PollingReadStrategy';
 import { DataBinding } from '../../dataManagers/DataBinding';
@@ -51,12 +51,12 @@ const services = [
   // SoundMappingService,
   // UserWatcher,
   // BaseVersion,
-  // BeaconRecordService,
+  BeaconRecordService,
   // NotificationService,
   // BackgroundImageService,
   // CharacterHealthStateService,
   // UserRecordService,
-  // ManaOceanSettingsService,
+  ManaOceanSettingsService,
   // ManaOceanService,
 ];
 
@@ -66,14 +66,14 @@ export function makeGameModel(database) {
   const gameModel = gameServer.getGameModel();
   // fillGameModelWithBots(gameModel);
 
-  // gameServer.addDataBinding(new DataBinding({
-  //   gameModel,
-  //   entityName: 'beaconRecord',
-  //   DataProvider: BeaconRecordProvider,
-  //   DataManager: CrudDataManager,
-  //   ReadStrategy: PollingReadStrategy,
-  //   ReadStrategyArgs: [15000],
-  // }));
+  gameServer.addDataBinding(new DataBinding({
+    gameModel,
+    entityName: 'beaconRecord',
+    DataProvider: BeaconRecordProvider,
+    DataManager: CrudDataManager,
+    ReadStrategy: PollingReadStrategy,
+    ReadStrategyArgs: [15000],
+  }));
   gameServer.addDataBinding(new DataBinding({
     gameModel,
     entityName: 'locationRecord',
@@ -90,13 +90,13 @@ export function makeGameModel(database) {
   //   ReadStrategy: PollingReadStrategy,
   //   ReadStrategyArgs: [15000, 'reloadUserRecords'],
   // }));
-  // gameServer.addDataBinding(new DataBinding({
-  //   gameModel,
-  //   entityName: 'manaOceanSettings',
-  //   DataProvider: ManaOceanSettingsProvider,
-  //   DataManager: ReadWriteSettingsDataManager,
-  //   ReadStrategy: PollingReadStrategy,
-  //   ReadStrategyArgs: [15000],
-  // }));
+  gameServer.addDataBinding(new DataBinding({
+    gameModel,
+    entityName: 'manaOceanSettings',
+    DataProvider: ManaOceanSettingsProvider,
+    DataManager: ReadWriteSettingsDataManager,
+    ReadStrategy: PollingReadStrategy,
+    ReadStrategyArgs: [15000],
+  }));
   return { gameModel, gameServer };
 }

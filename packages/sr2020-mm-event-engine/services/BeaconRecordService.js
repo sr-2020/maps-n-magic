@@ -36,10 +36,10 @@ export class BeaconRecordService extends AbstractService {
 
   setData({ beaconRecords = [] } = {}) {
     // better data reuse
-    const { updated, added, unchanged } = getArrDiff(beaconRecords, this.beaconRecords, R.prop('id'));
-    this.beaconRecords = [...unchanged, ...updated, ...added];
-    return beaconRecords.length === this.beaconRecords && unchanged.length === beaconRecords.length;
-    // this.beaconRecords = beaconRecords;
+    // const { updated, added, unchanged } = getArrDiff(beaconRecords, this.beaconRecords, R.prop('id'));
+    // this.beaconRecords = [...unchanged, ...R.pluck('item', updated), ...added];
+    // return beaconRecords.length === this.beaconRecords && unchanged.length === beaconRecords.length;
+    this.beaconRecords = beaconRecords;
   }
 
   getData() {
@@ -53,10 +53,11 @@ export class BeaconRecordService extends AbstractService {
   }
 
   setBeaconRecords({ beaconRecords }) {
-    const hasChanges = this.setData({ beaconRecords });
-    if (!hasChanges) {
-      return;
-    }
+    this.setData({ beaconRecords });
+    // const hasChanges =
+    // if (!hasChanges) {
+    //   return;
+    // }
     this.emit('beaconRecordsChanged', {
       beaconRecords,
     });

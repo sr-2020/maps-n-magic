@@ -71,14 +71,14 @@ export function makeGameModel(database) {
 
   const wsConnection = new WSConnector(gameModel);
 
-  gameServer.addDataBinding(new DataBinding({
-    gameModel,
-    entityName: 'beaconRecord',
-    DataProvider: BeaconRecordProvider,
-    DataManager: CrudDataManager,
-    ReadStrategy: PollingReadStrategy,
-    ReadStrategyArgs: [15000],
-  }));
+  // gameServer.addDataBinding(new DataBinding({
+  //   gameModel,
+  //   entityName: 'beaconRecord',
+  //   DataProvider: BeaconRecordProvider,
+  //   DataManager: CrudDataManager,
+  //   ReadStrategy: PollingReadStrategy,
+  //   ReadStrategyArgs: [15000],
+  // }));
   // gameServer.addDataBinding(new DataBinding({
   //   gameModel,
   //   entityName: 'locationRecord',
@@ -96,7 +96,7 @@ export function makeGameModel(database) {
     ReadStrategyArgs: [15000, 'reloadUserRecords'],
   }));
   gameServer.addDataBinding(new WsDataBinding({
-    gameModel, entityName: 'locationRecord', wsConnection,
+    gameModel, wsConnection,
   }));
   gameServer.addDataBinding(new DataBinding({
     gameModel,
