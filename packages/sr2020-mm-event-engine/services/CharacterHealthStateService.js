@@ -45,11 +45,19 @@ export class CharacterHealthStateService extends AbstractService {
     const { characterId, characterHealthState } = action;
     console.log('setCharacterHealthState', characterId, characterHealthState);
     const prevCharacterHealthState = this.characterHealthStates[characterId];
-    this.characterHealthStates[characterId] = characterHealthState;
+    // this.characterHealthStates[characterId] = characterHealthState;
+    this.characterHealthStates = {
+      ...this.characterHealthStates,
+      [characterId]: characterHealthState,
+    };
     this.emit('characterHealthStateChanged', {
       ...action,
       type: 'characterHealthStateChanged',
       prevCharacterHealthState,
+    });
+    this.emit('characterHealthStatesLoaded', {
+      type: 'characterHealthStatesLoaded',
+      characterHealthStates: this.characterHealthStates,
     });
     // console.log({ characterId, characterHealthState, prevCharacterHealthState });
   }

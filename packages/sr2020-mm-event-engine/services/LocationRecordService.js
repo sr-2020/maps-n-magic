@@ -65,6 +65,9 @@ export class LocationRecordService extends AbstractService {
 
   getLocationRecord({ id }) {
     const locationRecord = this.locationRecords.find((br) => br.id === id);
+    if (locationRecord === undefined) {
+      console.error('location record not found, locaitonId', id);
+    }
     return R.clone(locationRecord);
   }
 
