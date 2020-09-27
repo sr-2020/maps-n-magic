@@ -60,7 +60,7 @@ const services = [
   CharacterHealthStateService,
   UserRecordService,
   ManaOceanSettingsService,
-  ManaOceanService,
+  // ManaOceanService,
 ];
 
 export function makeGameModel(database) {

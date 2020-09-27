@@ -1,6 +1,7 @@
 import * as R from 'ramda';
 // import R from 'ramda';
-import * as moment from 'moment-timezone';
+// import * as moment from 'moment-timezone'; // works in browser
+import moment from 'moment-timezone'; // works in node js
 
 export const fullDay = 24 * 60; // minutes in full day
 
@@ -27,6 +28,7 @@ const periodToPattern = (period) => ([
 // ]);
 
 export function getMoscowTime() {
+  // console.log('moment', moment);
   const moscowTime = moment().tz('Europe/Moscow');
 
   const moscowTimeInMinutes = moscowTime.hour() * 60 + moscowTime.minute();
