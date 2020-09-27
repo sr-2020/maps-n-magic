@@ -13,7 +13,7 @@ import { LocationRecordService } from '../../services/LocationRecordService';
 // import { UserWatcher } from '../../services/UserWatcher';
 // import { BaseVersion } from '../../services/BaseVersion';
 import { BeaconRecordService } from '../../services/BeaconRecordService';
-// import { NotificationService } from '../../services/NotificationService';
+import { NotificationService } from '../../services/NotificationService';
 // import { BackgroundImageService } from '../../services/BackgroundImageService';
 // import { CharacterHealthStateService } from '../../services/CharacterHealthStateService';
 // import { UserRecordService } from '../../services/UserRecordService';
@@ -52,7 +52,7 @@ const services = [
   // UserWatcher,
   // BaseVersion,
   BeaconRecordService,
-  // NotificationService,
+  NotificationService,
   // BackgroundImageService,
   // CharacterHealthStateService,
   // UserRecordService,

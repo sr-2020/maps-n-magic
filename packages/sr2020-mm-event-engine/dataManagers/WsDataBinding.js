@@ -6,6 +6,7 @@ const forwardActions = [
   'locationRecordsChanged2',
   'beaconRecordsChanged2',
   'manaOceanSettingsChanged',
+  'postNotification',
 ];
 
 export class WsDataBinding {
@@ -96,6 +97,10 @@ export class WsDataBinding {
         ...data,
         type: 'setManaOceanSettings',
       });
+    }
+
+    if (type === 'postNotification') {
+      this.gameModel.execute(data);
     }
 
     // console.log('onMessage', data);

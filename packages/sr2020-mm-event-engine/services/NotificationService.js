@@ -16,6 +16,7 @@ export class NotificationService extends AbstractService {
 
   postNotification({ title = '', message = '', kind = 'info' }) {
     this.emit('postNotification', {
+      type: 'postNotification',
       title,
       message,
       kind,
