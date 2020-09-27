@@ -67,6 +67,9 @@ export class ManaOceanService extends AbstractService {
     const { neutralManaLevel } = manaOceanSettings;
 
     const firstLocation = locationRecords.find(isGeoLocation);
+    if (!firstLocation) {
+      return;
+    }
 
     let { moscowTimeInMinutes, moscowTime } = getMoscowTime();
     // speed up time
@@ -81,7 +84,8 @@ export class ManaOceanService extends AbstractService {
 
     this.prevTideHeight = tideHeight;
 
-    console.log('onTideLevelUpdate', 'moscowTimeInMinutes', moscowTimeInMinutes, 'tideHeight', tideHeight, firstLocation);
+    // console.log('onTideLevelUpdate', 'moscowTimeInMinutes', moscowTimeInMinutes, 'tideHeight', tideHeight, firstLocation);
+    console.log('onTideLevelUpdate', 'moscowTimeInMinutes', moscowTimeInMinutes, 'tideHeight', tideHeight);
 
     // this.executeOnModel({
     //   type: 'putLocationRecords',

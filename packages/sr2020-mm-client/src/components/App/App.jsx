@@ -347,7 +347,7 @@ export class App extends Component {
                       {/* TODO CharacterHealthListener should be in event engine
                         This is a fictive component for polling character health status
                       */}
-                      <CharacterHealthListener gameModel={gameModel} />
+                      {/* <CharacterHealthListener gameModel={gameModel} /> */}
                     </main>
                   </div>
                 </Router>

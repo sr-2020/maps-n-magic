@@ -1,10 +1,9 @@
 // const fetch = require('node-fetch');
-const R = require('ramda');
-const { isGeoLocation } = require('sr2020-mm-event-engine/utils');
+import * as R from 'ramda';
+import { isGeoLocation } from '../../utils';
+// const { isGeoLocation } = require('sr2020-mm-event-engine/utils');
 
-// /api/v1/users/{id}
-const url = 'https://position.evarun.ru/api/v1/users';
-const locationUrl = 'https://position.evarun.ru/api/v1/locations';
+import { usersUrl, locationsUrl } from '../constants';
 
 let locations = null;
 
@@ -13,8 +12,8 @@ function randomInteger(min, max) {
   return Math.floor(rand);
 }
 
-async function getCharacterLocation(characterId, simulateLocation = false) {
-  const response = await fetch(`${url}/${characterId}`, {
+export async function getCharacterLocation(characterId, simulateLocation = false) {
+  const response = await fetch(`${usersUrl}/${characterId}`, {
   // const response = await fetch(`${url}`, {
     method: 'GET',
     headers: {
@@ -41,7 +40,7 @@ async function getCharacterLocation(characterId, simulateLocation = false) {
   return result.location_id;
 }
 async function getLocations() {
-  const response = await fetch(`${locationUrl}`, {
+  const response = await fetch(`${locationsUrl}`, {
   // const response = await fetch(`${url}`, {
     method: 'GET',
     headers: {
@@ -61,4 +60,4 @@ async function getLocations() {
 // getCharacterLocation(10198, true).then(console.log).catch(console.log);
 // getCharacterLocation(10198).then((data) => console.log(R.pluck('id', data))).catch(console.log);
 
-exports.getCharacterLocation = getCharacterLocation;
+// exports.getCharacterLocation = getCharacterLocation;

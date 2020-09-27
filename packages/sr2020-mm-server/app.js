@@ -43,7 +43,7 @@ app.use(cookieParser());
 
 app.get('/fileList', fileListRouter);
 app.get('/file/:name', fileRouter);
-app.all('/characterStates', characterStatesRouter);
+// app.all('/characterStates', characterStatesRouter);
 
 app.ws('/ws', (ws, req, next) => {
   ws.on('message', (msgStr) => {

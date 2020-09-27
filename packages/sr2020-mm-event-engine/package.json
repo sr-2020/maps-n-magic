@@ -6,6 +6,7 @@
     "ramda": "^0.27.1"
   },
   "dependencies": {
+    "@google-cloud/pubsub": "^2.0.0",
     "sr2020-mm-data": "*",
     "sr2020-mm-hacks-n-fixes": "*",
     "@thi.ng/geom-isec": "^0.5.7",

@@ -7,6 +7,8 @@ const forwardActions = [
   'beaconRecordsChanged2',
   'manaOceanSettingsChanged',
   'postNotification',
+  'characterHealthStateChanged',
+  'characterHealthStatesLoaded',
 ];
 
 export class WsDataBinding {
@@ -38,6 +40,9 @@ export class WsDataBinding {
       }, {
         type: 'manaOceanSettingsChanged',
         payload: 'manaOceanSettings',
+      }, {
+        type: 'characterHealthStatesLoaded',
+        payload: 'characterHealthStates',
       }],
       forwardActions,
     });
@@ -62,6 +67,7 @@ export class WsDataBinding {
       'putBeaconRecordRequested',
       'deleteBeaconRecordRequested',
       'postManaOceanSettingsRequested',
+      'setCharacterHealthState',
     ];
     arrList.forEach((eventName) => gameModel[action](eventName, this.emit));
   }
@@ -98,6 +104,23 @@ export class WsDataBinding {
         type: 'setManaOceanSettings',
       });
     }
+
+    if (type === 'characterHealthStateChanged') {
+      this.gameModel.execute({
+        ...data,
+        type: 'setCharacterHealthState',
+      });
+    }
+
+    if (type === 'characterHealthStatesLoaded') {
+      this.gameModel.execute({
+        ...data,
+        type: 'setCharacterHealthStates',
+      });
+    }
+
+    // 'characterHealthStateChanged',
+    // 'characterHealthStatesLoaded'
 
     if (type === 'postNotification') {
       this.gameModel.execute(data);

@@ -4,6 +4,10 @@ export const usersUrl = 'https://position.evarun.ru/api/v1/users';
 export const positionUrl = 'https://position.evarun.ru/api/v1/positions';
 export const manaOceanConfigUrl = 'https://gateway.evarun.ru/api/v1/config/manaOceanConfig';
 
+// // /api/v1/users/{id}
+// const url = 'https://position.evarun.ru/api/v1/users';
+// const locationUrl = 'https://position.evarun.ru/api/v1/locations';
+
 export const defaultBeaconRecord = {
   ssid: '',
   bssid: '',

@@ -6,12 +6,14 @@ export class CharacterHealthStateService extends AbstractService {
   metadata = {
     actions: [
       'setCharacterHealthState',
+      'setCharacterHealthStates',
     ],
     requests: [
       'characterHealthState', 'characterHealthStates',
     ],
     emitEvents: [
       'characterHealthStateChanged',
+      'characterHealthStatesLoaded',
     ],
     listenEvents: [],
   };
@@ -39,10 +41,25 @@ export class CharacterHealthStateService extends AbstractService {
     return R.clone(this.characterHealthStates[id]);
   }
 
-  setCharacterHealthState({ characterId, characterHealthState }) {
+  setCharacterHealthState(action) {
+    const { characterId, characterHealthState } = action;
+    console.log('setCharacterHealthState', characterId, characterHealthState);
     const prevCharacterHealthState = this.characterHealthStates[characterId];
     this.characterHealthStates[characterId] = characterHealthState;
-    this.emit('characterHealthStateChanged', { characterId, characterHealthState, prevCharacterHealthState });
+    this.emit('characterHealthStateChanged', {
+      ...action,
+      type: 'characterHealthStateChanged',
+      prevCharacterHealthState,
+    });
     // console.log({ characterId, characterHealthState, prevCharacterHealthState });
+  }
+
+  setCharacterHealthStates({ characterHealthStates } = {}) {
+    console.log('characterHealthStates', characterHealthStates);
+    // this.characterHealthStates = characterHealthStates;
+    // this.emit('characterHealthStatesLoaded', {
+    //   type: 'characterHealthStatesLoaded'
+    //   characterHealthStates
+    // });
   }
 }

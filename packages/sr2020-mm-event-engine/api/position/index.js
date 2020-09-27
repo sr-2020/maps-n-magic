@@ -11,7 +11,7 @@ import {
   manaOceanConfigUrl,
   defaultBeaconRecord,
   defaultLocationRecord,
-} from './constants';
+} from '../constants';
 
 export class RemoteBeaconRecordProvider extends ManageableResourceProvider {
   constructor() {

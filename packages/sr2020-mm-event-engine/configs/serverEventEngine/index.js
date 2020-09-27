@@ -15,7 +15,7 @@ import { LocationRecordService } from '../../services/LocationRecordService';
 import { BeaconRecordService } from '../../services/BeaconRecordService';
 import { NotificationService } from '../../services/NotificationService';
 // import { BackgroundImageService } from '../../services/BackgroundImageService';
-// import { CharacterHealthStateService } from '../../services/CharacterHealthStateService';
+import { CharacterHealthStateService } from '../../services/CharacterHealthStateService';
 // import { UserRecordService } from '../../services/UserRecordService';
 import { ManaOceanSettingsService } from '../../services/ManaOceanSettingsService';
 import { ManaOceanService } from '../../services/ManaOceanService';
@@ -36,6 +36,8 @@ import {
   ManaOceanSettingsProvider,
 } from '../../api/position';
 
+import { CharacterStatesListener } from '../../api/characterStates/CharacterStatesListener';
+
 import { EventEngine } from '../../core/EventEngine';
 
 const services = [
@@ -54,7 +56,7 @@ const services = [
   BeaconRecordService,
   NotificationService,
   // BackgroundImageService,
-  // CharacterHealthStateService,
+  CharacterHealthStateService,
   // UserRecordService,
   ManaOceanSettingsService,
   ManaOceanService,
@@ -98,5 +100,6 @@ export function makeGameModel(database) {
     ReadStrategy: PollingReadStrategy,
     ReadStrategyArgs: [15000],
   }));
+  const characterStatesListener = new CharacterStatesListener(gameModel);
   return { gameModel, gameServer };
 }
