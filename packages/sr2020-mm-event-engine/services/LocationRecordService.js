@@ -111,12 +111,24 @@ export class LocationRecordService extends AbstractService {
   }
 
   putLocationRecordsConfirmed({ locationRecords }) {
-    console.log(locationRecords);
+    // console.log('locationRecords', locationRecords);
+    const locationRecordsIndex = R.indexBy(R.prop('id'), locationRecords);
+    this.locationRecords = this.locationRecords.map((locationRecord) => {
+      const updatedLocationRecord = locationRecordsIndex[locationRecord.id];
+      if (updatedLocationRecord) {
+        return updatedLocationRecord;
+      }
+      return locationRecord;
+    });
     // locationRecords.forEach((locationRecord) => {
     //   const index = this.locationRecords.findIndex((br) => br.id === locationRecord.id);
     //   this.locationRecords[index] = locationRecord;
     // });
-    // this.emit('putLocationRecords', { locationRecords });
+    this.emit('putLocationRecords', { locationRecords });
+    this.emit('locationRecordsChanged2', {
+      type: 'locationRecordsChanged2',
+      locationRecords: this.locationRecords,
+    });
   }
 
   deleteLocationRecordConfirmed({ locationRecord }) {

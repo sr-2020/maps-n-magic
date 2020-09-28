@@ -66,10 +66,12 @@ export class ManaOceanService extends AbstractService {
     const locationRecords = this.getFromModel('locationRecords');
     const { neutralManaLevel } = manaOceanSettings;
 
-    const firstLocation = locationRecords.find(isGeoLocation);
-    if (!firstLocation) {
-      return;
-    }
+    const geoLocations = locationRecords.filter(isGeoLocation);
+
+    // const firstLocation = locationRecords.find(isGeoLocation);
+    // if (!firstLocation) {
+    //   return;
+    // }
 
     let { moscowTimeInMinutes, moscowTime } = getMoscowTime();
     // speed up time
@@ -87,28 +89,11 @@ export class ManaOceanService extends AbstractService {
     // console.log('onTideLevelUpdate', 'moscowTimeInMinutes', moscowTimeInMinutes, 'tideHeight', tideHeight, firstLocation);
     console.log('onTideLevelUpdate', 'moscowTimeInMinutes', moscowTimeInMinutes, 'tideHeight', tideHeight);
 
-    // this.executeOnModel({
-    //   type: 'putLocationRecords',
-    //   updates: [{
-    //     id: firstLocation.id,
-    //     body: {
-    //       options: {
-    //         ...firstLocation.options,
-    //         manaLevel: this.calcManaLevel([neutralManaLevel, tideHeight]),
-    //         manaLevelModifiers: {
-    //           neutralManaLevel,
-    //           tideHeight,
-    //         },
-    //       },
-    //     },
-    //   }],
-    // });
-    this.executeOnModel({
-      type: 'putLocationRecord',
-      id: firstLocation.id,
-      props: {
+    const updates = geoLocations.map((geoLocation) => ({
+      id: geoLocation.id,
+      body: {
         options: {
-          ...firstLocation.options,
+          ...geoLocation.options,
           manaLevel: this.calcManaLevel([neutralManaLevel, tideHeight]),
           manaLevelModifiers: {
             neutralManaLevel,
@@ -116,7 +101,26 @@ export class ManaOceanService extends AbstractService {
           },
         },
       },
+    }));
+
+    this.executeOnModel({
+      type: 'putLocationRecords',
+      updates,
     });
+    // this.executeOnModel({
+    //   type: 'putLocationRecord',
+    //   id: firstLocation.id,
+    //   props: {
+    //     options: {
+    //       ...firstLocation.options,
+    //       manaLevel: this.calcManaLevel([neutralManaLevel, tideHeight]),
+    //       manaLevelModifiers: {
+    //         neutralManaLevel,
+    //         tideHeight,
+    //       },
+    //     },
+    //   },
+    // });
   }
 
   calcManaLevel(arr) {
