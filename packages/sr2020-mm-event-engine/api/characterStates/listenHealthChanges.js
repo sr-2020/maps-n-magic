@@ -2,7 +2,13 @@
 // const { PubSub } = require('@google-cloud/pubsub');
 import { PubSub } from '@google-cloud/pubsub';
 
-const subscriptionName = 'rescue-service';
+let subscriptionName;
+if (process.env.NODE_ENV === 'production') {
+  subscriptionName = 'rescue-service';
+} else {
+  subscriptionName = 'rescue-service-dev';
+}
+console.log('subscriptionName', subscriptionName);
 const timeout = 60;
 
 // Creates a client; cache this for further use
