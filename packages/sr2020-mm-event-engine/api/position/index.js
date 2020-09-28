@@ -1,6 +1,6 @@
 // eslint-disable-next-line max-classes-per-file
 import {
-  gettable, postable, puttable, deletable, postSettings, getSettings,
+  gettable, postable, puttable, deletable, postSettings, getSettings, multiPuttable,
 } from './apiInterfaces';
 
 import {
@@ -11,7 +11,7 @@ import {
   manaOceanConfigUrl,
   defaultBeaconRecord,
   defaultLocationRecord,
-} from './constants';
+} from '../constants';
 
 export class RemoteBeaconRecordProvider extends ManageableResourceProvider {
   constructor() {
@@ -19,7 +19,7 @@ export class RemoteBeaconRecordProvider extends ManageableResourceProvider {
   }
 }
 
-export class RemoteLocationRecordProvider extends ManageableResourceProvider {
+export class RemoteLocationRecordProvider extends ManageablePlusResourceProvider {
   constructor() {
     super(locationsUrl, defaultLocationRecord);
   }
@@ -67,6 +67,20 @@ function ManageableResourceProvider(url, defaultObject) {
   );
 }
 
+function ManageablePlusResourceProvider(url, defaultObject) {
+  this.url = url;
+  this.defaultObject = defaultObject;
+
+  return Object.assign(
+    this,
+    gettable(this),
+    postable(this),
+    puttable(this),
+    deletable(this),
+    multiPuttable(this),
+  );
+}
+
 // function ReadWriteResourceProvider(url) {
 //   this.url = url;
 
@@ -110,7 +124,6 @@ function SettingsResourceProvider(url) {
 //     moscowTime: 0,
 //   }),
 // }).then((res) => res.json()).then(console.log);
-
 
 function GettableResourceProvider(url) {
   this.url = url;

@@ -55,18 +55,23 @@ export class ManaOceanSettingsService extends AbstractService {
     this.setData({ manaOceanSettings });
     if (!areEqual) {
       this.emit('manaOceanSettingsChanged', {
+        type: 'manaOceanSettingsChanged',
         manaOceanSettings,
       });
     }
   }
 
-  postManaOceanSettings = ({ manaOceanSettings }) => {
-    this.emit('postManaOceanSettingsRequested', { manaOceanSettings });
+  postManaOceanSettings = (action) => {
+    this.emit('postManaOceanSettingsRequested', action);
   }
 
   postManaOceanSettingsConfirmed({ manaOceanSettings }) {
     this.manaOceanSettings = R.clone(manaOceanSettings);
     // console.log('postBeaconRecord');
     this.emit('postManaOceanSettings', { manaOceanSettings });
+    this.emit('manaOceanSettingsChanged', {
+      type: 'manaOceanSettingsChanged',
+      manaOceanSettings,
+    });
   }
 }

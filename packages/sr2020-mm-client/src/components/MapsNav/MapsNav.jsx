@@ -19,11 +19,11 @@ const navLinks = [{
 }];
 
 const navLinks2 = [{
-//   to: '/manaOceanSettings',
-//   tKey: 'manaOceanSettings',
-// }, {
   to: '/rescueService',
   tKey: 'rescueService',
+}, {
+  to: '/manaOcean',
+  tKey: 'manaOcean',
 }];
 
 const navLinks3 = [{

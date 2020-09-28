@@ -8,4 +8,5 @@ export const AUDIO_RETRANSLATOR = {
 };
 
 export const CHARACTER_STATES_URL = 'http://localhost:3001';
+export const WS_URL = 'ws://localhost:3001/ws';
 // export const CHARACTER_STATES_URL = '';

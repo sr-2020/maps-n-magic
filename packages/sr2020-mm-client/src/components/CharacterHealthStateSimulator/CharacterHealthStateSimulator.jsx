@@ -3,14 +3,13 @@ import './CharacterHealthStateSimulator.css';
 
 import * as R from 'ramda';
 
-import { isGeoLocation } from '../../utils/miscUtils';
+import { isGeoLocation } from 'sr2020-mm-event-engine/utils';
 
 // import { CharacterHealthStateSimulatorPropTypes } from '../../types';
 
 const healthStates = ['healthy', 'wounded', 'clinically_dead', 'biologically_dead'];
 
 const CHARACTER_CHANGE_TIMEOUT = 1000;
-
 
 // random number from min to (max+1)
 function randomInteger(min, max) {
@@ -55,7 +54,7 @@ export class CharacterHealthStateSimulator extends Component {
     // console.log(locations);
 
     gameModel.execute({
-      type: 'setCharacterHealthState',
+      type: 'putCharHealth',
       characterId,
       characterHealthState: {
         locationId: getRandomEl(locations).id,

@@ -1,6 +1,7 @@
 import React, {
   Component, useState, useEffect, useContext,
 } from 'react';
+import Color from 'color';
 import './GeoJsonLayer.css';
 import * as R from 'ramda';
 
@@ -30,10 +31,11 @@ function camelize(str) {
   // return capitalString;
 }
 
+// eslint-disable-next-line max-lines-per-function
 export function GeoJsonLayer(props) {
   const [group] = useState(L.layerGroup([]));
   const {
-    enableByDefault, layerCommunicator, layerNameKey, geoData,
+    enableByDefault, layerCommunicator, layerNameKey, geoData, grayscale = false,
   } = props;
   const translator = useContext(TranslatorContext);
 
@@ -50,19 +52,26 @@ export function GeoJsonLayer(props) {
     };
   }, []);
 
+  const makeStyles = function (properties) {
+    return R.pipe(
+      R.keys,
+      R.filter(R.includes(R.__, styleProps)),
+      R.reduce((acc, prop) => {
+        let value = properties[prop];
+        if (grayscale && (prop === 'stroke' || prop === 'fill')) {
+          value = Color(value).grayscale().string();
+        }
+        acc[transformName(prop)] = value;
+        return acc;
+      }, {}),
+    )(properties);
+  };
+
   useEffect(() => {
     geoData.features.forEach((feature) => {
       feature = translator.geoJsonMoveTo(feature);
       const style = function (feature2) {
         const { properties } = feature2;
-        const makeStyles = R.pipe(
-          R.keys,
-          R.filter(R.includes(R.__, styleProps)),
-          R.reduce((acc, prop) => {
-            acc[transformName(prop)] = properties[prop];
-            return acc;
-          }, {}),
-        );
         // console.log(properties.name, makeStyles(properties));
         return makeStyles(properties);
       };

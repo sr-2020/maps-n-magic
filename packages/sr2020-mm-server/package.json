@@ -3,8 +3,9 @@
   "version": "0.0.0",
   "private": true,
   "scripts": {
-    "start": "node ./bin/www",
-    "start:server": "node ./bin/www"
+    "start": "node -r esm ./bin/www",
+    "start:server": "node -r esm ./bin/www",
+    "watch:server": "nodemon --inspect -r esm ./bin/www"
   },
   "dependencies": {
     "@google-cloud/pubsub": "^2.0.0",
@@ -12,12 +13,16 @@
     "cors": "^2.8.5",
     "debug": "~4.1.1",
     "dropbox": "^4.0.30",
+    "esm": "^3.2.25",
     "express": "~4.17.1",
+    "express-ws": "^4.0.0",
     "http-errors": "~1.7.3",
     "isomorphic-fetch": "^2.2.1",
     "morgan": "~1.10.0",
     "node-fetch": "^2.6.1",
-    "ramda": "^0.27.1"
+    "ramda": "^0.27.1",
+    "shortid": "^2.2.15",
+    "sr2020-mm-event-engine": "*"
   },
   "devDependencies": {
     "nodemon": "^2.0.2"

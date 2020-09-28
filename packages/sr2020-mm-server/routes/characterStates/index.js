@@ -15,12 +15,12 @@ const bodyConditions = [
   'biologically_dead',
 ];
 
-async function onMessageRecieved(data) {
-  // const { characterId } = console.log(data);
-  const { characterId, stateFrom, stateTo } = data;
-  const locationId = await getCharacterLocation(characterId, true);
-  updateState(characterId, locationId, stateTo);
-}
+// async function onMessageRecieved(data) {
+//   // const { characterId } = console.log(data);
+//   const { characterId, stateFrom, stateTo } = data;
+//   const locationId = await getCharacterLocation(characterId, true);
+//   updateState(characterId, locationId, stateTo);
+// }
 
 function updateState(characterId, locationId, healthState) {
   characterStates[characterId] = {
@@ -71,6 +71,6 @@ router.put('/characterStates', (req, res) => {
   }
 });
 
-listenHealthChanges(onMessageRecieved, true);
+// listenHealthChanges(onMessageRecieved, true);
 
 module.exports = router;

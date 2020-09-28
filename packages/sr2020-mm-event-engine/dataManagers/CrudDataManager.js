@@ -8,6 +8,7 @@ export class CrudDataManager extends ReadDataManager {
     this.onPostEntityRequested = this.onPostEntityRequested.bind(this);
     this.onPutEntityRequested = this.onPutEntityRequested.bind(this);
     this.onDeleteEntityRequested = this.onDeleteEntityRequested.bind(this);
+    this.putEntityTimeoutIndex = {};
   }
 
   initialize() {
@@ -28,9 +29,9 @@ export class CrudDataManager extends ReadDataManager {
   }
 
   onPutEntityRequested({ id, props }) {
-    clearTimeout(this.inputChangeTimeout);
+    clearTimeout(this.putEntityTimeoutIndex[id]);
 
-    this.inputChangeTimeout = setTimeout(() => {
+    this.putEntityTimeoutIndex[id] = setTimeout(() => {
       this.dataProvider.put({ id, props }).then((entity) => {
         const index = this.entities.findIndex((br) => br.id === id);
         this.entities[index] = entity;

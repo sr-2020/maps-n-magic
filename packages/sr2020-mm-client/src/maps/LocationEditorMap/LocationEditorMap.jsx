@@ -5,11 +5,9 @@ import { Map } from 'sr2020-mm-client-core/maps/Map';
 
 import { DefaultSatelliteBackground } from 'sr2020-mm-client-core/layers/DefaultSatelliteBackground';
 import { BaseContourLayer2 } from 'sr2020-mm-client-core/layers/BaseContourLayer2';
-import { BackgroundImageLayer } from '../../layers/BackgroundImageLayer';
+import { BackgroundImageDisplayLayer } from '../../layers/BackgroundImageDisplayLayer';
 import { GoogleMapsExportedDataLayer } from '../../layers/GoogleMapsExportedDataLayer';
-import { LocationLayer3 } from '../../layers/LocationLayer3';
-
-// import { LocationEditorMapPropTypes } from '../../types';
+import { LocationLayer4 } from '../../layers/LocationLayer4';
 
 export function LocationEditorMap(props) {
   const {
@@ -28,18 +26,15 @@ export function LocationEditorMap(props) {
       <BaseContourLayer2
         enableByDefault
       />
-      <BackgroundImageLayer
+      <BackgroundImageDisplayLayer
         enableByDefault
-        editable={false}
       />
       <GoogleMapsExportedDataLayer
         enableByDefault={false}
       />
-      <LocationLayer3
+      <LocationLayer4
         enableByDefault
       />
     </Map>
   );
 }
-
-// LocationEditorMap.propTypes = LocationEditorMapPropTypes;

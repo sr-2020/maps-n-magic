@@ -15,9 +15,11 @@ export class LocationRecordService extends AbstractService {
       'postLocationRecord',
       'deleteLocationRecord',
       'putLocationRecord',
+      'putLocationRecords',
       'postLocationRecordConfirmed',
       'deleteLocationRecordConfirmed',
       'putLocationRecordConfirmed',
+      'putLocationRecordsConfirmed',
       'setLocationRecords',
     ],
     requests: ['locationRecord', 'locationRecords'],
@@ -25,10 +27,13 @@ export class LocationRecordService extends AbstractService {
       'postLocationRecord',
       'deleteLocationRecord',
       'putLocationRecord',
+      'putLocationRecords',
       'postLocationRecordRequested',
       'deleteLocationRecordRequested',
       'putLocationRecordRequested',
+      'putLocationRecordsRequested',
       'locationRecordsChanged',
+      'locationRecordsChanged2',
     ],
     listenEvents: [],
   };
@@ -60,6 +65,9 @@ export class LocationRecordService extends AbstractService {
 
   getLocationRecord({ id }) {
     const locationRecord = this.locationRecords.find((br) => br.id === id);
+    if (locationRecord === undefined) {
+      console.error('location record not found, locaitonId', id);
+    }
     return R.clone(locationRecord);
   }
 
@@ -69,34 +77,64 @@ export class LocationRecordService extends AbstractService {
     this.emit('locationRecordsChanged', {
       locationRecords,
     });
+    this.emit('locationRecordsChanged2', {
+      type: 'locationRecordsChanged2',
+      locationRecords,
+    });
   }
 
-  putLocationRecord({ id, props }) {
-    this.emit('putLocationRecordRequested', { id, props });
+  putLocationRecord(action) {
+    this.emit('putLocationRecordRequested', action);
   }
 
-  postLocationRecord = ({ props }) => {
-    this.emit('postLocationRecordRequested', { props });
+  putLocationRecords(action) {
+    this.emit('putLocationRecordsRequested', action);
   }
 
-  deleteLocationRecord = ({ id }) => {
-    this.emit('deleteLocationRecordRequested', { id });
+  postLocationRecord = (action) => {
+    this.emit('postLocationRecordRequested', action);
+  }
+
+  deleteLocationRecord = (action) => {
+    this.emit('deleteLocationRecordRequested', action);
   }
 
   putLocationRecordConfirmed({ locationRecord }) {
     const index = this.locationRecords.findIndex((br) => br.id === locationRecord.id);
+    this.locationRecords = [...this.locationRecords];
     this.locationRecords[index] = locationRecord;
     this.emit('putLocationRecord', { locationRecord });
+    this.emit('locationRecordsChanged2', {
+      type: 'locationRecordsChanged2',
+      locationRecords: this.locationRecords,
+    });
+  }
+
+  putLocationRecordsConfirmed({ locationRecords }) {
+    console.log(locationRecords);
+    // locationRecords.forEach((locationRecord) => {
+    //   const index = this.locationRecords.findIndex((br) => br.id === locationRecord.id);
+    //   this.locationRecords[index] = locationRecord;
+    // });
+    // this.emit('putLocationRecords', { locationRecords });
   }
 
   deleteLocationRecordConfirmed({ locationRecord }) {
     this.locationRecords = this.locationRecords.filter((br) => br.id !== locationRecord.id);
     this.emit('deleteLocationRecord', { locationRecord });
+    this.emit('locationRecordsChanged2', {
+      type: 'locationRecordsChanged2',
+      locationRecords: this.locationRecords,
+    });
   }
 
   postLocationRecordConfirmed({ locationRecord }) {
-    this.locationRecords.push(locationRecord);
+    this.locationRecords = [...this.locationRecords, locationRecord];
     // console.log('postBeaconRecord');
     this.emit('postLocationRecord', { locationRecord });
+    this.emit('locationRecordsChanged2', {
+      type: 'locationRecordsChanged2',
+      locationRecords: this.locationRecords,
+    });
   }
 }

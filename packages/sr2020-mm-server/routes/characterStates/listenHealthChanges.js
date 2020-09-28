@@ -26,7 +26,6 @@ function listenHealthChanges(callback, simulateMessages = false) {
     callback(parsedData);
   };
 
-
   // Listen for new messages until timeout is hit
   subscription.on('message', messageHandler);
 

@@ -26,12 +26,14 @@ export class ReadDataManager {
   }
 
   load() {
+    console.log(`load ${this.entityName}`);
     this.dataProvider.get().then((entities) => {
       if (R.equals(this.entities, entities)) {
         // console.log('no changes', this.ccEntityName);
         return;
       }
       this.entities = entities;
+      // console.log(entities);
       this.gameModel.execute({
         type: `set${this.ccEntityName}s`,
         [this.plural]: R.clone(this.entities),

@@ -40,7 +40,10 @@ Girt
 Schera
 10198
 51614
-Алексей Еремин`.split('\n');
+Алексей Еремин
+11157
+51935
+NtsDK`.split('\n');
 
 const userList = (R.map(R.zipObj(['userId', 'joinId', 'name']), R.splitEvery(3, arr)));
 const userDict = R.indexBy(R.prop('userId'), userList);

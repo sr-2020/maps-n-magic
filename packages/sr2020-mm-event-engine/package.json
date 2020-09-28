@@ -6,7 +6,12 @@
     "ramda": "^0.27.1"
   },
   "dependencies": {
+    "@google-cloud/pubsub": "^2.0.0",
     "sr2020-mm-data": "*",
-    "@thi.ng/geom-isec": "^0.5.7"
+    "sr2020-mm-hacks-n-fixes": "*",
+    "@thi.ng/geom-isec": "^0.5.7",
+    "moment": "^2.27.0",
+    "moment-timezone": "^0.5.31",
+    "leaflet": "^1.7.1"
   }
 }

@@ -51,7 +51,7 @@ export class CharacterHealthListener extends Component {
 
     const postUpdate = (characterId) => {
       gameModel.execute({
-        type: 'setCharacterHealthState',
+        type: 'putCharHealth',
         characterId,
         characterHealthState: {
           ...newStates[characterId],
@@ -66,7 +66,6 @@ export class CharacterHealthListener extends Component {
 
     changes.forEach(postUpdate);
   }
-
 
   render() {
     return null;

@@ -1,7 +1,6 @@
-
 export const gettable = (state) => ({
   async get() {
-    const response = await fetch(state.url);
+    const response = await fetch(`${state.url}?limit=200`);
     if (!response.ok) {
       const text = await response.text();
       throw new Error(`Network response was not ok ${text}`);
@@ -46,7 +45,6 @@ export const getSettings = (state) => ({
 //     return response.json();
 //   },
 // });
-
 
 // export const manaOceanGettable = (state) => ({
 //   async get() {
@@ -122,6 +120,26 @@ export const puttable = (state) => ({
       body: JSON.stringify({
         ...props,
       }),
+    });
+
+    if (!response.ok) {
+      const text = await response.text();
+      throw new Error(`Network response was not ok ${text}`);
+    }
+
+    return response.json();
+  },
+});
+
+export const multiPuttable = (state) => ({
+  async putMultiple({ updates }) {
+    const response = await fetch(`${state.url}`, {
+      method: 'PUT',
+      headers: {
+        'Content-Type': 'application/json;charset=utf-8',
+        'X-User-Id': 1,
+      },
+      body: JSON.stringify(updates),
     });
 
     if (!response.ok) {

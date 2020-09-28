@@ -16,6 +16,7 @@ export class BackgroundImageService extends AbstractService {
       'putBackgroundImage',
       'postBackgroundImage',
       'deleteBackgroundImage',
+      'backgroundImagesChanged',
     ],
     listenEvents: [],
   };
@@ -29,6 +30,10 @@ export class BackgroundImageService extends AbstractService {
   setData({ backgroundImages } = {}) {
     this.backgroundImages = backgroundImages || R.clone(defaultBackgroundImages);
     this.maxBackgroundImageId = R.reduce(R.max, 1, R.pluck('id', this.backgroundImages));
+    this.emit('backgroundImagesChanged', {
+      type: 'backgroundImagesChanged',
+      backgroundImages,
+    });
   }
 
   getData() {
@@ -43,6 +48,7 @@ export class BackgroundImageService extends AbstractService {
 
   putBackgroundImage({ id, props }) {
     const index = this.backgroundImages.findIndex((bi) => bi.id === id);
+    this.backgroundImages = [...this.backgroundImages];
     this.backgroundImages[index] = {
       ...this.backgroundImages[index],
       ...props,
@@ -50,6 +56,10 @@ export class BackgroundImageService extends AbstractService {
     };
     this.emit('putBackgroundImage', {
       backgroundImage: this.backgroundImages[index],
+    });
+    this.emit('backgroundImagesChanged', {
+      type: 'backgroundImagesChanged',
+      backgroundImages: this.backgroundImages,
     });
   }
 
@@ -61,8 +71,12 @@ export class BackgroundImageService extends AbstractService {
       id: this.maxBackgroundImageId,
       name: `Image ${String(this.maxBackgroundImageId)}`,
     };
-    this.backgroundImages.push(backgroundImage);
+    this.backgroundImages = [...this.backgroundImages, backgroundImage];
     this.emit('postBackgroundImage', { backgroundImage });
+    this.emit('backgroundImagesChanged', {
+      type: 'backgroundImagesChanged',
+      backgroundImages: this.backgroundImages,
+    });
     return backgroundImage;
   }
 
@@ -71,6 +85,10 @@ export class BackgroundImageService extends AbstractService {
     const backgroundImage = this.backgroundImages[index];
     this.backgroundImages = R.remove(index, 1, this.backgroundImages);
     this.emit('deleteBackgroundImage', { backgroundImage });
+    this.emit('backgroundImagesChanged', {
+      type: 'backgroundImagesChanged',
+      backgroundImages: this.backgroundImages,
+    });
     return backgroundImage;
   }
 }

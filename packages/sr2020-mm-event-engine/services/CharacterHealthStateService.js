@@ -5,13 +5,17 @@ import { AbstractService } from '../core/AbstractService';
 export class CharacterHealthStateService extends AbstractService {
   metadata = {
     actions: [
-      'setCharacterHealthState',
+      'putCharHealth',
+      'putCharHealthConfirmed',
+      'setCharacterHealthStates',
     ],
     requests: [
       'characterHealthState', 'characterHealthStates',
     ],
     emitEvents: [
+      'putCharHealthRequested',
       'characterHealthStateChanged',
+      'characterHealthStatesLoaded',
     ],
     listenEvents: [],
   };
@@ -39,10 +43,37 @@ export class CharacterHealthStateService extends AbstractService {
     return R.clone(this.characterHealthStates[id]);
   }
 
-  setCharacterHealthState({ characterId, characterHealthState }) {
+  putCharHealth(action) {
+    this.emit('putCharHealthRequested', action);
+  }
+
+  putCharHealthConfirmed(action) {
+    const { characterId, characterHealthState } = action;
+    console.log('putCharHealthConfirmed', characterId, characterHealthState);
     const prevCharacterHealthState = this.characterHealthStates[characterId];
-    this.characterHealthStates[characterId] = characterHealthState;
-    this.emit('characterHealthStateChanged', { characterId, characterHealthState, prevCharacterHealthState });
+    // this.characterHealthStates[characterId] = characterHealthState;
+    this.characterHealthStates = {
+      ...this.characterHealthStates,
+      [characterId]: characterHealthState,
+    };
+    this.emit('characterHealthStateChanged', {
+      ...action,
+      type: 'characterHealthStateChanged',
+      prevCharacterHealthState,
+    });
+    this.emit('characterHealthStatesLoaded', {
+      type: 'characterHealthStatesLoaded',
+      characterHealthStates: this.characterHealthStates,
+    });
     // console.log({ characterId, characterHealthState, prevCharacterHealthState });
+  }
+
+  setCharacterHealthStates({ characterHealthStates } = {}) {
+    console.log('characterHealthStates', characterHealthStates);
+    // this.characterHealthStates = characterHealthStates;
+    // this.emit('characterHealthStatesLoaded', {
+    //   type: 'characterHealthStatesLoaded'
+    //   characterHealthStates
+    // });
   }
 }

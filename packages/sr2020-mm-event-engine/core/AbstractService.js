@@ -68,6 +68,7 @@ export class AbstractService {
   }
 
   emit(...args) {
+    // console.log('emit', args[0]);
     if (!this.metadata.emitEvents.includes(args[0])) {
       throw new Error(`Event ${args[0]} is not in emit events list of ${this.constructor.name}`);
     }
@@ -91,8 +92,8 @@ export class AbstractService {
   getFromModel(...args) {
     const request = stringToType(args[0]);
 
-    const includes = this.metadata.needRequests.includes(request.type);
-    if (!includes) {
+    const { needRequests } = this.metadata;
+    if (needRequests && !needRequests.includes(request.type)) {
       throw new Error(`Request ${request.type} is not expected from ${this.constructor.name}`);
     }
 
@@ -102,8 +103,8 @@ export class AbstractService {
   executeOnModel(...args) {
     const action = stringToType(args[0]);
 
-    const includes = this.metadata.needActions.includes(action.type);
-    if (!includes) {
+    const { needActions } = this.metadata;
+    if (needActions && !needActions.includes(action.type)) {
       throw new Error(`Action ${action.type} is not expected from ${this.constructor.name}`);
     }
 
