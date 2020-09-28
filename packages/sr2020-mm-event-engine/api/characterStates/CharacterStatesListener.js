@@ -29,7 +29,7 @@ export class CharacterStatesListener {
 
   updateState(characterId, locationId, healthState) {
     this.gameModel.execute({
-      type: 'setCharacterHealthState',
+      type: 'putCharHealth',
       characterId,
       characterHealthState: {
         locationId,
@@ -38,14 +38,14 @@ export class CharacterStatesListener {
     });
 
     // gameModel.execute({
-    //   type: 'setCharacterHealthState',
+    //   type: 'putCharHealth',
     //   characterId,
     //   characterHealthState: {
     //     locationId: getRandomEl(locations).id,
     //     healthState: getRandomEl(healthStates),
     //   },
     // });
-    // setCharacterHealthState({ characterId, characterHealthState })
+    // putCharHealth({ characterId, characterHealthState })
     // characterStates[characterId] = {
     //   locationId,
     //   healthState,

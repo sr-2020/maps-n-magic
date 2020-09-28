@@ -10,6 +10,7 @@ class WebSocketWrapper {
     this.subscribeWsConnection('on');
     this.subscribe('on');
     this.innerInit();
+    console.log('forward actions', initConfig.forwardActions);
   }
 
   innerInit() {
@@ -23,7 +24,7 @@ class WebSocketWrapper {
   }
 
   onMessage(msgStr) {
-    console.log('msgStr', msgStr);
+    console.log('recieved action', msgStr);
     this.gameModel.execute(JSON.parse(msgStr));
   }
 
@@ -36,6 +37,7 @@ class WebSocketWrapper {
   }
 
   forwardAction(action) {
+    console.log('forwardAction', action.type);
     this.ws.send(JSON.stringify(action));
   }
 

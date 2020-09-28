@@ -120,13 +120,21 @@ export class RescueServiceMessageSender extends Component {
       return;
     }
 
-    putCharacterState({
+    gameModel.execute({
+      type: 'putCharHealth',
       characterId,
-      locationId: Number(data.get('locationId')),
-      healthState: data.get('healthStateRadio'),
-    }).catch((error) => {
-      console.error(error);
+      characterHealthState: {
+        locationId: Number(data.get('locationId')),
+        healthState: data.get('healthStateRadio'),
+      },
     });
+    // putCharacterState({
+    //   characterId,
+    //   locationId: Number(data.get('locationId')),
+    //   healthState: data.get('healthStateRadio'),
+    // }).catch((error) => {
+    //   console.error(error);
+    // });
   }
 
   // eslint-disable-next-line class-methods-use-this

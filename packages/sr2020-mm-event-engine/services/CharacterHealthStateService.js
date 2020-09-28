@@ -5,13 +5,15 @@ import { AbstractService } from '../core/AbstractService';
 export class CharacterHealthStateService extends AbstractService {
   metadata = {
     actions: [
-      'setCharacterHealthState',
+      'putCharHealth',
+      'putCharHealthConfirmed',
       'setCharacterHealthStates',
     ],
     requests: [
       'characterHealthState', 'characterHealthStates',
     ],
     emitEvents: [
+      'putCharHealthRequested',
       'characterHealthStateChanged',
       'characterHealthStatesLoaded',
     ],
@@ -41,9 +43,13 @@ export class CharacterHealthStateService extends AbstractService {
     return R.clone(this.characterHealthStates[id]);
   }
 
-  setCharacterHealthState(action) {
+  putCharHealth(action) {
+    this.emit('putCharHealthRequested', action);
+  }
+
+  putCharHealthConfirmed(action) {
     const { characterId, characterHealthState } = action;
-    console.log('setCharacterHealthState', characterId, characterHealthState);
+    console.log('putCharHealthConfirmed', characterId, characterHealthState);
     const prevCharacterHealthState = this.characterHealthStates[characterId];
     // this.characterHealthStates[characterId] = characterHealthState;
     this.characterHealthStates = {

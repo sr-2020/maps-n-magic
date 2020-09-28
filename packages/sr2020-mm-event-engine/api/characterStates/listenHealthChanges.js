@@ -30,17 +30,18 @@ export function listenHealthChanges(callback, simulateMessages = false) {
   // Listen for new messages until timeout is hit
   subscription.on('message', messageHandler);
 
-  if (simulateMessages) {
-    let flag = true;
-    setInterval(() => {
-      callback({
-        characterId: 10198,
-        stateFrom: flag ? 'clinically_dead' : 'healthy',
-        stateTo: !flag ? 'clinically_dead' : 'healthy',
-      });
-      flag = !flag;
-    }, 3000);
-  }
+  // if (simulateMessages) {
+  //   let flag = true;
+  //   setInterval(() => {
+  //     callback({
+  //       characterId: 10198,
+  //       stateFrom: flag ? 'clinically_dead' : 'healthy',
+  //       stateTo: !flag ? 'clinically_dead' : 'healthy',
+  //     });
+  //     flag = !flag;
+  //   }, 3000);
+  // }
+
   // setTimeout(() => {
   //   subscription.removeListener('message', messageHandler);
   //   console.log(`${messageCount} message(s) received.`);

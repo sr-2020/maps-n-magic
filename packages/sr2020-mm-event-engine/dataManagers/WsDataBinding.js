@@ -2,13 +2,26 @@ export function capitalizeFirstLetter(string) {
   return string.charAt(0).toUpperCase() + string.slice(1);
 }
 
-const forwardActions = [
+const forwardServer2ClientActions = [
   'locationRecordsChanged2',
   'beaconRecordsChanged2',
   'manaOceanSettingsChanged',
   'postNotification',
   'characterHealthStateChanged',
   'characterHealthStatesLoaded',
+  // 'characterHealthStateChanged',
+];
+
+const forwardClient2ServerActions = [
+  'postLocationRecordRequested',
+  'putLocationRecordRequested',
+  'putLocationRecordsRequested',
+  'deleteLocationRecordRequested',
+  'postBeaconRecordRequested',
+  'putBeaconRecordRequested',
+  'deleteBeaconRecordRequested',
+  'postManaOceanSettingsRequested',
+  'putCharHealthRequested',
 ];
 
 export class WsDataBinding {
@@ -44,7 +57,7 @@ export class WsDataBinding {
         type: 'characterHealthStatesLoaded',
         payload: 'characterHealthStates',
       }],
-      forwardActions,
+      forwardActions: forwardServer2ClientActions,
     });
     // if (hasError) {
     //   setTimeout(this.initClientConfig, 1000);
@@ -58,18 +71,7 @@ export class WsDataBinding {
   }
 
   subscribe(action, gameModel) {
-    const arrList = [
-      'postLocationRecordRequested',
-      'putLocationRecordRequested',
-      'putLocationRecordsRequested',
-      'deleteLocationRecordRequested',
-      'postBeaconRecordRequested',
-      'putBeaconRecordRequested',
-      'deleteBeaconRecordRequested',
-      'postManaOceanSettingsRequested',
-      'setCharacterHealthState',
-    ];
-    arrList.forEach((eventName) => gameModel[action](eventName, this.emit));
+    forwardClient2ServerActions.forEach((eventName) => gameModel[action](eventName, this.emit));
   }
 
   subscribeWsConnection(action, wsConnection) {
@@ -79,8 +81,8 @@ export class WsDataBinding {
 
   onMessage(data) {
     const { type } = data;
-    if (!forwardActions.includes(type)) {
-      console.error('Unexpected action:', type, ', expected actions list:', forwardActions);
+    if (!forwardServer2ClientActions.includes(type)) {
+      console.error('Unexpected action:', type, ', expected actions list:', forwardServer2ClientActions);
       return;
     }
 
@@ -108,7 +110,7 @@ export class WsDataBinding {
     if (type === 'characterHealthStateChanged') {
       this.gameModel.execute({
         ...data,
-        type: 'setCharacterHealthState',
+        type: 'putCharHealthConfirmed',
       });
     }
 

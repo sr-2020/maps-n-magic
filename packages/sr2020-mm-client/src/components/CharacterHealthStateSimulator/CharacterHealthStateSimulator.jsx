@@ -54,7 +54,7 @@ export class CharacterHealthStateSimulator extends Component {
     // console.log(locations);
 
     gameModel.execute({
-      type: 'setCharacterHealthState',
+      type: 'putCharHealth',
       characterId,
       characterHealthState: {
         locationId: getRandomEl(locations).id,

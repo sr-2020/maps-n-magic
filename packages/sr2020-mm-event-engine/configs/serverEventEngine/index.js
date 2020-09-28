@@ -28,6 +28,7 @@ import { ReadWriteSettingsDataManager } from '../../dataManagers/SettingsDataMan
 // import { SingleReadStrategy } from '../../dataManagers/SingleReadStrategy';
 import { PollingReadStrategy } from '../../dataManagers/PollingReadStrategy';
 import { DataBinding } from '../../dataManagers/DataBinding';
+import { RedirectDataBinding } from '../../dataManagers/RedirectDataBinding';
 
 import {
   RemoteLocationRecordProvider as LocationRecordProvider,
@@ -100,6 +101,12 @@ export function makeGameModel(database) {
     ReadStrategy: PollingReadStrategy,
     ReadStrategyArgs: [15000],
   }));
+  gameServer.addDataBinding(new RedirectDataBinding(
+    gameModel,
+    {
+      putCharHealthRequested: 'putCharHealthConfirmed',
+    },
+  ));
   const characterStatesListener = new CharacterStatesListener(gameModel);
   return { gameModel, gameServer };
 }
