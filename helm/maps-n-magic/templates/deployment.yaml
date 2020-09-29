@@ -1,0 +1,35 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: maps-n-magic
+spec:
+  selector:
+    matchLabels:
+      run: maps-n-magic
+  replicas: {{ .Values.replicaCount }}
+  template:
+    metadata:
+      annotations:
+        checksum/config: {{ include (print $.Template.BasePath "/configmap.yaml") . | sha256sum }}
+      labels:
+        run: maps-n-magic
+    spec:
+      containers:
+        - name: maps-n-magic
+          image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          ports:
+            - containerPort: 3001
+          resources:
+            {{- toYaml .Values.resources | nindent 12 }}
+          env:
+            - name: SKIP_PREFLIGHT_CHECK
+              valueFrom:
+                configMapKeyRef:
+                  name: {{ .Release.Name }}-configmap
+                  key: SKIP_PREFLIGHT_CHECK
+            - name: DROPBOX_TOKEN
+              valueFrom:
+                secretKeyRef:
+                  name: admin-client
+                  key: dropboxToken
