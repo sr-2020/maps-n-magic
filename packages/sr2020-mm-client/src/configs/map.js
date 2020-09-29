@@ -17,12 +17,21 @@ const googleTileLayer = {
   },
 };
 
+// SR Amur settings
 const mapConfig = {
-  lat: 54.92822999834723,
+  lat: 54.92912999834723,
   // lng: 36.87105243803666,
-  lng: 36.87455243803666,
+  lng: 36.87405243803666,
   zoom: 17,
 };
+
+// initial data config
+// const mapConfig = {
+//   lat: 54.92822999834723,
+//   // lng: 36.87105243803666,
+//   lng: 36.87455243803666,
+//   zoom: 17,
+// };
 
 mapConfig.center = [mapConfig.lat, mapConfig.lng];
 
@@ -87,7 +96,6 @@ const beaconEditor2GeomanConfig = {
 // const getTileConfiguration = () => googleSettings;
 
 const defaultTileLayer = googleTileLayer;
-
 
 export {
   osmTileLayer, googleTileLayer, mapConfig, defaultTileLayer, backgroundEditorGeomanConfig,
