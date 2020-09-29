@@ -11,7 +11,7 @@ const { makeGameModel } = require('sr2020-mm-event-engine/configs/serverEventEng
 
 const indexRouter = require('./routes/index');
 const fileListRouter = require('./routes/fileList');
-const characterStatesRouter = require('./routes/characterStates');
+// const characterStatesRouter = require('./routes/characterStates');
 const fileRouter = require('./routes/file');
 const usersRouter = require('./routes/users');
 const { WebSocketWrapper } = require('./webSocketWrapper');

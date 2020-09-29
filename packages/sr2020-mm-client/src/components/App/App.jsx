@@ -25,7 +25,6 @@ import { TranslatorProvider } from 'sr2020-mm-client-core/translatorContext';
 
 import { Translator } from 'sr2020-mm-client-core/utils/Translator';
 import { AudioContextWrapper } from '../../utils/AudioContextWrapper';
-
 import { SpiritEditor } from '../SpiritEditor';
 
 // import { AppPropTypes } from '../../types';
@@ -35,8 +34,6 @@ import { SoundManager } from '../SoundManager';
 import * as mapDefaults from '../../configs/map';
 
 import { GeoDataStreamSimulator } from '../GeoDataStreamSimulator';
-import { CharacterHealthStateSimulator } from '../CharacterHealthStateSimulator';
-import { CharacterHealthListener } from '../CharacterHealthListener';
 import { CharacterPositions } from '../CharacterPositions';
 import { ManaOceanSettings } from '../ManaOceanSettings';
 

@@ -9,8 +9,6 @@ import Alert from 'react-bootstrap/Alert';
 import ToggleButtonGroup from 'react-bootstrap/ToggleButtonGroup';
 import ToggleButton from 'react-bootstrap/ToggleButton';
 
-// TODO this call should be moved in event engine service
-import { putCharacterState } from 'sr2020-mm-event-engine/api/characterStates';
 import { isGeoLocation } from 'sr2020-mm-event-engine/utils';
 
 const bodyConditions = [
@@ -128,13 +126,6 @@ export class RescueServiceMessageSender extends Component {
         healthState: data.get('healthStateRadio'),
       },
     });
-    // putCharacterState({
-    //   characterId,
-    //   locationId: Number(data.get('locationId')),
-    //   healthState: data.get('healthStateRadio'),
-    // }).catch((error) => {
-    //   console.error(error);
-    // });
   }
 
   // eslint-disable-next-line class-methods-use-this
