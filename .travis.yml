@@ -27,4 +27,4 @@ jobs:
         - curl https://raw.githubusercontent.com/helm/helm/master/scripts/get-helm-3 | bash
         - helm version
       script:
-        - helm upgrade maps-n-magic helm/maps-n-magic/ --set image.tag=$IMAGE_TAG
+        - helm upgrade maps-n-magic helm/maps-n-magic/ --wait --set image.tag=$IMAGE_TAG
