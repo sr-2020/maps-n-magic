@@ -1,6 +1,8 @@
 // Imports the Google Cloud client library
 // const { PubSub } = require('@google-cloud/pubsub');
 import { PubSub } from '@google-cloud/pubsub';
+import moment from 'moment-timezone';
+import { randomInteger } from '../../utils';
 
 let subscriptionName;
 if (process.env.NODE_ENV === 'production') {
@@ -36,17 +38,19 @@ export function listenHealthChanges(callback, simulateMessages = false) {
   // Listen for new messages until timeout is hit
   subscription.on('message', messageHandler);
 
-  // if (simulateMessages) {
-  //   let flag = true;
-  //   setInterval(() => {
-  //     callback({
-  //       characterId: 10198,
-  //       stateFrom: flag ? 'clinically_dead' : 'healthy',
-  //       stateTo: !flag ? 'clinically_dead' : 'healthy',
-  //     });
-  //     flag = !flag;
-  //   }, 3000);
-  // }
+  if (simulateMessages) {
+    let flag = true;
+    const charList = [10198, 9504, 9542, 10199, 10200, 10201];
+    setInterval(() => {
+      callback({
+        characterId: charList[randomInteger(0, charList.length - 1)],
+        stateFrom: flag ? 'clinically_dead' : 'healthy',
+        stateTo: !flag ? 'clinically_dead' : 'healthy',
+        timestamp: moment.utc().valueOf(),
+      });
+      flag = !flag;
+    }, 3000);
+  }
 
   // setTimeout(() => {
   //   subscription.removeListener('message', messageHandler);

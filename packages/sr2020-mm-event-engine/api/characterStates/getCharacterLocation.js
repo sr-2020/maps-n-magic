@@ -1,16 +1,11 @@
 // const fetch = require('node-fetch');
 import * as R from 'ramda';
-import { isGeoLocation } from '../../utils';
+import { isGeoLocation, randomInteger } from '../../utils';
 // const { isGeoLocation } = require('sr2020-mm-event-engine/utils');
 
 import { usersUrl, locationsUrl } from '../constants';
 
 let locations = null;
-
-function randomInteger(min, max) {
-  const rand = min + Math.random() * (max + 1 - min);
-  return Math.floor(rand);
-}
 
 export async function getCharacterLocation(characterId, simulateLocation = false) {
   const response = await fetch(`${usersUrl}/${characterId}`, {

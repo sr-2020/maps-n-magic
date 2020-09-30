@@ -1,4 +1,5 @@
 import * as R from 'ramda';
+import moment from 'moment-timezone';
 import { getCharacterLocation } from './getCharacterLocation';
 import { listenHealthChanges } from './listenHealthChanges';
 
@@ -22,18 +23,22 @@ export class CharacterStatesListener {
   async onMessageRecieved(data) {
     console.log('onMessageRecieved');
     // const { characterId } = console.log(data);
-    const { characterId, stateFrom, stateTo } = data;
+    const {
+      characterId, stateFrom, stateTo, timestamp,
+    } = data;
     const locationId = await getCharacterLocation(characterId, true);
-    this.updateState(characterId, locationId, stateTo);
+    this.updateState(characterId, locationId, stateTo, timestamp);
   }
 
-  updateState(characterId, locationId, healthState) {
+  updateState(characterId, locationId, healthState, timestamp) {
+    console.log('received timestamp', timestamp, ', cur moment().utc()', moment.utc().valueOf());
     this.gameModel.execute({
       type: 'putCharHealth',
       characterId,
       characterHealthState: {
         locationId,
         healthState,
+        timestamp,
       },
     });
 

@@ -7,6 +7,7 @@ import { Map } from 'sr2020-mm-client-core/maps/Map';
 import { BackgroundImageDisplayLayer } from '../../layers/BackgroundImageDisplayLayer';
 import { LocationLayer4 } from '../../layers/LocationLayer4';
 import { RescueServiceLayer2 } from '../../layers/RescueServiceLayer2';
+import { RescueServiceTable } from '../../components/RescueServiceTable';
 
 export function RescueServiceMap(props) {
   const {
@@ -33,6 +34,7 @@ export function RescueServiceMap(props) {
       <RescueServiceLayer2
         enableByDefault
       />
+      <RescueServiceTable />
     </Map>
   );
 }

@@ -1,0 +1,7 @@
+.RescueServiceTable {
+  position: relative;
+  top: -100%;
+  left: 0;
+  z-index: 1000;
+  width: fit-content;
+}

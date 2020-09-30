@@ -1,5 +1,5 @@
-import { withMapDefaults } from 'sr2020-mm-client-core/withMapDefaults.jsx';
 import { pipe } from 'ramda';
+import { withMapDefaults } from '../../withMapDefaults.jsx';
 import { SatelliteBackground } from './SatelliteBackground.jsx';
 
 const tmp = (SatelliteBackground);

@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import * as R from 'ramda';
+import * as moment from 'moment-timezone';
 
 import './RescueServiceMessageSender.css';
 
@@ -124,6 +125,7 @@ export class RescueServiceMessageSender extends Component {
       characterHealthState: {
         locationId: Number(data.get('locationId')),
         healthState: data.get('healthStateRadio'),
+        timestamp: moment().utc().valueOf(),
       },
     });
   }
