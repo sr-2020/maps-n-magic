@@ -8,6 +8,7 @@ import { BackgroundImageDisplayLayer } from '../../layers/BackgroundImageDisplay
 import { LocationLayer4 } from '../../layers/LocationLayer4';
 import { RescueServiceLayer2 } from '../../layers/RescueServiceLayer2';
 import { RescueServiceTable } from '../../components/RescueServiceTable';
+import { RescueServiceSoundAlarm } from '../../components/RescueServiceSoundAlarm';
 
 export function RescueServiceMap(props) {
   const {
@@ -35,6 +36,7 @@ export function RescueServiceMap(props) {
         enableByDefault
       />
       <RescueServiceTable />
+      <RescueServiceSoundAlarm />
     </Map>
   );
 }
