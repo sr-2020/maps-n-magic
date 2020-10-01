@@ -7,6 +7,11 @@ export const AUDIO_RETRANSLATOR = {
   SOUND_ROUTE: '/file',
 };
 
-export const CHARACTER_STATES_URL = 'http://localhost:3001';
-export const WS_URL = 'ws://localhost:3001/ws';
-// export const CHARACTER_STATES_URL = '';
+let WS_URL;
+if (process.env.NODE_ENV === 'production') {
+  WS_URL = 'ws://admin-client.evarun.ru/ws';
+} else {
+  WS_URL = 'ws://localhost:3001/ws';
+}
+
+export { WS_URL };
