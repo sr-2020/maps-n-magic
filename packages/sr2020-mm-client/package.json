@@ -59,6 +59,9 @@
   },
   "browserslist": {
     "production": [
+      "last 2 versions and not dead and > 1% and not ie < 12"
+    ],
+    "production_backup": [
       ">0.2%",
       "not dead",
       "not op_mini all"
