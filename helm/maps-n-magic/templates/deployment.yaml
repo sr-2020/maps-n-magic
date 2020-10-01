@@ -20,8 +20,6 @@ spec:
           imagePullPolicy: {{ .Values.image.pullPolicy }}
           ports:
             - containerPort: 3001
-          resources:
-            {{- toYaml .Values.resources | nindent 12 }}
           env:
             - name: SKIP_PREFLIGHT_CHECK
               valueFrom:
