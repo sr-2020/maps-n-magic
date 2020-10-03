@@ -13,6 +13,7 @@ const indexRouter = require('./routes/index');
 const fileListRouter = require('./routes/fileList');
 // const characterStatesRouter = require('./routes/characterStates');
 const fileRouter = require('./routes/file');
+const pingRouter = require('./routes/ping');
 const usersRouter = require('./routes/users');
 const { WebSocketWrapper } = require('./webSocketWrapper');
 
@@ -43,6 +44,7 @@ app.use(cookieParser());
 
 app.get('/fileList', fileListRouter);
 app.get('/file/:name', fileRouter);
+app.get('/ping', pingRouter);
 // app.all('/characterStates', characterStatesRouter);
 
 app.ws('/ws', (ws, req, next) => {
