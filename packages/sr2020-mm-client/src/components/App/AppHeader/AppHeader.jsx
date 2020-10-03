@@ -16,6 +16,7 @@ import { DownloadDatabaseButton } from '../DownloadDatabaseButton';
 import { UploadDatabaseButton } from '../UploadDatabaseButton';
 import { JumpToUserCoordsSwitch } from '../JumpToUserCoordsSwitch';
 import { MovementSimulatorSwitch } from '../MovementSimulatorSwitch';
+import { ManaOceanSwitch } from '../ManaOceanSwitch';
 import { ModelRunSelector } from '../ModelRunSelector';
 
 // import { AppHeaderPropTypes } from '../../types';
@@ -167,6 +168,9 @@ export class AppHeader extends Component {
               <MovementSimulatorSwitch
                 onClick={switchMovementMode}
                 simulateGeoDataStream={simulateGeoDataStream}
+              />
+              <ManaOceanSwitch
+                gameModel={gameModel}
               />
               <Dropdown.Divider />
               <Route path="/map2">

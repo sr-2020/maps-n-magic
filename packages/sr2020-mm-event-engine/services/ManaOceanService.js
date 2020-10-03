@@ -22,18 +22,15 @@ export class ManaOceanService extends AbstractService {
     actions: [
       // 'postManaOceanSettings',
       // 'postManaOceanSettingsConfirmed',
-      // 'setManaOceanSettings',
     ],
     requests: [
-      // 'manaOceanSettings',
     ],
     emitEvents: [
       // 'postManaOceanSettings',
       // 'postManaOceanSettingsRequested',
-      // 'manaOceanSettingsChanged',
     ],
     needActions: ['putLocationRecord', 'putLocationRecords'],
-    needRequests: ['manaOceanSettings', 'locationRecords'],
+    needRequests: ['manaOceanSettings', 'locationRecords', 'enableManaOcean'],
     listenEvents: [],
   };
 
@@ -62,6 +59,11 @@ export class ManaOceanService extends AbstractService {
   }
 
   onTideLevelUpdate() {
+    const enableManaOcean = this.getFromModel('enableManaOcean');
+    if (!enableManaOcean) {
+      return;
+    }
+
     const manaOceanSettings = this.getFromModel('manaOceanSettings');
     const locationRecords = this.getFromModel('locationRecords');
     const { neutralManaLevel } = manaOceanSettings;

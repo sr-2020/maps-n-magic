@@ -3,7 +3,7 @@
   "version": "0.0.0",
   "private": true,
   "scripts": {
-    "start": "node -r esm ./bin/www",
+    "start": "node -r esm --inspect ./bin/www",
     "start:server": "node -r esm ./bin/www",
     "watch:server": "nodemon --inspect -r esm ./bin/www"
   },

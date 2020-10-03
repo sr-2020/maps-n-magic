@@ -29,6 +29,7 @@ export const appDictionary = {
   uploadDatabase: 'Загрузить базу',
   downloadDatabase: 'Скачать базу',
   simulateMovement: 'Симулировать ходьбу',
+  calcManaOcean: 'Считать океан маны',
   jumpToUserCoords: 'Перенос карты к пользователю',
   actionMenu: 'Меню действий',
   prevPrototypes: 'Др. страницы',

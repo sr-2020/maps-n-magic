@@ -19,6 +19,7 @@ import { CharacterHealthStateService } from '../../services/CharacterHealthState
 // import { UserRecordService } from '../../services/UserRecordService';
 import { ManaOceanSettingsService } from '../../services/ManaOceanSettingsService';
 import { ManaOceanService } from '../../services/ManaOceanService';
+import { ManaOceanEnableService } from '../../services/ManaOceanEnableService';
 
 // // import { fillGameModelWithBots } from './GameModelFiller';
 import { CrudDataManager } from '../../dataManagers/CrudDataManager';
@@ -61,6 +62,7 @@ const services = [
   // UserRecordService,
   ManaOceanSettingsService,
   ManaOceanService,
+  ManaOceanEnableService,
 ];
 
 export function makeGameModel(database) {
@@ -105,6 +107,7 @@ export function makeGameModel(database) {
     gameModel,
     {
       putCharHealthRequested: 'putCharHealthConfirmed',
+      enableManaOceanRequested: 'enableManaOceanConfirmed',
     },
   ));
   const characterStatesListener = new CharacterStatesListener(gameModel);

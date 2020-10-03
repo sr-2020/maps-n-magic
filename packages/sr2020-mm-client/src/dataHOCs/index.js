@@ -20,3 +20,8 @@ export const withLocationRecords = basicDataHOC(
   'locationRecords',
   [],
 );
+export const withEnableManaOcean = basicDataHOC(
+  'enableManaOceanChanged',
+  'enableManaOcean',
+  true,
+);

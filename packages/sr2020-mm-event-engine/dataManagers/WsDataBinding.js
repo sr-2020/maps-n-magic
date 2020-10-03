@@ -9,6 +9,7 @@ const forwardServer2ClientActions = [
   'postNotification',
   'characterHealthStateChanged',
   'characterHealthStatesLoaded',
+  'enableManaOceanChanged',
   // 'characterHealthStateChanged',
 ];
 
@@ -22,6 +23,7 @@ const forwardClient2ServerActions = [
   'deleteBeaconRecordRequested',
   'postManaOceanSettingsRequested',
   'putCharHealthRequested',
+  'enableManaOceanRequested',
 ];
 
 export class WsDataBinding {
@@ -56,6 +58,9 @@ export class WsDataBinding {
       }, {
         type: 'characterHealthStatesLoaded',
         payload: 'characterHealthStates',
+      }, {
+        type: 'enableManaOceanChanged',
+        payload: 'enableManaOcean',
       }],
       forwardActions: forwardServer2ClientActions,
     });
@@ -118,6 +123,13 @@ export class WsDataBinding {
       this.gameModel.execute({
         ...data,
         type: 'setCharacterHealthStates',
+      });
+    }
+
+    if (type === 'enableManaOceanChanged') {
+      this.gameModel.execute({
+        ...data,
+        type: 'enableManaOceanConfirmed',
       });
     }
 
