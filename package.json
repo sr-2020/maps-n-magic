@@ -4,10 +4,13 @@
   "license": "Apache-2.0",
   "private": true,
   "scripts": {
-    "bootstrap": "lerna bootstrap --hoist",
+    "bootstrap:hoist": "lerna bootstrap --hoist",
+    "bootstrap": "lerna bootstrap",
+    "bootstrap:server": "lerna bootstrap --scope sr2020-mm-server --include-dependencies",
     "start": "lerna run start --stream",
     "start:server": "lerna run start:server",
-    "build-and-deploy": "lerna run build && lerna run deploy"
+    "build-and-deploy": "lerna run build && lerna run deploy",
+    "clean": "lerna clean"
   },
   "devDependencies": {
     "autoprefixer": "^9.8.6",
