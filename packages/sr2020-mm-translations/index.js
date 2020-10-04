@@ -2,6 +2,7 @@ import { appDictionary } from './app';
 import { spiritDictionary } from './spirits';
 import { manaOceanDictionary } from './manaOcean';
 import { soundDictionary } from './sounds';
+import { gameConstantsDictionary } from './gameConstants';
 
 export const translations = {
   ru: {
@@ -11,6 +12,7 @@ export const translations = {
       ...spiritDictionary,
       ...soundDictionary,
       ...manaOceanDictionary,
+      ...gameConstantsDictionary,
 
       // layers
       botTrackLayer: 'Треки движения духов',

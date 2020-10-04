@@ -28,6 +28,7 @@
     "nodemon": "^2.0.2"
   },
   "nodemonConfig": {
+    "watch": ["app.js","webSocketWrapper.js", "bin/", "routes/", "static/", "../sr2020-mm-event-engine"],
     "ignore": [
       "node_modules/*"
     ]

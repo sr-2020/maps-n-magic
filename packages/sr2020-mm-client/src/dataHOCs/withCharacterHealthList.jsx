@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import * as R from 'ramda';
 import { isClinicallyDead } from 'sr2020-mm-event-engine/utils';
+import { lifeStyleScore } from 'sr2020-mm-data/gameConstants';
 
 const changeEventName = 'characterHealthStatesLoaded';
 const srcDataName = 'characterHealthStates';
@@ -27,21 +28,24 @@ export const withCharacterHealthList = (Wrapped) => (props) => {
     const newData = event[srcDataName];
 
     const fullList = objToList(mergeKeyNEntry('characterId'))(newData);
-    const fullList2 = fullList.map((item) => {
-      const userName = item.characterId + getUserNameStr(gameModel.get({
-        type: 'userRecord',
-        id: Number(item.characterId),
-      }));
-      return {
-        ...item,
-        userName,
-      };
-    });
+    // const fullList2 = fullList.map((item) => {
+    //   const userName = item.characterId + getUserNameStr(gameModel.get({
+    //     type: 'userRecord',
+    //     id: Number(item.characterId),
+    //   }));
+    //   return {
+    //     ...item,
+    //     userName,
+    //   };
+    // });
 
     const fullList3 = R.pipe(
       R.filter(isClinicallyDead),
+      R.sortBy((el) => -lifeStyleScore[el.lifeStyle]),
       R.sortBy(R.prop('timestamp')),
-    )(fullList2);
+    )(fullList);
+
+    // console.log(R.filter(isClinicallyDead, fullList));
 
     setData(fullList3);
     // const locationIndex = R.groupBy(R.prop('locationId'), fullList2);

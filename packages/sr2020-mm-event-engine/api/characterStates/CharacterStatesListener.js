@@ -1,6 +1,7 @@
 import * as R from 'ramda';
 import moment from 'moment-timezone';
 import { getCharacterLocation } from './getCharacterLocation';
+import { getCharacterLifeStyle } from './getCharacterLifeStyle';
 import { listenHealthChanges } from './listenHealthChanges';
 
 // const { listenHealthChanges } = require('./listenHealthChanges');
@@ -21,25 +22,31 @@ export class CharacterStatesListener {
   }
 
   async onMessageRecieved(data) {
-    console.log('onMessageRecieved');
+    // console.log('onMessageRecieved');
     // const { characterId } = console.log(data);
     const {
       characterId, stateFrom, stateTo, timestamp,
     } = data;
-    const locationId = await getCharacterLocation(characterId, true);
-    this.updateState(characterId, locationId, stateTo, timestamp);
+    const [locationId, { lifeStyle, personName }] = await Promise.all([
+      getCharacterLocation(characterId, true),
+      getCharacterLifeStyle(characterId),
+    ]);
+    // console.log('lifeStyle', lifeStyle, 'personName', personName);
+    this.updateState(characterId, {
+      locationId,
+      healthState: stateTo,
+      timestamp,
+      lifeStyle,
+      personName,
+    });
   }
 
-  updateState(characterId, locationId, healthState, timestamp) {
-    console.log('received timestamp', timestamp, ', cur moment().utc()', moment.utc().valueOf());
+  updateState(characterId, characterHealthState) {
+    // console.log('received timestamp', timestamp, ', cur moment().utc()', moment.utc().valueOf());
     this.gameModel.execute({
       type: 'putCharHealth',
       characterId,
-      characterHealthState: {
-        locationId,
-        healthState,
-        timestamp,
-      },
+      characterHealthState,
     });
 
     // gameModel.execute({

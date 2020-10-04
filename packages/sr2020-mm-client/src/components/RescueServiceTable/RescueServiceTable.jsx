@@ -39,14 +39,17 @@ export function RescueServiceTable(props) {
       {characterHealthList.length !== 0 && (
         <div className="tw-mb-4">
           <span>Персонаж</span>
-          <span className="tw-pl-4 tw-float-right">Время в КС</span>
+          <span className="tw-pl-4 tw-float-right time-min-width">Время в КС</span>
+          <span className="tw-pl-4 tw-float-right">ЛС</span>
         </div>
       )}
       {
         characterHealthList.map((character) => (
           <div key={character.characterId}>
-            <span>{character.userName}</span>
-            <span className="tw-pl-4 tw-float-right">{formatTime(curTime, character.timestamp)}</span>
+            {/* <span>{character.userName}</span> */}
+            <span>{character.personName}</span>
+            <span className="tw-pl-4 tw-float-right time-min-width">{formatTime(curTime, character.timestamp)}</span>
+            <span className="tw-pl-4 tw-float-right">{character.lifeStyle}</span>
           </div>
         ))
       }

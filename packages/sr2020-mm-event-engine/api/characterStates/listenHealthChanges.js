@@ -5,6 +5,7 @@ import moment from 'moment-timezone';
 import { randomInteger } from '../../utils';
 
 let subscriptionName;
+
 if (process.env.NODE_ENV === 'production') {
   subscriptionName = 'rescue-service';
 } else {
@@ -41,9 +42,14 @@ export function listenHealthChanges(callback, simulateMessages = false) {
   if (simulateMessages) {
     let flag = true;
     const charList = [10198, 9504, 9542, 10199, 10200, 10201];
+    // charList.forEach((characterId) => {
+    // });
     setInterval(() => {
+      const characterId = charList[randomInteger(0, charList.length - 1)];
       callback({
-        characterId: charList[randomInteger(0, charList.length - 1)],
+        characterId,
+        // stateFrom: 'healthy',
+        // stateTo: 'clinically_dead',
         stateFrom: flag ? 'clinically_dead' : 'healthy',
         stateTo: !flag ? 'clinically_dead' : 'healthy',
         timestamp: moment.utc().valueOf(),
@@ -59,3 +65,5 @@ export function listenHealthChanges(callback, simulateMessages = false) {
 }
 
 // exports.listenHealthChanges = listenHealthChanges;
+// console.log('process.env.NODE_ENV', process.env.NODE_ENV);
+// throw new Error('boom');

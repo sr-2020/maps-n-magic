@@ -3,6 +3,7 @@ export const locationsUrl = 'https://position.evarun.ru/api/v1/locations';
 export const usersUrl = 'https://position.evarun.ru/api/v1/users';
 export const positionUrl = 'https://position.evarun.ru/api/v1/positions';
 export const manaOceanConfigUrl = 'https://gateway.evarun.ru/api/v1/config/manaOceanConfig';
+export const billingInsurance = 'https://billing.evarun.ru/insurance/getinsurance';
 
 // // /api/v1/users/{id}
 // const url = 'https://position.evarun.ru/api/v1/users';
