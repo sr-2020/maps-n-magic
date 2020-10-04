@@ -6,7 +6,8 @@ let audio = null;
 
 function playSound() {
   if (!audio) {
-    audio = new Audio('http://localhost:3000/sounds/274682__jppi-stu__sw-school-pa-alert.wav');
+    // audio = new Audio('http://localhost:3000/sounds/274682__jppi-stu__sw-school-pa-alert.wav');
+    audio = new Audio('/sounds/274682__jppi-stu__sw-school-pa-alert.wav');
   }
   audio.play();
 }
