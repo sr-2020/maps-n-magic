@@ -5,6 +5,7 @@ export const gameConstantsDictionary = {
   Gold: 'Золотой',
   Platinum: 'Платиновый',
   Iridium: 'Иридиевый',
+  Unknown: 'Неизвестно',
 
   Wood_short: 'Д',
   Bronze_short: 'Б',
@@ -12,4 +13,5 @@ export const gameConstantsDictionary = {
   Gold_short: 'З',
   Platinum_short: 'П',
   Iridium_short: 'И',
+  Unknown_short: 'Н',
 };

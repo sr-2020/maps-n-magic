@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import './RescueServiceTable.css';
 import * as moment from 'moment-timezone';
+import { useTranslation } from 'react-i18next';
 
 function formatTime(curTime, eventTimestamp) {
   let delta = Math.floor((curTime - eventTimestamp) / 1000);
@@ -21,6 +22,7 @@ function formatTime(curTime, eventTimestamp) {
 
 export function RescueServiceTable(props) {
   const { characterHealthList } = props;
+  const { t } = useTranslation();
 
   const [curTime, setCurTime] = useState(moment().utc().valueOf());
 
@@ -40,7 +42,7 @@ export function RescueServiceTable(props) {
         <div className="tw-mb-4">
           <span>Персонаж</span>
           <span className="tw-pl-4 tw-float-right time-min-width">Время в КС</span>
-          <span className="tw-pl-4 tw-float-right">ЛС</span>
+          <span className="tw-pl-4 tw-float-right">Лайфстайл</span>
         </div>
       )}
       {
@@ -49,7 +51,7 @@ export function RescueServiceTable(props) {
             {/* <span>{character.userName}</span> */}
             <span>{character.personName}</span>
             <span className="tw-pl-4 tw-float-right time-min-width">{formatTime(curTime, character.timestamp)}</span>
-            <span className="tw-pl-4 tw-float-right">{character.lifeStyle}</span>
+            <span className="tw-pl-4 tw-float-right" title={t(character.lifeStyle)}>{t(`${character.lifeStyle}_short`)}</span>
           </div>
         ))
       }

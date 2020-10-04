@@ -102,7 +102,8 @@ export class RescueServiceLayer2 extends Component {
     marker.unbindTooltip();
     const deadCharacters = characters.filter(isClinicallyDead);
     // marker.bindTooltip(`id персонажей: ${R.pluck('userName', deadCharacters).join(', ')}`, {
-    marker.bindTooltip(`${R.pluck('userName', deadCharacters).join(', ')}`, {
+    // marker.bindTooltip(`${R.pluck('userName', deadCharacters).join(', ')}`, {
+    marker.bindTooltip(`${R.pluck('personName', deadCharacters).join(', ')}`, {
       permanent: true,
     });
   }
