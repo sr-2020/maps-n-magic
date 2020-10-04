@@ -70,7 +70,10 @@ export class LocationLayer4 extends Component {
   }
 
   onLocationClick = (e) => {
-    const { layerCommunicator } = this.props;
+    const { layerCommunicator, editable } = this.props;
+    if (!editable) {
+      return;
+    }
     const {
       label, id, markers, manaLevel, layer_id, color, weight, fillOpacity,
     } = e.target.options;
@@ -93,8 +96,11 @@ export class LocationLayer4 extends Component {
 
   onLocationEdit = (e) => {
     const {
-      gameModel, translator, layerCommunicator,
+      gameModel, translator, layerCommunicator, editable,
     } = this.props;
+    if (!editable) {
+      return;
+    }
     const location = e.target;
     const latlngs = translator.moveFrom({
       latlngs: location.getLatLngs(),
@@ -118,7 +124,10 @@ export class LocationLayer4 extends Component {
 
   onLocationChange = (prop) => (e) => {
     let { value } = e.target;
-    const { gameModel } = this.props;
+    const { gameModel, editable } = this.props;
+    if (!editable) {
+      return;
+    }
     const { id } = this.state.curLocation;
     if (prop === 'weight') {
       value = Number(value);

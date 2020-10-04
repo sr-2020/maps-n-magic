@@ -32,6 +32,7 @@ export function InnerLocationLayer(props) {
           <LocationGroupLayer
             {...props}
             layerId={layerId}
+            geoLayerName={layerIdToLayerName[layerId]}
             nameKey={`locationsLayer_${layerIdToLayerName[layerId]}`}
             locationRecords={mergedGroups[layerId]}
           />

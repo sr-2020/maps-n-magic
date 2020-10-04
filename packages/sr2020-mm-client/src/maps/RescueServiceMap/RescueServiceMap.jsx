@@ -30,7 +30,11 @@ export function RescueServiceMap(props) {
         enableByDefault
       />
       <LocationLayer4
-        enableByDefault
+        editable={false}
+        enableByDefault={false}
+        enableLayerIndex={{
+          geoLocation: true,
+        }}
       />
       <RescueServiceLayer2
         enableByDefault

@@ -18,11 +18,12 @@ export class LocationGroupLayer extends Component {
 
   componentDidMount() {
     const {
-      enableByDefault, layerCommunicator, locationRecords,
+      enableByDefault, layerCommunicator, locationRecords, enableLayerIndex, geoLayerName,
     } = this.props;
+
     layerCommunicator.emit('setLayersMeta', {
       layersMeta: this.getLayersMeta(),
-      enableByDefault,
+      enableByDefault: enableLayerIndex[geoLayerName] || enableByDefault,
     });
     this.updateLocations({
       added: (locationRecords),

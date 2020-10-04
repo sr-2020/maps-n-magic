@@ -33,6 +33,7 @@ export function LocationEditorMap(props) {
         enableByDefault={false}
       />
       <LocationLayer4
+        editable
         enableByDefault
       />
     </Map>
