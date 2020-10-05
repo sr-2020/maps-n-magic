@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import './RescueServiceTable.css';
 import * as moment from 'moment-timezone';
 import { useTranslation } from 'react-i18next';
+import classNames from 'classnames';
 
 function formatTime(curTime, eventTimestamp) {
   let delta = Math.floor((curTime - eventTimestamp) / 1000);
@@ -39,20 +40,26 @@ export function RescueServiceTable(props) {
     <div className="RescueServiceTable tw-bg-gray-300 tw-p-4">
       {characterHealthList.length === 0 && <span>Список КС пуст</span>}
       {characterHealthList.length !== 0 && (
-        <div className="tw-mb-4">
-          <span>Персонаж</span>
-          <span className="tw-pl-4 tw-float-right time-min-width">Время в КС</span>
-          <span className="tw-pl-4 tw-float-right">Лайфстайл</span>
+        <div className="tw-flex tw-mb-4">
+          <div className="tw-flex-1 max-w-3xs tw-truncate">Персонаж</div>
+          <div className="tw-pl-2">Лайфстайл</div>
+          <div className="tw-pl-2 time-min-width">Время в КС</div>
         </div>
       )}
       {
-        characterHealthList.map((character) => (
-          <div key={character.characterId}>
-            {/* <span>{character.userName}</span> */}
-            <span>{character.personName}</span>
-            <span>{character.locationLabel}</span>
-            <span className="tw-pl-4 tw-float-right time-min-width">{formatTime(curTime, character.timestamp)}</span>
-            <span className="tw-pl-4 tw-float-right" title={t(character.lifeStyle)}>{t(`${character.lifeStyle}_short`)}</span>
+        characterHealthList.map((character, i, arr) => (
+          <div
+            key={character.characterId}
+            className={classNames('tw-flex ', {
+              'tw-mb-4': arr.length - 1 !== i,
+            })}
+          >
+            <div className="tw-flex-1 max-w-3xs">
+              <div className="tw-truncate">{character.personName}</div>
+              <div className="tw-text-xs">{character.locationLabel}</div>
+            </div>
+            <div className="tw-pl-2 " title={t(character.lifeStyle)}>{t(character.lifeStyle)}</div>
+            <div className="tw-pl-2  time-min-width">{formatTime(curTime, character.timestamp)}</div>
           </div>
         ))
       }

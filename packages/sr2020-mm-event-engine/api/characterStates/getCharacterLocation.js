@@ -46,7 +46,7 @@ export async function getCharacterLocation(characterId, simulateLocation = false
 
   return {
     locationId: result.location_id,
-    locationLabel: result.label,
+    locationLabel: result.location.label,
   };
 }
 async function getLocations() {

@@ -1,4 +1,25 @@
+.RescueServiceTable {
+  position: relative;
+  top: -100%;
+  left: 0;
+  z-index: 1000;
+  width: fit-content;
+  overflow: auto;
+  /* height: 80%; */
+  max-height: 35rem;
+}
+
 .time-min-width {
   width: 8rem;
   text-align: right;
 }
+
+.max-w-2xs {
+  max-width: 16rem;
+}
+
+.max-w-3xs {
+  max-width: 12rem;
+}
+
+
