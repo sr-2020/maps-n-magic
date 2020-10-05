@@ -101,7 +101,7 @@ export class RescueServiceMessageSender extends Component {
     const {
       gameModel,
     } = this.props;
-    const { beaconIndex } = this.state;
+    const { beaconIndex, sortedLocationList, users } = this.state;
     const form = e.currentTarget;
     e.stopPropagation();
     e.preventDefault();
@@ -119,13 +119,22 @@ export class RescueServiceMessageSender extends Component {
       return;
     }
 
+    const locationId = Number(data.get('locationId'));
+
+    const location = sortedLocationList.find((el) => el.id === locationId);
+
+    const user = users.filter((el) => el.id === characterId);
+
     gameModel.execute({
       type: 'putCharHealth',
       characterId,
       characterHealthState: {
-        locationId: Number(data.get('locationId')),
+        locationId,
+        locationLabel: location.label,
         healthState: data.get('healthStateRadio'),
         timestamp: moment().utc().valueOf(),
+        lifeStyle: 'Wood',
+        personName: user.name || `id ${characterId}`,
       },
     });
   }
