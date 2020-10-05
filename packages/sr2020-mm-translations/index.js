@@ -119,8 +119,10 @@ export const translations = {
       physicalBodyCondition_wounded: 'Ранен',
       physicalBodyCondition_clinically_dead: 'Клиническая смерть',
       physicalBodyCondition_biologically_dead: 'Биологическая смерть',
+      characterlifeStyle: 'Лайфстайл персонажа',
 
       sendRescueServiceMessage: 'Отправить сообщение в МЧС',
+      unknownLocation: 'Неизвестная локация',
 
     },
   },

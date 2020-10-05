@@ -7,13 +7,6 @@ import { listenHealthChanges } from './listenHealthChanges';
 // const { listenHealthChanges } = require('./listenHealthChanges');
 // const { getCharacterLocation } = require('./getCharacterLocation');
 
-const bodyConditions = [
-  'healthy',
-  'wounded',
-  'clinically_dead',
-  'biologically_dead',
-];
-
 export class CharacterStatesListener {
   constructor(gameModel) {
     this.gameModel = gameModel;

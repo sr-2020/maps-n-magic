@@ -11,13 +11,7 @@ import ToggleButtonGroup from 'react-bootstrap/ToggleButtonGroup';
 import ToggleButton from 'react-bootstrap/ToggleButton';
 
 import { isGeoLocation } from 'sr2020-mm-event-engine/utils';
-
-const bodyConditions = [
-  'healthy',
-  'wounded',
-  'clinically_dead',
-  'biologically_dead',
-];
+import { bodyConditions, lifeStyleList } from 'sr2020-mm-data/gameConstants';
 
 // import { RescueServiceMessageSenderPropTypes } from '../../types';
 
@@ -129,11 +123,11 @@ export class RescueServiceMessageSender extends Component {
       type: 'putCharHealth',
       characterId,
       characterHealthState: {
-        locationId,
-        locationLabel: location.label,
+        locationId: locationId === -1 ? null : locationId,
+        locationLabel: locationId === -1 ? 'N/A' : location.label,
         healthState: data.get('healthStateRadio'),
         timestamp: moment().utc().valueOf(),
-        lifeStyle: 'Wood',
+        lifeStyle: data.get('lifeStyleRadio'),
         personName: user.name || `id ${characterId}`,
       },
     });
@@ -188,9 +182,33 @@ export class RescueServiceMessageSender extends Component {
             </div>
           </Form.Group>
 
+          <Form.Group>
+            <Form.Label>{t('characterlifeStyle')}</Form.Label>
+            <div>
+              <ToggleButtonGroup type="radio" name="lifeStyleRadio" defaultValue={lifeStyleList[0]}>
+                {
+                  lifeStyleList.map((value) => (
+                    <ToggleButton
+                      key={value}
+                      value={value}
+                    >
+                      {t(value)}
+                    </ToggleButton>
+                  ))
+                }
+              </ToggleButtonGroup>
+            </div>
+          </Form.Group>
+
           <Form.Group controlId="locationId">
             <Form.Label>{t('location')}</Form.Label>
             <Form.Control as="select" name="locationId">
+              <option
+                key="-1"
+                value="-1"
+              >
+                {t('unknownLocation')}
+              </option>
               {
                 sortedLocationList.map((location) => (
                   <option

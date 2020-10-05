@@ -55,7 +55,7 @@ export function RescueServiceTable(props) {
             })}
           >
             <div className="tw-flex-1 max-w-3xs">
-              <div className="tw-truncate">{character.personName}</div>
+              <div className="tw-truncate" title={`${character.personName} (${character.characterId})`}>{character.personName}</div>
               <div className="tw-text-xs">{character.locationLabel}</div>
             </div>
             <div className="tw-pl-2 " title={t(character.lifeStyle)}>{t(character.lifeStyle)}</div>

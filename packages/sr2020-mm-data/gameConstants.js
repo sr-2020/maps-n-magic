@@ -1,4 +1,5 @@
 export const lifeStyleList = [
+  'Unknown',
   'Wood',
   'Bronze',
   'Silver',
@@ -8,6 +9,7 @@ export const lifeStyleList = [
 ];
 
 export const lifeStyleScore = {
+  Unknown: -1,
   Wood: 1,
   Bronze: 2,
   Silver: 3,
@@ -15,3 +17,10 @@ export const lifeStyleScore = {
   Platinum: 5,
   Iridium: 6,
 };
+
+export const bodyConditions = [
+  'healthy',
+  'wounded',
+  'clinically_dead',
+  'biologically_dead',
+];
