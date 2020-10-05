@@ -1,10 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import * as R from 'ramda';
-import { isClinicallyDead } from 'sr2020-mm-event-engine/utils';
 
 const changeEventName = 'characterHealthStatesLoaded';
 const srcDataName = 'characterHealthStates';
-const dstDataName = 'characterIdHealthList';
+const dstDataName = 'characterHealthByLocations';
 const initState = [];
 
 const objToList = (objItem2ListItem) => R.pipe(R.toPairs, R.map(objItem2ListItem));
@@ -19,7 +18,7 @@ function getUserNameStr(user) {
 //   id: Number(id),
 // })));
 
-export const withCharacterIdHealthList = (Wrapped) => (props) => {
+export const withCharacterHealthStatesForMap = (Wrapped) => (props) => {
   const { gameModel } = props;
   const [data, setData] = useState(initState);
 
@@ -37,14 +36,27 @@ export const withCharacterIdHealthList = (Wrapped) => (props) => {
     //     userName,
     //   };
     // });
+    const locationIndex = R.groupBy(R.prop('locationId'), fullList.filter((el) => el.locationId !== null));
 
-    const fullList3 = R.pipe(
-      R.filter(isClinicallyDead),
-      R.pluck('characterId'),
-      // R.sortBy(R.prop('timestamp')),
-    )(fullList);
+    const updatedIndex = R.mapObjIndexed((characters, locationId) => {
+      const location = gameModel.get({
+        type: 'locationRecord',
+        id: Number(locationId),
+      });
+      return {
+        characters,
+        location,
+        locationId: Number(locationId),
+      };
+    }, locationIndex);
 
-    setData(fullList3);
+    // const objToList(mergeKeyNEntry('locationId'))(locationIndex);
+    const list = R.values(updatedIndex);
+    const filteredList = list.filter((el) => el.location);
+    if (list.length !== filteredList.length) {
+      console.error('Some locations not found', list.filter((el) => !el.location));
+    }
+    setData(filteredList);
   }
 
   useEffect(() => {

@@ -49,7 +49,7 @@ export class CharacterHealthStateService extends AbstractService {
 
   putCharHealthConfirmed(action) {
     const { characterId, characterHealthState } = action;
-    console.log('putCharHealthConfirmed', characterId, characterHealthState);
+    // console.log('putCharHealthConfirmed', characterId, characterHealthState);
     const prevCharacterHealthState = this.characterHealthStates[characterId];
     // this.characterHealthStates[characterId] = characterHealthState;
     this.characterHealthStates = {

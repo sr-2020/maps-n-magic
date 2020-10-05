@@ -1,7 +1,7 @@
 import { pipe } from 'ramda';
-import { withCharacterHealthList } from '../../dataHOCs/withCharacterHealthList.jsx';
+import { withCharacterHealthListForTable } from '../../dataHOCs/withCharacterHealthListForTable.jsx';
 import { RescueServiceTable } from './RescueServiceTable.jsx';
 
-const tmp = pipe(withCharacterHealthList)(RescueServiceTable);
+const tmp = pipe(withCharacterHealthListForTable)(RescueServiceTable);
 
 export { tmp as RescueServiceTable };

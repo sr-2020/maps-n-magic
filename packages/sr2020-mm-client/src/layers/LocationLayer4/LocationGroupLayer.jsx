@@ -28,7 +28,7 @@ export class LocationGroupLayer extends Component {
     this.updateLocations({
       added: (locationRecords),
     });
-    console.log('InnerManaOceanLayer2 mounted');
+    // console.log('LocationGroupLayer mounted');
   }
 
   componentDidUpdate(prevProps) {
@@ -51,13 +51,13 @@ export class LocationGroupLayer extends Component {
       // this.clear();
       // this.populate();
     }
-    console.log('InnerManaOceanLayer2 did update');
+    // console.log('LocationGroupLayer did update');
   }
 
   componentWillUnmount() {
     this.clear();
     // this.communicatorSubscribe('off');
-    console.log('InnerManaOceanLayer2 will unmount');
+    // console.log('LocationGroupLayer will unmount');
   }
 
   getLayersMeta() {

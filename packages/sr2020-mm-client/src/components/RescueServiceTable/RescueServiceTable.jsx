@@ -50,6 +50,7 @@ export function RescueServiceTable(props) {
           <div key={character.characterId}>
             {/* <span>{character.userName}</span> */}
             <span>{character.personName}</span>
+            <span>{character.locationLabel}</span>
             <span className="tw-pl-4 tw-float-right time-min-width">{formatTime(curTime, character.timestamp)}</span>
             <span className="tw-pl-4 tw-float-right" title={t(character.lifeStyle)}>{t(`${character.lifeStyle}_short`)}</span>
           </div>

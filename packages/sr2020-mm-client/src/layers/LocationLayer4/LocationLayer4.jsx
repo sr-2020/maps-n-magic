@@ -22,16 +22,16 @@ export class LocationLayer4 extends Component {
     this.locationPopupDom = document.createElement('div');
     this.communicatorSubscribe('on');
     this.locationPopup = L.popup();
-    console.log('LocationLayer4 mounted');
+    // console.log('LocationLayer4 mounted');
   }
 
   componentDidUpdate() {
-    console.log('LocationLayer4 did update');
+    // console.log('LocationLayer4 did update');
   }
 
   componentWillUnmount() {
     this.communicatorSubscribe('off');
-    console.log('LocationLayer4 will unmount');
+    // console.log('LocationLayer4 will unmount');
   }
 
   communicatorSubscribe(action) {

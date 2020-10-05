@@ -20,7 +20,7 @@ function getUserNameStr(user) {
 //   id: Number(id),
 // })));
 
-export const withCharacterHealthList = (Wrapped) => (props) => {
+export const withCharacterHealthListForTable = (Wrapped) => (props) => {
   const { gameModel } = props;
   const [data, setData] = useState(initState);
 
@@ -38,11 +38,15 @@ export const withCharacterHealthList = (Wrapped) => (props) => {
     //     userName,
     //   };
     // });
-
+    // const ageNameSort = ;
     const fullList3 = R.pipe(
       R.filter(isClinicallyDead),
-      R.sortBy((el) => -lifeStyleScore[el.lifeStyle]),
-      R.sortBy(R.prop('timestamp')),
+      R.sortWith([
+        R.descend((el) => lifeStyleScore[el.lifeStyle]),
+        R.ascend(R.prop('timestamp')),
+      ]),
+      // R.sortBy((el) => -lifeStyleScore[el.lifeStyle]),
+      // R.sortBy(R.prop('timestamp')),
     )(fullList);
 
     // console.log(R.filter(isClinicallyDead, fullList));

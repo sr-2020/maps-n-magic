@@ -50,7 +50,7 @@ export class RescueServiceLayer2 extends Component {
     this.updateMarkers({
       added: preFilterCharacters(characterHealthByLocations),
     });
-    console.log('InnerManaOceanLayer2 mounted');
+    // console.log('RescueServiceLayer2 mounted');
   }
 
   componentDidUpdate(prevProps) {
@@ -74,12 +74,12 @@ export class RescueServiceLayer2 extends Component {
       // this.clear();
       // this.populate();
     }
-    console.log('InnerManaOceanLayer2 did update');
+    // console.log('RescueServiceLayer2 did update');
   }
 
   componentWillUnmount() {
     this.clear();
-    console.log('InnerManaOceanLayer2 will unmount');
+    // console.log('RescueServiceLayer2 will unmount');
   }
 
   getLayersMeta() {

@@ -6,8 +6,16 @@ export async function getCharacterLifeStyle(characterId) {
   const response = await fetch(`${billingInsurance}?characterid=${characterId}`);
 
   if (!response.ok) {
-    const text = await response.text();
-    throw new Error(`Network response was not ok ${text}`);
+    try {
+      const text = await response.text();
+      throw new Error(`Network response was not ok ${text}`);
+    } catch (err) {
+      console.error(err);
+    }
+    return {
+      lifeStyle: 'Unknown',
+      personName: 'N/A',
+    };
   }
 
   const result = await response.json();

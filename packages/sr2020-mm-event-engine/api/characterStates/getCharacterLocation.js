@@ -5,7 +5,7 @@ import { isGeoLocation, randomInteger } from '../../utils';
 
 import { usersUrl, locationsUrl } from '../constants';
 
-let locations = null;
+const locations = null;
 
 export async function getCharacterLocation(characterId, simulateLocation = false) {
   const response = await fetch(`${usersUrl}/${characterId}`, {
@@ -18,21 +18,36 @@ export async function getCharacterLocation(characterId, simulateLocation = false
   });
 
   if (!response.ok) {
-    const text = await response.text();
-    throw new Error(`Network response was not ok ${text}`);
+    try {
+      const text = await response.text();
+      throw new Error(`Network response was not ok ${text}`);
+    } catch (err) {
+      console.error(err);
+    }
+    return {
+      locationId: null,
+      locationLabel: 'N/A',
+    };
   }
 
   const result = await response.json();
   if (R.isNil(result.location_id)) {
-    if (!locations) {
-      const rawLocations = await getLocations();
-      locations = rawLocations.filter(isGeoLocation);
-      // console.log(rawLocations.length, locations.length);
-    }
-    return locations[randomInteger(0, locations.length - 1)].id;
+    return {
+      locationId: null,
+      locationLabel: 'N/A',
+    };
+    // if (!locations) {
+    //   const rawLocations = await getLocations();
+    //   locations = rawLocations.filter(isGeoLocation);
+    //   // console.log(rawLocations.length, locations.length);
+    // }
+    // return locations[randomInteger(0, locations.length - 1)].id;
   }
 
-  return result.location_id;
+  return {
+    locationId: result.location_id,
+    locationLabel: result.label,
+  };
 }
 async function getLocations() {
   const response = await fetch(`${locationsUrl}`, {

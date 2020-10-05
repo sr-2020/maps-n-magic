@@ -27,13 +27,14 @@ export class CharacterStatesListener {
     const {
       characterId, stateFrom, stateTo, timestamp,
     } = data;
-    const [locationId, { lifeStyle, personName }] = await Promise.all([
+    const [{ locationId, locationLabel }, { lifeStyle, personName }] = await Promise.all([
       getCharacterLocation(characterId, true),
       getCharacterLifeStyle(characterId),
     ]);
     // console.log('lifeStyle', lifeStyle, 'personName', personName);
     this.updateState(characterId, {
       locationId,
+      locationLabel,
       healthState: stateTo,
       timestamp,
       lifeStyle,

@@ -1,8 +1,8 @@
 import { withTranslation } from 'react-i18next';
 import { pipe } from 'ramda';
-import { withCharacterIdHealthList } from '../../dataHOCs/withCharacterIdHealthList.jsx';
+import { withCharacterIdHealthListForAudio } from '../../dataHOCs/withCharacterIdHealthListForAudio.jsx';
 import { RescueServiceSoundAlarm } from './RescueServiceSoundAlarm.jsx';
 
-const tmp = pipe(withTranslation(), withCharacterIdHealthList)(RescueServiceSoundAlarm);
+const tmp = pipe(withTranslation(), withCharacterIdHealthListForAudio)(RescueServiceSoundAlarm);
 
 export { tmp as RescueServiceSoundAlarm };

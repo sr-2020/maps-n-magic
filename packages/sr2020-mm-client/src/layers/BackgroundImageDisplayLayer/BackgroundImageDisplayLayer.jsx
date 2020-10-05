@@ -77,7 +77,7 @@ export class BackgroundImageDisplayLayer extends Component {
     this.updateBackgroundImages({
       added: (backgroundImages),
     });
-    console.log('InnerManaOceanLayer2 mounted');
+    // console.log('BackgroundImageDisplayLayer mounted');
   }
 
   componentDidUpdate(prevProps) {
@@ -100,13 +100,13 @@ export class BackgroundImageDisplayLayer extends Component {
       // this.clear();
       // this.populate();
     }
-    console.log('InnerManaOceanLayer2 did update');
+    // console.log('BackgroundImageDisplayLayer did update');
   }
 
   componentWillUnmount() {
     this.clear();
     // this.communicatorSubscribe('off');
-    console.log('InnerManaOceanLayer2 will unmount');
+    // console.log('BackgroundImageDisplayLayer will unmount');
   }
 
   getLayersMeta() {
