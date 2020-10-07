@@ -15,7 +15,8 @@ import { isGeoLocation } from '../utils';
 //   invisibleMoonManaTideHeight: 1,
 //   moscowTime: 0,
 // };
-const TIDE_LEVEL_UPDATE_INTERVAL = 5000; // millis
+// const TIDE_LEVEL_UPDATE_INTERVAL = 5000; // millis
+const TIDE_LEVEL_UPDATE_INTERVAL = 60000 * 10; // millis
 
 export class ManaOceanService extends AbstractService {
   metadata = {
@@ -76,7 +77,7 @@ export class ManaOceanService extends AbstractService {
     // }
 
     let { moscowTimeInMinutes, moscowTime } = getMoscowTime();
-    // speed up time
+    // speed up time, 1 second is 1 minute
     moscowTimeInMinutes = (moscowTime.minute() * 60 + moscowTime.second()) % 1440;
     // const tideHeight = getTideHeight2(moscowTimeInMinutes, manaOceanSettings);
 
