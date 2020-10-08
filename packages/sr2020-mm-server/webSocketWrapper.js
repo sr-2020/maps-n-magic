@@ -37,7 +37,7 @@ class WebSocketWrapper {
   }
 
   forwardAction(action) {
-    console.log('forwardAction', action.type);
+    // console.log('forwardAction', action.type);
     this.ws.send(JSON.stringify(action));
   }
 

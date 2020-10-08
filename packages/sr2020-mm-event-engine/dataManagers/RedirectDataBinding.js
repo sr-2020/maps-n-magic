@@ -22,7 +22,7 @@ export class RedirectDataBinding {
   // For now this stuff is used by single game model so it shouldn't make problems in nearest time.
   emit(eventName) {
     return (action) => {
-      console.log('redirect action', eventName);
+      // console.log('redirect action', eventName);
       this.gameModel.execute({
         ...action,
         type: this.redirectIndex[eventName],

@@ -2,6 +2,7 @@
 // const { PubSub } = require('@google-cloud/pubsub');
 import { PubSub } from '@google-cloud/pubsub';
 import moment from 'moment-timezone';
+import { bodyConditions } from 'sr2020-mm-data/gameConstants';
 import { randomInteger } from '../../utils';
 
 let subscriptionName;
@@ -48,14 +49,17 @@ export function listenHealthChanges(callback, simulateMessages = false) {
       const characterId = charList[randomInteger(0, charList.length - 1)];
       callback({
         characterId,
-        // stateFrom: 'healthy',
+        stateFrom: 'healthy',
+        stateTo: bodyConditions[randomInteger(0, bodyConditions.length - 1)],
         // stateTo: 'clinically_dead',
-        stateFrom: flag ? 'clinically_dead' : 'healthy',
-        stateTo: !flag ? 'clinically_dead' : 'healthy',
+        // stateFrom: flag ? 'clinically_dead' : 'healthy',
+        // stateTo: !flag ? 'clinically_dead' : 'healthy',
         timestamp: moment.utc().valueOf(),
       });
       flag = !flag;
     }, 3000);
+    // }, 500);
+    // }, 100);
   }
 
   // setTimeout(() => {
