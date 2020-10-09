@@ -1,4 +1,7 @@
 import * as R from 'ramda';
+import shortid from 'shortid';
+import moment from 'moment-timezone';
+// const shortid = require('shortid');
 
 import { AbstractService } from '../core/AbstractService';
 
@@ -18,6 +21,8 @@ import { isGeoLocation } from '../utils';
 // const TIDE_LEVEL_UPDATE_INTERVAL = 5000; // millis
 const TIDE_LEVEL_UPDATE_INTERVAL = 60000 * 10; // millis
 
+let counter = 1;
+
 export class ManaOceanService extends AbstractService {
   metadata = {
     actions: [
@@ -31,15 +36,18 @@ export class ManaOceanService extends AbstractService {
       // 'postManaOceanSettingsRequested',
     ],
     needActions: ['putLocationRecord', 'putLocationRecords'],
-    needRequests: ['manaOceanSettings', 'locationRecords', 'enableManaOcean'],
-    listenEvents: [],
+    needRequests: ['manaOceanSettings', 'locationRecords', 'locationRecord', 'enableManaOcean'],
+    listenEvents: ['massacreTriggered'],
   };
 
   constructor() {
     super();
     this.prevTideHeight = null;
     this.tideLevelTimerId = null;
+    this.manaModifiers = [];
     this.onTideLevelUpdate = this.onTideLevelUpdate.bind(this);
+    this.onMassacreTriggered = this.onMassacreTriggered.bind(this);
+    this.getManaOptions = this.getManaOptions.bind(this);
     // this.manaOceanSettings = R.clone(defaultManaOceanSettings);
   }
 
@@ -50,6 +58,7 @@ export class ManaOceanService extends AbstractService {
     } else {
       console.error('tideLevelTimer already initialized');
     }
+    this.on('massacreTriggered', this.onMassacreTriggered);
     // this.gameModel = gameModel;
   }
 
@@ -57,6 +66,43 @@ export class ManaOceanService extends AbstractService {
     if (this.tideLevelTimerId !== null) {
       clearInterval(this.tideLevelTimerId);
     }
+    this.off('massacreTriggered', this.onMassacreTriggered);
+  }
+
+  onMassacreTriggered(data) {
+    const { locationId, timestamp } = data;
+    // {
+    //   type: 'massacreTriggered',
+    //   locationId: 3061,
+    //   timestamp: 1602203600686
+    // }
+    this.manaModifiers.push(data);
+    const locationRecord = this.getFromModel({
+      type: 'locationRecord',
+      id: locationId,
+    });
+    // console.log('manaModifiers', this.manaModifiers, shortid.generate(), data, locationRecord);
+    // const locationRecords = this.getFromModel('locationRecords');
+    const { effectList = [] } = locationRecord.options;
+    effectList.push({
+      type: 'massacre',
+      id: shortid.generate(),
+      start: timestamp + 60000 * 15, // start after 15 minutes
+      end: timestamp + 60000 * 30, // end after 30 minutes
+      // start: timestamp + 15000, // start after 15 seconds
+      // end: timestamp + 30000, // end after 30 seconds
+      manaLevelChange: 1,
+    });
+    this.executeOnModel({
+      type: 'putLocationRecord',
+      id: locationRecord.id,
+      props: {
+        options: {
+          ...locationRecord.options,
+          effectList,
+        },
+      },
+    });
   }
 
   onTideLevelUpdate() {
@@ -64,12 +110,16 @@ export class ManaOceanService extends AbstractService {
     if (!enableManaOcean) {
       return;
     }
+    counter++;
+    const curTimestamp = moment.utc().valueOf();
 
     const manaOceanSettings = this.getFromModel('manaOceanSettings');
     const locationRecords = this.getFromModel('locationRecords');
     const { neutralManaLevel } = manaOceanSettings;
 
     const geoLocations = locationRecords.filter(isGeoLocation);
+
+    // const geoLocationIndex = R.indexBy(R.prop('id'), geoLocations);
 
     // const firstLocation = locationRecords.find(isGeoLocation);
     // if (!firstLocation) {
@@ -85,26 +135,33 @@ export class ManaOceanService extends AbstractService {
     //   console.log('Tide height not changed, skip mana level update');
     //   return;
     // }
-    const tideHeight = this.prevTideHeight === null ? -2 : (this.prevTideHeight === 2 ? -2 : (this.prevTideHeight + 1));
+    let tideHeight = this.prevTideHeight;
+    if (counter % 2) {
+      tideHeight = this.prevTideHeight === null ? -2 : (this.prevTideHeight === 2 ? -2 : (this.prevTideHeight + 1));
+    }
 
     this.prevTideHeight = tideHeight;
 
     // console.log('onTideLevelUpdate', 'moscowTimeInMinutes', moscowTimeInMinutes, 'tideHeight', tideHeight, firstLocation);
     console.log('onTideLevelUpdate', 'moscowTimeInMinutes', moscowTimeInMinutes, 'tideHeight', tideHeight);
 
-    const updates = geoLocations.map((geoLocation) => ({
-      id: geoLocation.id,
-      body: {
-        options: {
-          ...geoLocation.options,
-          manaLevel: this.calcManaLevel([neutralManaLevel, tideHeight]),
-          manaLevelModifiers: {
-            neutralManaLevel,
-            tideHeight,
+    const updates = geoLocations.reduce((acc, location) => {
+      const newOptions = this.getManaOptions(location, tideHeight, neutralManaLevel, curTimestamp);
+      if (!R.isNil(newOptions)) {
+        acc.push({
+          id: location.id,
+          body: {
+            options: newOptions,
           },
-        },
-      },
-    }));
+        });
+      }
+      return acc;
+    }, []);
+    console.log('updates.length', updates.length);
+    if (updates.length === 0) {
+      console.log('no updates for mana ocean');
+      return;
+    }
 
     this.executeOnModel({
       type: 'putLocationRecords',
@@ -124,6 +181,33 @@ export class ManaOceanService extends AbstractService {
     //     },
     //   },
     // });
+  }
+
+  // eslint-disable-next-line class-methods-use-this
+  getManaOptions(location, tideHeight, neutralManaLevel, curTimestamp) {
+    const { options } = location;
+    const { effectList = [] } = options;
+    const liveEffectList = effectList.filter((effect) => effect.end > curTimestamp);
+    const effects = liveEffectList.filter((effect) => effect.start < curTimestamp).map((effect) => ({
+      type: effect.type,
+      manaLevelChange: effect.manaLevelChange,
+    }));
+    if (effects.length > 0) {
+      console.log('effects', location.id, effects);
+    }
+    const newOptions = {
+      manaLevelModifiers: {
+        neutralManaLevel,
+        tideHeight,
+        effects,
+      },
+      effectList: liveEffectList,
+    };
+    newOptions.manaLevel = this.calcManaLevel([neutralManaLevel, tideHeight, ...R.pluck('manaLevelChange', effects)]);
+    if (!R.equals(options, newOptions)) {
+      return newOptions;
+    }
+    return null;
   }
 
   calcManaLevel(arr) {

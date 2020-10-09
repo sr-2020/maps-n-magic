@@ -61,6 +61,8 @@ export const translations = {
 
       geoLocationTooltip: 'Геолокация "{{name}}"',
       manaGeoLocationTooltip: '{{name}}<br/>Уровень маны <b>{{manaLevel}}</b>',
+      manaLevelNumber: 'Уровень маны <b>{{manaLevel}}</b>',
+      manaEffect_massacre: 'Массакр {{ manaLevelChange }}',
       regionTooltip: 'Регион "{{name}}"',
       gameLocationTooltip: 'Игровая локация "{{name}}"',
       unknownLocationTypeTooltip: 'Локация неизвестного типа "{{name}}"',

@@ -43,6 +43,7 @@ export class ManaOceanLayer extends Component {
     this.createLocation = this.createLocation.bind(this);
     this.updateLocation = this.updateLocation.bind(this);
     this.removeLocation = this.removeLocation.bind(this);
+    this.getLocationTooltip = this.getLocationTooltip.bind(this);
   }
 
   componentDidMount() {
@@ -113,8 +114,9 @@ export class ManaOceanLayer extends Component {
     const { manaLevel } = item.options;
     loc.setStyle({ fillColor: manaFillColors[manaLevel] });
     L.setOptions(loc, { label: item.label });
+    const that = this;
     loc.on('mouseover', function (e) {
-      loc.bindTooltip(t('manaGeoLocationTooltip', { name: this.options.label, manaLevel }));
+      loc.bindTooltip(that.getLocationTooltip(this.options.label, item.options));
       this.openTooltip();
     });
   }
@@ -132,14 +134,22 @@ export class ManaOceanLayer extends Component {
       // id, label, layer_id, color: '#2d3748', weight: 2, dashArray: [10], fillColor: manaFillColors[manaLevel], fillOpacity: 1,
       id, label, layer_id, color: '#1a202c', weight: 2, dashArray: [7], fillColor: manaFillColors[options.manaLevel], fillOpacity: 1,
     });
+    const that = this;
     loc.on('mouseover', function (e) {
-      loc.bindTooltip(t('manaGeoLocationTooltip', { name: this.options.label, manaLevel: options.manaLevel }));
+      loc.bindTooltip(that.getLocationTooltip(this.options.label, options));
       this.openTooltip();
     });
     loc.on('mouseout', function (e) {
       this.closeTooltip();
     });
     this.group.addLayer(loc);
+  }
+
+  getLocationTooltip(label, locOptions) {
+    const { t } = this.props;
+    const { effects = [] } = locOptions.manaLevelModifiers;
+    const strings = effects.map(({ type, manaLevelChange }) => t(`manaEffect_${type}`, { manaLevelChange }));
+    return [label, t('manaLevelNumber', { manaLevel: locOptions.manaLevel }), ...strings].join('<br/>');
   }
 
   removeLocation(locationData) {
