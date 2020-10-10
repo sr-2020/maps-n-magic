@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import L from 'leaflet/dist/leaflet-src';
 import * as R from 'ramda';
+import * as moment from 'moment-timezone';
 import './ManaOceanLayer.css';
 
 import { isGeoLocation, getArrDiff } from 'sr2020-mm-event-engine/utils';
@@ -148,8 +149,30 @@ export class ManaOceanLayer extends Component {
   getLocationTooltip(label, locOptions) {
     const { t } = this.props;
     const { effects = [] } = locOptions.manaLevelModifiers;
+    const { effectList = [] } = locOptions;
+    let output = [label, t('manaLevelNumber', { manaLevel: locOptions.manaLevel })];
     const strings = effects.map(({ type, manaLevelChange }) => t(`manaEffect_${type}`, { manaLevelChange }));
-    return [label, t('manaLevelNumber', { manaLevel: locOptions.manaLevel }), ...strings].join('<br/>');
+    if (strings.length > 0) {
+      output = output.concat(strings);
+    }
+
+    const strings2 = effectList.map(({
+      type, manaLevelChange, start, end,
+    }) => {
+      const str = t(`manaEffect_${type}`, { manaLevelChange });
+      const startStr = moment(start).format('HH:mm');
+      const endStr = moment(end).format('HH:mm');
+      return `${str}, ${startStr}-${endStr}, мана ${manaLevelChange}`;
+    });
+    //     end: 1602289691729
+    // id: "gRSQuMVdM"
+    // manaLevelChange: 1
+    // start: 1602289676729
+    // type: "massacre"
+    if (strings2.length > 0) {
+      output = output.concat(['', ...strings2]);
+    }
+    return output.join('<br/>');
   }
 
   removeLocation(locationData) {

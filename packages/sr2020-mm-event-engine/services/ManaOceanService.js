@@ -18,10 +18,12 @@ import { isGeoLocation } from '../utils';
 //   invisibleMoonManaTideHeight: 1,
 //   moscowTime: 0,
 // };
-// const TIDE_LEVEL_UPDATE_INTERVAL = 5000; // millis
-const TIDE_LEVEL_UPDATE_INTERVAL = 60000 * 10; // millis
+const TIDE_LEVEL_UPDATE_INTERVAL = 5000; // millis
 
-let counter = 1;
+// const MANA_TIDE_UPDATE_INTERVAL = 30000; // millis
+const MANA_TIDE_UPDATE_INTERVAL = 60000 * 10; // millis
+
+// let counter = 1;
 
 export class ManaOceanService extends AbstractService {
   metadata = {
@@ -84,6 +86,7 @@ export class ManaOceanService extends AbstractService {
     // console.log('manaModifiers', this.manaModifiers, shortid.generate(), data, locationRecord);
     // const locationRecords = this.getFromModel('locationRecords');
     const { effectList = [] } = locationRecord.options;
+    // effectList = [];
     effectList.push({
       type: 'massacre',
       id: shortid.generate(),
@@ -91,6 +94,7 @@ export class ManaOceanService extends AbstractService {
       end: timestamp + 60000 * 30, // end after 30 minutes
       // start: timestamp + 15000, // start after 15 seconds
       // end: timestamp + 30000, // end after 30 seconds
+      // end: timestamp + 120000, // end after 30 seconds
       manaLevelChange: 1,
     });
     this.executeOnModel({
@@ -110,7 +114,7 @@ export class ManaOceanService extends AbstractService {
     if (!enableManaOcean) {
       return;
     }
-    counter++;
+    // counter++;
     const curTimestamp = moment.utc().valueOf();
 
     const manaOceanSettings = this.getFromModel('manaOceanSettings');
@@ -135,10 +139,7 @@ export class ManaOceanService extends AbstractService {
     //   console.log('Tide height not changed, skip mana level update');
     //   return;
     // }
-    let tideHeight = this.prevTideHeight;
-    if (counter % 2) {
-      tideHeight = this.prevTideHeight === null ? -2 : (this.prevTideHeight === 2 ? -2 : (this.prevTideHeight + 1));
-    }
+    const tideHeight = this.getNextTideHeight(curTimestamp);
 
     this.prevTideHeight = tideHeight;
 
@@ -208,6 +209,24 @@ export class ManaOceanService extends AbstractService {
       return newOptions;
     }
     return null;
+  }
+
+  getNextTideHeight(curTimestamp) {
+    if (this.prevTideHeight === null) {
+      this.lastManaUpdateTimestamp = curTimestamp;
+      return -2;
+    }
+    if (this.lastManaUpdateTimestamp + MANA_TIDE_UPDATE_INTERVAL > curTimestamp) {
+      // console.log('no mana update');
+      return this.prevTideHeight;
+    }
+    // console.log('update mana tide');
+    this.lastManaUpdateTimestamp = curTimestamp;
+    let tideHeight = this.prevTideHeight;
+    // if (counter % 2) {
+    tideHeight = this.prevTideHeight === 2 ? -2 : (this.prevTideHeight + 1);
+    // }
+    return tideHeight;
   }
 
   calcManaLevel(arr) {

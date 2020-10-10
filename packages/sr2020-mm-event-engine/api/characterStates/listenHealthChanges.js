@@ -57,7 +57,8 @@ export function listenHealthChanges(callback, simulateMessages = false) {
         timestamp: moment.utc().valueOf(),
       });
       flag = !flag;
-    }, 3000);
+    // }, 3000);
+    }, 30000);
     // }, 500);
     // }, 100);
   }
