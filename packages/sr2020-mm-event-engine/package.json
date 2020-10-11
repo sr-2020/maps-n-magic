@@ -13,6 +13,7 @@
     "moment": "^2.27.0",
     "moment-timezone": "^0.5.31",
     "leaflet": "^1.7.1",
-    "shortid": "^2.2.15"
+    "shortid": "^2.2.15",
+    "d3-delaunay": "^5.3.0"
   }
 }

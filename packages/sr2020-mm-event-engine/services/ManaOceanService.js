@@ -20,6 +20,7 @@ import { isGeoLocation } from '../utils';
 // };
 const TIDE_LEVEL_UPDATE_INTERVAL = 5000; // millis
 
+// const MANA_TIDE_UPDATE_INTERVAL = 10000; // millis
 // const MANA_TIDE_UPDATE_INTERVAL = 30000; // millis
 const MANA_TIDE_UPDATE_INTERVAL = 60000 * 10; // millis
 
@@ -98,6 +99,10 @@ export class ManaOceanService extends AbstractService {
       return;
     }
     const locationRecord = this.getLocation(locationId);
+    if (!locationRecord) {
+      console.error('location not found', locationId);
+      return;
+    }
     this.pushEffect(locationRecord, {
       type: 'powerSpell',
       id: shortid.generate(),
@@ -119,6 +124,10 @@ export class ManaOceanService extends AbstractService {
     // }
     // this.manaModifiers.push(data);
     const locationRecord = this.getLocation(locationId);
+    if (!locationRecord) {
+      console.error('location not found', locationId);
+      return;
+    }
     this.pushEffect(locationRecord, {
       type: 'massacre',
       id: shortid.generate(),
