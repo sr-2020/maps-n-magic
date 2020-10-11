@@ -18,7 +18,7 @@ export class LocationGroupLayer extends Component {
 
   componentDidMount() {
     const {
-      enableByDefault, layerCommunicator, locationRecords, enableLayerIndex, geoLayerName,
+      enableByDefault, layerCommunicator, locationRecords, enableLayerIndex = {}, geoLayerName,
     } = this.props;
 
     layerCommunicator.emit('setLayersMeta', {
