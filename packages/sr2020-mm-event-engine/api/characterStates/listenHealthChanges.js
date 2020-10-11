@@ -28,7 +28,7 @@ export function listenHealthChanges(callback, simulateMessages = false) {
     // console.log(`Received message ${message.id}:`);
     // console.log(`\tData: ${message.data}`);
     const parsedData = JSON.parse(message.data);
-    console.log(`Data: ${JSON.stringify(parsedData, null, '  ')}`);
+    // console.log(`Data: ${JSON.stringify(parsedData, null, '  ')}`);
     // console.log(`\tAttributes: ${message.attributes}`);
     messageCount += 1;
 

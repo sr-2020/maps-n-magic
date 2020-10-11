@@ -40,6 +40,7 @@ import {
 } from '../../api/position';
 
 import { CharacterStatesListener } from '../../api/characterStates/CharacterStatesListener';
+import { SpellCastsListener } from '../../api/spellCasts/SpellCastsListener';
 
 import { EventEngine } from '../../core/EventEngine';
 
@@ -113,5 +114,6 @@ export function makeGameModel(database) {
     },
   ));
   const characterStatesListener = new CharacterStatesListener(gameModel);
+  const spellCastsListener = new SpellCastsListener(gameModel);
   return { gameModel, gameServer };
 }

@@ -28,6 +28,7 @@ const MANA_TIDE_UPDATE_INTERVAL = 60000 * 10; // millis
 export class ManaOceanService extends AbstractService {
   metadata = {
     actions: [
+      'spellCast',
       // 'postManaOceanSettings',
       // 'postManaOceanSettingsConfirmed',
     ],
@@ -46,7 +47,7 @@ export class ManaOceanService extends AbstractService {
     super();
     this.prevTideHeight = null;
     this.tideLevelTimerId = null;
-    this.manaModifiers = [];
+    // this.manaModifiers = [];
     this.onTideLevelUpdate = this.onTideLevelUpdate.bind(this);
     this.onMassacreTriggered = this.onMassacreTriggered.bind(this);
     this.getManaOptions = this.getManaOptions.bind(this);
@@ -71,6 +72,44 @@ export class ManaOceanService extends AbstractService {
     this.off('massacreTriggered', this.onMassacreTriggered);
   }
 
+  spellCast(data) {
+    console.log(data);
+
+    // {
+    //   timestamp: moment.utc().valueOf(), // Unix time в миллисекундах
+    //   id: 'stone-skin', // id спелла из сводной таблички
+    //   name: 'Skin stoner', // человекочитаемое название спелла
+    //   characterId: '10198', // персонаж применивший спелл
+    //   location: {
+    //     id: 3065, // район силовиков
+    //     manaLevel: 10,
+    //   },
+    //   power: 7, // мощь спелла
+    //   reagentIds: ['123', '321'], // идентификаторы QR-ов реагентов
+    //   ritualMembersIds: ['555', '666'], // идентификаторы участников ритуала
+    //   ritualVictimIds: ['111', '222'], // идентификаторы жертв ритуала
+    //   // целевой персонаж (если данная способность имеет целевого персонажа),
+    //   // иначе пусто
+    //   targetCharacterId: '10246',
+    // }
+    const { timestamp, power } = data;
+    const locationId = data.location.id;
+    if (power < 7) {
+      return;
+    }
+    const locationRecord = this.getLocation(locationId);
+    this.pushEffect(locationRecord, {
+      type: 'powerSpell',
+      id: shortid.generate(),
+      start: timestamp + 60000 * 15, // start after 15 minutes
+      end: timestamp + 60000 * 30, // end after 30 minutes
+      // start: timestamp + 15000, // start after 15 seconds
+      // end: timestamp + 30000, // end after 30 seconds
+      // end: timestamp + 120000, // end after 30 seconds
+      manaLevelChange: -1,
+    });
+  }
+
   onMassacreTriggered(data) {
     const { locationId, timestamp } = data;
     // {
@@ -78,25 +117,32 @@ export class ManaOceanService extends AbstractService {
     //   locationId: 3061,
     //   timestamp: 1602203600686
     // }
-    this.manaModifiers.push(data);
-    const locationRecord = this.getFromModel({
-      type: 'locationRecord',
-      id: locationId,
-    });
-    // console.log('manaModifiers', this.manaModifiers, shortid.generate(), data, locationRecord);
-    // const locationRecords = this.getFromModel('locationRecords');
-    const { effectList = [] } = locationRecord.options;
-    // effectList = [];
-    effectList.push({
+    // this.manaModifiers.push(data);
+    const locationRecord = this.getLocation(locationId);
+    this.pushEffect(locationRecord, {
       type: 'massacre',
       id: shortid.generate(),
       start: timestamp + 60000 * 15, // start after 15 minutes
-      end: timestamp + 60000 * 30, // end after 30 minutes
+      end: timestamp + 60000 * 45, // end after 30 minutes
       // start: timestamp + 15000, // start after 15 seconds
       // end: timestamp + 30000, // end after 30 seconds
       // end: timestamp + 120000, // end after 30 seconds
       manaLevelChange: 1,
     });
+    // // console.log('manaModifiers', this.manaModifiers, shortid.generate(), data, locationRecord);
+  }
+
+  getLocation(locationId) {
+    return this.getFromModel({
+      type: 'locationRecord',
+      id: locationId,
+    });
+  }
+
+  pushEffect(locationRecord, effect) {
+    const { effectList = [] } = locationRecord.options;
+    // effectList = [];
+    effectList.push(effect);
     this.executeOnModel({
       type: 'putLocationRecord',
       id: locationRecord.id,
@@ -214,7 +260,8 @@ export class ManaOceanService extends AbstractService {
   getNextTideHeight(curTimestamp) {
     if (this.prevTideHeight === null) {
       this.lastManaUpdateTimestamp = curTimestamp;
-      return -2;
+      // return -2;
+      return 0;
     }
     if (this.lastManaUpdateTimestamp + MANA_TIDE_UPDATE_INTERVAL > curTimestamp) {
       // console.log('no mana update');
@@ -233,27 +280,4 @@ export class ManaOceanService extends AbstractService {
     const sum = R.sum(arr);
     return R.max(R.min(5, sum), 1);
   }
-  // getManaOceanSettings() {
-  //   return R.clone(this.manaOceanSettings);
-  // }
-
-  // setManaOceanSettings({ manaOceanSettings }) {
-  //   const areEqual = R.equals(this.manaOceanSettings, manaOceanSettings);
-  //   this.setData({ manaOceanSettings });
-  //   if (!areEqual) {
-  //     this.emit('manaOceanSettingsChanged', {
-  //       manaOceanSettings,
-  //     });
-  //   }
-  // }
-
-  // postManaOceanSettings = ({ manaOceanSettings }) => {
-  //   this.emit('postManaOceanSettingsRequested', { manaOceanSettings });
-  // }
-
-  // postManaOceanSettingsConfirmed({ manaOceanSettings }) {
-  //   this.manaOceanSettings = R.clone(manaOceanSettings);
-  //   // console.log('postBeaconRecord');
-  //   this.emit('postManaOceanSettings', { manaOceanSettings });
-  // }
 }
