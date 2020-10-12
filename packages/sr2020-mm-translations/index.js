@@ -85,6 +85,8 @@ export const translations = {
       botTooltip: 'Дух "{{name}}"<br>Скорость {{speed}} м/с<br>Фракция {{fraction}}<br>Время остановки {{waitTime}}с',
 
       defaultSatelliteLayer: 'Спутниковая карта',
+      locationCentroidLayer: 'Центроиды геолокаций',
+      locationNeighborLayer: 'Соседние локации',
 
       // track analysis
       trackDemo: 'Карта с треками пользователей',

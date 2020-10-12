@@ -6,6 +6,8 @@ import { BaseContourLayer2 } from 'sr2020-mm-client-core/layers/BaseContourLayer
 import { Map } from 'sr2020-mm-client-core/maps/Map';
 import { BackgroundImageDisplayLayer } from '../../layers/BackgroundImageDisplayLayer';
 import { ManaOceanLayer } from '../../layers/ManaOceanLayer';
+import { LocationCentroidLayer } from '../../layers/LocationCentroidLayer';
+import { LocationNeighborLayer } from '../../layers/LocationNeighborLayer';
 
 export function ManaOceanMap(props) {
   const {
@@ -31,6 +33,8 @@ export function ManaOceanMap(props) {
       <ManaOceanLayer
         enableByDefault
       />
+      <LocationNeighborLayer enableByDefault={false} />
+      <LocationCentroidLayer enableByDefault={false} />
     </Map>
   );
 }

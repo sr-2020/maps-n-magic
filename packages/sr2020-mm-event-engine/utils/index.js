@@ -82,3 +82,9 @@ export function randomInteger(min, max) {
   const rand = min + Math.random() * (max + 1 - min);
   return Math.floor(rand);
 }
+
+// 111100 meters in lat
+// 63995 meters in lng
+
+export const deg2meters = ({ lat, lng }) => ({ lat: lat * 111100, lng: lng * 63995 });
+export const meters2deg = ({ lat, lng }) => ({ lat: lat / 111100, lng: lng / 63995 });

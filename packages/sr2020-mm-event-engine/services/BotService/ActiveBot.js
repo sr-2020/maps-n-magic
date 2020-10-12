@@ -1,8 +1,4 @@
-// 111100 meters in lat
-// 63995 meters in lng
-
-const deg2meters = ({ lat, lng }) => ({ lat: lat * 111100, lng: lng * 63995 });
-const meters2deg = ({ lat, lng }) => ({ lat: lat / 111100, lng: lng / 63995 });
+import { deg2meters, meters2deg } from '../../utils';
 
 const dist = (pt1, pt2) => Math.sqrt((pt1.lat - pt2.lat) ** 2 + (pt1.lng - pt2.lng) ** 2);
 

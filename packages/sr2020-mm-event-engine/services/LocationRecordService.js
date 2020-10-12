@@ -1,7 +1,9 @@
 import * as R from 'ramda';
 import { Delaunay } from 'd3-delaunay';
 
-import { getArrDiff, isGeoLocation, getPolygonCentroid } from '../utils';
+import {
+  getArrDiff, isGeoLocation, getPolygonCentroid, deg2meters,
+} from '../utils';
 import { AbstractService } from '../core/AbstractService';
 
 // duplicated in LocationHolder
@@ -26,7 +28,7 @@ export class LocationRecordService extends AbstractService {
       'putLocationRecordsConfirmed',
       'setLocationRecords',
     ],
-    requests: ['locationRecord', 'locationRecords'],
+    requests: ['locationRecord', 'locationRecords', 'triangulationData'],
     emitEvents: [
       'postLocationRecord',
       'deleteLocationRecord',
@@ -117,16 +119,26 @@ export class LocationRecordService extends AbstractService {
     }
   }
 
+  getTriangulationData() {
+    return this.neighborsIndex;
+  }
+
   // eslint-disable-next-line class-methods-use-this
   calcTriangulation(data) {
-    const points = data.map((loc) => (loc.centroid = getPolygonCentroid(loc.polygon))).map(({ lat, lng }) => [lat, lng]);
+    const centroids = data.map((loc) => (loc.centroid = getPolygonCentroid(loc.polygon)));
+    // const points = centroids.map(({ lat, lng }) => [lat, lng]);
+    const points = centroids.map(deg2meters).map(({ lat, lng }) => [lat, lng]);
     // console.log(points);
 
     const delaunay = Delaunay.from(points);
     this.neighborsIndex = data.reduce((acc, loc, i) => {
       const neighborsList = [...delaunay.neighbors(i)];
       // console.log(loc.id, neighborsIndex);
-      acc.set(loc.id, neighborsList.map((index) => data[index].id));
+      // acc.set(loc.id, neighborsList.map((index) => data[index].id));
+      acc.set(loc.id, {
+        centroid: centroids[i],
+        neighborsList: neighborsList.map((index) => data[index].id),
+      });
       return acc;
     }, new Map());
     // console.log(this.neighborsIndex);
