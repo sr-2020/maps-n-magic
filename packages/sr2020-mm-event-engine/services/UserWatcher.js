@@ -1,31 +1,8 @@
 import * as R from 'ramda';
-import * as gi from '@thi.ng/geom-isec';
 
 import L from 'leaflet/dist/leaflet-src';
 import { AbstractService } from '../core/AbstractService';
-
-
-const latlngs2arr = R.map((el) => [el.lat, el.lng]);
-
-function latLngsToBounds(latLngs) {
-  const bounds = new L.LatLngBounds();
-  latLngs.forEach(bounds.extend.bind(bounds));
-  return bounds;
-}
-
-function isPointInLocation(latlng, latlngPolygon) {
-  // const latlngPolygon = loc.getLatLngs();
-  // const bounds = loc.getBounds();
-  const bounds = latLngsToBounds(latlngPolygon);
-
-  const simpleTest = bounds.contains(latlng);
-  if (simpleTest) {
-    const coords = [latlng.lat, latlng.lng];
-    const polygon = latlngs2arr(latlngPolygon);
-    return gi.pointInPolygon2(coords, polygon);
-  }
-  return false;
-}
+import { isPointInLocation } from '../utils';
 
 const notNull = R.pipe(R.isNil, R.not);
 

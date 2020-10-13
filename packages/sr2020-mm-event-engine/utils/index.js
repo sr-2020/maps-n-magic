@@ -1,6 +1,10 @@
 import * as R from 'ramda';
 import 'sr2020-mm-hacks-n-fixes/leafletWindowMP';
 import { LatLngBounds } from 'leaflet/src/geo/LatLngBounds';
+import { pointToSegmentDistance } from 'leaflet/src/geometry/LineUtil';
+import * as gi from '@thi.ng/geom-isec';
+import * as gcp from '@thi.ng/geom-closest-point';
+import clippingUtils from 'polygon-clipping';
 
 export function isGeoLocation(location) {
   return location.layer_id === 1 && !R.isEmpty(location.polygon);
@@ -88,3 +92,60 @@ export function randomInteger(min, max) {
 
 export const deg2meters = ({ lat, lng }) => ({ lat: lat * 111100, lng: lng * 63995 });
 export const meters2deg = ({ lat, lng }) => ({ lat: lat / 111100, lng: lng / 63995 });
+
+const latlngs2arr = R.map((el) => [el.lat, el.lng]);
+
+export function isPointInLocation(latlng, latlngPolygon) {
+  // const latlngPolygon = loc.getLatLngs();
+  // const bounds = loc.getBounds();
+  const bounds = latLngsToBounds(latlngPolygon);
+
+  const simpleTest = bounds.contains(latlng);
+  if (simpleTest) {
+    const coords = [latlng.lat, latlng.lng];
+    const polygon = latlngs2arr(latlngPolygon);
+    return gi.pointInPolygon2(coords, polygon);
+  }
+  return false;
+}
+
+export function getPolygonMinDistance1(polygon1, polygon2) {
+  // getPolygonMinDistance2(polygon1, polygon2);
+  const latLng2Point = ({ lat, lng }) => ({ x: lat, y: lng });
+  polygon1 = polygon1.map(latLng2Point);
+  polygon2 = polygon2.map(latLng2Point);
+  // console.log(polygon1, polygon2);
+  const pairs1 = R.aperture(2, [...polygon1, polygon1[0]]);
+  const pairs2 = R.aperture(2, [...polygon2, polygon2[0]]);
+
+  const distance = [
+    ...R.xprod(polygon1, pairs2).map(([pt, pair]) => pointToSegmentDistance(pt, pair[0], pair[1])),
+    ...R.xprod(polygon2, pairs1).map(([pt, pair]) => pointToSegmentDistance(pt, pair[0], pair[1])),
+  ];
+  // console.log('distLeaflet', distance);
+
+  return R.reduce(R.min, Infinity, distance);
+}
+
+export function getPolygonMinDistance(polygon1, polygon2) {
+  const latLng2Point = ({ lat, lng }) => ([lat, lng]);
+  polygon1 = polygon1.map(latLng2Point);
+  polygon2 = polygon2.map(latLng2Point);
+  const intersection = clippingUtils.intersection([polygon1], [polygon2]);
+  // console.log('intersection', intersection);
+  if (intersection.length > 0) {
+    return 0;
+  }
+
+  // console.log(polygon1, polygon2);
+  const pairs1 = R.aperture(2, [...polygon1, polygon1[0]]);
+  const pairs2 = R.aperture(2, [...polygon2, polygon2[0]]);
+
+  const distance = [
+    ...R.xprod(polygon1, pairs2).map(([pt, pair]) => gcp.distToSegment(pt, pair[0], pair[1])),
+    ...R.xprod(polygon2, pairs1).map(([pt, pair]) => gcp.distToSegment(pt, pair[0], pair[1])),
+  ];
+  // console.log('distThing', distance);
+
+  return R.reduce(R.min, Infinity, distance);
+}
