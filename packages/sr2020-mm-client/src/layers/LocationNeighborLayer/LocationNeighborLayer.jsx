@@ -75,7 +75,7 @@ export class LocationNeighborLayer extends Component {
     const { edgeId, centroidLatLng1, centroidLatLng2 } = dataItem;
     const edge = L.polyline([centroidLatLng1, centroidLatLng2], {
       edgeId,
-      color: 'red',
+      color: 'green',
     });
     this.group.addLayer(edge);
   }

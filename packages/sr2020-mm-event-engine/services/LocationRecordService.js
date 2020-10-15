@@ -1,7 +1,7 @@
 import * as R from 'ramda';
 
 import {
-  getArrDiff, isGeoLocation, getPolygonCentroid, deg2meters, latLngsToBounds, getPolygonMinDistance,
+  getArrDiff, isGeoLocation,
 } from '../utils';
 import { makeNeighborsIndex } from '../utils/makeNeighborsIndex';
 import { AbstractService } from '../core/AbstractService';
