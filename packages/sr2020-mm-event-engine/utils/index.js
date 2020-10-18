@@ -149,3 +149,11 @@ export function getPolygonMinDistance(polygon1, polygon2) {
 
   return R.reduce(R.min, Infinity, distance);
 }
+
+export function pairToEdgeId(locId1, locId2) {
+  return Number(locId1) < Number(locId2) ? `${locId1}_${locId2}` : `${locId2}_${locId1}`;
+}
+
+export function edgeIdToPair(edgeId) {
+  return edgeId.split('_');
+}

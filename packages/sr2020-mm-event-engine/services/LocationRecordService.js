@@ -3,7 +3,7 @@ import * as R from 'ramda';
 import {
   getArrDiff, isGeoLocation,
 } from '../utils';
-import { makeNeighborsIndex } from '../utils/makeNeighborsIndex';
+import { makeTriangulationData } from '../utils/makeTriangulationData';
 import { AbstractService } from '../core/AbstractService';
 
 // duplicated in LocationHolder
@@ -106,7 +106,7 @@ export class LocationRecordService extends AbstractService {
     const nextData = extractPolygonData(locationRecords);
     const { unchanged } = getArrDiff(nextData, prevData, R.prop('id'));
     if (!this.neighborsIndex) {
-      this.neighborsIndex = makeNeighborsIndex(nextData);
+      this.neighborsIndex = makeTriangulationData(nextData);
       return;
     }
     if (prevData.length === unchanged.length
@@ -115,7 +115,7 @@ export class LocationRecordService extends AbstractService {
       console.log('no location changes');
     } else {
       console.log('detected location changes');
-      this.neighborsIndex = makeNeighborsIndex(nextData);
+      this.neighborsIndex = makeTriangulationData(nextData);
     }
   }
 

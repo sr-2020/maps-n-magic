@@ -2,7 +2,8 @@ import * as R from 'ramda';
 import { Delaunay } from 'd3-delaunay';
 
 import {
-  getArrDiff, isGeoLocation, getPolygonCentroid, deg2meters, latLngsToBounds, getPolygonMinDistance,
+  getArrDiff, isGeoLocation, getPolygonCentroid, deg2meters,
+  latLngsToBounds, getPolygonMinDistance, pairToEdgeId,
 } from './index';
 
 // const epsilon = 1;
@@ -42,8 +43,11 @@ function getPrecalcData(data) {
 }
 
 // eslint-disable-next-line max-lines-per-function
-export function makeNeighborsIndex(data) {
-  const centroids = data.map((loc) => (loc.centroid = getPolygonCentroid(loc.polygon)));
+export function makeTriangulationData(data) {
+  const centroids = data.map((loc) => ({
+    locationId: loc.id,
+    centroidLatLng: getPolygonCentroid(loc.polygon),
+  }));
   // const points = centroids.map(({ lat, lng }) => [lat, lng]);
   // const points = centroids.map(deg2meters).map(({ lat, lng }) => [lat, lng]);
   // console.log(points);
@@ -67,37 +71,43 @@ export function makeNeighborsIndex(data) {
 
   const neighborsIndex = data.reduce((acc, loc, i) => {
     acc.set(loc.id, {
-      centroid: centroids[i],
+      // centroid: centroids[i],
       neighborsList: [],
     });
     return acc;
   }, new Map());
 
+  const edgeSet = new Set();
+
   // first - triangulation
-  // makeConnectionsByTriangulation(data, neighborsIndex);
+  // makeConnectionsByTriangulation(data, neighborsIndex, edgeSet);
 
   // second - dense clusters + intercluster connections
-  connectClosestLocations(precalcData, neighborsIndex);
+  connectClosestLocations(precalcData, neighborsIndex, edgeSet);
   const clusterList = collectClusters(neighborsIndex);
-  connectClosestXClusters(precalcData, clusterList, neighborsIndex);
+  connectClosestXClusters(precalcData, clusterList, neighborsIndex, edgeSet);
 
   // third - dist is smaller than median
-  // locMedianBasedApproach(precalcData, neighborsIndex);
+  // locMedianBasedApproach(precalcData, neighborsIndex, edgeSet);
 
   // fourth - cluster dist is smaller than median
-  // connectClosestLocations(precalcData, neighborsIndex);
+  // connectClosestLocations(precalcData, neighborsIndex, edgeSet);
   // const clusterList = collectClusters(neighborsIndex);
-  // connectClustersCloserThanMedian(precalcData, clusterList, neighborsIndex);
+  // connectClustersCloserThanMedian(precalcData, clusterList, neighborsIndex, edgeSet);
 
   // fifth - connect closest cluster
-  // connectClosestLocations(precalcData, neighborsIndex);
+  // connectClosestLocations(precalcData, neighborsIndex, edgeSet);
   // const clusterList = collectClusters(neighborsIndex);
-  // connectClosestClusters(precalcData, clusterList, neighborsIndex);
+  // connectClosestClusters(precalcData, clusterList, neighborsIndex, edgeSet);
 
-  return neighborsIndex;
+  return {
+    neighborsIndex,
+    centroids,
+    edgeSet,
+  };
 }
 
-function connectClosestLocations(precalcData, neighborsIndex) {
+function connectClosestLocations(precalcData, neighborsIndex, edgeSet) {
   let totalCases = 0;
   let simpleTestPassed = 0;
   let simpleTestFailed = 0;
@@ -120,6 +130,7 @@ function connectClosestLocations(precalcData, neighborsIndex) {
             advancedTestPassed++;
             neighborsIndex.get(loc1.locationId).neighborsList.push(loc2.locationId);
             neighborsIndex.get(loc2.locationId).neighborsList.push(loc1.locationId);
+            edgeSet.add(pairToEdgeId(loc1.locationId, loc2.locationId));
           } else {
             advancedTestFailed++;
           }
@@ -179,12 +190,13 @@ function collectClusters(neighborsIndex) {
   return clusterList;
 }
 
-function connectClosestXClusters(precalcData, clusterList, neighborsIndex) {
+function connectClosestXClusters(precalcData, clusterList, neighborsIndex, edgeSet) {
   const clusterDists = getClusterDists(precalcData, clusterList);
   clusterDists.forEach((dists) => {
     const dists2 = R.sortBy(R.prop('minDist'), dists);
     R.take(clusterConnectionsNum, dists2).forEach(({ locId1, locId2 }) => {
       addConnection(neighborsIndex, locId1, locId2);
+      edgeSet.add(pairToEdgeId(locId1, locId2));
     });
   });
 
@@ -195,7 +207,7 @@ function connectClosestXClusters(precalcData, clusterList, neighborsIndex) {
   console.log(clusterList);
 }
 
-function connectClustersCloserThanMedian(precalcData, clusterList, neighborsIndex) {
+function connectClustersCloserThanMedian(precalcData, clusterList, neighborsIndex, edgeSet) {
   const clusterDists = getClusterDists(precalcData, clusterList);
   const distArr = R.flatten(clusterDists);
   const median = R.pipe(
@@ -205,10 +217,11 @@ function connectClustersCloserThanMedian(precalcData, clusterList, neighborsInde
   const divider = 1.25;
   distArr.filter((el) => el.minDist < median / divider).forEach(({ locId1, locId2 }) => {
     addConnection(neighborsIndex, Number(locId1), Number(locId2));
+    edgeSet.add(pairToEdgeId(locId1, locId2));
   });
 }
 
-function connectClosestClusters(precalcData, clusterList, neighborsIndex) {
+function connectClosestClusters(precalcData, clusterList, neighborsIndex, edgeSet) {
   const clusterDists = getClusterDists(precalcData, clusterList);
   const distArr = R.sortBy(R.prop('minDist'), R.flatten(clusterDists));
   const clusterSet = new Map();
@@ -226,6 +239,7 @@ function connectClosestClusters(precalcData, clusterList, neighborsIndex) {
       };
       R.keys(join).forEach((key) => clusterSet.set((key), join));
       addConnection(neighborsIndex, Number(locId1), Number(locId2));
+      edgeSet.add(pairToEdgeId(locId1, locId2));
       // clusterSet.add(clusterId1);
       // clusterSet.add(clusterId2);
     }
@@ -248,7 +262,7 @@ function getClusterDists(precalcData, clusterList) {
   });
 }
 
-function locMedianBasedApproach(precalcData, neighborsIndex) {
+function locMedianBasedApproach(precalcData, neighborsIndex, edgeSet) {
   const locIndex = R.indexBy(R.prop('locationId'), precalcData);
   const distArr = getDistArr(locIndex, R.keys(locIndex), R.keys(locIndex));
   const median = R.pipe(
@@ -258,6 +272,7 @@ function locMedianBasedApproach(precalcData, neighborsIndex) {
   const divider = 3;
   distArr.filter((el) => el.minDist < median / divider).forEach(({ locId1, locId2 }) => {
     addConnection(neighborsIndex, Number(locId1), Number(locId2));
+    edgeSet.add(pairToEdgeId(locId1, locId2));
   });
 }
 
@@ -305,10 +320,15 @@ function extendBoundsWithE(bounds, epsilon) {
   return bounds;
 }
 
-export function makeConnectionsByTriangulation(data, neighborsIndex) {
+export function makeConnectionsByTriangulation(data, neighborsIndex, edgeSet) {
   const centroids = data.map((loc) => (loc.centroid = getPolygonCentroid(loc.polygon)));
   const points = centroids.map(deg2meters).map(({ lat, lng }) => [lat, lng]);
   const delaunay = Delaunay.from(points);
+
+  data.forEach((loc, i) => {
+    const neighborsList = [...delaunay.neighbors(i)];
+    neighborsList.forEach((index) => edgeSet.add(pairToEdgeId(loc.id, data[index].id)));
+  });
   data.forEach((loc, i) => {
     const neighborsList = [...delaunay.neighbors(i)];
     // console.log(loc.id, neighborsIndex);
