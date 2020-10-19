@@ -27,31 +27,14 @@ export const withTriangulationData = (Wrapped) => (props) => {
     const { neighborsIndex, centroids, edgeSet } = triangulationData;
     const centroidIndex = R.indexBy((el) => `${el.locationId}`, centroids);
 
-    let edges;
-    if (edgeSet.size > 0) {
-      edges = Array.from(edgeSet).map((edgeId) => {
-        const [locationId1, locationId2] = edgeIdToPair(edgeId);
-        return {
-          edgeId,
-          centroidLatLng1: centroidIndex[Number(locationId1)].centroidLatLng,
-          centroidLatLng2: centroidIndex[Number(locationId2)].centroidLatLng,
-        };
-      });
-    } else {
-      edges = [...neighborsIndex.keys()].reduce((acc, locationId1) => {
-        neighborsIndex.get(locationId1).neighborsList.forEach((locationId2) => {
-          if (locationId1 < locationId2) {
-            acc.push({
-              edgeId: `${locationId1}-${locationId2}`,
-              centroidLatLng1: neighborsIndex.get(locationId1).centroid,
-              centroidLatLng2: neighborsIndex.get(locationId2).centroid,
-            });
-          }
-        });
-        return acc;
-      }, []);
-      // console.log('edges', edges);
-    }
+    const edges = Array.from(edgeSet).map((edgeId) => {
+      const [locationId1, locationId2] = edgeIdToPair(edgeId);
+      return {
+        edgeId,
+        centroidLatLng1: centroidIndex[Number(locationId1)].centroidLatLng,
+        centroidLatLng2: centroidIndex[Number(locationId2)].centroidLatLng,
+      };
+    });
 
     setData({
       centroids,
