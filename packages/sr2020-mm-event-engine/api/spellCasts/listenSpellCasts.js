@@ -52,7 +52,8 @@ export function listenSpellCasts(callback, simulateMessages = false) {
         name: 'Skin stoner', // человекочитаемое название спелла
         characterId: '10198', // персонаж применивший спелл
         location: {
-          id: 3065, // район силовиков
+          // id: 3065, // район силовиков
+          id: 3048,
           manaLevel: 10,
         },
         power: 7, // мощь спелла
@@ -79,6 +80,7 @@ export function listenSpellCasts(callback, simulateMessages = false) {
     emitEvent();
     setInterval(emitEvent, 60000 * 20);
     // setInterval(emitEvent, 30000);
+    // setInterval(emitEvent, 10000);
     // }, 30000);
     // }, 500);
     // }, 100);

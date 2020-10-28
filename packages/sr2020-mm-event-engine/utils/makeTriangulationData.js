@@ -120,7 +120,7 @@ export function makeTriangulationData(data) {
   // const edgeSet = triangulationSubEdgeSet;
 
   return {
-    // neighborsIndex,
+    neighborsIndex,
     centroids,
     edgeSet,
   };

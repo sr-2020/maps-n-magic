@@ -117,7 +117,7 @@ export class ManaOceanLayer extends Component {
     L.setOptions(loc, { label: item.label });
     const that = this;
     loc.on('mouseover', function (e) {
-      loc.bindTooltip(that.getLocationTooltip(this.options.label, item.options));
+      loc.bindTooltip(that.getLocationTooltip(this.options.label, item.options, item.id));
       this.openTooltip();
     });
   }
@@ -137,7 +137,7 @@ export class ManaOceanLayer extends Component {
     });
     const that = this;
     loc.on('mouseover', function (e) {
-      loc.bindTooltip(that.getLocationTooltip(this.options.label, options));
+      loc.bindTooltip(that.getLocationTooltip(this.options.label, options, locationData.id));
       this.openTooltip();
     });
     loc.on('mouseout', function (e) {
@@ -146,21 +146,24 @@ export class ManaOceanLayer extends Component {
     this.group.addLayer(loc);
   }
 
-  getLocationTooltip(label, locOptions) {
+  getLocationTooltip(label, locOptions, locId) {
     const { t } = this.props;
     const { effects = [] } = locOptions.manaLevelModifiers;
     const { effectList = [] } = locOptions;
-    let output = [label, t('manaLevelNumber', { manaLevel: locOptions.manaLevel })];
+    let output = [`${label} (${locId})`, t('manaLevelNumber', { manaLevel: locOptions.manaLevel })];
     const strings = effects.map(({ type, manaLevelChange }) => t(`manaEffect_${type}`, { manaLevelChange }));
     if (strings.length > 0) {
       output = output.concat(strings);
     }
 
     const strings2 = effectList.map(({
-      type, manaLevelChange, start, end,
+      type, manaLevelChange, start, end, permanent,
     }) => {
       const str = t(`manaEffect_${type}`, { manaLevelChange });
       const startStr = moment(start).format('HH:mm');
+      if (permanent) {
+        return `${str}, ${startStr}, мана ${manaLevelChange}`;
+      }
       const endStr = moment(end).format('HH:mm');
       return `${str}, ${startStr}-${endStr}, мана ${manaLevelChange}`;
     });

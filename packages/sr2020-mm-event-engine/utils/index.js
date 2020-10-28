@@ -87,6 +87,13 @@ export function randomInteger(min, max) {
   return Math.floor(rand);
 }
 
+export function sample(arr) {
+  if (arr.length === 0) {
+    return null;
+  }
+  return arr[Math.floor(Math.random() * arr.length)];
+}
+
 // 111100 meters in lat
 // 63995 meters in lng
 

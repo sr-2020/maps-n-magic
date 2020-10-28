@@ -40,7 +40,7 @@ export class ManaOceanService extends AbstractService {
       // 'postManaOceanSettingsRequested',
     ],
     needActions: ['putLocationRecord', 'putLocationRecords'],
-    needRequests: ['manaOceanSettings', 'locationRecords', 'locationRecord', 'enableManaOcean'],
+    needRequests: ['manaOceanSettings', 'locationRecords', 'locationRecord', 'enableManaOcean', 'neighborOrRandomLocation'],
     listenEvents: ['massacreTriggered'],
   };
 
@@ -74,7 +74,7 @@ export class ManaOceanService extends AbstractService {
   }
 
   spellCast(data) {
-    console.log(data);
+    console.log('spellCast', data);
 
     // {
     //   timestamp: moment.utc().valueOf(), // Unix time в миллисекундах
@@ -93,14 +93,60 @@ export class ManaOceanService extends AbstractService {
     //   // иначе пусто
     //   targetCharacterId: '10246',
     // }
-    const { timestamp, power } = data;
     const locationId = data.location.id;
-    if (power < 7) {
-      return;
-    }
     const locationRecord = this.getLocation(locationId);
     if (!locationRecord) {
       console.error('location not found', locationId);
+      return;
+    }
+    this.processPowerSpell(data, locationRecord);
+    this.processRitualCast(data, locationRecord);
+  }
+
+  processRitualCast(data, locationRecord) {
+    const { timestamp, ritualMembersIds, ritualVictimIds } = data;
+    if (ritualMembersIds.length + ritualVictimIds.length < 2) {
+      return;
+    }
+    // console.log('dssd');
+    const neighborLocation = this.getFromModel({
+      type: 'neighborOrRandomLocation',
+      locationId: locationRecord.id,
+    });
+    if (neighborLocation == null) {
+      return;
+    }
+    console.log({ neighborLocation });
+
+    const ritualId = shortid.generate();
+
+    this.pushEffect(locationRecord, {
+      type: 'ritualLocation',
+      id: ritualId,
+      start: timestamp + 60000 * 15, // start after 15 minutes
+      // end: timestamp + 60000 * 30, // end after 30 minutes
+      // start: timestamp + 15000, // start after 15 seconds
+      // end: timestamp + 30000, // end after 30 seconds
+      // end: timestamp + 120000, // end after 30 seconds
+      manaLevelChange: -1,
+      permanent: true,
+    });
+    this.pushEffect(neighborLocation, {
+      type: 'ritualNeighborLocation',
+      id: ritualId,
+      start: timestamp + 60000 * 15, // start after 15 minutes
+      // end: timestamp + 60000 * 30, // end after 30 minutes
+      // start: timestamp + 15000, // start after 15 seconds
+      // end: timestamp + 30000, // end after 30 seconds
+      // end: timestamp + 120000, // end after 30 seconds
+      manaLevelChange: 1,
+      permanent: true,
+    });
+  }
+
+  processPowerSpell(data, locationRecord) {
+    const { timestamp, power } = data;
+    if (power < 7) {
       return;
     }
     this.pushEffect(locationRecord, {
@@ -243,7 +289,7 @@ export class ManaOceanService extends AbstractService {
   getManaOptions(location, tideHeight, neutralManaLevel, curTimestamp) {
     const { options } = location;
     const { effectList = [] } = options;
-    const liveEffectList = effectList.filter((effect) => effect.end > curTimestamp);
+    const liveEffectList = effectList.filter((effect) => effect.permanent || effect.end > curTimestamp);
     const effects = liveEffectList.filter((effect) => effect.start < curTimestamp).map((effect) => ({
       type: effect.type,
       manaLevelChange: effect.manaLevelChange,

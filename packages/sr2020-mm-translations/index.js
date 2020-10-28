@@ -64,6 +64,8 @@ export const translations = {
       manaLevelNumber: 'Уровень маны <b>{{manaLevel}}</b>',
       manaEffect_massacre: 'Массакр {{ manaLevelChange }}',
       manaEffect_powerSpell: 'Мощное заклинание {{ manaLevelChange }}',
+      manaEffect_ritualLocation: 'Отлив от ритуала {{ manaLevelChange }}',
+      manaEffect_ritualNeighborLocation: 'Прилив от ритуала {{ manaLevelChange }}',
       regionTooltip: 'Регион "{{name}}"',
       gameLocationTooltip: 'Игровая локация "{{name}}"',
       unknownLocationTypeTooltip: 'Локация неизвестного типа "{{name}}"',

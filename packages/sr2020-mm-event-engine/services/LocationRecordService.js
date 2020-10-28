@@ -1,7 +1,7 @@
 import * as R from 'ramda';
 
 import {
-  getArrDiff, isGeoLocation,
+  getArrDiff, isGeoLocation, sample,
 } from '../utils';
 import { makeTriangulationData } from '../utils/makeTriangulationData';
 import { AbstractService } from '../core/AbstractService';
@@ -28,7 +28,7 @@ export class LocationRecordService extends AbstractService {
       'putLocationRecordsConfirmed',
       'setLocationRecords',
     ],
-    requests: ['locationRecord', 'locationRecords', 'triangulationData'],
+    requests: ['locationRecord', 'locationRecords', 'triangulationData', 'neighborOrRandomLocation'],
     emitEvents: [
       'postLocationRecord',
       'deleteLocationRecord',
@@ -121,6 +121,20 @@ export class LocationRecordService extends AbstractService {
 
   getTriangulationData() {
     return this.neighborsIndex;
+  }
+
+  getNeighborOrRandomLocation({ locationId }) {
+    const { neighborsIndex } = this.neighborsIndex;
+    // console.log(neighborsIndex);
+    let neighborsList = neighborsIndex.get(Number(locationId));
+    if (neighborsList.length === 0) {
+      neighborsList = R.without([locationId], Array.from(neighborsIndex.keys()));
+    }
+    if (neighborsList.length === 0) {
+      return null;
+    }
+    const neighborLocationId = sample(neighborsList);
+    return this.getLocationRecord({ id: neighborLocationId });
   }
 
   putLocationRecord(action) {
