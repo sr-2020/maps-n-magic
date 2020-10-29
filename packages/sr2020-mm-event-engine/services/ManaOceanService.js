@@ -99,15 +99,17 @@ export class ManaOceanService extends AbstractService {
       console.error('location not found', locationId);
       return;
     }
-    this.processPowerSpell(data, locationRecord);
-    this.processRitualCast(data, locationRecord);
+    this.processPowerSpell(data);
+    this.processRitualCast(data);
   }
 
-  processRitualCast(data, locationRecord) {
+  processRitualCast(data) {
     const { timestamp, ritualMembersIds, ritualVictimIds } = data;
     if (ritualMembersIds.length + ritualVictimIds.length < 2) {
       return;
     }
+    const locationId = data.location.id;
+    const locationRecord = this.getLocation(locationId);
     // console.log('dssd');
     const neighborLocation = this.getFromModel({
       type: 'neighborOrRandomLocation',
@@ -118,11 +120,9 @@ export class ManaOceanService extends AbstractService {
     }
     console.log({ neighborLocation });
 
-    const ritualId = shortid.generate();
-
     this.pushEffect(locationRecord, {
       type: 'ritualLocation',
-      id: ritualId,
+      id: shortid.generate(),
       start: timestamp + 60000 * 15, // start after 15 minutes
       // end: timestamp + 60000 * 30, // end after 30 minutes
       // start: timestamp + 15000, // start after 15 seconds
@@ -133,7 +133,7 @@ export class ManaOceanService extends AbstractService {
     });
     this.pushEffect(neighborLocation, {
       type: 'ritualNeighborLocation',
-      id: ritualId,
+      id: shortid.generate(),
       start: timestamp + 60000 * 15, // start after 15 minutes
       // end: timestamp + 60000 * 30, // end after 30 minutes
       // start: timestamp + 15000, // start after 15 seconds
@@ -144,11 +144,13 @@ export class ManaOceanService extends AbstractService {
     });
   }
 
-  processPowerSpell(data, locationRecord) {
+  processPowerSpell(data) {
     const { timestamp, power } = data;
     if (power < 7) {
       return;
     }
+    const locationId = data.location.id;
+    const locationRecord = this.getLocation(locationId);
     this.pushEffect(locationRecord, {
       type: 'powerSpell',
       id: shortid.generate(),
@@ -198,6 +200,7 @@ export class ManaOceanService extends AbstractService {
     const { effectList = [] } = locationRecord.options;
     // effectList = [];
     effectList.push(effect);
+    console.log('pushEffect', locationRecord.id, locationRecord.label, effect.type);
     this.executeOnModel({
       type: 'putLocationRecord',
       id: locationRecord.id,
@@ -295,7 +298,7 @@ export class ManaOceanService extends AbstractService {
       manaLevelChange: effect.manaLevelChange,
     }));
     if (effects.length > 0) {
-      console.log('effects', location.id, effects);
+      // console.log('effects', location.id, effects);
     }
     const newOptions = {
       manaLevelModifiers: {

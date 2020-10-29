@@ -146,27 +146,61 @@ export class ManaOceanLayer extends Component {
     this.group.addLayer(loc);
   }
 
+  // eslint-disable-next-line max-lines-per-function
   getLocationTooltip(label, locOptions, locId) {
     const { t } = this.props;
     const { effects = [] } = locOptions.manaLevelModifiers;
     const { effectList = [] } = locOptions;
     let output = [`${label} (${locId})`, t('manaLevelNumber', { manaLevel: locOptions.manaLevel })];
-    const strings = effects.map(({ type, manaLevelChange }) => t(`manaEffect_${type}`, { manaLevelChange }));
+    // const strings = effects.map(({ type, manaLevelChange }) => t(`manaEffect_${type}`, { manaLevelChange }));
+
+    const effectGroups1 = R.groupBy(R.prop('type'), effects);
+
+    const strings = R.sortBy(R.identity, R.keys(effectGroups1)).map((effectType) => {
+      const firstEffect = effectGroups1[effectType][0];
+      const str = t(`manaEffect_${effectType}`, { manaLevelChange: firstEffect.manaLevelChange });
+      const { length } = effectGroups1[effectType];
+      return `${str} x${length}, мана ${firstEffect.manaLevelChange * length}`;
+    });
+
     if (strings.length > 0) {
       output = output.concat(strings);
     }
 
-    const strings2 = effectList.map(({
-      type, manaLevelChange, start, end, permanent,
-    }) => {
-      const str = t(`manaEffect_${type}`, { manaLevelChange });
-      const startStr = moment(start).format('HH:mm');
-      if (permanent) {
-        return `${str}, ${startStr}, мана ${manaLevelChange}`;
-      }
-      const endStr = moment(end).format('HH:mm');
-      return `${str}, ${startStr}-${endStr}, мана ${manaLevelChange}`;
+    const effectGroups = R.groupBy(R.prop('type'), effectList);
+
+    const strings2 = R.sortBy(R.identity, R.keys(effectGroups)).map((effectType) => {
+      const timeArr = effectGroups[effectType].map((effect) => {
+        const {
+          start, end, permanent,
+        } = effect;
+        const startStr = moment(start).format('HH:mm');
+        if (permanent) {
+          return startStr;
+        }
+        const endStr = moment(end).format('HH:mm');
+        return `${startStr}-${endStr}`;
+      });
+
+      const firstEffect = effectGroups[effectType][0];
+      const str = t(`manaEffect_${effectType}`, { manaLevelChange: firstEffect.manaLevelChange });
+      const timeSubArr = R.take(3, timeArr);
+      const timeStr = timeSubArr.join(', ') + (timeArr.length > timeSubArr.length ? ', ...' : '');
+      const { length } = effectGroups[effectType];
+      return `${str}, x${length} (${timeStr}), мана ${firstEffect.manaLevelChange * length}`;
     });
+
+    // const strings2 = effectList.map(({
+    //   type, manaLevelChange, start, end, permanent,
+    // }) => {
+    //   const str = t(`manaEffect_${type}`, { manaLevelChange });
+    //   const startStr = moment(start).format('HH:mm');
+    //   if (permanent) {
+    //     return `${str}, ${startStr}, мана ${manaLevelChange}`;
+    //   }
+    //   const endStr = moment(end).format('HH:mm');
+    //   return `${str}, ${startStr}-${endStr}, мана ${manaLevelChange}`;
+    // });
     //     end: 1602289691729
     // id: "gRSQuMVdM"
     // manaLevelChange: 1

@@ -3,7 +3,7 @@
 import { PubSub } from '@google-cloud/pubsub';
 import moment from 'moment-timezone';
 import { bodyConditions } from 'sr2020-mm-data/gameConstants';
-import { randomInteger } from '../../utils';
+import { randomInteger, sample } from '../../utils';
 
 let subscriptionName;
 
@@ -45,6 +45,10 @@ export function listenSpellCasts(callback, simulateMessages = false) {
     const charList = [10198, 9504, 9542, 10199, 10200, 10201];
     // charList.forEach((characterId) => {
     // });
+
+    const locArr = [3080, 3177, 3175, 3183, 3054, 3050, 3166, 3060, 3051, 3066,
+      3174, 3062, 3188, 3187, 3065, 3047, 3178, 3132, 3186, 3185, 3179, 3061,
+      3184, 3064, 3063, 3180, 3053, 3176, 3052, 3055, 3173, 3181, 3049, 3182, 3048, 3067];
     const emitEvent = () => {
       callback({
         timestamp: moment.utc().valueOf(), // Unix time в миллисекундах
@@ -53,7 +57,8 @@ export function listenSpellCasts(callback, simulateMessages = false) {
         characterId: '10198', // персонаж применивший спелл
         location: {
           // id: 3065, // район силовиков
-          id: 3048,
+          // id: 3048,
+          id: sample(locArr),
           manaLevel: 10,
         },
         power: 7, // мощь спелла
