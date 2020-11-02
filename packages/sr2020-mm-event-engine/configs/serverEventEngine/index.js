@@ -40,6 +40,7 @@ import {
 } from '../../api/position';
 
 import { CharacterStatesListener } from '../../api/characterStates/CharacterStatesListener';
+import { CharacterLocationListener } from '../../api/position/CharacterLocationListener';
 import { SpellCastsListener } from '../../api/spellCasts/SpellCastsListener';
 
 import { EventEngine } from '../../core/EventEngine';
@@ -110,10 +111,12 @@ export function makeGameModel(database) {
     gameModel,
     {
       putCharHealthRequested: 'putCharHealthConfirmed',
+      putCharLocationRequested: 'putCharLocationConfirmed',
       enableManaOceanRequested: 'enableManaOceanConfirmed',
     },
   ));
   const characterStatesListener = new CharacterStatesListener(gameModel);
+  const characterLocationListener = new CharacterLocationListener(gameModel);
   const spellCastsListener = new SpellCastsListener(gameModel);
   return { gameModel, gameServer };
 }

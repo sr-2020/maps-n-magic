@@ -7,6 +7,8 @@ export class CharacterHealthStateService extends AbstractService {
     actions: [
       'putCharHealth',
       'putCharHealthConfirmed',
+      'putCharLocation',
+      'putCharLocationConfirmed',
       'setCharacterHealthStates',
     ],
     requests: [
@@ -14,9 +16,11 @@ export class CharacterHealthStateService extends AbstractService {
     ],
     emitEvents: [
       'putCharHealthRequested',
+      'putCharLocationRequested',
       'characterHealthStateChanged',
       'characterHealthStatesLoaded',
     ],
+    needRequests: ['locationRecord'],
     listenEvents: [],
   };
 
@@ -45,6 +49,45 @@ export class CharacterHealthStateService extends AbstractService {
 
   putCharHealth(action) {
     this.emit('putCharHealthRequested', action);
+  }
+
+  putCharLocation(action) {
+    this.emit('putCharLocationRequested', action);
+  }
+
+  getLocation(locationId) {
+    return this.getFromModel({
+      type: 'locationRecord',
+      id: locationId,
+    });
+  }
+
+  putCharLocationConfirmed(action) {
+    const { characterId, locationId } = action;
+    const prevCharacterHealthState = this.characterHealthStates[characterId];
+    const locationRecord = this.getLocation(locationId);
+    if (!prevCharacterHealthState || !locationRecord) {
+      return;
+    }
+    const characterHealthState = {
+      ...prevCharacterHealthState,
+      locationId,
+      locationLabel: locationRecord.label,
+    };
+    this.characterHealthStates = {
+      ...this.characterHealthStates,
+      [characterId]: characterHealthState,
+    };
+    this.emit('characterHealthStateChanged', {
+      characterId,
+      characterHealthState,
+      type: 'characterHealthStateChanged',
+      prevCharacterHealthState,
+    });
+    this.emit('characterHealthStatesLoaded', {
+      type: 'characterHealthStatesLoaded',
+      characterHealthStates: this.characterHealthStates,
+    });
   }
 
   putCharHealthConfirmed(action) {
