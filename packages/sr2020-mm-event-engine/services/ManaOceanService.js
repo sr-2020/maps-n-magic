@@ -1,3 +1,4 @@
+// eslint-disable-next-line max-classes-per-file
 import * as R from 'ramda';
 import shortid from 'shortid';
 import moment from 'moment-timezone';
@@ -25,6 +26,38 @@ const TIDE_LEVEL_UPDATE_INTERVAL = 5000; // millis
 const MANA_TIDE_UPDATE_INTERVAL = 60000 * 10; // millis
 
 // let counter = 1;
+
+class EffectCollector {
+  index = {};
+
+  addEffect(locationRecord, effect) {
+    const { id } = locationRecord;
+    let record = this.index[id];
+    if (!record) {
+      record = {
+        locationRecord,
+        effects: [],
+      };
+      this.index[id] = record;
+    }
+    record.effects.push(effect);
+  }
+
+  toLocationUpdates() {
+    return R.values(this.index).map(({ locationRecord, effects }) => {
+      const { effectList = [] } = locationRecord.options;
+      return {
+        id: locationRecord.id,
+        body: {
+          options: {
+            ...locationRecord.options,
+            effectList: R.concat(effectList, effects),
+          },
+        },
+      };
+    });
+  }
+}
 
 export class ManaOceanService extends AbstractService {
   metadata = {
@@ -99,11 +132,17 @@ export class ManaOceanService extends AbstractService {
       console.error('location not found', locationId);
       return;
     }
-    this.processPowerSpell(data);
-    this.processRitualCast(data);
+    const effectCollector = new EffectCollector();
+    this.processPowerSpell(data, effectCollector);
+    this.processRitualCast(data, effectCollector);
+    const updates = effectCollector.toLocationUpdates();
+    if (updates.length > 0) {
+      this.pushEffects(updates);
+    }
+    // console.log('effectCollector', JSON.stringify(effectCollector.index, null, '  '));
   }
 
-  processRitualCast(data) {
+  processRitualCast(data, effectCollector) {
     const { timestamp, ritualMembersIds, ritualVictimIds } = data;
     if (ritualMembersIds.length + ritualVictimIds.length < 2) {
       return;
@@ -120,7 +159,7 @@ export class ManaOceanService extends AbstractService {
     }
     console.log({ neighborLocation });
 
-    this.pushEffect(locationRecord, {
+    effectCollector.addEffect(locationRecord, {
       type: 'ritualLocation',
       id: shortid.generate(),
       start: timestamp + 60000 * 15, // start after 15 minutes
@@ -131,7 +170,7 @@ export class ManaOceanService extends AbstractService {
       manaLevelChange: -1,
       permanent: true,
     });
-    this.pushEffect(neighborLocation, {
+    effectCollector.addEffect(neighborLocation, {
       type: 'ritualNeighborLocation',
       id: shortid.generate(),
       start: timestamp + 60000 * 15, // start after 15 minutes
@@ -144,14 +183,14 @@ export class ManaOceanService extends AbstractService {
     });
   }
 
-  processPowerSpell(data) {
+  processPowerSpell(data, effectCollector) {
     const { timestamp, power } = data;
     if (power < 7) {
       return;
     }
     const locationId = data.location.id;
     const locationRecord = this.getLocation(locationId);
-    this.pushEffect(locationRecord, {
+    effectCollector.addEffect(locationRecord, {
       type: 'powerSpell',
       id: shortid.generate(),
       start: timestamp + 60000 * 15, // start after 15 minutes
@@ -210,6 +249,14 @@ export class ManaOceanService extends AbstractService {
           effectList,
         },
       },
+    });
+  }
+
+  pushEffects(updates) {
+    console.log('pushEffects', updates);
+    this.executeOnModel({
+      type: 'putLocationRecords',
+      updates,
     });
   }
 
@@ -292,8 +339,23 @@ export class ManaOceanService extends AbstractService {
   getManaOptions(location, tideHeight, neutralManaLevel, curTimestamp) {
     const { options } = location;
     const { effectList = [] } = options;
-    const liveEffectList = effectList.filter((effect) => effect.permanent || effect.end > curTimestamp);
-    const effects = liveEffectList.filter((effect) => effect.start < curTimestamp).map((effect) => ({
+    const notOutdatedEffectList = effectList.filter((effect) => effect.permanent || effect.end > curTimestamp);
+    const startedEffects = notOutdatedEffectList.filter((effect) => effect.start < curTimestamp);
+    const groups = R.groupBy(R.prop('type'), startedEffects);
+
+    let ids = [];
+    if (groups.ritualLocation && groups.ritualNeighborLocation) {
+      const compensatedEffectsSize = Math.min(groups.ritualLocation.length, groups.ritualNeighborLocation.length);
+      ids = R.pluck('id', R.concat(
+        groups.ritualLocation.slice(0, compensatedEffectsSize),
+        groups.ritualNeighborLocation.slice(0, compensatedEffectsSize),
+      ));
+    }
+
+    const liveEffectList = notOutdatedEffectList.filter((effect) => !ids.includes(effect.id));
+    const startedEffects2 = startedEffects.filter((effect) => !ids.includes(effect.id));
+
+    const effects = startedEffects2.map((effect) => ({
       type: effect.type,
       manaLevelChange: effect.manaLevelChange,
     }));
@@ -305,8 +367,10 @@ export class ManaOceanService extends AbstractService {
         neutralManaLevel,
         tideHeight,
         effects,
+        // effects: [],
       },
       effectList: liveEffectList,
+      // effectList: [],
     };
     newOptions.manaLevel = this.calcManaLevel([neutralManaLevel, tideHeight, ...R.pluck('manaLevelChange', effects)]);
     if (!R.equals(options, newOptions)) {
