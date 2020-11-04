@@ -17,6 +17,8 @@ const pingRouter = require('./routes/ping');
 const usersRouter = require('./routes/users');
 const { WebSocketWrapper } = require('./webSocketWrapper');
 
+console.log('process.env.NODE_ENV', process.env.NODE_ENV);
+
 const { gameModel, gameServer } = makeGameModel({});
 
 const app = express();

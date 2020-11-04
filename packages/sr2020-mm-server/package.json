@@ -3,15 +3,16 @@
   "version": "0.0.0",
   "private": true,
   "scripts": {
-    "start": "node -r esm --inspect ./bin/www",
-    "start:server": "node -r esm ./bin/www",
-    "watch:server": "nodemon --inspect -r esm ./bin/www"
+    "start": "node -r esm -r dotenv/config --inspect ./bin/www",
+    "start:server": "node -r esm -r dotenv/config ./bin/www",
+    "watch:server": "nodemon --inspect -r esm -r dotenv/config ./bin/www"
   },
   "dependencies": {
     "@google-cloud/pubsub": "^2.0.0",
     "cookie-parser": "~1.4.5",
     "cors": "^2.8.5",
     "debug": "~4.1.1",
+    "dotenv": "^8.2.0",
     "dropbox": "^4.0.30",
     "esm": "^3.2.25",
     "express": "~4.17.1",
@@ -28,7 +29,14 @@
     "nodemon": "^2.0.2"
   },
   "nodemonConfig": {
-    "watch": ["app.js","webSocketWrapper.js", "bin/", "routes/", "static/", "../sr2020-mm-event-engine"],
+    "watch": [
+      "app.js",
+      "webSocketWrapper.js",
+      "bin/",
+      "routes/",
+      "static/",
+      "../sr2020-mm-event-engine"
+    ],
     "ignore": [
       "node_modules/*"
     ]
