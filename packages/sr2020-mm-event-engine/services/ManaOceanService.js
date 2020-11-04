@@ -136,11 +136,77 @@ export class ManaOceanService extends AbstractService {
     const effectCollector = new EffectCollector();
     this.processPowerSpell(data, effectCollector);
     this.processRitualCast(data, effectCollector);
+    this.processManaOceanSpells(data, effectCollector);
     const updates = effectCollector.toLocationUpdates();
     if (updates.length > 0) {
       this.pushEffects(updates);
     }
     // console.log('effectCollector', JSON.stringify(effectCollector.index, null, '  '));
+  }
+
+  processManaOceanSpells(data, effectCollector) {
+    const { id, power, timestamp } = data;
+
+    // Пока не кончится заклинание, мана из соседних локаций будет призываться в эту
+    // (с некоторой вероятностью). Чем больше Мощь, тем больше срок и вероятность.
+
+    // В течение Мощь*3 минут каждые 60с будет сделана попытка
+    // (с вероятностью Мощь*20. Значение больше 100% учитывать как 100%)
+    // вытянуть 1 уровень плотности маны из случайной соседней локации (там понизится, тут повысится).
+
+    // В течение Мощь*3 минут каждые 60с будет сделана попытка
+    // (с вероятностью Мощь*20. Значение больше 100% учитывать как 100%)
+    // выгнать 1 уровень плотности маны в случайную соседнюю локацию (там понизится, тут повысится).
+    if (id !== 'input-stream' && id !== 'output-stream') {
+      return;
+    }
+
+    const startTime = timestamp;
+    const endTime = startTime + power * 3 * 60000;
+    const probability = Math.min(1, power * 0.2);
+    let range = R.range(1, power * 3);
+    if (probability < 1) {
+      range = range.filter(() => Math.random() < probability);
+    }
+
+    const locationId = data.location.id;
+    const locationRecord = this.getLocation(locationId);
+    // console.log('dssd');
+
+    range.forEach((el) => {
+      const neighborLocation = this.getFromModel({
+        type: 'neighborOrRandomLocation',
+        locationId: locationRecord.id,
+      });
+      if (neighborLocation == null) {
+        return;
+      }
+      effectCollector.addEffect(locationRecord, {
+        type: id === 'input-stream' ? 'inputStreamStart' : 'outputStreamStart',
+        id: shortid.generate(),
+        start: startTime + el * 60000,
+        end: endTime,
+        // start: timestamp + 15000, // start after 15 seconds
+        // end: timestamp + 30000, // end after 30 seconds
+        // end: timestamp + 120000, // end after 30 seconds
+        manaLevelChange: id === 'input-stream' ? 1 : -1,
+      });
+      effectCollector.addEffect(neighborLocation, {
+        type: id === 'input-stream' ? 'inputStreamNeighbor' : 'outputStreamNeighbor',
+        id: shortid.generate(),
+        start: startTime + el * 60000,
+        end: endTime,
+        // start: timestamp + 15000, // start after 15 seconds
+        // end: timestamp + 30000, // end after 30 seconds
+        // end: timestamp + 120000, // end after 30 seconds
+        manaLevelChange: id === 'input-stream' ? -1 : 1,
+      });
+    });
+    // console.log({
+    //   startTime,
+    //   endTime,
+    //   range,
+    // });
   }
 
   processRitualCast(data, effectCollector) {
