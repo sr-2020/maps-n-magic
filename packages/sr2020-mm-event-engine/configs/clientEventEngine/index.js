@@ -19,6 +19,7 @@ import { CharacterHealthStateService } from '../../services/CharacterHealthState
 import { UserRecordService } from '../../services/UserRecordService';
 import { ManaOceanSettingsService } from '../../services/ManaOceanSettingsService';
 import { ManaOceanEnableService } from '../../services/ManaOceanEnableService';
+import { ClientEventStubService } from '../../services/ClientEventStubService';
 
 import { fillGameModelWithBots } from './GameModelFiller';
 import { CrudDataManager } from '../../dataManagers/CrudDataManager';
@@ -61,6 +62,7 @@ const services = [
   UserRecordService,
   ManaOceanSettingsService,
   ManaOceanEnableService,
+  ClientEventStubService,
 ];
 
 export function makeGameModel(database) {

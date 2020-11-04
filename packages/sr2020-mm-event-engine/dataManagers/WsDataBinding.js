@@ -24,6 +24,7 @@ const forwardClient2ServerActions = [
   'postManaOceanSettingsRequested',
   'putCharHealthRequested',
   'enableManaOceanRequested',
+  'wipeManaOceanEffects',
 ];
 
 export class WsDataBinding {

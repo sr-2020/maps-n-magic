@@ -18,6 +18,7 @@ import { JumpToUserCoordsSwitch } from '../JumpToUserCoordsSwitch';
 import { MovementSimulatorSwitch } from '../MovementSimulatorSwitch';
 import { ManaOceanSwitch } from '../ManaOceanSwitch';
 import { ModelRunSelector } from '../ModelRunSelector';
+import { WipeManaOceanEffectsButton } from '../WipeManaOceanEffectsButton';
 
 // import { AppHeaderPropTypes } from '../../types';
 
@@ -170,6 +171,9 @@ export class AppHeader extends Component {
                 simulateGeoDataStream={simulateGeoDataStream}
               />
               <ManaOceanSwitch
+                gameModel={gameModel}
+              />
+              <WipeManaOceanEffectsButton
                 gameModel={gameModel}
               />
               <Dropdown.Divider />

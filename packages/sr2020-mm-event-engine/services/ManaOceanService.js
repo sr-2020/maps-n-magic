@@ -63,6 +63,7 @@ export class ManaOceanService extends AbstractService {
   metadata = {
     actions: [
       'spellCast',
+      'wipeManaOceanEffects',
       // 'postManaOceanSettings',
       // 'postManaOceanSettingsConfirmed',
     ],
@@ -254,6 +255,45 @@ export class ManaOceanService extends AbstractService {
 
   pushEffects(updates) {
     console.log('pushEffects', updates);
+    this.executeOnModel({
+      type: 'putLocationRecords',
+      updates,
+    });
+  }
+
+  wipeManaOceanEffects() {
+    // console.log('wipeManaOceanEffects');
+    const manaOceanSettings = this.getFromModel('manaOceanSettings');
+    const locationRecords = this.getFromModel('locationRecords');
+    const { neutralManaLevel } = manaOceanSettings;
+    const geoLocations = locationRecords.filter(isGeoLocation);
+    const curTimestamp = moment.utc().valueOf();
+
+    const tideHeight = this.getNextTideHeight(curTimestamp);
+
+    this.prevTideHeight = tideHeight;
+
+    const updates = geoLocations.reduce((acc, location) => {
+      const newOptions = {
+        manaLevelModifiers: {
+          neutralManaLevel,
+          tideHeight,
+          effects: [],
+        },
+        effectList: [],
+      };
+      newOptions.manaLevel = this.calcManaLevel([neutralManaLevel, tideHeight]);
+      if (!R.isNil(newOptions)) {
+        acc.push({
+          id: location.id,
+          body: {
+            options: newOptions,
+          },
+        });
+      }
+      return acc;
+    }, []);
+
     this.executeOnModel({
       type: 'putLocationRecords',
       updates,
