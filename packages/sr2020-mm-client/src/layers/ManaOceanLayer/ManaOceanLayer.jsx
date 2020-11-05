@@ -5,6 +5,7 @@ import * as moment from 'moment-timezone';
 import './ManaOceanLayer.css';
 
 import { isGeoLocation, getArrDiff } from 'sr2020-mm-event-engine/utils';
+import { LocationPopup } from './LocationPopup';
 
 const manaFillColors = { // based on h202
   1: 'white', // hsla(202, 60%, 90%, 1)
@@ -40,11 +41,13 @@ export class ManaOceanLayer extends Component {
   constructor(props) {
     super(props);
     this.state = {
+      curLocation: null,
     };
     this.createLocation = this.createLocation.bind(this);
     this.updateLocation = this.updateLocation.bind(this);
     this.removeLocation = this.removeLocation.bind(this);
     this.getLocationTooltip = this.getLocationTooltip.bind(this);
+    this.onLocationClick = this.onLocationClick.bind(this);
   }
 
   componentDidMount() {
@@ -60,6 +63,8 @@ export class ManaOceanLayer extends Component {
     this.updateLocations({
       added: filterLocationRecords(locationRecords),
     });
+    this.locationPopupDom = document.createElement('div');
+    this.locationPopup = L.popup();
     console.log('InnerManaOceanLayer2 mounted');
   }
 
@@ -114,7 +119,7 @@ export class ManaOceanLayer extends Component {
     loc.setLatLngs([item.polygon[0]]);
     const { manaLevel } = item.options;
     loc.setStyle({ fillColor: manaFillColors[manaLevel] });
-    L.setOptions(loc, { label: item.label });
+    L.setOptions(loc, { label: item.label, locOptions: item.options });
     const that = this;
     loc.on('mouseover', function (e) {
       loc.bindTooltip(that.getLocationTooltip(this.options.label, item.options, item.id));
@@ -133,9 +138,12 @@ export class ManaOceanLayer extends Component {
     const loc = L.polygon([polygon[0]], {
       // id, label, layer_id, color: options.color, weight: options.weight, fillOpacity: options.fillOpacity,
       // id, label, layer_id, color: '#2d3748', weight: 2, dashArray: [10], fillColor: manaFillColors[manaLevel], fillOpacity: 1,
-      id, label, layer_id, color: '#1a202c', weight: 2, dashArray: [7], fillColor: manaFillColors[options.manaLevel], fillOpacity: 1,
+      id, label, layer_id, color: '#1a202c', locOptions: options, weight: 2, dashArray: [7], fillColor: manaFillColors[options.manaLevel], fillOpacity: 1,
     });
     const that = this;
+    loc.on({
+      click: this.onLocationClick,
+    });
     loc.on('mouseover', function (e) {
       loc.bindTooltip(that.getLocationTooltip(this.options.label, options, locationData.id));
       this.openTooltip();
@@ -217,7 +225,57 @@ export class ManaOceanLayer extends Component {
     this.group.removeLayer(location);
   }
 
+  onLocationClick = (e) => {
+    const { layerCommunicator } = this.props;
+    const {
+      id, label, layer_id, locOptions,
+    } = e.target.options;
+    this.setState({
+      curLocation: {
+        id, locOptions,
+      },
+    });
+    layerCommunicator.emit('openPopup', {
+      popup: this.locationPopup.setLatLng(e.latlng).setContent(this.locationPopupDom),
+    });
+  }
+
+  getLocationPopup() {
+    const {
+      curLocation,
+    } = this.state;
+    const {
+      gameModel, locationRecords,
+    } = this.props;
+    if (!curLocation) {
+      return null;
+    }
+    const record = locationRecords.find((record2) => record2.id === curLocation.id);
+    return (
+      <LocationPopup
+        id={curLocation.id}
+        locOptions={record.options}
+        gameModel={gameModel}
+        onClose={this.closePopup}
+        locationPopupDom={this.locationPopupDom}
+      />
+    );
+  }
+
+  closePopup() {
+    const {
+      layerCommunicator,
+    } = this.props;
+    layerCommunicator.emit('closePopup');
+  }
+
   render() {
-    return null;
+    return (
+      <>
+        {
+          this.getLocationPopup()
+        }
+      </>
+    );
   }
 }

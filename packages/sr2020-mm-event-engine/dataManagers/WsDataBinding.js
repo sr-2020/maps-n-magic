@@ -25,6 +25,7 @@ const forwardClient2ServerActions = [
   'putCharHealthRequested',
   'enableManaOceanRequested',
   'wipeManaOceanEffects',
+  'removeManaEffect',
 ];
 
 export class WsDataBinding {

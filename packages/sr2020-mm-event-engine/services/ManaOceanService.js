@@ -64,6 +64,7 @@ export class ManaOceanService extends AbstractService {
     actions: [
       'spellCast',
       'wipeManaOceanEffects',
+      'removeManaEffect',
       // 'postManaOceanSettings',
       // 'postManaOceanSettingsConfirmed',
     ],
@@ -327,6 +328,30 @@ export class ManaOceanService extends AbstractService {
     });
   }
 
+  removeManaEffect(data) {
+    const { locationId, effectId } = data;
+    const locationRecord = this.getLocation(locationId);
+    if (!locationRecord) {
+      console.error('location not found', locationId);
+      return;
+    }
+
+    const { options } = locationRecord;
+    const newEffectList = options.effectList.filter((el) => el.id !== effectId);
+    this.executeOnModel({
+      type: 'putLocationRecord',
+      id: locationRecord.id,
+      props: {
+        options: {
+          ...locationRecord.options,
+          effectList: newEffectList,
+        },
+      },
+    });
+
+    // console.log('removeManaEffect', data);
+  }
+
   wipeManaOceanEffects() {
     // console.log('wipeManaOceanEffects');
     const manaOceanSettings = this.getFromModel('manaOceanSettings');
@@ -473,10 +498,8 @@ export class ManaOceanService extends AbstractService {
         neutralManaLevel,
         tideHeight,
         effects,
-        // effects: [],
       },
       effectList: liveEffectList,
-      // effectList: [],
     };
     newOptions.manaLevel = this.calcManaLevel([neutralManaLevel, tideHeight, ...R.pluck('manaLevelChange', effects)]);
     if (!R.equals(options, newOptions)) {
