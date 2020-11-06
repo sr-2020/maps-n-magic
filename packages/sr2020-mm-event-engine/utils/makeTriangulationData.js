@@ -116,7 +116,16 @@ export function makeTriangulationData(data) {
     return edgeSet;
   }, new Set());
   const triangulationSubEdgeSet = difference(difference(triangulationEdgeSet, clusterCliqueEdgeSet), longEdges);
-  const edgeSet = union(triangulationSubEdgeSet, closestLocationsEdgeSet);
+  const edgeSet1 = union(triangulationSubEdgeSet, closestLocationsEdgeSet);
+
+  const neighborsIndex2 = initNeighborsIndex(data);
+  edgeSetToNeighborsIndex(neighborsIndex2, edgeSet1);
+  const clusterList2 = collectClusters(neighborsIndex2);
+  const clusterDists2 = getClusterDists(precalcData, clusterList2);
+  // console.log(clusterDists2);
+  const clustersTreeEdgeSet = connectClustersWithGreedyTree(clusterDists2);
+  const edgeSet = union(edgeSet1, clustersTreeEdgeSet);
+
   // const edgeSet = triangulationSubEdgeSet;
 
   return {
@@ -408,5 +417,41 @@ export function makeConnectionsByTriangulation(data) {
     const neighborsList = [...delaunay.neighbors(i)];
     neighborsList.forEach((index) => edgeSet.add(pairToEdgeId(loc.id, data[index].id)));
   });
+  return edgeSet;
+}
+
+function connectClustersWithGreedyTree(clusterDists) {
+  const edgeSet = new Set();
+  const arr = R.pipe(
+    R.flatten,
+    R.filter(({ locId1, locId2 }) => locId1 < locId2),
+    R.sortBy(R.prop('minDist')),
+  )(clusterDists);
+
+  // (clusterDists).filter();
+  let clusterIndex = {};
+  arr.forEach((el) => {
+    clusterIndex[el.clusterId1] = el.clusterId1;
+    clusterIndex[el.clusterId2] = el.clusterId2;
+  });
+  // console.log('arr', arr);
+  // console.log('clusterIndex', clusterIndex);
+  const selectedDists = [];
+
+  arr.forEach(((el) => {
+  // const el = arr2[0];
+    const { clusterId1, clusterId2 } = el;
+    const subclusterId1 = clusterIndex[clusterId1];
+    const subclusterId2 = clusterIndex[clusterId2];
+    if (subclusterId1 !== subclusterId2) {
+      selectedDists.push(el);
+      clusterIndex = R.mapObjIndexed((value) => (value === subclusterId2 ? subclusterId1 : value), clusterIndex);
+      // console.log('-------');
+      // console.log(selectedDists, clusterIndex);
+    }
+  }));
+
+  selectedDists.forEach((el) => edgeSet.add(pairToEdgeId(el.locId1, el.locId2)));
+  // console.log('connectClustersWithGreedyTree', edgeSet);
   return edgeSet;
 }
