@@ -82,25 +82,27 @@ export class LocationPopup extends Component {
 
     return (
       <div className="LocationPopup">
-        <Button variant="primary" className="tw-mb-2" data-effect-type="massacre" onClick={onAddEffect}>
+        <Button variant="primary" className="tw-mb-4" data-effect-type="massacre" onClick={onAddEffect}>
           {t('addMassacre')}
         </Button>
-        <Button variant="primary" className="tw-mb-2" data-effect-type="powerSpell" onClick={onAddEffect}>
+        <Button variant="primary" className="tw-mb-4" data-effect-type="powerSpell" onClick={onAddEffect}>
           {t('addCastRollback')}
         </Button>
-        {
-          sortedEffectList.map((effect) => (
-            <div key={effect.id} className="tw-flex tw-mb-2">
-              <div className="tw-flex-1 tw-text-sm">{getEffectLabel(effect)}</div>
-              <button type="button" data-effect-id={effect.id} onClick={onButtonClick}>
-                <FontAwesomeIcon
-                  className="tw-text-base tw-text-gray-700"
-                  icon={faTimes}
-                />
-              </button>
-            </div>
-          ))
-        }
+        <div style={{ maxHeight: '16rem' }} className="tw-overflow-auto">
+          {
+            sortedEffectList.map((effect) => (
+              <div key={effect.id} className="tw-flex tw-mb-4">
+                <div className="tw-flex-1 tw-text-sm">{getEffectLabel(effect)}</div>
+                <button type="button" data-effect-id={effect.id} onClick={onButtonClick}>
+                  <FontAwesomeIcon
+                    className="tw-text-base tw-text-gray-700"
+                    icon={faTimes}
+                  />
+                </button>
+              </div>
+            ))
+          }
+        </div>
       </div>
     );
   }

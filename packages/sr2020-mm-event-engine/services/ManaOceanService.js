@@ -9,6 +9,26 @@ import { AbstractService } from '../core/AbstractService';
 import { getMoscowTime, getTideHeight2 } from '../utils/moonActivityUtils';
 import { isGeoLocation } from '../utils';
 
+const manaOceanEffectSettings = {
+  massacreDelay: 60000 * 15,
+  massacreDuration: 60000 * 30,
+  // massacreDelay: 15000,
+  // massacreDuration: 15000,
+  // massacreDuration: 105000,
+  powerSpellBoundary: 7,
+  powerSpellDelay: 60000 * 15,
+  powerSpellDuration: 60000 * 15,
+  // powerSpellDelay: 15000,
+  // powerSpellDuration: 15000,
+  // powerSpellDuration: 105000,
+  ritualMembersBoundary: 2,
+  ritualDelay: 60000 * 15,
+  // ritualDelay: 15000,
+  spellDurationItem: 60000,
+  spellProbabilityPerPower: 0.2,
+  spellDurationPerPower: 3,
+};
+
 // const defaultManaOceanSettings = {
 //   neutralManaLevel: 3,
 //   visibleMoonPeriod: 180, // minutes
@@ -167,9 +187,11 @@ export class ManaOceanService extends AbstractService {
     }
 
     const startTime = timestamp;
-    const endTime = startTime + power * 3 * 60000;
-    const probability = Math.min(1, power * 0.2);
-    let range = R.range(1, power * 3);
+    const endTime = startTime + power
+    * manaOceanEffectSettings.spellDurationPerPower
+    * manaOceanEffectSettings.spellDurationItem;
+    const probability = Math.min(1, power * manaOceanEffectSettings.spellProbabilityPerPower);
+    let range = R.range(0, power * manaOceanEffectSettings.spellDurationPerPower);
     if (probability < 1) {
       range = range.filter(() => Math.random() < probability);
     }
@@ -189,21 +211,15 @@ export class ManaOceanService extends AbstractService {
       effectCollector.addEffect(locationRecord, {
         type: id === 'input-stream' ? 'inputStreamStart' : 'outputStreamStart',
         id: shortid.generate(),
-        start: startTime + el * 60000,
+        start: startTime + el * manaOceanEffectSettings.spellDurationItem,
         end: endTime,
-        // start: timestamp + 15000, // start after 15 seconds
-        // end: timestamp + 30000, // end after 30 seconds
-        // end: timestamp + 120000, // end after 30 seconds
         manaLevelChange: id === 'input-stream' ? 1 : -1,
       });
       effectCollector.addEffect(neighborLocation, {
         type: id === 'input-stream' ? 'inputStreamNeighbor' : 'outputStreamNeighbor',
         id: shortid.generate(),
-        start: startTime + el * 60000,
+        start: startTime + el * manaOceanEffectSettings.spellDurationItem,
         end: endTime,
-        // start: timestamp + 15000, // start after 15 seconds
-        // end: timestamp + 30000, // end after 30 seconds
-        // end: timestamp + 120000, // end after 30 seconds
         manaLevelChange: id === 'input-stream' ? -1 : 1,
       });
     });
@@ -216,7 +232,8 @@ export class ManaOceanService extends AbstractService {
 
   processRitualCast(data, effectCollector) {
     const { timestamp, ritualMembersIds, ritualVictimIds } = data;
-    if (ritualMembersIds.length + ritualVictimIds.length < 2) {
+    if (ritualMembersIds.length + ritualVictimIds.length
+      < manaOceanEffectSettings.ritualMembersBoundary) {
       return;
     }
     const locationId = data.location.id;
@@ -234,22 +251,14 @@ export class ManaOceanService extends AbstractService {
     effectCollector.addEffect(locationRecord, {
       type: 'ritualLocation',
       id: shortid.generate(),
-      start: timestamp + 60000 * 15, // start after 15 minutes
-      // end: timestamp + 60000 * 30, // end after 30 minutes
-      // start: timestamp + 15000, // start after 15 seconds
-      // end: timestamp + 30000, // end after 30 seconds
-      // end: timestamp + 120000, // end after 30 seconds
+      start: timestamp + manaOceanEffectSettings.ritualDelay,
       manaLevelChange: -1,
       permanent: true,
     });
     effectCollector.addEffect(neighborLocation, {
       type: 'ritualNeighborLocation',
       id: shortid.generate(),
-      start: timestamp + 60000 * 15, // start after 15 minutes
-      // end: timestamp + 60000 * 30, // end after 30 minutes
-      // start: timestamp + 15000, // start after 15 seconds
-      // end: timestamp + 30000, // end after 30 seconds
-      // end: timestamp + 120000, // end after 30 seconds
+      start: timestamp + manaOceanEffectSettings.ritualDelay,
       manaLevelChange: 1,
       permanent: true,
     });
@@ -257,7 +266,7 @@ export class ManaOceanService extends AbstractService {
 
   processPowerSpell(data, effectCollector) {
     const { timestamp, power } = data;
-    if (power < 7) {
+    if (power < manaOceanEffectSettings.powerSpellBoundary) {
       return;
     }
     const locationId = data.location.id;
@@ -265,11 +274,11 @@ export class ManaOceanService extends AbstractService {
     effectCollector.addEffect(locationRecord, {
       type: 'powerSpell',
       id: shortid.generate(),
-      start: timestamp + 60000 * 15, // start after 15 minutes
-      end: timestamp + 60000 * 30, // end after 30 minutes
-      // start: timestamp + 15000, // start after 15 seconds
-      // end: timestamp + 30000, // end after 30 seconds
-      // end: timestamp + 120000, // end after 30 seconds
+      start: timestamp
+      + manaOceanEffectSettings.powerSpellDelay,
+      end: timestamp
+      + manaOceanEffectSettings.powerSpellDelay
+      + manaOceanEffectSettings.powerSpellDuration,
       manaLevelChange: -1,
     });
   }
@@ -290,11 +299,10 @@ export class ManaOceanService extends AbstractService {
     this.pushEffect(locationRecord, {
       type: 'massacre',
       id: shortid.generate(),
-      start: timestamp + 60000 * 15, // start after 15 minutes
-      end: timestamp + 60000 * 45, // end after 30 minutes
-      // start: timestamp + 15000, // start after 15 seconds
-      // end: timestamp + 30000, // end after 30 seconds
-      // end: timestamp + 120000, // end after 30 seconds
+      start: timestamp + manaOceanEffectSettings.massacreDelay, // start after 15 minutes
+      end: timestamp
+      + manaOceanEffectSettings.massacreDelay
+      + manaOceanEffectSettings.massacreDuration, // end after 30 minutes
       manaLevelChange: 1,
     });
     // // console.log('manaModifiers', this.manaModifiers, shortid.generate(), data, locationRecord);
@@ -352,11 +360,8 @@ export class ManaOceanService extends AbstractService {
       effect = {
         type: 'massacre',
         id: shortid.generate(),
-        start: timestamp, // start after 15 minutes
-        end: timestamp + 60000 * 30, // end after 30 minutes
-        // start: timestamp + 15000, // start after 15 seconds
-        // end: timestamp + 30000, // end after 30 seconds
-        // end: timestamp + 120000, // end after 30 seconds
+        start: timestamp,
+        end: timestamp + manaOceanEffectSettings.massacreDuration,
         manaLevelChange: 1,
       };
     }
@@ -364,11 +369,8 @@ export class ManaOceanService extends AbstractService {
       effect = {
         type: 'powerSpell',
         id: shortid.generate(),
-        start: timestamp, // start after 15 minutes
-        end: timestamp + 60000 * 15, // end after 30 minutes
-        // start: timestamp + 15000, // start after 15 seconds
-        // end: timestamp + 30000, // end after 30 seconds
-        // end: timestamp + 120000, // end after 30 seconds
+        start: timestamp,
+        end: timestamp + manaOceanEffectSettings.powerSpellDuration,
         manaLevelChange: -1,
       };
     }
@@ -581,7 +583,7 @@ export class ManaOceanService extends AbstractService {
     this.lastManaUpdateTimestamp = curTimestamp;
     let tideHeight = this.prevTideHeight;
     // if (counter % 2) {
-    tideHeight = this.prevTideHeight === 3 ? -3 : (this.prevTideHeight + 1);
+    tideHeight = this.prevTideHeight === 2 ? -2 : (this.prevTideHeight + 1);
     // }
     return tideHeight;
   }
