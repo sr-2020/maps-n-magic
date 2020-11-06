@@ -70,6 +70,8 @@ export const translations = {
       manaEffect_outputStreamStart: 'Output Stream отлив',
       manaEffect_inputStreamNeighbor: 'Input Stream отлив',
       manaEffect_outputStreamNeighbor: 'Output Stream прилив',
+      addMassacre: 'Добавить массакр, мана +1',
+      addCastRollback: 'Добавить откат заклинания, мана -1',
       regionTooltip: 'Регион "{{name}}"',
       gameLocationTooltip: 'Игровая локация "{{name}}"',
       unknownLocationTypeTooltip: 'Локация неизвестного типа "{{name}}"',

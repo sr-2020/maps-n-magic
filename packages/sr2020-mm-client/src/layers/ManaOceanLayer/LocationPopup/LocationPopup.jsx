@@ -8,6 +8,7 @@ import * as moment from 'moment-timezone';
 
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faTimes } from '@fortawesome/free-solid-svg-icons';
+import Button from 'react-bootstrap/Button';
 
 import FormControl from 'react-bootstrap/FormControl';
 
@@ -63,10 +64,30 @@ export class LocationPopup extends Component {
       // });
     }
 
+    function onAddEffect(event) {
+      const { effectType } = event.currentTarget.dataset;
+      gameModel.execute({
+        type: 'addManaEffect',
+        effectType,
+        locationId: id,
+      });
+      // console.log({
+      //   type: 'addManaEffect',
+      //   effectType,
+      //   locationId: id,
+      // });
+    }
+
     const sortedEffectList = R.sortBy(R.prop('start'), effectList);
 
     return (
       <div className="LocationPopup">
+        <Button variant="primary" className="tw-mb-2" data-effect-type="massacre" onClick={onAddEffect}>
+          {t('addMassacre')}
+        </Button>
+        <Button variant="primary" className="tw-mb-2" data-effect-type="powerSpell" onClick={onAddEffect}>
+          {t('addCastRollback')}
+        </Button>
         {
           sortedEffectList.map((effect) => (
             <div key={effect.id} className="tw-flex tw-mb-2">

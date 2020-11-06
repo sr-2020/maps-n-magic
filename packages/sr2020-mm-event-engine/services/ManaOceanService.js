@@ -65,6 +65,7 @@ export class ManaOceanService extends AbstractService {
       'spellCast',
       'wipeManaOceanEffects',
       'removeManaEffect',
+      'addManaEffect',
       // 'postManaOceanSettings',
       // 'postManaOceanSettingsConfirmed',
     ],
@@ -158,6 +159,9 @@ export class ManaOceanService extends AbstractService {
     // В течение Мощь*3 минут каждые 60с будет сделана попытка
     // (с вероятностью Мощь*20. Значение больше 100% учитывать как 100%)
     // выгнать 1 уровень плотности маны в случайную соседнюю локацию (там понизится, тут повысится).
+
+    // 0 1 2 3 4 5 - момент каста уже считается попыткой
+    // 0 1 4 5
     if (id !== 'input-stream' && id !== 'output-stream') {
       return;
     }
@@ -325,6 +329,61 @@ export class ManaOceanService extends AbstractService {
     this.executeOnModel({
       type: 'putLocationRecords',
       updates,
+    });
+  }
+
+  addManaEffect(data) {
+    // console.log('addManaEffect', data);
+    const { locationId, effectType } = data;
+    const locationRecord = this.getLocation(locationId);
+    if (!locationRecord) {
+      console.error('location not found', locationId);
+      return;
+    }
+    if (effectType !== 'massacre' && effectType !== 'powerSpell') {
+      return;
+    }
+
+    // const { moscowTime } = getMoscowTime();
+    // const timestamp = moscowTime.utc().valueOf();
+    const timestamp = moment.utc().valueOf();
+    let effect;
+    if (effectType === 'massacre') {
+      effect = {
+        type: 'massacre',
+        id: shortid.generate(),
+        start: timestamp, // start after 15 minutes
+        end: timestamp + 60000 * 30, // end after 30 minutes
+        // start: timestamp + 15000, // start after 15 seconds
+        // end: timestamp + 30000, // end after 30 seconds
+        // end: timestamp + 120000, // end after 30 seconds
+        manaLevelChange: 1,
+      };
+    }
+    if (effectType === 'powerSpell') {
+      effect = {
+        type: 'powerSpell',
+        id: shortid.generate(),
+        start: timestamp, // start after 15 minutes
+        end: timestamp + 60000 * 15, // end after 30 minutes
+        // start: timestamp + 15000, // start after 15 seconds
+        // end: timestamp + 30000, // end after 30 seconds
+        // end: timestamp + 120000, // end after 30 seconds
+        manaLevelChange: -1,
+      };
+    }
+
+    const { options } = locationRecord;
+    // const newEffectList = options.effectList.filter((el) => el.id !== effectId);
+    this.executeOnModel({
+      type: 'putLocationRecord',
+      id: locationRecord.id,
+      props: {
+        options: {
+          ...locationRecord.options,
+          effectList: [...options.effectList, effect],
+        },
+      },
     });
   }
 

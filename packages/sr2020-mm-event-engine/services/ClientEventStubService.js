@@ -5,10 +5,12 @@ export class ClientEventStubService extends AbstractService {
     actions: [
       'wipeManaOceanEffects',
       'removeManaEffect',
+      'addManaEffect',
     ],
     emitEvents: [
       'wipeManaOceanEffects',
       'removeManaEffect',
+      'addManaEffect',
     ],
   };
 
@@ -21,6 +23,13 @@ export class ClientEventStubService extends AbstractService {
   removeManaEffect(data) {
     this.emit('removeManaEffect', {
       type: 'removeManaEffect',
+      ...data,
+    });
+  }
+
+  addManaEffect(data) {
+    this.emit('addManaEffect', {
+      type: 'addManaEffect',
       ...data,
     });
   }

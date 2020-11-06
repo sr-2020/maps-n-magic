@@ -251,6 +251,9 @@ export class ManaOceanLayer extends Component {
       return null;
     }
     const record = locationRecords.find((record2) => record2.id === curLocation.id);
+    if (!record) {
+      return null;
+    }
     return (
       <LocationPopup
         id={curLocation.id}
