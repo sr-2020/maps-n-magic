@@ -82,7 +82,12 @@ export const postSettings = (state) => ({
       throw new Error(`Network response was not ok ${text}`);
     }
 
-    return response.json();
+    // console.log('before parse post settings json');
+
+    // return response.json();
+    // something strange. response.json() returns error
+    // just use settings instead
+    return settings;
   },
 });
 

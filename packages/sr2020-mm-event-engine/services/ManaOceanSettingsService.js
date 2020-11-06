@@ -3,7 +3,9 @@ import * as R from 'ramda';
 import { AbstractService } from '../core/AbstractService';
 
 const defaultManaOceanSettings = {
-  neutralManaLevel: 3,
+  minManaLevel: 1,
+  neutralManaLevel: 4,
+  maxManaLevel: 7,
   visibleMoonPeriod: 180, // minutes
   visibleMoonNewMoonTime: 0,
   visibleMoonManaTideHeight: 1,
@@ -38,6 +40,7 @@ export class ManaOceanSettingsService extends AbstractService {
 
   setData({ manaOceanSettings } = {}) {
     this.manaOceanSettings = manaOceanSettings || R.clone(defaultManaOceanSettings);
+    // this.manaOceanSettings = R.clone(defaultManaOceanSettings);
   }
 
   getData() {

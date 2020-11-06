@@ -7,13 +7,25 @@ import './ManaOceanLayer.css';
 import { isGeoLocation, getArrDiff } from 'sr2020-mm-event-engine/utils';
 import { LocationPopup } from './LocationPopup';
 
+// const manaFillColors = { // based on h202
+//   1: 'white', // hsla(202, 60%, 90%, 1)
+//   2: '#c4deee', // hsla(202, 55%, 85%, 1)
+//   3: '#7dc1e8', // hsla(202, 70%, 70%, 1)
+//   4: '#2ba6ee', // hsla(202, 85%, 55%, 1)
+//   5: '#0081cc', // hsla(202, 100%, 40%, 1)
+// };
+
 const manaFillColors = { // based on h202
-  1: 'white', // hsla(202, 60%, 90%, 1)
-  2: '#c4deee', // hsla(202, 55%, 85%, 1)
-  3: '#7dc1e8', // hsla(202, 70%, 70%, 1)
-  4: '#2ba6ee', // hsla(202, 85%, 55%, 1)
-  5: '#0081cc', // hsla(202, 100%, 40%, 1)
+  1: '#ee2b45', // hsla(352, 85%, 55%, 1)
+  2: '#e87d8b', // hsla(352, 70%, 70%, 1)
+  3: '#eec4c9', // hsla(352, 55%, 85%, 1)
+  4: 'white',
+  5: '#c4deee', // hsla(202, 55%, 85%, 1)
+  6: '#7dc1e8', // hsla(202, 70%, 70%, 1)
+  7: '#2ba6ee', // hsla(202, 85%, 55%, 1)
 };
+
+const defaultColor = 'black';
 
 const isNotEmptyPolygon = R.pipe(
   R.prop('polygon'),
@@ -118,7 +130,7 @@ export class ManaOceanLayer extends Component {
     const loc = this.group.getLayers().find((loc2) => loc2.options.id === item.id);
     loc.setLatLngs([item.polygon[0]]);
     const { manaLevel } = item.options;
-    loc.setStyle({ fillColor: manaFillColors[manaLevel] });
+    loc.setStyle({ fillColor: manaFillColors[manaLevel] || defaultColor });
     L.setOptions(loc, { label: item.label, locOptions: item.options });
     const that = this;
     loc.on('mouseover', function (e) {
@@ -138,7 +150,7 @@ export class ManaOceanLayer extends Component {
     const loc = L.polygon([polygon[0]], {
       // id, label, layer_id, color: options.color, weight: options.weight, fillOpacity: options.fillOpacity,
       // id, label, layer_id, color: '#2d3748', weight: 2, dashArray: [10], fillColor: manaFillColors[manaLevel], fillOpacity: 1,
-      id, label, layer_id, color: '#1a202c', locOptions: options, weight: 2, dashArray: [7], fillColor: manaFillColors[options.manaLevel], fillOpacity: 1,
+      id, label, layer_id, color: '#1a202c', locOptions: options, weight: 2, dashArray: [7], fillColor: manaFillColors[options.manaLevel] || defaultColor, fillOpacity: 1,
     });
     const that = this;
     loc.on({

@@ -581,13 +581,14 @@ export class ManaOceanService extends AbstractService {
     this.lastManaUpdateTimestamp = curTimestamp;
     let tideHeight = this.prevTideHeight;
     // if (counter % 2) {
-    tideHeight = this.prevTideHeight === 2 ? -2 : (this.prevTideHeight + 1);
+    tideHeight = this.prevTideHeight === 3 ? -3 : (this.prevTideHeight + 1);
     // }
     return tideHeight;
   }
 
   calcManaLevel(arr) {
+    const manaOceanSettings = this.getFromModel('manaOceanSettings');
     const sum = R.sum(arr);
-    return R.max(R.min(5, sum), 1);
+    return R.max(R.min(manaOceanSettings.maxManaLevel, sum), manaOceanSettings.minManaLevel);
   }
 }
