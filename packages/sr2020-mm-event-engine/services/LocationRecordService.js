@@ -112,9 +112,9 @@ export class LocationRecordService extends AbstractService {
     if (prevData.length === unchanged.length
       && prevData.length === nextData.length
     ) {
-      console.log('no location changes');
+      // console.log('no location changes');
     } else {
-      console.log('detected location changes');
+      // console.log('detected location changes');
       this.neighborsIndex = makeTriangulationData(nextData);
     }
   }

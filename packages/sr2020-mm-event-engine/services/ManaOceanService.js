@@ -214,6 +214,7 @@ export class ManaOceanService extends AbstractService {
         start: startTime + el * manaOceanEffectSettings.spellDurationItem,
         end: endTime,
         manaLevelChange: id === 'input-stream' ? 1 : -1,
+        locationId,
       });
       effectCollector.addEffect(neighborLocation, {
         type: id === 'input-stream' ? 'inputStreamNeighbor' : 'outputStreamNeighbor',
@@ -221,6 +222,7 @@ export class ManaOceanService extends AbstractService {
         start: startTime + el * manaOceanEffectSettings.spellDurationItem,
         end: endTime,
         manaLevelChange: id === 'input-stream' ? -1 : 1,
+        locationId: neighborLocation.id,
       });
     });
     // console.log({
@@ -254,6 +256,7 @@ export class ManaOceanService extends AbstractService {
       start: timestamp + manaOceanEffectSettings.ritualDelay,
       manaLevelChange: -1,
       permanent: true,
+      locationId,
     });
     effectCollector.addEffect(neighborLocation, {
       type: 'ritualNeighborLocation',
@@ -261,6 +264,7 @@ export class ManaOceanService extends AbstractService {
       start: timestamp + manaOceanEffectSettings.ritualDelay,
       manaLevelChange: 1,
       permanent: true,
+      locationId: neighborLocation.id,
     });
   }
 
@@ -280,6 +284,7 @@ export class ManaOceanService extends AbstractService {
       + manaOceanEffectSettings.powerSpellDelay
       + manaOceanEffectSettings.powerSpellDuration,
       manaLevelChange: -1,
+      locationId,
     });
   }
 
@@ -304,6 +309,7 @@ export class ManaOceanService extends AbstractService {
       + manaOceanEffectSettings.massacreDelay
       + manaOceanEffectSettings.massacreDuration, // end after 30 minutes
       manaLevelChange: 1,
+      locationId,
     });
     // // console.log('manaModifiers', this.manaModifiers, shortid.generate(), data, locationRecord);
   }
@@ -363,6 +369,7 @@ export class ManaOceanService extends AbstractService {
         start: timestamp,
         end: timestamp + manaOceanEffectSettings.massacreDuration,
         manaLevelChange: 1,
+        locationId,
       };
     }
     if (effectType === 'powerSpell') {
@@ -372,6 +379,7 @@ export class ManaOceanService extends AbstractService {
         start: timestamp,
         end: timestamp + manaOceanEffectSettings.powerSpellDuration,
         manaLevelChange: -1,
+        locationId,
       };
     }
 
@@ -452,7 +460,78 @@ export class ManaOceanService extends AbstractService {
     });
   }
 
+  // eslint-disable-next-line max-lines-per-function
+  onTideLevelUpdate2() {
+    const enableManaOcean = this.getFromModel('enableManaOcean');
+    if (!enableManaOcean) {
+      return;
+    }
+    const curTimestamp = moment.utc().valueOf();
+    const manaOceanSettings = this.getFromModel('manaOceanSettings');
+    const locationRecords = this.getFromModel('locationRecords');
+    const { neutralManaLevel, minManaLevel, maxManaLevel } = manaOceanSettings;
+
+    const geoLocations = locationRecords.filter(isGeoLocation);
+
+    const tideHeight = this.getNextTideHeight(curTimestamp);
+    this.prevTideHeight = tideHeight;
+
+    const getEffectList = R.pipe(
+      R.prop('options'),
+      R.prop('effectList'),
+      R.defaultTo([]),
+    );
+
+    const getFullEffectList = R.pipe(
+      R.map(getEffectList),
+      R.unnest,
+      R.sortBy(R.prop('start')),
+      R.filter((effect) => effect.permanent || effect.end > curTimestamp),
+      R.map((effect) => ({ ...effect, isApplicable: effect.start < curTimestamp })),
+    );
+
+    const list = getFullEffectList(geoLocations);
+    console.log('list', list);
+
+    // console.log('getEffectList', getEffectList(geoLocations[0]));
+
+    const optIndex = geoLocations.reduce((acc, location) => {
+      acc[location.id] = {
+        manaLevel: neutralManaLevel + tideHeight,
+        effectList: [],
+      };
+      return acc;
+    }, {});
+
+    // console.log('optIndex', optIndex);
+
+    list.forEach((effect) => {
+      // console.log('optIndex', optIndex);
+      const options = optIndex[effect.locationId];
+      options.effectList.push(effect);
+      if (effect.isApplicable) {
+        switch (effect.type) {
+        case 'massacre':
+          if (options.manaLevel < maxManaLevel) {
+            options.manaLevel += effect.manaLevelChange;
+          }
+          break;
+        case 'powerSpell':
+          if (options.manaLevel > minManaLevel) {
+            options.manaLevel += effect.manaLevelChange;
+          }
+          break;
+        default:
+          // do nothing
+        }
+      }
+    });
+
+    // console.log('optIndex', optIndex);
+  }
+
   onTideLevelUpdate() {
+    // this.onTideLevelUpdate2();
     const enableManaOcean = this.getFromModel('enableManaOcean');
     if (!enableManaOcean) {
       return;
@@ -501,7 +580,7 @@ export class ManaOceanService extends AbstractService {
       }
       return acc;
     }, []);
-    console.log('updates.length', updates.length);
+    // console.log('updates.length', updates.length);
     if (updates.length === 0) {
       console.log('no updates for mana ocean');
       return;
@@ -511,20 +590,6 @@ export class ManaOceanService extends AbstractService {
       type: 'putLocationRecords',
       updates,
     });
-    // this.executeOnModel({
-    //   type: 'putLocationRecord',
-    //   id: firstLocation.id,
-    //   props: {
-    //     options: {
-    //       ...firstLocation.options,
-    //       manaLevel: this.calcManaLevel([neutralManaLevel, tideHeight]),
-    //       manaLevelModifiers: {
-    //         neutralManaLevel,
-    //         tideHeight,
-    //       },
-    //     },
-    //   },
-    // });
   }
 
   // eslint-disable-next-line class-methods-use-this
