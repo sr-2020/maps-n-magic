@@ -28,7 +28,13 @@ export class LocationRecordService extends AbstractService {
       'putLocationRecordsConfirmed',
       'setLocationRecords',
     ],
-    requests: ['locationRecord', 'locationRecords', 'triangulationData', 'neighborOrRandomLocation'],
+    requests: [
+      'locationRecord',
+      'locationRecords',
+      'triangulationData',
+      'neighborOrRandomLocation',
+      'neighborList',
+    ],
     emitEvents: [
       'postLocationRecord',
       'deleteLocationRecord',
@@ -121,6 +127,17 @@ export class LocationRecordService extends AbstractService {
 
   getTriangulationData() {
     return this.neighborsIndex;
+  }
+
+  getNeighborList({ locationId }) {
+    const { neighborsIndex } = this.neighborsIndex;
+    // console.log(neighborsIndex);
+    const neighborsIdList = neighborsIndex.get(Number(locationId));
+    if (neighborsIdList.length === 0) {
+      return null;
+    }
+    const neighborList = this.locationRecords.filter((el) => neighborsIdList.includes(el.id));
+    return neighborList;
   }
 
   getNeighborOrRandomLocation({ locationId }) {

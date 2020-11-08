@@ -7,7 +7,8 @@ import moment from 'moment-timezone';
 import { AbstractService } from '../core/AbstractService';
 
 import { getMoscowTime, getTideHeight2 } from '../utils/moonActivityUtils';
-import { isGeoLocation } from '../utils';
+
+import { isGeoLocation, shuffle } from '../utils';
 
 const manaOceanEffectSettings = {
   massacreDelay: 60000 * 15,
@@ -96,7 +97,14 @@ export class ManaOceanService extends AbstractService {
       // 'postManaOceanSettingsRequested',
     ],
     needActions: ['putLocationRecord', 'putLocationRecords'],
-    needRequests: ['manaOceanSettings', 'locationRecords', 'locationRecord', 'enableManaOcean', 'neighborOrRandomLocation'],
+    needRequests: [
+      'manaOceanSettings',
+      'locationRecords',
+      'locationRecord',
+      'enableManaOcean',
+      'neighborOrRandomLocation',
+      'neighborList',
+    ],
     listenEvents: ['massacreTriggered'],
   };
 
@@ -254,18 +262,19 @@ export class ManaOceanService extends AbstractService {
       type: 'ritualLocation',
       id: shortid.generate(),
       start: timestamp + manaOceanEffectSettings.ritualDelay,
+      // start: timestamp,
       manaLevelChange: -1,
       permanent: true,
       locationId,
     });
-    effectCollector.addEffect(neighborLocation, {
-      type: 'ritualNeighborLocation',
-      id: shortid.generate(),
-      start: timestamp + manaOceanEffectSettings.ritualDelay,
-      manaLevelChange: 1,
-      permanent: true,
-      locationId: neighborLocation.id,
-    });
+    // effectCollector.addEffect(neighborLocation, {
+    //   type: 'ritualNeighborLocation',
+    //   id: shortid.generate(),
+    //   start: timestamp + manaOceanEffectSettings.ritualDelay,
+    //   manaLevelChange: 1,
+    //   permanent: true,
+    //   locationId: neighborLocation.id,
+    // });
   }
 
   processPowerSpell(data, effectCollector) {
@@ -521,6 +530,9 @@ export class ManaOceanService extends AbstractService {
             options.manaLevel += effect.manaLevelChange;
           }
           break;
+        case 'ritualLocation':
+          this.onApplyRitualLocation(optIndex, effect, manaOceanSettings);
+          break;
         default:
           // do nothing
         }
@@ -528,6 +540,46 @@ export class ManaOceanService extends AbstractService {
     });
 
     // console.log('optIndex', optIndex);
+  }
+
+  onApplyRitualLocation(optIndex, effect, manaOceanSettings) {
+    const { neutralManaLevel, minManaLevel, maxManaLevel } = manaOceanSettings;
+    const options = optIndex[effect.locationId];
+    console.log('onApplyRitualLocation', effect);
+    if (options.manaLevel > minManaLevel) {
+      if (effect.neighborId) {
+        const neighborOptions = optIndex[effect.neighborId];
+        if (neighborOptions.manaLevel < maxManaLevel) {
+          options.manaLevel += effect.manaLevelChange;
+          neighborOptions.manaLevel -= effect.manaLevelChange;
+          console.log('repeated ritual effect');
+          return;
+        }
+      }
+      const neighborList = this.getFromModel({
+        type: 'neighborList',
+        locationId: effect.locationId,
+      });
+      if (neighborList == null) {
+        return;
+      }
+      const list2 = shuffle(neighborList);
+      const neighborLocation = list2.find((el) => {
+        const neighborOptions = optIndex[el.id];
+        return neighborOptions.manaLevel < maxManaLevel;
+      });
+      if (neighborLocation) {
+        const neighborOptions = optIndex[neighborLocation.id];
+        options.manaLevel += effect.manaLevelChange;
+        effect.neighborId = neighborLocation.id;
+        neighborOptions.manaLevel -= effect.manaLevelChange;
+        console.log('applied ritual effect');
+      } else {
+        console.log('ritual loc has no neighbor with place for mana');
+      }
+    } else {
+      console.log('ritual loc has no mana');
+    }
   }
 
   onTideLevelUpdate() {

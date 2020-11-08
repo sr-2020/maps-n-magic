@@ -3,7 +3,7 @@
 import * as R from 'ramda';
 import { EventEmitter } from 'events';
 
-import { shuffle } from '../../utils/miscUtils';
+import { shuffle } from 'sr2020-mm-event-engine/utils';
 
 export class SoundStage extends EventEmitter {
   context = null;
@@ -202,7 +202,6 @@ export class SoundStage extends EventEmitter {
     this.currentTimeoutType = currentTimeoutType;
     this.emit('currentTimeoutUpdate', { currentTimeout, currentTimeoutType });
   }
-
 
   // playSingleSound(name, buffer) {
   //   this.stopAllSounds();
