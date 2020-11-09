@@ -26,6 +26,7 @@ const manaOceanEffectSettings = {
   ritualDelay: 60000 * 15,
   // ritualDelay: 15000,
   spellDurationItem: 60000,
+  // spellDurationItem: 6000,
   spellProbabilityPerPower: 0.2,
   spellDurationPerPower: 3,
 };
@@ -208,31 +209,41 @@ export class ManaOceanService extends AbstractService {
     const locationRecord = this.getLocation(locationId);
     // console.log('dssd');
 
-    range.forEach((el) => {
-      const neighborLocation = this.getFromModel({
-        type: 'neighborOrRandomLocation',
-        locationId: locationRecord.id,
-      });
-      if (neighborLocation == null) {
-        return;
-      }
-      effectCollector.addEffect(locationRecord, {
-        type: id === 'input-stream' ? 'inputStreamStart' : 'outputStreamStart',
-        id: shortid.generate(),
-        start: startTime + el * manaOceanEffectSettings.spellDurationItem,
-        end: endTime,
-        manaLevelChange: id === 'input-stream' ? 1 : -1,
-        locationId,
-      });
-      effectCollector.addEffect(neighborLocation, {
-        type: id === 'input-stream' ? 'inputStreamNeighbor' : 'outputStreamNeighbor',
-        id: shortid.generate(),
-        start: startTime + el * manaOceanEffectSettings.spellDurationItem,
-        end: endTime,
-        manaLevelChange: id === 'input-stream' ? -1 : 1,
-        locationId: neighborLocation.id,
-      });
+    effectCollector.addEffect(locationRecord, {
+      type: id === 'input-stream' ? 'inputStream' : 'outputStream',
+      id: shortid.generate(),
+      start: startTime,
+      end: endTime,
+      manaLevelChange: id === 'input-stream' ? 1 : -1,
+      locationId,
+      range,
     });
+
+    // range.forEach((el) => {
+    //   const neighborLocation = this.getFromModel({
+    //     type: 'neighborOrRandomLocation',
+    //     locationId: locationRecord.id,
+    //   });
+    //   if (neighborLocation == null) {
+    //     return;
+    //   }
+    //   effectCollector.addEffect(locationRecord, {
+    //     type: id === 'input-stream' ? 'inputStreamStart' : 'outputStreamStart',
+    //     id: shortid.generate(),
+    //     start: startTime + el * manaOceanEffectSettings.spellDurationItem,
+    //     end: endTime,
+    //     manaLevelChange: id === 'input-stream' ? 1 : -1,
+    //     locationId,
+    //   });
+    //   effectCollector.addEffect(neighborLocation, {
+    //     type: id === 'input-stream' ? 'inputStreamNeighbor' : 'outputStreamNeighbor',
+    //     id: shortid.generate(),
+    //     start: startTime + el * manaOceanEffectSettings.spellDurationItem,
+    //     end: endTime,
+    //     manaLevelChange: id === 'input-stream' ? -1 : 1,
+    //     locationId: neighborLocation.id,
+    //   });
+    // });
     // console.log({
     //   startTime,
     //   endTime,
@@ -502,6 +513,14 @@ export class ManaOceanService extends AbstractService {
     const list = getFullEffectList(geoLocations);
     console.log('list', list);
 
+    const prevOptIndex = geoLocations.reduce((acc, location) => {
+      acc[location.id] = {
+        manaLevel: location.options.manaLevel,
+        effectList: location.options.effectList,
+      };
+      return acc;
+    }, {});
+
     // console.log('getEffectList', getEffectList(geoLocations[0]));
 
     const optIndex = geoLocations.reduce((acc, location) => {
@@ -516,6 +535,7 @@ export class ManaOceanService extends AbstractService {
 
     list.forEach((effect) => {
       // console.log('optIndex', optIndex);
+      console.log('effect type:', effect.type);
       const options = optIndex[effect.locationId];
       options.effectList.push(effect);
       if (effect.isApplicable) {
@@ -533,13 +553,107 @@ export class ManaOceanService extends AbstractService {
         case 'ritualLocation':
           this.onApplyRitualLocation(optIndex, effect, manaOceanSettings);
           break;
+        case 'inputStream':
+        case 'outputStream':
+          this.onApplyManaSpell(optIndex, effect, manaOceanSettings, curTimestamp);
+          break;
         default:
           // do nothing
         }
       }
     });
 
+    // console.log('prevOptIndex', prevOptIndex);
     // console.log('optIndex', optIndex);
+    const changedPairs = R.difference(R.toPairs(optIndex), R.toPairs(prevOptIndex));
+    const changedOpts = R.fromPairs(changedPairs);
+    // console.log('changedOpts', changedOpts);
+    const updates = changedPairs.map(([id, options]) => ({
+      id: Number(id),
+      body: {
+        options,
+      },
+    }));
+
+    // console.log('updates.length', updates.length);
+    if (updates.length === 0) {
+      console.log('no updates for mana ocean');
+      return;
+    }
+
+    // console.log('updates', updates);
+
+    this.executeOnModel({
+      type: 'putLocationRecords',
+      updates,
+    });
+
+    // const nonNeutralOpts = R.filter((el) => (el.manaLevel !== (neutralManaLevel + tideHeight)), optIndex);
+    // console.log('optIndex', JSON.stringify(nonNeutralOpts, null, '  '));
+  }
+
+  // eslint-disable-next-line max-lines-per-function
+  onApplyManaSpell(optIndex, effect, manaOceanSettings, curTimestamp) {
+    const { neutralManaLevel, minManaLevel, maxManaLevel } = manaOceanSettings;
+    const options = optIndex[effect.locationId];
+    console.log('onApplyManaSpell', effect);
+    const { type, range, start } = effect;
+    // if( type === 'inputStream' ? options.manaLevel < maxManaLevel : options.manaLevel > minManaLevel) {
+    // if( options.manaLevel < maxManaLevel) {
+    // has applicable mana transfers check
+    const applicableItems = range.filter((point) => (start + point * manaOceanEffectSettings.spellDurationItem) < curTimestamp);
+
+    function getMaxDelta() {
+      return type === 'inputStream' ? maxManaLevel - options.manaLevel : options.manaLevel - minManaLevel;
+    }
+    function hasPlaceForMana(id) {
+      return type === 'inputStream' ? optIndex[id].manaLevel > minManaLevel : optIndex[id].manaLevel < maxManaLevel;
+    }
+    function isNeighborManaPlaceEnded(id) {
+      return type === 'inputStream' ? optIndex[id].manaLevel === minManaLevel
+        : optIndex[id].manaLevel === maxManaLevel;
+    }
+    const maxApplicableNum = Math.min(applicableItems.length, getMaxDelta());
+
+    if (maxApplicableNum === 0) {
+      console.log('onApplyManaSpell: no applicable items');
+      return;
+    }
+    const neighborList = this.getFromModel({
+      type: 'neighborList',
+      locationId: effect.locationId,
+    });
+    console.log('onApplyManaSpell: neighborList', neighborList);
+    if (neighborList == null) {
+      console.log('onApplyManaSpell: no neighbors');
+      return;
+    }
+    const neighborIds = R.pluck('id', neighborList);
+    const prepareIds = R.pipe(
+      R.filter(hasPlaceForMana),
+      shuffle,
+    );
+    let neighborIds2 = prepareIds(neighborIds);
+    if (!effect.prevNeighborIds) {
+      effect.prevNeighborIds = [];
+    }
+    for (let i = 0; i < maxApplicableNum; i++) {
+      if (neighborIds2.length === 0) {
+        break;
+      }
+      // const element = array[i];
+      let neighborId = effect.prevNeighborIds[i];
+      if (neighborId === undefined || isNeighborManaPlaceEnded(neighborId)) {
+        // eslint-disable-next-line prefer-destructuring
+        neighborId = neighborIds2[0];
+      }
+      effect.prevNeighborIds[i] = neighborId;
+      const neighborOptions = optIndex[neighborId];
+      options.manaLevel += effect.manaLevelChange;
+      // effect.neighborId = neighborLocation.id;
+      neighborOptions.manaLevel -= effect.manaLevelChange;
+      neighborIds2 = prepareIds(neighborIds);
+    }
   }
 
   onApplyRitualLocation(optIndex, effect, manaOceanSettings) {
@@ -552,7 +666,7 @@ export class ManaOceanService extends AbstractService {
         if (neighborOptions.manaLevel < maxManaLevel) {
           options.manaLevel += effect.manaLevelChange;
           neighborOptions.manaLevel -= effect.manaLevelChange;
-          console.log('repeated ritual effect');
+          console.log('onApplyRitualLocation: repeated ritual effect');
           return;
         }
       }
@@ -560,7 +674,9 @@ export class ManaOceanService extends AbstractService {
         type: 'neighborList',
         locationId: effect.locationId,
       });
+      console.log('onApplyRitualLocation: neighborList', neighborList);
       if (neighborList == null) {
+        console.log('onApplyRitualLocation: no neighbors');
         return;
       }
       const list2 = shuffle(neighborList);
@@ -573,75 +689,75 @@ export class ManaOceanService extends AbstractService {
         options.manaLevel += effect.manaLevelChange;
         effect.neighborId = neighborLocation.id;
         neighborOptions.manaLevel -= effect.manaLevelChange;
-        console.log('applied ritual effect');
+        console.log('onApplyRitualLocation: applied ritual effect');
       } else {
-        console.log('ritual loc has no neighbor with place for mana');
+        console.log('onApplyRitualLocation: ritual loc has no neighbor with place for mana');
       }
     } else {
-      console.log('ritual loc has no mana');
+      console.log('onApplyRitualLocation: ritual loc has no mana');
     }
   }
 
   onTideLevelUpdate() {
-    // this.onTideLevelUpdate2();
-    const enableManaOcean = this.getFromModel('enableManaOcean');
-    if (!enableManaOcean) {
-      return;
-    }
-    // counter++;
-    const curTimestamp = moment.utc().valueOf();
+    this.onTideLevelUpdate2();
+    // const enableManaOcean = this.getFromModel('enableManaOcean');
+    // if (!enableManaOcean) {
+    //   return;
+    // }
+    // // counter++;
+    // const curTimestamp = moment.utc().valueOf();
 
-    const manaOceanSettings = this.getFromModel('manaOceanSettings');
-    const locationRecords = this.getFromModel('locationRecords');
-    const { neutralManaLevel } = manaOceanSettings;
+    // const manaOceanSettings = this.getFromModel('manaOceanSettings');
+    // const locationRecords = this.getFromModel('locationRecords');
+    // const { neutralManaLevel } = manaOceanSettings;
 
-    const geoLocations = locationRecords.filter(isGeoLocation);
+    // const geoLocations = locationRecords.filter(isGeoLocation);
 
-    // const geoLocationIndex = R.indexBy(R.prop('id'), geoLocations);
+    // // const geoLocationIndex = R.indexBy(R.prop('id'), geoLocations);
 
-    // const firstLocation = locationRecords.find(isGeoLocation);
-    // if (!firstLocation) {
+    // // const firstLocation = locationRecords.find(isGeoLocation);
+    // // if (!firstLocation) {
+    // //   return;
+    // // }
+
+    // let { moscowTimeInMinutes, moscowTime } = getMoscowTime();
+    // // speed up time, 1 second is 1 minute
+    // moscowTimeInMinutes = (moscowTime.minute() * 60 + moscowTime.second()) % 1440;
+    // // const tideHeight = getTideHeight2(moscowTimeInMinutes, manaOceanSettings);
+
+    // // if (this.prevTideHeight === tideHeight) {
+    // //   console.log('Tide height not changed, skip mana level update');
+    // //   return;
+    // // }
+    // const tideHeight = this.getNextTideHeight(curTimestamp);
+
+    // this.prevTideHeight = tideHeight;
+
+    // // console.log('onTideLevelUpdate', 'moscowTimeInMinutes', moscowTimeInMinutes, 'tideHeight', tideHeight, firstLocation);
+    // console.log('onTideLevelUpdate', 'moscowTimeInMinutes', moscowTimeInMinutes, 'tideHeight', tideHeight);
+
+    // const updates = geoLocations.reduce((acc, location) => {
+    //   const newOptions = this.getManaOptions(location, tideHeight, neutralManaLevel, curTimestamp);
+    //   if (!R.isNil(newOptions)) {
+    //     acc.push({
+    //       id: location.id,
+    //       body: {
+    //         options: newOptions,
+    //       },
+    //     });
+    //   }
+    //   return acc;
+    // }, []);
+    // // console.log('updates.length', updates.length);
+    // if (updates.length === 0) {
+    //   console.log('no updates for mana ocean');
     //   return;
     // }
 
-    let { moscowTimeInMinutes, moscowTime } = getMoscowTime();
-    // speed up time, 1 second is 1 minute
-    moscowTimeInMinutes = (moscowTime.minute() * 60 + moscowTime.second()) % 1440;
-    // const tideHeight = getTideHeight2(moscowTimeInMinutes, manaOceanSettings);
-
-    // if (this.prevTideHeight === tideHeight) {
-    //   console.log('Tide height not changed, skip mana level update');
-    //   return;
-    // }
-    const tideHeight = this.getNextTideHeight(curTimestamp);
-
-    this.prevTideHeight = tideHeight;
-
-    // console.log('onTideLevelUpdate', 'moscowTimeInMinutes', moscowTimeInMinutes, 'tideHeight', tideHeight, firstLocation);
-    console.log('onTideLevelUpdate', 'moscowTimeInMinutes', moscowTimeInMinutes, 'tideHeight', tideHeight);
-
-    const updates = geoLocations.reduce((acc, location) => {
-      const newOptions = this.getManaOptions(location, tideHeight, neutralManaLevel, curTimestamp);
-      if (!R.isNil(newOptions)) {
-        acc.push({
-          id: location.id,
-          body: {
-            options: newOptions,
-          },
-        });
-      }
-      return acc;
-    }, []);
-    // console.log('updates.length', updates.length);
-    if (updates.length === 0) {
-      console.log('no updates for mana ocean');
-      return;
-    }
-
-    this.executeOnModel({
-      type: 'putLocationRecords',
-      updates,
-    });
+    // this.executeOnModel({
+    //   type: 'putLocationRecords',
+    //   updates,
+    // });
   }
 
   // eslint-disable-next-line class-methods-use-this

@@ -169,23 +169,23 @@ export class ManaOceanLayer extends Component {
   // eslint-disable-next-line max-lines-per-function
   getLocationTooltip(label, locOptions, locId) {
     const { t } = this.props;
-    const { effects = [] } = locOptions.manaLevelModifiers;
+    // const { effects = [] } = locOptions.manaLevelModifiers;
     const { effectList = [] } = locOptions;
     let output = [`${label} (${locId})`, t('manaLevelNumber', { manaLevel: locOptions.manaLevel })];
     // const strings = effects.map(({ type, manaLevelChange }) => t(`manaEffect_${type}`, { manaLevelChange }));
 
-    const effectGroups1 = R.groupBy(R.prop('type'), effects);
+    // const effectGroups1 = R.groupBy(R.prop('type'), effects);
 
-    const strings = R.sortBy(R.identity, R.keys(effectGroups1)).map((effectType) => {
-      const firstEffect = effectGroups1[effectType][0];
-      const str = t(`manaEffect_${effectType}`, { manaLevelChange: firstEffect.manaLevelChange });
-      const { length } = effectGroups1[effectType];
-      return `${str} x${length}, мана ${firstEffect.manaLevelChange * length}`;
-    });
+    // const strings = R.sortBy(R.identity, R.keys(effectGroups1)).map((effectType) => {
+    //   const firstEffect = effectGroups1[effectType][0];
+    //   const str = t(`manaEffect_${effectType}`, { manaLevelChange: firstEffect.manaLevelChange });
+    //   const { length } = effectGroups1[effectType];
+    //   return `${str} x${length}, мана ${firstEffect.manaLevelChange * length}`;
+    // });
 
-    if (strings.length > 0) {
-      output = output.concat(strings);
-    }
+    // if (strings.length > 0) {
+    //   output = output.concat(strings);
+    // }
 
     const effectGroups = R.groupBy(R.prop('type'), effectList);
 

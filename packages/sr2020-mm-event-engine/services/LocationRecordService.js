@@ -131,7 +131,7 @@ export class LocationRecordService extends AbstractService {
 
   getNeighborList({ locationId }) {
     const { neighborsIndex } = this.neighborsIndex;
-    // console.log(neighborsIndex);
+    // console.log('neighborsIndex', neighborsIndex);
     const neighborsIdList = neighborsIndex.get(Number(locationId));
     if (neighborsIdList.length === 0) {
       return null;
