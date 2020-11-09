@@ -126,10 +126,13 @@ export function makeTriangulationData(data) {
   const clustersTreeEdgeSet = connectClustersWithGreedyTree(clusterDists2);
   const edgeSet = union(edgeSet1, clustersTreeEdgeSet);
 
+  const neighborsIndex3 = initNeighborsIndex(data);
+  edgeSetToNeighborsIndex(neighborsIndex3, edgeSet);
+
   // const edgeSet = triangulationSubEdgeSet;
 
   return {
-    neighborsIndex,
+    neighborsIndex: neighborsIndex3,
     centroids,
     edgeSet,
   };
