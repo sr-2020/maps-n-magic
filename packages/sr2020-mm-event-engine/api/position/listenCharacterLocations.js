@@ -44,8 +44,8 @@ export function listenCharacterLocations(callback, simulateMessages = false) {
 
   // if (simulateMessages) {
   //   let flag = true;
-  //   // const charList = [10198, 9504, 9542, 10199, 10200, 10201, 11157];
-  //   const charList = [11157];
+  //   // const charList = [10198, 9504, 9542, 10199, 10200, 10201, 51935];
+  //   const charList = [51935];
   //   // charList.forEach((characterId) => {
   //   // });
   //   setInterval(() => {

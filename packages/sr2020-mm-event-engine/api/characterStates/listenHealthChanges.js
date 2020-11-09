@@ -42,7 +42,8 @@ export function listenHealthChanges(callback, simulateMessages = false) {
 
   if (simulateMessages) {
     let flag = true;
-    const charList = [10198, 9504, 9542, 10199, 10200, 10201];
+    // const charList = [10198, 9504, 9542, 10199, 10200, 10201, 51935];
+    const charList = [51935];
     // charList.forEach((characterId) => {
     // });
     setInterval(() => {
@@ -59,6 +60,20 @@ export function listenHealthChanges(callback, simulateMessages = false) {
       flag = !flag;
     // }, 3000);
     }, 30000);
+    // }, 3000);
+
+    // const characterId = charList[randomInteger(0, charList.length - 1)];
+    // callback({
+    //   characterId,
+    //   stateFrom: 'healthy',
+    //   // stateTo: bodyConditions[randomInteger(0, bodyConditions.length - 1)],
+    //   stateTo: 'clinically_dead',
+    //   // stateFrom: flag ? 'clinically_dead' : 'healthy',
+    //   // stateTo: !flag ? 'clinically_dead' : 'healthy',
+    //   timestamp: moment.utc().valueOf(),
+    // });
+    // flag = !flag;
+
     // }, 500);
     // }, 100);
   }
