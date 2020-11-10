@@ -50,12 +50,14 @@ export function listenSpellCasts(callback, simulateMessages = false) {
       3174, 3062, 3188, 3187, 3065, 3047, 3178, 3132, 3186, 3185, 3179, 3061,
       3184, 3064, 3063, 3180, 3053, 3176, 3052, 3055, 3173, 3181, 3049, 3182, 3048, 3067];
     // const locArr = [3047, 3049];
+    let spellSwitch = true;
     const emitEvent = () => {
       callback({
         timestamp: moment.utc().valueOf(), // Unix time в миллисекундах
         // id: 'stone-skin', // id спелла из сводной таблички
         // name: 'Skin stoner', // человекочитаемое название спелла
-        id: 'input-stream', // id спелла из сводной таблички
+        // id: 'input-stream', // id спелла из сводной таблички
+        id: spellSwitch ? 'input-stream' : 'output-stream', // id спелла из сводной таблички
         name: 'Input Stream', // человекочитаемое название спелла
         characterId: '10198', // персонаж применивший спелл
         location: {
@@ -64,15 +66,19 @@ export function listenSpellCasts(callback, simulateMessages = false) {
           id: sample(locArr),
           manaLevel: 10,
         },
-        // power: 7, // мощь спелла
-        power: 4, // мощь спелла
+        power: 7, // мощь спелла
+        // power: 4, // мощь спелла
         reagentIds: ['123', '321'], // идентификаторы QR-ов реагентов
+        // ritualMembersIds: [], // идентификаторы участников ритуала
+        // ritualVictimIds: [], // идентификаторы жертв ритуала
+        // reagentIds: ['123', '321'], // идентификаторы QR-ов реагентов
         ritualMembersIds: ['555', '666'], // идентификаторы участников ритуала
         ritualVictimIds: ['111', '222'], // идентификаторы жертв ритуала
         // целевой персонаж (если данная способность имеет целевого персонажа),
         // иначе пусто
         targetCharacterId: '10246',
       });
+      spellSwitch = !spellSwitch;
       // const characterId = charList[randomInteger(0, charList.length - 1)];
       // callback({
       //   characterId,
@@ -86,7 +92,8 @@ export function listenSpellCasts(callback, simulateMessages = false) {
       // flag = !flag;
     // }, 3000);
     };
-    emitEvent();
+    // setTimeout(() => emitEvent(), 5000);
+    // emitEvent();
     setInterval(emitEvent, 60000 * 20);
     // setInterval(emitEvent, 30000);
     // setInterval(emitEvent, 10000);

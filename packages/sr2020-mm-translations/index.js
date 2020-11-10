@@ -66,6 +66,8 @@ export const translations = {
       manaEffect_powerSpell: 'Мощное заклинание',
       manaEffect_ritualLocation: 'Отлив от ритуала',
       manaEffect_ritualNeighborLocation: 'Прилив от ритуала',
+      manaEffect_inputStream: 'Input Stream',
+      manaEffect_outputStream: 'Output Stream',
       manaEffect_inputStreamStart: 'Input Stream прилив',
       manaEffect_outputStreamStart: 'Output Stream отлив',
       manaEffect_inputStreamNeighbor: 'Input Stream отлив',
