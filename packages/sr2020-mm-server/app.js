@@ -3,11 +3,12 @@ const express = require('express');
 const expressWs = require('express-ws');
 const path = require('path');
 const cookieParser = require('cookie-parser');
-const logger = require('morgan');
+const morganLogger = require('morgan');
 const shortid = require('shortid');
 
 const cors = require('cors');
 const { makeGameModel } = require('sr2020-mm-event-engine/configs/serverEventEngine');
+const { winstonLogger } = require('sr2020-mm-event-engine/utils/winstonLogger');
 
 const indexRouter = require('./routes/index');
 const fileListRouter = require('./routes/fileList');
@@ -35,7 +36,7 @@ app.use(cors());
 // app.set('views', path.join(__dirname, 'views'));
 // app.set('view engine', 'jade');
 
-app.use(logger('dev'));
+app.use(morganLogger('dev', { stream: winstonLogger.stream }));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
