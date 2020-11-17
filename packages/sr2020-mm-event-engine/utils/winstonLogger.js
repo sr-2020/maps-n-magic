@@ -1,6 +1,8 @@
 // const winston = require('winston');
 import winston from 'winston';
 import DailyRotateFile from 'winston-daily-rotate-file';
+import util from 'util';
+import * as R from 'ramda';
 
 const {
   combine, timestamp, label, printf,
@@ -15,9 +17,30 @@ const myFormat = printf(({
   return `${timestamp} ${level}: ${message}`;
 });
 
+function transform(info, opts) {
+  // console.log('info', info);
+  // console.log('opts', opts);
+  const args = info[Symbol.for('splat')];
+  // if (args) { info.message = util.format(info.message, ...args); }
+  if (args) {
+    info.message = [info.message, ...args].map((el) => {
+      if (R.is(Object, el)) {
+        return JSON.stringify(el, null, '  ');
+      }
+      return el;
+    }).join(' ');
+    info[Symbol.for('splat')] = [];
+  }
+  return info;
+}
+
+function utilFormatter() { return { transform }; }
+
 const customFormat = combine(
   // label({ label: 'right meow!' }),
-  timestamp(),
+  timestamp({ format: 'YYYY-MM-DD HH:mm:ss.SSS' }),
+  utilFormatter(),
+  // timestamp(),
   myFormat,
 );
 

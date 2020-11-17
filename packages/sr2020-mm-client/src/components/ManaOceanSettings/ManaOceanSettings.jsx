@@ -88,14 +88,23 @@ export class ManaOceanSettings extends Component {
       throw new Error(`Unexpected propName: ${propName}`);
     }
 
-    const { manaOceanSettings, gameModel } = this.props;
+    const { manaOcean, gameModel } = this.props;
     gameModel.execute({
-      type: 'postManaOceanSettings',
-      manaOceanSettings: {
-        ...manaOceanSettings,
+      type: 'postSettings',
+      name: 'manaOcean',
+      settings: {
+        ...manaOcean,
         [propName]: value,
       },
     });
+    // const { manaOceanSettings, gameModel } = this.props;
+    // gameModel.execute({
+    //   type: 'postManaOceanSettings',
+    //   manaOceanSettings: {
+    //     ...manaOceanSettings,
+    //     [propName]: value,
+    //   },
+    // });
   }
 
   // eslint-disable-next-line max-lines-per-function
@@ -103,8 +112,10 @@ export class ManaOceanSettings extends Component {
     const {
       moscowTime,
     } = this.state;
-    const { t, manaOceanSettings } = this.props;
-    if (manaOceanSettings === undefined || manaOceanSettings.visibleMoonPeriod === undefined) {
+    // const { t, manaOceanSettings } = this.props;
+    // if (manaOceanSettings === undefined || manaOceanSettings.visibleMoonPeriod === undefined) {
+    const { t, manaOcean } = this.props;
+    if (manaOcean === undefined || manaOcean.visibleMoonPeriod === undefined) {
       return null;
     }
     const {
@@ -115,7 +126,7 @@ export class ManaOceanSettings extends Component {
       invisibleMoonPeriod,
       invisibleMoonNewMoonTime,
       invisibleMoonManaTideHeight,
-    } = manaOceanSettings;
+    } = manaOcean;
 
     const visibleMoonActivity = getMoonActivity(visibleMoonPeriod, visibleMoonNewMoonTime);
     const invisibleMoonActivity = getMoonActivity(invisibleMoonPeriod, invisibleMoonNewMoonTime);

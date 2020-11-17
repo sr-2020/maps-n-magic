@@ -11,8 +11,9 @@ function stringToType(entity) {
 }
 
 export class GameModel extends EventEmitter {
-  constructor() {
+  constructor(logger) {
     super();
+    this.logger = logger;
     this.actionMap = {};
     this.requestMap = {};
     this.verificator = new GameModelVerificator();
@@ -22,7 +23,7 @@ export class GameModel extends EventEmitter {
 
   init(services, migrator) {
     this.services = services.map((ServiceClass) => {
-      const service = new ServiceClass();
+      const service = new ServiceClass(this.logger);
       service.init(this);
       this.registerService(service);
       return service;

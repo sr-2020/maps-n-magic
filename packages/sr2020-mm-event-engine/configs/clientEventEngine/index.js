@@ -18,6 +18,7 @@ import { BackgroundImageService } from '../../services/BackgroundImageService';
 import { CharacterHealthStateService } from '../../services/CharacterHealthStateService';
 import { UserRecordService } from '../../services/UserRecordService';
 import { ManaOceanSettingsService } from '../../services/ManaOceanSettingsService';
+import { SettingsService } from '../../services/SettingsService';
 import { ManaOceanEnableService } from '../../services/ManaOceanEnableService';
 import { ClientEventStubService } from '../../services/ClientEventStubService';
 
@@ -25,7 +26,7 @@ import { fillGameModelWithBots } from './GameModelFiller';
 import { CrudDataManager } from '../../dataManagers/CrudDataManager';
 import { LocationDataManager } from '../../dataManagers/LocationDataManager';
 import { ReadDataManager } from '../../dataManagers/ReadDataManager';
-import { ReadWriteSettingsDataManager } from '../../dataManagers/SettingsDataManagers';
+import { SettingsDataManager } from '../../dataManagers/SettingsDataManagers';
 import { SingleReadStrategy } from '../../dataManagers/SingleReadStrategy';
 import { PollingReadStrategy } from '../../dataManagers/PollingReadStrategy';
 import { DataBinding } from '../../dataManagers/DataBinding';
@@ -60,13 +61,14 @@ const services = [
   BackgroundImageService,
   CharacterHealthStateService,
   UserRecordService,
-  ManaOceanSettingsService,
+  // ManaOceanSettingsService,
+  SettingsService,
   ManaOceanEnableService,
   ClientEventStubService,
 ];
 
 export function makeGameModel(database) {
-  const gameServer = new EventEngine(services, Migrator);
+  const gameServer = new EventEngine(services, console, Migrator);
   gameServer.setData(database);
   const gameModel = gameServer.getGameModel();
   fillGameModelWithBots(gameModel);
@@ -104,7 +106,7 @@ export function makeGameModel(database) {
   //   gameModel,
   //   entityName: 'manaOceanSettings',
   //   DataProvider: ManaOceanSettingsProvider,
-  //   DataManager: ReadWriteSettingsDataManager,
+  //   DataManager: SettingsDataManager,
   //   ReadStrategy: PollingReadStrategy,
   //   ReadStrategyArgs: [15000],
   // }));

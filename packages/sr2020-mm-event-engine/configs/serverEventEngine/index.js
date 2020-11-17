@@ -17,7 +17,8 @@ import { NotificationService } from '../../services/NotificationService';
 // import { BackgroundImageService } from '../../services/BackgroundImageService';
 import { CharacterHealthStateService } from '../../services/CharacterHealthStateService';
 // import { UserRecordService } from '../../services/UserRecordService';
-import { ManaOceanSettingsService } from '../../services/ManaOceanSettingsService';
+// import { ManaOceanSettingsService } from '../../services/ManaOceanSettingsService';
+import { SettingsService } from '../../services/SettingsService';
 import { ManaOceanService } from '../../services/ManaOceanService';
 import { ManaOceanEnableService } from '../../services/ManaOceanEnableService';
 import { MassacreService } from '../../services/MassacreService';
@@ -26,11 +27,14 @@ import { MassacreService } from '../../services/MassacreService';
 import { CrudDataManager } from '../../dataManagers/CrudDataManager';
 import { LocationDataManager } from '../../dataManagers/LocationDataManager';
 // import { ReadDataManager } from '../../dataManagers/ReadDataManager';
-import { ReadWriteSettingsDataManager } from '../../dataManagers/SettingsDataManagers';
+import { SettingsDataManager } from '../../dataManagers/SettingsDataManagers';
 // import { SingleReadStrategy } from '../../dataManagers/SingleReadStrategy';
 import { PollingReadStrategy } from '../../dataManagers/PollingReadStrategy';
 import { DataBinding } from '../../dataManagers/DataBinding';
 import { RedirectDataBinding } from '../../dataManagers/RedirectDataBinding';
+import { sendNotification } from '../../api/sendNotification';
+
+import { defaultManaOceanSettings } from '../../api/constants';
 
 import {
   RemoteLocationRecordProvider as LocationRecordProvider,
@@ -44,6 +48,8 @@ import { CharacterLocationListener } from '../../api/position/CharacterLocationL
 import { SpellCastsListener } from '../../api/spellCasts/SpellCastsListener';
 
 import { EventEngine } from '../../core/EventEngine';
+
+import { winstonLogger } from '../../utils/winstonLogger';
 
 const services = [
   // UserService,
@@ -63,14 +69,16 @@ const services = [
   // BackgroundImageService,
   CharacterHealthStateService,
   // UserRecordService,
-  ManaOceanSettingsService,
+  // ManaOceanSettingsService,
+  SettingsService,
   ManaOceanService,
   ManaOceanEnableService,
   MassacreService,
 ];
 
 export function makeGameModel(database) {
-  const gameServer = new EventEngine(services);
+  // const gameServer = new EventEngine(services, console);
+  const gameServer = new EventEngine(services, winstonLogger);
   gameServer.setData(database);
   const gameModel = gameServer.getGameModel();
   // fillGameModelWithBots(gameModel);
@@ -101,11 +109,12 @@ export function makeGameModel(database) {
   // }));
   gameServer.addDataBinding(new DataBinding({
     gameModel,
-    entityName: 'manaOceanSettings',
+    entityName: 'manaOcean',
     DataProvider: ManaOceanSettingsProvider,
-    DataManager: ReadWriteSettingsDataManager,
+    DataManager: SettingsDataManager,
     ReadStrategy: PollingReadStrategy,
     ReadStrategyArgs: [15000],
+    defaultSettings: defaultManaOceanSettings,
   }));
   gameServer.addDataBinding(new RedirectDataBinding(
     gameModel,

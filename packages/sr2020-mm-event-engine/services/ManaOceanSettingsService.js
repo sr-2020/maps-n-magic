@@ -2,18 +2,7 @@ import * as R from 'ramda';
 
 import { AbstractService } from '../core/AbstractService';
 
-const defaultManaOceanSettings = {
-  minManaLevel: 1,
-  neutralManaLevel: 4,
-  maxManaLevel: 7,
-  visibleMoonPeriod: 180, // minutes
-  visibleMoonNewMoonTime: 0,
-  visibleMoonManaTideHeight: 1,
-  invisibleMoonPeriod: 270,
-  invisibleMoonNewMoonTime: 120,
-  invisibleMoonManaTideHeight: 1,
-  moscowTime: 0,
-};
+import { defaultManaOceanSettings } from '../api/constants';
 
 export class ManaOceanSettingsService extends AbstractService {
   metadata = {

@@ -5,7 +5,8 @@ export function capitalizeFirstLetter(string) {
 const forwardServer2ClientActions = [
   'locationRecordsChanged2',
   'beaconRecordsChanged2',
-  'manaOceanSettingsChanged',
+  // 'manaOceanSettingsChanged',
+  'settingsChanged',
   'postNotification',
   'characterHealthStateChanged',
   'characterHealthStatesLoaded',
@@ -21,7 +22,8 @@ const forwardClient2ServerActions = [
   'postBeaconRecordRequested',
   'putBeaconRecordRequested',
   'deleteBeaconRecordRequested',
-  'postManaOceanSettingsRequested',
+  // 'postManaOceanSettingsRequested',
+  'postSettingsRequested',
   'putCharHealthRequested',
   'enableManaOceanRequested',
   'wipeManaOceanEffects',
@@ -56,8 +58,11 @@ export class WsDataBinding {
         type: 'beaconRecordsChanged2',
         payload: 'beaconRecords',
       }, {
-        type: 'manaOceanSettingsChanged',
-        payload: 'manaOceanSettings',
+        type: 'settingsChanged',
+        payload: 'settings',
+      // }, {
+      //   type: 'manaOceanSettingsChanged',
+      //   payload: 'manaOceanSettings',
       }, {
         type: 'characterHealthStatesLoaded',
         payload: 'characterHealthStates',
@@ -108,12 +113,20 @@ export class WsDataBinding {
       });
     }
 
-    if (type === 'manaOceanSettingsChanged') {
+    if (type === 'settingsChanged') {
+      const { name, settings } = data;
       this.gameModel.execute({
-        ...data,
-        type: 'setManaOceanSettings',
+        type: 'setSettings',
+        name,
+        settings: settings?.[name],
       });
     }
+    // if (type === 'manaOceanSettingsChanged') {
+    //   this.gameModel.execute({
+    //     ...data,
+    //     type: 'setManaOceanSettings',
+    //   });
+    // }
 
     if (type === 'characterHealthStateChanged') {
       this.gameModel.execute({

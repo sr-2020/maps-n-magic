@@ -193,14 +193,14 @@ function connectClosestLocations(precalcData) {
       }
     });
   });
-  console.log({
-    precalcDataLength: precalcData.length,
-    totalCases,
-    simpleTestPassed,
-    simpleTestFailed,
-    advancedTestPassed,
-    advancedTestFailed,
-  });
+  // console.log({
+  //   precalcDataLength: precalcData.length,
+  //   totalCases,
+  //   simpleTestPassed,
+  //   simpleTestFailed,
+  //   advancedTestPassed,
+  //   advancedTestFailed,
+  // });
   return edgeSet;
 }
 
@@ -290,7 +290,7 @@ function connectClosestXClusters(precalcData, clusterList, neighborsIndex) {
   // console.log(this.neighborsIndex);
   // console.log(invClusters);
   // console.log(clusterIndex);
-  console.log(clusterList);
+  // console.log(clusterList);
   return edgeSet;
 }
 

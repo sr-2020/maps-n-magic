@@ -1,8 +1,9 @@
 import { basicDataHOC } from './basicDataHOC.jsx';
+import { settingsDataHOC } from './settingsDataHOC.jsx';
 
-export const withManaOceanSettings = basicDataHOC(
-  'manaOceanSettingsChanged',
-  'manaOceanSettings',
+export const withManaOceanSettings = settingsDataHOC(
+  'settingsChanged',
+  'manaOcean',
   {},
 );
 export const withBackgroundImages = basicDataHOC(

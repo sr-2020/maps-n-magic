@@ -24,6 +24,10 @@ export class AbstractService {
     listenEvents: [],
   };
 
+  constructor(logger) {
+    this.logger = logger;
+  }
+
   init(gameModel) {
     this.gameModel = gameModel;
   }

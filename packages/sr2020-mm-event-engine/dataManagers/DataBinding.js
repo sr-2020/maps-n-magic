@@ -1,12 +1,15 @@
 export class DataBinding {
-  constructor({
-    gameModel, entityName, DataProvider, DataManager, ReadStrategy, ReadStrategyArgs = [],
-  }) {
+  constructor(args) {
+    const {
+      gameModel, entityName, DataProvider, DataManager, ReadStrategy, ReadStrategyArgs = [],
+    } = args;
+
     this.dataManager = new DataManager(
       gameModel,
       new DataProvider(),
       entityName,
       new ReadStrategy(gameModel, ...ReadStrategyArgs),
+      args,
     );
     this.dataManager.initialize();
   }

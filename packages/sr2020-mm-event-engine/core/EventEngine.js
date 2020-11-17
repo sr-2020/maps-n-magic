@@ -6,8 +6,8 @@ function hardDispose(obj) {
 }
 
 export class EventEngine {
-  constructor(services2, Migrator2) {
-    this.gameModel = new GameModel();
+  constructor(services2, logger, Migrator2) {
+    this.gameModel = new GameModel(logger);
     this.gameModel.init(services2, Migrator2);
     this.dataBindings = [];
   }

@@ -33,6 +33,7 @@ packages/sr2020-mm-client/public/images/nonIndexedImages/
 packages/sr2020-mm-client/build
 
 packages/sr2020-mm-server/settings-real.js
+packages/sr2020-mm-server/logs/*
 
 packages/sr2020-mm-data/analysis/data/restOfAll/
 packages/sr2020-mm-data/analysis/data/kml/otherKml
