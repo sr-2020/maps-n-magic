@@ -17,7 +17,7 @@ import { NotificationService } from '../../services/NotificationService';
 import { BackgroundImageService } from '../../services/BackgroundImageService';
 import { CharacterHealthStateService } from '../../services/CharacterHealthStateService';
 import { UserRecordService } from '../../services/UserRecordService';
-import { ManaOceanSettingsService } from '../../services/ManaOceanSettingsService';
+// import { ManaOceanSettingsService } from '../../services/ManaOceanSettingsService';
 import { SettingsService } from '../../services/SettingsService';
 import { ManaOceanEnableService } from '../../services/ManaOceanEnableService';
 import { ClientEventStubService } from '../../services/ClientEventStubService';

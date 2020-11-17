@@ -1,8 +1,9 @@
 class WebSocketWrapper {
-  constructor(ws, gameModel, initConfig) {
+  constructor(ws, gameModel, initConfig, logger) {
     this.ws = ws;
     this.gameModel = gameModel;
     this.initConfig = initConfig;
+    this.logger = logger;
     this.onMessage = this.onMessage.bind(this);
     this.onClose = this.onClose.bind(this);
     this.onError = this.onError.bind(this);
@@ -10,12 +11,16 @@ class WebSocketWrapper {
     this.subscribeWsConnection('on');
     this.subscribe('on');
     this.innerInit();
-    console.log('forward actions', initConfig.forwardActions);
+    // console.log('forward actions', initConfig.forwardActions);
   }
 
   innerInit() {
     const { data } = this.initConfig;
     data.forEach((item) => {
+      if (!this.gameModel.hasRequest(item.payload)) {
+        this.logger.info('GameModel unsupported request:', item.payload);
+        return;
+      }
       this.ws.send(JSON.stringify({
         type: item.type,
         [item.payload]: this.gameModel.get(item.payload),
@@ -24,7 +29,7 @@ class WebSocketWrapper {
   }
 
   onMessage(msgStr) {
-    console.log('recieved action', msgStr);
+    // console.log('recieved action', msgStr);
     this.gameModel.execute(JSON.parse(msgStr));
   }
 

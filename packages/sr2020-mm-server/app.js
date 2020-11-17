@@ -55,7 +55,9 @@ app.ws('/ws', (ws, req, next) => {
     // console.log('msg:', msgStr);
     const msg = JSON.parse(msgStr);
     if (msg.message && msg.message === 'initClientConfig') {
-      new WebSocketWrapper(ws, gameModel, msg);
+      const ip = req.connection.remoteAddress;
+      winstonLogger.info(ip, 'initClientConfig', msgStr);
+      new WebSocketWrapper(ws, gameModel, msg, winstonLogger);
     }
   });
 });

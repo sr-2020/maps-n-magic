@@ -89,7 +89,7 @@ export class ManaOceanService extends AbstractService {
     ],
     needActions: ['putLocationRecord', 'putLocationRecords'],
     needRequests: [
-      'manaOceanSettings',
+      // 'manaOceanSettings',
       'settings',
       'locationRecords',
       'locationRecord',

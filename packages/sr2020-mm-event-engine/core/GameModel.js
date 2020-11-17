@@ -64,6 +64,10 @@ export class GameModel extends EventEmitter {
     };
   }
 
+  hasRequest(request) {
+    return !!this.requestMap[request];
+  }
+
   execute(action) {
     action = stringToType(action);
     const service = this.actionMap[action.type];
