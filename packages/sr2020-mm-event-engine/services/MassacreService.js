@@ -10,8 +10,8 @@ export class MassacreService extends AbstractService {
     listenEvents: ['characterHealthStateChanged'],
   };
 
-  constructor() {
-    super();
+  constructor(...args) {
+    super(...args);
     this.characterHealthStats = {};
     this.onCharHealthChanged = this.onCharHealthChanged.bind(this);
   }
@@ -26,17 +26,17 @@ export class MassacreService extends AbstractService {
   }
 
   onCharHealthChanged(data) {
-    // console.log('massacre service', data);
+    // this.logger.info('massacre service', data);
     const { characterId, characterHealthState } = data;
     const { locationId, healthState, timestamp } = characterHealthState;
     if (healthState !== 'wounded') {
       return;
     }
     if (!locationId) {
-      console.log(`Character is wounded in unknown location, characterId: ${characterId}`);
+      this.logger.info(`Character is wounded in unknown location, characterId: ${characterId}`);
       return;
     }
-    console.log('massacre service', characterId, locationId, healthState, timestamp);
+    this.logger.info('massacre service', characterId, locationId, healthState, timestamp);
     let locationList = this.characterHealthStats[locationId];
     if (!locationList) {
       locationList = [];
@@ -54,12 +54,12 @@ export class MassacreService extends AbstractService {
         locationId,
         timestamp,
       });
-      console.log(`massacre detected, locationId ${locationId}`);
+      this.logger.info(`massacre detected, locationId ${locationId}`);
     }
 
     this.characterHealthStats[locationId] = locationList;
-    // console.log('characterHealthStats', JSON.stringify(this.characterHealthStats, null, '  '));
-    console.log('characterHealthStats', this.characterHealthStats);
+    // this.logger.info('characterHealthStats', JSON.stringify(this.characterHealthStats, null, '  '));
+    this.logger.info('characterHealthStats', this.characterHealthStats);
 
     // massacre service {
     //   type: 'characterHealthStateChanged',

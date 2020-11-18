@@ -18,7 +18,9 @@ const pingRouter = require('./routes/ping');
 const usersRouter = require('./routes/users');
 const { WebSocketWrapper } = require('./webSocketWrapper');
 
-console.log('process.env.NODE_ENV', process.env.NODE_ENV);
+winstonLogger.info('process.env.NODE_ENV', process.env.NODE_ENV);
+
+// console.log('process.env.NODE_ENV', process.env.NODE_ENV);
 
 const { gameModel, gameServer } = makeGameModel({});
 
@@ -57,7 +59,7 @@ app.ws('/ws', (ws, req, next) => {
     if (msg.message && msg.message === 'initClientConfig') {
       const ip = req.connection.remoteAddress;
       const id = shortid.generate();
-      const childLogger = winstonLogger.customChild(winstonLogger, { service: `session_${id}` });
+      const childLogger = winstonLogger.customChild(winstonLogger, { service: `ws_session_${id}` });
       childLogger.info(ip, 'initClientConfig', msgStr);
       new WebSocketWrapper(ws, gameModel, msg, childLogger);
     }

@@ -26,7 +26,7 @@ export class ReadDataManager {
   }
 
   load() {
-    console.log(`load ${this.entityName}`);
+    // console.log(`load ${this.entityName}`);
     this.dataProvider.get().then((entities) => {
       if (R.equals(this.entities, entities)) {
         // console.log('no changes', this.ccEntityName);
