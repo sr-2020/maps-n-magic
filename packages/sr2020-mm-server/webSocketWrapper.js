@@ -1,3 +1,5 @@
+import * as R from 'ramda';
+
 class WebSocketWrapper {
   constructor(ws, gameModel, initConfig, logger) {
     this.ws = ws;
@@ -29,8 +31,13 @@ class WebSocketWrapper {
   }
 
   onMessage(msgStr) {
-    // console.log('recieved action', msgStr);
-    this.gameModel.execute(JSON.parse(msgStr));
+    const msg = JSON.parse(msgStr);
+    if (R.is(String, msg)) {
+      this.logger.info(msg);
+    } else {
+      this.logger.info(msg.type, msgStr);
+    }
+    this.gameModel.execute(msg);
   }
 
   onClose() {

@@ -56,8 +56,10 @@ app.ws('/ws', (ws, req, next) => {
     const msg = JSON.parse(msgStr);
     if (msg.message && msg.message === 'initClientConfig') {
       const ip = req.connection.remoteAddress;
-      winstonLogger.info(ip, 'initClientConfig', msgStr);
-      new WebSocketWrapper(ws, gameModel, msg, winstonLogger);
+      const id = shortid.generate();
+      const childLogger = winstonLogger.customChild(winstonLogger, { service: `session_${id}` });
+      childLogger.info(ip, 'initClientConfig', msgStr);
+      new WebSocketWrapper(ws, gameModel, msg, childLogger);
     }
   });
 });
