@@ -23,7 +23,12 @@ export class GameModel extends EventEmitter {
 
   init(services, migrator) {
     this.services = services.map((ServiceClass) => {
-      const service = new ServiceClass(this.logger);
+      this.logger.info('Creating service', ServiceClass.name);
+      let childLogger = this.logger;
+      if (this.logger.customChild) {
+        childLogger = this.logger.customChild(this.logger, { service: ServiceClass.name });
+      }
+      const service = new ServiceClass(childLogger);
       service.init(this);
       this.registerService(service);
       return service;

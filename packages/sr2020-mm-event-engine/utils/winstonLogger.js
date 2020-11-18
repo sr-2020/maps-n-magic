@@ -9,38 +9,48 @@ const {
 } = winston.format;
 
 const myFormat = printf(({
-  level, message, label, timestamp,
+  level, message, label, timestamp, service, stack,
 }) => {
-  if (label) {
-    return `${timestamp} [${label}] ${level}: ${message}`;
+  // if (label) {
+  //   return `${timestamp} [${label}] ${level}: ${message}`;
+  // }
+  if (service) {
+    return `${timestamp} [${service}] ${level}: ${message} ${stack}`;
   }
-  return `${timestamp} ${level}: ${message}`;
+  return `${timestamp} ${level}: ${stack}`;
 });
 
 function transform(info, opts) {
   // console.log('info', info);
   // console.log('opts', opts);
+  // console.log('this', this);
   const args = info[Symbol.for('splat')];
   // if (args) { info.message = util.format(info.message, ...args); }
+  let arr = [info.message];
   if (args) {
-    info.message = [info.message, ...args].map((el) => {
-      if (R.is(Object, el)) {
-        return JSON.stringify(el, null, '  ');
-      }
-      return el;
-    }).join(' ');
+    arr = [info.message, ...args];
     info[Symbol.for('splat')] = [];
   }
+  info.message = arr.map((el) => {
+    // console.log('echo', el, el instanceof Error, R.is(Object, el), R.is(String, el));
+    // if (el instanceof Error) {
+    // // console.log('item', el);
+    //   return el.stack;
+    // }
+    if (R.is(Object, el)) {
+      return JSON.stringify(el, null, '  ');
+    }
+    return el;
+  }).join(' ');
   return info;
 }
 
 function utilFormatter() { return { transform }; }
 
 const customFormat = combine(
-  // label({ label: 'right meow!' }),
+  // label({ label: 'root' }),
   timestamp({ format: 'YYYY-MM-DD HH:mm:ss.SSS' }),
   utilFormatter(),
-  // timestamp(),
   myFormat,
 );
 
@@ -48,6 +58,7 @@ export const winstonLogger = winston.createLogger({
   level: 'info',
   // format: winston.format.json(),
   format: customFormat,
+  defaultMeta: { service: 'root' },
   // defaultMeta: { service: 'user-service' },
   transports: [
     //
@@ -97,3 +108,16 @@ winstonLogger.stream = {
     winstonLogger.info(message);
   },
 };
+
+function customChild(logger, defaultMeta) {
+  const childLogger = logger.child();
+  childLogger.defaultMeta = { ...logger.defaultMeta, ...defaultMeta };
+  childLogger.customChild = customChild;
+  return childLogger;
+}
+
+winstonLogger.customChild = customChild;
+
+// winstonLogger.defaultMeta = { service: 'root2323' };
+
+// console.log(winstonLogger);
