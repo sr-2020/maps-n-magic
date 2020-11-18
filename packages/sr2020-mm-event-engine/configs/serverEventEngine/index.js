@@ -34,13 +34,14 @@ import { DataBinding } from '../../dataManagers/DataBinding';
 import { RedirectDataBinding } from '../../dataManagers/RedirectDataBinding';
 import { sendNotification } from '../../api/sendNotification';
 
-import { defaultManaOceanSettings } from '../../api/constants';
+import { defaultManaOceanSettings, manaOceanEffectSettings } from '../../api/constants';
 
 import {
   RemoteLocationRecordProvider as LocationRecordProvider,
   RemoteBeaconRecordProvider as BeaconRecordProvider,
   RemoteUsersRecordProvider as UserRecordProvider,
   ManaOceanSettingsProvider,
+  ManaOceanEffectSettingsProvider,
 } from '../../api/position';
 
 import { CharacterStatesListener } from '../../api/characterStates/CharacterStatesListener';
@@ -76,6 +77,7 @@ const services = [
   MassacreService,
 ];
 
+// eslint-disable-next-line max-lines-per-function
 export function makeGameModel(database) {
   // const gameServer = new EventEngine(services, console);
   const gameServer = new EventEngine(services, winstonLogger);
@@ -115,6 +117,15 @@ export function makeGameModel(database) {
     ReadStrategy: PollingReadStrategy,
     ReadStrategyArgs: [15000],
     defaultSettings: defaultManaOceanSettings,
+  }));
+  gameServer.addDataBinding(new DataBinding({
+    gameModel,
+    entityName: 'manaOceanEffects',
+    DataProvider: ManaOceanEffectSettingsProvider,
+    DataManager: SettingsDataManager,
+    ReadStrategy: PollingReadStrategy,
+    ReadStrategyArgs: [15000],
+    defaultSettings: manaOceanEffectSettings,
   }));
   gameServer.addDataBinding(new RedirectDataBinding(
     gameModel,

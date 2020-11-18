@@ -9,6 +9,7 @@ import {
   usersUrl,
   positionUrl,
   manaOceanConfigUrl,
+  manaOceanEffectConfigUrl,
   defaultBeaconRecord,
   defaultLocationRecord,
 } from '../constants';
@@ -34,6 +35,12 @@ export class RemoteUsersRecordProvider extends GettableResourceProvider {
 export class ManaOceanSettingsProvider extends SettingsResourceProvider {
   constructor() {
     super(manaOceanConfigUrl);
+  }
+}
+
+export class ManaOceanEffectSettingsProvider extends SettingsResourceProvider {
+  constructor() {
+    super(manaOceanEffectConfigUrl);
   }
 }
 

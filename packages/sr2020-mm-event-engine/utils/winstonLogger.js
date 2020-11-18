@@ -15,9 +15,9 @@ const myFormat = printf(({
   //   return `${timestamp} [${label}] ${level}: ${message}`;
   // }
   if (service) {
-    return `${timestamp} [${service}] ${level}: ${message} ${stack}`;
+    return `${timestamp} [${service}] ${level}: ${message} ${stack || ''}`;
   }
-  return `${timestamp} ${level}: ${stack}`;
+  return `${timestamp} ${level}: ${stack || ''}`;
 });
 
 function transform(info, opts) {

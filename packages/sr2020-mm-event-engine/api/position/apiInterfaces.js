@@ -14,7 +14,11 @@ export const getSettings = (state) => ({
   async get() {
     const response = await fetch(state.url);
     if (!response.ok) {
+      if (response.status === 404) {
+        return null;
+      }
       const text = await response.text();
+      // console.log(response);
       throw new Error(`Network response was not ok ${text}`);
     }
 

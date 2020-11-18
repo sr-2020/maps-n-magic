@@ -10,26 +10,7 @@ import { getMoscowTime, getTideHeight2 } from '../utils/moonActivityUtils';
 
 import { isGeoLocation, shuffle } from '../utils';
 
-const manaOceanEffectSettings = {
-  massacreDelay: 60000 * 15,
-  massacreDuration: 60000 * 30,
-  // massacreDelay: 15000,
-  // massacreDuration: 15000,
-  // massacreDuration: 105000,
-  powerSpellBoundary: 7,
-  powerSpellDelay: 60000 * 15,
-  powerSpellDuration: 60000 * 15,
-  // powerSpellDelay: 15000,
-  // powerSpellDuration: 15000,
-  // powerSpellDuration: 105000,
-  ritualMembersBoundary: 2,
-  ritualDelay: 60000 * 15,
-  // ritualDelay: 15000,
-  spellDurationItem: 60000,
-  // spellDurationItem: 6000,
-  spellProbabilityPerPower: 0.2,
-  spellDurationPerPower: 3,
-};
+// import { manaOceanEffectSettings } from '../api/constants';
 
 const TIDE_LEVEL_UPDATE_INTERVAL = 5000; // millis
 
@@ -57,11 +38,14 @@ class EffectCollector {
 
   toLocationUpdates() {
     return R.values(this.index).map(({ locationRecord, effects }) => {
+      // @ts-ignore
       const { effectList = [] } = locationRecord.options;
       return {
+        // @ts-ignore
         id: locationRecord.id,
         body: {
           options: {
+            // @ts-ignore
             ...locationRecord.options,
             effectList: R.concat(effectList, effects),
           },
@@ -186,6 +170,7 @@ export class ManaOceanService extends AbstractService {
       return;
     }
 
+    const manaOceanEffectSettings = this.getSettings('manaOceanEffects');
     const startTime = timestamp;
     const endTime = startTime + power
     * manaOceanEffectSettings.spellDurationPerPower
@@ -243,6 +228,7 @@ export class ManaOceanService extends AbstractService {
 
   processRitualCast(data, effectCollector) {
     const { timestamp, ritualMembersIds, ritualVictimIds } = data;
+    const manaOceanEffectSettings = this.getSettings('manaOceanEffects');
     if (ritualMembersIds.length + ritualVictimIds.length
       < manaOceanEffectSettings.ritualMembersBoundary) {
       return;
@@ -280,6 +266,7 @@ export class ManaOceanService extends AbstractService {
 
   processPowerSpell(data, effectCollector) {
     const { timestamp, power } = data;
+    const manaOceanEffectSettings = this.getSettings('manaOceanEffects');
     if (power < manaOceanEffectSettings.powerSpellBoundary) {
       return;
     }
@@ -311,6 +298,7 @@ export class ManaOceanService extends AbstractService {
       console.error('location not found', locationId);
       return;
     }
+    const manaOceanEffectSettings = this.getSettings('manaOceanEffects');
     this.pushEffect(locationRecord, {
       type: 'massacre',
       id: shortid.generate(),
@@ -367,6 +355,7 @@ export class ManaOceanService extends AbstractService {
     if (effectType !== 'massacre' && effectType !== 'powerSpell') {
       return;
     }
+    const manaOceanEffectSettings = this.getSettings('manaOceanEffects');
 
     // const { moscowTime } = getMoscowTime();
     // const timestamp = moscowTime.utc().valueOf();
@@ -433,10 +422,7 @@ export class ManaOceanService extends AbstractService {
 
   wipeManaOceanEffects() {
     // this.logger.info('wipeManaOceanEffects');
-    const manaOceanSettings = this.getFromModel({
-      type: 'settings',
-      name: 'manaOcean',
-    });
+    const manaOceanSettings = this.getSettings('manaOcean');
     const locationRecords = this.getFromModel('locationRecords');
     const { neutralManaLevel } = manaOceanSettings;
     const geoLocations = locationRecords.filter(isGeoLocation);
@@ -480,10 +466,7 @@ export class ManaOceanService extends AbstractService {
       return;
     }
     const curTimestamp = moment.utc().valueOf();
-    const manaOceanSettings = this.getFromModel({
-      type: 'settings',
-      name: 'manaOcean',
-    });
+    const manaOceanSettings = this.getSettings('manaOcean');
     const locationRecords = this.getFromModel('locationRecords');
     const { neutralManaLevel, minManaLevel, maxManaLevel } = manaOceanSettings;
 
@@ -494,6 +477,7 @@ export class ManaOceanService extends AbstractService {
 
     const getEffectList = R.pipe(
       R.prop('options'),
+      // @ts-ignore
       R.prop('effectList'),
       R.defaultTo([]),
     );
@@ -594,6 +578,7 @@ export class ManaOceanService extends AbstractService {
     const options = optIndex[effect.locationId];
     // this.logger.info('onApplyManaSpell: effect', effect);
     const { type, range, start } = effect;
+    const manaOceanEffectSettings = this.getSettings('manaOceanEffects');
     // if( type === 'inputStream' ? options.manaLevel < maxManaLevel : options.manaLevel > minManaLevel) {
     // if( options.manaLevel < maxManaLevel) {
     // has applicable mana transfers check
@@ -820,11 +805,15 @@ export class ManaOceanService extends AbstractService {
     return tideHeight;
   }
 
-  calcManaLevel(arr) {
-    const manaOceanSettings = this.getFromModel({
+  getSettings(name) {
+    return this.getFromModel({
       type: 'settings',
-      name: 'manaOcean',
+      name,
     });
+  }
+
+  calcManaLevel(arr) {
+    const manaOceanSettings = this.getSettings('manaOcean');
     const sum = R.sum(arr);
     return R.max(R.min(manaOceanSettings.maxManaLevel, sum), manaOceanSettings.minManaLevel);
   }

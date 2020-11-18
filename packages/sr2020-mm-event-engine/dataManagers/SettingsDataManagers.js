@@ -73,7 +73,7 @@ export class SettingsDataManager {
     //   return;
     // }
     // console.log('settings', JSON.stringify(settings));
-    this.gameModel.logger.info('settings', this.ccSettingsName, JSON.stringify(settings));
+    // this.gameModel.logger.info('settings', this.ccSettingsName, JSON.stringify(settings));
     // this.gameModel.logger.info('settings', this.ccSettingsName);
     // this.gameModel.logger.info('settings', settings);
     // throw new Error('sdfsdfsd');

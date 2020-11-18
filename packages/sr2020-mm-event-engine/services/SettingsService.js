@@ -32,12 +32,12 @@ export class SettingsService extends AbstractService {
   }
 
   setData({ settings = {} }) {
-    try {
-      throw new Error('1212');
-    } catch (e) {
-      this.logger.info(e);
-    }
-    this.logger.info('SettingsService setData', settings);
+    // try {
+    //   throw new Error('1212');
+    // } catch (e) {
+    //   this.logger.info(e);
+    // }
+    // this.logger.info('SettingsService setData', settings);
     this.settings = settings || {
     // this.settings = {
       manaOcean: R.clone(defaultManaOceanSettings),
@@ -56,7 +56,7 @@ export class SettingsService extends AbstractService {
   }
 
   getSettings({ name }) {
-    this.logger.info('getSettings', name, this.settings);
+    // this.logger.info('getSettings', name, this.settings);
     return R.clone(this.settings[name]);
   }
 
