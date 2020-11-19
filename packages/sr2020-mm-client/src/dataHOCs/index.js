@@ -6,6 +6,11 @@ export const withManaOceanSettings = settingsDataHOC(
   'manaOcean',
   {},
 );
+export const withManaOceanEffectSettings = settingsDataHOC(
+  'settingsChanged',
+  'manaOceanEffects',
+  {},
+);
 export const withBackgroundImages = basicDataHOC(
   'backgroundImagesChanged',
   'backgroundImages',

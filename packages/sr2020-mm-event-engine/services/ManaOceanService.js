@@ -175,7 +175,7 @@ export class ManaOceanService extends AbstractService {
     const endTime = startTime + power
     * manaOceanEffectSettings.spellDurationPerPower
     * manaOceanEffectSettings.spellDurationItem;
-    const probability = Math.min(1, power * manaOceanEffectSettings.spellProbabilityPerPower);
+    const probability = Math.min(1, power * (manaOceanEffectSettings.spellProbabilityPerPower / 100));
     let range = R.range(0, power * manaOceanEffectSettings.spellDurationPerPower);
     if (probability < 1) {
       range = range.filter(() => Math.random() < probability);

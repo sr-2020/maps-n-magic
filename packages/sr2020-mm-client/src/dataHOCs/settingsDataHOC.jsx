@@ -6,12 +6,12 @@ export const settingsDataHOC = function (changeEventName, dataName, initState) {
     const [data, setData] = useState(initState);
 
     function update(event) {
-      setData(event.settings?.[dataName] || initState);
+      setData(event.settingsCatalog?.[dataName] || initState);
     }
 
     useEffect(() => {
       gameModel.on(changeEventName, update);
-      update({ settings: gameModel.get('allSettings') });
+      update({ settingsCatalog: gameModel.get('settingsCatalog') });
 
       return () => {
         gameModel.off(changeEventName, update);

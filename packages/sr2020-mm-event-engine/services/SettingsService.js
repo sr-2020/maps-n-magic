@@ -2,7 +2,7 @@ import * as R from 'ramda';
 
 import { AbstractService } from '../core/AbstractService';
 
-import { defaultManaOceanSettings } from '../api/constants';
+// import { defaultManaOceanSettings } from '../api/constants';
 
 export class SettingsService extends AbstractService {
   metadata = {
@@ -12,7 +12,7 @@ export class SettingsService extends AbstractService {
       'setSettings',
     ],
     requests: [
-      'allSettings',
+      'settingsCatalog',
       'settings',
     ],
     emitEvents: [
@@ -25,49 +25,50 @@ export class SettingsService extends AbstractService {
 
   constructor(...args) {
     super(...args);
-    this.settings = {
-      manaOcean: R.clone(defaultManaOceanSettings),
+    this.settingsCatalog = {
+      // manaOcean: R.clone(defaultManaOceanSettings),
     };
     // this.manaOceanSettings = R.clone(defaultManaOceanSettings);
   }
 
-  setData({ settings = {} }) {
+  setData({ settingsCatalog = {} }) {
     // try {
     //   throw new Error('1212');
     // } catch (e) {
     //   this.logger.info(e);
     // }
     // this.logger.info('SettingsService setData', settings);
-    this.settings = settings || {
-    // this.settings = {
-      manaOcean: R.clone(defaultManaOceanSettings),
+    this.settingsCatalog = settingsCatalog || {
+      // manaOcean: R.clone(defaultManaOceanSettings),
     };
     // this.manaOceanSettings = R.clone(defaultManaOceanSettings);
   }
 
   getData() {
     return {
-      settings: this.getAllSettings(),
+      settingsCatalog: this.getSettingsCatalog(),
     };
   }
 
-  getAllSettings() {
-    return R.clone(this.settings);
+  getSettingsCatalog() {
+    return R.clone(this.settingsCatalog);
   }
 
   getSettings({ name }) {
-    // this.logger.info('getSettings', name, this.settings);
-    return R.clone(this.settings[name]);
+    // this.logger.info('getSettings', name, this.settingsCatalog);
+    return R.clone(this.settingsCatalog[name]);
   }
 
   setSettings({ name, settings }) {
-    const areEqual = R.equals(this.settings[name], settings);
-    this.setData({ settings: { ...this.settings, [name]: settings } });
+    // this.logger.info('setSettings', name, settings);
+    const areEqual = R.equals(this.settingsCatalog[name], settings);
+    this.setData({ settingsCatalog: { ...this.settingsCatalog, [name]: settings } });
+
     if (!areEqual) {
       this.emit('settingsChanged', {
         type: 'settingsChanged',
         name,
-        settings: this.settings,
+        settingsCatalog: this.settingsCatalog,
       });
     }
   }
@@ -77,12 +78,12 @@ export class SettingsService extends AbstractService {
   }
 
   postSettingsConfirmed({ name, settings }) {
-    this.settings = { ...this.settings, [name]: settings };
+    this.settingsCatalog = { ...this.settingsCatalog, [name]: settings };
     this.emit('postSettings', { name, settings });
     this.emit('settingsChanged', {
       type: 'settingsChanged',
       name,
-      settings: this.settings,
+      settingsCatalog: this.settingsCatalog,
     });
   }
 }

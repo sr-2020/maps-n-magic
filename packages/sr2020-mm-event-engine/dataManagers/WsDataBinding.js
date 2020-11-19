@@ -114,12 +114,14 @@ export class WsDataBinding {
     }
 
     if (type === 'settingsChanged') {
-      const { name, settings } = data;
-      this.gameModel.execute({
-        type: 'setSettings',
-        name,
-        settings: settings?.[name],
-      });
+      const { name, settingsCatalog } = data;
+      if (name && settingsCatalog) {
+        this.gameModel.execute({
+          type: 'setSettings',
+          name,
+          settings: settingsCatalog?.[name],
+        });
+      }
     }
     // if (type === 'manaOceanSettingsChanged') {
     //   this.gameModel.execute({

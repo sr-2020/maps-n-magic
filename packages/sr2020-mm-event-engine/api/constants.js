@@ -68,6 +68,6 @@ export const manaOceanEffectSettings = {
   // ritualDelay: 15000,
   spellDurationItem: 60000,
   // spellDurationItem: 6000,
-  spellProbabilityPerPower: 0.2,
+  spellProbabilityPerPower: 20,
   spellDurationPerPower: 3,
 };

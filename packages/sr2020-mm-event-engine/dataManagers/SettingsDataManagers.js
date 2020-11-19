@@ -61,7 +61,7 @@ export class SettingsDataManager {
     // }).then((el) => {
     let settings = await this.dataProvider.get();
     if (R.isNil(settings) || R.isEmpty(settings)) {
-      // settingsName
+    // settingsName
       this.gameModel.logger.info('settings_are_empty');
       await this.dataProvider.post(R.clone(this.defaultSettings));
       settings = R.clone(this.defaultSettings);
@@ -104,10 +104,15 @@ export class SettingsDataManager {
   }
 
   onPostSettingsRequested({ name, settings }) {
+    if (name !== this.ccSettingsName) {
+      return;
+    }
+
     this.dataProvider.post(settings).then((settings2) => {
     // this.dataProvider.post(null).then((settings2) => {
       // this.entities.push(entity);
       this.settings = settings2;
+      // console.log('onPostSettingsRequested', name, settings, settings2);
       this.gameModel.execute({
         // type: `post${this.ccSettingsName}Confirmed`,
         // [this.settingsName]: settings2,

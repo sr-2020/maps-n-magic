@@ -18,6 +18,7 @@ export const appDictionary = {
   beaconEditor2: 'Маяки',
   mapEditors: 'Редакторы карт',
   manaOceanSettings: 'Настройки океана маны',
+  manaOceanEffectSettings: 'Настройки эффектов океана маны',
   rescueService: 'МЧС - карта клинических смертей',
   specificMaps: 'Конечные карты',
   debuggingTools: 'Инструменты отладки',

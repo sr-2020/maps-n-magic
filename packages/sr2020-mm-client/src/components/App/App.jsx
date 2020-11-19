@@ -36,6 +36,7 @@ import * as mapDefaults from '../../configs/map';
 import { GeoDataStreamSimulator } from '../GeoDataStreamSimulator';
 import { CharacterPositions } from '../CharacterPositions';
 import { ManaOceanSettings } from '../ManaOceanSettings';
+import { ManaOceanEffectSettings } from '../ManaOceanEffectSettings';
 
 import { SoundMapper } from '../SoundMapper';
 
@@ -313,6 +314,9 @@ export class App extends Component {
                         </Route>
                         <Route path="/manaOceanSettings">
                           <ManaOceanSettings gameModel={gameModel} />
+                        </Route>
+                        <Route path="/manaOceanEffectSettings">
+                          <ManaOceanEffectSettings gameModel={gameModel} />
                         </Route>
 
                         {/* MapRoutes is NOT a component. This is a function which returns array.
