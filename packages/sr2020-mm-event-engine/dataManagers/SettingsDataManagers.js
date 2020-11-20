@@ -12,6 +12,7 @@ export class SettingsDataManager {
     }
     this.settings = {};
     this.defaultSettings = rest.defaultSettings;
+    this.logger = rest.logger;
     this.gameModel = gameModel;
     this.settingsName = settingsName;
     // this.plural = `${entityName}s`;
@@ -61,11 +62,11 @@ export class SettingsDataManager {
     // }).then((el) => {
     let settings = await this.dataProvider.get();
     if (R.isNil(settings) || R.isEmpty(settings)) {
-    // settingsName
       this.gameModel.logger.info('settings_are_empty');
       await this.dataProvider.post(R.clone(this.defaultSettings));
       settings = R.clone(this.defaultSettings);
     }
+    // this.logger.info(this.settingsName, settings);
 
     // .then((settings) => {
     // if (R.equals(this.settings, settings)) {
@@ -123,75 +124,3 @@ export class SettingsDataManager {
     }).catch(this.getErrorHandler(`Error on ${this.ccSettingsName} post`));
   }
 }
-
-// export class ReadWriteSettingsDataManager extends ReadSettingsDataManager {
-//   constructor(...args) {
-//     super(...args);
-//     this.onPostSettingsRequested = this.onPostSettingsRequested.bind(this);
-//     // this.onPutEntityRequested = this.onPutEntityRequested.bind(this);
-//     // this.onDeleteEntityRequested = this.onDeleteEntityRequested.bind(this);
-//   }
-
-//   initialize() {
-//     super.initialize();
-//     this.subscribe('on', this.gameModel);
-//     this.onPostSettingsRequested({
-//       name: 'manaOcean',
-//       settings: null,
-//     });
-//   }
-
-//   dispose() {
-//     super.dispose();
-//     this.subscribe('off', this.gameModel);
-//   }
-
-//   // eslint-disable-next-line react/sort-comp
-//   subscribe(action, gameModel) {
-//     // gameModel[action](`post${this.ccSettingsName}Requested`, this.onPostSettingsRequested);
-//     gameModel[action]('postSettingsRequested', this.onPostSettingsRequested);
-//     // gameModel[action](`put${this.ccEntityName}Requested`, this.onPutEntityRequested);
-//     // gameModel[action](`delete${this.ccEntityName}Requested`, this.onDeleteEntityRequested);
-//   }
-
-//   // onPutEntityRequested({ id, props }) {
-//   //   clearTimeout(this.inputChangeTimeout);
-
-//   //   this.inputChangeTimeout = setTimeout(() => {
-//   //     this.dataProvider.put({ id, props }).then((entity) => {
-//   //       const index = this.entities.findIndex((br) => br.id === id);
-//   //       this.entities[index] = entity;
-//   //       this.gameModel.execute({
-//   //         type: `put${this.ccEntityName}Confirmed`,
-//   //         [this.entityName]: entity,
-//   //       });
-//   //     }).catch(this.getErrorHandler(`Error on ${this.entityName} put`));
-//   //   }, 500);
-//   // }
-
-//   // onDeleteEntityRequested({ id }) {
-//   //   this.dataProvider.delete({ id }).then(() => {
-//   //     const entity = this.entities.find((br) => br.id === id);
-//   //     this.entities = this.entities.filter((br) => br.id !== id);
-//   //     this.gameModel.execute({
-//   //       type: `delete${this.ccEntityName}Confirmed`,
-//   //       [this.entityName]: entity,
-//   //     });
-//   //   }).catch(this.getErrorHandler(`Error on ${this.entityName} delete`));
-//   // }
-
-//   onPostSettingsRequested({ name, settings }) {
-//     this.dataProvider.post(settings).then((settings2) => {
-//     // this.dataProvider.post(null).then((settings2) => {
-//       // this.entities.push(entity);
-//       this.settings = settings2;
-//       this.gameModel.execute({
-//         // type: `post${this.ccSettingsName}Confirmed`,
-//         // [this.settingsName]: settings2,
-//         type: 'postSettingsConfirmed',
-//         name,
-//         settings: settings2,
-//       });
-//     }).catch(this.getErrorHandler(`Error on ${this.ccSettingsName} post`));
-//   }
-// }

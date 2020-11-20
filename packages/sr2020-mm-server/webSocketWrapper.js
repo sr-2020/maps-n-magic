@@ -23,6 +23,7 @@ class WebSocketWrapper {
         this.logger.info('GameModel unsupported request:', item.payload);
         return;
       }
+      // this.logger.info('sendingData', item.type, item.payload, this.gameModel.get(item.payload));
       this.ws.send(JSON.stringify({
         type: item.type,
         [item.payload]: this.gameModel.get(item.payload),

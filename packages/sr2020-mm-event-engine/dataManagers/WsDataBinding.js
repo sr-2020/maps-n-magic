@@ -59,7 +59,7 @@ export class WsDataBinding {
         payload: 'beaconRecords',
       }, {
         type: 'settingsChanged',
-        payload: 'settings',
+        payload: 'settingsCatalog',
       // }, {
       //   type: 'manaOceanSettingsChanged',
       //   payload: 'manaOceanSettings',

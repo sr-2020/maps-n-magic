@@ -26,7 +26,7 @@ import { fillGameModelWithBots } from './GameModelFiller';
 import { CrudDataManager } from '../../dataManagers/CrudDataManager';
 import { LocationDataManager } from '../../dataManagers/LocationDataManager';
 import { ReadDataManager } from '../../dataManagers/ReadDataManager';
-import { SettingsDataManager } from '../../dataManagers/SettingsDataManagers';
+// import { SettingsDataManager } from '../../dataManagers/SettingsDataManagers';
 import { SingleReadStrategy } from '../../dataManagers/SingleReadStrategy';
 import { PollingReadStrategy } from '../../dataManagers/PollingReadStrategy';
 import { DataBinding } from '../../dataManagers/DataBinding';

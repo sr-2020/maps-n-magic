@@ -117,6 +117,7 @@ export function makeGameModel(database) {
     ReadStrategy: PollingReadStrategy,
     ReadStrategyArgs: [15000],
     defaultSettings: defaultManaOceanSettings,
+    logger: winstonLogger,
   }));
   gameServer.addDataBinding(new DataBinding({
     gameModel,
@@ -126,6 +127,7 @@ export function makeGameModel(database) {
     ReadStrategy: PollingReadStrategy,
     ReadStrategyArgs: [15000],
     defaultSettings: manaOceanEffectSettings,
+    logger: winstonLogger,
   }));
   gameServer.addDataBinding(new RedirectDataBinding(
     gameModel,
