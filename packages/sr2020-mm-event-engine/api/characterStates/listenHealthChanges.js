@@ -8,8 +8,10 @@ import { randomInteger } from '../../utils';
 let subscriptionName;
 
 if (process.env.NODE_ENV === 'production') {
+  // subscriptionName = 'rescue-service-dev';
   subscriptionName = 'rescue-service';
 } else {
+  // subscriptionName = 'rescue-service';
   subscriptionName = 'rescue-service-dev';
 }
 console.log('subscriptionName', subscriptionName);
@@ -40,43 +42,43 @@ export function listenHealthChanges(callback, simulateMessages = false) {
   // Listen for new messages until timeout is hit
   subscription.on('message', messageHandler);
 
-  if (simulateMessages) {
-    let flag = true;
-    // const charList = [10198, 9504, 9542, 10199, 10200, 10201, 51935];
-    const charList = [51935];
-    // charList.forEach((characterId) => {
-    // });
-    setInterval(() => {
-      const characterId = charList[randomInteger(0, charList.length - 1)];
-      callback({
-        characterId,
-        stateFrom: 'healthy',
-        stateTo: bodyConditions[randomInteger(0, bodyConditions.length - 1)],
-        // stateTo: 'clinically_dead',
-        // stateFrom: flag ? 'clinically_dead' : 'healthy',
-        // stateTo: !flag ? 'clinically_dead' : 'healthy',
-        timestamp: moment.utc().valueOf(),
-      });
-      flag = !flag;
-    // }, 3000);
-    }, 30000);
-    // }, 3000);
+  // if (simulateMessages) {
+  //   let flag = true;
+  //   // const charList = [10198, 9504, 9542, 10199, 10200, 10201, 51935];
+  //   const charList = [51935];
+  //   // charList.forEach((characterId) => {
+  //   // });
+  //   setInterval(() => {
+  //     const characterId = charList[randomInteger(0, charList.length - 1)];
+  //     callback({
+  //       characterId,
+  //       stateFrom: 'healthy',
+  //       stateTo: bodyConditions[randomInteger(0, bodyConditions.length - 1)],
+  //       // stateTo: 'clinically_dead',
+  //       // stateFrom: flag ? 'clinically_dead' : 'healthy',
+  //       // stateTo: !flag ? 'clinically_dead' : 'healthy',
+  //       timestamp: moment.utc().valueOf(),
+  //     });
+  //     flag = !flag;
+  //   // }, 3000);
+  //   }, 30000);
+  //   // }, 3000);
 
-    // const characterId = charList[randomInteger(0, charList.length - 1)];
-    // callback({
-    //   characterId,
-    //   stateFrom: 'healthy',
-    //   // stateTo: bodyConditions[randomInteger(0, bodyConditions.length - 1)],
-    //   stateTo: 'clinically_dead',
-    //   // stateFrom: flag ? 'clinically_dead' : 'healthy',
-    //   // stateTo: !flag ? 'clinically_dead' : 'healthy',
-    //   timestamp: moment.utc().valueOf(),
-    // });
-    // flag = !flag;
+  //   // const characterId = charList[randomInteger(0, charList.length - 1)];
+  //   // callback({
+  //   //   characterId,
+  //   //   stateFrom: 'healthy',
+  //   //   // stateTo: bodyConditions[randomInteger(0, bodyConditions.length - 1)],
+  //   //   stateTo: 'clinically_dead',
+  //   //   // stateFrom: flag ? 'clinically_dead' : 'healthy',
+  //   //   // stateTo: !flag ? 'clinically_dead' : 'healthy',
+  //   //   timestamp: moment.utc().valueOf(),
+  //   // });
+  //   // flag = !flag;
 
-    // }, 500);
-    // }, 100);
-  }
+  //   // }, 500);
+  //   // }, 100);
+  // }
 
   // setTimeout(() => {
   //   subscription.removeListener('message', messageHandler);

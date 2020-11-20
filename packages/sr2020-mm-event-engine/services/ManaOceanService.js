@@ -14,9 +14,9 @@ import { isGeoLocation, shuffle } from '../utils';
 
 const TIDE_LEVEL_UPDATE_INTERVAL = 5000; // millis
 
-// const MANA_TIDE_UPDATE_INTERVAL = 10000; // millis
+const MANA_TIDE_UPDATE_INTERVAL = 10000; // millis
 // const MANA_TIDE_UPDATE_INTERVAL = 30000; // millis
-const MANA_TIDE_UPDATE_INTERVAL = 60000 * 10; // millis
+// const MANA_TIDE_UPDATE_INTERVAL = 60000 * 10; // millis
 
 // let counter = 1;
 
@@ -449,7 +449,7 @@ export class ManaOceanService extends AbstractService {
     const geoLocations = locationRecords.filter(isGeoLocation);
     const curTimestamp = moment.utc().valueOf();
 
-    const tideHeight = this.getNextTideHeight(curTimestamp);
+    const tideHeight = this.getNextTideHeight(curTimestamp, manaOceanSettings);
 
     this.prevTideHeight = tideHeight;
 
@@ -483,17 +483,19 @@ export class ManaOceanService extends AbstractService {
   // eslint-disable-next-line max-lines-per-function
   onTideLevelUpdate2() {
     const enableManaOcean = this.getFromModel('enableManaOcean');
-    if (!enableManaOcean) {
+    const manaOceanSettings = this.getSettings('manaOcean');
+    // this.logger.info('manaOceanSettings', manaOceanSettings);
+
+    if (!enableManaOcean || !manaOceanSettings) {
       return;
     }
     const curTimestamp = moment.utc().valueOf();
-    const manaOceanSettings = this.getSettings('manaOcean');
     const locationRecords = this.getFromModel('locationRecords');
     const { neutralManaLevel, minManaLevel, maxManaLevel } = manaOceanSettings;
 
     const geoLocations = locationRecords.filter(isGeoLocation);
 
-    const tideHeight = this.getNextTideHeight(curTimestamp);
+    const tideHeight = this.getNextTideHeight(curTimestamp, manaOceanSettings);
     this.prevTideHeight = tideHeight;
 
     const getEffectList = R.pipe(
@@ -807,23 +809,29 @@ export class ManaOceanService extends AbstractService {
     return null;
   }
 
-  getNextTideHeight(curTimestamp) {
+  getNextTideHeight(curTimestamp, manaOceanSettings) {
     if (this.prevTideHeight === null) {
       this.lastManaUpdateTimestamp = curTimestamp;
       // return -2;
       return 0;
     }
-    if (this.lastManaUpdateTimestamp + MANA_TIDE_UPDATE_INTERVAL > curTimestamp) {
-      // this.logger.info('no mana update');
-      return this.prevTideHeight;
-    }
-    // this.logger.info('update mana tide');
-    this.lastManaUpdateTimestamp = curTimestamp;
-    let tideHeight = this.prevTideHeight;
-    // if (counter % 2) {
-    tideHeight = this.prevTideHeight === 2 ? -2 : (this.prevTideHeight + 1);
-    // }
+    const { moscowTimeInMinutes, moscowTime } = getMoscowTime();
+    // speed up time, 1 second is 1 minute
+    // moscowTimeInMinutes = (moscowTime.minute() * 60 + moscowTime.second()) % 1440;
+    const tideHeight = getTideHeight2(moscowTimeInMinutes, manaOceanSettings);
     return tideHeight;
+
+    // if (this.lastManaUpdateTimestamp + MANA_TIDE_UPDATE_INTERVAL > curTimestamp) {
+    //   // this.logger.info('no mana update');
+    //   return this.prevTideHeight;
+    // }
+    // // this.logger.info('update mana tide');
+    // this.lastManaUpdateTimestamp = curTimestamp;
+    // let tideHeight = this.prevTideHeight;
+    // // if (counter % 2) {
+    // tideHeight = this.prevTideHeight === 2 ? -2 : (this.prevTideHeight + 1);
+    // // }
+    // return tideHeight;
   }
 
   getSettings(name) {

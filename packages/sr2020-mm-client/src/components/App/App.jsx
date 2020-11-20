@@ -63,10 +63,10 @@ const TEST_POSITION = {
 };
 
 const initialDatabaseStr = localStorage.getItem(STORAGE_KEY);
-let initialDatabase = {};
-if (initialDatabaseStr) {
-  initialDatabase = JSON.parse(initialDatabaseStr);
-}
+const initialDatabase = {};
+// if (initialDatabaseStr) {
+//   initialDatabase = JSON.parse(initialDatabaseStr);
+// }
 
 export class App extends Component {
   audioContextWrapper = new AudioContextWrapper();
