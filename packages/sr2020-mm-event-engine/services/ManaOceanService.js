@@ -71,7 +71,11 @@ export class ManaOceanService extends AbstractService {
       // 'postManaOceanSettings',
       // 'postManaOceanSettingsRequested',
     ],
-    needActions: ['putLocationRecord', 'putLocationRecords'],
+    needActions: [
+      'putLocationRecord',
+      'putLocationRecords',
+      'pushNotification',
+    ],
     needRequests: [
       // 'manaOceanSettings',
       'settings',
@@ -100,7 +104,7 @@ export class ManaOceanService extends AbstractService {
     if (this.tideLevelTimerId === null) {
       this.tideLevelTimerId = setInterval(this.onTideLevelUpdate, TIDE_LEVEL_UPDATE_INTERVAL);
     } else {
-      console.error('tideLevelTimer already initialized');
+      this.logger.error('tideLevelTimer already initialized');
     }
     this.on('massacreTriggered', this.onMassacreTriggered);
     // this.gameModel = gameModel;
@@ -136,13 +140,24 @@ export class ManaOceanService extends AbstractService {
     const locationId = data.location.id;
     const locationRecord = this.getLocation(locationId);
     if (!locationRecord) {
-      console.error('location not found', locationId);
+      this.logger.error('location not found', locationId);
+      if (data.id === 'input-stream' || data.id === 'output-stream') {
+        const {
+          characterId, name,
+        } = data;
+        this.executeOnModel({
+          type: 'pushNotification',
+          characterId,
+          title: `Заклинание ${name} не применено`,
+          message: `Не найдена локация заклинания, id локации ${data.location.id}`,
+        });
+      }
       return;
     }
     const effectCollector = new EffectCollector();
     this.processPowerSpell(data, effectCollector);
     this.processRitualCast(data, effectCollector);
-    this.processManaOceanSpells(data, effectCollector);
+    this.processManaOceanSpells(data, effectCollector, locationRecord);
     const updates = effectCollector.toLocationUpdates();
     if (updates.length > 0) {
       this.pushEffects(updates);
@@ -150,8 +165,10 @@ export class ManaOceanService extends AbstractService {
     // this.logger.info('effectCollector', JSON.stringify(effectCollector.index, null, '  '));
   }
 
-  processManaOceanSpells(data, effectCollector) {
-    const { id, power, timestamp } = data;
+  processManaOceanSpells(data, effectCollector, locationRecord) {
+    const {
+      id, power, timestamp, characterId, name,
+    } = data;
 
     // Пока не кончится заклинание, мана из соседних локаций будет призываться в эту
     // (с некоторой вероятностью). Чем больше Мощь, тем больше срок и вероятность.
@@ -170,6 +187,13 @@ export class ManaOceanService extends AbstractService {
       return;
     }
 
+    this.executeOnModel({
+      type: 'pushNotification',
+      characterId,
+      title: `Заклинание ${name} применено`,
+      message: `Мощь ${power}, локация: ${locationRecord.label}`,
+    });
+
     const manaOceanEffectSettings = this.getSettings('manaOceanEffects');
     const startTime = timestamp;
     const endTime = startTime + power
@@ -181,16 +205,13 @@ export class ManaOceanService extends AbstractService {
       range = range.filter(() => Math.random() < probability);
     }
 
-    const locationId = data.location.id;
-    const locationRecord = this.getLocation(locationId);
-
     effectCollector.addEffect(locationRecord, {
       type: id === 'input-stream' ? 'inputStream' : 'outputStream',
       id: shortid.generate(),
       start: startTime,
       end: endTime,
       manaLevelChange: id === 'input-stream' ? 1 : -1,
-      locationId,
+      locationId: locationRecord.id,
       range,
     });
 
@@ -243,7 +264,7 @@ export class ManaOceanService extends AbstractService {
     if (neighborLocation == null) {
       return;
     }
-    this.logger.info('neighborLocation', { neighborLocation });
+    // this.logger.info('neighborLocation', { neighborLocation });
 
     effectCollector.addEffect(locationRecord, {
       type: 'ritualLocation',
@@ -295,7 +316,7 @@ export class ManaOceanService extends AbstractService {
     // this.manaModifiers.push(data);
     const locationRecord = this.getLocation(locationId);
     if (!locationRecord) {
-      console.error('location not found', locationId);
+      this.logger.error('location not found', locationId);
       return;
     }
     const manaOceanEffectSettings = this.getSettings('manaOceanEffects');
@@ -337,7 +358,7 @@ export class ManaOceanService extends AbstractService {
   }
 
   pushEffects(updates) {
-    this.logger.info('pushEffects', updates);
+    // this.logger.info('pushEffects', updates);
     this.executeOnModel({
       type: 'putLocationRecords',
       updates,
@@ -349,7 +370,7 @@ export class ManaOceanService extends AbstractService {
     const { locationId, effectType } = data;
     const locationRecord = this.getLocation(locationId);
     if (!locationRecord) {
-      console.error('location not found', locationId);
+      this.logger.error('location not found', locationId);
       return;
     }
     if (effectType !== 'massacre' && effectType !== 'powerSpell') {
@@ -400,7 +421,7 @@ export class ManaOceanService extends AbstractService {
     const { locationId, effectId } = data;
     const locationRecord = this.getLocation(locationId);
     if (!locationRecord) {
-      console.error('location not found', locationId);
+      this.logger.error('location not found', locationId);
       return;
     }
 

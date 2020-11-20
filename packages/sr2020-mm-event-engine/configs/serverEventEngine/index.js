@@ -22,6 +22,7 @@ import { SettingsService } from '../../services/SettingsService';
 import { ManaOceanService } from '../../services/ManaOceanService';
 import { ManaOceanEnableService } from '../../services/ManaOceanEnableService';
 import { MassacreService } from '../../services/MassacreService';
+import { PushNotificationService } from '../../services/PushNotificationService';
 
 // // import { fillGameModelWithBots } from './GameModelFiller';
 import { CrudDataManager } from '../../dataManagers/CrudDataManager';
@@ -32,7 +33,6 @@ import { SettingsDataManager } from '../../dataManagers/SettingsDataManagers';
 import { PollingReadStrategy } from '../../dataManagers/PollingReadStrategy';
 import { DataBinding } from '../../dataManagers/DataBinding';
 import { RedirectDataBinding } from '../../dataManagers/RedirectDataBinding';
-import { sendNotification } from '../../api/sendNotification';
 
 import { defaultManaOceanSettings, manaOceanEffectSettings } from '../../api/constants';
 
@@ -47,6 +47,7 @@ import {
 import { CharacterStatesListener } from '../../api/characterStates/CharacterStatesListener';
 import { CharacterLocationListener } from '../../api/position/CharacterLocationListener';
 import { SpellCastsListener } from '../../api/spellCasts/SpellCastsListener';
+import { PushNotificationEmitter } from '../../api/pushNotificationEmitter';
 
 import { EventEngine } from '../../core/EventEngine';
 
@@ -75,6 +76,7 @@ const services = [
   ManaOceanService,
   ManaOceanEnableService,
   MassacreService,
+  PushNotificationService,
 ];
 
 // eslint-disable-next-line max-lines-per-function
@@ -140,5 +142,7 @@ export function makeGameModel(database) {
   const characterStatesListener = new CharacterStatesListener(gameModel);
   const characterLocationListener = new CharacterLocationListener(gameModel);
   const spellCastsListener = new SpellCastsListener(gameModel);
+  const pushNotificationEmitter = new PushNotificationEmitter(gameModel, winstonLogger);
+  pushNotificationEmitter.initialize();
   return { gameModel, gameServer };
 }

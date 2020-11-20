@@ -59,7 +59,8 @@ export function listenSpellCasts(callback, simulateMessages = false) {
         // id: 'input-stream', // id спелла из сводной таблички
         id: spellSwitch ? 'input-stream' : 'output-stream', // id спелла из сводной таблички
         name: 'Input Stream', // человекочитаемое название спелла
-        characterId: '10198', // персонаж применивший спелл
+        // characterId: '10198', // персонаж применивший спелл
+        characterId: '51935', // персонаж применивший спелл
         location: {
           // id: 3065, // район силовиков
           // id: 3048,

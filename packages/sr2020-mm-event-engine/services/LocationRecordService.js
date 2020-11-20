@@ -50,8 +50,8 @@ export class LocationRecordService extends AbstractService {
     listenEvents: [],
   };
 
-  constructor() {
-    super();
+  constructor(...args) {
+    super(...args);
     this.locationRecords = [];
     this.neighborsIndex = null;
   }
@@ -81,7 +81,8 @@ export class LocationRecordService extends AbstractService {
   getLocationRecord({ id }) {
     const locationRecord = this.locationRecords.find((br) => br.id === id);
     if (locationRecord === undefined) {
-      console.error('location record not found, locationId', id);
+      this.logger.error('location record not found, locationId', id);
+      // this.logger.info(R.pluck('id', this.locationRecords));
     }
     return R.clone(locationRecord);
   }
