@@ -15,6 +15,7 @@ RUN npm run bootstrap
 
 COPY .env.example /app/packages/sr2020-mm-track-analysis/.env
 COPY .env.example /app/packages/sr2020-mm-client/.env
+COPY /app/packages/sr2020-mm-server/.env.example /app/packages/sr2020-mm-server/.env
 
 RUN npm run build-and-deploy
 
