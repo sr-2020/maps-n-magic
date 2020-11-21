@@ -8,10 +8,12 @@ import { randomInteger, sample } from '../../utils';
 let subscriptionName;
 
 if (process.env.NODE_ENV === 'production') {
-  subscriptionName = 'mana-ocean-spell-cast';
+  // subscriptionName = 'mana-ocean-spell-cast';
+  subscriptionName = 'mm-mana-ocean-spell-cast-prod';
   // subscriptionName = 'mana-ocean-spell-cast-dev';
 } else {
-  subscriptionName = 'mana-ocean-spell-cast-dev';
+  // subscriptionName = 'mana-ocean-spell-cast-dev';
+  subscriptionName = 'mm-mana-ocean-spell-cast-dev';
   // subscriptionName = 'mana-ocean-spell-cast';
 }
 console.log('subscriptionName', subscriptionName);
@@ -30,7 +32,7 @@ export function listenSpellCasts(callback, simulateMessages = false) {
     // console.log(`Received message ${message.id}:`);
     // console.log(`\tData: ${message.data}`);
     const parsedData = JSON.parse(message.data);
-    console.log(`Data: ${JSON.stringify(parsedData, null, '  ')}`);
+    // console.log(`listenSpellCasts data: ${JSON.stringify(parsedData, null, '  ')}`);
     // console.log(`\tAttributes: ${message.attributes}`);
     messageCount += 1;
 

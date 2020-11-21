@@ -7,13 +7,15 @@ import moment from 'moment-timezone';
 import { bodyConditions } from 'sr2020-mm-data/gameConstants';
 import { randomInteger } from '../../utils';
 
-const subscriptionName = 'character_location_change';
+let subscriptionName;
 
-// if (process.env.NODE_ENV === 'production') {
-//   subscriptionName = 'rescue-service';
-// } else {
-//   subscriptionName = 'rescue-service-dev';
-// }
+if (process.env.NODE_ENV === 'production') {
+  // subscriptionName = 'rescue-service';
+  subscriptionName = 'mm-char-loc-change-prod';
+} else {
+  // subscriptionName = 'rescue-service-dev';
+  subscriptionName = 'mm-char-loc-change-dev';
+}
 console.log('subscriptionName', subscriptionName);
 const timeout = 60;
 
@@ -33,6 +35,7 @@ export function listenCharacterLocations(callback, simulateMessages = false) {
     // console.log(`Data: ${JSON.stringify(parsedData, null, '  ')}`);
     // console.log(`\tAttributes: ${message.attributes}`);
     messageCount += 1;
+    // console.log(`listenCharacterLocations data: ${JSON.stringify(parsedData, null, '  ')}`);
 
     // "Ack" (acknowledge receipt of) the message
     message.ack();

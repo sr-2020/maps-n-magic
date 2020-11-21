@@ -9,10 +9,12 @@ let subscriptionName;
 
 if (process.env.NODE_ENV === 'production') {
   // subscriptionName = 'rescue-service-dev';
-  subscriptionName = 'rescue-service';
+  // subscriptionName = 'rescue-service';
+  subscriptionName = 'mm-rescue-service-prod';
 } else {
   // subscriptionName = 'rescue-service';
-  subscriptionName = 'rescue-service-dev';
+  // subscriptionName = 'rescue-service-dev';
+  subscriptionName = 'mm-rescue-service-dev';
 }
 console.log('subscriptionName', subscriptionName);
 const timeout = 60;
@@ -33,6 +35,7 @@ export function listenHealthChanges(callback, simulateMessages = false) {
     // console.log(`Data: ${JSON.stringify(parsedData, null, '  ')}`);
     // console.log(`\tAttributes: ${message.attributes}`);
     messageCount += 1;
+    // console.log(`listenHealthChanges data: ${JSON.stringify(parsedData, null, '  ')}`);
 
     // "Ack" (acknowledge receipt of) the message
     message.ack();

@@ -15,7 +15,7 @@ export class PushNotificationService extends AbstractService {
   };
 
   pushNotification(data) {
-    this.logger.info('pushNotification', data);
+    // this.logger.info('pushNotification', data);
     this.emit('pushNotification', {
       type: 'pushNotification',
       ...data,
