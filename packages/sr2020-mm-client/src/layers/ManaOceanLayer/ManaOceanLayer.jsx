@@ -42,6 +42,7 @@ function hasLocationDifference(item, prevItem) {
   // polygon, label, options.manaLevel
   return !R.equals(item.polygon, prevItem.polygon)
     || !R.equals(item.label, prevItem.label)
+    || !R.equals(item.options.effectList, prevItem.options.effectList)
     || item.options.manaLevel !== prevItem.options.manaLevel;
 }
 
