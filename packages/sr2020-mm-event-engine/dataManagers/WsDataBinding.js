@@ -11,6 +11,7 @@ const forwardServer2ClientActions = [
   'characterHealthStateChanged',
   'characterHealthStatesLoaded',
   'enableManaOceanChanged',
+  'setSettingsCatalog',
   // 'characterHealthStateChanged',
 ];
 
@@ -58,7 +59,8 @@ export class WsDataBinding {
         type: 'beaconRecordsChanged2',
         payload: 'beaconRecords',
       }, {
-        type: 'settingsChanged',
+        type: 'setSettingsCatalog',
+        // type: 'settingsChanged',
         payload: 'settingsCatalog',
       // }, {
       //   type: 'manaOceanSettingsChanged',
@@ -92,6 +94,7 @@ export class WsDataBinding {
     wsConnection[action]('onMessage', this.onMessage);
   }
 
+  // eslint-disable-next-line max-lines-per-function
   onMessage(data) {
     const { type } = data;
     if (!forwardServer2ClientActions.includes(type)) {
@@ -110,6 +113,14 @@ export class WsDataBinding {
       this.gameModel.execute({
         ...data,
         type: 'setBeaconRecords',
+      });
+    }
+
+    if (type === 'setSettingsCatalog') {
+      const { settingsCatalog } = data;
+      this.gameModel.execute({
+        type: 'setSettingsCatalog',
+        settingsCatalog,
       });
     }
 

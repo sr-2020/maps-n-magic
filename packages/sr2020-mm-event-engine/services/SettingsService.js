@@ -10,6 +10,7 @@ export class SettingsService extends AbstractService {
       'postSettings',
       'postSettingsConfirmed',
       'setSettings',
+      'setSettingsCatalog',
     ],
     requests: [
       'settingsCatalog',
@@ -52,6 +53,27 @@ export class SettingsService extends AbstractService {
 
   getSettingsCatalog() {
     return R.clone(this.settingsCatalog);
+  }
+
+  setSettingsCatalog({ settingsCatalog }) {
+    const prevSettingsCatalog = this.settingsCatalog;
+    let list = [];
+    if (R.is(Object, settingsCatalog)) {
+      list = R.keys(settingsCatalog);
+    }
+    if (R.is(Object, prevSettingsCatalog)) {
+      list = R.uniq([...list, ...R.keys(prevSettingsCatalog)]);
+    }
+    this.settingsCatalog = settingsCatalog;
+    list.forEach((newKey) => {
+      if (!R.equals(this.settingsCatalog[newKey], prevSettingsCatalog[newKey])) {
+        this.emit('settingsChanged', {
+          type: 'settingsChanged',
+          name: newKey,
+          settingsCatalog: this.settingsCatalog,
+        });
+      }
+    });
   }
 
   getSettings({ name }) {
