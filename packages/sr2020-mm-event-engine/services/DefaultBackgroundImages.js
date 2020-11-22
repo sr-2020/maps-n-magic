@@ -150,7 +150,7 @@ export const defaultBackgroundImages = [
     ],
     image: 'images/sr_amur_house1.svg',
     id: 24,
-    name: 'Домик 1',
+    name: 'Ленинский',
   },
   {
     latlngs: [
@@ -175,6 +175,6 @@ export const defaultBackgroundImages = [
     ],
     image: 'images/sr_amur_house2.svg',
     id: 25,
-    name: 'Домик 2',
+    name: 'Центральный',
   },
 ];
