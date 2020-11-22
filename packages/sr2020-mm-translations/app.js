@@ -20,6 +20,7 @@ export const appDictionary = {
   manaOceanSettings: 'Настройки океана маны',
   manaOceanEffectSettings: 'Настройки эффектов океана маны',
   rescueService: 'МЧС - карта клинических смертей',
+  audioEngineDemo: 'Демо аудио движка',
   specificMaps: 'Конечные карты',
   debuggingTools: 'Инструменты отладки',
   characterPositions: 'Позиции персонажей',
