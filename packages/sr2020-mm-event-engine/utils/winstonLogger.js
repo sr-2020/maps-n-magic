@@ -20,6 +20,11 @@ const myFormat = printf(({
   return `${timestamp} ${level}: ${stack || ''}`;
 });
 
+function objectConverter(key, value) {
+  if (value instanceof Map || value instanceof Set) return [...value];
+  return value;
+}
+
 function transform(info, opts) {
   // console.log('info', info);
   // console.log('opts', opts);
@@ -38,7 +43,8 @@ function transform(info, opts) {
     //   return el.stack;
     // }
     if (R.is(Object, el)) {
-      return JSON.stringify(el, null, '  ');
+      // return JSON.stringify(el, null, '  ');
+      return JSON.stringify(el, objectConverter, '  ');
     }
     return el;
   }).join(' ');

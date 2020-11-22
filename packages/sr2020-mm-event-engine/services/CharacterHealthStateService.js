@@ -19,13 +19,14 @@ export class CharacterHealthStateService extends AbstractService {
       'putCharLocationRequested',
       'characterHealthStateChanged',
       'characterHealthStatesLoaded',
+      'putCharLocationConfirmed',
     ],
     needRequests: ['locationRecord'],
     listenEvents: [],
   };
 
-  constructor() {
-    super();
+  constructor(...args) {
+    super(...args);
     this.characterHealthStates = {};
   }
 
@@ -52,6 +53,7 @@ export class CharacterHealthStateService extends AbstractService {
   }
 
   putCharLocation(action) {
+    // this.logger.info('putCharLocationRequested', action);
     this.emit('putCharLocationRequested', action);
   }
 
@@ -66,6 +68,11 @@ export class CharacterHealthStateService extends AbstractService {
     const { characterId, locationId } = action;
     const prevCharacterHealthState = this.characterHealthStates[characterId];
     const locationRecord = this.getLocation(locationId);
+    // this.logger.info('putCharLocationConfirmed', action);
+    this.emit('putCharLocationConfirmed', {
+      ...action,
+      type: 'putCharLocationConfirmed',
+    });
     if (!prevCharacterHealthState || !locationRecord) {
       return;
     }

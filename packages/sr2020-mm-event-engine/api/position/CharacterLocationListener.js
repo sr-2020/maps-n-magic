@@ -25,15 +25,16 @@ export class CharacterLocationListener {
     //   getCharacterLifeStyle(characterId),
     // ]);
     // console.log('lifeStyle', lifeStyle, 'personName', personName);
-    this.updateState(id, locationId);
+    this.updateState(id, locationId, prevLocationId);
   }
 
-  updateState(characterId, locationId) {
+  updateState(characterId, locationId, prevLocationId) {
     // console.log('received timestamp', timestamp, ', cur moment().utc()', moment.utc().valueOf());
     this.gameModel.execute({
       type: 'putCharLocation',
       characterId,
       locationId,
+      prevLocationId,
     });
   }
 }
