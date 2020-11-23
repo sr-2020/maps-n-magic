@@ -10,10 +10,8 @@ import { randomInteger } from '../../utils';
 let subscriptionName;
 
 if (process.env.NODE_ENV === 'production') {
-  // subscriptionName = 'rescue-service';
   subscriptionName = 'mm-char-loc-change-prod';
 } else {
-  // subscriptionName = 'rescue-service-dev';
   subscriptionName = 'mm-char-loc-change-dev';
 }
 console.log('subscriptionName', subscriptionName);

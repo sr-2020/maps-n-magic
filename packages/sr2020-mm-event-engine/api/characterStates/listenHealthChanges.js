@@ -37,6 +37,14 @@ export function listenHealthChanges(callback, simulateMessages = false) {
     messageCount += 1;
     // console.log(`listenHealthChanges data: ${JSON.stringify(parsedData, null, '  ')}`);
 
+    // listenHealthChanges data: {
+    //   "characterId": 51935,
+    //   "characterName": "Новый персонаж в группе Мастера и приложение",
+    //   "stateFrom": "clinically_dead",
+    //   "stateTo": "healthy",
+    //   "timestamp": 1606017590767
+    // }
+
     // "Ack" (acknowledge receipt of) the message
     message.ack();
     callback(parsedData);
