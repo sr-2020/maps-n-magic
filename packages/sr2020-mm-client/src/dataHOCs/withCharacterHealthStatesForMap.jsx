@@ -52,9 +52,10 @@ export const withCharacterHealthStatesForMap = (Wrapped) => (props) => {
 
     // const objToList(mergeKeyNEntry('locationId'))(locationIndex);
     const list = R.values(updatedIndex);
-    const filteredList = list.filter((el) => el.location);
+    const isDrawableLoc = (el) => el.location && !R.equals(el.location.polygon, {});
+    const filteredList = list.filter(isDrawableLoc);
     if (list.length !== filteredList.length) {
-      console.error('Some locations not found', list.filter((el) => !el.location));
+      console.error('Some locations not found or not valid', list.filter((el) => !isDrawableLoc(el)));
     }
     setData(filteredList);
   }
