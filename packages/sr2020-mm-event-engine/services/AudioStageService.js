@@ -9,7 +9,7 @@ export class AudioStageService extends AbstractService {
     ],
     requests: [],
     emitEvents: [
-      // 'postNotification',
+      'soundStageChanged',
     ],
     listenEvents: [
       'characterLocationChanged',
@@ -17,6 +17,7 @@ export class AudioStageService extends AbstractService {
     ],
     needRequests: [
       'locationRecord',
+      'charactersFromLocation',
     ],
   };
 
@@ -72,7 +73,36 @@ export class AudioStageService extends AbstractService {
   //       },
   //     ]
   //   }
-    // this.logger.info('onPutLocationRecords', data);
+    const locationRecords2 = data.locationRecords.map((record) => ({
+      locationId: record.id,
+      manaLevel: record.options.manaLevel,
+    }));
+
+    const changedManaLevelLocs = locationRecords2.filter((el) => {
+      const data2 = this.locationIndex.get(el.locationId);
+      if (!data2) {
+        return false;
+      }
+      return data2.manaLevel !== el.manaLevel;
+    });
+    const soundStageUpdates = R.flatten(changedManaLevelLocs.map(({ locationId, manaLevel }) => {
+      const data2 = this.locationIndex.get(locationId);
+      data2.manaLevel = manaLevel;
+      const characterSet = this.getFromModel({
+        type: 'charactersFromLocation',
+        locationId,
+      });
+      return [...characterSet].map((characterId) => ({
+        characterId,
+        backgroundSound: manaLevel,
+      }));
+    }));
+    this.emit('soundStageChanged', {
+      type: 'soundStageChanged',
+      list: soundStageUpdates,
+    });
+    // this.logger.info('onPutLocationRecords', changedManaLevelLocs);
+    this.logger.info('soundStageUpdates', soundStageUpdates);
   }
 
   onCharacterLocationChanged(data) {
@@ -83,10 +113,10 @@ export class AudioStageService extends AbstractService {
     //   "prevLocationId": 3080
     // }
     const { characterId, locationId, prevLocationId } = data;
-    if (this.locationIndex.has(prevLocationId)) {
-      const { characterSet } = this.locationIndex.get(prevLocationId);
-      characterSet.delete(characterId);
-    }
+    // if (this.locationIndex.has(prevLocationId)) {
+    //   const { characterSet } = this.locationIndex.get(prevLocationId);
+    //   characterSet.delete(characterId);
+    // }
 
     let manaLevel = null;
     if (locationId !== null) {
@@ -103,11 +133,20 @@ export class AudioStageService extends AbstractService {
     if (!this.locationIndex.has(locationId)) {
       this.locationIndex.set(locationId, {
         manaLevel,
-        characterSet: new Set(),
+        // characterSet: new Set(),
       });
     }
-    const { characterSet } = this.locationIndex.get(locationId);
-    characterSet.add(characterId);
+    // const { characterSet } = this.locationIndex.get(locationId);
+    // characterSet.add(characterId);
+    const list = [{
+      characterId,
+      backgroundSound: manaLevel,
+    }];
+    this.logger.info('soundStageChanged', list);
+    this.emit('soundStageChanged', {
+      type: 'soundStageChanged',
+      list,
+    });
     // todo - emit event that user has new background sound
 
     // this.logger.info('onCharacterLocationChanged', data);
