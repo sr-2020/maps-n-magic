@@ -12,7 +12,7 @@ export class AudioStageService extends AbstractService {
       // 'postNotification',
     ],
     listenEvents: [
-      'putCharLocationConfirmed',
+      'characterLocationChanged',
       'putLocationRecords',
     ],
     needRequests: [
@@ -35,25 +35,24 @@ export class AudioStageService extends AbstractService {
     // Using this data we can generate sound rotation update list.
 
     this.locationIndex = new Map();
-    // this.rotationIndex = new Map();
-    this.onPutCharLocationConfirmed = this.onPutCharLocationConfirmed.bind(this);
+    this.onCharacterLocationChanged = this.onCharacterLocationChanged.bind(this);
     this.onPutLocationRecords = this.onPutLocationRecords.bind(this);
   }
 
   init(gameModel) {
     super.init(gameModel);
-    this.on('putCharLocationConfirmed', this.onPutCharLocationConfirmed);
+    this.on('characterLocationChanged', this.onCharacterLocationChanged);
     this.on('putLocationRecords', this.onPutLocationRecords);
   }
 
   dispose() {
-    this.off('putCharLocationConfirmed', this.onPutCharLocationConfirmed);
+    this.off('characterLocationChanged', this.onCharacterLocationChanged);
     this.off('putLocationRecords', this.onPutLocationRecords);
   }
 
   // If character exists in locationIndex - emit cur stage status as update event.
   // If character absent in locationIndex - request character location
-  //  which should emit onPutCharLocationConfirmed.
+  //  which should emit onCharacterLocationChanged.
   // updateCharacterStage() {
 
   // }
@@ -76,7 +75,7 @@ export class AudioStageService extends AbstractService {
     // this.logger.info('onPutLocationRecords', data);
   }
 
-  onPutCharLocationConfirmed(data) {
+  onCharacterLocationChanged(data) {
     // data: {
     //   "type": "putCharLocationConfirmed",
     //   "characterId": 51935,
@@ -89,16 +88,21 @@ export class AudioStageService extends AbstractService {
       characterSet.delete(characterId);
     }
 
-    const locationRecord = this.getLocation(locationId);
-    if (!locationRecord) {
-      this.logger.error('onPutCharLocation, location not found', locationId);
-      // TODO - emit event that user has no background sound
-      return;
+    let manaLevel = null;
+    if (locationId !== null) {
+      const locationRecord = this.getLocation(locationId);
+      if (!locationRecord) {
+        this.logger.error('onCharacterLocationChanged, character location not found', characterId, locationId);
+        // TODO - emit event that user has no background sound
+        // return;
+      } else {
+        manaLevel = locationRecord.options.manaLevel;
+      }
     }
 
     if (!this.locationIndex.has(locationId)) {
       this.locationIndex.set(locationId, {
-        manaLevel: locationRecord.options.manaLevel,
+        manaLevel,
         characterSet: new Set(),
       });
     }
@@ -106,7 +110,7 @@ export class AudioStageService extends AbstractService {
     characterSet.add(characterId);
     // todo - emit event that user has new background sound
 
-    // this.logger.info('onPutCharLocationConfirmed', data);
+    // this.logger.info('onCharacterLocationChanged', data);
     // this.logger.info(this.locationIndex);
   }
 

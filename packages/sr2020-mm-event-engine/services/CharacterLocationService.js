@@ -41,9 +41,9 @@ export class CharacterLocationService extends AbstractService {
     // this.logger.info(this.char2locIndex);
   }
 
-  setCharacterLocation({ characterId, locationId }) {
-    const prevLocationId = this.char2locIndex.get(characterId);
-    if (prevLocationId === locationId) {
+  setCharacterLocation({ characterId, locationId, prevLocationId }) {
+    const prevLocationId2 = this.char2locIndex.get(characterId);
+    if (prevLocationId2 === locationId) {
       return;
     }
     this.char2locIndex.set(characterId, locationId);
@@ -53,11 +53,12 @@ export class CharacterLocationService extends AbstractService {
       locData = this.loc2charIndex.get(locationId);
     }
     locData.add(characterId);
-    // this.logger.info({ characterId, locationId });
+    // this.logger.info({ characterId, locationId, prevLocationId });
     this.emit('characterLocationChanged', {
       type: 'characterLocationChanged',
       locationId,
       characterId,
+      prevLocationId,
     });
   }
 }

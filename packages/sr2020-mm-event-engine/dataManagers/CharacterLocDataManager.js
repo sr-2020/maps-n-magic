@@ -59,6 +59,7 @@ export class CharacterLocDataManager {
       type: 'setCharacterLocation',
       characterId: parsedData.id,
       locationId: parsedData.locationId,
+      prevLocationId: parsedData.prevLocationId,
     });
   }
 
@@ -69,6 +70,7 @@ export class CharacterLocDataManager {
     const characterLocations = rawCharacterLocations.map((item) => ({
       characterId: item.id,
       locationId: item.location_id,
+      prevLocationId: null,
     }));
     // this.logger.info(characterLocations);
     this.gameModel.execute({
