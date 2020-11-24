@@ -105,7 +105,11 @@ export class SoundStage extends EventEmitter {
         type: 'sound',
         name: this.backgroundSound,
       });
-      this.startSound(this.backgroundSources, this.backgroundSound, sound.buffer, this.backgroundVolume / 100, true);
+      if (sound) {
+        this.startSound(this.backgroundSources, this.backgroundSound, sound.buffer, this.backgroundVolume / 100, true);
+      } else {
+        console.warn(`Sound not found: ${this.backgroundSound}`);
+      }
     }
     console.log('SoundStage onBackgroundSoundUpdate');
   }

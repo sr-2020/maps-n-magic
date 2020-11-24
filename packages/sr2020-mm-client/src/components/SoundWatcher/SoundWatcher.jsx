@@ -133,19 +133,19 @@ export class SoundWatcher extends Component {
     // this.emit('soundsUpdate');
   }
 
-  loadSound = function (name) {
+  loadSound = async function (name) {
     const sound = this.getSound(name);
     if (sound.status !== 'unloaded') {
       return;
     }
     sound.status = 'loading';
-    getSound(name, this.abortController).then((result) => this.props.context.makeAudioBuffer(result)).then((result) => {
-      // console.log(result);
-      this.soundLoaded(name, result);
-    })
-      .catch((error) => {
-        console.error(error);
-      });
+    try {
+      const arrayBuffer = await getSound(name, this.abortController);
+      const decodedData = await this.props.context.makeAudioBuffer(arrayBuffer);
+      this.soundLoaded(name, decodedData);
+    } catch (error) {
+      console.error(error);
+    }
   }
 
   soundLoaded(name, result) {

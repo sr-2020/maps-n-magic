@@ -24,6 +24,9 @@ const navLinks2 = [{
 }, {
   to: '/manaOcean',
   tKey: 'manaOcean',
+}, {
+  to: '/audioEngineDemo',
+  tKey: 'audioEngineDemo',
 }];
 
 const navLinks3 = [{

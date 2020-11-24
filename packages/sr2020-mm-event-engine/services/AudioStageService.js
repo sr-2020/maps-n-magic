@@ -102,7 +102,7 @@ export class AudioStageService extends AbstractService {
       list: soundStageUpdates,
     });
     // this.logger.info('onPutLocationRecords', changedManaLevelLocs);
-    this.logger.info('soundStageUpdates', soundStageUpdates);
+    // this.logger.info('soundStageUpdates', soundStageUpdates);
   }
 
   onCharacterLocationChanged(data) {
@@ -142,7 +142,7 @@ export class AudioStageService extends AbstractService {
       characterId,
       backgroundSound: manaLevel,
     }];
-    this.logger.info('soundStageChanged', list);
+    // this.logger.info('soundStageChanged', list);
     this.emit('soundStageChanged', {
       type: 'soundStageChanged',
       list,
