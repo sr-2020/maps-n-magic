@@ -9,10 +9,12 @@ import Form from 'react-bootstrap/Form';
 import Button from 'react-bootstrap/Button';
 import Alert from 'react-bootstrap/Alert';
 
-import { isGeoLocation } from 'sr2020-mm-event-engine/utils';
+import { isGeoLocation, getUserNameStr } from 'sr2020-mm-event-engine/utils';
 
 // TODO this call should be moved in event engine service
 import { postUserPosition } from 'sr2020-mm-event-engine/api/position';
+
+import { CharacterDataList } from '../CharacterDataList';
 
 // import { CharacterPositionsPropTypes } from '../../types';
 
@@ -152,11 +154,6 @@ export class CharacterPositions extends Component {
     return 'N/A';
   }
 
-  // eslint-disable-next-line class-methods-use-this
-  getUserNameStr(user) {
-    return user.name !== '' ? ` (${user.name})` : '';
-  }
-
   // eslint-disable-next-line max-lines-per-function
   render() {
     const {
@@ -224,7 +221,7 @@ export class CharacterPositions extends Component {
                 {
                   users.map((user) => (
                     <tr>
-                      <td>{user.id + this.getUserNameStr(user)}</td>
+                      <td>{user.id + getUserNameStr(user)}</td>
                       <td>{this.getLocationText(user.location_id)}</td>
                     </tr>
                   ))
@@ -232,19 +229,7 @@ export class CharacterPositions extends Component {
               </tbody>
             </Table>
 
-            <datalist className="CharacterIdList" id="characterIdList">
-              {
-              // eslint-disable-next-line jsx-a11y/control-has-associated-label
-                users.map((user) => (
-                  <option
-                    key={user.id}
-                    value={user.id}
-                  >
-                    {user.id + this.getUserNameStr(user)}
-                  </option>
-                ))
-              }
-            </datalist>
+            <CharacterDataList users={users} />
           </div>
 
           <Alert className="tw-ml-8" variant="warning">

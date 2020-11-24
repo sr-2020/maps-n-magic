@@ -186,3 +186,7 @@ export function shuffle(array) {
 
   return array;
 }
+
+export function getUserNameStr(user) {
+  return user.name !== '' ? ` (${user.name})` : '';
+}

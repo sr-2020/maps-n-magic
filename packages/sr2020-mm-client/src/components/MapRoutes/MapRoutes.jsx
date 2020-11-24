@@ -11,6 +11,8 @@ import { LocationEditorMap } from '../../maps/LocationEditorMap';
 import { BeaconEditorMap } from '../../maps/BeaconEditorMap';
 import { RescueServiceMap } from '../../maps/RescueServiceMap';
 import { ManaOceanMap } from '../../maps/ManaOceanMap';
+import { AudioEngineDemo } from '../../maps/AudioEngineDemo';
+import { CharacterWatcher } from '../CharacterWatcher';
 
 import { MapsNav } from '../MapsNav';
 
@@ -60,6 +62,13 @@ export function MapRoutes(props) {
       <ManaOceanMap
         gameModel={gameModel}
       />
+    </Route>,
+    <Route path="/audioEngineDemo" key="audioEngineDemo">
+      <CharacterWatcher gameModel={gameModel}>
+        <AudioEngineDemo
+          gameModel={gameModel}
+        />
+      </CharacterWatcher>
     </Route>,
   ];
 }

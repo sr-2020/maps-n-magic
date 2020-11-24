@@ -23,6 +23,8 @@ import { ManaOceanService } from '../../services/ManaOceanService';
 import { ManaOceanEnableService } from '../../services/ManaOceanEnableService';
 import { MassacreService } from '../../services/MassacreService';
 import { PushNotificationService } from '../../services/PushNotificationService';
+import { AudioStageService } from '../../services/AudioStageService';
+import { CharacterLocationService } from '../../services/CharacterLocationService';
 
 // // import { fillGameModelWithBots } from './GameModelFiller';
 import { CrudDataManager } from '../../dataManagers/CrudDataManager';
@@ -33,6 +35,7 @@ import { SettingsDataManager } from '../../dataManagers/SettingsDataManagers';
 import { PollingReadStrategy } from '../../dataManagers/PollingReadStrategy';
 import { DataBinding } from '../../dataManagers/DataBinding';
 import { RedirectDataBinding } from '../../dataManagers/RedirectDataBinding';
+import { CharacterLocDataManager } from '../../dataManagers/CharacterLocDataManager';
 
 import { defaultManaOceanSettings, manaOceanEffectSettings } from '../../api/constants';
 
@@ -77,6 +80,8 @@ const services = [
   ManaOceanEnableService,
   MassacreService,
   PushNotificationService,
+  AudioStageService,
+  CharacterLocationService,
 ];
 
 // eslint-disable-next-line max-lines-per-function
@@ -131,6 +136,13 @@ export function makeGameModel(database) {
     defaultSettings: manaOceanEffectSettings,
     logger: winstonLogger,
   }));
+
+  const charLocDM = new CharacterLocDataManager(
+    gameModel,
+    winstonLogger,
+  );
+  charLocDM.initialize();
+  gameServer.addDataBinding(charLocDM);
   gameServer.addDataBinding(new RedirectDataBinding(
     gameModel,
     {
