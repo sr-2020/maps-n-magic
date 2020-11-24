@@ -12,6 +12,7 @@ const forwardServer2ClientActions = [
   'characterHealthStatesLoaded',
   'enableManaOceanChanged',
   'setSettingsCatalog',
+  'characterLocationChanged',
   // 'characterHealthStateChanged',
 ];
 
@@ -30,6 +31,7 @@ const forwardClient2ServerActions = [
   'wipeManaOceanEffects',
   'removeManaEffect',
   'addManaEffect',
+  'emitCharacterLocationChanged',
 ];
 
 export class WsDataBinding {
@@ -160,6 +162,10 @@ export class WsDataBinding {
         ...data,
         type: 'enableManaOceanConfirmed',
       });
+    }
+
+    if (type === 'characterLocationChanged') {
+      this.gameModel.execute(data);
     }
 
     // 'characterHealthStateChanged',

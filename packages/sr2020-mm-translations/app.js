@@ -27,6 +27,7 @@ export const appDictionary = {
   manaOcean: 'Океан маны',
   manaOceanLayer: 'Океан маны',
   rescueServiceLayer: 'МЧС',
+  characterLocationLayer: 'Маркер персонажа',
 
   // App actions
   uploadDatabase: 'Загрузить базу',

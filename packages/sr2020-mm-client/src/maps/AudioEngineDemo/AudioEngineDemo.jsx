@@ -6,6 +6,7 @@ import { BaseContourLayer2 } from 'sr2020-mm-client-core/layers/BaseContourLayer
 import { Map } from 'sr2020-mm-client-core/maps/Map';
 import { BackgroundImageDisplayLayer } from '../../layers/BackgroundImageDisplayLayer';
 import { ManaOceanLayer } from '../../layers/ManaOceanLayer';
+import { CharacterLocationLayer } from '../../layers/CharacterLocationLayer';
 
 export function AudioEngineDemo(props) {
   const {
@@ -29,6 +30,9 @@ export function AudioEngineDemo(props) {
         imageClassName="grayscale tw-opacity-20"
       />
       <ManaOceanLayer
+        enableByDefault
+      />
+      <CharacterLocationLayer
         enableByDefault
       />
     </Map>

@@ -11,7 +11,7 @@ const WATCH_CHARACTER_HISTORY_KEY = 'watchCharacterHistory';
 // eslint-disable-next-line max-lines-per-function
 export function CharacterWatcher(props) {
   const {
-    characterId, userRecords, gameModel, children,
+    characterId, userRecords, gameModel, children, characterLocationId,
   } = props;
 
   const userIds = R.pluck('id', userRecords);
@@ -125,6 +125,8 @@ export function CharacterWatcher(props) {
           {children}
           <div className="tw-fixed tw-bottom-0 tw-left-0" style={{ zIndex: 10000 }}>
             {`Персонаж ${characterId}`}
+            <br />
+            {`Локация ${characterLocationId || 'N/A'}`}
             <br />
             <Button variant="primary" onClick={onWatchCancel}>
               Остановить отслеживание

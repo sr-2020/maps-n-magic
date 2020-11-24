@@ -7,6 +7,7 @@ export class CharacterLocationService extends AbstractService {
     actions: [
       'setAllCharacterLocations',
       'setCharacterLocation',
+      'emitCharacterLocationChanged',
     ],
     requests: [
       'charactersFromLocation',
@@ -71,6 +72,15 @@ export class CharacterLocationService extends AbstractService {
       locationId,
       characterId,
       prevLocationId,
+    });
+  }
+
+  emitCharacterLocationChanged({ characterId }) {
+    this.emit('characterLocationChanged', {
+      type: 'characterLocationChanged',
+      locationId: this.char2locIndex.get(characterId) || null,
+      characterId,
+      prevLocationId: null,
     });
   }
 }
