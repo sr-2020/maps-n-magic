@@ -1,5 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import * as R from 'ramda';
+import { isRelevant } from 'sr2020-mm-event-engine/utils';
+import * as moment from 'moment-timezone';
 
 const changeEventName = 'characterHealthStatesLoaded';
 const srcDataName = 'characterHealthStates';
@@ -36,7 +38,9 @@ export const withCharacterHealthStatesForMap = (Wrapped) => (props) => {
     //     userName,
     //   };
     // });
-    const locationIndex = R.groupBy(R.prop('locationId'), fullList.filter((el) => el.locationId !== null));
+    const timestamp = moment().utc().valueOf();
+    const fullList2 = fullList.filter((el) => el.locationId !== null).filter(isRelevant(timestamp));
+    const locationIndex = R.groupBy(R.prop('locationId'), fullList2);
 
     const updatedIndex = R.mapObjIndexed((characters, locationId) => {
       const location = gameModel.get({

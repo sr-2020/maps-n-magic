@@ -83,6 +83,12 @@ export function getPolygonCentroid(polygon) {
 
 export const isClinicallyDead = (charState) => charState.healthState === bodyConditionsSet.clinically_dead;
 
+// export const isRelevant = (curTime) => (el) => ((curTime - el.timestamp) < (30 * 60000));
+export const isRelevant = (curTime) => (el) =>
+  // console.log(curTime, el.timestamp, curTime - el.timestamp);
+  ((curTime - el.timestamp) < (30 * 60000))
+;
+
 // random integer from min (including min) to max (including max)
 export function randomInteger(min, max) {
   const rand = min + Math.random() * (max + 1 - min);

@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import * as R from 'ramda';
-import { isClinicallyDead } from 'sr2020-mm-event-engine/utils';
+import { isClinicallyDead, isRelevant } from 'sr2020-mm-event-engine/utils';
+import * as moment from 'moment-timezone';
 
 const changeEventName = 'characterHealthStatesLoaded';
 const srcDataName = 'characterHealthStates';
@@ -37,9 +38,10 @@ export const withCharacterIdHealthListForAudio = (Wrapped) => (props) => {
     //     userName,
     //   };
     // });
-
+    const timestamp = moment().utc().valueOf();
     const fullList3 = R.pipe(
       R.filter(isClinicallyDead),
+      R.filter(isRelevant(timestamp)),
       R.pluck('characterId'),
       // R.sortBy(R.prop('timestamp')),
     )(fullList);
