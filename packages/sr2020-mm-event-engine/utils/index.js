@@ -6,6 +6,7 @@ import 'sr2020-mm-hacks-n-fixes/leafletUnwindowMP';
 import * as gi from '@thi.ng/geom-isec';
 import * as gcp from '@thi.ng/geom-closest-point';
 import clippingUtils from 'polygon-clipping';
+import { bodyConditionsSet } from 'sr2020-mm-data/gameConstants';
 
 export function isGeoLocation(location) {
   return location.layer_id === 1 && !R.isEmpty(location.polygon);
@@ -80,7 +81,7 @@ export function getPolygonCentroid(polygon) {
   };
 }
 
-export const isClinicallyDead = (charState) => charState.healthState === 'clinically_dead';
+export const isClinicallyDead = (charState) => charState.healthState === bodyConditionsSet.clinically_dead;
 
 // random integer from min (including min) to max (including max)
 export function randomInteger(min, max) {

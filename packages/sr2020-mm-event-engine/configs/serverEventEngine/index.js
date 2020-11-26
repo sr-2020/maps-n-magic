@@ -25,6 +25,7 @@ import { MassacreService } from '../../services/MassacreService';
 import { PushNotificationService } from '../../services/PushNotificationService';
 import { AudioStageService } from '../../services/AudioStageService';
 import { CharacterLocationService } from '../../services/CharacterLocationService';
+import { RescueServicePushService } from '../../services/RescueServicePushService';
 
 // // import { fillGameModelWithBots } from './GameModelFiller';
 import { CrudDataManager } from '../../dataManagers/CrudDataManager';
@@ -82,6 +83,7 @@ const services = [
   PushNotificationService,
   AudioStageService,
   CharacterLocationService,
+  RescueServicePushService,
 ];
 
 // eslint-disable-next-line max-lines-per-function

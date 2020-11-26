@@ -24,3 +24,10 @@ export const bodyConditions = [
   'clinically_dead',
   'biologically_dead',
 ];
+
+export const bodyConditionsSet = {
+  healthy: 'healthy',
+  wounded: 'wounded',
+  clinically_dead: 'clinically_dead',
+  biologically_dead: 'biologically_dead',
+};
