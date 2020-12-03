@@ -3,9 +3,9 @@
   "version": "0.0.0",
   "private": true,
   "scripts": {
-    "start": "node -r esm -r dotenv/config --inspect ./bin/www",
-    "start:server": "node -r esm -r dotenv/config ./bin/www",
-    "watch:server": "nodemon --inspect -r esm -r dotenv/config ./bin/www"
+    "start": "node -r esm -r dotenv/config --inspect ./src/bin/www",
+    "start:server": "node -r esm -r dotenv/config ./src/bin/www",
+    "watch:server": "nodemon --inspect -r esm -r dotenv/config ./src/bin/www"
   },
   "dependencies": {
     "@google-cloud/pubsub": "^2.6.0",
