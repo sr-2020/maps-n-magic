@@ -27,14 +27,19 @@ shadowrun.code-workspace
 .vscode/launch.json
 
 npm-debug.log*
+lerna-debug.log*
 yarn-debug.log*
 yarn-error.log*
+
+packages/*/lib
+
 packages/sr2020-mm-client/public/images/nonIndexedImages/
 packages/sr2020-mm-client/build
 
 packages/sr2020-mm-server/src/settings-real.js
 packages/sr2020-mm-server/logs/*
 packages/sr2020-mm-server/static/
+packages/sr2020-mm-server/dist/
 
 packages/sr2020-mm-data/analysis/data/restOfAll/
 packages/sr2020-mm-data/analysis/data/kml/otherKml
