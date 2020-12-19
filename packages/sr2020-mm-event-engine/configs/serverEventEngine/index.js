@@ -16,7 +16,7 @@ import { BeaconRecordService } from '../../services/BeaconRecordService';
 import { NotificationService } from '../../services/NotificationService';
 // import { BackgroundImageService } from '../../services/BackgroundImageService';
 import { CharacterHealthStateService } from '../../services/CharacterHealthStateService';
-// import { UserRecordService } from '../../services/UserRecordService';
+import { UserRecordService } from '../../services/UserRecordService';
 // import { ManaOceanSettingsService } from '../../services/ManaOceanSettingsService';
 import { SettingsService } from '../../services/SettingsService';
 import { ManaOceanService } from '../../services/ManaOceanService';
@@ -30,7 +30,7 @@ import { RescueServicePushService } from '../../services/RescueServicePushServic
 // // import { fillGameModelWithBots } from './GameModelFiller';
 import { CrudDataManager } from '../../dataManagers/CrudDataManager';
 import { LocationDataManager } from '../../dataManagers/LocationDataManager';
-// import { ReadDataManager } from '../../dataManagers/ReadDataManager';
+import { ReadDataManager } from '../../dataManagers/ReadDataManager';
 import { SettingsDataManager } from '../../dataManagers/SettingsDataManagers';
 // import { SingleReadStrategy } from '../../dataManagers/SingleReadStrategy';
 import { PollingReadStrategy } from '../../dataManagers/PollingReadStrategy';
@@ -74,7 +74,7 @@ const services = [
   NotificationService,
   // BackgroundImageService,
   CharacterHealthStateService,
-  // UserRecordService,
+  UserRecordService,
   // ManaOceanSettingsService,
   SettingsService,
   ManaOceanService,
@@ -110,14 +110,15 @@ export function makeGameModel(database) {
     ReadStrategy: PollingReadStrategy, // implements read strategy, used deep inside in data manager read part
     ReadStrategyArgs: [15000],
   }));
-  // gameServer.addDataBinding(new DataBinding({
-  //   gameModel,
-  //   entityName: 'userRecord',
-  //   DataProvider: UserRecordProvider,
-  //   DataManager: ReadDataManager,
-  //   ReadStrategy: PollingReadStrategy,
-  //   ReadStrategyArgs: [15000, 'reloadUserRecords'],
-  // }));
+  gameServer.addDataBinding(new DataBinding({
+    gameModel,
+    entityName: 'userRecord',
+    DataProvider: UserRecordProvider,
+    // DataProvider: UsersRecordProviderMock,
+    DataManager: ReadDataManager,
+    ReadStrategy: PollingReadStrategy,
+    ReadStrategyArgs: [15000, 'reloadUserRecords'],
+  }));
   gameServer.addDataBinding(new DataBinding({
     gameModel,
     entityName: 'manaOcean',

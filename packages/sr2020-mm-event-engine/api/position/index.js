@@ -1,4 +1,5 @@
 // eslint-disable-next-line max-classes-per-file
+import * as R from 'ramda';
 import {
   gettable, postable, puttable, deletable, postSettings, getSettings, multiPuttable,
 } from './apiInterfaces';
@@ -31,6 +32,16 @@ export class RemoteUsersRecordProvider extends GettableResourceProvider {
     super(usersUrl);
   }
 }
+
+// Test class to get frequently changed user data.
+// export class UsersRecordProviderMock {
+//   isEven = true;
+
+//   async get() {
+//     this.isEven = !this.isEven;
+//     return R.clone(this.isEven ? [users[1]] : users);
+//   }
+// }
 
 export class ManaOceanSettingsProvider extends SettingsResourceProvider {
   constructor() {

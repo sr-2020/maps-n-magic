@@ -13,6 +13,7 @@ const forwardServer2ClientActions = [
   'enableManaOceanChanged',
   'setSettingsCatalog',
   'characterLocationChanged',
+  'userRecordsChanged',
   // 'characterHealthStateChanged',
 ];
 
@@ -161,6 +162,13 @@ export class WsDataBinding {
       this.gameModel.execute({
         ...data,
         type: 'enableManaOceanConfirmed',
+      });
+    }
+
+    if (type === 'userRecordsChanged') {
+      this.gameModel.execute({
+        ...data,
+        type: 'setUserRecords',
       });
     }
 

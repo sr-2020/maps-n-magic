@@ -60,12 +60,13 @@ export class UserRecordService extends AbstractService {
     listenEvents: [],
   };
 
-  constructor() {
-    super();
+  constructor(...args) {
+    super(...args);
     this.userRecords = [];
   }
 
   setData({ userRecords } = {}) {
+    // this.logger.info('userRecords', userRecords);
     this.userRecords = userRecords || [];
     this.userRecords.forEach((user) => {
       user.name = '';
@@ -93,6 +94,7 @@ export class UserRecordService extends AbstractService {
   setUserRecords({ userRecords }) {
     this.setData({ userRecords });
     this.emit('userRecordsChanged', {
+      type: 'userRecordsChanged',
       userRecords,
     });
   }

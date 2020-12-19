@@ -93,14 +93,15 @@ export function makeGameModel(database) {
   //   ReadStrategy: PollingReadStrategy,
   //   ReadStrategyArgs: [15000],
   // }));
-  gameServer.addDataBinding(new DataBinding({
-    gameModel,
-    entityName: 'userRecord',
-    DataProvider: UserRecordProvider,
-    DataManager: ReadDataManager,
-    ReadStrategy: PollingReadStrategy,
-    ReadStrategyArgs: [15000, 'reloadUserRecords'],
-  }));
+  // gameServer.addDataBinding(new DataBinding({
+  //   gameModel,
+  //   entityName: 'userRecord',
+  //   // DataProvider: UserRecordProvider,
+  //   DataProvider: UsersRecordProviderMock,
+  //   DataManager: ReadDataManager,
+  //   ReadStrategy: PollingReadStrategy,
+  //   ReadStrategyArgs: [15000, 'reloadUserRecords'],
+  // }));
   gameServer.addDataBinding(new WsDataBinding({
     gameModel, wsConnection,
   }));
