@@ -12,7 +12,7 @@ import Alert from 'react-bootstrap/Alert';
 import { isGeoLocation, getUserNameStr } from 'sr2020-mm-event-engine/utils';
 
 // TODO this call should be moved in event engine service
-import { postUserPosition } from 'sr2020-mm-event-engine/api/position';
+import { postUserPosition } from 'sr2020-mm-event-engine/internalApi/position';
 
 import { CharacterDataList } from '../CharacterDataList';
 
@@ -140,7 +140,7 @@ export class CharacterPositions extends Component {
 
     postUserPosition(characterId, beacon).then((result) => {
       if (!result.ok) throw new Error(result);
-      gameModel.emit('reloadUserRecords');
+      gameModel.execute('reloadUserRecords');
     }).catch((error) => {
       console.error(error);
     });

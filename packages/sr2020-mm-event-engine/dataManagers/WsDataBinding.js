@@ -33,6 +33,7 @@ const forwardClient2ServerActions = [
   'removeManaEffect',
   'addManaEffect',
   'emitCharacterLocationChanged',
+  'reloadUserRecords',
 ];
 
 export class WsDataBinding {
@@ -74,6 +75,9 @@ export class WsDataBinding {
       }, {
         type: 'enableManaOceanChanged',
         payload: 'enableManaOcean',
+      }, {
+        type: 'userRecordsChanged',
+        payload: 'userRecords',
       }],
       forwardActions: forwardServer2ClientActions,
     });

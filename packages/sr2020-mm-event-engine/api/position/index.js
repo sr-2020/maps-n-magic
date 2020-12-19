@@ -55,7 +55,7 @@ export class ManaOceanEffectSettingsProvider extends SettingsResourceProvider {
   }
 }
 
-export async function postUserPosition(characterId, beacon) {
+export async function innerPostUserPosition(characterId, beacon) {
   return fetch(positionUrl, {
     method: 'POST',
     headers: {

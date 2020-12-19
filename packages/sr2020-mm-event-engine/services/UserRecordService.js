@@ -100,7 +100,9 @@ export class UserRecordService extends AbstractService {
   }
 
   reloadUserRecords() {
-    this.emit('reloadUserRecords');
+    this.emit('reloadUserRecords', {
+      type: 'reloadUserRecords',
+    });
     // console.log('reloadUserRecords');
   }
 }
