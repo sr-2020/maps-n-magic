@@ -6,7 +6,7 @@
   "homepage": "https://github.com/sr-2020/maps-n-magic#readme",
   "license": "Apache-2.0",
   "main": "lib/sample.js",
-  "typings": "lib/doctor.d.ts",
+  "typings": "lib/sample.d.ts",
   "directories": {
     "lib": "lib",
     "test": "__tests__"
