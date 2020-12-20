@@ -1,4 +1,4 @@
-import { AbstractService } from '../core/AbstractService';
+import { AbstractService } from 'sr2020-mm-event-engine/core/AbstractService';
 
 export class ClientEventStubService extends AbstractService {
   metadata = {

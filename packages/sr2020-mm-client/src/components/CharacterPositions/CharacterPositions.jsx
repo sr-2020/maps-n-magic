@@ -12,7 +12,7 @@ import Alert from 'react-bootstrap/Alert';
 import { isGeoLocation, getUserNameStr } from 'sr2020-mm-event-engine/utils';
 
 // TODO this call should be moved in event engine service
-import { postUserPosition } from 'sr2020-mm-event-engine/api/position';
+import { postUserPosition } from 'sr2020-mm-client-event-engine/api/position';
 
 import { CharacterDataList } from '../CharacterDataList';
 

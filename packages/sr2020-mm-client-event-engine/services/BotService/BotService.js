@@ -1,8 +1,7 @@
 import * as R from 'ramda';
+import { AbstractService } from 'sr2020-mm-event-engine/core/AbstractService';
 
 import { ActiveBot } from './ActiveBot';
-
-import { AbstractService } from '../../core/AbstractService';
 
 export class BotService extends AbstractService {
   metadata = {

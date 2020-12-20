@@ -3,7 +3,7 @@ import { Component } from 'react';
 import './SoundWatcher.css';
 
 // TODO this call should be moved in event engine service
-import { getSound, getSoundList } from 'sr2020-mm-event-engine/api/sounds';
+import { getSound, getSoundList } from 'sr2020-mm-client-event-engine/api/sounds';
 
 const POLL_INTERVAL = 15000; // ms
 

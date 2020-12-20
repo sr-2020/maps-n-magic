@@ -44,6 +44,7 @@
     "sr2020-mm-client-core": "*",
     "sr2020-mm-data": "*",
     "sr2020-mm-event-engine": "*",
+    "sr2020-mm-client-event-engine": "*",
     "sr2020-mm-translations": "*",
     "tone": "^14.7.39"
   },

@@ -1,8 +1,8 @@
 import * as R from 'ramda';
 
-import L from 'leaflet/dist/leaflet-src';
-import { AbstractService } from '../core/AbstractService';
-import { isPointInLocation } from '../utils';
+// import L from 'leaflet/dist/leaflet-src';
+import { AbstractService } from 'sr2020-mm-event-engine/core/AbstractService';
+import { isPointInLocation } from 'sr2020-mm-event-engine/utils';
 
 const notNull = R.pipe(R.isNil, R.not);
 

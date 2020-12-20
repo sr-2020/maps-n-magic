@@ -2,7 +2,7 @@ import * as R from 'ramda';
 
 // import { defaultSpirit } from '../../types/primitives';
 
-import { AbstractService } from '../core/AbstractService';
+import { AbstractService } from 'sr2020-mm-event-engine/core/AbstractService';
 
 const defaultSpirit = {
   name: '',

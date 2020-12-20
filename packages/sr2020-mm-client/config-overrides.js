@@ -1,5 +1,5 @@
-const { override, babelInclude } = require('customize-cra')
-const path = require('path')
+const { override, babelInclude } = require('customize-cra');
+const path = require('path');
 
 module.exports = override(
   babelInclude([
@@ -7,5 +7,6 @@ module.exports = override(
     path.resolve('../sr2020-mm-client-core'),
     path.resolve('../sr2020-mm-data'),
     path.resolve('../sr2020-mm-event-engine'),
+    path.resolve('../sr2020-mm-client-event-engine'),
   ]),
-)
+);

@@ -1,4 +1,4 @@
-import { AbstractService } from '../core/AbstractService';
+import { AbstractService } from 'sr2020-mm-event-engine/core/AbstractService';
 
 export class TickerService extends AbstractService {
   metadata = {
@@ -52,7 +52,6 @@ export class TickerService extends AbstractService {
       // console.log(options.key || 'animation triggered');
       // if (!animation.enable) return;
       if (this.mainCycleAbortController.signal.aborted) return;
-
 
       // console.log(time - start);
       // this.activeBots = filterBots(this.activeBots);

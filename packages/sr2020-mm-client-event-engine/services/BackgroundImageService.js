@@ -1,6 +1,6 @@
 import * as R from 'ramda';
 
-import { AbstractService } from '../core/AbstractService';
+import { AbstractService } from 'sr2020-mm-event-engine/core/AbstractService';
 
 import { defaultBackgroundImages } from './DefaultBackgroundImages';
 

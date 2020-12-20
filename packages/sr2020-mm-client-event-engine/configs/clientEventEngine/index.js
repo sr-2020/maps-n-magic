@@ -1,12 +1,14 @@
-import { Migrator } from './Migrator';
+import { LocationRecordService } from 'sr2020-mm-event-engine/services/LocationRecordService';
+import { BeaconRecordService } from 'sr2020-mm-event-engine/services/BeaconRecordService';
+import { NotificationService } from 'sr2020-mm-event-engine/services/NotificationService';
+import { CharacterHealthStateService } from 'sr2020-mm-event-engine/services/CharacterHealthStateService';
+import { UserRecordService } from 'sr2020-mm-event-engine/services/UserRecordService';
+import { SettingsService } from 'sr2020-mm-event-engine/services/SettingsService';
+import { ManaOceanEnableService } from 'sr2020-mm-event-engine/services/ManaOceanEnableService';
 
-import { LocationRecordService } from '../../services/LocationRecordService';
-import { BeaconRecordService } from '../../services/BeaconRecordService';
-import { NotificationService } from '../../services/NotificationService';
-import { CharacterHealthStateService } from '../../services/CharacterHealthStateService';
-import { UserRecordService } from '../../services/UserRecordService';
-import { SettingsService } from '../../services/SettingsService';
-import { ManaOceanEnableService } from '../../services/ManaOceanEnableService';
+import { EventEngine } from 'sr2020-mm-event-engine/core/EventEngine';
+
+import { Migrator } from './Migrator';
 
 import { UserService } from '../../services/UserService';
 import { BotService } from '../../services/BotService/BotService';
@@ -27,8 +29,6 @@ import { fillGameModelWithBots } from './GameModelFiller';
 import { WsDataBinding } from '../../dataManagers/WsDataBinding';
 
 import { WSConnector } from '../../api/wsConnection';
-
-import { EventEngine } from '../../core/EventEngine';
 
 const services = [
   UserService,

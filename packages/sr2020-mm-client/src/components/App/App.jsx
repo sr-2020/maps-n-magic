@@ -16,7 +16,7 @@ import { ErrorBoundry } from 'sr2020-mm-client-core/components/ErrorBoundry';
 
 import {
   makeGameModel,
-} from 'sr2020-mm-event-engine/configs/clientEventEngine';
+} from 'sr2020-mm-client-event-engine/configs/clientEventEngine';
 
 import { NotificationWatcher } from 'sr2020-mm-client-core/components/NotificationWatcher';
 import { json2File, makeFileName, readJsonFile } from 'sr2020-mm-client-core/utils/fileUtils';
