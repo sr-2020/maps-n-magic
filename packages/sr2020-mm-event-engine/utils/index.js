@@ -7,6 +7,7 @@ import * as gi from '@thi.ng/geom-isec';
 import * as gcp from '@thi.ng/geom-closest-point';
 import clippingUtils from 'polygon-clipping';
 import { bodyConditionsSet } from 'sr2020-mm-data/gameConstants';
+import AbortController from 'abort-controller';
 
 export function isGeoLocation(location) {
   return location.layer_id === 1 && !R.isEmpty(location.polygon);
@@ -197,4 +198,19 @@ export function shuffle(array) {
 
 export function getUserNameStr(user) {
   return user.name !== '' ? ` (${user.name})` : '';
+}
+
+export async function fetchWithTimeout(resource, options) {
+  const { timeout = 8000 } = options;
+
+  const controller = new AbortController();
+  const id = setTimeout(() => controller.abort(), timeout);
+
+  const response = await fetch(resource, {
+    ...options,
+    signal: controller.signal,
+  });
+  clearTimeout(id);
+
+  return response;
 }

@@ -16,6 +16,7 @@ const fileListRouter = require('./routes/fileList');
 const fileRouter = require('./routes/file');
 const pingRouter = require('./routes/ping');
 const usersRouter = require('./routes/users');
+const postUserPosition = require('./routes/postUserPosition');
 const { WebSocketWrapper } = require('./webSocketWrapper');
 
 winstonLogger.info('process.env.NODE_ENV', process.env.NODE_ENV);
@@ -50,6 +51,7 @@ app.use(cookieParser());
 app.get('/fileList', fileListRouter);
 app.get('/file/:name', fileRouter);
 app.get('/ping', pingRouter);
+app.post('/postUserPosition/:characterId', postUserPosition);
 // app.all('/characterStates', characterStatesRouter);
 
 app.ws('/ws', (ws, req, next) => {

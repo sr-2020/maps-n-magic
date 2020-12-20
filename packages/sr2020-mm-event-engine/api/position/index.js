@@ -3,6 +3,7 @@ import * as R from 'ramda';
 import {
   gettable, postable, puttable, deletable, postSettings, getSettings, multiPuttable,
 } from './apiInterfaces';
+import { fetchWithTimeout } from '../../utils';
 
 import {
   locationsUrl,
@@ -56,7 +57,7 @@ export class ManaOceanEffectSettingsProvider extends SettingsResourceProvider {
 }
 
 export async function innerPostUserPosition(characterId, beacon) {
-  return fetch(positionUrl, {
+  return fetchWithTimeout(positionUrl, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json;charset=utf-8',
