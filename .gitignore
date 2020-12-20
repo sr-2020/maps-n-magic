@@ -40,6 +40,7 @@ packages/sr2020-mm-server/src/settings-real.js
 packages/sr2020-mm-server/logs/*
 packages/sr2020-mm-server/static/
 packages/sr2020-mm-server/dist/
+packages/sr2020-mm-server/src/static
 
 packages/sr2020-mm-data/analysis/data/restOfAll/
 packages/sr2020-mm-data/analysis/data/kml/otherKml

@@ -1,6 +1,6 @@
 const fs = require('fs-extra');
 
-const pathToStatic = '../sr2020-mm-server/static';
+const pathToStatic = '../sr2020-mm-server/src/static';
 const pathToStaticTA = `${pathToStatic}/trackAnalysis`;
 const pathToClientBuild = '../sr2020-mm-client/build';
 const pathToTrackAnalysis = '../sr2020-mm-track-analysis/build';
