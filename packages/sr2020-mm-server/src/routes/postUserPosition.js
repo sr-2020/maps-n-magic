@@ -1,5 +1,5 @@
 const express = require('express');
-const { innerPostUserPosition } = require('sr2020-mm-event-engine/api/position');
+const { innerPostUserPosition } = require('sr2020-mm-server-event-engine/api/position');
 
 const router = express.Router();
 

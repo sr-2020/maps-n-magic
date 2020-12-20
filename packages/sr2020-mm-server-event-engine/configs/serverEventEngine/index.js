@@ -1,38 +1,25 @@
-// import { Migrator } from './Migrator';
+import { LocationRecordService } from 'sr2020-mm-event-engine/services/LocationRecordService';
+import { BeaconRecordService } from 'sr2020-mm-event-engine/services/BeaconRecordService';
+import { NotificationService } from 'sr2020-mm-event-engine/services/NotificationService';
+import { CharacterHealthStateService } from 'sr2020-mm-event-engine/services/CharacterHealthStateService';
+import { UserRecordService } from 'sr2020-mm-event-engine/services/UserRecordService';
+import { SettingsService } from 'sr2020-mm-event-engine/services/SettingsService';
+import { ManaOceanEnableService } from 'sr2020-mm-event-engine/services/ManaOceanEnableService';
 
-// import { UserService } from '../../services/UserService';
-// import { BotService } from '../../services/BotService/BotService';
-// import { TickerService } from '../../services/TickerService';
-// import { SpiritService } from '../../services/SpiritService';
-// import { SoundService2 } from '../../services/SoundService2';
-// import { SoundStageService } from '../../services/SoundStageService';
-// import { BeaconService } from '../../services/BeaconService';
-// import { LocationService } from '../../services/LocationService';
-import { LocationRecordService } from '../../services/LocationRecordService';
-// import { SoundMappingService } from '../../services/SoundMappingService';
-// import { UserWatcher } from '../../services/UserWatcher';
-// import { BaseVersion } from '../../services/BaseVersion';
-import { BeaconRecordService } from '../../services/BeaconRecordService';
-import { NotificationService } from '../../services/NotificationService';
-// import { BackgroundImageService } from '../../services/BackgroundImageService';
-import { CharacterHealthStateService } from '../../services/CharacterHealthStateService';
-import { UserRecordService } from '../../services/UserRecordService';
-// import { ManaOceanSettingsService } from '../../services/ManaOceanSettingsService';
-import { SettingsService } from '../../services/SettingsService';
+import { EventEngine } from 'sr2020-mm-event-engine/core/EventEngine';
+import { winstonLogger } from 'sr2020-mm-event-engine/utils/winstonLogger';
+
 import { ManaOceanService } from '../../services/ManaOceanService';
-import { ManaOceanEnableService } from '../../services/ManaOceanEnableService';
 import { MassacreService } from '../../services/MassacreService';
 import { PushNotificationService } from '../../services/PushNotificationService';
 import { AudioStageService } from '../../services/AudioStageService';
 import { CharacterLocationService } from '../../services/CharacterLocationService';
 import { RescueServicePushService } from '../../services/RescueServicePushService';
 
-// // import { fillGameModelWithBots } from './GameModelFiller';
 import { CrudDataManager } from '../../dataManagers/CrudDataManager';
 import { LocationDataManager } from '../../dataManagers/LocationDataManager';
 import { ReadDataManager } from '../../dataManagers/ReadDataManager';
 import { SettingsDataManager } from '../../dataManagers/SettingsDataManagers';
-// import { SingleReadStrategy } from '../../dataManagers/SingleReadStrategy';
 import { PollingReadStrategy } from '../../dataManagers/PollingReadStrategy';
 import { DataBinding } from '../../dataManagers/DataBinding';
 import { RedirectDataBinding } from '../../dataManagers/RedirectDataBinding';
@@ -53,29 +40,12 @@ import { CharacterLocationListener } from '../../api/position/CharacterLocationL
 import { SpellCastsListener } from '../../api/spellCasts/SpellCastsListener';
 import { PushNotificationEmitter } from '../../api/pushNotificationEmitter';
 
-import { EventEngine } from '../../core/EventEngine';
-
-import { winstonLogger } from '../../utils/winstonLogger';
-
 const services = [
-  // UserService,
-  // BotService,
-  // TickerService,
-  // SpiritService,
-  // SoundService2,
-  // SoundStageService,
-  // BeaconService,
-  // LocationService,
   LocationRecordService,
-  // SoundMappingService,
-  // UserWatcher,
-  // BaseVersion,
   BeaconRecordService,
   NotificationService,
-  // BackgroundImageService,
   CharacterHealthStateService,
   UserRecordService,
-  // ManaOceanSettingsService,
   SettingsService,
   ManaOceanService,
   ManaOceanEnableService,

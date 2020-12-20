@@ -3,9 +3,9 @@
 // Imports the Google Cloud client library
 // const { PubSub } = require('@google-cloud/pubsub');
 import { PubSub } from '@google-cloud/pubsub';
-import moment from 'moment-timezone';
-import { bodyConditions } from 'sr2020-mm-data/gameConstants';
-import { randomInteger } from '../../utils';
+// import moment from 'moment-timezone';
+// import { bodyConditions } from 'sr2020-mm-data/gameConstants';
+// import { randomInteger } from '../../utils';
 
 let subscriptionName;
 

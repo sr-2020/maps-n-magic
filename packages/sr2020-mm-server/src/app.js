@@ -7,7 +7,7 @@ const morganLogger = require('morgan');
 const shortid = require('shortid');
 
 const cors = require('cors');
-const { makeGameModel } = require('sr2020-mm-event-engine/configs/serverEventEngine');
+const { makeGameModel } = require('sr2020-mm-server-event-engine/configs/serverEventEngine');
 const { winstonLogger } = require('sr2020-mm-event-engine/utils/winstonLogger');
 
 const indexRouter = require('./routes/index');
