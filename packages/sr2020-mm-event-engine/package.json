@@ -2,6 +2,11 @@
   "name": "sr2020-mm-event-engine",
   "description": "Event engine for client and server",
   "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "ts:compile": "tsc",
+    "ts:watch": "tsc --watch"
+  },
   "peerDependencies": {
     "ramda": "^0.27.1"
   },
@@ -21,5 +26,8 @@
     "sr2020-mm-hacks-n-fixes": "*",
     "winston": "^3.3.3",
     "winston-daily-rotate-file": "^4.5.0"
+  },
+  "devDependencies": {
+    "typescript": "^4.1.2"
   }
 }
