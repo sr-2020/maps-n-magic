@@ -42,8 +42,8 @@ packages/sr2020-mm-server/static/
 packages/sr2020-mm-server/dist/
 packages/sr2020-mm-server/src/static
 
-packages/sr2020-mm-data/analysis/data/restOfAll/
-packages/sr2020-mm-data/analysis/data/kml/otherKml
+packages/sr2020-mm-data/src/analysis/data/restOfAll/
+packages/sr2020-mm-data/src/analysis/data/kml/otherKml
 
 packages/pubSubTest/
 

@@ -2,6 +2,11 @@
   "name": "sr2020-mm-data",
   "description": "Data processing code",
   "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "ts:compile": "tsc",
+    "ts:watch": "tsc --watch"
+  },
   "peerDependencies": {
     "ramda": "^0.27.1"
   },
@@ -12,5 +17,8 @@
     "d3-delaunay": "^5.3.0",
     "polygon-clipping": "^0.15.1",
     "@thi.ng/geom-poly-utils": "^0.2.1"
+  },
+  "devDependencies": {
+    "typescript": "^4.1.2"
   }
 }
