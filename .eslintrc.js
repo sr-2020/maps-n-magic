@@ -86,7 +86,7 @@ module.exports = {
     'import/prefer-default-export': 'off',
     'import/named': 'error',
     'import/no-default-export': 'error',
-    // "import/no-unresolved": "off",
+    'import/no-unresolved': 'off',
     'import/extensions': [
       'error',
       'never',
