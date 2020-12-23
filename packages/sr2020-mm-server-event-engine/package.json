@@ -2,6 +2,11 @@
   "name": "sr2020-mm-server-event-engine",
   "description": "Server event engine",
   "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "ts:compile": "tsc",
+    "ts:watch": "tsc --watch"
+  },
   "peerDependencies": {
     "ramda": "^0.27.1"
   },
@@ -12,5 +17,8 @@
     "moment": "^2.29.1",
     "moment-timezone": "^0.5.32",
     "shortid": "^2.2.16"
+  },
+  "devDependencies": {
+    "typescript": "^4.1.2"
   }
 }
