@@ -61,3 +61,10 @@ packages/sr2020-mm-server-event-engine/api
 packages/sr2020-mm-server-event-engine/configs
 packages/sr2020-mm-server-event-engine/dataManagers
 packages/sr2020-mm-server-event-engine/services
+
+packages/sr2020-mm-data/analysis
+packages/sr2020-mm-data/assets
+packages/sr2020-mm-data/gpx
+packages/sr2020-mm-data/pocs
+packages/sr2020-mm-data/utils
+packages/sr2020-mm-data/gameConstants*
