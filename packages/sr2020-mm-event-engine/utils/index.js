@@ -1,8 +1,8 @@
 import * as R from 'ramda';
-import 'sr2020-mm-hacks-n-fixes/leafletWindowMP';
+import 'sr2020-mm-hacks-n-fixes/src/leafletWindowMP';
 import { LatLngBounds } from 'leaflet/src/geo/LatLngBounds';
 import { pointToSegmentDistance } from 'leaflet/src/geometry/LineUtil';
-import 'sr2020-mm-hacks-n-fixes/leafletUnwindowMP';
+import 'sr2020-mm-hacks-n-fixes/src/leafletUnwindowMP';
 import * as gi from '@thi.ng/geom-isec';
 import * as gcp from '@thi.ng/geom-closest-point';
 import clippingUtils from 'polygon-clipping';
