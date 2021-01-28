@@ -36,7 +36,7 @@ packages/*/lib
 packages/sr2020-mm-client/public/images/nonIndexedImages/
 packages/sr2020-mm-client/build
 
-packages/sr2020-mm-server/src/settings-real.js
+packages/sr2020-mm-server/src/settings-real.ts
 packages/sr2020-mm-server/logs/*
 packages/sr2020-mm-server/static/
 packages/sr2020-mm-server/dist/
@@ -56,6 +56,8 @@ packages/sr2020-mm-event-engine/core
 packages/sr2020-mm-event-engine/outdated
 packages/sr2020-mm-event-engine/services
 packages/sr2020-mm-event-engine/utils
+packages/sr2020-mm-event-engine/index.js
+packages/sr2020-mm-event-engine/index.d.ts
 
 packages/sr2020-mm-server-event-engine/api
 packages/sr2020-mm-server-event-engine/configs
