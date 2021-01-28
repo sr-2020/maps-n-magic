@@ -1,4 +1,4 @@
-import srcData from '../analysis/data/used/14-09-2019_beacons.json';
+import srcData from '../analysis/data/used/14-09-2019_beacons';
 
 const getBeacons = () => srcData.features.slice(0, 10);
 // return srcData.features.filter(feature => feature.geometry.type === 'Point');
