@@ -24,9 +24,14 @@
     "sr2020-mm-translations": "*",
     "color": "^3.1.2"
   },
+  "devDependencies": {
+    "typescript": "^4.1.2"
+  },
   "scripts": {
     "tailwind:css": "./node_modules/.bin/tailwind build css/tailwind.src.css -c  tailwind.js -o css/tailwind.css",
     "build:css": "postcss css/tailwind.src.css -o css/tailwind.css",
-    "start:css": "postcss css/tailwind.src.css -o css/tailwind.css -w"
+    "start:css": "postcss css/tailwind.src.css -o css/tailwind.css -w",
+    "ts:build": "tsc",
+    "ts:watch": "tsc --watch"
   }
 }
