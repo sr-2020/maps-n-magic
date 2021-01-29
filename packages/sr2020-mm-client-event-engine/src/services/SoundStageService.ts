@@ -2,30 +2,37 @@ import * as R from 'ramda';
 
 import { AbstractService } from 'sr2020-mm-event-engine/core/AbstractService';
 
+const metadata = {
+  actions: [
+    'setBackgroundSound',
+    'rotationSoundsChange',
+    'clearSoundStage',
+    'setRotationTimeout',
+    'setRotationSoundTimeout',
+    'setRotationVolume',
+    'setBackgroundVolume',
+  ],
+  requests: ['soundStage'],
+  emitEvents: [
+    'backgroundSoundUpdate',
+    'rotationSoundsUpdate',
+    'rotationTimeoutUpdate',
+    'rotationSoundTimeoutUpdate',
+    'backgroundVolumeUpdate',
+    'rotationVolumeUpdate',
+  ],
+};
 export class SoundStageService extends AbstractService {
-  metadata = {
-    actions: [
-      'setBackgroundSound',
-      'rotationSoundsChange',
-      'clearSoundStage',
-      'setRotationTimeout',
-      'setRotationSoundTimeout',
-      'setRotationVolume',
-      'setBackgroundVolume',
-    ],
-    requests: ['soundStage'],
-    emitEvents: [
-      'backgroundSoundUpdate',
-      'rotationSoundsUpdate',
-      'rotationTimeoutUpdate',
-      'rotationSoundTimeoutUpdate',
-      'backgroundVolumeUpdate',
-      'rotationVolumeUpdate',
-    ],
-  };
+  backgroundSound: any;
+  rotationSounds: any;
+  rotationTimeout: any;
+  rotationSoundTimeout: any;
+  backgroundVolume: any;
+  rotationVolume: any;
 
-  constructor() {
-    super();
+  constructor(logger) {
+    super(logger);
+    this.setMetadata(metadata);
     this.backgroundSound = null;
     this.rotationSounds = [];
     this.rotationTimeout = 2000;
@@ -35,9 +42,13 @@ export class SoundStageService extends AbstractService {
   }
 
   setData({ soundStageSettings = {} } = {}) {
+    // @ts-ignore
     this.rotationTimeout = soundStageSettings.rotationTimeout || this.rotationTimeout;
+    // @ts-ignore
     this.rotationSoundTimeout = soundStageSettings.rotationSoundTimeout || this.rotationSoundTimeout;
+    // @ts-ignore
     this.backgroundVolume = soundStageSettings.backgroundVolume || this.backgroundVolume;
+    // @ts-ignore
     this.rotationVolume = soundStageSettings.rotationVolume || this.rotationVolume;
   }
 

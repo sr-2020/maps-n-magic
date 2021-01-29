@@ -1,14 +1,16 @@
 import { AbstractService } from 'sr2020-mm-event-engine/core/AbstractService';
 
+const metadata = {
+  actions: ['updateUserPosition'],
+  requests: ['user'],
+  emitEvents: ['userPositionUpdate'],
+};
 export class UserService extends AbstractService {
-  metadata = {
-    actions: ['updateUserPosition'],
-    requests: ['user'],
-    emitEvents: ['userPositionUpdate'],
-  };
+  user: any;
 
-  constructor() {
-    super();
+  constructor(logger) {
+    super(logger);
+    this.setMetadata(metadata);
     this.user = {
       pos: null, // based on position from leaflet
     };

@@ -1,7 +1,10 @@
-import EventEmitter from 'events';
+import { EventEmitter } from 'events';
 import { WS_URL } from '../settings';
 
 export class WSConnector extends EventEmitter {
+  gameModel: any;
+  socket: any;
+
   constructor(gameModel) {
     super();
     this.gameModel = gameModel;

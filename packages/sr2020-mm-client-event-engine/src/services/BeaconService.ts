@@ -7,20 +7,24 @@ import { getPolygons2 } from 'sr2020-mm-data/utils/polygonGenerator';
 
 import { AbstractService } from 'sr2020-mm-event-engine/core/AbstractService';
 
+const metadata = {
+  actions: ['postBeacon', 'deleteBeacon', 'putBeacon'],
+  requests: ['beacons', 'voronoiPolygonData'],
+  emitEvents: ['postBeacon', 'deleteBeacon', 'putBeacon'],
+  listenEvents: [],
+};
 export class BeaconService extends AbstractService {
-  metadata = {
-    actions: ['postBeacon', 'deleteBeacon', 'putBeacon'],
-    requests: ['beacons', 'voronoiPolygonData'],
-    emitEvents: ['postBeacon', 'deleteBeacon', 'putBeacon'],
-    listenEvents: [],
-  };
+  beacons: any;
+  maxBeaconId: any;
 
-  constructor() {
-    super();
+  constructor(logger) {
+    super(logger);
+    this.setMetadata(metadata);
     this.beacons = getBeacons2();
     this.maxBeaconId = 1;
   }
 
+  // @ts-ignore
   setData({ beacons } = {}) {
     this.beacons = beacons || getBeacons2();
     this.maxBeaconId = R.reduce(R.max, 1, this.beacons.map(R.prop('id')));

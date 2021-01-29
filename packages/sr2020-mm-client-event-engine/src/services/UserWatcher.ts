@@ -6,26 +6,28 @@ import { isPointInLocation } from 'sr2020-mm-event-engine/utils';
 
 const notNull = R.pipe(R.isNil, R.not);
 
+const metadata = {
+  actions: [],
+  requests: [],
+  emitEvents: [],
+  needActions: ['setBackgroundSound', 'rotationSoundsChange'],
+  needRequests: ['soundForKey', 'activeBots', 'locations', 'sounds', 'soundStage'],
+  listenEvents: ['soundToKeySet', 'userPositionUpdate', 'botUpdate'],
+};
 export class UserWatcher extends AbstractService {
-  metadata = {
-    actions: [],
-    requests: [],
-    emitEvents: [],
-    needActions: ['setBackgroundSound', 'rotationSoundsChange'],
-    needRequests: ['soundForKey', 'activeBots', 'locations', 'sounds', 'soundStage'],
-    listenEvents: ['soundToKeySet', 'userPositionUpdate', 'botUpdate'],
-  };
+  location: any;
 
-  constructor() {
-    super();
+  constructor(logger) {
+    super(logger);
+    this.setMetadata(metadata);
     this.location = null;
     this.onSoundToKeySet = this.onSoundToKeySet.bind(this);
     this.onUserPositionUpdate = this.onUserPositionUpdate.bind(this);
     this.onBotUpdate = this.onBotUpdate.bind(this);
   }
 
-  init(...args) {
-    super.init(...args);
+  init(gameModel) {
+    super.init(gameModel);
     this.on('soundToKeySet', this.onSoundToKeySet);
     this.on('userPositionUpdate', this.onUserPositionUpdate);
     this.on('botUpdate', this.onBotUpdate);

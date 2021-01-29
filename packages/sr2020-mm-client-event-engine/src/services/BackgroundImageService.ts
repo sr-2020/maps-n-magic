@@ -4,29 +4,33 @@ import { AbstractService } from 'sr2020-mm-event-engine/core/AbstractService';
 
 import { defaultBackgroundImages } from './DefaultBackgroundImages';
 
+const metadata = {
+  actions: [
+    'putBackgroundImage',
+    'postBackgroundImage',
+    'deleteBackgroundImage',
+  ],
+  requests: ['backgroundImages'],
+  emitEvents: [
+    'putBackgroundImage',
+    'postBackgroundImage',
+    'deleteBackgroundImage',
+    'backgroundImagesChanged',
+  ],
+  listenEvents: [],
+};
 export class BackgroundImageService extends AbstractService {
-  metadata = {
-    actions: [
-      'putBackgroundImage',
-      'postBackgroundImage',
-      'deleteBackgroundImage',
-    ],
-    requests: ['backgroundImages'],
-    emitEvents: [
-      'putBackgroundImage',
-      'postBackgroundImage',
-      'deleteBackgroundImage',
-      'backgroundImagesChanged',
-    ],
-    listenEvents: [],
-  };
+  backgroundImages: any;
+  maxBackgroundImageId: any;
 
-  constructor() {
-    super();
+  constructor(logger) {
+    super(logger);
+    this.setMetadata(metadata);
     this.backgroundImages = R.clone(defaultBackgroundImages);
     this.maxBackgroundImageId = 1;
   }
 
+  // @ts-ignore
   setData({ backgroundImages } = {}) {
     this.backgroundImages = backgroundImages || R.clone(defaultBackgroundImages);
     this.maxBackgroundImageId = R.reduce(R.max, 1, R.pluck('id', this.backgroundImages));

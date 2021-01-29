@@ -14,24 +14,26 @@ const defaultSoundMapping = {
   },
 };
 
+const metadata = {
+  // ...this.metadata,
+  actions: ['mapSoundToKey'],
+  requests: ['soundMapping', 'soundForKey'],
+  emitEvents: ['soundToKeySet', 'soundMappingChange'],
+  listenEvents: ['fractionChange'],
+  needRequests: ['sound'],
+};
 export class SoundMappingService extends AbstractService {
-  metadata = {
-    ...this.metadata,
-    actions: ['mapSoundToKey'],
-    requests: ['soundMapping', 'soundForKey'],
-    emitEvents: ['soundToKeySet', 'soundMappingChange'],
-    listenEvents: ['fractionChange'],
-    needRequests: ['sound'],
-  };
+  soundMapping: any;
 
-  constructor() {
-    super();
+  constructor(logger) {
+    super(logger);
+    this.setMetadata(metadata);
     this.soundMapping = R.clone(defaultSoundMapping);
     this.onFractionChange = this.onFractionChange.bind(this);
   }
 
-  init(...args) {
-    super.init(...args);
+  init(gameModel) {
+    super.init(gameModel);
     this.on('fractionChange', this.onFractionChange);
   }
 
@@ -39,6 +41,7 @@ export class SoundMappingService extends AbstractService {
     this.off('fractionChange', this.onFractionChange);
   }
 
+  // @ts-ignore
   setData({ soundMapping } = {}) {
     this.soundMapping = soundMapping || R.clone(defaultSoundMapping);
   }

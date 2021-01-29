@@ -3,24 +3,27 @@ import { AbstractService } from 'sr2020-mm-event-engine/core/AbstractService';
 
 import { ActiveBot } from './ActiveBot';
 
+const metadata = {
+  actions: ['putBot', 'runBot', 'moveBots', 'stopBots'],
+  requests: ['activeBots'],
+  emitEvents: ['botUpdate'],
+  listenEvents: ['modelRunningChange', 'modelTick'],
+};
 export class BotService extends AbstractService {
-  metadata = {
-    actions: ['putBot', 'runBot', 'moveBots', 'stopBots'],
-    requests: ['activeBots'],
-    emitEvents: ['botUpdate'],
-    listenEvents: ['modelRunningChange', 'modelTick'],
-  };
+  bots: any;
+  activeBots: any;
 
-  constructor() {
-    super();
+  constructor(logger) {
+    super(logger);
+    this.setMetadata(metadata);
     this.bots = {};
     this.activeBots = [];
     this.onModelRunningChange = this.onModelRunningChange.bind(this);
     this.onModelTick = this.onModelTick.bind(this);
   }
 
-  init(...args) {
-    super.init(...args);
+  init(gameModel) {
+    super.init(gameModel);
     this.on('modelRunningChange', this.onModelRunningChange);
     this.on('modelTick', this.onModelTick);
   }

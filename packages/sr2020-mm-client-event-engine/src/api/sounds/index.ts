@@ -13,7 +13,8 @@ export async function getSound(name, abortController) {
     signal: abortController.signal,
   })
     .then((result) => {
-      if (!result.ok) throw new Error(result);
+      // TODO - make better error informing
+      if (!result.ok) throw new Error(result.statusText);
       return result.arrayBuffer();
     });
 }
@@ -23,7 +24,8 @@ export async function getSoundList(abortController) {
     signal: abortController.signal,
   })
     .then((result) => {
-      if (!result.ok) throw new Error(result);
+      // TODO - make better error informing
+      if (!result.ok) throw new Error(result.statusText);
       return result.json();
     });
 }

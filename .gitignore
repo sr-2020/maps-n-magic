@@ -64,6 +64,11 @@ packages/sr2020-mm-server-event-engine/configs
 packages/sr2020-mm-server-event-engine/dataManagers
 packages/sr2020-mm-server-event-engine/services
 
+packages/sr2020-mm-client-event-engine/api
+packages/sr2020-mm-client-event-engine/configs
+packages/sr2020-mm-client-event-engine/dataManagers
+packages/sr2020-mm-client-event-engine/services
+
 packages/sr2020-mm-data/analysis
 packages/sr2020-mm-data/assets
 packages/sr2020-mm-data/gpx

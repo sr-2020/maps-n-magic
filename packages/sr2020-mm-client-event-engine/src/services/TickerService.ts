@@ -1,14 +1,18 @@
 import { AbstractService } from 'sr2020-mm-event-engine/core/AbstractService';
 
+const metadata = {
+  actions: ['runModel', 'stopModel'],
+  requests: ['isModelRunning', 'modelSpeed'],
+  emitEvents: ['modelRunningChange', 'modelTick'],
+};
 export class TickerService extends AbstractService {
-  metadata = {
-    actions: ['runModel', 'stopModel'],
-    requests: ['isModelRunning', 'modelSpeed'],
-    emitEvents: ['modelRunningChange', 'modelTick'],
-  };
+  startTime: any;
+  speed: any;
+  mainCycleAbortController: any;
 
-  constructor() {
-    super();
+  constructor(logger) {
+    super(logger);
+    this.setMetadata(metadata);
     this.startTime = null;
     this.speed = null;
     this.mainCycleAbortController = null;

@@ -4,16 +4,19 @@ import { initialLocations } from 'sr2020-mm-data/assets/locations';
 
 import { AbstractService } from 'sr2020-mm-event-engine/core/AbstractService';
 
+const metadata = {
+  actions: ['postLocation', 'deleteLocation', 'putLocation'],
+  requests: ['locations', 'attachedBeaconIds'],
+  emitEvents: ['postLocation', 'deleteLocation', 'putLocation'],
+  listenEvents: [],
+};
 export class LocationService extends AbstractService {
-  metadata = {
-    actions: ['postLocation', 'deleteLocation', 'putLocation'],
-    requests: ['locations', 'attachedBeaconIds'],
-    emitEvents: ['postLocation', 'deleteLocation', 'putLocation'],
-    listenEvents: [],
-  };
+  locations: any;
+  maxLocationId: any;
 
-  constructor() {
-    super();
+  constructor(logger) {
+    super(logger);
+    this.setMetadata(metadata);
     this.locations = initialLocations;
     this.locations.forEach((location) => {
       if (!location.manaLevel) {
@@ -23,6 +26,7 @@ export class LocationService extends AbstractService {
     this.maxLocationId = 1;
   }
 
+  // @ts-ignore
   setData({ locations } = {}) {
     this.locations = locations || initialLocations;
     this.locations.forEach((location) => {

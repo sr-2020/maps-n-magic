@@ -37,8 +37,12 @@ const forwardClient2ServerActions = [
 ];
 
 export class WsDataBinding {
+  gameModel: any;
+  wsConnection: any;
+
   constructor({
-    gameModel, entityName, wsConnection,
+    gameModel, wsConnection,
+    // entityName, 
   }) {
     this.gameModel = gameModel;
     this.wsConnection = wsConnection;

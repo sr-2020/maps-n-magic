@@ -12,6 +12,15 @@ const dist = (pt1, pt2) => Math.sqrt((pt1.lat - pt2.lat) ** 2 + (pt1.lng - pt2.l
 // walk <-> wait -> finish
 
 export class ActiveBot {
+  name: any;
+  bot: any;
+  pathIndex: any;
+  curPosition: any;
+  nextPoint: any;
+  speed: any;
+  curTask: any;
+  lastTime: any;
+
   constructor(name, bot) {
     this.name = name;
     this.bot = bot;

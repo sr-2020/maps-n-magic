@@ -5,18 +5,21 @@ const sortByNameCaseInsensitive = R.sortBy(R.compose(R.toLower, R.prop('name')))
 
 const soundRequiredFields = ['name', 'hash', 'size', 'status', 'buffer'];
 
+const metadata = {
+  actions: ['soundLoaded', 'soundsRemoved', 'clearMissingSounds'],
+  requests: ['sounds', 'sound'],
+  emitEvents: ['soundLoaded', 'soundsRemoved', 'missingSoundsCleared'],
+};
 export class SoundService2 extends AbstractService {
-  metadata = {
-    actions: ['soundLoaded', 'soundsRemoved', 'clearMissingSounds'],
-    requests: ['sounds', 'sound'],
-    emitEvents: ['soundLoaded', 'soundsRemoved', 'missingSoundsCleared'],
-  };
+  sounds: any;
 
-  constructor() {
-    super();
+  constructor(logger) {
+    super(logger);
+    this.setMetadata(metadata);
     this.sounds = [];
   }
 
+  // @ts-ignore
   setData({ sounds } = {}) {
     this.sounds = sounds || [];
     this.sounds.forEach((sound) => (sound.status = 'unloaded'));

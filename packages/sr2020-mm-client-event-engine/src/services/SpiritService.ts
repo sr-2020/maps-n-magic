@@ -20,21 +20,27 @@ const defaultSpirit = {
   maxHitPoints: 10,
 };
 
+const metadata = {
+  actions: ['putSpirit', 'postSpirit', 'cloneSpirit', 'deleteSpirit'],
+  requests: ['spirits', 'spirit', 'spiritFractionsList', 'spiritAbilitiesList'],
+  emitEvents: ['putSpirit', 'fractionChange'],
+};
 export class SpiritService extends AbstractService {
-  metadata = {
-    actions: ['putSpirit', 'postSpirit', 'cloneSpirit', 'deleteSpirit'],
-    requests: ['spirits', 'spirit', 'spiritFractionsList', 'spiritAbilitiesList'],
-    emitEvents: ['putSpirit', 'fractionChange'],
-  };
+  fractions: any;
+  abilities: any;
+  spirits: any;
+  maxSpiritId: any;
 
-  constructor() {
-    super();
+  constructor(logger) {
+    super(logger);
+    this.setMetadata(metadata);
     this.fractions = [];
     this.abilities = [];
     this.spirits = [];
     this.maxSpiritId = 1;
   }
 
+  // @ts-ignore
   setData({ spirits } = {}) {
     this.spirits = spirits || [];
     this.maxSpiritId = R.reduce(R.max, 1, this.spirits.map(R.prop('id')));
