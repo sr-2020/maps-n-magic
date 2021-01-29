@@ -70,3 +70,11 @@ packages/sr2020-mm-data/gpx
 packages/sr2020-mm-data/pocs
 packages/sr2020-mm-data/utils
 packages/sr2020-mm-data/gameConstants*
+
+packages/sr2020-mm-translations/app.*
+packages/sr2020-mm-translations/gameConstants.*
+packages/sr2020-mm-translations/index.*
+packages/sr2020-mm-translations/leaflet.*
+packages/sr2020-mm-translations/manaOcean.*
+packages/sr2020-mm-translations/sounds.*
+packages/sr2020-mm-translations/spirits.*
