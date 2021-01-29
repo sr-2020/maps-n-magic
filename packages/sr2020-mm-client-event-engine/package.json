@@ -8,5 +8,12 @@
   "dependencies": {
     "sr2020-mm-event-engine": "*",
     "sr2020-mm-data": "*"
+  },
+  "devDependencies": {
+    "typescript": "^4.1.2"
+  },
+  "scripts": {
+    "ts:build": "tsc",
+    "ts:watch": "tsc --watch"
   }
 }
