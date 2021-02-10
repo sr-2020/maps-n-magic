@@ -31,7 +31,7 @@
     "tailwind:css": "./node_modules/.bin/tailwind build css/tailwind.src.css -c  tailwind.js -o css/tailwind.css",
     "build:css": "postcss css/tailwind.src.css -o css/tailwind.css",
     "start:css": "postcss css/tailwind.src.css -o css/tailwind.css -w",
-    "ts:build": "tsc",
-    "ts:watch": "tsc --watch"
+    "ts:bu___ild": "tsc",
+    "ts:wa___tch": "tsc --watch"
   }
 }

@@ -4,11 +4,10 @@
   "version": "1.0.0",
   "private": true,
   "scripts": {
-    "ts:compile": "tsc",
+    "ts:build": "tsc",
     "ts:watch": "tsc --watch"
   },
   "peerDependencies": {
-    "ramda": "^0.27.1"
   },
   "dependencies": {
     "sr2020-mm-event-engine": "*",
@@ -17,7 +16,8 @@
     "moment": "^2.29.1",
     "moment-timezone": "^0.5.32",
     "shortid": "^2.2.16",
-    "isomorphic-fetch": "^3.0.0"
+    "isomorphic-fetch": "^3.0.0",
+    "ramda": "^0.27.1"
   },
   "devDependencies": {
     "typescript": "^4.1.2"

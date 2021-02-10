@@ -4,7 +4,7 @@
   "version": "1.0.0",
   "private": true,
   "scripts": {
-    "ts:compile": "tsc",
+    "ts:build": "tsc",
     "ts:watch": "tsc --watch"
   },
   "peerDependencies": {
@@ -26,7 +26,8 @@
     "sr2020-mm-hacks-n-fixes": "*",
     "winston": "^3.3.3",
     "winston-daily-rotate-file": "^4.5.0",
-    "isomorphic-fetch": "^3.0.0"
+    "isomorphic-fetch": "^3.0.0",
+    "ramda": "^0.27.1"
   },
   "devDependencies": {
     "typescript": "^4.1.2"

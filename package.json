@@ -12,8 +12,8 @@
     "build-and-deploy": "lerna run build && lerna run deploy",
     "clean": "lerna clean",
     "tsc": "lerna run tsc",
-    "ts:compile": "lerna run ts:compile",
-    "ts:watch": "lerna run ts:watch"
+    "ts:build": "lerna run ts:build",
+    "ts:watch": "lerna run ts:watch --stream"
   },
   "devDependencies": {
     "@types/node": "^14.14.10",

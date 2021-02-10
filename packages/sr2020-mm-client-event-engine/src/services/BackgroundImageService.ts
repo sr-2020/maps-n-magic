@@ -20,7 +20,7 @@ const metadata = {
   listenEvents: [],
 };
 export class BackgroundImageService extends AbstractService {
-  backgroundImages: any;
+  backgroundImages: any[];
   maxBackgroundImageId: any;
 
   constructor(logger) {
