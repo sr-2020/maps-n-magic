@@ -57,7 +57,20 @@ const navLinks = [{
   tKey: 'beaconRecordEditor',
 }];
 
-export class AppHeader extends Component {
+interface AppHeaderProps {
+  t: any;
+  simulateGeoDataStream: boolean;
+  waitingForGeolocation: boolean;
+  gameModel: any;
+  onUploadFileSelected: any;
+  downloadDatabaseAsFile: any;
+  jumpToUserCoords: any;
+  switchMovementMode: any;
+};
+interface AppHeaderState {
+};
+
+export class AppHeader extends Component<AppHeaderProps, AppHeaderState> {
   // static propTypes = AppHeaderPropTypes;
 
   constructor(props) {
@@ -110,7 +123,7 @@ export class AppHeader extends Component {
 
   // eslint-disable-next-line max-lines-per-function
   render() {
-    const { expanded } = this.state;
+    // const { expanded } = this.state;
     const {
       t, gameModel, waitingForGeolocation, simulateGeoDataStream,
       onUploadFileSelected, downloadDatabaseAsFile, jumpToUserCoords, switchMovementMode,
