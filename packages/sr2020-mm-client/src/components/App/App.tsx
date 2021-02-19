@@ -68,10 +68,26 @@ const initialDatabase = {};
 //   initialDatabase = JSON.parse(initialDatabaseStr);
 // }
 
-export class App extends Component {
+interface AppProps {
+  t: any;
+};
+interface AppState {
+  simulateGeoDataStream: boolean;
+  translator: any;
+  waitingForGeolocation: boolean;
+  gameServer: any;
+  gameModel: any;
+  initialized: boolean;
+};
+
+export class App extends Component<AppProps, AppState> {
   audioContextWrapper = new AudioContextWrapper();
 
   soundStage = new SoundStage(this.audioContextWrapper);
+
+  saveDataInLsId: NodeJS.Timeout;
+
+  watchGeolocationId: number;
 
   // static propTypes = AppPropTypes;
 
@@ -209,15 +225,18 @@ export class App extends Component {
   jumpToUserCoords(e) {
     e.stopPropagation();
     e.preventDefault();
-    this.setState(({ translator }) => {
+    this.setState((prevState) => {
+      const { translator, waitingForGeolocation } = prevState;
       const virtualCenter = translator.getVirtualCenter();
       if (virtualCenter) {
         return {
           translator: new Translator(mapDefaults.defaultCenter, null),
+          waitingForGeolocation
         };
       }
       this.jumpToUserCoords2();
       return {
+        translator,
         waitingForGeolocation: true,
       };
     });
