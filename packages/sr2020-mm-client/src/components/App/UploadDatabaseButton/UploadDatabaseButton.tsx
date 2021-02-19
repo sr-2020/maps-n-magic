@@ -28,7 +28,7 @@ export function UploadDatabaseButton(props) {
       <input
         type="file"
         className="tw-hidden"
-        tabIndex="-1"
+        tabIndex={-1}
         onChange={onChange}
       />
       {t('uploadDatabase')}
