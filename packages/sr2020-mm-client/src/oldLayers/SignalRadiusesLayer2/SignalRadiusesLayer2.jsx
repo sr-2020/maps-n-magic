@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import './SignalRadiusesLayer2.css';
 
-import L from 'leaflet/dist/leaflet-src';
+import { L } from "sr2020-mm-client-core/leafletWrapper";
 import * as R from 'ramda';
 
 // import { SignalRadiusesLayer2PropTypes } from '../../types';

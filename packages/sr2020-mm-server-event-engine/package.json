@@ -5,7 +5,7 @@
   "private": true,
   "scripts": {
     "ts:build": "tsc",
-    "ts:watch": "tsc --watch"
+    "ts:watch": "tsc --watch --preserveWatchOutput"
   },
   "peerDependencies": {
   },

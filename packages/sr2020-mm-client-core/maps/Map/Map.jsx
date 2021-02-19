@@ -4,10 +4,7 @@ import * as R from 'ramda';
 
 // import '../../../utils/gpxConverter';
 
-import L from 'leaflet/dist/leaflet-src';
-import 'leaflet/dist/leaflet.css';
-import '@geoman-io/leaflet-geoman-free';
-import '@geoman-io/leaflet-geoman-free/dist/leaflet-geoman.css';
+import { L } from "../../leafletWrapper";
 
 import { EventEmitter } from 'events';
 

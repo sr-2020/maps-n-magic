@@ -7,7 +7,7 @@
     "start:server": "node -r esm -r dotenv/config ./dist/bin/www",
     "watch:server": "nodemon --inspect -r esm -r dotenv/config ./dist/bin/www",
     "ts:build": "tsc",
-    "ts:watch": "tsc --watch"
+    "ts:watch": "tsc --watch --preserveWatchOutput"
   },
   "dependencies": {
     "@google-cloud/pubsub": "^2.6.0",

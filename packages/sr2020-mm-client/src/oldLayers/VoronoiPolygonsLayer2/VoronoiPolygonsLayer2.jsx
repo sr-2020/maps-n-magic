@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import './VoronoiPolygonsLayer2.css';
 
-import L from 'leaflet/dist/leaflet-src';
+import { L } from "sr2020-mm-client-core/leafletWrapper";
 import * as R from 'ramda';
 
 import { COLOR_PALETTE } from 'sr2020-mm-client-core/utils/colorPalette';

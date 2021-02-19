@@ -13,7 +13,7 @@
     "clean": "lerna clean",
     "tsc": "lerna run tsc",
     "ts:build": "lerna run ts:build",
-    "ts:watch": "lerna run ts:watch --stream"
+    "ts:watch": "lerna run --parallel ts:watch"
   },
   "devDependencies": {
     "@types/node": "^14.14.10",

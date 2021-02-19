@@ -1,4 +1,4 @@
-import L from 'leaflet/dist/leaflet-src';
+import { L } from "sr2020-mm-client-core/leafletWrapper";
 import * as R from 'ramda';
 
 import { getIcon } from 'sr2020-mm-client-core/utils/icons';

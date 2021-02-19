@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import L from 'leaflet/dist/leaflet-src';
+import { L } from "sr2020-mm-client-core/leafletWrapper";
 import * as R from 'ramda';
 import './CharacterLocationLayer.css';
 
