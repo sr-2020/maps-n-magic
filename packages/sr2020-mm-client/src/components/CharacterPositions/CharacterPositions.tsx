@@ -15,10 +15,30 @@ import { isGeoLocation, getUserNameStr } from 'sr2020-mm-event-engine/utils';
 import { postUserPosition } from 'sr2020-mm-client-event-engine/api/position';
 
 import { CharacterDataList } from '../CharacterDataList';
+import { BeaconRecord, UserRecord, LocationRecord } from "../../types";
 
 // import { CharacterPositionsPropTypes } from '../../types';
+type BeaconIndex = {[location_id: string]: BeaconRecord};
+type LocationIndex = {[location_id: string]: LocationRecord};
 
-export class CharacterPositions extends Component {
+interface CharacterPositionsProps {
+  gameModel: any;
+  t: any;
+};
+interface CharacterPositionsState {
+  users: UserRecord[]; 
+  locationIndex: LocationIndex;
+  sortedLocationList: LocationRecord[];
+  beaconIndex: BeaconIndex;
+};
+
+
+// const {
+//   users, locationIndex, sortedLocationList, beaconIndex,
+// } = this.state;
+// const { t } = this.props;
+
+export class CharacterPositions extends Component<CharacterPositionsProps, CharacterPositionsState> {
   // static propTypes = CharacterPositionsPropTypes;
 
   constructor(props) {
@@ -42,7 +62,7 @@ export class CharacterPositions extends Component {
     this.subscribe('on', gameModel);
 
     this.setBeaconRecords({
-      beaconRecords: gameModel.get('beaconRecords'),
+      beaconRecords: gameModel.get('beaconRecords') as BeaconRecord[],
     });
     this.setLocationRecords({
       locationRecords: gameModel.get('locationRecords'),
@@ -89,7 +109,8 @@ export class CharacterPositions extends Component {
     gameModel[action]('userRecordsChanged', this.setUserRecords);
   }
 
-  setLocationRecords({ locationRecords }) {
+  setLocationRecords( data: { locationRecords: LocationRecord[]} ) {
+    const { locationRecords } = data;
     const geoLocations = locationRecords.filter(isGeoLocation);
     this.setState({
       locationIndex: R.indexBy(R.prop('id'), geoLocations),
@@ -98,11 +119,13 @@ export class CharacterPositions extends Component {
   }
 
   // eslint-disable-next-line react/sort-comp
-  setBeaconRecords({ beaconRecords }) {
+  setBeaconRecords(data: { beaconRecords: BeaconRecord[]} ) {
+    const { beaconRecords } = data;
+    type IndexFunction = (beaconRecords: BeaconRecord[]) => BeaconIndex;
     const makeIndex = R.pipe(
       R.filter(R.pipe(R.prop('location_id'), R.isNil, R.not)),
       R.indexBy(R.prop('location_id')),
-    );
+    ) as IndexFunction;
     const beaconIndex = makeIndex(beaconRecords);
     // console.log(beaconIndex);
     this.setState({
@@ -139,7 +162,7 @@ export class CharacterPositions extends Component {
     const beacon = beaconIndex[locationId];
 
     postUserPosition(characterId, beacon).then((result) => {
-      if (!result.ok) throw new Error(result);
+      if (!result.ok) throw new Error(result.toString());
       gameModel.execute('reloadUserRecords');
     }).catch((error) => {
       console.error(error);
@@ -165,7 +188,7 @@ export class CharacterPositions extends Component {
       return <div> Loading data... </div>;
     }
 
-    const groupByHasBeacons = R.groupBy((loc) => (beaconIndex[loc.id] ? 'hasBeacons' : 'hasNoBeacons'));
+    const groupByHasBeacons = R.groupBy((loc: LocationRecord) => (beaconIndex[loc.id] ? 'hasBeacons' : 'hasNoBeacons'));
     const { hasBeacons = [], hasNoBeacons = [] } = groupByHasBeacons(sortedLocationList);
 
     return (

@@ -23,12 +23,12 @@ const metadata = {
   ],
 };
 export class SoundStageService extends AbstractService {
-  backgroundSound: any;
-  rotationSounds: any;
-  rotationTimeout: any;
-  rotationSoundTimeout: any;
-  backgroundVolume: any;
-  rotationVolume: any;
+  backgroundSound: string;
+  rotationSounds: string[];
+  rotationTimeout: number;
+  rotationSoundTimeout: number;
+  backgroundVolume: number;
+  rotationVolume: number;
 
   constructor(logger) {
     super(logger);

@@ -40,7 +40,7 @@ import { ManaOceanEffectSettings } from '../ManaOceanEffectSettings';
 
 import { SoundMapper } from '../SoundMapper';
 
-import { AppHeader } from './AppHeader/index';
+import { AppHeader } from './AppHeader';
 
 import { SoundWatcher } from '../SoundWatcher';
 

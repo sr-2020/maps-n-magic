@@ -11,8 +11,25 @@ import { SoundStageEcho } from './SoundStageEcho';
 import { SoundSettingsForm } from './SoundSettingsForm';
 
 import { SoundRow } from './SoundRow';
+import { SoundStage } from './../App/SoundStage';
 
-export class SoundManager extends Component {
+import { SoundStageData, Sound } from "../../types";
+
+interface SoundManagerProps {
+  gameModel: any;
+  soundStage: SoundStage;
+  t: any;
+};
+interface SoundManagerState {
+  sounds: Sound[];
+  soundStageState: SoundStageData;
+  initialized: boolean;
+  playbackRotation: any[]; 
+  currentTimeout: number;
+  currentTimeoutType: any;
+};
+
+export class SoundManager extends Component<SoundManagerProps, SoundManagerState> {
   // static propTypes = SoundManagerPropTypes;
 
   constructor(props) {
@@ -20,10 +37,11 @@ export class SoundManager extends Component {
     console.log('SoundManager constructing');
     this.state = {
       sounds: [],
-      soundStageState: {},
+      soundStageState: null,
       playbackRotation: [],
       currentTimeout: null,
       currentTimeoutType: null,
+      initialized: false,
     };
     this.onSoundUpdate = this.onSoundUpdate.bind(this);
     this.onSoundStageUpdate = this.onSoundStageUpdate.bind(this);
@@ -67,7 +85,7 @@ export class SoundManager extends Component {
 
   onSoundUpdate() {
     const { gameModel } = this.props;
-    const sounds = gameModel.get('sounds');
+    const sounds: Sound[] = gameModel.get('sounds');
     this.setState({
       sounds,
     });
@@ -75,7 +93,7 @@ export class SoundManager extends Component {
 
   onSoundStageUpdate() {
     const { gameModel } = this.props;
-    const soundStageState = gameModel.get('soundStage');
+    const soundStageState: SoundStageData = gameModel.get('soundStage');
     this.setState({
       soundStageState,
     });
@@ -95,12 +113,12 @@ export class SoundManager extends Component {
     });
   }
 
-  subscribeOnSoundStage(soundStage) {
+  subscribeOnSoundStage(soundStage: SoundStage): void {
     soundStage.on('playbackRotationUpdate', this.onPlaybackRotationUpdate);
     soundStage.on('currentTimeoutUpdate', this.onCurrentTimeoutUpdate);
   }
 
-  unsubscribeFromSoundStage(soundStage) {
+  unsubscribeFromSoundStage(soundStage: SoundStage): void {
     soundStage.off('playbackRotationUpdate', this.onPlaybackRotationUpdate);
     soundStage.off('currentTimeoutUpdate', this.onCurrentTimeoutUpdate);
   }
@@ -119,18 +137,18 @@ export class SoundManager extends Component {
     gameModel.off('backgroundSoundUpdate', this.onSoundStageUpdate);
   }
 
-  selectBackgroundSound(soundName) {
+  selectBackgroundSound(soundName: string): void {
     const { gameModel } = this.props;
-    const soundStageState = gameModel.get('soundStage');
+    const soundStageState: SoundStageData = gameModel.get('soundStage');
     gameModel.execute({
       type: 'setBackgroundSound',
       name: soundStageState.backgroundSound === soundName ? null : soundName,
     });
   }
 
-  selectRotationSound(soundName) {
+  selectRotationSound(soundName: string): void {
     const { gameModel } = this.props;
-    const soundStageState = gameModel.get('soundStage');
+    const soundStageState: SoundStageData = gameModel.get('soundStage');
 
     const isInRotation = soundStageState.rotationSounds.includes(soundName);
     gameModel.execute({

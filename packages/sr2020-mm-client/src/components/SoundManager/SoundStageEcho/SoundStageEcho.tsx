@@ -3,7 +3,15 @@ import './SoundStageEcho.css';
 
 // import { SoundStageEchoPropTypes } from '../../../types';
 
-export class SoundStageEcho extends Component {
+interface SoundStageEchoProps {
+  gameModel: any;
+};
+interface SoundStageEchoState {
+  backgroundSound: string;
+  rotationSounds: string[];
+};
+
+export class SoundStageEcho extends Component<SoundStageEchoProps, SoundStageEchoState> {
   // static propTypes = SoundStageEchoPropTypes;
 
   constructor(props) {

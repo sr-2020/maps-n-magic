@@ -1,4 +1,6 @@
 export class DisposeController {
+  disposed: boolean;
+  
   constructor() {
     this.disposed = false;
   }

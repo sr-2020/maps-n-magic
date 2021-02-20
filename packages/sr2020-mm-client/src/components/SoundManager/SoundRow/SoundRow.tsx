@@ -11,7 +11,20 @@ import { formatBytes, formatDuration } from '../../../utils/miscUtils';
 
 // import { SoundRowPropTypes } from '../../types';
 
-export class SoundRow extends Component {
+import { Sound } from "../../../types";
+
+interface SoundRowProps {
+  sound: Sound,
+  isSelected: boolean;
+  selectBackgroundSound: (soundName: string) => void;
+  selectRotationSound: (soundName: string) => void;
+  t: any;
+  isInRotation: boolean;
+  isBackground: boolean;
+  playbackIndex: number;
+};
+
+export class SoundRow extends Component<SoundRowProps> {
   // static propTypes = SoundRowPropTypes;
 
   constructor(props) {

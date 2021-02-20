@@ -1,6 +1,6 @@
 import { withTranslation } from 'react-i18next';
 import { pipe } from 'ramda';
-import { SoundRow } from './SoundRow.jsx';
+import { SoundRow } from './SoundRow';
 
 const tmp = pipe(withTranslation())(SoundRow);
 

@@ -5,7 +5,11 @@ import { MusicSelectControl } from '../MusicSelectControl';
 
 // import { SoundMapperPropTypes } from '../../types';
 
-export class SoundMapper extends Component {
+interface SoundMapperProps {
+  gameModel: any;
+};
+
+export class SoundMapper extends Component<SoundMapperProps> {
   // static propTypes = SoundMapperPropTypes;
 
   constructor(props) {

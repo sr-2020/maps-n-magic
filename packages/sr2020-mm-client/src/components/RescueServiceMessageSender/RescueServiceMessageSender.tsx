@@ -13,9 +13,24 @@ import ToggleButton from 'react-bootstrap/ToggleButton';
 import { isGeoLocation } from 'sr2020-mm-event-engine/utils';
 import { bodyConditions, lifeStyleList } from 'sr2020-mm-data/gameConstants';
 
+import { UserRecord } from "../../types";
+
 // import { RescueServiceMessageSenderPropTypes } from '../../types';
 
-export class RescueServiceMessageSender extends Component {
+interface RescueServiceMessageSenderProps {
+  gameModel: any;
+  t: any;
+};
+
+interface RescueServiceMessageSenderState {
+  sortedLocationList: any[];
+  users: UserRecord[];
+  locationIndex: any;
+};
+
+// userRecords
+
+export class RescueServiceMessageSender extends Component<RescueServiceMessageSenderProps, RescueServiceMessageSenderState> {
   // static propTypes = RescueServiceMessageSenderPropTypes;
 
   constructor(props) {
@@ -95,7 +110,7 @@ export class RescueServiceMessageSender extends Component {
     const {
       gameModel,
     } = this.props;
-    const { beaconIndex, sortedLocationList, users } = this.state;
+    const { sortedLocationList, users } = this.state;
     const form = e.currentTarget;
     e.stopPropagation();
     e.preventDefault();
@@ -104,11 +119,11 @@ export class RescueServiceMessageSender extends Component {
     //   console.log(`${name} = ${value}`);
     // }
 
-    let characterId = data.get('characterId');
-    if (R.isEmpty(characterId)) {
+    let characterId1 = data.get('characterId');
+    if (R.isEmpty(characterId1)) {
       return;
     }
-    characterId = Number(characterId);
+    const characterId = Number(characterId1);
     if (Number.isNaN(characterId)) {
       return;
     }
@@ -117,7 +132,7 @@ export class RescueServiceMessageSender extends Component {
 
     const location = sortedLocationList.find((el) => el.id === locationId);
 
-    const user = users.filter((el) => el.id === characterId);
+    const user = users.find((el) => el.id === characterId);
 
     gameModel.execute({
       type: 'putCharHealth',
@@ -126,7 +141,7 @@ export class RescueServiceMessageSender extends Component {
         locationId: locationId === -1 ? null : locationId,
         locationLabel: locationId === -1 ? 'N/A' : location.label,
         healthState: data.get('healthStateRadio'),
-        timestamp: moment().utc().valueOf(),
+        timestamp: moment.utc().valueOf(),
         lifeStyle: data.get('lifeStyleRadio'),
         personName: user.name || `id ${characterId}`,
       },
@@ -167,7 +182,7 @@ export class RescueServiceMessageSender extends Component {
           <Form.Group>
             <Form.Label>{t('physicalBodyCondition')}</Form.Label>
             <div>
-              <ToggleButtonGroup type="radio" controlId="healthState" name="healthStateRadio" defaultValue={bodyConditions[0]}>
+              <ToggleButtonGroup type="radio" name="healthStateRadio" defaultValue={bodyConditions[0]}>
                 {
                   bodyConditions.map((value) => (
                     <ToggleButton

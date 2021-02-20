@@ -42,8 +42,17 @@ Schera
 51935
 NtsDK`.split('\n');
 
+interface HardcodedUser {
+  userId: string;
+  joinId: string;
+  name: string;
+}
+
+// : HardcodedUser[]
+
 const userList = (R.map(R.zipObj(['userId', 'joinId', 'name']), R.splitEvery(3, arr)));
 const userDict = R.indexBy(R.prop('userId'), userList);
+
 // console.log(characterDict);
 
 const metadata = {
@@ -58,6 +67,7 @@ const metadata = {
   ],
   listenEvents: [],
 };
+
 export class UserRecordService extends AbstractService {
   userRecords:any;
 

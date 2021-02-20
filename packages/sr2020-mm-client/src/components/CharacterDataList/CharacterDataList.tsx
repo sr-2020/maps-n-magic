@@ -4,7 +4,13 @@ import './CharacterDataList.css';
 
 import { getUserNameStr } from 'sr2020-mm-event-engine/utils';
 
-export function CharacterDataList(props) {
+import { UserRecord } from "../../types";
+
+interface CharacterDataListProps {
+  users: UserRecord[]
+};
+
+export function CharacterDataList(props: CharacterDataListProps) {
   const { users } = props;
 
   if (!users) {

@@ -11,8 +11,24 @@ import { InputLabel } from './InputLabel';
 const e2Timeout = R.pipe(parseInt, R.multiply(1000));
 const e2Volume = parseInt;
 
-export class SoundSettingsForm extends Component {
+interface SoundSettingsFormProps {
+  gameModel: any;
+  t: any;
+}
+interface SoundSettingsFormState {
+  initialized: boolean;
+  rotationSoundTimeout: number;
+  rotationTimeout: number;
+  backgroundVolume: number;
+  rotationVolume: number;
+}
+
+export class SoundSettingsForm extends Component<SoundSettingsFormProps, SoundSettingsFormState> {
   // static propTypes = SoundSettingsFormPropTypes;
+  onRotationSoundTimeoutChange: any;
+  onRotationTimeoutChange: any;
+  onBackgroundVolumeChange: any;
+  onRotationVolumeChange: any;
 
   constructor(props) {
     super(props);

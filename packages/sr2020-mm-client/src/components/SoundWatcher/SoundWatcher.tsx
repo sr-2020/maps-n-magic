@@ -4,17 +4,58 @@ import './SoundWatcher.css';
 
 // TODO this call should be moved in event engine service
 import { getSound, getSoundList } from 'sr2020-mm-client-event-engine/api/sounds';
+import { AudioContextWrapper } from '../../utils/AudioContextWrapper';
+
+import { Sound } from "../../types";
 
 const POLL_INTERVAL = 15000; // ms
 
-const indexByName = R.indexBy(R.prop('name'));
+
+interface ExternalSound {
+  // .tag: "file"
+  // client_modified: "2019-12-28T00:38:34Z"
+  // content_hash: "d830e7f9084f3745427bbb988fe42ed9d9cf12479a482895162f39d89a593058"
+  content_hash: string;
+  // id: "id:vM1Ht3UYasAAAAAAAAAAPw"
+  // is_downloadable: true
+  // name: "mana_weak_07072013.mp3"
+  name: string;
+  // parent_shared_folder_id: "6768512912"
+  // path_display: "/SR_sounds/mana_weak_07072013.mp3"
+  // path_lower: "/sr_sounds/mana_weak_07072013.mp3"
+  // rev: "0159ab8d4971d2100000001936f4f90"
+  // server_modified: "2019-12-28T00:38:34Z"
+  // size: 701652
+  size: number;
+}
+
+type SoundMap = {[name: string]: Sound};
+type IndexByName = (sounds: Sound[]) => SoundMap;
+const indexByName = R.indexBy(R.prop('name')) as IndexByName;
+
+interface SoundWatcherProps {
+  gameModel: any;
+  context: AudioContextWrapper;
+  // t: any;
+};
+interface SoundWatcherState {
+  // users: UserRecord[]; 
+  // locationIndex: LocationIndex;
+  // sortedLocationList: LocationRecord[];
+  // beaconIndex: BeaconIndex;
+};
 
 // import { SoundWatcherPropTypes } from '../../types';
 
-export class SoundWatcher extends Component {
+export class SoundWatcher extends Component<SoundWatcherProps, SoundWatcherState> {
   // static propTypes = SoundWatcherPropTypes;
+  sounds: Sound[];
 
-  constructor(props) {
+  abortController: AbortController;
+
+  pollInterval: NodeJS.Timeout;
+
+  constructor(props: SoundWatcherProps) {
     super(props);
     this.sounds = [];
     this.abortController = new AbortController();
@@ -22,7 +63,7 @@ export class SoundWatcher extends Component {
     };
   }
 
-  componentDidMount = () => {
+  componentDidMount(): void {
     this._getSoundList();
     this.pollInterval = setInterval(() => {
       this._getSoundList();
@@ -37,21 +78,21 @@ export class SoundWatcher extends Component {
     console.log('SoundWatcher mounted');
   }
 
-  componentDidUpdate = () => {
+  componentDidUpdate(): void {
     console.log('SoundWatcher did update');
   }
 
-  componentWillUnmount = () => {
+  componentWillUnmount(): void {
     this.abortController.abort();
     console.log('SoundWatcher will unmount');
   }
 
-  getSound = function (name) {
+  getSound(name: string): Sound {
     return this.sounds.find((sound) => sound.name === name);
   }
 
   // eslint-disable-next-line react/sort-comp
-  _getSoundList() {
+  _getSoundList(): void {
     getSoundList(this.abortController).then((result) => {
       console.log(`Sound list fetched ${result.entries.length}`);
       this._updateSounds(result);
@@ -61,7 +102,7 @@ export class SoundWatcher extends Component {
   }
 
   // eslint-disable-next-line max-lines-per-function
-  _updateSounds(soundList) {
+  _updateSounds(soundList: {entries: ExternalSound[]}): void {
     // console.log(soundList);
 
     const soundsMap = indexByName(this.sounds);
@@ -133,7 +174,7 @@ export class SoundWatcher extends Component {
     // this.emit('soundsUpdate');
   }
 
-  loadSound = async function (name) {
+  async loadSound(name: string): Promise<void> {
     const sound = this.getSound(name);
     if (sound.status !== 'unloaded') {
       return;
@@ -148,7 +189,7 @@ export class SoundWatcher extends Component {
     }
   }
 
-  soundLoaded(name, result) {
+  soundLoaded(name: string, result: AudioBuffer): void {
     console.log('soundLoaded', name);
     const sound = this.getSound(name);
     sound.status = 'loaded';

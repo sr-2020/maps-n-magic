@@ -1,6 +1,6 @@
 import { withTranslation } from 'react-i18next';
 import { pipe } from 'ramda';
-import { TimeoutInput } from './TimeoutInput.jsx';
+import { TimeoutInput } from './TimeoutInput';
 
 const tmp = pipe(withTranslation())(TimeoutInput);
 
