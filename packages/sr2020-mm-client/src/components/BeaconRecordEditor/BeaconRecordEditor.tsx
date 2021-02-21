@@ -14,10 +14,18 @@ import Form from 'react-bootstrap/Form';
 
 import Dropdown from 'react-bootstrap/Dropdown';
 
-import { classNames } from 'classnames';
 import { CreateBeaconPopover } from './CreateBeaconPopover';
 
-export class BeaconRecordEditor extends Component {
+import { LocationRecord, BeaconRecord } from "../../types";
+
+interface BeaconRecordEditorProps {
+  gameModel: any;
+  t: any;
+  beaconRecords: BeaconRecord[];
+  sortedLocationList: LocationRecord[];
+}
+
+export class BeaconRecordEditor extends Component<BeaconRecordEditorProps> {
   constructor(props) {
     super(props);
     this.state = {
@@ -27,7 +35,7 @@ export class BeaconRecordEditor extends Component {
     this.handleInputChange = this.handleInputChange.bind(this);
   }
 
-  createBeacon(macAddress) {
+  createBeacon(macAddress: string): void {
     const { gameModel } = this.props;
     // console.log('createBeacon', this.state.beaconRecords.length);
     gameModel.execute({
@@ -36,7 +44,7 @@ export class BeaconRecordEditor extends Component {
     });
   }
 
-  handleInputChange(event) {
+  handleInputChange(event): void {
     const { target } = event;
     const { idStr } = event.target.dataset;
     const value = this.getTargetValue(target);
@@ -44,14 +52,14 @@ export class BeaconRecordEditor extends Component {
     this.putBeaconRecord(Number(idStr), name, value);
   }
 
-  onLocationSelect(event) {
+  onLocationSelect(event): void {
     const { value } = event.target;
     const { idStr } = event.target.dataset;
     const newValue = value === 'beaconHasNoLocation' ? null : Number(value);
     this.putBeaconRecord(Number(idStr), 'location_id', newValue);
   }
 
-  putBeaconRecord(id, name, value) {
+  putBeaconRecord(id, name, value): void {
     const { gameModel } = this.props;
 
     gameModel.execute({
@@ -63,7 +71,7 @@ export class BeaconRecordEditor extends Component {
     });
   }
 
-  removeBeacon(e, id) {
+  removeBeacon(e, id): void {
     e.preventDefault();
     e.stopPropagation();
     const { gameModel } = this.props;

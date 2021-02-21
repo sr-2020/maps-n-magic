@@ -1,7 +1,7 @@
 import { withTranslation } from 'react-i18next';
 import { pipe } from 'ramda';
-import { BeaconRecordEditor } from './BeaconRecordEditor.jsx';
-import { withSortDataHOC } from './SortDataHOC.jsx';
+import { BeaconRecordEditor } from './BeaconRecordEditor';
+import { withSortDataHOC } from './SortDataHOC';
 import { withBeaconRecords, withLocationRecords } from '../../dataHOCs';
 
 const tmp = pipe(

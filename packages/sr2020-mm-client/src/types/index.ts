@@ -13,12 +13,19 @@ export interface UserRecord {
 
 export interface BeaconRecord {
   // bssid: "DF:8C:6D:50:E0:16"
+  bssid: string;
   // id: 34
+  id: number;
   // label: "Нджин"
+  label: string;
   // lat: null
+  lat: number;
   // lng: null
+  lng: number;
   // location_id: null
+  location_id: number;
   // ssid: "DF:8C:6D:50:E0:16"
+  ssid: number;
 }
 
 export interface LocationRecord {

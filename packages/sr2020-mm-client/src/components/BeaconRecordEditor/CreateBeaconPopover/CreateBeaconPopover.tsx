@@ -26,21 +26,31 @@ function formatMacValue(str) {
   )(str);
 }
 
-window.posMap = [
-  [0, 0],
-  [1, 1],
-  [2, 3],
-  [3, 4],
-  [4, 6],
-  [5, 7],
-  [6, 9],
-  [7, 10],
-];
+// window.posMap = [
+//   [0, 0],
+//   [1, 1],
+//   [2, 3],
+//   [3, 4],
+//   [4, 6],
+//   [5, 7],
+//   [6, 9],
+//   [7, 10],
+// ];
 
 // import { CreateBeaconPopoverPropTypes } from '../../types';
 
-export class CreateBeaconPopover extends Component {
+interface CreateBeaconPopoverProps {
+  t: any;
+  createBeacon: (macAddress: string) => void
+}
+interface CreateBeaconPopoverState {
+  macAddress: string;
+}
+
+export class CreateBeaconPopover extends Component<CreateBeaconPopoverProps, CreateBeaconPopoverState> {
   // static propTypes = CreateBeaconPopoverPropTypes;
+
+  newBeaconMacInput: any;
 
   constructor(props) {
     super(props);
@@ -177,7 +187,6 @@ export class CreateBeaconPopover extends Component {
     // }
     return (
       <OverlayTrigger
-        className="CreateBeaconPopover"
         trigger="click"
         placement="right"
         overlay={this.getCreateBeaconPopover(t)}
