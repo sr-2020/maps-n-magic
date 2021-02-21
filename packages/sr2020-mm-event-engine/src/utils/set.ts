@@ -1,4 +1,4 @@
-export function isSuperset(set, subset) {
+export function isSuperset<T>(set: Set<T>, subset: Set<T>): boolean {
   for (const elem of subset) {
     if (!set.has(elem)) {
       return false;
@@ -7,7 +7,7 @@ export function isSuperset(set, subset) {
   return true;
 }
 
-export function union(setA, setB) {
+export function union<T>(setA: Set<T>, setB: Set<T>): Set<T> {
   const _union = new Set(setA);
   for (const elem of setB) {
     _union.add(elem);
@@ -15,8 +15,8 @@ export function union(setA, setB) {
   return _union;
 }
 
-export function intersection(setA, setB) {
-  const _intersection = new Set();
+export function intersection<T>(setA: Set<T>, setB: Set<T>): Set<T> {
+  const _intersection = new Set<T>();
   for (const elem of setB) {
     if (setA.has(elem)) {
       _intersection.add(elem);
@@ -25,7 +25,7 @@ export function intersection(setA, setB) {
   return _intersection;
 }
 
-export function difference(setA, setB) {
+export function difference<T>(setA: Set<T>, setB: Set<T>): Set<T> {
   const _difference = new Set(setA);
   for (const elem of setB) {
     _difference.delete(elem);

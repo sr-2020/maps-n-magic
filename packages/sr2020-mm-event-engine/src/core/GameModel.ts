@@ -3,6 +3,7 @@ import * as R from 'ramda';
 import { EventEmitter } from 'events';
 
 import { GameModelVerificator } from './GameModelVerificator';
+import { AbstractService } from './AbstractService';
 
 function stringToType(entity) {
   return R.is(String, entity) ? {
@@ -10,16 +11,20 @@ function stringToType(entity) {
   } : entity;
 }
 
+export interface ServiceIndex {
+  [index: string]: AbstractService;
+}
+
 export class GameModel extends EventEmitter {
   logger: any;
 
-  actionMap: any;
+  actionMap: ServiceIndex;
 
-  requestMap: any;
+  requestMap: ServiceIndex;
 
-  verificator: any;
+  verificator: GameModelVerificator;
 
-  services: any;
+  services: AbstractService[];
 
   migrator: any;
 
@@ -40,7 +45,7 @@ export class GameModel extends EventEmitter {
       if (this.logger.customChild) {
         childLogger = this.logger.customChild(this.logger, { service: ServiceClass.name });
       }
-      const service = new ServiceClass(childLogger);
+      const service: AbstractService = new ServiceClass(childLogger);
       service.init(this);
       this.registerService(service);
       return service;
@@ -64,7 +69,7 @@ export class GameModel extends EventEmitter {
     return R.mergeAll(this.services.map((service) => service.getData()));
   }
 
-  registerService(service) {
+  registerService(service: AbstractService): void {
     const { actions = [], requests = [] } = service.metadata;
     const localActionMap = R.fromPairs(actions.map((action) => [action, service]));
     this.verificator.checkActionOverrides(service, actions, this.actionMap);
@@ -81,7 +86,7 @@ export class GameModel extends EventEmitter {
     };
   }
 
-  hasRequest(request) {
+  hasRequest(request: string): boolean {
     return !!this.requestMap[request];
   }
 

@@ -1,13 +1,15 @@
 import * as R from 'ramda';
+import { AbstractService } from './AbstractService';
+import { ServiceIndex } from './GameModel';
 
 export class GameModelVerificator {
-  initErrors: any;
+  initErrors: string[];
 
   constructor() {
     this.initErrors = [];
   }
 
-  checkActionOverrides(service, actions, actionMap) {
+  checkActionOverrides(service: AbstractService, actions: string[], actionMap: ServiceIndex): void {
     const actionIntersection = R.intersection(R.keys(actionMap), actions);
     if (!R.isEmpty(actionIntersection)) {
       actionIntersection.forEach((action) => {
@@ -18,7 +20,7 @@ export class GameModelVerificator {
     }
   }
 
-  checkRequestOverrides(service, requests, requestMap) {
+  checkRequestOverrides(service: AbstractService, requests: string[], requestMap: ServiceIndex): void {
     const requestIntersection = R.intersection(R.keys(requestMap), requests);
     if (!R.isEmpty(requestIntersection)) {
       requestIntersection.forEach((request) => {
@@ -29,7 +31,7 @@ export class GameModelVerificator {
     }
   }
 
-  verifyServices(services) {
+  verifyServices(services: AbstractService[]): void {
     const allEmittedEvents = R.flatten(services.map((service) => service.metadata.emitEvents || []));
     services.forEach((service) => {
       const { listenEvents = [] } = service.metadata;
@@ -43,7 +45,7 @@ export class GameModelVerificator {
     });
   }
 
-  finishVerification() {
+  finishVerification(): void {
     if (!R.isEmpty(this.initErrors)) {
       this.initErrors.forEach((err) => console.error(err));
       throw new Error(`Found ${this.initErrors.length} errors during game model initialization\n${this.initErrors.join('\n')}`);

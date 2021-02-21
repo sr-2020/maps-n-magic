@@ -58,6 +58,7 @@ packages/sr2020-mm-event-engine/core
 packages/sr2020-mm-event-engine/outdated
 packages/sr2020-mm-event-engine/services
 packages/sr2020-mm-event-engine/utils
+packages/sr2020-mm-event-engine/types
 packages/sr2020-mm-event-engine/index.js
 packages/sr2020-mm-event-engine/index.d.ts
 

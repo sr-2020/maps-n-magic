@@ -14,12 +14,21 @@ function stringToType(entity) {
   } : entity;
 }
 
+interface Metadata {
+  actions: string[];
+  requests: string[];
+  emitEvents: string[];
+  needActions: string[];
+  needRequests: string[];
+  listenEvents: string[];
+};
+
 export class AbstractService {
   logger: any;
 
   gameModel: any;
 
-  metadata = {
+  metadata: Metadata = {
     actions: [],
     requests: [],
     emitEvents: [],

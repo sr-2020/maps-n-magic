@@ -10,13 +10,37 @@ import { bodyConditionsSet } from 'sr2020-mm-data/gameConstants';
 import AbortController from 'abort-controller';
 import fetch from 'isomorphic-fetch';
 
-export function isGeoLocation(location) {
+import { 
+  LocationRecord, 
+  SRLatLng, 
+  SRPolygon, 
+  SRLatLngBounds, 
+  EdgeId,
+  RawCharacterHealthState
+} from "../types";
+
+export function isGeoLocation(location: LocationRecord): boolean {
   return location.layer_id === 1 && !R.isEmpty(location.polygon);
 }
 
 const notEquals = R.pipe(R.equals, R.not);
 
-export function getArrDiff(arr, prevArr, getKey, hasDifference = notEquals) {
+interface ArrDiff<T>{
+  added: T[];
+  updated: {
+    item: T,
+    prevItem: T
+  }[];
+  removed: T[];
+  unchanged: T[];
+}
+
+export function getArrDiff<T>(
+  arr: T[], 
+  prevArr: T[], 
+  getKey: (el: T) => string | number, 
+  hasDifference: (el1: T, el2: T) => boolean = notEquals
+): ArrDiff<T> {
   const arrIndex = R.indexBy(getKey, arr);
   const prevArrIndex = R.indexBy(getKey, prevArr);
   const arrKeys = R.keys(arrIndex);
@@ -27,7 +51,7 @@ export function getArrDiff(arr, prevArr, getKey, hasDifference = notEquals) {
   if (prevArrKeys.length !== prevArr.length) {
     console.error('prevArr keys are not unique');
   }
-  return R.union(arrKeys, prevArrKeys).reduce((acc, key) => {
+  const diff = R.union(arrKeys, prevArrKeys).reduce((acc, key) => {
     if (!!arrIndex[key] && !!prevArrIndex[key]) {
       if (hasDifference(arrIndex[key], prevArrIndex[key])) {
         acc.updated.push({
@@ -49,10 +73,11 @@ export function getArrDiff(arr, prevArr, getKey, hasDifference = notEquals) {
     updated: [],
     removed: [],
     unchanged: [],
-  });
+  } as ArrDiff<T>);
+  return diff;
 }
 
-export function latLngsToBounds(latLngs) {
+export function latLngsToBounds(latLngs: SRLatLng[]): SRLatLngBounds {
   const bounds = new LatLngBounds();
   latLngs.forEach(bounds.extend.bind(bounds));
   return bounds;
@@ -60,7 +85,7 @@ export function latLngsToBounds(latLngs) {
 
 // based on Leaflet implementation
 // https://github.com/Leaflet/Leaflet/blob/37d2fd15ad6518c254fae3e033177e96c48b5012/src/layer/vector/Polygon.js#L76
-export function getPolygonCentroid(polygon) {
+export function getPolygonCentroid(polygon: SRPolygon): SRLatLng {
   const pairs = R.aperture(2, [...polygon[0], polygon[0][0]]);
   const data = pairs.reduce((acc, [p1, p2]) => {
     const f = p1.lat * p2.lng - p2.lat * p1.lng;
@@ -75,7 +100,7 @@ export function getPolygonCentroid(polygon) {
   });
   if (data.area === 0) {
     // Polygon is so small that all points are on same pixel.
-    return pairs[0];
+    return pairs[0][0];
   }
   return {
     lat: data.lat / data.area,
@@ -83,21 +108,24 @@ export function getPolygonCentroid(polygon) {
   };
 }
 
-export const isClinicallyDead = (charState) => charState.healthState === bodyConditionsSet.clinically_dead;
+export const isClinicallyDead = (charState: RawCharacterHealthState): boolean => charState.healthState === bodyConditionsSet.clinically_dead;
 
+
+// Check if it is necessary to show clinically dead character.
+// By rules if character is dead more then 30 minutes it is not necessary to show character.
 // export const isRelevant = (curTime) => (el) => ((curTime - el.timestamp) < (30 * 60000));
-export const isRelevant = (curTime) => (el) =>
+export const isRelevant = (curTime: number) => (el: RawCharacterHealthState): boolean =>
   // console.log(curTime, el.timestamp, curTime - el.timestamp);
   ((curTime - el.timestamp) < (30 * 60000))
 ;
 
 // random integer from min (including min) to max (including max)
-export function randomInteger(min, max) {
+export function randomInteger(min: number, max: number): number {
   const rand = min + Math.random() * (max + 1 - min);
   return Math.floor(rand);
 }
 
-export function sample(arr) {
+export function sample<T>(arr: T[]): T | null {
   if (arr.length === 0) {
     return null;
   }
@@ -107,47 +135,49 @@ export function sample(arr) {
 // 111100 meters in lat
 // 63995 meters in lng
 
-export const deg2meters = ({ lat, lng }) => ({ lat: lat * 111100, lng: lng * 63995 });
-export const meters2deg = ({ lat, lng }) => ({ lat: lat / 111100, lng: lng / 63995 });
+export const deg2meters = ({ lat, lng }: SRLatLng):SRLatLng => ({ lat: lat * 111100, lng: lng * 63995 });
+export const meters2deg = ({ lat, lng }: SRLatLng):SRLatLng => ({ lat: lat / 111100, lng: lng / 63995 });
 
+// @ts-ignore
 const latlngs2arr = R.map((el) => [el.lat, el.lng]);
 
-export function isPointInLocation(latlng, latlngPolygon) {
+export function isPointInLocation(latlng: SRLatLng, latlngPolygon: SRLatLng[]): boolean {
   // const latlngPolygon = loc.getLatLngs();
   // const bounds = loc.getBounds();
-  const bounds = latLngsToBounds(latlngPolygon);
+  const bounds: SRLatLngBounds = latLngsToBounds(latlngPolygon);
 
   const simpleTest = bounds.contains(latlng);
   if (simpleTest) {
     const coords = [latlng.lat, latlng.lng];
     const polygon = latlngs2arr(latlngPolygon);
-    return gi.pointInPolygon2(coords, polygon);
+    return !!gi.pointInPolygon2(coords, polygon);
   }
   return false;
 }
 
-export function getPolygonMinDistance1(polygon1, polygon2) {
-  // getPolygonMinDistance2(polygon1, polygon2);
-  const latLng2Point = ({ lat, lng }) => ({ x: lat, y: lng });
-  polygon1 = polygon1.map(latLng2Point);
-  polygon2 = polygon2.map(latLng2Point);
-  // console.log(polygon1, polygon2);
-  const pairs1 = R.aperture(2, [...polygon1, polygon1[0]]);
-  const pairs2 = R.aperture(2, [...polygon2, polygon2[0]]);
+// export function getPolygonMinDistance1(polygon1, polygon2) {
+//   // getPolygonMinDistance2(polygon1, polygon2);
+//   const latLng2Point = ({ lat, lng }) => ({ x: lat, y: lng });
+//   polygon1 = polygon1.map(latLng2Point);
+//   polygon2 = polygon2.map(latLng2Point);
+//   // console.log(polygon1, polygon2);
+//   const pairs1 = R.aperture(2, [...polygon1, polygon1[0]]);
+//   const pairs2 = R.aperture(2, [...polygon2, polygon2[0]]);
 
-  const distance = [
-    ...R.xprod(polygon1, pairs2).map(([pt, pair]) => pointToSegmentDistance(pt, pair[0], pair[1])),
-    ...R.xprod(polygon2, pairs1).map(([pt, pair]) => pointToSegmentDistance(pt, pair[0], pair[1])),
-  ];
-  // console.log('distLeaflet', distance);
+//   const distance = [
+//     ...R.xprod(polygon1, pairs2).map(([pt, pair]) => pointToSegmentDistance(pt, pair[0], pair[1])),
+//     ...R.xprod(polygon2, pairs1).map(([pt, pair]) => pointToSegmentDistance(pt, pair[0], pair[1])),
+//   ];
+//   // console.log('distLeaflet', distance);
 
-  return R.reduce(R.min, Infinity, distance);
-}
+//   return R.reduce(R.min, Infinity, distance);
+// }
 
-export function getPolygonMinDistance(polygon1, polygon2) {
-  const latLng2Point = ({ lat, lng }) => ([lat, lng]);
-  polygon1 = polygon1.map(latLng2Point);
-  polygon2 = polygon2.map(latLng2Point);
+const latLng2Point = ({ lat, lng }: SRLatLng): [lat: number, lng: number] => ([lat, lng]);
+
+export function getPolygonMinDistance(rawPolygon1: SRLatLng[], rawPolygon2: SRLatLng[]): number {
+  const polygon1 = rawPolygon1.map(latLng2Point);
+  const polygon2 = rawPolygon2.map(latLng2Point);
   const intersection = clippingUtils.intersection([polygon1], [polygon2]);
   // console.log('intersection', intersection);
   if (intersection.length > 0) {
@@ -159,28 +189,33 @@ export function getPolygonMinDistance(polygon1, polygon2) {
   const pairs2 = R.aperture(2, [...polygon2, polygon2[0]]);
 
   const distance = [
+    // @ts-ignore
     ...R.xprod(polygon1, pairs2).map(([pt, pair]) => gcp.distToSegment(pt, pair[0], pair[1])),
+    // @ts-ignore
     ...R.xprod(polygon2, pairs1).map(([pt, pair]) => gcp.distToSegment(pt, pair[0], pair[1])),
   ];
   // console.log('distThing', distance);
 
-  return R.reduce(R.min, Infinity, distance);
+  // hardcoded type check
+  return R.reduce(R.min, Infinity, distance) as number;
 }
 
-export function pairToEdgeId(locId1, locId2) {
+export function pairToEdgeId(locId1: number, locId2: number): EdgeId {
   return Number(locId1) < Number(locId2) ? `${locId1}_${locId2}` : `${locId2}_${locId1}`;
 }
 
-export function edgeIdToPair(edgeId) {
+export function edgeIdToPair(edgeId: EdgeId): [locId1: string, locId2: string] {
+  // This conversion should work by edge id design
+  // @ts-ignore
   return edgeId.split('_');
 }
 
 // from https://stackoverflow.com/questions/2450954/how-to-randomize-shuffle-a-javascript-array
-export function shuffle(array) {
+export function shuffle<T>(array: T[]): T[] {
   array = [...array];
   let currentIndex = array.length;
-  let temporaryValue;
-  let randomIndex;
+  let temporaryValue: T;
+  let randomIndex: number;
 
   // While there remain elements to shuffle...
   while (currentIndex !== 0) {
@@ -197,7 +232,7 @@ export function shuffle(array) {
   return array;
 }
 
-export function getUserNameStr(user) {
+export function getUserNameStr(user: {name: string}): string {
   return user.name !== '' ? ` (${user.name})` : '';
 }
 

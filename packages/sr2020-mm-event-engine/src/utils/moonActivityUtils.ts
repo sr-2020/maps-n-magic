@@ -53,6 +53,7 @@ export function getMoonActivity(period, offset) {
   // console.log('pattern', pattern);
   // console.log('pattern2', periodToPattern2(period));
   const addTimeToPattern = R.curry((pattern2, time) => pattern2.map((point) => ({ ...point, startTime: point.startTime + time })));
+  // @ts-ignore
   const fullActivity = R.flatten(periodStarts.map(addTimeToPattern(pattern)));
 
   const activity = R.pipe(
@@ -118,6 +119,7 @@ export function mergeActivities(activity1, activity2) {
   const activity1ByTime = R.indexBy(R.prop('startTime'), activity1);
   const activity2ByTime = R.indexBy(R.prop('startTime'), activity2);
 
+  // @ts-ignore
   const changeTimes = R.uniq([...R.pluck('startTime', activity1), ...R.pluck('startTime', activity2)]);
   changeTimes.sort((a, b) => a - b);
   // console.log(activity1);
@@ -129,9 +131,12 @@ export function mergeActivities(activity1, activity2) {
     const last2El = activity2ByTime[String(time)] || acc.last2El;
     acc.mergedActivity.push({
       startTime: time,
+      // @ts-ignore
       value: last1El.value + last2El.value,
     });
+    // @ts-ignore
     acc.last1El = last1El;
+    // @ts-ignore
     acc.last2El = last2El;
     // console.log(last1El.value, last2El.value);
     return acc;
@@ -154,6 +159,7 @@ export function collectStatistics(activity) {
   const range = R.range(-2, 3);
   range.forEach((level) => (els[level] = els[level] || []));
 
+  // @ts-ignore
   return R.mapObjIndexed((arr) => R.sum(R.pluck('intervalDuration', arr)), els);
 }
 

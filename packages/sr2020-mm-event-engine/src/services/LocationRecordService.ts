@@ -5,6 +5,7 @@ import {
 } from '../utils';
 import { makeTriangulationData } from '../utils/makeTriangulationData';
 import { AbstractService } from '../core/AbstractService';
+import { LocationRecord, TriangulationData } from "../types";
 
 // duplicated in LocationHolder
 const defaultStyleOptions = {
@@ -13,7 +14,7 @@ const defaultStyleOptions = {
   fillOpacity: 0.2,
 };
 
-const extractPolygonData = (list) => list.filter(isGeoLocation).map(R.pick(['id', 'polygon']));
+const extractPolygonData = (list: LocationRecord[]) => list.filter(isGeoLocation).map(R.pick(['id', 'polygon']));
 
 const metadata = {
   actions: [
@@ -49,10 +50,14 @@ const metadata = {
   listenEvents: [],
 };
 
-export class LocationRecordService extends AbstractService {
-  locationRecords: any;
+type LocationRecordsObj = {locationRecords: LocationRecord[]};
+type LocationRecordObj = {locationRecord: LocationRecord};
+type LocationIdObj = {locationId: number};
 
-  neighborsIndex: any;
+export class LocationRecordService extends AbstractService {
+  locationRecords: LocationRecord[];
+
+  neighborsIndex: TriangulationData;
 
   constructor(logger) {
     super(logger);
@@ -61,7 +66,9 @@ export class LocationRecordService extends AbstractService {
     this.neighborsIndex = null;
   }
 
-  setData({ locationRecords } = { locationRecords: null }) {
+  setData(
+    { locationRecords }: LocationRecordsObj = { locationRecords: null }
+  ): void {
     locationRecords = locationRecords || [];
     this.updateTriangulation(locationRecords, this.locationRecords);
     this.locationRecords = locationRecords;
@@ -73,17 +80,17 @@ export class LocationRecordService extends AbstractService {
     });
   }
 
-  getData() {
+  getData(): LocationRecordsObj {
     return {
       locationRecords: this.getLocationRecords(),
     };
   }
 
-  getLocationRecords() {
+  getLocationRecords(): LocationRecord[] {
     return [...this.locationRecords];
   }
 
-  getLocationRecord({ id }) {
+  getLocationRecord({ id }: { id: number }): LocationRecord {
     const locationRecord = this.locationRecords.find((br) => br.id === id);
     if (locationRecord === undefined) {
       this.logger.error('location record not found, locationId', id);
@@ -92,7 +99,7 @@ export class LocationRecordService extends AbstractService {
     return R.clone(locationRecord);
   }
 
-  setLocationRecords({ locationRecords }) {
+  setLocationRecords({ locationRecords }: LocationRecordsObj): void {
     this.setData({ locationRecords });
     this.emit('locationRecordsChanged', {
       locationRecords,
@@ -103,7 +110,7 @@ export class LocationRecordService extends AbstractService {
     });
   }
 
-  innerSetLocationRecords(locationRecords) {
+  innerSetLocationRecords(locationRecords: LocationRecord[]): void {
     this.updateTriangulation(locationRecords, this.locationRecords);
     this.locationRecords = locationRecords;
     this.emit('locationRecordsChanged2', {
@@ -113,7 +120,7 @@ export class LocationRecordService extends AbstractService {
   }
 
   // eslint-disable-next-line class-methods-use-this
-  updateTriangulation(locationRecords, prevLocations) {
+  updateTriangulation(locationRecords: LocationRecord[], prevLocations: LocationRecord[]): void {
     const prevData = extractPolygonData(prevLocations);
     const nextData = extractPolygonData(locationRecords);
     const { unchanged } = getArrDiff(nextData, prevData, R.prop('id'));
@@ -131,11 +138,11 @@ export class LocationRecordService extends AbstractService {
     }
   }
 
-  getTriangulationData() {
+  getTriangulationData(): TriangulationData {
     return this.neighborsIndex;
   }
 
-  getNeighborList({ locationId }) {
+  getNeighborList({ locationId }: LocationIdObj): LocationRecord[] {
     const { neighborsIndex } = this.neighborsIndex;
     // console.log('neighborsIndex', neighborsIndex);
     const neighborsIdList = neighborsIndex.get(Number(locationId));
@@ -146,37 +153,37 @@ export class LocationRecordService extends AbstractService {
     return neighborList;
   }
 
-  getNeighborOrRandomLocation({ locationId }) {
+  getNeighborOrRandomLocation({ locationId }: LocationIdObj) {
     const { neighborsIndex } = this.neighborsIndex;
     // console.log(neighborsIndex);
-    let neighborsList = neighborsIndex.get(Number(locationId));
+    let neighborsList: number[] = neighborsIndex.get(Number(locationId));
     if (neighborsList.length === 0) {
       neighborsList = R.without([locationId], Array.from(neighborsIndex.keys()));
     }
     if (neighborsList.length === 0) {
       return null;
     }
-    const neighborLocationId = sample(neighborsList);
+    const neighborLocationId: number = sample(neighborsList);
     return this.getLocationRecord({ id: neighborLocationId });
   }
 
-  putLocationRecord(action) {
+  putLocationRecord(action): void {
     this.emit('putLocationRecordRequested', action);
   }
 
-  putLocationRecords(action) {
+  putLocationRecords(action): void {
     this.emit('putLocationRecordsRequested', action);
   }
 
-  postLocationRecord = (action) => {
+  postLocationRecord = (action): void => {
     this.emit('postLocationRecordRequested', action);
   }
 
-  deleteLocationRecord = (action) => {
+  deleteLocationRecord = (action): void => {
     this.emit('deleteLocationRecordRequested', action);
   }
 
-  putLocationRecordConfirmed({ locationRecord }) {
+  putLocationRecordConfirmed({ locationRecord }: LocationRecordObj): void {
     const index = this.locationRecords.findIndex((br) => br.id === locationRecord.id);
     const updatedLocationRecords = [...this.locationRecords];
     updatedLocationRecords[index] = locationRecord;
@@ -184,7 +191,7 @@ export class LocationRecordService extends AbstractService {
     this.emit('putLocationRecord', { locationRecord });
   }
 
-  putLocationRecordsConfirmed({ locationRecords }) {
+  putLocationRecordsConfirmed({ locationRecords }: LocationRecordsObj): void {
     // console.log('locationRecords', locationRecords);
     const locationRecordsIndex = R.indexBy(R.prop('id'), locationRecords);
     const updatedLocationRecords = this.locationRecords.map((locationRecord) => {
@@ -202,13 +209,13 @@ export class LocationRecordService extends AbstractService {
     this.emit('putLocationRecords', { locationRecords });
   }
 
-  deleteLocationRecordConfirmed({ locationRecord }) {
+  deleteLocationRecordConfirmed({ locationRecord }: LocationRecordObj): void {
     const updatedLocationRecords = this.locationRecords.filter((br) => br.id !== locationRecord.id);
     this.innerSetLocationRecords(updatedLocationRecords);
     this.emit('deleteLocationRecord', { locationRecord });
   }
 
-  postLocationRecordConfirmed({ locationRecord }) {
+  postLocationRecordConfirmed({ locationRecord }: LocationRecordObj): void {
     // console.log('postBeaconRecord');
     const updatedLocationRecords = [...this.locationRecords, locationRecord];
     this.innerSetLocationRecords(updatedLocationRecords);
