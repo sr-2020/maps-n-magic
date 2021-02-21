@@ -68,3 +68,53 @@ export interface SoundCtl {
   };
   gainNode: GainNode
 };
+
+export interface RawCharacterHealthState {
+  //   55817: {locationId: 3215, locationLabel: "Межрайонье 1", healthState: "clinically_dead",…}
+  // healthState: "clinically_dead"
+  healthState: string;
+  // lifeStyle: "Страховка отсутствует"
+  lifeStyle: string;
+  // locationId: 3215
+  locationId: number;
+  // locationLabel: "Межрайонье 1"
+  // personName: "Blaze ноябрь"
+  // timestamp: 1613673901135
+  timestamp: number;
+}
+
+export interface CharacterHealthState extends RawCharacterHealthState {
+  characterId: number;
+}
+
+export type CharacterHealthStates = {
+  [id: number]: RawCharacterHealthState;
+}
+
+
+export interface CharacterHealthStatesByLocation {
+  characters: CharacterHealthState[];
+  location: LocationRecord;
+  locationId: number;
+}
+
+// export interface TriangulationData {
+//   neighborsIndex: unknown;
+//   centroids: unknown;
+//   edgeSet: unknown;
+// }
+
+export type SRLatLng = {lat: number, lng: number};
+
+// EdgeId format `${locId1}_${locId2}` 
+// where locIds are numbers.
+export type EdgeId = string;
+
+export interface TriangulationData {
+  neighborsIndex: Map<number, number[]>;
+  centroids: {
+    locationId: number;
+    centroidLatLng: SRLatLng;
+  }[];
+  edgeSet: Set<EdgeId>;
+}

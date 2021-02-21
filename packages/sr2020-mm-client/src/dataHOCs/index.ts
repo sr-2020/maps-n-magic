@@ -1,5 +1,5 @@
-import { basicDataHOC } from './basicDataHOC.jsx';
-import { settingsDataHOC } from './settingsDataHOC.jsx';
+import { basicDataHOC } from './basicDataHOC';
+import { settingsDataHOC } from './settingsDataHOC';
 
 export const withManaOceanSettings = settingsDataHOC(
   'settingsChanged',

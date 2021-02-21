@@ -3,6 +3,10 @@ import * as R from 'ramda';
 
 import { edgeIdToPair } from 'sr2020-mm-event-engine/utils';
 
+import { 
+  TriangulationData
+} from "../types";
+
 const changeEventName = 'locationRecordsChanged2';
 const dataName = 'triangulationData';
 const initState = {
@@ -15,7 +19,7 @@ export const withTriangulationData = (Wrapped) => (props) => {
   const [data, setData] = useState(initState);
 
   function update(event) {
-    const triangulationData = gameModel.get(dataName);
+    const triangulationData: TriangulationData = gameModel.get(dataName);
 
     // const centroids = [...triangulationData.keys()].map((locationId) => ({
     //   locationId,
@@ -26,7 +30,7 @@ export const withTriangulationData = (Wrapped) => (props) => {
 
     const { neighborsIndex, centroids, edgeSet } = triangulationData;
     const centroidIndex = R.indexBy((el) => `${el.locationId}`, centroids);
-
+    
     const edges = Array.from(edgeSet).map((edgeId) => {
       const [locationId1, locationId2] = edgeIdToPair(edgeId);
       return {

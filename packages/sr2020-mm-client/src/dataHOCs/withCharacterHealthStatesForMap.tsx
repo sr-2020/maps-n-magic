@@ -3,10 +3,18 @@ import * as R from 'ramda';
 import { isRelevant } from 'sr2020-mm-event-engine/utils';
 import * as moment from 'moment-timezone';
 
+import { 
+  CharacterHealthStates, 
+  RawCharacterHealthState, 
+  CharacterHealthState,
+  LocationRecord,
+  CharacterHealthStatesByLocation
+} from "../types";
+
 const changeEventName = 'characterHealthStatesLoaded';
 const srcDataName = 'characterHealthStates';
 const dstDataName = 'characterHealthByLocations';
-const initState = [];
+const initState: CharacterHealthStatesByLocation[] = [];
 
 const objToList = (objItem2ListItem) => R.pipe(R.toPairs, R.map(objItem2ListItem));
 const mergeKeyNEntry = (idName) => ([id, data2]) => ({ [idName]: Number(id), ...data2 });
@@ -25,9 +33,9 @@ export const withCharacterHealthStatesForMap = (Wrapped) => (props) => {
   const [data, setData] = useState(initState);
 
   function update(event) {
-    const newData = event[srcDataName];
+    const newData: CharacterHealthStates = event[srcDataName];
 
-    const fullList = objToList(mergeKeyNEntry('characterId'))(newData);
+    const fullList = objToList(mergeKeyNEntry('characterId'))(newData) as CharacterHealthState[];
     // const fullList2 = fullList.map((item) => {
     //   const userName = item.characterId + getUserNameStr(gameModel.get({
     //     type: 'userRecord',
@@ -38,12 +46,14 @@ export const withCharacterHealthStatesForMap = (Wrapped) => (props) => {
     //     userName,
     //   };
     // });
-    const timestamp = moment().utc().valueOf();
+    const timestamp = moment.utc().valueOf();
     const fullList2 = fullList.filter((el) => el.locationId !== null).filter(isRelevant(timestamp));
-    const locationIndex = R.groupBy(R.prop('locationId'), fullList2);
+    // TS hardcoded type
+    const locIdGetter = R.prop('locationId') as (a: CharacterHealthState) => string;
+    const locationIndex = R.groupBy(locIdGetter, fullList2);
 
     const updatedIndex = R.mapObjIndexed((characters, locationId) => {
-      const location = gameModel.get({
+      const location: LocationRecord = gameModel.get({
         type: 'locationRecord',
         id: Number(locationId),
       });
