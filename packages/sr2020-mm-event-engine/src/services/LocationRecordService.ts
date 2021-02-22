@@ -7,6 +7,8 @@ import { makeTriangulationData } from '../utils/makeTriangulationData';
 import { AbstractService } from '../core/AbstractService';
 import { LocationRecord, TriangulationData } from "../types";
 
+import { Metadata } from "../core/types";
+
 // duplicated in LocationHolder
 const defaultStyleOptions = {
   color: '#3388ff',
@@ -16,7 +18,7 @@ const defaultStyleOptions = {
 
 const extractPolygonData = (list: LocationRecord[]) => list.filter(isGeoLocation).map(R.pick(['id', 'polygon']));
 
-const metadata = {
+const metadata: Metadata = {
   actions: [
     'postLocationRecord',
     'deleteLocationRecord',
@@ -48,6 +50,8 @@ const metadata = {
     'locationRecordsChanged2',
   ],
   listenEvents: [],
+  needActions: [],
+  needRequests: []
 };
 
 type LocationRecordsObj = {locationRecords: LocationRecord[]};
@@ -59,8 +63,8 @@ export class LocationRecordService extends AbstractService {
 
   neighborsIndex: TriangulationData;
 
-  constructor(logger) {
-    super(logger);
+  constructor() {
+    super();
     this.setMetadata(metadata);
     this.locationRecords = [];
     this.neighborsIndex = null;

@@ -4,7 +4,13 @@ import { AbstractService } from '../core/AbstractService';
 
 import { getArrDiff } from '../utils';
 
-const metadata = {
+import { Metadata } from "../core/types";
+import { BeaconRecord } from "../types";
+
+type BeaconRecordsObj = { beaconRecords: BeaconRecord[] };
+type BeaconRecordObj = { beaconRecord: BeaconRecord };
+
+const metadata: Metadata = {
   actions: [
     'postBeaconRecord',
     'deleteBeaconRecord',
@@ -26,13 +32,15 @@ const metadata = {
     'beaconRecordsChanged2',
   ],
   listenEvents: [],
+  needActions: [],
+  needRequests: [],
 };
 
 export class BeaconRecordService extends AbstractService {
-  beaconRecords: any;
+  beaconRecords: BeaconRecord[];
 
-  constructor(logger) {
-    super(logger);
+  constructor() {
+    super();
     this.setMetadata(metadata);
     this.beaconRecords = [];
   }
@@ -51,11 +59,11 @@ export class BeaconRecordService extends AbstractService {
     };
   }
 
-  getBeaconRecords() {
+  getBeaconRecords(): BeaconRecord[] {
     return [...this.beaconRecords];
   }
 
-  setBeaconRecords({ beaconRecords }) {
+  setBeaconRecords({ beaconRecords }: BeaconRecordsObj ): void {
     this.setData({ beaconRecords });
     // const hasChanges =
     // if (!hasChanges) {
@@ -70,7 +78,7 @@ export class BeaconRecordService extends AbstractService {
     });
   }
 
-  putBeaconRecord(action) {
+  putBeaconRecord(action): void {
     // try to speedup put changes. It is still slow, so commented it out.
     // const { id, props } = action;
     // const index = this.beaconRecords.findIndex((br) => br.id === id);
@@ -83,16 +91,16 @@ export class BeaconRecordService extends AbstractService {
     this.emit('putBeaconRecordRequested', action);
   }
 
-  postBeaconRecord = (action) => {
+  postBeaconRecord = (action): void => {
     this.emit('postBeaconRecordRequested', action);
   }
 
-  deleteBeaconRecord = (action) => {
+  deleteBeaconRecord = (action): void => {
     this.emit('deleteBeaconRecordRequested', action);
   }
 
-  putBeaconRecordConfirmed({ beaconRecord }) {
-    const index = this.beaconRecords.findIndex((br) => br.id === beaconRecord.id);
+  putBeaconRecordConfirmed({ beaconRecord }: BeaconRecordObj): void {
+    const index: number = this.beaconRecords.findIndex((br) => br.id === beaconRecord.id);
     this.beaconRecords = [...this.beaconRecords];
     this.beaconRecords[index] = beaconRecord;
     this.emit('putBeaconRecord', { beaconRecord });
@@ -102,7 +110,7 @@ export class BeaconRecordService extends AbstractService {
     });
   }
 
-  deleteBeaconRecordConfirmed({ beaconRecord }) {
+  deleteBeaconRecordConfirmed({ beaconRecord }: BeaconRecordObj): void {
     this.beaconRecords = this.beaconRecords.filter((br) => br.id !== beaconRecord.id);
     this.emit('deleteBeaconRecord', { beaconRecord });
     this.emit('beaconRecordsChanged2', {
@@ -111,7 +119,7 @@ export class BeaconRecordService extends AbstractService {
     });
   }
 
-  postBeaconRecordConfirmed({ beaconRecord }) {
+  postBeaconRecordConfirmed({ beaconRecord }: BeaconRecordObj): void {
     this.beaconRecords = [...this.beaconRecords, beaconRecord];
     // console.log('postBeaconRecord');
     this.emit('postBeaconRecord', { beaconRecord });

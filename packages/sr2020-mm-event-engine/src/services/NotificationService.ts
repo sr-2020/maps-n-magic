@@ -2,7 +2,9 @@ import * as R from 'ramda';
 
 import { AbstractService } from '../core/AbstractService';
 
-const metadata = {
+import { Metadata } from "../core/types";
+
+const metadata: Metadata = {
   actions: [
     'postNotification',
   ],
@@ -11,10 +13,13 @@ const metadata = {
     'postNotification',
   ],
   listenEvents: [],
+  needRequests: [],
+  needActions: [],
 };
+
 export class NotificationService extends AbstractService {
-  constructor(logger) {
-    super(logger);
+  constructor() {
+    super();
     this.setMetadata(metadata);
   }
 

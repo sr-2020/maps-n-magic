@@ -13,12 +13,19 @@ export interface UserRecord {
 
 export interface BeaconRecord {
   // bssid: "DF:8C:6D:50:E0:16"
+  bssid: string;
   // id: 34
+  id: number;
   // label: "Нджин"
+  label: string;
   // lat: null
+  lat: number;
   // lng: null
+  lng: number;
   // location_id: null
+  location_id: number;
   // ssid: "DF:8C:6D:50:E0:16"
+  ssid: number;
 }
 
 // I mix two types of points - usual coordinates and meter coordinates.
@@ -97,3 +104,83 @@ export interface RawCharacterHealthState {
   timestamp: number;
 }
 
+export interface SettingsData {
+
+}
+
+export interface ManaOceanSettingsData extends SettingsData {
+  minManaLevel: number;
+  neutralManaLevel: number;
+  maxManaLevel: number;
+  visibleMoonPeriod: number;
+  visibleMoonNewMoonTime: number;
+  visibleMoonManaTideHeight: number;
+  invisibleMoonPeriod: number;
+  invisibleMoonNewMoonTime: number;
+  invisibleMoonManaTideHeight: number;
+  // moscowTime: number;
+};
+
+export interface ManaOceanEffectSettingsData extends SettingsData {
+  massacreDelay: number;
+  massacreDuration: number;
+  powerSpellBoundary: number;
+  powerSpellDelay: number;
+  powerSpellDuration: number;
+  ritualMembersBoundary: number;
+  ritualDelay: number;
+  spellDurationItem: number;
+  spellProbabilityPerPower: number;
+  spellDurationPerPower: number;
+}
+
+export interface MoonProps {
+  period: number;
+  offset: number;
+}
+
+export interface TidePeriodProps {
+  startTime: number;
+  value: number;
+  intervalDuration?: number;
+};
+
+export interface SettingsCatalog {
+  manaOcean?: ManaOceanSettingsData;
+  manaOceanEffects?: ManaOceanEffectSettingsData
+};
+
+
+
+export type SettingsKeys = keyof SettingsCatalog;
+
+export type SettingsValues = ManaOceanSettingsData | ManaOceanEffectSettingsData;
+
+
+export interface RawCharacterHealthState {
+  //   55817: {locationId: 3215, locationLabel: "Межрайонье 1", healthState: "clinically_dead",…}
+  // healthState: "clinically_dead"
+  healthState: string;
+  // lifeStyle: "Страховка отсутствует"
+  lifeStyle: string;
+  // locationId: 3215
+  locationId: number;
+  // locationLabel: "Межрайонье 1"
+  // personName: "Blaze ноябрь"
+  // timestamp: 1613673901135
+  timestamp: number;
+}
+
+export interface CharacterHealthState extends RawCharacterHealthState {
+  characterId: number;
+}
+
+export type CharacterHealthStates = {
+  [id: number]: RawCharacterHealthState;
+}
+
+export interface CharacterHealthStatesByLocation {
+  characters: CharacterHealthState[];
+  location: LocationRecord;
+  locationId: number;
+}

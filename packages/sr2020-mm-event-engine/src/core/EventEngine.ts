@@ -1,6 +1,9 @@
 // eslint-disable-next-line max-classes-per-file
 import { GameModel } from './GameModel';
 
+import { GMLogger } from "./types";
+import { AbstractService } from "./AbstractService";
+
 function hardDispose(obj) {
   return Object.keys(obj).forEach((key) => { delete obj[key]; });
 }
@@ -10,19 +13,19 @@ export class EventEngine {
 
   dataBindings: any;
 
-  constructor(services2, logger, Migrator2) {
+  constructor(services2: AbstractService[], logger: GMLogger, Migrator2) {
     this.gameModel = new GameModel(logger);
     this.gameModel.init(services2, Migrator2);
     this.dataBindings = [];
   }
 
-  dispose() {
+  dispose(): void {
     this.gameModel.dispose();
     hardDispose(this.gameModel);
     this.dataBindings.forEach((el) => el.dispose());
   }
 
-  getGameModel() {
+  getGameModel(): GameModel {
     return this.gameModel;
   }
 

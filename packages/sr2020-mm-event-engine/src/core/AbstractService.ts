@@ -1,32 +1,14 @@
 import * as R from 'ramda';
 
-function capitalizeFirstLetter(string) {
-  return string.charAt(0).toUpperCase() + string.slice(1);
-}
+import { GameModel } from "./GameModel";
 
-function typeToGetter(type) {
-  return `get${capitalizeFirstLetter(type)}`;
-}
-
-function stringToType(entity) {
-  return R.is(String, entity) ? {
-    type: entity,
-  } : entity;
-}
-
-interface Metadata {
-  actions: string[];
-  requests: string[];
-  emitEvents: string[];
-  needActions: string[];
-  needRequests: string[];
-  listenEvents: string[];
-};
+import { Metadata, GMAction, GMRequest, GMLogger } from "./types";
+import { stringToType, typeToGetter } from "./utils";
 
 export class AbstractService {
-  logger: any;
+  logger: GMLogger;
 
-  gameModel: any;
+  gameModel: GameModel;
 
   metadata: Metadata = {
     actions: [],
@@ -37,12 +19,12 @@ export class AbstractService {
     listenEvents: [],
   };
 
-  constructor(logger) {
-    this.logger = logger;
+  constructor() {
   }
 
-  init(gameModel) {
+  init(gameModel: GameModel, logger: GMLogger) {
     this.gameModel = gameModel;
+    this.logger = logger;
   }
 
   // eslint-disable-next-line class-methods-use-this
@@ -56,7 +38,7 @@ export class AbstractService {
   // eslint-disable-next-line class-methods-use-this
   dispose() {}
 
-  execute(action, onDefaultAction) {
+  execute<T>(action: GMAction): T {
     const includes = this.metadata.actions.includes(action.type);
     if (includes && !!this[action.type]) {
       return this[action.type](action);
@@ -70,7 +52,7 @@ export class AbstractService {
     // return onDefaultAction(action);
   }
 
-  get(request, onDefaultRequest) {
+  get<T>(request: GMRequest): T {
     const includes = this.metadata.requests.includes(request.type);
     if (includes && !!this[typeToGetter(request.type)]) {
       return this[typeToGetter(request.type)](request);
@@ -84,51 +66,61 @@ export class AbstractService {
     // return onDefaultRequest(request);
   }
 
-  emit(...args) {
+  emit(event: string, ...args): boolean {
     // console.log('emit', args[0]);
     if (!this.metadata.emitEvents.includes(args[0])) {
       throw new Error(`Event ${args[0]} is not in emit events list of ${this.constructor.name}`);
     }
-    return this.gameModel.emit(...args);
+    return this.gameModel.emit(event, ...args);
   }
 
-  on(...args) {
-    if (!this.metadata.listenEvents.includes(args[0])) {
-      throw new Error(`Event ${args[0]} is not in listen events list of ${this.constructor.name}`);
+  on(event: string, listener: (...args: any[]) => void): GameModel {
+    if (!this.metadata.listenEvents.includes(event)) {
+      throw new Error(`Event ${event} is not in listen events list of ${this.constructor.name}`);
     }
-    return this.gameModel.on(...args);
+    return this.gameModel.on(event, listener);
   }
 
-  off(...args) {
-    if (!this.metadata.listenEvents.includes(args[0])) {
-      throw new Error(`Event ${args[0]} is not in listen events list of ${this.constructor.name}`);
+  off(event: string, listener: (...args: any[]) => void): GameModel {
+    if (!this.metadata.listenEvents.includes(event)) {
+      throw new Error(`Event ${event} is not in listen events list of ${this.constructor.name}`);
     }
-    return this.gameModel.off(...args);
+    return this.gameModel.off(event, listener);
   }
 
-  getFromModel(...args) {
-    const request = stringToType(args[0]);
+  // getFromModel(rawRequest: GMRequest | string) {
+  //   const request: GMRequest = stringToType<GMRequest>(rawRequest);
+
+  //   const { needRequests } = this.metadata;
+  //   if (needRequests && !needRequests.includes(request.type)) {
+  //     throw new Error(`Request ${request.type} is not expected from ${this.constructor.name}`);
+  //   }
+
+  //   return this.gameModel.get(rawRequest);
+  // }
+  getFromModel<T extends GMRequest, K>(rawRequest: T | string): K {
+    const request: T = stringToType<T>(rawRequest);
 
     const { needRequests } = this.metadata;
     if (needRequests && !needRequests.includes(request.type)) {
       throw new Error(`Request ${request.type} is not expected from ${this.constructor.name}`);
     }
 
-    return this.gameModel.get(...args);
+    return this.gameModel.get(rawRequest) as K;
   }
 
-  executeOnModel(...args) {
-    const action = stringToType(args[0]);
+  executeOnModel(rawAction: GMAction | string) {
+    const action: GMAction = stringToType<GMAction>(rawAction);
 
     const { needActions } = this.metadata;
     if (needActions && !needActions.includes(action.type)) {
       throw new Error(`Action ${action.type} is not expected from ${this.constructor.name}`);
     }
 
-    return this.gameModel.execute(...args);
+    return this.gameModel.execute(rawAction);
   }
 
-  setMetadata(metadata) {
+  setMetadata(metadata: Metadata): void {
     this.metadata = { ...this.metadata, ...metadata };
   }
 }

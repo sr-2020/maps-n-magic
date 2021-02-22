@@ -2,7 +2,16 @@ import * as R from 'ramda';
 
 import { AbstractService } from '../core/AbstractService';
 
-const metadata = {
+import { Metadata } from "../core/types";
+
+import { 
+  CharacterHealthStates, 
+  RawCharacterHealthState,
+  LocationRecord
+} from "../types";
+
+
+const metadata: Metadata = {
   actions: [
     'putCharHealth',
     'putCharHealthConfirmed',
@@ -20,15 +29,16 @@ const metadata = {
     'characterHealthStatesLoaded',
     'putCharLocationConfirmed',
   ],
-  needRequests: ['locationRecord'],
   listenEvents: [],
+  needRequests: ['locationRecord'],
+  needActions: [],
 };
 
 export class CharacterHealthStateService extends AbstractService {
-  characterHealthStates: any;
+  characterHealthStates: CharacterHealthStates;
 
-  constructor(logger) {
-    super(logger);
+  constructor() {
+    super();
     this.setMetadata(metadata);
     // {
     //   "51935": {
@@ -53,11 +63,11 @@ export class CharacterHealthStateService extends AbstractService {
     return {};
   }
 
-  getCharacterHealthStates() {
+  getCharacterHealthStates(): CharacterHealthStates {
     return R.clone(this.characterHealthStates);
   }
 
-  getCharacterHealthState({ id }) {
+  getCharacterHealthState({ id }: { id:number }): RawCharacterHealthState {
     return R.clone(this.characterHealthStates[id]);
   }
 
@@ -70,14 +80,17 @@ export class CharacterHealthStateService extends AbstractService {
     this.emit('putCharLocationRequested', action);
   }
 
-  getLocation(locationId) {
-    return this.getFromModel({
+  getLocation(locationId: number): LocationRecord {
+    return this.getFromModel<any, LocationRecord>({
       type: 'locationRecord',
       id: locationId,
     });
   }
 
-  putCharLocationConfirmed(action) {
+  putCharLocationConfirmed(action: { 
+    characterId: number, 
+    locationId: number 
+  } ): void {
     const { characterId, locationId } = action;
     const prevCharacterHealthState = this.characterHealthStates[characterId];
     const locationRecord = this.getLocation(locationId);
@@ -110,7 +123,10 @@ export class CharacterHealthStateService extends AbstractService {
     });
   }
 
-  putCharHealthConfirmed(action) {
+  putCharHealthConfirmed(action: { 
+    characterId: number, 
+    characterHealthState: RawCharacterHealthState 
+  }): void {
     const { characterId, characterHealthState } = action;
     // console.log('putCharHealthConfirmed', characterId, characterHealthState);
     const prevCharacterHealthState = this.characterHealthStates[characterId];
@@ -131,7 +147,9 @@ export class CharacterHealthStateService extends AbstractService {
     // console.log({ characterId, characterHealthState, prevCharacterHealthState });
   }
 
-  setCharacterHealthStates({ characterHealthStates }) {
+  setCharacterHealthStates({ characterHealthStates }: {
+    characterHealthStates: CharacterHealthStates
+  }): void {
     // console.log('characterHealthStates', characterHealthStates);
     this.characterHealthStates = characterHealthStates;
     this.emit('characterHealthStatesLoaded', {
