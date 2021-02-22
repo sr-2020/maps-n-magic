@@ -109,15 +109,15 @@ export class AbstractService {
     return this.gameModel.get(rawRequest) as K;
   }
 
-  executeOnModel(rawAction: GMAction | string) {
-    const action: GMAction = stringToType<GMAction>(rawAction);
+  executeOnModel<T extends GMAction, K>(rawAction: T | string): K {
+    const action: T = stringToType<T>(rawAction);
 
     const { needActions } = this.metadata;
     if (needActions && !needActions.includes(action.type)) {
       throw new Error(`Action ${action.type} is not expected from ${this.constructor.name}`);
     }
 
-    return this.gameModel.execute(rawAction);
+    return this.gameModel.execute(rawAction) as K;
   }
 
   setMetadata(metadata: Metadata): void {
