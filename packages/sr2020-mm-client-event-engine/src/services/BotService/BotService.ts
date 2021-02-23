@@ -1,5 +1,5 @@
 // import * as R from 'ramda';
-// import { AbstractService } from 'sr2020-mm-event-engine/core/AbstractService';
+// import { AbstractService } from 'sr2020-mm-event-engine';
 
 // import { ActiveBot } from './ActiveBot';
 

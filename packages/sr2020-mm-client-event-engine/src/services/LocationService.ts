@@ -2,7 +2,7 @@
 
 // import { initialLocations } from 'sr2020-mm-data/assets/locations';
 
-// import { AbstractService } from 'sr2020-mm-event-engine/core/AbstractService';
+// import { AbstractService } from 'sr2020-mm-event-engine';
 
 // const metadata = {
 //   actions: ['postLocation', 'deleteLocation', 'putLocation'],

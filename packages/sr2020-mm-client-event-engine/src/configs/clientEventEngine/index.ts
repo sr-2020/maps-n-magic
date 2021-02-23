@@ -1,12 +1,13 @@
-import { LocationRecordService } from 'sr2020-mm-event-engine/services/LocationRecordService';
-import { BeaconRecordService } from 'sr2020-mm-event-engine/services/BeaconRecordService';
-import { NotificationService } from 'sr2020-mm-event-engine/services/NotificationService';
-import { CharacterHealthStateService } from 'sr2020-mm-event-engine/services/CharacterHealthStateService';
-import { UserRecordService } from 'sr2020-mm-event-engine/services/UserRecordService';
-import { SettingsService } from 'sr2020-mm-event-engine/services/SettingsService';
-import { ManaOceanEnableService } from 'sr2020-mm-event-engine/services/ManaOceanEnableService';
-
-import { EventEngine } from 'sr2020-mm-event-engine/core/EventEngine';
+import { 
+  EventEngine,
+  LocationRecordService,
+  BeaconRecordService,
+  NotificationService,
+  CharacterHealthStateService,
+  UserRecordService,
+  SettingsService,
+  ManaOceanEnableService,
+} from 'sr2020-mm-event-engine';
 
 import { Migrator } from './Migrator';
 

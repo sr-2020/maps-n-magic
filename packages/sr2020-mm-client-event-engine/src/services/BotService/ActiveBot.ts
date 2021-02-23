@@ -1,4 +1,4 @@
-import { deg2meters, meters2deg } from 'sr2020-mm-event-engine/utils';
+import { deg2meters, meters2deg } from 'sr2020-mm-event-engine';
 
 const dist = (pt1, pt2) => Math.sqrt((pt1.lat - pt2.lat) ** 2 + (pt1.lng - pt2.lng) ** 2);
 
