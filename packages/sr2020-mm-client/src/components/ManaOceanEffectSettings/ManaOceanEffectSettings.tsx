@@ -9,18 +9,9 @@ import Form from 'react-bootstrap/Form';
 import Table from 'react-bootstrap/Table';
 import { prop } from 'ramda';
 
-import { ManaOceanEffectSettingsData } from "../../types";
-
-// import {
-//   getMoonActivity, mergeActivities, collectStatistics, getMoscowTime,
-// } from 'sr2020-mm-event-engine/utils/moonActivityUtils';
-// import { TideChart } from './TideChart';
-
-// const TIME_STEP = 10;
-
-// function formatMinutesStats(minutes) {
-//   return (minutes / 60).toFixed(1);
-// }
+import {
+  ManaOceanEffectSettingsData
+} from 'sr2020-mm-event-engine';
 
 interface ManaOceanEffectSettingsProps {
   t: any; 
@@ -32,15 +23,11 @@ export class ManaOceanEffectSettings extends Component<ManaOceanEffectSettingsPr
   constructor(props) {
     super(props);
     this.state = {
-      // moscowTime: 0,
     };
     this.onChange = this.onChange.bind(this);
-    // this.onUpdateMoscowTime = this.onUpdateMoscowTime.bind(this);
   }
 
   componentDidMount() {
-    // this.moscowTimeUpdater = setInterval(this.onUpdateMoscowTime, 1000);
-    // this.moscowTimeUpdater = setInterval(this.onUpdateMoscowTime, 100);
     console.log('ManaOceanSettings mounted');
   }
 
@@ -49,17 +36,8 @@ export class ManaOceanEffectSettings extends Component<ManaOceanEffectSettingsPr
   }
 
   componentWillUnmount() {
-    // clearInterval(this.moscowTimeUpdater);
     console.log('ManaOceanSettings will unmount');
   }
-
-  // onUpdateMoscowTime() {
-  //   const { moscowTimeInMinutes } = getMoscowTime();
-  //   this.setState((prevState) => (prevState.moscowTime === moscowTimeInMinutes ? null : {
-  //     moscowTime: moscowTimeInMinutes,
-  //     // moscowTime: (((msk.minute() * 60) + msk.seconds()) * 10) % fullDay,
-  //   }));
-  // }
 
   // eslint-disable-next-line class-methods-use-this
   onChange(event) {
@@ -110,10 +88,7 @@ export class ManaOceanEffectSettings extends Component<ManaOceanEffectSettingsPr
   // eslint-disable-next-line max-lines-per-function
   render() {
     const {
-      // moscowTime,
     } = this.state;
-    // const { t, manaOceanSettings } = this.props;
-    // if (manaOceanSettings === undefined || manaOceanSettings.visibleMoonPeriod === undefined) {
     const { t, manaOceanEffects } = this.props;
     if (manaOceanEffects === undefined || manaOceanEffects.massacreDelay === undefined) {
       return null;

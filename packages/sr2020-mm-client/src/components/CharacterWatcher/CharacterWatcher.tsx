@@ -5,8 +5,8 @@ import Form from 'react-bootstrap/Form';
 import Button from 'react-bootstrap/Button';
 
 import { CharacterDataList } from '../CharacterDataList';
-// import { UserRecord } from "sr2020-mm-event-engine/types";
-import { UserRecord } from "../../types";
+import { UserRecord } from "sr2020-mm-event-engine";
+// import { UserRecord } from "../../types";
 
 const WATCH_CHARACTER_HISTORY_KEY = 'watchCharacterHistory';
 

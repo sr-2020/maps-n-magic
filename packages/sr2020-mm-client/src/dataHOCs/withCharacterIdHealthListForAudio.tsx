@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import * as R from 'ramda';
-import { isClinicallyDead, isRelevant } from 'sr2020-mm-event-engine/utils';
+import { isClinicallyDead, isRelevant } from 'sr2020-mm-event-engine';
 import * as moment from 'moment-timezone';
 
 import { 

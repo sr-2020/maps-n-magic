@@ -10,7 +10,7 @@ import Alert from 'react-bootstrap/Alert';
 import ToggleButtonGroup from 'react-bootstrap/ToggleButtonGroup';
 import ToggleButton from 'react-bootstrap/ToggleButton';
 
-import { isGeoLocation } from 'sr2020-mm-event-engine/utils';
+import { isGeoLocation } from 'sr2020-mm-event-engine';
 import { bodyConditions, lifeStyleList } from 'sr2020-mm-data/gameConstants';
 
 import { UserRecord } from "../../types";

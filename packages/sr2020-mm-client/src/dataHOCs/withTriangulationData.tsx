@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import * as R from 'ramda';
 
-import { edgeIdToPair } from 'sr2020-mm-event-engine/utils';
+import { edgeIdToPair } from 'sr2020-mm-event-engine';
 
 import { 
   TriangulationData
