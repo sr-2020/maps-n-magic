@@ -14,5 +14,8 @@
   },
   "include": [
     "./src"
+  ],
+  "references": [
+      { "path": "../sr2020-mm-event-engine" }
   ]
  }

@@ -10,16 +10,16 @@ import { EventEngine } from 'sr2020-mm-event-engine/core/EventEngine';
 
 import { Migrator } from './Migrator';
 
-import { UserService } from '../../services/UserService';
-import { BotService } from '../../services/BotService/BotService';
-import { TickerService } from '../../services/TickerService';
-import { SpiritService } from '../../services/SpiritService';
+// import { UserService } from '../../services/UserService';
+// import { BotService } from '../../services/BotService/BotService';
+// import { TickerService } from '../../services/TickerService';
+// import { SpiritService } from '../../services/SpiritService';
 import { SoundService2 } from '../../services/SoundService2';
 import { SoundStageService } from '../../services/SoundStageService';
 import { BeaconService } from '../../services/BeaconService';
-import { LocationService } from '../../services/LocationService';
+// import { LocationService } from '../../services/LocationService';
 import { SoundMappingService } from '../../services/SoundMappingService';
-import { UserWatcher } from '../../services/UserWatcher';
+// import { UserWatcher } from '../../services/UserWatcher';
 import { BaseVersion } from '../../services/BaseVersion';
 import { BackgroundImageService } from '../../services/BackgroundImageService';
 import { ClientEventStubService } from '../../services/ClientEventStubService';
@@ -31,27 +31,27 @@ import { WsDataBinding } from '../../dataManagers/WsDataBinding';
 import { WSConnector } from '../../api/wsConnection';
 
 const services = [
-  UserService,
-  BotService,
-  TickerService,
-  SpiritService,
-  SoundService2,
-  SoundStageService,
-  BeaconService,
-  LocationService,
-  LocationRecordService,
-  SoundMappingService,
-  UserWatcher,
-  BaseVersion,
-  BeaconRecordService,
-  NotificationService,
-  BackgroundImageService,
-  CharacterHealthStateService,
-  UserRecordService,
-  SettingsService,
-  ManaOceanEnableService,
-  ClientEventStubService,
-  CharacterWatchService,
+  // new UserService(),
+  // new BotService(),
+  // new TickerService(),
+  // new SpiritService(),
+  new SoundService2(),
+  new SoundStageService(),
+  new BeaconService(),
+  // new LocationService(),
+  new LocationRecordService(),
+  new SoundMappingService(),
+  // new UserWatcher(),
+  new BaseVersion(),
+  new BeaconRecordService(),
+  new NotificationService(),
+  new BackgroundImageService(),
+  new CharacterHealthStateService(),
+  new UserRecordService(),
+  new SettingsService(),
+  new ManaOceanEnableService(),
+  new ClientEventStubService(),
+  new CharacterWatchService(),
 ];
 
 export function makeGameModel(database) {

@@ -5,20 +5,22 @@ import { getBoundingRect, scaleRect } from 'sr2020-mm-data/utils/polygonUtils';
 
 import { getPolygons2 } from 'sr2020-mm-data/utils/polygonGenerator';
 
-import { AbstractService } from 'sr2020-mm-event-engine/core/AbstractService';
+import { AbstractService, Metadata } from 'sr2020-mm-event-engine';
 
-const metadata = {
+const metadata: Metadata = {
   actions: ['postBeacon', 'deleteBeacon', 'putBeacon'],
   requests: ['beacons', 'voronoiPolygonData'],
   emitEvents: ['postBeacon', 'deleteBeacon', 'putBeacon'],
   listenEvents: [],
+  needActions: [],
+  needRequests: []
 };
 export class BeaconService extends AbstractService {
   beacons: any;
   maxBeaconId: any;
 
-  constructor(logger) {
-    super(logger);
+  constructor() {
+    super();
     this.setMetadata(metadata);
     this.beacons = getBeacons2();
     this.maxBeaconId = 1;

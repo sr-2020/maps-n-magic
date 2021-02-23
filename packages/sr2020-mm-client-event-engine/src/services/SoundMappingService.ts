@@ -1,5 +1,5 @@
 import * as R from 'ramda';
-import { AbstractService } from 'sr2020-mm-event-engine/core/AbstractService';
+import { AbstractService, Metadata } from 'sr2020-mm-event-engine';
 
 const defaultSoundMapping = {
   manaLevels: {
@@ -14,26 +14,27 @@ const defaultSoundMapping = {
   },
 };
 
-const metadata = {
+const metadata: Metadata = {
   // ...this.metadata,
   actions: ['mapSoundToKey'],
   requests: ['soundMapping', 'soundForKey'],
   emitEvents: ['soundToKeySet', 'soundMappingChange'],
   listenEvents: ['fractionChange'],
   needRequests: ['sound'],
+  needActions: []
 };
 export class SoundMappingService extends AbstractService {
   soundMapping: any;
 
-  constructor(logger) {
-    super(logger);
+  constructor() {
+    super();
     this.setMetadata(metadata);
     this.soundMapping = R.clone(defaultSoundMapping);
     this.onFractionChange = this.onFractionChange.bind(this);
   }
 
-  init(gameModel) {
-    super.init(gameModel);
+  init(gameModel, logger) {
+    super.init(gameModel, logger);
     this.on('fractionChange', this.onFractionChange);
   }
 

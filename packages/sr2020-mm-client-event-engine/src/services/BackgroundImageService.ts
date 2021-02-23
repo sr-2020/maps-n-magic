@@ -1,10 +1,10 @@
 import * as R from 'ramda';
 
-import { AbstractService } from 'sr2020-mm-event-engine/core/AbstractService';
+import { AbstractService, Metadata } from 'sr2020-mm-event-engine';
 
 import { defaultBackgroundImages } from './DefaultBackgroundImages';
 
-const metadata = {
+const metadata: Metadata = {
   actions: [
     'putBackgroundImage',
     'postBackgroundImage',
@@ -18,13 +18,15 @@ const metadata = {
     'backgroundImagesChanged',
   ],
   listenEvents: [],
+  needRequests: [],
+  needActions: []
 };
 export class BackgroundImageService extends AbstractService {
   backgroundImages: any[];
   maxBackgroundImageId: any;
 
-  constructor(logger) {
-    super(logger);
+  constructor() {
+    super();
     this.setMetadata(metadata);
     this.backgroundImages = R.clone(defaultBackgroundImages);
     this.maxBackgroundImageId = 1;

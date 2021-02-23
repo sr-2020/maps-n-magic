@@ -1,8 +1,8 @@
 import * as R from 'ramda';
 
-import { AbstractService } from 'sr2020-mm-event-engine/core/AbstractService';
+import { AbstractService, Metadata, LocationRecord } from 'sr2020-mm-event-engine';
 
-const metadata = {
+const metadata: Metadata = {
   actions: [
     'setCharacterId',
     // fictive event, actually it is emitted by CharacterLocationService
@@ -22,21 +22,23 @@ const metadata = {
   listenEvents: [
     'locationRecordsChanged2',
   ],
+  needRequests: [],
+  needActions: []
 };
 export class CharacterWatchService extends AbstractService {
   characterId: any;
   locationId: any;
 
-  constructor(logger) {
-    super(logger);
+  constructor() {
+    super();
     this.setMetadata(metadata);
     this.characterId = null;
     this.locationId = null;
     this.onLocationRecordsChanged2 = this.onLocationRecordsChanged2.bind(this);
   }
 
-  init(gameModel) {
-    super.init(gameModel);
+  init(gameModel, logger) {
+    super.init(gameModel, logger);
     this.on('locationRecordsChanged2', this.onLocationRecordsChanged2);
   }
 
@@ -124,7 +126,7 @@ export class CharacterWatchService extends AbstractService {
     }
   }
 
-  getLocation(locationId) {
+  getLocation(locationId): LocationRecord {
     return this.getFromModel({
       type: 'locationRecord',
       id: locationId,

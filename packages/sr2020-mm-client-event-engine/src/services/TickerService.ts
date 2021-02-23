@@ -1,95 +1,95 @@
-import { AbstractService } from 'sr2020-mm-event-engine/core/AbstractService';
+// import { AbstractService } from 'sr2020-mm-event-engine/core/AbstractService';
 
-const metadata = {
-  actions: ['runModel', 'stopModel'],
-  requests: ['isModelRunning', 'modelSpeed'],
-  emitEvents: ['modelRunningChange', 'modelTick'],
-};
-export class TickerService extends AbstractService {
-  startTime: any;
-  speed: any;
-  mainCycleAbortController: any;
+// const metadata = {
+//   actions: ['runModel', 'stopModel'],
+//   requests: ['isModelRunning', 'modelSpeed'],
+//   emitEvents: ['modelRunningChange', 'modelTick'],
+// };
+// export class TickerService extends AbstractService {
+//   startTime: any;
+//   speed: any;
+//   mainCycleAbortController: any;
 
-  constructor(logger) {
-    super(logger);
-    this.setMetadata(metadata);
-    this.startTime = null;
-    this.speed = null;
-    this.mainCycleAbortController = null;
-  }
+//   constructor(logger) {
+//     super(logger);
+//     this.setMetadata(metadata);
+//     this.startTime = null;
+//     this.speed = null;
+//     this.mainCycleAbortController = null;
+//   }
 
-  dispose() {
-    this.stopModel();
-  }
+//   dispose() {
+//     this.stopModel();
+//   }
 
-  getIsModelRunning() {
-    return this.mainCycleAbortController && !this.mainCycleAbortController.signal.aborted;
-  }
+//   getIsModelRunning() {
+//     return this.mainCycleAbortController && !this.mainCycleAbortController.signal.aborted;
+//   }
 
-  getModelSpeed() {
-    return this.speed;
-  }
+//   getModelSpeed() {
+//     return this.speed;
+//   }
 
-  stopModel() {
-    if (this.mainCycleAbortController) {
-      this.mainCycleAbortController.abort();
-      this.emit('modelRunningChange', {
-        isModelRunning: false,
-      });
-    }
-  }
+//   stopModel() {
+//     if (this.mainCycleAbortController) {
+//       this.mainCycleAbortController.abort();
+//       this.emit('modelRunningChange', {
+//         isModelRunning: false,
+//       });
+//     }
+//   }
 
-  runModel({ speed }) {
-    if (this.getIsModelRunning()) {
-      this.stopModel();
-    }
-    console.log(this);
-    // const start = performance.now();
-    this.mainCycleAbortController = new AbortController();
-    // const animation = {
-    //   enable: true,
-    // };
-    this.speed = speed;
-    this.startTime = performance.now();
+//   runModel({ speed }) {
+//     if (this.getIsModelRunning()) {
+//       this.stopModel();
+//     }
+//     console.log(this);
+//     // const start = performance.now();
+//     this.mainCycleAbortController = new AbortController();
+//     // const animation = {
+//     //   enable: true,
+//     // };
+//     this.speed = speed;
+//     this.startTime = performance.now();
 
-    requestAnimationFrame(function animate2(time) {
-      // console.log(options.key || 'animation triggered');
-      // if (!animation.enable) return;
-      if (this.mainCycleAbortController.signal.aborted) return;
+//     requestAnimationFrame(function animate2(time) {
+//       // console.log(options.key || 'animation triggered');
+//       // if (!animation.enable) return;
+//       if (this.mainCycleAbortController.signal.aborted) return;
 
-      // console.log(time - start);
-      // this.activeBots = filterBots(this.activeBots);
+//       // console.log(time - start);
+//       // this.activeBots = filterBots(this.activeBots);
 
-      // if (lastTime !== null) {
-      const newTime = this.startTime + (time - this.startTime) * this.speed;
-      this.emit('modelTick', {
-        // time,
-        time: newTime,
-      });
-      // }
-      // lastTime = time;
+//       // if (lastTime !== null) {
+//       const newTime = this.startTime + (time - this.startTime) * this.speed;
+//       this.emit('modelTick', {
+//         // time,
+//         time: newTime,
+//       });
+//       // }
+//       // lastTime = time;
 
-      // // timeFraction from 0 to 1
-      // let timeFraction = (time - start) / options.duration;
-      // if (timeFraction > 1) timeFraction = 1;
+//       // // timeFraction from 0 to 1
+//       // let timeFraction = (time - start) / options.duration;
+//       // if (timeFraction > 1) timeFraction = 1;
 
-      // // current animation state
-      // const progress = options.timing(timeFraction);
+//       // // current animation state
+//       // const progress = options.timing(timeFraction);
 
-      // options.draw(progress);
+//       // options.draw(progress);
 
-      // if (timeFraction < 1) {
-      requestAnimationFrame(animate2.bind(this));
-      // } else if (options.loop) {
-      //   start += options.duration;
-      //   requestAnimationFrame(animate2);
-      // }
-    }.bind(this));
+//       // if (timeFraction < 1) {
+//       requestAnimationFrame(animate2.bind(this));
+//       // } else if (options.loop) {
+//       //   start += options.duration;
+//       //   requestAnimationFrame(animate2);
+//       // }
+//     }.bind(this));
 
-    this.emit('modelRunningChange', {
-      isModelRunning: true,
-      speed: this.speed,
-    });
-    // return animation;
-  }
-}
+//     this.emit('modelRunningChange', {
+//       isModelRunning: true,
+//       speed: this.speed,
+//     });
+//     // return animation;
+//   }
+// }

@@ -1,20 +1,23 @@
 import * as R from 'ramda';
-import { AbstractService } from 'sr2020-mm-event-engine/core/AbstractService';
+import { AbstractService, Metadata } from 'sr2020-mm-event-engine';
 
 const sortByNameCaseInsensitive = R.sortBy(R.compose(R.toLower, R.prop('name')));
 
 const soundRequiredFields = ['name', 'hash', 'size', 'status', 'buffer'];
 
-const metadata = {
+const metadata: Metadata = {
   actions: ['soundLoaded', 'soundsRemoved', 'clearMissingSounds'],
   requests: ['sounds', 'sound'],
   emitEvents: ['soundLoaded', 'soundsRemoved', 'missingSoundsCleared'],
+  needRequests: [],
+  needActions: [],
+  listenEvents: []
 };
 export class SoundService2 extends AbstractService {
   sounds: any;
 
-  constructor(logger) {
-    super(logger);
+  constructor() {
+    super();
     this.setMetadata(metadata);
     this.sounds = [];
   }
@@ -31,28 +34,29 @@ export class SoundService2 extends AbstractService {
     };
   }
 
-  execute(action, onDefaultAction) {
-    if (action.type === 'soundLoaded') {
-      return this._soundLoaded(action);
-    }
-    if (action.type === 'soundsRemoved') {
-      return this._soundsRemoved(action);
-    }
-    if (action.type === 'clearMissingSounds') {
-      return this._clearMissingSounds();
-    }
-    return onDefaultAction(action);
-  }
+  // TODO rework execute and get methods
+  // execute(action) {
+  //   if (action.type === 'soundLoaded') {
+  //     return this._soundLoaded(action);
+  //   }
+  //   if (action.type === 'soundsRemoved') {
+  //     return this._soundsRemoved(action);
+  //   }
+  //   if (action.type === 'clearMissingSounds') {
+  //     return this._clearMissingSounds();
+  //   }
+  //   // return onDefaultAction(action);
+  // }
 
-  get(request, onDefaultRequest) {
-    if (request.type === 'sounds') {
-      return this._getSounds();
-    }
-    if (request.type === 'sound') {
-      return this._getSound(request);
-    }
-    return onDefaultRequest(request);
-  }
+  // get(request) {
+  //   if (request.type === 'sounds') {
+  //     return this._getSounds();
+  //   }
+  //   if (request.type === 'sound') {
+  //     return this._getSound(request);
+  //   }
+  //   // return onDefaultRequest(request);
+  // }
 
   // dispose() {
   //   // this._stop();

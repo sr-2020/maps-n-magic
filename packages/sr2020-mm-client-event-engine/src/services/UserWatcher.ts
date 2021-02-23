@@ -1,142 +1,150 @@
-import * as R from 'ramda';
+// import * as R from 'ramda';
 
-// import L from 'leaflet/dist/leaflet-src';
-import { AbstractService } from 'sr2020-mm-event-engine/core/AbstractService';
-import { isPointInLocation } from 'sr2020-mm-event-engine/utils';
+// // import L from 'leaflet/dist/leaflet-src';
+// import { 
+//   AbstractService,
+//   GameModel,
+//   GMLogger,
+//   isPointInLocation,
+//   Metadata,
+//   LocationRecord
+// } from 'sr2020-mm-event-engine';
 
-const notNull = R.pipe(R.isNil, R.not);
+// import { SoundStageData } from "../types";
 
-const metadata = {
-  actions: [],
-  requests: [],
-  emitEvents: [],
-  needActions: ['setBackgroundSound', 'rotationSoundsChange'],
-  needRequests: ['soundForKey', 'activeBots', 'locations', 'sounds', 'soundStage'],
-  listenEvents: ['soundToKeySet', 'userPositionUpdate', 'botUpdate'],
-};
-export class UserWatcher extends AbstractService {
-  location: any;
+// const notNull = R.pipe(R.isNil, R.not);
 
-  constructor(logger) {
-    super(logger);
-    this.setMetadata(metadata);
-    this.location = null;
-    this.onSoundToKeySet = this.onSoundToKeySet.bind(this);
-    this.onUserPositionUpdate = this.onUserPositionUpdate.bind(this);
-    this.onBotUpdate = this.onBotUpdate.bind(this);
-  }
+// const metadata: Metadata = {
+//   actions: [],
+//   requests: [],
+//   emitEvents: [],
+//   needActions: ['setBackgroundSound', 'rotationSoundsChange'],
+//   needRequests: ['soundForKey', 'activeBots', 'locations', 'sounds', 'soundStage'],
+//   listenEvents: ['soundToKeySet', 'userPositionUpdate', 'botUpdate'],
+// };
+// export class UserWatcher extends AbstractService {
+//   location: any;
 
-  init(gameModel) {
-    super.init(gameModel);
-    this.on('soundToKeySet', this.onSoundToKeySet);
-    this.on('userPositionUpdate', this.onUserPositionUpdate);
-    this.on('botUpdate', this.onBotUpdate);
-  }
+//   constructor() {
+//     super();
+//     this.setMetadata(metadata);
+//     this.location = null;
+//     this.onSoundToKeySet = this.onSoundToKeySet.bind(this);
+//     this.onUserPositionUpdate = this.onUserPositionUpdate.bind(this);
+//     this.onBotUpdate = this.onBotUpdate.bind(this);
+//   }
 
-  dispose() {
-    this.off('soundToKeySet', this.onSoundToKeySet);
-    this.off('userPositionUpdate', this.onUserPositionUpdate);
-    this.off('botUpdate', this.onBotUpdate);
-  }
+//   init(gameModel: GameModel, logger: GMLogger): void {
+//     super.init(gameModel, logger);
+//     this.on('soundToKeySet', this.onSoundToKeySet);
+//     this.on('userPositionUpdate', this.onUserPositionUpdate);
+//     this.on('botUpdate', this.onBotUpdate);
+//   }
 
-  onSoundToKeySet({ key, soundName }) {
-    if (!this.location) {
-      return;
-    }
-    const { manaLevel } = this.location;
-    if (manaLevel === key) {
-      this.executeOnModel({
-        type: 'setBackgroundSound',
-        name: soundName,
-      });
-    }
-  }
+//   dispose(): void {
+//     this.off('soundToKeySet', this.onSoundToKeySet);
+//     this.off('userPositionUpdate', this.onUserPositionUpdate);
+//     this.off('botUpdate', this.onBotUpdate);
+//   }
 
-  onBotUpdate({ bots }) {
-    this.updateBotSounds({ bots });
-  }
+//   onSoundToKeySet({ key, soundName }) {
+//     if (!this.location) {
+//       return;
+//     }
+//     const { manaLevel } = this.location;
+//     if (manaLevel === key) {
+//       this.executeOnModel({
+//         type: 'setBackgroundSound',
+//         name: soundName,
+//       });
+//     }
+//   }
 
-  updateBotSounds({ bots }) {
-    if (!this.location) {
-      return;
-    }
-    // const sounds = this.getFromModel('sounds').filter((sound) => sound.name.includes('spirit')).map(R.prop('name'));
-    // if (sounds.length === 0) {
-    //   return;
-    // }
-    const closeBots = bots.filter((bot) => {
-      const latlng = bot.getCurPosition();
-      return isPointInLocation(latlng, this.location.latlngs[0]);
-    });
+//   onBotUpdate({ bots }) {
+//     this.updateBotSounds({ bots });
+//   }
 
-    const curSoundStage = this.getFromModel('soundStage');
+//   updateBotSounds({ bots }) {
+//     if (!this.location) {
+//       return;
+//     }
+//     // const sounds = this.getFromModel('sounds').filter((sound) => sound.name.includes('spirit')).map(R.prop('name'));
+//     // if (sounds.length === 0) {
+//     //   return;
+//     // }
+//     const closeBots = bots.filter((bot) => {
+//       const latlng = bot.getCurPosition();
+//       return isPointInLocation(latlng, this.location.latlngs[0]);
+//     });
 
-    const newRotation = R.uniq(closeBots
-      .map((bot) => bot.getFraction())
-      .filter(notNull)
-      .map((fraction) => this.getFromModel({
-        type: 'soundForKey',
-        key: fraction,
-        keyType: 'spiritFractions',
-      }))
-      .filter(notNull));
+//     const curSoundStage: SoundStageData = this.getFromModel<any, SoundStageData>('soundStage');
 
-    // const newRotation = R.uniq(closeBots.map((bot) => sounds[bot.getIndex() % sounds.length]));
-    // console.log('closeBots.length', closeBots.length);
+//     const newRotation = R.uniq(closeBots
+//       .map((bot) => bot.getFraction())
+//       .filter(notNull)
+//       .map((fraction) => this.getFromModel({
+//         type: 'soundForKey',
+//         key: fraction,
+//         keyType: 'spiritFractions',
+//       }))
+//       .filter(notNull));
 
-    if (R.symmetricDifference(curSoundStage.rotationSounds, newRotation).length === 0) {
-      return;
-    }
-    const added = R.difference(newRotation, curSoundStage.rotationSounds);
-    const removed = R.difference(curSoundStage.rotationSounds, newRotation);
-    this.executeOnModel({
-      type: 'rotationSoundsChange',
-      added,
-      removed,
-    });
-    // console.log('newRotation', newRotation);
-  }
+//     // const newRotation = R.uniq(closeBots.map((bot) => sounds[bot.getIndex() % sounds.length]));
+//     // console.log('closeBots.length', closeBots.length);
 
-  onUserPositionUpdate({ user }) {
-    const coords = user.pos && user.pos.coords;
-    const latlng = coords ? {
-      lat: coords.latitude,
-      lng: coords.longitude,
-    } : null;
-    const locations = this.getFromModel('locations');
-    // if (this.location && isPointInLocation(latlng, this.location.getLatLngs()[0])) {
-    if (this.location && isPointInLocation(latlng, this.location.latlngs[0])) {
-      return;
-    }
-    // gi
-    const location = locations.find((loc) => isPointInLocation(latlng, loc.latlngs[0]));
-    // console.log('location', location && location.options.name);
-    if (this.location === location) {
-      return;
-    }
-    if (location) {
-      const { manaLevel } = location;
+//     if (R.symmetricDifference(curSoundStage.rotationSounds, newRotation).length === 0) {
+//       return;
+//     }
+//     const added = R.difference(newRotation, curSoundStage.rotationSounds);
+//     const removed = R.difference(curSoundStage.rotationSounds, newRotation);
+//     this.executeOnModel({
+//       type: 'rotationSoundsChange',
+//       added,
+//       removed,
+//     });
+//     // console.log('newRotation', newRotation);
+//   }
 
-      const soundName = this.getFromModel({
-        type: 'soundForKey',
-        keyType: 'manaLevels',
-        key: manaLevel,
-      });
-      this.executeOnModel({
-        type: 'setBackgroundSound',
-        name: soundName,
-        // name: null,
-      });
-    } else {
-      this.executeOnModel({
-        type: 'setBackgroundSound',
-        name: null,
-      });
-    }
-    this.location = R.clone(location);
+//   onUserPositionUpdate({ user }) {
+//     const coords = user.pos && user.pos.coords;
+//     const latlng = coords ? {
+//       lat: coords.latitude,
+//       lng: coords.longitude,
+//     } : null;
+//     const locations: LocationRecord[] = this.getFromModel<any, LocationRecord[]>('locations');
+//     // if (this.location && isPointInLocation(latlng, this.location.getLatLngs()[0])) {
+//     if (this.location && isPointInLocation(latlng, this.location.latlngs[0])) {
+//       return;
+//     }
+//     // gi
+//     const location = locations.find((loc) => isPointInLocation(latlng, loc.latlngs[0]));
+//     // console.log('location', location && location.options.name);
+//     if (this.location === location) {
+//       return;
+//     }
+//     if (location) {
+//       const { manaLevel } = location;
 
-    this.updateBotSounds({
-      bots: this.getFromModel('activeBots'),
-    });
-  }
-}
+//       const soundName = this.getFromModel({
+//         type: 'soundForKey',
+//         keyType: 'manaLevels',
+//         key: manaLevel,
+//       });
+//       this.executeOnModel({
+//         type: 'setBackgroundSound',
+//         name: soundName,
+//         // name: null,
+//       });
+//     } else {
+//       this.executeOnModel({
+//         type: 'setBackgroundSound',
+//         name: null,
+//       });
+//     }
+//     this.location = R.clone(location);
+
+//     this.updateBotSounds({
+//       bots: this.getFromModel('activeBots'),
+//     });
+//   }
+// }

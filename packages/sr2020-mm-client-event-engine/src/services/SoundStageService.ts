@@ -1,8 +1,8 @@
 import * as R from 'ramda';
 
-import { AbstractService } from 'sr2020-mm-event-engine/core/AbstractService';
+import { AbstractService, Metadata } from 'sr2020-mm-event-engine';
 
-const metadata = {
+const metadata: Metadata = {
   actions: [
     'setBackgroundSound',
     'rotationSoundsChange',
@@ -21,6 +21,9 @@ const metadata = {
     'backgroundVolumeUpdate',
     'rotationVolumeUpdate',
   ],
+  needActions: [],
+  needRequests: [],
+  listenEvents: []
 };
 export class SoundStageService extends AbstractService {
   backgroundSound: string;
@@ -30,8 +33,8 @@ export class SoundStageService extends AbstractService {
   backgroundVolume: number;
   rotationVolume: number;
 
-  constructor(logger) {
-    super(logger);
+  constructor() {
+    super();
     this.setMetadata(metadata);
     this.backgroundSound = null;
     this.rotationSounds = [];
