@@ -10,7 +10,7 @@ import Nav from 'react-bootstrap/Nav';
 import NavDropdown from 'react-bootstrap/NavDropdown';
 
 import Dropdown from 'react-bootstrap/Dropdown';
-import { ModelRunControl } from '../../ModelRunControl';
+// import { ModelRunControl } from '../../ModelRunControl';
 
 import { DownloadDatabaseButton } from '../DownloadDatabaseButton';
 import { UploadDatabaseButton } from '../UploadDatabaseButton';
@@ -46,9 +46,9 @@ const navLinks = [{
   to: '/soundManager2',
   tKey: 'soundManager2',
 }, {
-  to: '/soundMapping',
-  tKey: 'soundMapping',
-}, {
+//   to: '/soundMapping',
+//   tKey: 'soundMapping',
+// }, {
   to: '/trackAnalysis/index.html',
   tKey: 'trackAnalysisNav',
   rawLink: true,

@@ -98,7 +98,6 @@ export type CharacterHealthStates = {
   [id: number]: RawCharacterHealthState;
 }
 
-
 export interface CharacterHealthStatesByLocation {
   characters: CharacterHealthState[];
   location: LocationRecord;
@@ -125,3 +124,29 @@ export interface TriangulationData {
   }[];
   edgeSet: Set<EdgeId>;
 }
+
+export interface ManaOceanEffectSettingsData {
+  massacreDelay: number;
+  massacreDuration: number;
+  powerSpellBoundary: number;
+  powerSpellDelay: number;
+  powerSpellDuration: number;
+  ritualMembersBoundary: number;
+  ritualDelay: number;
+  spellDurationItem: number;
+  spellProbabilityPerPower: number;
+  spellDurationPerPower: number;
+}
+
+export interface ManaOceanSettingsData {
+  minManaLevel: number;
+  neutralManaLevel: number;
+  maxManaLevel: number;
+  visibleMoonPeriod: number;
+  visibleMoonNewMoonTime: number;
+  visibleMoonManaTideHeight: number;
+  invisibleMoonPeriod: number;
+  invisibleMoonNewMoonTime: number;
+  invisibleMoonManaTideHeight: number;
+  // moscowTime: number;
+};

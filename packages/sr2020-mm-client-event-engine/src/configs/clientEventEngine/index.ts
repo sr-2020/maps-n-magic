@@ -18,14 +18,14 @@ import { SoundService2 } from '../../services/SoundService2';
 import { SoundStageService } from '../../services/SoundStageService';
 import { BeaconService } from '../../services/BeaconService';
 // import { LocationService } from '../../services/LocationService';
-import { SoundMappingService } from '../../services/SoundMappingService';
+// import { SoundMappingService } from '../../services/SoundMappingService';
 // import { UserWatcher } from '../../services/UserWatcher';
 import { BaseVersion } from '../../services/BaseVersion';
 import { BackgroundImageService } from '../../services/BackgroundImageService';
 import { ClientEventStubService } from '../../services/ClientEventStubService';
 import { CharacterWatchService } from '../../services/CharacterWatchService';
 
-import { fillGameModelWithBots } from './GameModelFiller';
+// import { fillGameModelWithBots } from './GameModelFiller';
 import { WsDataBinding } from '../../dataManagers/WsDataBinding';
 
 import { WSConnector } from '../../api/wsConnection';
@@ -40,7 +40,7 @@ const services = [
   new BeaconService(),
   // new LocationService(),
   new LocationRecordService(),
-  new SoundMappingService(),
+  // new SoundMappingService(),
   // new UserWatcher(),
   new BaseVersion(),
   new BeaconRecordService(),
@@ -58,7 +58,7 @@ export function makeGameModel(database) {
   const gameServer = new EventEngine(services, console, Migrator);
   gameServer.setData(database);
   const gameModel = gameServer.getGameModel();
-  fillGameModelWithBots(gameModel);
+  // fillGameModelWithBots(gameModel);
 
   const wsConnection = new WSConnector(gameModel);
   gameServer.addDataBinding(new WsDataBinding({

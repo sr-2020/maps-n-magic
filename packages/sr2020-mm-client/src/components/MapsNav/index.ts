@@ -1,6 +1,6 @@
 import { withTranslation } from 'react-i18next';
 import { pipe } from 'ramda';
-import { MapsNav } from './MapsNav.jsx';
+import { MapsNav } from './MapsNav';
 
 const tmp = pipe(withTranslation())(MapsNav);
 

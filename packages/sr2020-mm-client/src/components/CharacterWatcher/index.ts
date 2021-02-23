@@ -1,7 +1,7 @@
 import { pipe } from 'ramda';
 import { withCharacterId, withUserRecords } from '../../dataHOCs';
 import { withCharacterPosition } from '../../dataHOCs/withCharacterPosition';
-import { CharacterWatcher } from './CharacterWatcher.jsx';
+import { CharacterWatcher } from './CharacterWatcher';
 
 const tmp = pipe(withCharacterId, withUserRecords, withCharacterPosition)(CharacterWatcher);
 

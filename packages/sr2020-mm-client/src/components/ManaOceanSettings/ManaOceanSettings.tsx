@@ -1,3 +1,4 @@
+import { WithTranslation } from 'react-i18next';
 import React, { Component } from 'react';
 import './ManaOceanSettings.css';
 import * as R from 'ramda';
@@ -10,17 +11,36 @@ import Table from 'react-bootstrap/Table';
 import { prop } from 'ramda';
 
 import {
-  getMoonActivity, mergeActivities, collectStatistics, getMoscowTime,
-} from 'sr2020-mm-event-engine/utils/moonActivityUtils';
+  getMoonActivity, 
+  mergeActivities, 
+  collectStatistics, 
+  getMoscowTime,
+  TidePeriodProps,
+  ManaOceanSettingsData,
+  GameModel
+} from 'sr2020-mm-event-engine';
+
 import { TideChart } from './TideChart';
+import { Series } from './TideChart/TideChart';
 
 const TIME_STEP = 10;
 
-function formatMinutesStats(minutes) {
+function formatMinutesStats(minutes: number): string {
   return (minutes / 60).toFixed(1);
 }
 
-export class ManaOceanSettings extends Component {
+interface ManaOceanSettingsProps {
+  manaOcean: ManaOceanSettingsData;
+  gameModel: GameModel; 
+}
+interface ManaOceanSettingsState {
+  moscowTime: number;
+}
+
+export class ManaOceanSettings extends Component<
+  ManaOceanSettingsProps & WithTranslation, ManaOceanSettingsState> {
+  moscowTimeUpdater: NodeJS.Timeout;
+
   constructor(props) {
     super(props);
     this.state = {
@@ -128,11 +148,16 @@ export class ManaOceanSettings extends Component {
       invisibleMoonManaTideHeight,
     } = manaOcean;
 
-    const visibleMoonActivity = getMoonActivity(visibleMoonPeriod, visibleMoonNewMoonTime);
-    const invisibleMoonActivity = getMoonActivity(invisibleMoonPeriod, invisibleMoonNewMoonTime);
-    const mergedActivities = mergeActivities(visibleMoonActivity, invisibleMoonActivity);
-
-    const series = [{
+    const visibleMoonActivity: TidePeriodProps[] = getMoonActivity({
+      period: visibleMoonPeriod, 
+      offset: visibleMoonNewMoonTime
+    });
+    const invisibleMoonActivity: TidePeriodProps[] = getMoonActivity({
+      period: invisibleMoonPeriod, 
+      offset: invisibleMoonNewMoonTime
+    });
+    const mergedActivities: TidePeriodProps[] = mergeActivities(visibleMoonActivity, invisibleMoonActivity);
+    const seriesList: Series[] = [{
       chartName: t('tideTimetable'),
       seriesName: t('tideHeight'),
       data: mergedActivities,
@@ -275,13 +300,9 @@ export class ManaOceanSettings extends Component {
           </div>
         </div>
         <div>
-          {series.map((s) => (
+          {seriesList.map((series) => (
             <TideChart
-              yDomain={s.yDomain}
-              yTicks={s.yTicks}
-              data={s.data}
-              chartName={s.chartName}
-              seriesName={s.seriesName}
+              series={series}
               className="tw-mb-8"
               moscowTime={moscowTime}
             />

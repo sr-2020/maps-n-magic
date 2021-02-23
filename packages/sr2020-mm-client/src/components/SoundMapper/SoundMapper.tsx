@@ -1,41 +1,44 @@
-import React, { Component } from 'react';
-import './SoundMapper.css';
+export {};
+// import React, { Component } from 'react';
+// import './SoundMapper.css';
 
-import { MusicSelectControl } from '../MusicSelectControl';
+// import { MusicSelectControl } from '../MusicSelectControl';
 
-// import { SoundMapperPropTypes } from '../../types';
+// import { GameModel } from "sr2020-mm-event-engine";
 
-interface SoundMapperProps {
-  gameModel: any;
-};
+// // import { SoundMapperPropTypes } from '../../types';
 
-export class SoundMapper extends Component<SoundMapperProps> {
-  // static propTypes = SoundMapperPropTypes;
+// interface SoundMapperProps {
+//   gameModel: GameModel;
+// };
 
-  constructor(props) {
-    super(props);
-    this.state = {
-    };
-  }
+// export class SoundMapper extends Component<SoundMapperProps> {
+//   // static propTypes = SoundMapperPropTypes;
 
-  componentDidMount = () => {
-    console.log('SoundMapper mounted');
-  }
+//   constructor(props) {
+//     super(props);
+//     this.state = {
+//     };
+//   }
 
-  componentDidUpdate = () => {
-    console.log('SoundMapper did update');
-  }
+//   componentDidMount = () => {
+//     console.log('SoundMapper mounted');
+//   }
 
-  componentWillUnmount = () => {
-    console.log('SoundMapper will unmount');
-  }
+//   componentDidUpdate = () => {
+//     console.log('SoundMapper did update');
+//   }
 
-  render() {
-    const { gameModel } = this.props;
-    return (
-      <div className="SoundMapper">
-        <MusicSelectControl gameModel={gameModel} />
-      </div>
-    );
-  }
-}
+//   componentWillUnmount = () => {
+//     console.log('SoundMapper will unmount');
+//   }
+
+//   render() {
+//     const { gameModel } = this.props;
+//     return (
+//       <div className="SoundMapper">
+//         <MusicSelectControl gameModel={gameModel} />
+//       </div>
+//     );
+//   }
+// }

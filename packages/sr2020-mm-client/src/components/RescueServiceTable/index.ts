@@ -1,6 +1,6 @@
 import { pipe } from 'ramda';
 import { withCharacterHealthListForTable } from '../../dataHOCs/withCharacterHealthListForTable';
-import { RescueServiceTable } from './RescueServiceTable.jsx';
+import { RescueServiceTable } from './RescueServiceTable';
 
 const tmp = pipe(withCharacterHealthListForTable)(RescueServiceTable);
 

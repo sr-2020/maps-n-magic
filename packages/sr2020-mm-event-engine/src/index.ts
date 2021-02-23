@@ -13,6 +13,7 @@ export { SettingsService } from './services/SettingsService';
 export { UserRecordService } from './services/UserRecordService'; 
 
 export * from './utils';
+export * from './utils/moonActivityUtils';
 
 export * from './types';
 

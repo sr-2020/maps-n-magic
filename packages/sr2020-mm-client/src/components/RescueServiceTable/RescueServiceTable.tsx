@@ -25,11 +25,11 @@ export function RescueServiceTable(props) {
   const { characterHealthList } = props;
   const { t } = useTranslation();
 
-  const [curTime, setCurTime] = useState(moment().utc().valueOf());
+  const [curTime, setCurTime] = useState(moment.utc().valueOf());
 
   useEffect(() => {
     const timeInterval = setInterval(() => {
-      setCurTime(moment().utc().valueOf());
+      setCurTime(moment.utc().valueOf());
     }, 500);
     return () => {
       clearInterval(timeInterval);

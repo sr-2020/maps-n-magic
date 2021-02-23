@@ -68,8 +68,8 @@ export class AbstractService {
 
   emit(event: string, ...args): boolean {
     // console.log('emit', args[0]);
-    if (!this.metadata.emitEvents.includes(args[0])) {
-      throw new Error(`Event ${args[0]} is not in emit events list of ${this.constructor.name}`);
+    if (!this.metadata.emitEvents.includes(event)) {
+      throw new Error(`Event ${event} is not in emit events list of ${this.constructor.name}`);
     }
     return this.gameModel.emit(event, ...args);
   }

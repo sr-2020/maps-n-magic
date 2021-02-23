@@ -5,11 +5,21 @@ import Form from 'react-bootstrap/Form';
 import Button from 'react-bootstrap/Button';
 
 import { CharacterDataList } from '../CharacterDataList';
+// import { UserRecord } from "sr2020-mm-event-engine/types";
+import { UserRecord } from "../../types";
 
 const WATCH_CHARACTER_HISTORY_KEY = 'watchCharacterHistory';
 
+interface CharacterWatcherProps {
+  characterId: number;
+  userRecords: UserRecord[];
+  gameModel: any;
+  children: any;
+  characterLocationId: number;
+}
+
 // eslint-disable-next-line max-lines-per-function
-export function CharacterWatcher(props) {
+export function CharacterWatcher(props: CharacterWatcherProps) {
   const {
     characterId, userRecords, gameModel, children, characterLocationId,
   } = props;

@@ -9,29 +9,37 @@ import Form from 'react-bootstrap/Form';
 import Table from 'react-bootstrap/Table';
 import { prop } from 'ramda';
 
-import {
-  getMoonActivity, mergeActivities, collectStatistics, getMoscowTime,
-} from 'sr2020-mm-event-engine/utils/moonActivityUtils';
+import { ManaOceanEffectSettingsData } from "../../types";
+
+// import {
+//   getMoonActivity, mergeActivities, collectStatistics, getMoscowTime,
+// } from 'sr2020-mm-event-engine/utils/moonActivityUtils';
 // import { TideChart } from './TideChart';
 
-const TIME_STEP = 10;
+// const TIME_STEP = 10;
 
-function formatMinutesStats(minutes) {
-  return (minutes / 60).toFixed(1);
+// function formatMinutesStats(minutes) {
+//   return (minutes / 60).toFixed(1);
+// }
+
+interface ManaOceanEffectSettingsProps {
+  t: any; 
+  manaOceanEffects: ManaOceanEffectSettingsData;
+  gameModel: any;
 }
 
-export class ManaOceanEffectSettings extends Component {
+export class ManaOceanEffectSettings extends Component<ManaOceanEffectSettingsProps> {
   constructor(props) {
     super(props);
     this.state = {
-      moscowTime: 0,
+      // moscowTime: 0,
     };
     this.onChange = this.onChange.bind(this);
-    this.onUpdateMoscowTime = this.onUpdateMoscowTime.bind(this);
+    // this.onUpdateMoscowTime = this.onUpdateMoscowTime.bind(this);
   }
 
   componentDidMount() {
-    this.moscowTimeUpdater = setInterval(this.onUpdateMoscowTime, 1000);
+    // this.moscowTimeUpdater = setInterval(this.onUpdateMoscowTime, 1000);
     // this.moscowTimeUpdater = setInterval(this.onUpdateMoscowTime, 100);
     console.log('ManaOceanSettings mounted');
   }
@@ -41,17 +49,17 @@ export class ManaOceanEffectSettings extends Component {
   }
 
   componentWillUnmount() {
-    clearInterval(this.moscowTimeUpdater);
+    // clearInterval(this.moscowTimeUpdater);
     console.log('ManaOceanSettings will unmount');
   }
 
-  onUpdateMoscowTime() {
-    const { moscowTimeInMinutes } = getMoscowTime();
-    this.setState((prevState) => (prevState.moscowTime === moscowTimeInMinutes ? null : {
-      moscowTime: moscowTimeInMinutes,
-      // moscowTime: (((msk.minute() * 60) + msk.seconds()) * 10) % fullDay,
-    }));
-  }
+  // onUpdateMoscowTime() {
+  //   const { moscowTimeInMinutes } = getMoscowTime();
+  //   this.setState((prevState) => (prevState.moscowTime === moscowTimeInMinutes ? null : {
+  //     moscowTime: moscowTimeInMinutes,
+  //     // moscowTime: (((msk.minute() * 60) + msk.seconds()) * 10) % fullDay,
+  //   }));
+  // }
 
   // eslint-disable-next-line class-methods-use-this
   onChange(event) {
@@ -102,7 +110,7 @@ export class ManaOceanEffectSettings extends Component {
   // eslint-disable-next-line max-lines-per-function
   render() {
     const {
-      moscowTime,
+      // moscowTime,
     } = this.state;
     // const { t, manaOceanSettings } = this.props;
     // if (manaOceanSettings === undefined || manaOceanSettings.visibleMoonPeriod === undefined) {

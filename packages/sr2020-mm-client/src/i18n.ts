@@ -1,6 +1,10 @@
 import i18n from 'i18next';
 import { initReactI18next } from 'react-i18next';
-import { translations as resources } from 'sr2020-mm-translations/index';
+import { translations } from 'sr2020-mm-translations';
+
+const resources = {
+  ru: translations.ru
+} as const;
 
 i18n
   .use(initReactI18next) // passes i18n down to react-i18next
@@ -16,3 +20,8 @@ i18n
   });
 
 export { i18n };
+
+declare module 'react-i18next' {
+  type DefaultResources = typeof resources['ru'];
+  interface Resources extends DefaultResources {}
+}

@@ -38,7 +38,7 @@ import { CharacterPositions } from '../CharacterPositions';
 import { ManaOceanSettings } from '../ManaOceanSettings';
 import { ManaOceanEffectSettings } from '../ManaOceanEffectSettings';
 
-import { SoundMapper } from '../SoundMapper';
+// import { SoundMapper } from '../SoundMapper';
 
 import { AppHeader } from './AppHeader';
 
@@ -123,16 +123,14 @@ export class App extends Component<AppProps, AppState> {
       initialized: true,
     });
     this.saveDataInLsId = setInterval(this.onSaveDataInLs, 10000);
-    this.watchGeolocationId = navigator.geolocation.watchPosition(this.onGetPosition);
+    // this.watchGeolocationId = navigator.geolocation.watchPosition(this.onGetPosition);
     // setInterval(this.onGetPosition, 1000);
     window.addEventListener('beforeunload', this.onSaveDataInLs);
   }
 
   componentWillUnmount() {
     clearInterval(this.saveDataInLsId);
-    // @ts-ignore
-    // eslint-disable-next-line no-undef
-    clearWatch(this.watchGeolocationId);
+    // navigator.geolocation.clearWatch(this.watchGeolocationId);
     this.soundStage.dispose();
     window.removeEventListener('beforeunload', this.onSaveDataInLs);
   }
@@ -319,9 +317,9 @@ export class App extends Component<AppProps, AppState> {
                             soundStage={this.soundStage}
                           />
                         </Route>
-                        <Route path="/soundMapping">
+                        {/* <Route path="/soundMapping">
                           <SoundMapper gameModel={gameModel} />
-                        </Route>
+                        </Route> */}
                         <Route path="/beaconRecordEditor">
                           <BeaconRecordEditor gameModel={gameModel} />
                         </Route>

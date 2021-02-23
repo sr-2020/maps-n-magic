@@ -1,3 +1,4 @@
+import { WithTranslation } from 'react-i18next';
 import React from 'react';
 import './TideChart.css';
 import * as R from 'ramda';
@@ -9,7 +10,7 @@ import {
   ReferenceLine, ReferenceArea,
 } from 'recharts';
 
-import { fullDay } from 'sr2020-mm-event-engine/utils/moonActivityUtils';
+import { fullDay, TidePeriodProps } from 'sr2020-mm-event-engine';
 
 const ticks = R.range(1, 24).map(R.multiply(60));
 
@@ -35,9 +36,9 @@ function CustomTooltip(props) {
 
 function formatMinutes(minutes) {
   const hour = Math.floor(minutes / 60);
-  let minute = (minutes % 60);
-  minute = (minute < 10 ? '0' : '') + minute;
-  return `${hour}:${minute}`;
+  const minute = (minutes % 60);
+  const minuteStr = (minute < 10 ? '0' : '') + minute;
+  return `${hour}:${minuteStr}`;
 }
 
 function CustomizedAxisTick(props) {
@@ -64,11 +65,29 @@ function CustomizedAxisTick(props) {
 
 // import { TideChartPropTypes } from '../../types';
 
+export interface Series {
+  chartName: string;
+  seriesName: string;
+  data: TidePeriodProps[];
+  yDomain: number[];
+  yTicks: number[];
+}
+
+interface TideChartProps {
+  series: Series;
+  className: string;
+  moscowTime: number;
+}
+
 // eslint-disable-next-line max-lines-per-function
-export function TideChart(props) {
+export function TideChart(props: TideChartProps & WithTranslation) {
   const {
-    yDomain, yTicks, data, chartName, seriesName, className, t, moscowTime,
+    series, className, t, moscowTime,
   } = props;
+
+  const {
+    yDomain, yTicks, data, chartName, seriesName
+  } = series;
 
   return (
     <div className={className}>
@@ -111,6 +130,7 @@ export function TideChart(props) {
               type="stepAfter"
               // type="monotone"
               dataKey="value"
+              // @ts-ignore
               data={data}
               name={seriesName}
               key={seriesName}
@@ -129,7 +149,8 @@ export function TideChart(props) {
               // stroke="red"
               strokeOpacity={0.3}
             >
-              <Label value={t('dailyBlackout')} position="bottomInside" />
+              {/* prev version <Label value={t('dailyBlackout')} position="bottomInside" /> */}
+              <Label value={t('dailyBlackout')} position="insideBottom" />
             </ReferenceArea>
           </AreaChart>
         </ResponsiveContainer>
