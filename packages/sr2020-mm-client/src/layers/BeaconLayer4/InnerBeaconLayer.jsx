@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { L } from "sr2020-mm-client-core/leafletWrapper";
 import * as R from 'ramda';
 
-import { getArrDiff } from 'sr2020-mm-event-engine/utils';
+import { getArrDiff } from 'sr2020-mm-event-engine';
 
 export class InnerBeaconLayer extends Component {
   group = L.layerGroup([]);

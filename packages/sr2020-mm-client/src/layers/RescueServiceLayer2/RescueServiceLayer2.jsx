@@ -7,7 +7,7 @@ import { getIcon } from 'sr2020-mm-client-core/utils/icons';
 
 import {
   isGeoLocation, getArrDiff, getPolygonCentroid, isClinicallyDead,
-} from 'sr2020-mm-event-engine/utils';
+} from 'sr2020-mm-event-engine';
 // import { InnerRescueServiceLayer } from './InnerRescueServiceLayer';
 
 // import { RescueServiceLayerPropTypes } from '../../types';

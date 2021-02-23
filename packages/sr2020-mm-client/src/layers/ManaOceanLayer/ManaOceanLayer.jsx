@@ -4,7 +4,7 @@ import * as R from 'ramda';
 import * as moment from 'moment-timezone';
 import './ManaOceanLayer.css';
 
-import { isGeoLocation, getArrDiff } from 'sr2020-mm-event-engine/utils';
+import { isGeoLocation, getArrDiff } from 'sr2020-mm-event-engine';
 import { LocationPopup } from './LocationPopup';
 
 // const manaFillColors = { // based on h202

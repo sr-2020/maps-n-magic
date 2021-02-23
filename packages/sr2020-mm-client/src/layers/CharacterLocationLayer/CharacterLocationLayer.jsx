@@ -5,7 +5,7 @@ import './CharacterLocationLayer.css';
 
 import {
   getPolygonCentroid,
-} from 'sr2020-mm-event-engine/utils';
+} from 'sr2020-mm-event-engine';
 
 export class CharacterLocationLayer extends Component {
   group = L.layerGroup([]);

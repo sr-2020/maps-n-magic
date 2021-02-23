@@ -5,7 +5,7 @@ import './LocationNeighborLayer.css';
 
 import {
   getArrDiff,
-} from 'sr2020-mm-event-engine/utils';
+} from 'sr2020-mm-event-engine';
 
 export class LocationNeighborLayer extends Component {
   group = L.layerGroup([]);

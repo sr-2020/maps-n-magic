@@ -3,7 +3,7 @@ import { L } from "sr2020-mm-client-core/leafletWrapper";
 import * as R from 'ramda';
 import './BackgroundImageDisplayLayer.css';
 
-import { getArrDiff, latLngsToBounds } from 'sr2020-mm-event-engine/utils';
+import { getArrDiff, latLngsToBounds } from 'sr2020-mm-event-engine';
 
 function getTitleLatLngBounds(latlngs) {
   const bounds = latLngsToBounds(latlngs);

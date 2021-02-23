@@ -5,7 +5,7 @@ import './LocationCentroidLayer.css';
 
 import {
   getArrDiff,
-} from 'sr2020-mm-event-engine/utils';
+} from 'sr2020-mm-event-engine';
 
 export class LocationCentroidLayer extends Component {
   group = L.layerGroup([]);
