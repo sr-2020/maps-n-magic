@@ -1,6 +1,6 @@
 // eslint-disable-next-line max-classes-per-file
 import * as R from 'ramda';
-import { fetchWithTimeout } from 'sr2020-mm-event-engine/utils';
+import { fetchWithTimeout } from 'sr2020-mm-event-engine';
 import {
   gettable, postable, puttable, deletable, postSettings, getSettings, multiPuttable,
 } from './apiInterfaces';

@@ -1,7 +1,4 @@
-// const fetch = require('node-fetch');
 import * as R from 'ramda';
-import { isGeoLocation, randomInteger } from 'sr2020-mm-event-engine/utils';
-// const { isGeoLocation } = require('sr2020-mm-event-engine/utils');
 import fetch from 'isomorphic-fetch';
 
 import { usersUrl, locationsUrl } from '../constants';

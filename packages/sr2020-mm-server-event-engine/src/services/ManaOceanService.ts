@@ -4,11 +4,13 @@ import shortid from 'shortid';
 import moment from 'moment-timezone';
 // const shortid = require('shortid');
 
-import { AbstractService } from 'sr2020-mm-event-engine/core/AbstractService';
-
-import { getMoscowTime, getTideHeight2 } from 'sr2020-mm-event-engine/utils/moonActivityUtils';
-
-import { isGeoLocation, shuffle } from 'sr2020-mm-event-engine/utils';
+import { 
+  AbstractService,
+  getMoscowTime, 
+  getTideHeight2,
+  isGeoLocation, 
+  shuffle
+} from 'sr2020-mm-event-engine';
 
 // import { manaOceanEffectSettings } from '../api/constants';
 

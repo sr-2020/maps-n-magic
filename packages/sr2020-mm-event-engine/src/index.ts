@@ -14,6 +14,7 @@ export { UserRecordService } from './services/UserRecordService';
 
 export * from './utils';
 export * from './utils/moonActivityUtils';
+export * from './utils/winstonLogger';
 
 export * from './types';
 

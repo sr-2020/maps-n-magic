@@ -1,9 +1,7 @@
 import * as R from 'ramda';
 import moment from 'moment-timezone';
 
-import { isClinicallyDead } from 'sr2020-mm-event-engine/utils';
-
-import { AbstractService } from 'sr2020-mm-event-engine/core/AbstractService';
+import { AbstractService, isClinicallyDead } from 'sr2020-mm-event-engine';
 
 const RESCUE_SERVICE_UPDATE_INTERVAL = 5000; // ms
 const RESCUE_SERVICE_PUSH_INTERVAL = 10 * 60000; // 10 minutes
