@@ -1,8 +1,8 @@
 import * as R from 'ramda';
 
-import { AbstractService } from 'sr2020-mm-event-engine';
+import { AbstractService, Metadata } from 'sr2020-mm-event-engine';
 
-const metadata = {
+const metadata: Metadata = {
   actions: [
     'pushNotification',
   ],
@@ -11,10 +11,13 @@ const metadata = {
     'pushNotification',
   ],
   listenEvents: [],
+  needActions: [],
+  needRequests: []
 };
+
 export class PushNotificationService extends AbstractService {
-  constructor(logger) {
-    super(logger);
+  constructor() {
+    super();
     this.setMetadata(metadata);
   }
 

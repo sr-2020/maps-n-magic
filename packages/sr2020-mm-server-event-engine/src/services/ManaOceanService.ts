@@ -2,33 +2,67 @@
 import * as R from 'ramda';
 import shortid from 'shortid';
 import moment from 'moment-timezone';
-// const shortid = require('shortid');
 
 import { 
   AbstractService,
   getMoscowTime, 
   getTideHeight2,
   isGeoLocation, 
-  shuffle
+  shuffle,
+  Metadata,
+  ManaOceanEffectSettingsData,
+  ManaOceanSettingsData,
+  SettingsKeys,
+  SettingsValues,
+  LocationRecord,
+  GameModel,
+  GMLogger,
+  RitualLocationEffect,
+  PowerSpellEffect,
+  SpellEffect,
+  ManaOceanEffect,
+  LocationRecordOptions,
+  MassacreEffect
 } from 'sr2020-mm-event-engine';
+
+import { 
+  SpellCast,
+} from "../types";
 
 // import { manaOceanEffectSettings } from '../api/constants';
 
-const TIDE_LEVEL_UPDATE_INTERVAL = 5000; // millis
+const TIDE_LEVEL_UPDATE_INTERVAL: number = 5000; // millis
 
-const MANA_TIDE_UPDATE_INTERVAL = 10000; // millis
+const MANA_TIDE_UPDATE_INTERVAL: number = 10000; // millis
 // const MANA_TIDE_UPDATE_INTERVAL = 30000; // millis
 // const MANA_TIDE_UPDATE_INTERVAL = 60000 * 10; // millis
 
 // let counter = 1;
 
-class EffectCollector {
-  index = {};
+interface LocationUpdate {
+  id: number;
+  body: {
+    options: LocationRecordOptions
+  }
+}
 
-  addEffect(locationRecord, effect) {
+type OptionsIndex = Record<number, {
+  manaLevel: number,
+  effectList: ManaOceanEffect[]
+}>
+
+class EffectCollector {
+  index: {
+    [locationId: number]: {
+      locationRecord: LocationRecord,
+      effects: ManaOceanEffect[]
+    }
+  } = {};
+
+  addEffect(locationRecord: LocationRecord, effect: ManaOceanEffect): void {
     const { id } = locationRecord;
     let record = this.index[id];
-    if (!record) {
+    if (record === undefined) {
       record = {
         locationRecord,
         effects: [],
@@ -38,16 +72,13 @@ class EffectCollector {
     record.effects.push(effect);
   }
 
-  toLocationUpdates() {
+  toLocationUpdates(): LocationUpdate[] {
     return R.values(this.index).map(({ locationRecord, effects }) => {
-      // @ts-ignore
       const { effectList = [] } = locationRecord.options;
       return {
-        // @ts-ignore
         id: locationRecord.id,
         body: {
           options: {
-            // @ts-ignore
             ...locationRecord.options,
             effectList: R.concat(effectList, effects),
           },
@@ -57,7 +88,7 @@ class EffectCollector {
   }
 }
 
-const metadata = {
+const metadata: Metadata = {
   actions: [
     'spellCast',
     'wipeManaOceanEffects',
@@ -90,43 +121,42 @@ const metadata = {
 };
 
 export class ManaOceanService extends AbstractService {
-  prevTideHeight: any;
+  prevTideHeight: number;
 
-  tideLevelTimerId: any;
+  tideLevelTimerId: NodeJS.Timeout;
 
-  lastManaUpdateTimestamp: any;
+  lastManaUpdateTimestamp: number;
 
-  constructor(logger) {
-    super(logger);
+  constructor() {
+    super();
     this.setMetadata(metadata);
     this.prevTideHeight = null;
     this.tideLevelTimerId = null;
     // this.manaModifiers = [];
     this.onTideLevelUpdate = this.onTideLevelUpdate.bind(this);
     this.onMassacreTriggered = this.onMassacreTriggered.bind(this);
-    this.getManaOptions = this.getManaOptions.bind(this);
+    // this.getManaOptions = this.getManaOptions.bind(this);
     // this.manaOceanSettings = R.clone(defaultManaOceanSettings);
   }
 
-  init(gameModel) {
-    super.init(gameModel);
+  init(gameModel: GameModel, logger: GMLogger): void {
+    super.init(gameModel, logger);
     if (this.tideLevelTimerId === null) {
       this.tideLevelTimerId = setInterval(this.onTideLevelUpdate, TIDE_LEVEL_UPDATE_INTERVAL);
     } else {
       this.logger.error('tideLevelTimer already initialized');
     }
     this.on('massacreTriggered', this.onMassacreTriggered);
-    // this.gameModel = gameModel;
   }
 
-  dispose() {
+  dispose(): void {
     if (this.tideLevelTimerId !== null) {
       clearInterval(this.tideLevelTimerId);
     }
     this.off('massacreTriggered', this.onMassacreTriggered);
   }
 
-  spellCast(data) {
+  spellCast(data: SpellCast): void {
     this.logger.info('spellCast', data);
 
     // {
@@ -147,7 +177,7 @@ export class ManaOceanService extends AbstractService {
     //   targetCharacterId: '10246',
     // }
     const locationId = data.location.id;
-    const locationRecord = this.getLocation(locationId);
+    const locationRecord: LocationRecord = this.getLocation(locationId);
     if (!locationRecord) {
       this.logger.error('location not found', locationId);
       if (data.id === 'input-stream' || data.id === 'output-stream') {
@@ -167,14 +197,14 @@ export class ManaOceanService extends AbstractService {
     this.processPowerSpell(data, effectCollector);
     this.processRitualCast(data, effectCollector);
     this.processManaOceanSpells(data, effectCollector, locationRecord);
-    const updates = effectCollector.toLocationUpdates();
+    const updates: LocationUpdate[] = effectCollector.toLocationUpdates();
     if (updates.length > 0) {
       this.pushEffects(updates);
     }
     // this.logger.info('effectCollector', JSON.stringify(effectCollector.index, null, '  '));
   }
 
-  processManaOceanSpells(data, effectCollector, locationRecord) {
+  processManaOceanSpells(data: SpellCast, effectCollector: EffectCollector, locationRecord: LocationRecord): void {
     const {
       id, power, timestamp, characterId, name,
     } = data;
@@ -203,7 +233,7 @@ export class ManaOceanService extends AbstractService {
       message: `Мощь ${power}, локация: ${locationRecord.label}`,
     });
 
-    const manaOceanEffectSettings = this.getSettings('manaOceanEffects');
+    const manaOceanEffectSettings: ManaOceanEffectSettingsData = this.getSettings<ManaOceanEffectSettingsData>('manaOceanEffects');
     const startTime = timestamp;
     const endTime = startTime + power
     * manaOceanEffectSettings.spellDurationPerPower
@@ -222,7 +252,7 @@ export class ManaOceanService extends AbstractService {
       manaLevelChange: id === 'input-stream' ? 1 : -1,
       locationId: locationRecord.id,
       range,
-    });
+    } as SpellEffect);
 
     // range.forEach((el) => {
     //   const neighborLocation = this.getFromModel({
@@ -256,23 +286,23 @@ export class ManaOceanService extends AbstractService {
     // });
   }
 
-  processRitualCast(data, effectCollector) {
+  processRitualCast(data: SpellCast, effectCollector: EffectCollector): void {
     const { timestamp, ritualMembersIds, ritualVictimIds } = data;
-    const manaOceanEffectSettings = this.getSettings('manaOceanEffects');
+    const manaOceanEffectSettings: ManaOceanEffectSettingsData = this.getSettings<ManaOceanEffectSettingsData>('manaOceanEffects');
     if (ritualMembersIds.length + ritualVictimIds.length
       < manaOceanEffectSettings.ritualMembersBoundary) {
       return;
     }
     const locationId = data.location.id;
-    const locationRecord = this.getLocation(locationId);
+    const locationRecord: LocationRecord = this.getLocation(locationId);
     // this.logger.info('dssd');
-    const neighborLocation = this.getFromModel({
-      type: 'neighborOrRandomLocation',
-      locationId: locationRecord.id,
-    });
-    if (neighborLocation == null) {
-      return;
-    }
+    // const neighborLocation = this.getFromModel({
+    //   type: 'neighborOrRandomLocation',
+    //   locationId: locationRecord.id,
+    // });
+    // if (neighborLocation == null) {
+    //   return;
+    // }
     // this.logger.info('neighborLocation', { neighborLocation });
 
     effectCollector.addEffect(locationRecord, {
@@ -283,7 +313,7 @@ export class ManaOceanService extends AbstractService {
       manaLevelChange: -1,
       permanent: true,
       locationId,
-    });
+    } as RitualLocationEffect);
     // effectCollector.addEffect(neighborLocation, {
     //   type: 'ritualNeighborLocation',
     //   id: shortid.generate(),
@@ -294,14 +324,15 @@ export class ManaOceanService extends AbstractService {
     // });
   }
 
-  processPowerSpell(data, effectCollector) {
+  processPowerSpell(data: SpellCast, effectCollector: EffectCollector): void {
     const { timestamp, power } = data;
-    const manaOceanEffectSettings = this.getSettings('manaOceanEffects');
+    const manaOceanEffectSettings: ManaOceanEffectSettingsData = this.getSettings<ManaOceanEffectSettingsData>('manaOceanEffects');
     if (power < manaOceanEffectSettings.powerSpellBoundary) {
       return;
     }
     const locationId = data.location.id;
-    const locationRecord = this.getLocation(locationId);
+    const locationRecord: LocationRecord = this.getLocation(locationId);
+
     effectCollector.addEffect(locationRecord, {
       type: 'powerSpell',
       id: shortid.generate(),
@@ -312,10 +343,13 @@ export class ManaOceanService extends AbstractService {
       + manaOceanEffectSettings.powerSpellDuration,
       manaLevelChange: -1,
       locationId,
-    });
+    } as PowerSpellEffect);
   }
 
-  onMassacreTriggered(data) {
+  onMassacreTriggered(data: {
+    locationId: number,
+    timestamp: number
+  }): void {
     const { locationId, timestamp } = data;
     // {
     //   type: 'massacreTriggered',
@@ -323,12 +357,13 @@ export class ManaOceanService extends AbstractService {
     //   timestamp: 1602203600686
     // }
     // this.manaModifiers.push(data);
-    const locationRecord = this.getLocation(locationId);
+    const locationRecord: LocationRecord = this.getLocation(locationId);
     if (!locationRecord) {
       this.logger.error('location not found', locationId);
       return;
     }
-    const manaOceanEffectSettings = this.getSettings('manaOceanEffects');
+    const manaOceanEffectSettings: ManaOceanEffectSettingsData = this.getSettings<ManaOceanEffectSettingsData>('manaOceanEffects');
+    
     this.pushEffect(locationRecord, {
       type: 'massacre',
       id: shortid.generate(),
@@ -338,18 +373,18 @@ export class ManaOceanService extends AbstractService {
       + manaOceanEffectSettings.massacreDuration, // end after 30 minutes
       manaLevelChange: 1,
       locationId,
-    });
+    } as MassacreEffect);
     // // this.logger.info('manaModifiers', this.manaModifiers, shortid.generate(), data, locationRecord);
   }
 
-  getLocation(locationId) {
-    return this.getFromModel({
+  getLocation(locationId: number): LocationRecord {
+    return this.getFromModel<any, LocationRecord>({
       type: 'locationRecord',
       id: locationId,
     });
   }
 
-  pushEffect(locationRecord, effect) {
+  pushEffect(locationRecord: LocationRecord, effect: ManaOceanEffect): void {
     const { effectList = [] } = locationRecord.options;
     // effectList = [];
     effectList.push(effect);
@@ -366,7 +401,7 @@ export class ManaOceanService extends AbstractService {
     });
   }
 
-  pushEffects(updates) {
+  pushEffects(updates: LocationUpdate[]): void {
     // this.logger.info('pushEffects', updates);
     this.executeOnModel({
       type: 'putLocationRecords',
@@ -374,10 +409,13 @@ export class ManaOceanService extends AbstractService {
     });
   }
 
-  addManaEffect(data) {
+  addManaEffect(data: {
+    locationId: number,
+    effectType: 'massacre' | 'powerSpell'
+  }): void {
     // this.logger.info('addManaEffect', data);
     const { locationId, effectType } = data;
-    const locationRecord = this.getLocation(locationId);
+    const locationRecord: LocationRecord = this.getLocation(locationId);
     if (!locationRecord) {
       this.logger.error('location not found', locationId);
       return;
@@ -385,12 +423,12 @@ export class ManaOceanService extends AbstractService {
     if (effectType !== 'massacre' && effectType !== 'powerSpell') {
       return;
     }
-    const manaOceanEffectSettings = this.getSettings('manaOceanEffects');
+    const manaOceanEffectSettings: ManaOceanEffectSettingsData = this.getSettings<ManaOceanEffectSettingsData>('manaOceanEffects');
 
     // const { moscowTime } = getMoscowTime();
     // const timestamp = moscowTime.utc().valueOf();
-    const timestamp = moment.utc().valueOf();
-    let effect;
+    const timestamp: number = moment.utc().valueOf();
+    let effect: ManaOceanEffect;
     if (effectType === 'massacre') {
       effect = {
         type: 'massacre',
@@ -399,7 +437,7 @@ export class ManaOceanService extends AbstractService {
         end: timestamp + manaOceanEffectSettings.massacreDuration,
         manaLevelChange: 1,
         locationId,
-      };
+      } as MassacreEffect;
     }
     if (effectType === 'powerSpell') {
       effect = {
@@ -409,7 +447,7 @@ export class ManaOceanService extends AbstractService {
         end: timestamp + manaOceanEffectSettings.powerSpellDuration,
         manaLevelChange: -1,
         locationId,
-      };
+      } as PowerSpellEffect;
     }
 
     const { options } = locationRecord;
@@ -426,16 +464,19 @@ export class ManaOceanService extends AbstractService {
     });
   }
 
-  removeManaEffect(data) {
+  removeManaEffect(data: {
+    locationId: number,
+    effectId: string
+  }): void {
     const { locationId, effectId } = data;
-    const locationRecord = this.getLocation(locationId);
+    const locationRecord: LocationRecord = this.getLocation(locationId);
     if (!locationRecord) {
       this.logger.error('location not found', locationId);
       return;
     }
 
     const { options } = locationRecord;
-    const newEffectList = options.effectList.filter((el) => el.id !== effectId);
+    const newEffectList: ManaOceanEffect[] = options.effectList.filter((el) => el.id !== effectId);
     this.executeOnModel({
       type: 'putLocationRecord',
       id: locationRecord.id,
@@ -450,10 +491,10 @@ export class ManaOceanService extends AbstractService {
     // this.logger.info('removeManaEffect', data);
   }
 
-  wipeManaOceanEffects() {
+  wipeManaOceanEffects(): void {
     // this.logger.info('wipeManaOceanEffects');
-    const manaOceanSettings = this.getSettings('manaOcean');
-    const locationRecords = this.getFromModel('locationRecords');
+    const manaOceanSettings: ManaOceanSettingsData = this.getSettings<ManaOceanSettingsData>('manaOcean');
+    const locationRecords: LocationRecord[] = this.getFromModel<any, LocationRecord[]>('locationRecords');
     const { neutralManaLevel } = manaOceanSettings;
     const geoLocations = locationRecords.filter(isGeoLocation);
     const curTimestamp = moment.utc().valueOf();
@@ -462,13 +503,14 @@ export class ManaOceanService extends AbstractService {
 
     this.prevTideHeight = tideHeight;
 
-    const updates = geoLocations.reduce((acc, location) => {
-      const newOptions = {
-        manaLevelModifiers: {
-          neutralManaLevel,
-          tideHeight,
-          effects: [],
-        },
+    const updates: LocationUpdate[] = geoLocations.reduce((acc: LocationUpdate[], location: LocationRecord) => {
+      const newOptions: LocationRecordOptions = {
+        ...location.options,
+        // manaLevelModifiers: {
+        //   neutralManaLevel,
+        //   tideHeight,
+        //   effects: [],
+        // },
         effectList: [],
         manaLevel: null,
       };
@@ -482,7 +524,7 @@ export class ManaOceanService extends AbstractService {
         });
       }
       return acc;
-    }, []);
+    }, [] as LocationUpdate[]);
 
     this.executeOnModel({
       type: 'putLocationRecords',
@@ -491,39 +533,45 @@ export class ManaOceanService extends AbstractService {
   }
 
   // eslint-disable-next-line max-lines-per-function
-  onTideLevelUpdate2() {
-    const enableManaOcean = this.getFromModel('enableManaOcean');
-    const manaOceanSettings = this.getSettings('manaOcean');
+  onTideLevelUpdate2(): void {
+    const enableManaOcean: boolean = this.getFromModel<any, boolean>('enableManaOcean');
+    const manaOceanSettings: ManaOceanSettingsData = this.getSettings<ManaOceanSettingsData>('manaOcean');
     // this.logger.info('manaOceanSettings', manaOceanSettings);
 
     if (!enableManaOcean || !manaOceanSettings) {
       return;
     }
     const curTimestamp = moment.utc().valueOf();
-    const locationRecords = this.getFromModel('locationRecords');
+    const locationRecords: LocationRecord[] = this.getFromModel<any, LocationRecord[]>('locationRecords');
     const { neutralManaLevel, minManaLevel, maxManaLevel } = manaOceanSettings;
 
-    const geoLocations = locationRecords.filter(isGeoLocation);
+    const geoLocations: LocationRecord[] = locationRecords.filter(isGeoLocation);
 
-    const tideHeight = this.getNextTideHeight(curTimestamp, manaOceanSettings);
+    const tideHeight: number = this.getNextTideHeight(curTimestamp, manaOceanSettings);
     this.prevTideHeight = tideHeight;
 
-    const getEffectList = R.pipe(
-      R.prop('options'),
+    const getEffectList = R.pipe<LocationRecord, LocationRecordOptions>(
+      R.prop<string, LocationRecordOptions>('options'),
+      R.prop<string, ManaOceanEffect[]>('effectList'),
       // @ts-ignore
-      R.prop('effectList'),
-      R.defaultTo([]),
-    );
+      R.defaultTo<ManaOceanEffect[]>([]),
+    ) as (el: LocationRecord) => ManaOceanEffect[];
+
+    type ApplicableManaOceanEffect = ManaOceanEffect & {
+      isApplicable: boolean;
+    }
 
     const getFullEffectList = R.pipe(
       R.map(getEffectList),
-      R.unnest,
-      R.sortBy(R.prop('start')),
-      R.filter((effect) => effect.permanent || effect.end > curTimestamp),
-      R.map((effect) => ({ ...effect, isApplicable: effect.start < curTimestamp })),
-    );
+      R.unnest as (arr: ManaOceanEffect[][]) => ManaOceanEffect[],
+      // @ts-ignore
+      R.sortBy(R.prop<string, ManaOceanEffect>('start')),
+      // @ts-ignore
+      R.filter((effect: ManaOceanEffect) => effect.permanent || effect.end > curTimestamp),
+      R.map((effect: ManaOceanEffect) => ({ ...effect, isApplicable: effect.start < curTimestamp })),
+    ) as (locs: LocationRecord[]) => ApplicableManaOceanEffect[];
 
-    const list = getFullEffectList(geoLocations);
+    const list: ApplicableManaOceanEffect[] = getFullEffectList(geoLocations);
     // this.logger.info('list', list);
 
     const prevOptIndex = geoLocations.reduce((acc, location) => {
@@ -532,7 +580,7 @@ export class ManaOceanService extends AbstractService {
         effectList: location.options.effectList,
       };
       return acc;
-    }, {});
+    }, {} as OptionsIndex);
 
     // this.logger.info('getEffectList', getEffectList(geoLocations[0]));
 
@@ -542,11 +590,11 @@ export class ManaOceanService extends AbstractService {
         effectList: [],
       };
       return acc;
-    }, {});
+    }, {} as OptionsIndex);
 
     // this.logger.info('optIndex', optIndex);
 
-    list.forEach((effect) => {
+    list.forEach((effect: ApplicableManaOceanEffect) => {
       // this.logger.info('optIndex', optIndex);
       // this.logger.info('effect type:', effect.type);
       const options = optIndex[effect.locationId];
@@ -581,7 +629,8 @@ export class ManaOceanService extends AbstractService {
     const changedPairs = R.difference(R.toPairs(optIndex), R.toPairs(prevOptIndex));
     const changedOpts = R.fromPairs(changedPairs);
     // this.logger.info('changedOpts', changedOpts);
-    const updates = changedPairs.map(([id, options]) => ({
+    // @ts-ignore TODO - check if this case corrupts data!!!!!!!!!
+    const updates: LocationUpdate[] = changedPairs.map(([id, options]) => ({
       id: Number(id),
       body: {
         options,
@@ -606,24 +655,29 @@ export class ManaOceanService extends AbstractService {
   }
 
   // eslint-disable-next-line max-lines-per-function
-  onApplyManaSpell(optIndex, effect, manaOceanSettings, curTimestamp) {
+  onApplyManaSpell(    
+    optIndex: OptionsIndex, 
+    effect: SpellEffect, 
+    manaOceanSettings: ManaOceanSettingsData, 
+    curTimestamp: number
+  ): void {
     const { neutralManaLevel, minManaLevel, maxManaLevel } = manaOceanSettings;
     const options = optIndex[effect.locationId];
     // this.logger.info('onApplyManaSpell: effect', effect);
     const { type, range, start } = effect;
-    const manaOceanEffectSettings = this.getSettings('manaOceanEffects');
+    const manaOceanEffectSettings = this.getSettings<ManaOceanEffectSettingsData>('manaOceanEffects');
     // if( type === 'inputStream' ? options.manaLevel < maxManaLevel : options.manaLevel > minManaLevel) {
     // if( options.manaLevel < maxManaLevel) {
     // has applicable mana transfers check
     const applicableItems = range.filter((point) => (start + point * manaOceanEffectSettings.spellDurationItem) < curTimestamp);
 
-    function getMaxDelta() {
+    function getMaxDelta(): number {
       return type === 'inputStream' ? maxManaLevel - options.manaLevel : options.manaLevel - minManaLevel;
     }
-    function hasPlaceForMana(id) {
+    function hasPlaceForMana(id: number): boolean {
       return type === 'inputStream' ? optIndex[id].manaLevel > minManaLevel : optIndex[id].manaLevel < maxManaLevel;
     }
-    function isNeighborManaPlaceEnded(id) {
+    function isNeighborManaPlaceEnded(id: number): boolean {
       return type === 'inputStream' ? optIndex[id].manaLevel === minManaLevel
         : optIndex[id].manaLevel === maxManaLevel;
     }
@@ -633,7 +687,7 @@ export class ManaOceanService extends AbstractService {
       // this.logger.info('onApplyManaSpell: no applicable items');
       return;
     }
-    const neighborList = this.getFromModel({
+    const neighborList = this.getFromModel<any, LocationRecord[]>({
       type: 'neighborList',
       locationId: effect.locationId,
     });
@@ -646,9 +700,9 @@ export class ManaOceanService extends AbstractService {
     const prepareIds = R.pipe(
       R.filter(hasPlaceForMana),
       shuffle,
-    );
+    ) as (ids: number[]) => number[];
     let neighborIds2 = prepareIds(neighborIds);
-    if (!effect.prevNeighborIds) {
+    if (effect.prevNeighborIds === undefined) {
       effect.prevNeighborIds = [];
     }
     for (let i = 0; i < maxApplicableNum; i++) {
@@ -670,12 +724,16 @@ export class ManaOceanService extends AbstractService {
     }
   }
 
-  onApplyRitualLocation(optIndex, effect, manaOceanSettings) {
+  onApplyRitualLocation(
+    optIndex: OptionsIndex, 
+    effect: RitualLocationEffect, 
+    manaOceanSettings: ManaOceanSettingsData
+  ): void {
     const { neutralManaLevel, minManaLevel, maxManaLevel } = manaOceanSettings;
     const options = optIndex[effect.locationId];
     // this.logger.info('onApplyRitualLocation: effect', effect);
     if (options.manaLevel > minManaLevel) {
-      if (effect.neighborId) {
+      if (effect.neighborId !== undefined) {
         const neighborOptions = optIndex[effect.neighborId];
         if (neighborOptions.manaLevel < maxManaLevel) {
           options.manaLevel += effect.manaLevelChange;
@@ -684,7 +742,7 @@ export class ManaOceanService extends AbstractService {
           return;
         }
       }
-      const neighborList = this.getFromModel({
+      const neighborList = this.getFromModel<any, LocationRecord[]>({
         type: 'neighborList',
         locationId: effect.locationId,
       });
@@ -698,7 +756,7 @@ export class ManaOceanService extends AbstractService {
         const neighborOptions = optIndex[el.id];
         return neighborOptions.manaLevel < maxManaLevel;
       });
-      if (neighborLocation) {
+      if (neighborLocation !== undefined) {
         const neighborOptions = optIndex[neighborLocation.id];
         options.manaLevel += effect.manaLevelChange;
         effect.neighborId = neighborLocation.id;
@@ -712,7 +770,7 @@ export class ManaOceanService extends AbstractService {
     }
   }
 
-  onTideLevelUpdate() {
+  onTideLevelUpdate(): void {
     this.onTideLevelUpdate2();
     // const enableManaOcean = this.getFromModel('enableManaOcean');
     // if (!enableManaOcean) {
@@ -778,49 +836,49 @@ export class ManaOceanService extends AbstractService {
   }
 
   // eslint-disable-next-line class-methods-use-this
-  getManaOptions(location, tideHeight, neutralManaLevel, curTimestamp) {
-    const { options } = location;
-    const { effectList = [] } = options;
-    const notOutdatedEffectList = effectList.filter((effect) => effect.permanent || effect.end > curTimestamp);
-    const startedEffects = notOutdatedEffectList.filter((effect) => effect.start < curTimestamp);
-    const groups = R.groupBy(R.prop('type'), startedEffects);
+  // getManaOptions(location: LocationRecord, tideHeight, neutralManaLevel, curTimestamp) {
+  //   const { options } = location;
+  //   const { effectList = [] } = options;
+  //   const notOutdatedEffectList = effectList.filter((effect) => effect.permanent || effect.end > curTimestamp);
+  //   const startedEffects = notOutdatedEffectList.filter((effect) => effect.start < curTimestamp);
+  //   const groups = R.groupBy(R.prop('type'), startedEffects);
 
-    let ids = [];
-    if (groups.ritualLocation && groups.ritualNeighborLocation) {
-      const compensatedEffectsSize = Math.min(groups.ritualLocation.length, groups.ritualNeighborLocation.length);
-      ids = R.pluck('id', R.concat(
-        groups.ritualLocation.slice(0, compensatedEffectsSize),
-        groups.ritualNeighborLocation.slice(0, compensatedEffectsSize),
-      ));
-    }
+  //   let ids = [];
+  //   if (groups.ritualLocation && groups.ritualNeighborLocation) {
+  //     const compensatedEffectsSize = Math.min(groups.ritualLocation.length, groups.ritualNeighborLocation.length);
+  //     ids = R.pluck('id', R.concat(
+  //       groups.ritualLocation.slice(0, compensatedEffectsSize),
+  //       groups.ritualNeighborLocation.slice(0, compensatedEffectsSize),
+  //     ));
+  //   }
 
-    const liveEffectList = notOutdatedEffectList.filter((effect) => !ids.includes(effect.id));
-    const startedEffects2 = startedEffects.filter((effect) => !ids.includes(effect.id));
+  //   const liveEffectList = notOutdatedEffectList.filter((effect) => !ids.includes(effect.id));
+  //   const startedEffects2 = startedEffects.filter((effect) => !ids.includes(effect.id));
 
-    const effects = startedEffects2.map((effect) => ({
-      type: effect.type,
-      manaLevelChange: effect.manaLevelChange,
-    }));
-    if (effects.length > 0) {
-      // this.logger.info('effects', location.id, effects);
-    }
-    const newOptions = {
-      manaLevelModifiers: {
-        neutralManaLevel,
-        tideHeight,
-        effects,
-      },
-      effectList: liveEffectList,
-      manaLevel: null,
-    };
-    newOptions.manaLevel = this.calcManaLevel([neutralManaLevel, tideHeight, ...R.pluck('manaLevelChange', effects)]);
-    if (!R.equals(options, newOptions)) {
-      return newOptions;
-    }
-    return null;
-  }
+  //   const effects = startedEffects2.map((effect) => ({
+  //     type: effect.type,
+  //     manaLevelChange: effect.manaLevelChange,
+  //   }));
+  //   if (effects.length > 0) {
+  //     // this.logger.info('effects', location.id, effects);
+  //   }
+  //   const newOptions = {
+  //     manaLevelModifiers: {
+  //       neutralManaLevel,
+  //       tideHeight,
+  //       effects,
+  //     },
+  //     effectList: liveEffectList,
+  //     manaLevel: null,
+  //   };
+  //   newOptions.manaLevel = this.calcManaLevel([neutralManaLevel, tideHeight, ...R.pluck('manaLevelChange', effects)]);
+  //   if (!R.equals(options, newOptions)) {
+  //     return newOptions;
+  //   }
+  //   return null;
+  // }
 
-  getNextTideHeight(curTimestamp, manaOceanSettings) {
+  getNextTideHeight(curTimestamp: number, manaOceanSettings: ManaOceanSettingsData): number {
     if (this.prevTideHeight === null) {
       this.lastManaUpdateTimestamp = curTimestamp;
       // return -2;
@@ -845,16 +903,16 @@ export class ManaOceanService extends AbstractService {
     // return tideHeight;
   }
 
-  getSettings(name) {
-    return this.getFromModel({
+  getSettings<T>(name: SettingsKeys): T {
+    return this.getFromModel<any, T>({
       type: 'settings',
       name,
     });
   }
 
-  calcManaLevel(arr) {
-    const manaOceanSettings = this.getSettings('manaOcean');
-    const sum = R.sum(arr);
+  calcManaLevel(arr: number[]): number {
+    const manaOceanSettings: ManaOceanSettingsData = this.getSettings<ManaOceanSettingsData>('manaOcean');
+    const sum: number = R.sum(arr);
     return R.max(R.min(manaOceanSettings.maxManaLevel, sum), manaOceanSettings.minManaLevel);
   }
 }

@@ -3,8 +3,9 @@
 import { PubSub } from '@google-cloud/pubsub';
 // import moment from 'moment-timezone';
 // import { bodyConditions } from 'sr2020-mm-data/gameConstants';
+import { SpellCast } from "../../types";
 
-let subscriptionName;
+let subscriptionName: string;
 
 if (process.env.NODE_ENV === 'production') {
   subscriptionName = 'mm-mana-ocean-spell-cast-prod';
@@ -18,7 +19,10 @@ const timeout = 60;
 // Creates a client; cache this for further use
 const pubSubClient = new PubSub();
 
-export function listenSpellCasts(callback, simulateMessages = false) {
+export function listenSpellCasts(
+  callback: (spellCast: SpellCast) => Promise<void>, 
+  simulateMessages: boolean = false
+) {
   // References an existing subscription
   const subscription = pubSubClient.subscription(subscriptionName);
 
@@ -27,7 +31,7 @@ export function listenSpellCasts(callback, simulateMessages = false) {
   const messageHandler = (message) => {
     // console.log(`Received message ${message.id}:`);
     // console.log(`\tData: ${message.data}`);
-    const parsedData = JSON.parse(message.data);
+    const parsedData: SpellCast = JSON.parse(message.data);
     // console.log(`listenSpellCasts data: ${JSON.stringify(parsedData, null, '  ')}`);
     // console.log(`\tAttributes: ${message.attributes}`);
     messageCount += 1;

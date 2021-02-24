@@ -3,21 +3,24 @@ import moment from 'moment-timezone';
 // import { getCharacterLocation } from './getCharacterLocation';
 // import { getCharacterLifeStyle } from './getCharacterLifeStyle';
 // import { listenHealthChanges } from './listenHealthChanges';
+import { GameModel } from "sr2020-mm-event-engine";
+
 import { listenSpellCasts } from './listenSpellCasts';
+import { SpellCast } from "../../types";
 
 // const { listenHealthChanges } = require('./listenHealthChanges');
 // const { getCharacterLocation } = require('./getCharacterLocation');
 
 export class SpellCastsListener {
-  gameModel: any;
+  gameModel: GameModel;
 
-  constructor(gameModel) {
+  constructor(gameModel: GameModel) {
     this.gameModel = gameModel;
     this.onMessageRecieved = this.onMessageRecieved.bind(this);
     listenSpellCasts(this.onMessageRecieved, true);
   }
 
-  async onMessageRecieved(data) {
+  async onMessageRecieved(data: SpellCast): Promise<void> {
     // console.log(data);
     this.gameModel.execute({
       type: 'spellCast',

@@ -1,8 +1,13 @@
 import * as R from 'ramda';
 
-import { AbstractService } from 'sr2020-mm-event-engine';
+import { 
+  AbstractService, 
+  Metadata,
+  LocationRecord,
+  CharacterLocationData
+} from 'sr2020-mm-event-engine';
 
-const metadata = {
+const metadata: Metadata = {
   actions: [
     // 'postNotification',
   ],
@@ -18,12 +23,15 @@ const metadata = {
     'locationRecord',
     'charactersFromLocation',
   ],
+  needActions: []
 };
 export class AudioStageService extends AbstractService {
-  locationIndex: any;
+  locationIndex: Map<number, {
+    manaLevel: number;
+  }>;
 
-  constructor(logger) {
-    super(logger);
+  constructor() {
+    super();
     this.setMetadata(metadata);
     // When we get location mana update we want to update sound stage for all character at that location.
     // When character steps in new location we want to get current location mana level.
@@ -42,8 +50,8 @@ export class AudioStageService extends AbstractService {
     this.onPutLocationRecords = this.onPutLocationRecords.bind(this);
   }
 
-  init(gameModel) {
-    super.init(gameModel);
+  init(gameModel, logger) {
+    super.init(gameModel, logger);
     this.on('characterLocationChanged', this.onCharacterLocationChanged);
     this.on('putLocationRecords', this.onPutLocationRecords);
   }
@@ -60,7 +68,9 @@ export class AudioStageService extends AbstractService {
 
   // }
 
-  onPutLocationRecords(data) {
+  onPutLocationRecords(data: {
+    locationRecords: LocationRecord[]
+  }) {
   // data:  {
   //     "locationRecords": [
   //       {
@@ -90,7 +100,7 @@ export class AudioStageService extends AbstractService {
     const soundStageUpdates = R.flatten(changedManaLevelLocs.map(({ locationId, manaLevel }) => {
       const data2 = this.locationIndex.get(locationId);
       data2.manaLevel = manaLevel;
-      const characterSet = this.getFromModel({
+      const characterSet = this.getFromModel<any, Set<number>>({
         type: 'charactersFromLocation',
         locationId,
       });
@@ -107,7 +117,7 @@ export class AudioStageService extends AbstractService {
     // this.logger.info('soundStageUpdates', soundStageUpdates);
   }
 
-  onCharacterLocationChanged(data) {
+  onCharacterLocationChanged(data: CharacterLocationData): void {
     // data: {
     //   "type": "putCharLocationConfirmed",
     //   "characterId": 51935,
@@ -120,7 +130,7 @@ export class AudioStageService extends AbstractService {
     //   characterSet.delete(characterId);
     // }
 
-    let manaLevel = null;
+    let manaLevel: number = null;
     if (locationId !== null) {
       const locationRecord = this.getLocation(locationId);
       if (!locationRecord) {
@@ -155,8 +165,8 @@ export class AudioStageService extends AbstractService {
     // this.logger.info(this.locationIndex);
   }
 
-  getLocation(locationId) {
-    return this.getFromModel({
+  getLocation(locationId: number): LocationRecord {
+    return this.getFromModel<any, LocationRecord>({
       type: 'locationRecord',
       id: locationId,
     });

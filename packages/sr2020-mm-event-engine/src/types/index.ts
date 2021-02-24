@@ -53,17 +53,57 @@ export interface LocationRecord {
     // fillOpacity: 0.2
     // manaLevel: 6
     // weight: 3
-  options: {
-    color: string;
-    weight: number;
-    fillOpacity: number;
-    manaLevel: number;
-    effectList: unknown[];
-  }
+  options: LocationRecordOptions;
   polygon: SRPolygon;
   // polygon: {,…}
   // 0: [{lat: 54.929353280120615, lng: 36.87302201994499}, {lat: 54.9291853949252, lng: 36.873314380727614},…]
 }
+
+export interface LocationRecordOptions {
+  color: string;
+  weight: number;
+  fillOpacity: number;
+  manaLevel: number;
+  effectList: ManaOceanEffect[];
+};
+
+export interface AbstractManaOceanEffect {
+  id: string;
+  start: number;
+  manaLevelChange: number;
+  locationId: number;
+}
+
+export interface RitualLocationEffect extends AbstractManaOceanEffect {
+  type: 'ritualLocation',
+  permanent: true;
+  neighborId?: number;
+}
+
+export interface PowerSpellEffect extends AbstractManaOceanEffect {
+  type: 'powerSpell';
+  end: number;
+}
+
+export interface SpellEffect extends AbstractManaOceanEffect {
+  type: 'inputStream' | 'outputStream',
+  end: number;
+  range: number[];
+  prevNeighborIds?: number[];
+}
+
+export interface MassacreEffect extends AbstractManaOceanEffect {
+  type: 'massacre';
+  end: number;
+}
+
+export type ManaOceanEffect = 
+  RitualLocationEffect | 
+  PowerSpellEffect | 
+  SpellEffect | 
+  MassacreEffect;
+
+
 
 export type LocPolygonData = Pick<LocationRecord, "id" | "polygon"> & {
   centroid?: SRLatLng
@@ -90,19 +130,19 @@ export interface SRLatLngBounds {
   intersects: (SRLatLngBounds) => boolean;
 }
 
-export interface RawCharacterHealthState {
-  //   55817: {locationId: 3215, locationLabel: "Межрайонье 1", healthState: "clinically_dead",…}
-  // healthState: "clinically_dead"
-  // TODO add enum here
-  healthState: string;
-  // lifeStyle: "Страховка отсутствует"
-  // locationId: 3215
-  locationId: number;
-  // locationLabel: "Межрайонье 1"
-  // personName: "Blaze ноябрь"
-  // timestamp: 1613673901135
-  timestamp: number;
-}
+// export interface RawCharacterHealthState {
+//   //   55817: {locationId: 3215, locationLabel: "Межрайонье 1", healthState: "clinically_dead",…}
+//   // healthState: "clinically_dead"
+//   // TODO add enum here
+//   healthState: string;
+//   // lifeStyle: "Страховка отсутствует"
+//   // locationId: 3215
+//   locationId: number;
+//   // locationLabel: "Межрайонье 1"
+//   // personName: "Blaze ноябрь"
+//   // timestamp: 1613673901135
+//   timestamp: number;
+// }
 
 export interface SettingsData {
 
@@ -184,3 +224,9 @@ export interface CharacterHealthStatesByLocation {
   location: LocationRecord;
   locationId: number;
 }
+
+export interface CharacterLocationData {
+  characterId: number;
+  locationId: number;
+  prevLocationId: number;
+};

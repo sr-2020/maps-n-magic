@@ -1,26 +1,29 @@
 import * as R from 'ramda';
 
-import { AbstractService } from 'sr2020-mm-event-engine';
+import { AbstractService, Metadata, RawCharacterHealthState } from 'sr2020-mm-event-engine';
 
-const metadata = {
+const metadata: Metadata = {
   actions: ['onCharHealthUpdateReceived'],
   requests: [],
   emitEvents: ['massacreTriggered'],
   listenEvents: ['characterHealthStateChanged'],
+  needRequests: [],
+  needActions: []
 };
 export class MassacreService extends AbstractService {
-  characterHealthStats: any;
+  // key - locationId, 
+  // value - array of timestamps when character falled in state 'wounded'
+  characterHealthStats: Record<number, number[]>;
 
-  constructor(logger) {
-    super(logger);
+  constructor() {
+    super();
     this.setMetadata(metadata);
     this.characterHealthStats = {};
     this.onCharHealthChanged = this.onCharHealthChanged.bind(this);
   }
 
-  init(...args) {
-    // @ts-ignore
-    super.init(...args);
+  init(gameModel, logger) {
+    super.init(gameModel, logger);
     this.on('characterHealthStateChanged', this.onCharHealthChanged);
   }
 
@@ -28,7 +31,10 @@ export class MassacreService extends AbstractService {
     this.off('characterHealthStateChanged', this.onCharHealthChanged);
   }
 
-  onCharHealthChanged(data) {
+  onCharHealthChanged(data: { 
+    characterId: number, 
+    characterHealthState: RawCharacterHealthState
+  }) {
     // this.logger.info('massacre service', data);
     const { characterId, characterHealthState } = data;
     const { locationId, healthState, timestamp } = characterHealthState;

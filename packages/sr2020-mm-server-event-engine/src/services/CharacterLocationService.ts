@@ -1,8 +1,12 @@
 import * as R from 'ramda';
 
-import { AbstractService } from 'sr2020-mm-event-engine';
+import { 
+  AbstractService, 
+  Metadata,
+  CharacterLocationData
+} from 'sr2020-mm-event-engine';
 
-const metadata = {
+const metadata: Metadata = {
   actions: [
     'setAllCharacterLocations',
     'setCharacterLocation',
@@ -18,14 +22,15 @@ const metadata = {
   ],
   needRequests: [
   ],
+  needActions: []
 };
 export class CharacterLocationService extends AbstractService {
-  loc2charIndex: any;
+  loc2charIndex: Map<number, Set<number>>;
 
-  char2locIndex: any;
+  char2locIndex: Map<number, number>;
 
-  constructor(logger) {
-    super(logger);
+  constructor() {
+    super();
     this.setMetadata(metadata);
     // Map(
     //   locationId,
@@ -40,7 +45,9 @@ export class CharacterLocationService extends AbstractService {
     this.setCharacterLocation = this.setCharacterLocation.bind(this);
   }
 
-  setAllCharacterLocations({ characterLocations }) {
+  setAllCharacterLocations({ characterLocations }: {
+    characterLocations: CharacterLocationData[]
+  }): void {
     characterLocations.forEach(this.setCharacterLocation);
 
     // this.logger.info(characterLocations);
@@ -48,11 +55,11 @@ export class CharacterLocationService extends AbstractService {
     // this.logger.info(this.char2locIndex);
   }
 
-  getCharactersFromLocation({ locationId }) {
+  getCharactersFromLocation({ locationId }): Set<number> {
     return this.loc2charIndex.get(locationId) || new Set();
   }
 
-  setCharacterLocation({ characterId, locationId, prevLocationId }) {
+  setCharacterLocation({ characterId, locationId, prevLocationId }: CharacterLocationData): void {
     const prevLocationId2 = this.char2locIndex.get(characterId);
     if (prevLocationId2 === locationId) {
       return;
@@ -63,7 +70,7 @@ export class CharacterLocationService extends AbstractService {
       prevLocData.delete(characterId);
     }
     let curLocData = this.loc2charIndex.get(locationId);
-    if (!curLocData) {
+    if (curLocData === undefined) {
       this.loc2charIndex.set(locationId, new Set());
       curLocData = this.loc2charIndex.get(locationId);
     }
