@@ -66,6 +66,8 @@ packages/sr2020-mm-server-event-engine/api
 packages/sr2020-mm-server-event-engine/configs
 packages/sr2020-mm-server-event-engine/dataManagers
 packages/sr2020-mm-server-event-engine/services
+packages/sr2020-mm-server-event-engine/index.js
+packages/sr2020-mm-server-event-engine/index.d.ts
 
 packages/sr2020-mm-client-event-engine/api
 packages/sr2020-mm-client-event-engine/configs
