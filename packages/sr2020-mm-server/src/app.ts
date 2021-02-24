@@ -7,8 +7,8 @@ import morganLogger from 'morgan';
 import shortid from 'shortid';
 import cors from 'cors';
 
-import { makeGameModel } from 'sr2020-mm-server-event-engine/configs/serverEventEngine';
-import { winstonLogger } from 'sr2020-mm-event-engine/utils/winstonLogger';
+import { makeGameModel } from 'sr2020-mm-server-event-engine';
+import { winstonLogger } from 'sr2020-mm-event-engine';
 
 import { indexRouter } from './routes/index';
 import { fileListRouter } from './routes/fileList';
@@ -26,8 +26,6 @@ import { WebSocketWrapper } from './webSocketWrapper';
 // const shortid = require('shortid');
 
 // const cors = require('cors');
-// const { makeGameModel } = require('sr2020-mm-server-event-engine/configs/serverEventEngine');
-// const { winstonLogger } = require('sr2020-mm-event-engine/utils/winstonLogger');
 
 // const indexRouter = require('./routes/index.ts');
 // const fileListRouter = require('./routes/fileList.ts');
@@ -46,8 +44,6 @@ import { WebSocketWrapper } from './webSocketWrapper';
 // const shortid = require('shortid');
 
 // const cors = require('cors');
-// const { makeGameModel } = require('sr2020-mm-server-event-engine/configs/serverEventEngine');
-// const { winstonLogger } = require('sr2020-mm-event-engine/utils/winstonLogger');
 
 // const indexRouter = require('./routes/index.ts');
 // const fileListRouter = require('./routes/fileList.ts');

@@ -1,10 +1,7 @@
 import { Router } from 'express';
-import { innerPostUserPosition } from 'sr2020-mm-server-event-engine/api/position';
+import { innerPostUserPosition } from 'sr2020-mm-server-event-engine';
 
 const router = Router();
-
-// const express = require('express');
-// const { innerPostUserPosition } = require('sr2020-mm-server-event-engine/api/position');
 
 // const router = express.Router();
 
