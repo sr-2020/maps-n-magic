@@ -7,8 +7,7 @@ import morganLogger from 'morgan';
 import shortid from 'shortid';
 import cors from 'cors';
 
-import { makeGameModel } from 'sr2020-mm-server-event-engine';
-import { winstonLogger } from 'sr2020-mm-event-engine';
+import { makeGameModel, winstonLogger } from 'sr2020-mm-server-event-engine';
 
 import { indexRouter } from './routes/index';
 import { fileListRouter } from './routes/fileList';

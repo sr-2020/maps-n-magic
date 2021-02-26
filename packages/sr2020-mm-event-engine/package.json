@@ -11,23 +11,21 @@
     "ramda": "^0.27.1"
   },
   "dependencies": {
-    "abort-controller": "^3.0.0",
     "@google-cloud/pubsub": "^2.6.0",
     "@thi.ng/geom-closest-point": "^0.5.3",
     "@thi.ng/geom-isec": "^0.7.1",
+    "abort-controller": "^3.0.0",
     "d3-delaunay": "^5.3.0",
+    "isomorphic-fetch": "^3.0.0",
     "leaflet": "^1.7.1",
     "loglevel": "^1.7.1",
     "moment": "^2.29.1",
     "moment-timezone": "^0.5.32",
     "polygon-clipping": "^0.15.1",
-    "shortid": "^2.2.16",
     "sr2020-mm-data": "*",
     "sr2020-mm-hacks-n-fixes": "*",
-    "winston": "^3.3.3",
-    "winston-daily-rotate-file": "^4.5.0",
-    "isomorphic-fetch": "^3.0.0",
-    "ramda": "^0.27.1"
+    "ramda": "^0.27.1",
+    "shortid": "^2.2.16"
   },
   "devDependencies": {
     "@types/ramda": "^0.27.38",

@@ -1,6 +1,5 @@
 import { 
   EventEngine,
-  winstonLogger,
   LocationRecordService,
   BeaconRecordService,
   NotificationService,
@@ -11,23 +10,25 @@ import {
   AbstractService
 } from 'sr2020-mm-event-engine';
 
-import { ManaOceanService } from '../../services/ManaOceanService';
-import { MassacreService } from '../../services/MassacreService';
-import { PushNotificationService } from '../../services/PushNotificationService';
-import { AudioStageService } from '../../services/AudioStageService';
-import { CharacterLocationService } from '../../services/CharacterLocationService';
-import { RescueServicePushService } from '../../services/RescueServicePushService';
+import { ManaOceanService } from '../services/ManaOceanService';
+import { MassacreService } from '../services/MassacreService';
+import { PushNotificationService } from '../services/PushNotificationService';
+import { AudioStageService } from '../services/AudioStageService';
+import { CharacterLocationService } from '../services/CharacterLocationService';
+import { RescueServicePushService } from '../services/RescueServicePushService';
 
-import { CrudDataManager } from '../../dataManagers/CrudDataManager';
-import { LocationDataManager } from '../../dataManagers/LocationDataManager';
-import { ReadDataManager } from '../../dataManagers/ReadDataManager';
-import { SettingsDataManager } from '../../dataManagers/SettingsDataManagers';
-import { PollingReadStrategy } from '../../dataManagers/PollingReadStrategy';
-import { DataBinding } from '../../dataManagers/DataBinding';
-import { RedirectDataBinding } from '../../dataManagers/RedirectDataBinding';
-import { CharacterLocDataManager } from '../../dataManagers/CharacterLocDataManager';
+import { CrudDataManager } from '../dataManagers/CrudDataManager';
+import { LocationDataManager } from '../dataManagers/LocationDataManager';
+import { ReadDataManager } from '../dataManagers/ReadDataManager';
+import { SettingsDataManager } from '../dataManagers/SettingsDataManagers';
+import { PollingReadStrategy } from '../dataManagers/PollingReadStrategy';
+import { DataBinding } from '../dataManagers/DataBinding';
+import { RedirectDataBinding } from '../dataManagers/RedirectDataBinding';
+import { CharacterLocDataManager } from '../dataManagers/CharacterLocDataManager';
 
-import { defaultManaOceanSettings, manaOceanEffectSettings } from '../../api/constants';
+import { defaultManaOceanSettings, manaOceanEffectSettings } from '../api/constants';
+
+import { winstonLogger } from "./winstonLogger";
 
 import {
   RemoteLocationRecordProvider as LocationRecordProvider,
@@ -35,12 +36,12 @@ import {
   RemoteUsersRecordProvider as UserRecordProvider,
   ManaOceanSettingsProvider,
   ManaOceanEffectSettingsProvider,
-} from '../../api/position';
+} from '../api/position';
 
-import { CharacterStatesListener } from '../../api/characterStates/CharacterStatesListener';
-import { CharacterLocationListener } from '../../api/position/CharacterLocationListener';
-import { SpellCastsListener } from '../../api/spellCasts/SpellCastsListener';
-import { PushNotificationEmitter } from '../../api/pushNotificationEmitter';
+import { CharacterStatesListener } from '../api/characterStates/CharacterStatesListener';
+import { CharacterLocationListener } from '../api/position/CharacterLocationListener';
+import { SpellCastsListener } from '../api/spellCasts/SpellCastsListener';
+import { PushNotificationEmitter } from '../api/pushNotificationEmitter';
 
 const services: AbstractService[] = [
   new LocationRecordService(),

@@ -7,16 +7,26 @@
     "ts:build": "tsc",
     "ts:watch": "tsc --watch --preserveWatchOutput"
   },
+  "main": "dist/index.js",
+  "typings": "dist/index.d.ts",
+  "directories": {
+    "lib": "dist"
+  },
+  "files": [
+    "dist"
+  ],
   "peerDependencies": {},
   "dependencies": {
-    "sr2020-mm-event-engine": "*",
-    "sr2020-mm-data": "*",
     "@google-cloud/pubsub": "^2.6.0",
+    "isomorphic-fetch": "^3.0.0",
     "moment": "^2.29.1",
     "moment-timezone": "^0.5.32",
+    "ramda": "^0.27.1",
     "shortid": "^2.2.16",
-    "isomorphic-fetch": "^3.0.0",
-    "ramda": "^0.27.1"
+    "sr2020-mm-data": "*",
+    "sr2020-mm-event-engine": "*",
+    "winston": "^3.3.3",
+    "winston-daily-rotate-file": "^4.5.0"
   },
   "devDependencies": {
     "@types/ramda": "^0.27.38",
