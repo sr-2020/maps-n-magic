@@ -33,7 +33,7 @@ import { SoundManager } from '../SoundManager';
 
 import * as mapDefaults from '../../configs/map';
 
-import { GeoDataStreamSimulator } from '../GeoDataStreamSimulator';
+// import { GeoDataStreamSimulator } from '../GeoDataStreamSimulator';
 import { CharacterPositions } from '../CharacterPositions';
 import { ManaOceanSettings } from '../ManaOceanSettings';
 import { ManaOceanEffectSettings } from '../ManaOceanEffectSettings';
@@ -348,10 +348,10 @@ export class App extends Component<AppProps, AppState> {
                         </Route>
                       </Switch>
                       {/* { refactor as GeoDataStreamSimulator } */}
-                      <GeoDataStreamSimulator
+                      {/* <GeoDataStreamSimulator
                         simulateGeoDataStream={simulateGeoDataStream}
                         gameModel={gameModel}
-                      />
+                      /> */}
                       {/* { refactor as SoundManager and SoundProvider } */}
                       <SoundWatcher
                         gameModel={gameModel}
