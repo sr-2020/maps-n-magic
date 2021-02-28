@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import './ToastWrapper.css';
-import * as moment from 'moment';
+import moment from 'moment';
 import classNames from 'classnames';
 
 import Toast from 'react-bootstrap/Toast';

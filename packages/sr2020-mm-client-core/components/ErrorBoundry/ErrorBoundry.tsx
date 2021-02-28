@@ -3,7 +3,11 @@ import './ErrorBoundry.css';
 
 // import { ErrorBoundryPropTypes } from '../../types';
 
-export class ErrorBoundry extends Component {
+interface ErrorBoundryState {
+  hasError: boolean;
+}
+
+export class ErrorBoundry extends Component<any, ErrorBoundryState> {
   // static propTypes = ErrorBoundryPropTypes;
 
   constructor(props) {
