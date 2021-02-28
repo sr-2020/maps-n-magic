@@ -23,6 +23,7 @@ const mapConfig = {
   // lng: 36.87105243803666,
   lng: 36.87405243803666,
   zoom: 17,
+  center: null as [number, number]
 };
 
 // initial data config
@@ -35,7 +36,7 @@ const mapConfig = {
 
 mapConfig.center = [mapConfig.lat, mapConfig.lng];
 
-export const defaultCenter = mapConfig.center;
+export const defaultCenter: [number, number] = mapConfig.center;
 export const defaultZoom = mapConfig.zoom;
 
 const defaultGeomanFeatures = {
