@@ -25,7 +25,7 @@ import { TranslatorProvider } from 'sr2020-mm-client-core/translatorContext';
 
 import { Translator } from 'sr2020-mm-client-core/utils/Translator';
 import { AudioContextWrapper } from '../../utils/AudioContextWrapper';
-import { SpiritEditor } from '../SpiritEditor';
+// import { SpiritEditor } from '../SpiritEditor';
 
 // import { AppPropTypes } from '../../types';
 
@@ -308,15 +308,15 @@ export class App extends Component<AppProps, AppState> {
 
                     <main className="tw-flex-auto tw-h-full">
                       <Switch>
-                        <Route path="/spiritEditor">
+                        {/* <Route path="/spiritEditor">
                           <SpiritEditor spiritService={gameModel} />
-                        </Route>
-                        <Route path="/soundManager2">
+                        </Route> */}
+                        {/* <Route path="/soundManager2">
                           <SoundManager
                             gameModel={gameModel}
                             soundStage={this.soundStage}
                           />
-                        </Route>
+                        </Route> */}
                         {/* <Route path="/soundMapping">
                           <SoundMapper gameModel={gameModel} />
                         </Route> */}

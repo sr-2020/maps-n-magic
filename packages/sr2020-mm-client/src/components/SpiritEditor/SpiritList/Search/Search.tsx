@@ -7,7 +7,21 @@ import { faSearch, faTimes } from '@fortawesome/free-solid-svg-icons';
 import classNames from 'classnames';
 // import { SearchPropTypes } from '../../../../types';
 
-export class Search extends Component {
+interface SearchProps {
+  t: any;
+  className: any;
+  placeholder: any;
+  onSearchChange: (value: string) => void
+}
+interface SearchState {
+  isInputFocused: boolean;
+  isClearFocused: boolean;
+  searchStr: string;
+}
+// const { isInputFocused, isClearFocused, searchStr } = this.state;
+// const { t, className, placeholder = 'Search' } = this.props;
+
+export class Search extends Component<SearchProps, SearchState> {
   // static propTypes = SearchPropTypes;
 
   constructor(props) {

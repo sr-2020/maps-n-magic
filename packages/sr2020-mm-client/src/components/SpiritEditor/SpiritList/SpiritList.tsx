@@ -22,8 +22,21 @@ const sort = R.sortBy(R.pipe(R.prop('name'), R.toLower));
 
 const spiritLink = (spirit) => `/spiritEditor/${spirit.id}#${spirit.name}`;
 
-export class SpiritList extends Component {
+interface SpiritListProps {
+  z: any;
+  t: any;
+  history: any;
+  spiritService: any;
+}
+interface SpiritListState {
+  spirits: any[],
+  removedSpiritIndex: number,
+  searchStr: string,
+}
+
+export class SpiritList extends Component<SpiritListProps, SpiritListState> {
   // static propTypes = SpiritListPropTypes;
+  newSpiritInput: any;
 
   constructor(props) {
     super(props);

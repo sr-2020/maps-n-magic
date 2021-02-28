@@ -40,19 +40,19 @@ const navLinks = [{
   to: '/mapsNav',
   tKey: 'mapsNav',
 }, {
-  to: '/spiritEditor',
-  tKey: 'spiritEditor',
-}, {
-  to: '/soundManager2',
-  tKey: 'soundManager2',
-}, {
+//   to: '/spiritEditor',
+//   tKey: 'spiritEditor',
+// }, {
+//   to: '/soundManager2',
+//   tKey: 'soundManager2',
+// }, {
 //   to: '/soundMapping',
 //   tKey: 'soundMapping',
 // }, {
-  to: '/trackAnalysis/index.html',
-  tKey: 'trackAnalysisNav',
-  rawLink: true,
-}, {
+//   to: '/trackAnalysis/index.html',
+//   tKey: 'trackAnalysisNav',
+//   rawLink: true,
+// }, {
   to: '/beaconRecordEditor',
   tKey: 'beaconRecordEditor',
 }];
@@ -175,24 +175,24 @@ export class AppHeader extends Component<AppHeaderProps, AppHeaderState> {
               <UploadDatabaseButton onChange={onUploadFileSelected} />
               <DownloadDatabaseButton onClick={downloadDatabaseAsFile} />
               <Dropdown.Divider />
-              <JumpToUserCoordsSwitch
+              {/* <JumpToUserCoordsSwitch
                 onClick={jumpToUserCoords}
                 waitingForGeolocation={waitingForGeolocation}
               />
               <MovementSimulatorSwitch
                 onClick={switchMovementMode}
                 simulateGeoDataStream={simulateGeoDataStream}
-              />
+              /> */}
               <ManaOceanSwitch
                 gameModel={gameModel}
               />
               <WipeManaOceanEffectsButton
                 gameModel={gameModel}
               />
-              <Dropdown.Divider />
+              {/* <Dropdown.Divider />
               <Route path="/map2">
                 <ModelRunSelector gameModel={gameModel} />
-              </Route>
+              </Route> */}
             </Dropdown.Menu>
           </Dropdown>
         </Navbar>

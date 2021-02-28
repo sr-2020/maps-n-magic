@@ -6,7 +6,15 @@ import { faEdit } from '@fortawesome/free-solid-svg-icons';
 
 // import { InPlaceInputPropTypes } from '../../types';
 
-export class InPlaceInput extends Component {
+interface InPlaceInputProps {
+  value: any;
+  t: any;
+}
+interface InPlaceInputState {
+  editMode: boolean;
+}
+
+export class InPlaceInput extends Component<InPlaceInputProps, InPlaceInputState> {
   // static propTypes = InPlaceInputPropTypes;
 
   constructor(props) {

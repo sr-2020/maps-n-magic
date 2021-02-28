@@ -16,13 +16,27 @@ import * as R from 'ramda';
 
 const sort = R.sortBy(R.toLower);
 
-export class AbilitiesInput extends Component {
+interface AbilitiesInputProps {
+  spiritService: any;
+  id: any;
+  t: any;
+  className?: any;
+}
+interface AbilitiesInputState {
+  initialized: boolean;
+  abilities: string[];
+  allAbilities: string[];
+}
+
+export class AbilitiesInput extends Component<AbilitiesInputProps, AbilitiesInputState> {
   // static propTypes = AbilitiesInputPropTypes;
 
   constructor(props) {
     super(props);
     this.state = {
       initialized: false,
+      abilities: [],
+      allAbilities: []
     };
     this.onSubmit = this.onSubmit.bind(this);
   }

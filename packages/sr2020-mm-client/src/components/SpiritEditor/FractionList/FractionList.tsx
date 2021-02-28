@@ -7,7 +7,14 @@ import * as R from 'ramda';
 
 const sort = R.sortBy(R.toLower);
 
-export class FractionList extends Component {
+interface FractionListProps {
+  spiritService: any;
+}
+interface FractionListState {
+  fractions: string[];
+}
+
+export class FractionList extends Component<FractionListProps, FractionListState> {
   // static propTypes = FractionListPropTypes;
 
   constructor(props) {

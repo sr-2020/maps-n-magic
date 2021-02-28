@@ -1,6 +1,6 @@
 import { withTranslation } from 'react-i18next';
 import { pipe } from 'ramda';
-import { Search } from './Search.jsx';
+import { Search } from './Search';
 
 const tmp = pipe(withTranslation())(Search);
 

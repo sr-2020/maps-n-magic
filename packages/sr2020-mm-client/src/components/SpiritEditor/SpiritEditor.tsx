@@ -10,8 +10,12 @@ import { SpiritList } from './SpiritList';
 import { SpiritContent } from './SpiritContent';
 import { FractionList } from './FractionList';
 
+interface SpiritEditorProps {
+  spiritService: any;
+}
+
 // eslint-disable-next-line react/prefer-stateless-function
-export class SpiritEditor extends Component {
+export class SpiritEditor extends Component<SpiritEditorProps> {
   // static propTypes = SpiritEditorPropTypes;
 
   // eslint-disable-next-line max-lines-per-function
@@ -31,10 +35,10 @@ export class SpiritEditor extends Component {
                 id={Number(id)}
                 spiritService={spiritService}
                 // spiritTmp={spiritService.getSpirit(Number(id))}
-                spiritTmp={spiritService.get({
-                  type: 'spirit',
-                  id: Number(id),
-                })}
+                // spiritTmp={spiritService.get({
+                //   type: 'spirit',
+                //   id: Number(id),
+                // })}
               />
             );
           }}

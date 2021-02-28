@@ -7,14 +7,32 @@ import DocumentTitle from 'react-document-title';
 
 import { AbilitiesInput } from './AbilitiesInput';
 
+interface SpiritContentProps {
+  id: any;
+  spiritService: any;
+  t: any;
+}
+interface SpiritContentState {
+  initialized: boolean;
+  name: any;
+  fraction: any;
+  story: any;
+  maxHitPoints: any;
+}
 
-export class SpiritContent extends Component {
+type spiritFields = 'name' | 'fraction' | 'story' | 'maxHitPoints';
+
+export class SpiritContent extends Component<SpiritContentProps, SpiritContentState> {
   // static propTypes = SpiritContentPropTypes;
 
   constructor(props) {
     super(props);
     this.state = {
       initialized: false,
+      name: null,
+      fraction: null,
+      story: null,
+      maxHitPoints: null,
     };
     this.handleInputChange = this.handleInputChange.bind(this);
   }
@@ -61,7 +79,9 @@ export class SpiritContent extends Component {
   handleInputChange(event) {
     const { target } = event;
     const value = this.getTargetValue(target);
-    const { name } = target;
+    const { name }: {
+      name: spiritFields;
+    } = target;
     const { id, spiritService } = this.props;
 
     // spiritService.putSpirit(id, {
@@ -76,9 +96,8 @@ export class SpiritContent extends Component {
       },
     });
 
-    this.setState({
-      [name]: value,
-    });
+    // @ts-ignore
+    this.setState({[name]: value});
   }
 
   // eslint-disable-next-line max-lines-per-function
@@ -169,7 +188,7 @@ export class SpiritContent extends Component {
                     name="story"
                     as="textarea"
                     id="storyInput"
-                    rows="3"
+                    rows={3}
                     value={story}
                     onChange={this.handleInputChange}
                   />
