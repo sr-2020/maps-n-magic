@@ -28,7 +28,7 @@ const readJsonFile = (evt) => new Promise((resolve, reject) => {
     r.onload = (e) => {
       const contents = e.target.result;
       try {
-        const object = JSON.parse(contents);
+        const object = JSON.parse(contents as string);
         resolve(object);
       } catch (err) {
         reject(err);
@@ -70,8 +70,8 @@ const windowsReservedRe = /^(con|prn|aux|nul|com[0-9]|lpt[0-9])(\..*)?$/i;
 // eslint-disable-next-line no-useless-escape
 const windowsTrailingRe = /[\. ]+$/;
 
-function sanitizeStr2FileName(input, replacement) {
-  replacement = replacement || '';
+function sanitizeStr2FileName(input, replacement = '') {
+  // replacement = replacement || '';
   const sanitized = input
     .replace(illegalRe, replacement)
     .replace(controlRe, replacement)

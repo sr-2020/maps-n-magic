@@ -1,6 +1,11 @@
 import * as R from 'ramda';
 
 export class Translator {
+  defaultCenter: [number, number];
+  virtualCenter: [number, number];
+  deltaLat: number;
+  deltaLng: number;
+
   constructor(defaultCenter, virtualCenter) {
     this.defaultCenter = defaultCenter; // [lat, lng]
     this.virtualCenter = virtualCenter; // [lat, lng]

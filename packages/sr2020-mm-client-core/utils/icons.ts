@@ -1,29 +1,32 @@
-import L from 'leaflet/dist/leaflet-src';
+import L, { IconOptions, Icon } from 'leaflet';
 import * as R from 'ramda';
 
-const defaults = {
+const defaults: IconOptions = {
   shadowUrl: './images/leafletImages/marker-shadow.png',
   iconSize: [25, 41],
   iconAnchor: [12, 41],
   popupAnchor: [1, -34],
-  shadowSize: [41, 41]
+  shadowSize: [41, 41],
+  iconUrl: null
 };
 
-const colorMap = {
-  black: true,
-  blue: true,
-  green: true,
-  grey: true,
-  orange: true,
-  red: true,
-  violet: true,
-  yellow: true,
+enum colors {
+  black,
+  blue,
+  green,
+  grey,
+  orange,
+  red,
+  violet,
+  yellow,
 };
 
-const usedIcons = {};
+const usedIcons: {
+  [color in colors]?: Icon
+} = {};
 
-const getIcon = (color) => {
-  if (!colorMap[color]) {
+const getIcon = (color: colors) => {
+  if (colors[color] !== undefined) {
     throw new Error(`Unexpected color ${color}`);
   }
   if (!usedIcons[color]) {
