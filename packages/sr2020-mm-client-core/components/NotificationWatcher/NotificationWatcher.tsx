@@ -4,7 +4,14 @@ import './NotificationWatcher.css';
 // import { ErrorWatcherPropTypes } from '../../types';
 import { ToastWrapper } from './ToastWrapper';
 
-export class NotificationWatcher extends Component {
+interface NotificationWatcherProps {
+  gameModel: any;
+}
+interface NotificationWatcherState {
+  notifications: any[];
+}
+
+export class NotificationWatcher extends Component<NotificationWatcherProps, NotificationWatcherState> {
   // static propTypes = ErrorWatcherPropTypes;
 
   constructor(props) {
