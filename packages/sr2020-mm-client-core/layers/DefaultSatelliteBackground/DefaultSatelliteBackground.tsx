@@ -1,7 +1,7 @@
 import React, {
   useContext,
 } from 'react';
-import { MapDefaultsContext } from '../../mapDefaultsContext';
+import { MapDefaultsContext } from '../../misc/mapDefaultsContext';
 import { SatelliteBackground } from '../SatelliteBackground';
 
 import './DefaultSatelliteBackground.css';

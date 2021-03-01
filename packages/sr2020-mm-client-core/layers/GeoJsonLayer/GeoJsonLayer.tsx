@@ -6,7 +6,7 @@ import './GeoJsonLayer.css';
 import * as R from 'ramda';
 
 import L from 'leaflet/dist/leaflet-src';
-import { TranslatorContext } from '../../translatorContext';
+import { TranslatorContext } from '../../misc/translatorContext';
 
 // "stroke": "#ffd600",
 // "stroke-opacity": 1,
