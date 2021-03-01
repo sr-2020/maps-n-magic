@@ -11,7 +11,8 @@
 // So this is hack to have only one leaflet instance in client-core and
 // remove leaflet dependency from client.
 
-import L from 'leaflet/dist/leaflet-src';
+// import L from 'leaflet/dist/leaflet-src';
+import L from 'leaflet';
 import 'leaflet/dist/leaflet.css';
 import '@geoman-io/leaflet-geoman-free';
 import '@geoman-io/leaflet-geoman-free/dist/leaflet-geoman.css';

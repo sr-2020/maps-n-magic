@@ -1,10 +1,12 @@
 // eslint-disable-next-line max-classes-per-file
+import { WithTranslation } from 'react-i18next';
 import React, { Component } from 'react';
+import { Translator } from "../../utils/Translator";
 import * as R from 'ramda';
 
 // import '../../../utils/gpxConverter';
 
-import { L } from "../../leafletWrapper";
+import { L } from "../../misc/leafletWrapper";
 
 import { EventEmitter } from 'events';
 
@@ -21,10 +23,32 @@ import './Map.css';
 // console.log(L);
 L.Icon.Default.imagePath = './images/leafletImages/';
 
-export class Map extends Component {
-  // static propTypes = Map2PropTypes;
+interface MapProps extends WithTranslation {
+  geomanConfig: L.PM.DrawControlOptions;
+  defaultCenter: L.LatLngTuple;
+  defaultZoom: number;
+  translator: Translator;
+  commonPropsExtension: object;
+}
+interface MapState {
+  map: L.Map;
+}
 
-  constructor(props) {
+interface LayersMeta {
+  [layerName: string]: L.Layer;
+}
+
+export class Map extends Component<MapProps, MapState> {
+  // static propTypes = Map2PropTypes;
+  layerCommunicator: EventEmitter;
+
+  map: L.Map;
+
+  layerControl: L.Control.Layers;
+
+  mapEl: HTMLElement;
+
+  constructor(props: MapProps) {
     super(props);
     this.state = {
       map: null,
@@ -37,7 +61,7 @@ export class Map extends Component {
   }
 
   // eslint-disable-next-line max-lines-per-function
-  componentDidMount() {
+  componentDidMount(): void {
     const {
       geomanConfig, defaultCenter, defaultZoom,
     } = this.props;
@@ -79,7 +103,7 @@ export class Map extends Component {
     // this.map.pm.toggleGlobalDragMode();
   }
 
-  componentDidUpdate(prevProps) {
+  componentDidUpdate(prevProps: MapProps): void {
     const {
       translator, defaultCenter,
     } = this.props;
@@ -90,19 +114,24 @@ export class Map extends Component {
     // console.log('Map did update');
   }
 
-  componentWillUnmount() {
+  componentWillUnmount(): void {
     this.communicatorSubscribe('off');
   }
 
-  onCreateLayer = (event) => {
+  onCreateLayer = (event): void => {
     this.layerCommunicator.emit('onCreateLayer', event);
+    console.log('TODO fix type in Map.onCreateLayer');
   }
 
-  onRemoveLayer = (event) => {
+  onRemoveLayer = (event): void => {
     this.layerCommunicator.emit('onRemoveLayer', event);
+    console.log('TODO fix type in Map.onRemoveLayer');
   }
 
-  setLayersMeta({ layersMeta, enableByDefault }) {
+  setLayersMeta({ layersMeta, enableByDefault }:{
+    layersMeta: LayersMeta,
+    enableByDefault: boolean
+  }): void {
     const { t } = this.props;
     if (enableByDefault) {
       Object.values(layersMeta).forEach((group) => group.addTo(this.map));
@@ -112,7 +141,7 @@ export class Map extends Component {
     });
   }
 
-  removeLayersMeta({ layersMeta }) {
+  removeLayersMeta({ layersMeta }: {layersMeta: LayersMeta}): void {
     // const { t } = this.props;
     // if (enableByDefault) {
     Object.values(layersMeta).forEach((group) => group.remove());
@@ -122,7 +151,7 @@ export class Map extends Component {
     });
   }
 
-  communicatorSubscribe(action) {
+  communicatorSubscribe(action: 'on'|'off'): void {
     this.layerCommunicator[action]('openPopup', this.openPopup);
     this.layerCommunicator[action]('closePopup', this.closePopup);
     this.layerCommunicator[action]('setLayersMeta', this.setLayersMeta);
@@ -130,19 +159,21 @@ export class Map extends Component {
     this.layerCommunicator[action]('addToMap', this.addToMap);
   }
 
-  openPopup({ popup }) {
+  openPopup({ popup }): void {
     popup.openOn(this.map);
+    console.log('TODO fix type in Map.openPopup');
   }
 
-  addToMap({ control }) {
+  addToMap({ control }): void {
     control.addTo(this.map);
+    console.log('TODO fix type in Map.addToMap');
   }
 
-  closePopup() {
+  closePopup(): void {
     this.map.closePopup();
   }
 
-  render() {
+  render(): JSX.Element {
     const { map } = this.state;
 
     const {
@@ -161,9 +192,12 @@ export class Map extends Component {
           className="Map tw-h-full"
           ref={(map2) => (this.mapEl = map2)}
         />
-        {map && React.Children.map(children, (child) => React.cloneElement(child, {
+        {map && React.Children.map(children, (child) => React.cloneElement(
+          // @ts-ignore
+          child, {
           ...mapProps,
-        }))}
+          }
+        ))}
       </>
     );
   }
