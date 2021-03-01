@@ -137,6 +137,7 @@ export class Map extends Component<MapProps, MapState> {
       Object.values(layersMeta).forEach((group) => group.addTo(this.map));
     }
     Object.entries(layersMeta).forEach(([nameKey, group]) => {
+      // @ts-ignore
       this.layerControl.addOverlay(group, t(nameKey));
     });
   }

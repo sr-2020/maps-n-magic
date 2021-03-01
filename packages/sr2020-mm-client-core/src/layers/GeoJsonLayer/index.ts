@@ -1,3 +1,3 @@
-import { GeoJsonLayer } from './GeoJsonLayer.jsx';
+import { GeoJsonLayer } from './GeoJsonLayer';
 
 export { GeoJsonLayer };

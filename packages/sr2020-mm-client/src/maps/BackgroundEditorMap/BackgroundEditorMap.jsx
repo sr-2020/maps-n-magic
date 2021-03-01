@@ -1,10 +1,12 @@
 import React from 'react';
 import './BackgroundEditorMap.css';
 
-import { Map } from 'sr2020-mm-client-core/maps/Map';
+import { 
+  Map,
+  DefaultSatelliteBackground,
+  BaseContourLayer2
+} from 'sr2020-mm-client-core';
 
-import { DefaultSatelliteBackground } from 'sr2020-mm-client-core/layers/DefaultSatelliteBackground';
-import { BaseContourLayer2 } from 'sr2020-mm-client-core/layers/BaseContourLayer2';
 import { BackgroundImageEditLayer } from '../../layers/BackgroundImageEditLayer';
 import { GoogleMapsExportedDataLayer } from '../../layers/GoogleMapsExportedDataLayer';
 

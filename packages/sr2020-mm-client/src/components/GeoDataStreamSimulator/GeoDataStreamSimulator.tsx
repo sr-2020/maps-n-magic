@@ -2,7 +2,7 @@ export {};
 // import React, { Component } from 'react';
 // import './GeoDataStreamSimulator.css';
 
-// import { animate, Timing } from 'sr2020-mm-client-core/utils/animation';
+// import { animate, Timing } from 'sr2020-mm-client-core';
 
 // // import { GeoDataStreamSimulatorPropTypes } from '../../types';
 

@@ -1,9 +1,11 @@
 import React from 'react';
 import './AudioEngineDemo.css';
 
-import { DefaultSatelliteBackground } from 'sr2020-mm-client-core/layers/DefaultSatelliteBackground';
-import { BaseContourLayer2 } from 'sr2020-mm-client-core/layers/BaseContourLayer2';
-import { Map } from 'sr2020-mm-client-core/maps/Map';
+import { 
+  DefaultSatelliteBackground,
+  BaseContourLayer2,
+  Map
+} from 'sr2020-mm-client-core';
 import { BackgroundImageDisplayLayer } from '../../layers/BackgroundImageDisplayLayer';
 import { ManaOceanLayer } from '../../layers/ManaOceanLayer';
 import { CharacterLocationLayer } from '../../layers/CharacterLocationLayer';

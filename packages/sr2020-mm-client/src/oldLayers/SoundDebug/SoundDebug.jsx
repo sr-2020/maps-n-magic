@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import './SoundDebug.css';
 
-import { L } from "sr2020-mm-client-core/leafletWrapper";
+import { L } from "sr2020-mm-client-core";
 
 import { musicSelectDom } from '../../utils/domUtils';
 

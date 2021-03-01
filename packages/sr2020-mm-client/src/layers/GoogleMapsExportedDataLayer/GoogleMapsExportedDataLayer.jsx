@@ -2,7 +2,7 @@ import React from 'react';
 import * as R from 'ramda';
 import './GoogleMapsExportedDataLayer.css';
 import staticGeoData from 'sr2020-mm-data/analysis/data/kml/aggregatedKml';
-import { GeoJsonLayer } from 'sr2020-mm-client-core/layers/GeoJsonLayer';
+import { GeoJsonLayer } from 'sr2020-mm-client-core';
 
 const featureGroups = R.groupBy((feature) => feature.geometry.type, staticGeoData.features);
 

@@ -1,4 +1,4 @@
-import { L } from "sr2020-mm-client-core/leafletWrapper";
+import { L } from "sr2020-mm-client-core";
 import * as R from 'ramda';
 
 export class LocationsLayer {

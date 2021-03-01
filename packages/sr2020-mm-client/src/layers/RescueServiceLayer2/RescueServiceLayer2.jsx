@@ -1,9 +1,7 @@
 import React, { Component } from 'react';
-import { L } from "sr2020-mm-client-core/leafletWrapper";
+import { L, getIcon } from "sr2020-mm-client-core";
 import * as R from 'ramda';
 import './RescueServiceLayer2.css';
-
-import { getIcon } from 'sr2020-mm-client-core/utils/icons';
 
 import {
   isGeoLocation, getArrDiff, getPolygonCentroid, isClinicallyDead,

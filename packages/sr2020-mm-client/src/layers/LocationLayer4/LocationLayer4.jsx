@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import './LocationLayer4.css';
 
-import { L } from "sr2020-mm-client-core/leafletWrapper";
+import { L } from "sr2020-mm-client-core";
 import * as R from 'ramda';
 
 import { LocationPopup3 } from './LocationPopup3';

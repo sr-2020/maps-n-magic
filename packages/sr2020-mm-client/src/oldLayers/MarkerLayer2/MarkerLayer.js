@@ -1,7 +1,5 @@
-import { L } from "sr2020-mm-client-core/leafletWrapper";
+import { L, getIcon } from "sr2020-mm-client-core";
 import * as R from 'ramda';
-
-import { getIcon } from 'sr2020-mm-client-core/utils/icons';
 
 export class MarkerLayer {
   group = L.layerGroup([]);

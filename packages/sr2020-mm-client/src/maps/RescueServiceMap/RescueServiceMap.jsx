@@ -1,9 +1,12 @@
 import React from 'react';
 import './RescueServiceMap.css';
 
-import { DefaultSatelliteBackground } from 'sr2020-mm-client-core/layers/DefaultSatelliteBackground';
-import { BaseContourLayer2 } from 'sr2020-mm-client-core/layers/BaseContourLayer2';
-import { Map } from 'sr2020-mm-client-core/maps/Map';
+import { 
+  Map,
+  DefaultSatelliteBackground,
+  BaseContourLayer2
+} from 'sr2020-mm-client-core';
+
 import { BackgroundImageDisplayLayer } from '../../layers/BackgroundImageDisplayLayer';
 import { LocationLayer4 } from '../../layers/LocationLayer4';
 import { RescueServiceLayer2 } from '../../layers/RescueServiceLayer2';

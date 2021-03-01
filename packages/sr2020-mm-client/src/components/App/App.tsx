@@ -12,18 +12,21 @@ import {
   HashRouter as Router, Switch, Route, Redirect, NavLink,
 } from 'react-router-dom';
 
-import { ErrorBoundry } from 'sr2020-mm-client-core/components/ErrorBoundry';
+import { 
+  ErrorBoundry,
+  NotificationWatcher,
+  json2File, 
+  makeFileName, 
+  readJsonFile,
+  MapDefaultsProvider,
+  TranslatorProvider,
+  Translator
+} from 'sr2020-mm-client-core';
 
 import {
   makeGameModel,
 } from 'sr2020-mm-client-event-engine/configs/clientEventEngine';
 
-import { NotificationWatcher } from 'sr2020-mm-client-core/components/NotificationWatcher';
-import { json2File, makeFileName, readJsonFile } from 'sr2020-mm-client-core/utils/fileUtils';
-import { MapDefaultsProvider } from 'sr2020-mm-client-core/mapDefaultsContext';
-import { TranslatorProvider } from 'sr2020-mm-client-core/translatorContext';
-
-import { Translator } from 'sr2020-mm-client-core/utils/Translator';
 import { AudioContextWrapper } from '../../utils/AudioContextWrapper';
 // import { SpiritEditor } from '../SpiritEditor';
 

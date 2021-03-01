@@ -1,3 +1,3 @@
-import { DefaultSatelliteBackground } from './DefaultSatelliteBackground.jsx';
+import { DefaultSatelliteBackground } from './DefaultSatelliteBackground';
 
 export { DefaultSatelliteBackground };

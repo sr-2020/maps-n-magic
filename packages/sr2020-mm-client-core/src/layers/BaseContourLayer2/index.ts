@@ -1,3 +1,3 @@
-import { BaseContourLayer2 } from './BaseContourLayer2.jsx';
+import { BaseContourLayer2 } from './BaseContourLayer2';
 
 export { BaseContourLayer2 };

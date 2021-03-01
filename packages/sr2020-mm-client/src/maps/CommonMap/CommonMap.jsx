@@ -2,9 +2,11 @@
 import React, { Component } from 'react';
 import './CommonMap.css';
 
-import { BaseContourLayer2 } from 'sr2020-mm-client-core/layers/BaseContourLayer2';
-import { DefaultSatelliteBackground } from 'sr2020-mm-client-core/layers/DefaultSatelliteBackground';
-import { Map } from 'sr2020-mm-client-core/maps/Map';
+import { 
+  Map,
+  DefaultSatelliteBackground,
+  BaseContourLayer2
+} from 'sr2020-mm-client-core';
 
 import { BotLayer2 } from '../../oldLayers/BotLayer2';
 import { UserLayer2 } from '../../oldLayers/UserLayer2';

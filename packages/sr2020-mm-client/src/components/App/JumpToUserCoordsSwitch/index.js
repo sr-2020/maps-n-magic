@@ -1,6 +1,6 @@
 import React from 'react';
 import { withTranslation } from 'react-i18next';
-import { withTranslator } from 'sr2020-mm-client-core/withTranslator';
+import { withTranslator } from 'sr2020-mm-client-core';
 import { pipe } from 'ramda';
 import { JumpToUserCoordsSwitch } from './JumpToUserCoordsSwitch';
 
