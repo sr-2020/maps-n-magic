@@ -1,3 +1,5 @@
+import { BackgroundImage } from "../types";
+
 // export const defaultBackgroundImages = [
 //   {
 //     latlngs: [
@@ -76,7 +78,7 @@
 //   },
 // ];
 
-export const defaultBackgroundImages = [
+export const defaultBackgroundImages: BackgroundImage[] = [
   {
     latlngs: [
       [

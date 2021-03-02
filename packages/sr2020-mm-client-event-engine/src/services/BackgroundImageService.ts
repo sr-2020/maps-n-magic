@@ -4,6 +4,8 @@ import { AbstractService, Metadata } from 'sr2020-mm-event-engine';
 
 import { defaultBackgroundImages } from './DefaultBackgroundImages';
 
+import { BackgroundImage } from "../types";
+
 const metadata: Metadata = {
   actions: [
     'putBackgroundImage',
@@ -22,8 +24,8 @@ const metadata: Metadata = {
   needActions: []
 };
 export class BackgroundImageService extends AbstractService {
-  backgroundImages: any[];
-  maxBackgroundImageId: any;
+  backgroundImages: BackgroundImage[];
+  maxBackgroundImageId: number;
 
   constructor() {
     super();
@@ -35,7 +37,7 @@ export class BackgroundImageService extends AbstractService {
   // @ts-ignore
   setData({ backgroundImages } = {}) {
     this.backgroundImages = backgroundImages || R.clone(defaultBackgroundImages);
-    this.maxBackgroundImageId = R.reduce(R.max, 1, R.pluck('id', this.backgroundImages));
+    this.maxBackgroundImageId = R.reduce(R.max, 1, R.pluck('id', this.backgroundImages)) as number;
     this.emit('backgroundImagesChanged', {
       type: 'backgroundImagesChanged',
       backgroundImages,

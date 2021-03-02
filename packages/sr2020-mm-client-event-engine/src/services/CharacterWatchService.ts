@@ -26,8 +26,8 @@ const metadata: Metadata = {
   needActions: []
 };
 export class CharacterWatchService extends AbstractService {
-  characterId: any;
-  locationId: any;
+  characterId: number | null;
+  locationId: number | null;
 
   constructor() {
     super();

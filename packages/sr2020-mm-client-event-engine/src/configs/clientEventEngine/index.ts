@@ -17,7 +17,7 @@ import { Migrator } from './Migrator';
 // import { SpiritService } from '../../services/SpiritService';
 import { SoundService2 } from '../../services/SoundService2';
 import { SoundStageService } from '../../services/SoundStageService';
-import { BeaconService } from '../../services/BeaconService';
+// import { BeaconService } from '../../services/BeaconService';
 // import { LocationService } from '../../services/LocationService';
 // import { SoundMappingService } from '../../services/SoundMappingService';
 // import { UserWatcher } from '../../services/UserWatcher';
@@ -38,7 +38,7 @@ const services = [
   // new SpiritService(),
   new SoundService2(),
   new SoundStageService(),
-  new BeaconService(),
+  // new BeaconService(),
   // new LocationService(),
   new LocationRecordService(),
   // new SoundMappingService(),

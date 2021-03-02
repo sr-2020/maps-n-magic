@@ -13,8 +13,13 @@ const metadata: Metadata = {
   needActions: [],
   listenEvents: []
 };
+
+interface Sound {
+  status: '' | 'loaded' | 'unloaded';
+  name: string;
+}
 export class SoundService2 extends AbstractService {
-  sounds: any;
+  sounds: Sound[];
 
   constructor() {
     super();
@@ -25,7 +30,7 @@ export class SoundService2 extends AbstractService {
   // @ts-ignore
   setData({ sounds } = {}) {
     this.sounds = sounds || [];
-    this.sounds.forEach((sound) => (sound.status = 'unloaded'));
+    this.sounds.forEach((sound) => (sound.status = ''));
   }
 
   getData() {
