@@ -1,10 +1,13 @@
 import React, { useState, useEffect } from 'react';
 import * as R from 'ramda';
-import { isClinicallyDead, isRelevant } from 'sr2020-mm-event-engine';
+import { 
+  isClinicallyDead, 
+  isRelevant,
+  CharacterHealthStates, 
+  CharacterHealthState
+} from 'sr2020-mm-event-engine';
 import { lifeStyleScore } from 'sr2020-mm-data/gameConstants';
 import * as moment from 'moment-timezone';
-
-import { CharacterHealthStates, RawCharacterHealthState, CharacterHealthState } from "../types";
 
 const changeEventName = 'characterHealthStatesLoaded';
 const srcDataName = 'characterHealthStates';

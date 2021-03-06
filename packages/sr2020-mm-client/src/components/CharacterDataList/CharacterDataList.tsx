@@ -2,9 +2,7 @@ import * as R from 'ramda';
 import React from 'react';
 import './CharacterDataList.css';
 
-import { getUserNameStr } from 'sr2020-mm-event-engine';
-
-import { UserRecord } from "../../types";
+import { getUserNameStr, UserRecord } from 'sr2020-mm-event-engine';
 
 interface CharacterDataListProps {
   users: UserRecord[]

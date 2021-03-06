@@ -14,9 +14,9 @@ import Form from 'react-bootstrap/Form';
 
 import Dropdown from 'react-bootstrap/Dropdown';
 
-import { CreateBeaconPopover } from './CreateBeaconPopover';
+import { LocationRecord, BeaconRecord } from 'sr2020-mm-event-engine';
 
-import { LocationRecord, BeaconRecord } from "../../types";
+import { CreateBeaconPopover } from './CreateBeaconPopover';
 
 interface BeaconRecordEditorProps {
   gameModel: any;

@@ -4,16 +4,17 @@ import './SoundManager.css';
 
 import Accordion from 'react-bootstrap/Accordion';
 import Card from 'react-bootstrap/Card';
-// import { SoundManagerPropTypes } from '../../types';
-import { SoundStageEcho } from './SoundStageEcho';
 
+import { SoundStageData } from "sr2020-mm-client-event-engine/types";
+
+import { SoundStageEcho } from './SoundStageEcho';
 
 import { SoundSettingsForm } from './SoundSettingsForm';
 
 import { SoundRow } from './SoundRow';
 import { SoundStage } from './../App/SoundStage';
 
-import { SoundStageData, Sound } from "../../types";
+import { Sound } from "../../types";
 
 interface SoundManagerProps {
   gameModel: any;

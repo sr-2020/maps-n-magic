@@ -4,11 +4,14 @@ import * as R from 'ramda';
 import { EventEmitter } from 'events';
 
 import { shuffle } from 'sr2020-mm-event-engine';
+import { SoundStageData } from 'sr2020-mm-client-event-engine/types';
 import { AudioContextWrapper } from '../../utils/AudioContextWrapper';
 
-import { SoundStageData, ShuffleFunction, Sound, SoundCtl } from "../../types";
+import { Sound, SoundCtl } from "../../types";
 
-type SoundCollection = {[name: string]: SoundCtl};
+type SoundCollection = {
+  [name: string]: SoundCtl
+};
 
 enum TimeoutType {
   'rotationTimeout',
@@ -160,8 +163,7 @@ export class SoundStage extends EventEmitter {
     if (this.rotationSounds.length === 0 || this.rotationTimeoutId !== null) {
       return;
     }
-    const shuffle2 = shuffle as ShuffleFunction;
-    this._setPlaybackRotation(shuffle2([...this.rotationSounds]));
+    this._setPlaybackRotation(shuffle([...this.rotationSounds]));
     this.startRotationSound();
   }
 

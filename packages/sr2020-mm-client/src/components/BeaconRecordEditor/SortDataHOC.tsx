@@ -1,8 +1,7 @@
 import React from 'react';
 import * as R from 'ramda';
 
-import { isGeoLocation } from 'sr2020-mm-event-engine';
-import { LocationRecord, BeaconRecord } from "../../types";
+import { isGeoLocation, LocationRecord, BeaconRecord } from 'sr2020-mm-event-engine';
 
 const sortById = R.sortBy(R.prop('id'));
 const sortByLabel = R.sortBy(R.prop('id'));
