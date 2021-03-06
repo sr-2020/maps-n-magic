@@ -9,7 +9,7 @@ import {
   getArrDiff, TriangulationCentroid
 } from 'sr2020-mm-event-engine';
 
-import { makeLocationCentroid, LocationCentroid } from "../../types/leafletExtensions";
+import { makeLocationCentroid, LocationCentroid } from "../../types";
 
 interface LocationCentroidLayerProps {
   enableByDefault: boolean;

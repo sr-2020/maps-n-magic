@@ -9,7 +9,7 @@ import {
   getArrDiff,
 } from 'sr2020-mm-event-engine';
 
-import { locNeighborLine, LocNeighborLine } from "../../types/leafletExtensions";
+import { locNeighborLine, LocNeighborLine } from "../../types";
 
 interface LocationNeighborLayerProps {
   enableByDefault: boolean;

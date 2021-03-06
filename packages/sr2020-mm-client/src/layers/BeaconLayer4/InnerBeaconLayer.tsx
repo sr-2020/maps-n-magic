@@ -6,7 +6,7 @@ import * as R from 'ramda';
 import { getArrDiff } from 'sr2020-mm-event-engine';
 import { WithLatLngBeacons } from "./withLatLngBeacons";
 
-import { Beacon, makeBeacon } from "../../types/leafletExtensions";
+import { Beacon, makeBeacon } from "../../types";
 
 interface InnerBeaconLayerProps {
   enableByDefault: boolean;

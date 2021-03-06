@@ -1,3 +1,10 @@
+export * from './Beacon';
+export * from './BgImageOverlay';
+export * from './BgRectangle';
+export * from './BgTitleOverlay';
+export * from './LocationCentroid';
+export * from './LocNeighborLine';
+
 export interface UserRecord {
   // created_at: "2020-05-03 07:58:52"
   // id: 10207

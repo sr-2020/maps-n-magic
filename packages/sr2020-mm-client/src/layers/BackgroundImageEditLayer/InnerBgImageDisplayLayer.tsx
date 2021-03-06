@@ -11,7 +11,7 @@ import {
 import { 
   bgRectangle,
   BgRectangle
-} from "../../types/leafletExtensions";
+} from "../../types";
 
 interface BackgroundImageEditLayerProps {
   enableByDefault: boolean;

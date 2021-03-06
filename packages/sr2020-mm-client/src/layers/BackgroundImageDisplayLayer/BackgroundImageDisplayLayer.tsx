@@ -14,7 +14,7 @@ import {
   BgTitleOverlay,
   bgImageOverlay,
   BgImageOverlay
-} from "../../types/leafletExtensions";
+} from "../../types";
 
 function getTitleLatLngBounds(latlngs) {
   const bounds = latLngsToBounds(latlngs);
