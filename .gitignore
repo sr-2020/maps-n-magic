@@ -69,6 +69,8 @@ packages/sr2020-mm-client-event-engine/configs
 packages/sr2020-mm-client-event-engine/dataManagers
 packages/sr2020-mm-client-event-engine/services
 packages/sr2020-mm-client-event-engine/types
+packages/sr2020-mm-client-event-engine/input.d.ts
+packages/sr2020-mm-client-event-engine/input.js
 
 packages/sr2020-mm-data/analysis
 packages/sr2020-mm-data/assets

@@ -4,6 +4,10 @@ const changeEventName = 'characterLocationChanged';
 const dataName = 'characterLocationId';
 const initState = null;
 
+export interface WithCharacterPosition {
+  characterLocationId: number;
+}
+
 export const withCharacterPosition = (Wrapped) => (props) => {
   const { gameModel } = props;
   const [data, setData] = useState(initState);

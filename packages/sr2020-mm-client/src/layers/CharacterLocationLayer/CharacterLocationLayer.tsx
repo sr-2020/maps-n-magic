@@ -1,13 +1,26 @@
 import React, { Component } from 'react';
-import { L } from "sr2020-mm-client-core";
+import { L, CommonLayerProps } from "sr2020-mm-client-core";
 import * as R from 'ramda';
 import './CharacterLocationLayer.css';
+import { 
+  WithLocationRecords,
+  WithCharacterPosition
+} from "../../dataHOCs";
 
 import {
   getPolygonCentroid,
 } from 'sr2020-mm-event-engine';
 
-export class CharacterLocationLayer extends Component {
+interface CharacterLocationLayerProps {
+  enableByDefault: boolean;
+}
+
+export class CharacterLocationLayer extends Component<
+  CharacterLocationLayerProps &
+  CommonLayerProps &
+  WithLocationRecords &
+  WithCharacterPosition
+> {
   group = L.layerGroup([]);
 
   nameKey = 'characterLocationLayer';
@@ -22,7 +35,7 @@ export class CharacterLocationLayer extends Component {
 
   componentDidMount() {
     const {
-      enableByDefault, layerCommunicator, edges,
+      enableByDefault, layerCommunicator,
     } = this.props;
     layerCommunicator.emit('setLayersMeta', {
       layersMeta: this.getLayersMeta(),
@@ -72,6 +85,7 @@ export class CharacterLocationLayer extends Component {
     } = this.props;
     if (characterLocationId && locationRecords) {
       const location = locationRecords.find((loc) => loc.id === characterLocationId);
+      // @ts-ignore
       if (location.polygon && !R.equals(location.polygon, {})) {
         if (this.marker) {
           this.updateMarker(location);
