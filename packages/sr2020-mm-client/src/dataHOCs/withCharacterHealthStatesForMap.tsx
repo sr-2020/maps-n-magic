@@ -21,6 +21,10 @@ function getUserNameStr(user) {
   return user && user.name !== '' ? ` (${user.name})` : '';
 }
 
+export interface WithCharacterHealthStatesForMap {
+  characterHealthByLocations: CharacterHealthStatesByLocation[]
+};
+
 // const labels = marker.options.clinicalDeathIds.map((id) => id + this.getUserNameStr(gameModel.get({
 //   type: 'userRecord',
 //   id: Number(id),

@@ -1,16 +1,25 @@
 import React, { Component } from 'react';
-import { L, getIcon } from "sr2020-mm-client-core";
+import { L, getIcon, CommonLayerProps, iconColors } from "sr2020-mm-client-core";
+import { WithCharacterHealthStatesForMap } from '../../dataHOCs';
 import * as R from 'ramda';
 import './RescueServiceLayer2.css';
 
 import {
-  isGeoLocation, getArrDiff, getPolygonCentroid, isClinicallyDead,
+  isGeoLocation, 
+  getArrDiff, 
+  ArrDiff,
+  getPolygonCentroid, 
+  isClinicallyDead,
+  CharacterHealthStatesByLocation,
+  CharacterHealthState
 } from 'sr2020-mm-event-engine';
-// import { InnerRescueServiceLayer } from './InnerRescueServiceLayer';
 
-// import { RescueServiceLayerPropTypes } from '../../types';
+import { LocationCentroid, makeLocationCentroid } from "../../types";
 
-function hasDifference(item, prevItem) {
+function hasDifference(
+  item: CharacterHealthStatesByLocation, 
+  prevItem: CharacterHealthStatesByLocation
+): boolean {
   // polygon, label, options.manaLevel
   const list1 = R.pluck('characterId', item.characters.filter(isClinicallyDead));
   const list2 = R.pluck('characterId', prevItem.characters.filter(isClinicallyDead));
@@ -18,9 +27,18 @@ function hasDifference(item, prevItem) {
     || R.equals(item.location.polygon, prevItem.location.polygon);
 }
 
-const preFilterCharacters = (list) => list.filter((item) => item.characters.some(isClinicallyDead));
+const preFilterCharacters = (list: CharacterHealthStatesByLocation[]) => 
+  list.filter((item) => item.characters.some(isClinicallyDead));
 
-export class RescueServiceLayer2 extends Component {
+interface RescueServiceLayer2Props {
+  enableByDefault: boolean;
+}
+
+export class RescueServiceLayer2 extends Component<
+  RescueServiceLayer2Props &
+  CommonLayerProps &
+  WithCharacterHealthStatesForMap
+> {
   group = L.layerGroup([]);
 
   nameKey = 'rescueServiceLayer';
@@ -96,7 +114,7 @@ export class RescueServiceLayer2 extends Component {
     this.group.clearLayers();
   }
 
-  updateMarkerTooltip(marker, characters) {
+  updateMarkerTooltip(marker: LocationCentroid, characters: CharacterHealthState[]) {
     marker.unbindTooltip();
     const deadCharacters = characters.filter(isClinicallyDead);
     // marker.bindTooltip(`id персонажей: ${R.pluck('userName', deadCharacters).join(', ')}`, {
@@ -106,25 +124,30 @@ export class RescueServiceLayer2 extends Component {
     });
   }
 
-  createMarker(dataItem) {
+  createMarker(dataItem: CharacterHealthStatesByLocation) {
     const { location, locationId, characters } = dataItem;
-    const marker2 = L.marker(getPolygonCentroid(location.polygon), {
+    // const marker2 = L.marker(getPolygonCentroid(location.polygon), {
+    const marker2 = makeLocationCentroid(getPolygonCentroid(location.polygon), {
       locationId,
     });
-    marker2.setIcon(getIcon('red'));
+    marker2.setIcon(getIcon(iconColors.red));
     this.updateMarkerTooltip(marker2, characters);
     this.group.addLayer(marker2);
   }
 
-  updateMarker({ item }) {
+  updateMarker({ item }: {
+    item: CharacterHealthStatesByLocation
+  }) {
     const { location, locationId, characters } = item;
-    const marker = this.group.getLayers().find((marker2) => marker2.options.locationId === item.locationId);
+    const marker = this.group.getLayers().find((marker2: LocationCentroid) => 
+      marker2.options.locationId === item.locationId) as LocationCentroid;
     marker.setLatLng(getPolygonCentroid(location.polygon));
     this.updateMarkerTooltip(marker, characters);
   }
 
-  removeMarker(locationData) {
-    const marker = this.group.getLayers().find((loc2) => loc2.options.locationId === locationData.locationId);
+  removeMarker(locationData: CharacterHealthStatesByLocation) {
+    const marker = this.group.getLayers().find((loc2: LocationCentroid) => 
+      loc2.options.locationId === locationData.locationId);
     this.group.removeLayer(marker);
   }
 

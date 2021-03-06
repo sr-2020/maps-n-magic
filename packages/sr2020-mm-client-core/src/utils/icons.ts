@@ -10,7 +10,7 @@ const defaults: IconOptions = {
   iconUrl: null
 };
 
-enum colors {
+export enum iconColors {
   black,
   blue,
   green,
@@ -22,11 +22,11 @@ enum colors {
 };
 
 const usedIcons: {
-  [color in colors]?: Icon
+  [color in iconColors]?: Icon
 } = {};
 
-const getIcon = (color: colors) => {
-  if (colors[color] !== undefined) {
+export const getIcon = (color: iconColors) => {
+  if (iconColors[color] !== undefined) {
     throw new Error(`Unexpected color ${color}`);
   }
   if (!usedIcons[color]) {
@@ -36,5 +36,3 @@ const getIcon = (color: colors) => {
   }
   return usedIcons[color];
 };
-
-export { getIcon };

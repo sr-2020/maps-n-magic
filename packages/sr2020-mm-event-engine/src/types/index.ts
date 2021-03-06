@@ -209,6 +209,7 @@ export interface RawCharacterHealthState {
   locationId: number;
   // locationLabel: "Межрайонье 1"
   // personName: "Blaze ноябрь"
+  personName: string;
   // timestamp: 1613673901135
   timestamp: number;
 }

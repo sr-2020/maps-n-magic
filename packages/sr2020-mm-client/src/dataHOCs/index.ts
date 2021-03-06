@@ -14,11 +14,14 @@ import { settingsDataHOC } from './settingsDataHOC';
 
 export * from './withCharacterPosition';
 export * from './withTriangulationData';
+export * from './withCharacterHealthStatesForMap';
+export * from './withCharacterHealthListForTable';
+export * from './withCharacterIdHealthListForAudio';
 
 export interface WithManaOceanSettings {
   manaOcean: ManaOceanSettingsData;
 }
-export interface wWithManaOceanEffectSettings {
+export interface WithManaOceanEffectSettings {
   manaOceanEffects: ManaOceanEffectSettingsData;
 }
 
