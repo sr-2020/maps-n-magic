@@ -13,6 +13,7 @@ import { basicDataHOC } from './basicDataHOC';
 import { settingsDataHOC } from './settingsDataHOC';
 
 export * from './withCharacterPosition';
+export * from './withTriangulationData';
 
 export interface WithManaOceanSettings {
   manaOcean: ManaOceanSettingsData;

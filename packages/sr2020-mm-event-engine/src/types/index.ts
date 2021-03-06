@@ -113,12 +113,14 @@ export type LocPolygonData = Pick<LocationRecord, "id" | "polygon"> & {
 // where locIds are numbers.
 export type EdgeId = string;
 
+export interface TriangulationCentroid {
+  locationId: number;
+  centroidLatLng: SRLatLng;
+}
+
 export interface TriangulationData {
   neighborsIndex: Map<number, number[]>;
-  centroids: {
-    locationId: number;
-    centroidLatLng: SRLatLng;
-  }[];
+  centroids: TriangulationCentroid[];
   edgeSet: Set<EdgeId>;
 }
 

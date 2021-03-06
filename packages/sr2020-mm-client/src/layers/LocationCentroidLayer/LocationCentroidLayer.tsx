@@ -1,13 +1,25 @@
 import React, { Component } from 'react';
-import { L } from "sr2020-mm-client-core";
+import { L, CommonLayerProps } from "sr2020-mm-client-core";
 import * as R from 'ramda';
 import './LocationCentroidLayer.css';
 
+import { WithTriangulationData } from '../../dataHOCs';
+
 import {
-  getArrDiff,
+  getArrDiff, TriangulationCentroid
 } from 'sr2020-mm-event-engine';
 
-export class LocationCentroidLayer extends Component {
+import { makeLocationCentroid, LocationCentroid } from "../../types/leafletExtensions";
+
+interface LocationCentroidLayerProps {
+  enableByDefault: boolean;
+}
+
+export class LocationCentroidLayer extends Component<
+  LocationCentroidLayerProps &
+  CommonLayerProps &
+  WithTriangulationData
+> {
   group = L.layerGroup([]);
 
   nameKey = 'locationCentroidLayer';
@@ -40,7 +52,7 @@ export class LocationCentroidLayer extends Component {
       translator, centroids,
     } = this.props;
     if (prevProps.centroids !== centroids) {
-      const diff = getArrDiff(
+      const diff = getArrDiff<TriangulationCentroid>(
         centroids,
         prevProps.centroids,
         R.prop('locationId'),
@@ -73,7 +85,8 @@ export class LocationCentroidLayer extends Component {
 
   createMarker(dataItem) {
     const { locationId, centroidLatLng } = dataItem;
-    const marker2 = L.marker(centroidLatLng, {
+    // const marker2 = L.marker(centroidLatLng, {
+    const marker2 = makeLocationCentroid(centroidLatLng, {
       locationId,
     });
     this.group.addLayer(marker2);
@@ -81,12 +94,12 @@ export class LocationCentroidLayer extends Component {
 
   updateMarker({ item }) {
     const { location, centroidLatLng } = item;
-    const marker = this.group.getLayers().find((marker2) => marker2.options.locationId === item.locationId);
+    const marker = this.group.getLayers().find((marker2: LocationCentroid) => marker2.options.locationId === item.locationId) as LocationCentroid;
     marker.setLatLng(centroidLatLng);
   }
 
   removeMarker(locationData) {
-    const marker = this.group.getLayers().find((loc2) => loc2.options.locationId === locationData.locationId);
+    const marker = this.group.getLayers().find((loc2: LocationCentroid) => loc2.options.locationId === locationData.locationId);
     this.group.removeLayer(marker);
   }
 

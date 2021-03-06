@@ -1,13 +1,25 @@
 import React, { Component } from 'react';
-import { L } from "sr2020-mm-client-core";
+import { L, CommonLayerProps } from "sr2020-mm-client-core";
 import * as R from 'ramda';
 import './LocationNeighborLayer.css';
+
+import { WithTriangulationData } from '../../dataHOCs';
 
 import {
   getArrDiff,
 } from 'sr2020-mm-event-engine';
 
-export class LocationNeighborLayer extends Component {
+import { locNeighborLine, LocNeighborLine } from "../../types/leafletExtensions";
+
+interface LocationNeighborLayerProps {
+  enableByDefault: boolean;
+}
+
+export class LocationNeighborLayer extends Component<
+  LocationNeighborLayerProps &
+  CommonLayerProps &
+  WithTriangulationData
+> {
   group = L.layerGroup([]);
 
   nameKey = 'locationNeighborLayer';
@@ -73,7 +85,8 @@ export class LocationNeighborLayer extends Component {
 
   createEdge(dataItem) {
     const { edgeId, centroidLatLng1, centroidLatLng2 } = dataItem;
-    const edge = L.polyline([centroidLatLng1, centroidLatLng2], {
+    // const edge = L.polyline([centroidLatLng1, centroidLatLng2], {
+    const edge = locNeighborLine([centroidLatLng1, centroidLatLng2], {
       edgeId,
       color: 'green',
     });
@@ -82,13 +95,13 @@ export class LocationNeighborLayer extends Component {
 
   updateEdge({ item }) {
     const { edgeId, centroidLatLng1, centroidLatLng2 } = item;
-    const edge = this.group.getLayers().find((edge2) => edge2.options.edgeId === item.edgeId);
+    const edge = this.group.getLayers().find((edge2: LocNeighborLine) => edge2.options.edgeId === item.edgeId) as LocNeighborLine;
     // marker.setLatLng(centroidLatLng);
     edge.setLatLngs([centroidLatLng1, centroidLatLng2]);
   }
 
   removeEdge(locationData) {
-    const edge = this.group.getLayers().find((loc2) => loc2.options.edgeId === locationData.edgeId);
+    const edge = this.group.getLayers().find((loc2: LocNeighborLine) => loc2.options.edgeId === locationData.edgeId);
     this.group.removeLayer(edge);
   }
 

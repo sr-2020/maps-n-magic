@@ -1,11 +1,21 @@
 import React, { useState, useEffect } from 'react';
 import * as R from 'ramda';
 
-import { edgeIdToPair } from 'sr2020-mm-event-engine';
-
 import { 
-  TriangulationData
-} from "../types";
+  edgeIdToPair, 
+  TriangulationCentroid,
+  TriangulationData,
+  SRLatLng
+} from 'sr2020-mm-event-engine';
+
+export interface WithTriangulationData {
+  centroids: TriangulationCentroid[];
+  edges: {
+    edgeId: string;
+    centroidLatLng1: SRLatLng;
+    centroidLatLng2: SRLatLng;
+  }[]
+}
 
 const changeEventName = 'locationRecordsChanged2';
 const dataName = 'triangulationData';
@@ -28,7 +38,7 @@ export const withTriangulationData = (Wrapped) => (props) => {
     // console.log('withTriangulationData', triangulationData);
     // console.log('centroids', centroids);
 
-    const { neighborsIndex, centroids, edgeSet } = triangulationData;
+    const { centroids, edgeSet } = triangulationData;
     const centroidIndex = R.indexBy((el) => `${el.locationId}`, centroids);
     
     const edges = Array.from(edgeSet).map((edgeId) => {
