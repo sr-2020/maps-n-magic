@@ -6,3 +6,5 @@ export {
 export { postUserPosition } from './api/position';
 
 export { getSound, getSoundList } from './api/sounds';
+
+export * from './types';

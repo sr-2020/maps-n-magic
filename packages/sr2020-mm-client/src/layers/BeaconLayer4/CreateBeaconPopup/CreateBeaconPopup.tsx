@@ -1,13 +1,25 @@
 import React, { Component } from 'react';
+import { WithTranslation } from 'react-i18next';
 import './CreateBeaconPopup.css';
 import * as R from 'ramda';
 
 import ReactDOM from 'react-dom';
 import classNames from 'classnames';
 
-// import { CreateBeaconPopupPropTypes } from '../../types';
+import { CurBeacon } from "../BeaconLayer4";
 
-export class CreateBeaconPopup extends Component {
+interface CreateBeaconPopupProp {
+  freeBeaconIds: number[];
+  domContainer: HTMLElement;
+  latLng: L.LatLng;
+  onClose: () => void;
+  onSelect: (latLng: L.LatLng, id: number) => void;
+  curBeacon: CurBeacon;
+}
+
+export class CreateBeaconPopup extends Component<
+  CreateBeaconPopupProp & WithTranslation
+> {
   // static propTypes = CreateBeaconPopupPropTypes;
 
   constructor(props) {

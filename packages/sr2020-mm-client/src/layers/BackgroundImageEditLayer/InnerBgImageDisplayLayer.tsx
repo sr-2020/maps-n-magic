@@ -1,11 +1,28 @@
 import React, { Component } from 'react';
-import { L } from "sr2020-mm-client-core";
+import { L, LayersMeta, CommonLayerProps } from "sr2020-mm-client-core";
 import * as R from 'ramda';
 import './BackgroundImageEditLayer.css';
 
 import { getArrDiff } from 'sr2020-mm-event-engine';
+import {
+  BackgroundImage
+} from 'sr2020-mm-client-event-engine/types';
 
-export class InnerBgImageDisplayLayer extends Component {
+import { 
+  bgRectangle,
+  BgRectangle
+} from "../../types/leafletExtensions";
+
+interface BackgroundImageEditLayerProps {
+  enableByDefault: boolean;
+  backgroundImages: BackgroundImage[];
+  onRectangleClick: L.LeafletEventHandlerFn;
+  onRectangleEdit: L.LeafletEventHandlerFn;
+}
+
+export class InnerBgImageDisplayLayer extends Component<
+  BackgroundImageEditLayerProps & CommonLayerProps
+> {
   rectangleGroup = L.layerGroup([]);
 
   rectangleGroupNameKey = 'rectangleGroupLayer';
@@ -86,13 +103,12 @@ export class InnerBgImageDisplayLayer extends Component {
     const {
       latlngs, name, id, image,
     } = imageData;
-    const rectangle = L.rectangle(latlngs, {
+    // const rectangle = L.rectangle(latlngs, {
+    const rectangle = bgRectangle(latlngs, {
       id, name, image,
     });
-    rectangle.on({
-      click: onRectangleClick,
-      'pm:edit': onRectangleEdit,
-    });
+    rectangle.on('click', onRectangleClick);
+    rectangle.on('pm:edit', onRectangleEdit);
     this.rectangleGroup.addLayer(rectangle);
   }
 
@@ -100,14 +116,14 @@ export class InnerBgImageDisplayLayer extends Component {
     const {
       latlngs, name, id, image,
     } = item;
-    const rect = this.rectangleGroup.getLayers().find((rect2) => rect2.options.id === id);
+    const rect = this.rectangleGroup.getLayers().find((rect2: BgRectangle) => rect2.options.id === id) as BgRectangle;
     rect.setLatLngs(latlngs);
-    L.setOptions(rect, { name, image });
+    L.Util.setOptions(rect, { name, image });
   }
 
   removeBackgroundImage(imageData) {
     const { id } = imageData;
-    const rect = this.rectangleGroup.getLayers().find((rect2) => rect2.options.id === id);
+    const rect = this.rectangleGroup.getLayers().find((rect2: BgRectangle) => rect2.options.id === id);
     this.rectangleGroup.removeLayer(rect);
   }
 

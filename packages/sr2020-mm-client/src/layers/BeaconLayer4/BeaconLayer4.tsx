@@ -1,15 +1,45 @@
 import React, { Component } from 'react';
+import { WithTranslation } from 'react-i18next';
 import './BeaconLayer4.css';
 
-import { L } from "sr2020-mm-client-core";
+import { L, CommonLayerProps } from "sr2020-mm-client-core";
 import * as R from 'ramda';
 
+import { GameModel, BeaconRecord } from 'sr2020-mm-event-engine';
+
 import { CreateBeaconPopup } from './CreateBeaconPopup';
+import { WithLatLngBeacons } from "./withLatLngBeacons";
 
 import { getFreeBeaconIds } from './beaconUtils';
-import { InnerBeaconLayer } from './InnerBeaconLayer.jsx';
+import { InnerBeaconLayer } from './InnerBeaconLayer';
 
-export class BeaconLayer4 extends Component {
+interface BeaconLayer4Props {
+  gameModel: GameModel;
+  beaconRecords: BeaconRecord[];
+  enableByDefault: boolean;
+}
+
+export interface CurBeacon {
+  id: number;
+  label: string;
+}
+
+interface BeaconLayer4State {
+  beaconLatLng: L.LatLng;
+  curBeacon: CurBeacon;
+}
+
+export class BeaconLayer4 extends Component<
+  BeaconLayer4Props & 
+  CommonLayerProps &
+  WithTranslation &
+  WithLatLngBeacons,
+  BeaconLayer4State
+> {
+  beaconPopupContainer: HTMLElement;
+
+  createBeaconPopup: L.Popup;
+
   constructor(props) {
     super(props);
     this.state = {
@@ -49,7 +79,7 @@ export class BeaconLayer4 extends Component {
   onCreateLayer(event) {
     const { translator, layerCommunicator } = this.props;
     if (event.layer instanceof L.Marker) {
-      const beacon = event.layer;
+      const beacon = event.layer as L.Marker;
       const latlng = translator.moveFrom(beacon.getLatLng());
       this.setState({
         beaconLatLng: latlng,
@@ -63,7 +93,7 @@ export class BeaconLayer4 extends Component {
 
   onRemoveLayer(event) {
     const {
-      gameModel, translator, closePopup, layerCommunicator,
+      gameModel, translator, layerCommunicator,
     } = this.props;
     if (event.layer instanceof L.Marker) {
       const beacon = event.layer;
@@ -125,7 +155,7 @@ export class BeaconLayer4 extends Component {
     });
   }
 
-  onSelectBeacon(latLng, id) {
+  onSelectBeacon(latLng: L.LatLng, id: number): void {
     const {
       gameModel,
     } = this.props;

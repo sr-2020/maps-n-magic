@@ -20,6 +20,8 @@ import 'leaflet.locatecontrol/dist/L.Control.Locate.min.css';
 
 import './Map.css';
 
+import { LayersMeta } from "../../types";
+
 // console.log(L);
 L.Icon.Default.imagePath = './images/leafletImages/';
 
@@ -32,10 +34,6 @@ interface MapProps extends WithTranslation {
 }
 interface MapState {
   map: L.Map;
-}
-
-interface LayersMeta {
-  [layerName: string]: L.Layer;
 }
 
 export class Map extends Component<MapProps, MapState> {

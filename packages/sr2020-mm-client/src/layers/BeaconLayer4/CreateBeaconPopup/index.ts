@@ -1,6 +1,6 @@
 import { withTranslation } from 'react-i18next';
 import { pipe } from 'ramda';
-import { CreateBeaconPopup } from './CreateBeaconPopup.jsx';
+import { CreateBeaconPopup } from './CreateBeaconPopup';
 
 const tmp = pipe(withTranslation())(CreateBeaconPopup);
 

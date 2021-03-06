@@ -93,7 +93,7 @@ export class Translator {
     return this._move(obj, R.add);
   }
 
-  moveFrom(obj) {
+  moveFrom<T>(obj: T): T {
     return this._move(obj, R.subtract);
   }
 

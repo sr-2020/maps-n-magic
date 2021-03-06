@@ -1,9 +1,20 @@
 import React, { Component } from 'react';
-import { L } from "sr2020-mm-client-core";
+import { L, LayersMeta, CommonLayerProps } from "sr2020-mm-client-core";
 import * as R from 'ramda';
 import './BackgroundImageDisplayLayer.css';
 
+import {
+  BackgroundImage
+} from 'sr2020-mm-client-event-engine/types';
+
 import { getArrDiff, latLngsToBounds } from 'sr2020-mm-event-engine';
+
+import { 
+  bgTitleOverlay,
+  BgTitleOverlay,
+  bgImageOverlay,
+  BgImageOverlay
+} from "../../types/leafletExtensions";
 
 function getTitleLatLngBounds(latlngs) {
   const bounds = latLngsToBounds(latlngs);
@@ -34,7 +45,8 @@ function createTitle(imageData) {
   // <rect x="75" y="123" width="50" height="50" style="fill:#0013ff"/>
   // const svgElementBounds = [[32, -130], [13, -100]];
   const svgElementBounds = getTitleLatLngBounds(latlngs);
-  const titleRect = L.svgOverlay(svgElement, svgElementBounds, { id });
+  // const titleRect = L.svgOverlay(svgElement, svgElementBounds, { id });
+  const titleRect = bgTitleOverlay(svgElement, svgElementBounds, { id });
   setTitleText(svgElement, name);
   return titleRect;
 }
@@ -43,14 +55,24 @@ function setTitleText(svgElement, text) {
   svgElement.innerHTML = `<text x="0" y="80" class="svg-title-text">${text}</text>`;
 }
 
-export class BackgroundImageDisplayLayer extends Component {
-  imageGroup = L.layerGroup([]);
+interface BackgroundImageDisplayLayerProps {
+  imageClassName: string;
+  enableByDefault: boolean;
+  backgroundImages: BackgroundImage[];
+}
+
+export class BackgroundImageDisplayLayer extends Component<BackgroundImageDisplayLayerProps & CommonLayerProps> {
+  imageGroup: L.LayerGroup<L.ImageOverlay> = L.layerGroup([]);
 
   titleGroup = L.layerGroup([]);
 
   imageGroupNameKey = 'imageGroupLayer';
 
   titleGroupNameKey = 'titleGroupLayer';
+
+  imagePopupDom: HTMLElement;
+
+  imagePopup: L.Popup;
 
   constructor(props) {
     super(props);
@@ -136,7 +158,8 @@ export class BackgroundImageDisplayLayer extends Component {
     } = imageData;
     const titleRect = createTitle(imageData);
     this.titleGroup.addLayer(titleRect);
-    const imageLayer = L.imageOverlay(image, latlngs, {
+    // const imageLayer = L.imageOverlay(image, latlngs, {
+    const imageLayer = bgImageOverlay(image, latlngs, {
       id,
       className: imageClassName,
       errorOverlayUrl: 'images/noImage.svg',
@@ -148,19 +171,19 @@ export class BackgroundImageDisplayLayer extends Component {
     const {
       latlngs, name, id, image,
     } = item;
-    const imageLayer = this.imageGroup.getLayers().find((image2) => image2.options.id === id);
+    const imageLayer = this.imageGroup.getLayers().find((image2: BgImageOverlay) => image2.options.id === id) as BgImageOverlay;
     imageLayer.setBounds(latlngs);
     imageLayer.setUrl(image);
-    const title = this.titleGroup.getLayers().find((title2) => title2.options.id === id);
+    const title = this.titleGroup.getLayers().find((title2: BgTitleOverlay) => title2.options.id === id) as BgTitleOverlay;
     setTitleText(title.getElement(), name);
     title.setBounds(getTitleLatLngBounds(latlngs));
   }
 
   removeBackgroundImage(imageData) {
     const { id } = imageData;
-    const image = this.imageGroup.getLayers().find((image2) => image2.options.id === id);
+    const image = this.imageGroup.getLayers().find((image2: BgImageOverlay) => image2.options.id === id);
     this.imageGroup.removeLayer(image);
-    const title = this.titleGroup.getLayers().find((title2) => title2.options.id === id);
+    const title = this.titleGroup.getLayers().find((title2: BgTitleOverlay) => title2.options.id === id);
     this.titleGroup.removeLayer(title);
   }
 

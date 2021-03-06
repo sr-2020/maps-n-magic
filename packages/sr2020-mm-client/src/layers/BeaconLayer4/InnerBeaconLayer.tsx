@@ -1,10 +1,25 @@
 import React, { Component } from 'react';
-import { L } from "sr2020-mm-client-core";
+import { WithTranslation } from 'react-i18next';
+import { L, CommonLayerProps } from "sr2020-mm-client-core";
 import * as R from 'ramda';
 
 import { getArrDiff } from 'sr2020-mm-event-engine';
+import { WithLatLngBeacons } from "./withLatLngBeacons";
 
-export class InnerBeaconLayer extends Component {
+import { Beacon, makeBeacon } from "../../types/leafletExtensions";
+
+interface InnerBeaconLayerProps {
+  enableByDefault: boolean;
+  onBeaconClick: L.LeafletEventHandlerFn;
+  onBeaconEdit: L.LeafletEventHandlerFn;
+}
+
+export class InnerBeaconLayer extends Component<
+  InnerBeaconLayerProps & 
+  CommonLayerProps & 
+  WithTranslation &
+  WithLatLngBeacons
+> {
   group = L.layerGroup([]);
 
   nameKey = 'beaconsLayer';
@@ -85,7 +100,8 @@ export class InnerBeaconLayer extends Component {
     const {
       lat, lng, label, id,
     } = beaconRecord;
-    const beacon = L.marker({ lat, lng }, {
+    // const beacon = L.marker({ lat, lng }, {
+    const beacon = makeBeacon({ lat, lng }, {
       id, label,
     });
     beacon.on('mouseover', function (e) {
@@ -96,10 +112,8 @@ export class InnerBeaconLayer extends Component {
       this.closeTooltip();
     });
 
-    beacon.on({
-      click: onBeaconClick,
-      'pm:edit': onBeaconEdit,
-    });
+    beacon.on('click', onBeaconClick);
+    beacon.on('pm:edit', onBeaconEdit);
 
     this.group.addLayer(beacon);
   }
@@ -108,14 +122,14 @@ export class InnerBeaconLayer extends Component {
     const {
       lat, lng, label, id,
     } = item;
-    const marker = this.group.getLayers().find((rect2) => rect2.options.id === id);
+    const marker = this.group.getLayers().find((rect2: Beacon) => rect2.options.id === id) as Beacon;
     marker.setLatLng({ lat, lng });
-    L.setOptions(marker, { label });
+    L.Util.setOptions(marker, { label });
   }
 
   removeBeacon(beaconRecord) {
     const { id } = beaconRecord;
-    const marker = this.group.getLayers().find((marker2) => marker2.options.id === id);
+    const marker = this.group.getLayers().find((marker2: Beacon) => marker2.options.id === id);
     this.group.removeLayer(marker);
   }
 

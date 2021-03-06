@@ -1,15 +1,39 @@
 import React, { Component } from 'react';
-import { L } from "sr2020-mm-client-core";
+import { L, LayersMeta, CommonLayerProps } from "sr2020-mm-client-core";
 import * as R from 'ramda';
 import './BackgroundImageEditLayer.css';
 
-import { getArrDiff } from 'sr2020-mm-event-engine';
+import { getArrDiff, GameModel } from 'sr2020-mm-event-engine';
+import {
+  BackgroundImage
+} from 'sr2020-mm-client-event-engine/types';
+
 import { BackgroundImagePopup } from './BackgroundImagePopup';
 
 import { BackgroundImageDisplayLayer } from '../BackgroundImageDisplayLayer';
-import { InnerBgImageDisplayLayer } from './InnerBgImageDisplayLayer.jsx';
+import { InnerBgImageDisplayLayer } from './InnerBgImageDisplayLayer';
 
-export class BackgroundImageEditLayer extends Component {
+interface BackgroundImageEditLayerProps {
+  gameModel: GameModel;
+  enableByDefault: boolean;
+  backgroundImages: BackgroundImage[];
+}
+interface BackgroundImageEditLayerState {
+  curBackgroundImage: {
+    image: string;
+    id: number;
+    name: string;
+  } | null;
+}
+
+export class BackgroundImageEditLayer extends Component<
+  BackgroundImageEditLayerProps & CommonLayerProps, 
+  BackgroundImageEditLayerState
+> {
+  imagePopupDom: HTMLElement;
+
+  imagePopup: L.Popup;
+
   constructor(props) {
     super(props);
     this.state = {
@@ -21,9 +45,9 @@ export class BackgroundImageEditLayer extends Component {
   }
 
   componentDidMount() {
-    const {
-      enableByDefault, layerCommunicator, backgroundImages,
-    } = this.props;
+    // const {
+    //   enableByDefault, layerCommunicator, backgroundImages,
+    // } = this.props;
     this.imagePopupDom = document.createElement('div');
     // this.subscribe('on', gameModel);
     this.communicatorSubscribe('on');
@@ -32,19 +56,19 @@ export class BackgroundImageEditLayer extends Component {
   }
 
   componentDidUpdate(prevProps) {
-    const {
-      translator, backgroundImages,
-    } = this.props;
-    if (prevProps.backgroundImages !== backgroundImages) {
-    //   this.subscribe('off', prevProps.gameModel);
-    //   this.subscribe('on', gameModel);
-    //   this.clear();
-    //   this.populate();
-    }
-    if (prevProps.translator !== translator) {
-      // this.clear();
-      // this.populate();
-    }
+    // const {
+    //   translator, backgroundImages,
+    // } = this.props;
+    // if (prevProps.backgroundImages !== backgroundImages) {
+    // //   this.subscribe('off', prevProps.gameModel);
+    // //   this.subscribe('on', gameModel);
+    // //   this.clear();
+    // //   this.populate();
+    // }
+    // if (prevProps.translator !== translator) {
+    //   // this.clear();
+    //   // this.populate();
+    // }
     console.log('InnerManaOceanLayer2 did update');
   }
 
@@ -75,7 +99,7 @@ export class BackgroundImageEditLayer extends Component {
 
   onRemoveLayer(event) {
     const {
-      gameModel, translator, closePopup, layerCommunicator,
+      gameModel, layerCommunicator,
     } = this.props;
     if (event.layer instanceof L.Rectangle) {
       const rect = event.layer;
@@ -109,7 +133,7 @@ export class BackgroundImageEditLayer extends Component {
 
   onRectangleEdit = (e) => {
     const {
-      gameModel, translator, closePopup, layerCommunicator,
+      gameModel, layerCommunicator,
     } = this.props;
     const rectangle = e.target;
     gameModel.execute({

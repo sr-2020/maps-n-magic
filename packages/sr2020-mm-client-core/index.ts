@@ -22,5 +22,7 @@ export * from './src/utils/googleMapsColorPalette';
 export * from './src/utils/icons';
 export * from './src/utils/Translator';
 
+export * from './src/types';
+
 
 
