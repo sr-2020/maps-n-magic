@@ -3,8 +3,15 @@ import * as R from 'ramda';
 // 'geolocation' layer_id = 1
 // 'region' layer_id = 2
 // 'gamelocation' layer_id = 3
+// export const locationTypes = ['region', 'geoLocation', 'gameLocation'];
 export const locationTypes = ['region', 'geoLocation', 'gameLocation'];
 export const locationTypeSequence = [2, 1, 3];
+
+export enum locationTypesEnum {
+  region,
+  geoLocation,
+  gameLocation,
+}
 
 export const layerIdToLayerName = {
   2: 'region',

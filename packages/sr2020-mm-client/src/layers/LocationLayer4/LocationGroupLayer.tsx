@@ -1,10 +1,28 @@
 import React, { Component } from 'react';
-import { L } from "sr2020-mm-client-core";
+import { L, CommonLayerProps } from "sr2020-mm-client-core";
+import { WithTranslation } from "react-i18next";
 import * as R from 'ramda';
 
 import { getArrDiff } from 'sr2020-mm-event-engine';
 
-export class LocationGroupLayer extends Component {
+import { WithLocationRecords } from '../../dataHOCs';
+import { BasicLocation, basicLocation } from "../../types";
+
+interface LocationGroupLayerProps {
+  enableByDefault: boolean;
+  enableLayerIndex: any;
+  geoLayerName: any;
+  nameKey: any;
+  onLocationClick: any;
+  onLocationEdit: any;
+}
+
+export class LocationGroupLayer extends Component<
+  LocationGroupLayerProps &
+  CommonLayerProps &
+  WithTranslation &
+  WithLocationRecords
+> {
   group = L.layerGroup([]);
 
   constructor(props) {
@@ -82,7 +100,8 @@ export class LocationGroupLayer extends Component {
     const {
       polygon, label, id, layer_id, options,
     } = locationRecord;
-    const loc = L.polygon([polygon[0]], {
+    // const loc = L.polygon([polygon[0]], {
+    const loc = basicLocation([polygon[0]], {
       id, label, layer_id, color: options.color, weight: options.weight, fillOpacity: options.fillOpacity,
     });
     loc.on('mouseover', function (e) {
@@ -106,10 +125,12 @@ export class LocationGroupLayer extends Component {
     loc.on('mouseout', function (e) {
       this.closeTooltip();
     });
-    loc.on({
-      click: onLocationClick,
-      'pm:edit': onLocationEdit,
-    });
+    loc.on('click', onLocationClick);
+    loc.on('pm:edit', onLocationEdit);
+    // loc.on({
+    //   click: onLocationClick,
+    //   'pm:edit': onLocationEdit,
+    // });
     this.group.addLayer(loc);
   }
 
@@ -117,15 +138,15 @@ export class LocationGroupLayer extends Component {
     const {
       polygon, label, id, layer_id, options,
     } = item;
-    const location = this.group.getLayers().find((marker2) => marker2.options.id === id);
+    const location = this.group.getLayers().find((layer: BasicLocation) => layer.options.id === id) as BasicLocation;
     location.setLatLngs([polygon[0]]);
-    L.setOptions(location, { label });
+    L.Util.setOptions(location, { label });
     location.setStyle({ color: options.color, weight: options.weight, fillOpacity: options.fillOpacity });
   }
 
   removeLocation(locationRecord) {
     const { id } = locationRecord;
-    const location = this.group.getLayers().find((marker2) => marker2.options.id === id);
+    const location = this.group.getLayers().find((layer: BasicLocation) => layer.options.id === id);
     this.group.removeLayer(location);
   }
 

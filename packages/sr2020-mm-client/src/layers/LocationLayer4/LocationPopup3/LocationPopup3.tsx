@@ -4,18 +4,31 @@ import * as R from 'ramda';
 
 import ReactDOM from 'react-dom';
 import classNames from 'classnames';
+import { WithTranslation } from "react-i18next";
 
 import FormControl from 'react-bootstrap/FormControl';
-import { layerNameToLayerId, locationTypes } from '../LocationLayerTypes';
+import { layerNameToLayerId, locationTypes, locationTypesEnum } from '../LocationLayerTypes';
 
 import { GOOGLE_MAPS_COLOR_PALETTE as COLOR_PALETTE } from 'sr2020-mm-client-core';
 
 
 // console.log('COLOR_PALETTE', COLOR_PALETTE);
-// import { LocationPopup3PropTypes } from '../../types';
-// import { LocationLayer3 } from '../LocationLayer3/LocationLayer3';
 
-export class LocationPopup3 extends Component {
+interface LocationPopup3Props {
+  locationPopupDom: HTMLElement;
+  onChange: any;
+  label: string;
+  layer_id: number;
+  color: string;
+  weight: number;
+  fillOpacity: number;
+  onClose: () => void;
+}
+
+export class LocationPopup3 extends Component<
+  LocationPopup3Props &
+  WithTranslation
+> {
   // static propTypes = LocationPopup3PropTypes;
 
   constructor(props) {
@@ -33,9 +46,9 @@ export class LocationPopup3 extends Component {
   }
 
   componentDidUpdate = (prevProps) => {
-    const {
-      label, allBeacons, attachedMarkers, manaLevel,
-    } = this.props;
+    // const {
+    //   label, allBeacons, attachedMarkers, manaLevel,
+    // } = this.props;
     // if (label === prevProps.label
     // // && manaLevel === prevProps.manaLevel
     // // && R.equals(attachedMarkers, prevProps.attachedMarkers)
@@ -58,7 +71,7 @@ export class LocationPopup3 extends Component {
     //   // unattachedList, attachedList, selectedAddMarker, selectedRemoveMarker,
     // } = this.state;
     const {
-      label, onChange, t, manaLevel, layer_id, color, weight, fillOpacity,
+      label, onChange, t, layer_id, color, weight, fillOpacity,
     } = this.props;
 
     const common = 'w-33p tw-font-bold tw-py-2 tw-px-4 focus:tw-outline-none focus:tw-shadow-outline';
@@ -105,7 +118,10 @@ export class LocationPopup3 extends Component {
                   value={layerNameToLayerId[locationType]}
                   onClick={onChange('layer_id')}
                 >
-                  {t(`locationType_${locationType}`)}
+                  {
+                    // @ts-ignore
+                    t(`locationType_${locationType}`)
+                  }
                 </button>
               ))
             }

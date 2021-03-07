@@ -5,7 +5,7 @@ import {
   Route,
 } from 'react-router-dom';
 
-import { CommonMap } from '../../maps/CommonMap';
+// import { CommonMap } from '../../maps/CommonMap';
 import { BackgroundEditorMap } from '../../maps/BackgroundEditorMap';
 import { LocationEditorMap } from '../../maps/LocationEditorMap';
 import { BeaconEditorMap } from '../../maps/BeaconEditorMap';
@@ -29,12 +29,12 @@ export function MapRoutes(props) {
     <Route path="/mapsNav" key="mapsNav">
       <MapsNav />
     </Route>,
-    <Route path="/map2" key="map2">
-      <CommonMap
-        gameModel={gameModel}
-        geomanConfig={oldLocationAndMarkerGeomanConfig}
-      />
-    </Route>,
+    // <Route path="/map2" key="map2">
+    //   <CommonMap
+    //     gameModel={gameModel}
+    //     geomanConfig={oldLocationAndMarkerGeomanConfig}
+    //   />
+    // </Route>,
     <Route path="/locationsEditor2" key="locationsEditor2">
       <LocationEditorMap
         gameModel={gameModel}

@@ -1,13 +1,39 @@
 import React, { Component } from 'react';
 import './LocationLayer4.css';
 
-import { L } from "sr2020-mm-client-core";
-import * as R from 'ramda';
+import { L, CommonLayerProps } from "sr2020-mm-client-core";
+import { GameModel, LocationRecord } from "sr2020-mm-event-engine";
+// import * as R from 'ramda';
 
 import { LocationPopup3 } from './LocationPopup3';
-import { InnerLocationLayer } from './InnerLocationLayer.jsx';
+import { InnerLocationLayer } from './InnerLocationLayer';
 
-export class LocationLayer4 extends Component {
+interface LocationLayer4Props {
+  gameModel: GameModel;
+  editable: boolean;
+}
+interface LocationLayer4State {
+  curLocation: {
+    id: number;
+    label: string;
+    layer_id: number;
+    // from LocationRecordOptions
+    color: string;
+    weight: number;
+    fillOpacity: number;
+    // manaLevel: number;
+  };
+}
+
+export class LocationLayer4 extends Component<
+  LocationLayer4Props &
+  CommonLayerProps,
+  LocationLayer4State
+> {
+  locationPopupDom: HTMLElement;
+
+  locationPopup: L.Popup;
+
   constructor(props) {
     super(props);
     this.state = {
@@ -57,7 +83,7 @@ export class LocationLayer4 extends Component {
 
   onRemoveLayer(event) {
     const {
-      gameModel, translator, closePopup, layerCommunicator,
+      gameModel, layerCommunicator,
     } = this.props;
     if (event.layer instanceof L.Polygon) {
       const location = event.layer;
@@ -75,14 +101,14 @@ export class LocationLayer4 extends Component {
       return;
     }
     const {
-      label, id, markers, manaLevel, layer_id, color, weight, fillOpacity,
+      label, id, layer_id, color, weight, fillOpacity,
     } = e.target.options;
     this.setState({
       curLocation: {
         id,
         label,
-        markers,
-        manaLevel,
+        // markers,
+        // manaLevel,
         layer_id,
         color,
         weight,
@@ -174,7 +200,7 @@ export class LocationLayer4 extends Component {
       });
     }
     if (prop === 'weight' || prop === 'fillOpacity' || prop === 'color') {
-      const locationRecord = gameModel.get({
+      const locationRecord = gameModel.get<LocationRecord>({
         type: 'locationRecord',
         id,
       });
@@ -204,7 +230,7 @@ export class LocationLayer4 extends Component {
     return (
       <LocationPopup3
         label={curLocation.label}
-        id={curLocation.id}
+        // id={curLocation.id}
         layer_id={curLocation.layer_id}
         color={curLocation.color}
         weight={curLocation.weight}

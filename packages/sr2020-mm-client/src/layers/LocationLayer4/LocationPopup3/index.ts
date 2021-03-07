@@ -1,6 +1,6 @@
 import { withTranslation } from 'react-i18next';
 import { pipe } from 'ramda';
-import { LocationPopup3 } from './LocationPopup3.jsx';
+import { LocationPopup3 } from './LocationPopup3';
 
 const tmp = pipe(withTranslation())(LocationPopup3);
 

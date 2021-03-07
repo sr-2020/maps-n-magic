@@ -1,3 +1,3 @@
-import { InPlaceInput } from './InPlaceInput.jsx';
+import { InPlaceInput } from './InPlaceInput';
 
 export { InPlaceInput };

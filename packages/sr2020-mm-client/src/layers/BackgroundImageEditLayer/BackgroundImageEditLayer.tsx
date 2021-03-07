@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { ChangeEventHandler, Component } from 'react';
 import { L, LayersMeta, CommonLayerProps } from "sr2020-mm-client-core";
 import * as R from 'ramda';
 import './BackgroundImageEditLayer.css';
@@ -155,7 +155,7 @@ export class BackgroundImageEditLayer extends Component<
     layerCommunicator.emit('closePopup');
   }
 
-  onBackgroundImageChange = (prop) => (e) => {
+  onBackgroundImageChange = (prop: 'name' | 'image') => (e) => {
     const { value } = e.target;
     const { gameModel } = this.props;
     const { id } = this.state.curBackgroundImage;
@@ -197,7 +197,7 @@ export class BackgroundImageEditLayer extends Component<
           <BackgroundImagePopup
             imagePopupDom={this.imagePopupDom}
             name={curBackgroundImage.name}
-            id={curBackgroundImage.id}
+            // id={curBackgroundImage.id}
             image={curBackgroundImage.image}
             onClose={this.closePopup}
             onChange={this.onBackgroundImageChange}

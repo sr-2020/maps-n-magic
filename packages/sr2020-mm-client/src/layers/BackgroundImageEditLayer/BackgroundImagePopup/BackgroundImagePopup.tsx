@@ -1,12 +1,21 @@
-import React, { Component } from 'react';
+import React, { ChangeEventHandler, Component } from 'react';
 import './BackgroundImagePopup.css';
+import { WithTranslation } from "react-i18next";
 
 import ReactDOM from 'react-dom';
 
-// import { BackgroundImagePopupPropTypes } from '../../types';
+interface BackgroundImagePopupProps {
+  imagePopupDom: HTMLElement;
+  onClose: () => void;
+  name: string;
+  onChange: (prop: 'name' | 'image') => ChangeEventHandler;
+  image: string;
+}
 
-export class BackgroundImagePopup extends Component {
-  // static propTypes = BackgroundImagePopupPropTypes;
+export class BackgroundImagePopup extends Component<
+  BackgroundImagePopupProps &
+  WithTranslation
+> {
 
   constructor(props) {
     super(props);
