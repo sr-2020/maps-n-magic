@@ -104,11 +104,11 @@ export class InnerBeaconLayer extends Component<
     const beacon = makeBeacon({ lat, lng }, {
       id, label,
     });
-    beacon.on('mouseover', function (e) {
+    beacon.on('mouseover', function (this: Beacon, e) {
       beacon.bindTooltip(t('markerTooltip', { name: this.options.label }));
       this.openTooltip();
     });
-    beacon.on('mouseout', function (e) {
+    beacon.on('mouseout', function (this: Beacon, e) {
       this.closeTooltip();
     });
 

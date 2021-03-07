@@ -266,7 +266,7 @@ export class App extends Component<AppProps, AppState> {
       });
     };
 
-    function error() {
+    function error(this: App) {
       console.error('Unable to retrieve your location');
       this.setState({
         waitingForGeolocation: false,

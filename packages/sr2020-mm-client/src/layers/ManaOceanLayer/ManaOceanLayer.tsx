@@ -176,7 +176,7 @@ export class ManaOceanLayer extends Component<
     loc.setStyle({ fillColor: manaFillColors[manaLevel] || defaultColor });
     L.Util.setOptions(loc, { label: item.label, locOptions: item.options });
     const that = this;
-    loc.on('mouseover', function (e) {
+    loc.on('mouseover', function (this: ManaOceanLocation, e) {
       loc.bindTooltip(that.getLocationTooltip(this.options.label, item.options, item.id));
       this.openTooltip();
     });
@@ -200,11 +200,11 @@ export class ManaOceanLayer extends Component<
     loc.on({
       click: this.onLocationClick,
     });
-    loc.on('mouseover', function (e) {
+    loc.on('mouseover', function (this: ManaOceanLocation, e) {
       loc.bindTooltip(that.getLocationTooltip(this.options.label, options, locationData.id));
       this.openTooltip();
     });
-    loc.on('mouseout', function (e) {
+    loc.on('mouseout', function (this: ManaOceanLocation, e) {
       this.closeTooltip();
     });
     this.group.addLayer(loc);

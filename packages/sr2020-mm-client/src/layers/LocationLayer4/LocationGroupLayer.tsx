@@ -104,7 +104,7 @@ export class LocationGroupLayer extends Component<
     const loc = basicLocation([polygon[0]], {
       id, label, layer_id, color: options.color, weight: options.weight, fillOpacity: options.fillOpacity,
     });
-    loc.on('mouseover', function (e) {
+    loc.on('mouseover', function (this: BasicLocation, e) {
       let tooltipTemplate;
       switch (layer_id) {
       case 1:
@@ -122,7 +122,7 @@ export class LocationGroupLayer extends Component<
       loc.bindTooltip(t(tooltipTemplate, { name: this.options.label }));
       this.openTooltip();
     });
-    loc.on('mouseout', function (e) {
+    loc.on('mouseout', function (this: BasicLocation, e) {
       this.closeTooltip();
     });
     loc.on('click', onLocationClick);
