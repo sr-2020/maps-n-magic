@@ -5,7 +5,7 @@ import Color from 'color';
 import './GeoJsonLayer.css';
 import * as R from 'ramda';
 
-import L from 'leaflet/dist/leaflet-src';
+import L from 'leaflet';
 import { TranslatorContext } from '../../misc/translatorContext';
 
 // "stroke": "#ffd600",
@@ -78,8 +78,10 @@ export function GeoJsonLayer(props) {
       const geoJsonObj = L.geoJSON(feature, {
         style,
       })
-        .bindPopup((layer) => layer.feature.properties.description || '')
-        .bindTooltip((layer) => layer.feature.properties.name || '');
+        // @ts-ignore
+        .bindPopup((layer: L.GeoJSON) => layer.feature.properties.description || '')
+        // @ts-ignore
+        .bindTooltip((layer: L.GeoJSON) => layer.feature.properties.name || '');
       group.addLayer(geoJsonObj);
     });
 

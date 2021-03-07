@@ -9,3 +9,9 @@ export interface CommonLayerProps {
   layerCommunicator: EventEmitter;
   translator: Translator;
 }
+
+export interface MapDefaults {
+  defaultTileLayer: any;
+  defaultZoom: number;
+  defaultCenter: any;
+}

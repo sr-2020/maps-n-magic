@@ -3,7 +3,7 @@ import React, {
 } from 'react';
 import './SatelliteBackground.css';
 
-import L from 'leaflet/dist/leaflet-src';
+import L from 'leaflet';
 
 export function SatelliteBackground(props) {
   const [group] = useState(L.layerGroup([]));

@@ -11,6 +11,9 @@ export function DefaultSatelliteBackground(props) {
     enableByDefault, layerCommunicator,
   } = props;
   const mapDefaults = useContext(MapDefaultsContext);
+  if(!mapDefaults) {
+    return null;
+  }
   const { urlTemplate, options } = mapDefaults.defaultTileLayer;
   return (
     <SatelliteBackground
