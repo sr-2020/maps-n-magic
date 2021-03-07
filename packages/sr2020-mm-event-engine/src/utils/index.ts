@@ -1,7 +1,7 @@
 import * as R from 'ramda';
 import 'sr2020-mm-hacks-n-fixes/leafletWindowMP';
-import { LatLngBounds } from 'leaflet/src/geo/LatLngBounds';
-import { pointToSegmentDistance } from 'leaflet/src/geometry/LineUtil';
+// import { LatLngBounds } from 'leaflet/src/geo/LatLngBounds';
+import L from 'leaflet';
 import 'sr2020-mm-hacks-n-fixes/leafletUnwindowMP';
 import * as gi from '@thi.ng/geom-isec';
 import * as gcp from '@thi.ng/geom-closest-point';
@@ -79,8 +79,12 @@ export function getArrDiff<T>(
   return diff;
 }
 
-export function latLngsToBounds(latLngs: SRLatLng[]): SRLatLngBounds {
-  const bounds = new LatLngBounds();
+// export function latLngsToBounds(latLngs: SRLatLng[]): SRLatLngBounds {
+export function latLngsToBounds(latLngs: L.LatLngLiteral[]): L.LatLngBounds {
+  if(latLngs.length === 0) {
+    return null;
+  }
+  const bounds = new L.LatLngBounds(latLngs[0], latLngs[0]);
   latLngs.forEach(bounds.extend.bind(bounds));
   return bounds;
 }
@@ -146,7 +150,7 @@ const latlngs2arr = R.map((el) => [el.lat, el.lng]);
 export function isPointInLocation(latlng: SRLatLng, latlngPolygon: SRLatLng[]): boolean {
   // const latlngPolygon = loc.getLatLngs();
   // const bounds = loc.getBounds();
-  const bounds: SRLatLngBounds = latLngsToBounds(latlngPolygon);
+  const bounds = latLngsToBounds(latlngPolygon);
 
   const simpleTest = bounds.contains(latlng);
   if (simpleTest) {
@@ -238,7 +242,7 @@ export function getUserNameStr(user: {name: string}): string {
   return user.name !== '' ? ` (${user.name})` : '';
 }
 
-export async function fetchWithTimeout(resource, options) {
+export async function fetchWithTimeout(resource: RequestInfo, options: RequestInit & {timeout?: number}) {
   const { timeout = 8000 } = options;
 
   const controller = new AbortController();

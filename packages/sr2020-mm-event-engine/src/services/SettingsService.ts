@@ -105,7 +105,7 @@ export class SettingsService extends AbstractService {
     }
   }
 
-  postSettings = (action): void => {
+  postSettings = (action: unknown): void => {
     this.emit('postSettingsRequested', action);
   }
 

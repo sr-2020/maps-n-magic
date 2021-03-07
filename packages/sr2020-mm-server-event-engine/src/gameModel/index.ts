@@ -62,8 +62,8 @@ const services: AbstractService[] = [
 // eslint-disable-next-line max-lines-per-function
 export function makeGameModel(database) {
   // const gameServer = new EventEngine(services, console);
-  const gameServer = new EventEngine(services, winstonLogger, null);
-  gameServer.setData(database);
+  const gameServer = new EventEngine(services, winstonLogger);
+  // gameServer.setData(database);
   const gameModel = gameServer.getGameModel();
   // fillGameModelWithBots(gameModel);
 

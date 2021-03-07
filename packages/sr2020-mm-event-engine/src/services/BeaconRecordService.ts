@@ -45,7 +45,7 @@ export class BeaconRecordService extends AbstractService {
     this.beaconRecords = [];
   }
 
-  setData({ beaconRecords = [] } = {}) {
+  setData({ beaconRecords = [] }: BeaconRecordsObj) {
     // better data reuse
     // const { updated, added, unchanged } = getArrDiff(beaconRecords, this.beaconRecords, R.prop('id'));
     // this.beaconRecords = [...unchanged, ...R.pluck('item', updated), ...added];
@@ -78,7 +78,7 @@ export class BeaconRecordService extends AbstractService {
     });
   }
 
-  putBeaconRecord(action): void {
+  putBeaconRecord(action: unknown): void {
     // try to speedup put changes. It is still slow, so commented it out.
     // const { id, props } = action;
     // const index = this.beaconRecords.findIndex((br) => br.id === id);
@@ -91,11 +91,11 @@ export class BeaconRecordService extends AbstractService {
     this.emit('putBeaconRecordRequested', action);
   }
 
-  postBeaconRecord = (action): void => {
+  postBeaconRecord = (action: unknown): void => {
     this.emit('postBeaconRecordRequested', action);
   }
 
-  deleteBeaconRecord = (action): void => {
+  deleteBeaconRecord = (action: unknown): void => {
     this.emit('deleteBeaconRecordRequested', action);
   }
 

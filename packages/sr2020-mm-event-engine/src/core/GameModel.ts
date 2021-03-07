@@ -23,7 +23,7 @@ export class GameModel extends EventEmitter {
 
   services: AbstractService[];
 
-  migrator: any;
+  // migrator: any;
 
   constructor(logger: GMLogger) {
     super();
@@ -35,7 +35,7 @@ export class GameModel extends EventEmitter {
     this.onDefaultRequest = this.onDefaultRequest.bind(this);
   }
 
-  init(services: AbstractService[], migrator) {
+  init(services: AbstractService[]) {
     this.services = services;
     services.forEach((service) => {
       this.logger.info('Creating service', service.constructor.name);
@@ -53,19 +53,19 @@ export class GameModel extends EventEmitter {
 
     this.verificator.finishVerification();
 
-    this.migrator = migrator;
+    // this.migrator = migrator;
   }
 
-  setData(database) {
-    if (this.migrator) {
-      database = this.migrator.migrate(database);
-    }
-    this.services.forEach((service) => service.setData(database));
-  }
+  // setData(database) {
+  //   if (this.migrator) {
+  //     database = this.migrator.migrate(database);
+  //   }
+  //   this.services.forEach((service) => service.setData(database));
+  // }
 
-  getData() {
-    return R.mergeAll(this.services.map((service) => service.getData()));
-  }
+  // getData() {
+  //   return R.mergeAll(this.services.map((service) => service.getData()));
+  // }
 
   registerService(service: AbstractService): void {
     const { actions = [], requests = [] } = service.metadata;

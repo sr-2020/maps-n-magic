@@ -1,5 +1,6 @@
 import * as R from 'ramda';
 import { Delaunay } from 'd3-delaunay';
+import L from 'leaflet';
 
 import {
   getArrDiff, isGeoLocation, getPolygonCentroid, deg2meters,
@@ -19,7 +20,7 @@ import {
 interface TriangulationPrecalcData {
   locationId: number;
   polygon: SRLatLng[][];
-  bounds: SRLatLngBounds;
+  bounds: L.LatLngBounds;
 };
 
 interface LocCluster {
@@ -177,8 +178,8 @@ function edgeSetToDistList(
   const locIndex = R.indexBy(R.prop('locationId'), precalcData);
   return Array.from(edgeSet).map((edgeId) => {
     const [locId1, locId2] = edgeIdToPair(edgeId);
-    const loc1: TriangulationPrecalcData = locIndex[locId1];
-    const loc2: TriangulationPrecalcData = locIndex[locId2];
+    const loc1: TriangulationPrecalcData = locIndex[Number(locId1)];
+    const loc2: TriangulationPrecalcData = locIndex[Number(locId2)];
 
     const dist = getPolygonMinDistance(loc1.polygon[0], loc2.polygon[0]);
     return {
@@ -315,7 +316,11 @@ function clustersToClusterCliques(clusterList: LocCluster[]): Set<EdgeId> {
   return edgeSet;
 }
 
-function connectClosestXClusters(precalcData, clusterList, neighborsIndex) {
+function connectClosestXClusters(
+  precalcData: TriangulationPrecalcData[], 
+  clusterList: LocCluster[], 
+  neighborsIndex: Map<number, number[]>
+) {
   const edgeSet = new Set();
   const clusterDists = getClusterDists(precalcData, clusterList);
   clusterDists.forEach((dists) => {
@@ -333,7 +338,10 @@ function connectClosestXClusters(precalcData, clusterList, neighborsIndex) {
   return edgeSet;
 }
 
-function connectClustersCloserThanMedian(precalcData, clusterList) {
+function connectClustersCloserThanMedian(
+  precalcData: TriangulationPrecalcData[], 
+  clusterList: LocCluster[]
+) {
   const edgeSet = new Set();
   const clusterDists = getClusterDists(precalcData, clusterList);
   const distArr = R.flatten(clusterDists);
@@ -348,7 +356,7 @@ function connectClustersCloserThanMedian(precalcData, clusterList) {
   return edgeSet;
 }
 
-function connectClosestClusters(precalcData, clusterList) {
+function connectClosestClusters(precalcData: TriangulationPrecalcData[], clusterList: LocCluster[]) {
   const edgeSet = new Set();
   const clusterDists = getClusterDists(precalcData, clusterList);
   const distArr = R.sortBy(R.prop('minDist'), R.flatten(clusterDists));
@@ -407,14 +415,14 @@ function locMedianBasedApproach(precalcData: TriangulationPrecalcData[]) {
   return edgeSet;
 }
 
-function addConnection(neighborsIndex, locId1, locId2) {
-  const obj1 = neighborsIndex.get(locId1);
-  const list1 = R.uniq([...obj1.neighborsList, locId2]);
-  obj1.neighborsList = list1;
-  const obj2 = neighborsIndex.get(locId2);
-  const list2 = R.uniq([...obj2.neighborsList, locId1]);
-  obj2.neighborsList = list2;
-}
+// function addConnection(neighborsIndex, locId1, locId2) {
+//   const obj1 = neighborsIndex.get(locId1);
+//   const list1 = R.uniq([...obj1.neighborsList, locId2]);
+//   obj1.neighborsList = list1;
+//   const obj2 = neighborsIndex.get(locId2);
+//   const list2 = R.uniq([...obj2.neighborsList, locId1]);
+//   obj2.neighborsList = list2;
+// }
 
 function getDistArr(
   locIndex: {[x: number]: TriangulationPrecalcData}, 
@@ -445,7 +453,7 @@ function getDistArr(
 
 // долгота, longitude
 // 36 37
-function extendBoundsWithE(bounds: SRLatLngBounds, epsilon: number): SRLatLngBounds {
+function extendBoundsWithE(bounds: L.LatLngBounds, epsilon: number): L.LatLngBounds {
   const northWest = bounds.getNorthWest();
   const southEast = bounds.getSouthEast();
   bounds.extend({

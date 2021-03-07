@@ -3,14 +3,17 @@ import './ErrorBoundry.css';
 
 // import { ErrorBoundryPropTypes } from '../../types';
 
+interface ErrorBoundryProps {
+  children: React.ReactNode;
+}
 interface ErrorBoundryState {
   hasError: boolean;
 }
 
-export class ErrorBoundry extends Component<any, ErrorBoundryState> {
+export class ErrorBoundry extends Component<ErrorBoundryProps, ErrorBoundryState> {
   // static propTypes = ErrorBoundryPropTypes;
 
-  constructor(props) {
+  constructor(props: ErrorBoundryProps) {
     super(props);
     this.state = {
       hasError: false,

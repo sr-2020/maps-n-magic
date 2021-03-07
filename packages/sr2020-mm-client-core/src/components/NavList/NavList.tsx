@@ -9,6 +9,8 @@ import classNames from 'classnames';
 
 // import { NavListPropTypes } from '../../types';
 
+// interface 
+
 export function NavList(props) {
   const { t, navLinks, className } = props;
 

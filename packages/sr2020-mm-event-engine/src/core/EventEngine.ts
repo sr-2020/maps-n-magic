@@ -3,25 +3,26 @@ import { GameModel } from './GameModel';
 
 import { GMLogger } from "./types";
 import { AbstractService } from "./AbstractService";
+import { AbstractDataBinding } from "./AbstractDataBinding";
 
-function hardDispose(obj) {
-  return Object.keys(obj).forEach((key) => { delete obj[key]; });
-}
+// function hardDispose(obj: Record<string | number | symbol, unknown>) {
+//   return Object.keys(obj).forEach((key) => { delete obj[key]; });
+// }
 
 export class EventEngine {
   gameModel: GameModel;
 
-  dataBindings: any;
+  dataBindings: AbstractDataBinding[];
 
-  constructor(services2: AbstractService[], logger: GMLogger, Migrator2) {
+  constructor(services2: AbstractService[], logger: GMLogger) {
     this.gameModel = new GameModel(logger);
-    this.gameModel.init(services2, Migrator2);
+    this.gameModel.init(services2);
     this.dataBindings = [];
   }
 
   dispose(): void {
     this.gameModel.dispose();
-    hardDispose(this.gameModel);
+    // hardDispose(this.gameModel);
     this.dataBindings.forEach((el) => el.dispose());
   }
 
@@ -29,11 +30,11 @@ export class EventEngine {
     return this.gameModel;
   }
 
-  setData(database) {
-    this.gameModel.setData(database);
-  }
+  // setData(database) {
+  //   this.gameModel.setData(database);
+  // }
 
-  addDataBinding(dataBinding) {
+  addDataBinding(dataBinding: AbstractDataBinding) {
     this.dataBindings.push(dataBinding);
   }
 }

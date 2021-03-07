@@ -171,19 +171,19 @@ export class LocationRecordService extends AbstractService {
     return this.getLocationRecord({ id: neighborLocationId });
   }
 
-  putLocationRecord(action): void {
+  putLocationRecord(action: unknown): void {
     this.emit('putLocationRecordRequested', action);
   }
 
-  putLocationRecords(action): void {
+  putLocationRecords(action: unknown): void {
     this.emit('putLocationRecordsRequested', action);
   }
 
-  postLocationRecord = (action): void => {
+  postLocationRecord = (action: unknown): void => {
     this.emit('postLocationRecordRequested', action);
   }
 
-  deleteLocationRecord = (action): void => {
+  deleteLocationRecord = (action: unknown): void => {
     this.emit('deleteLocationRecordRequested', action);
   }
 

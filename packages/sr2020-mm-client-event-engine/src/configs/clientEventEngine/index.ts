@@ -9,7 +9,7 @@ import {
   ManaOceanEnableService,
 } from 'sr2020-mm-event-engine';
 
-import { Migrator } from './Migrator';
+// import { Migrator } from './Migrator';
 
 // import { UserService } from '../../services/UserService';
 // import { BotService } from '../../services/BotService/BotService';
@@ -56,8 +56,8 @@ const services = [
 ];
 
 export function makeGameModel(database) {
-  const gameServer = new EventEngine(services, console, Migrator);
-  gameServer.setData(database);
+  const gameServer = new EventEngine(services, console);
+  // gameServer.setData(database);
   const gameModel = gameServer.getGameModel();
   // fillGameModelWithBots(gameModel);
 

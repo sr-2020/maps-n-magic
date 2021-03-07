@@ -150,8 +150,8 @@ export function mergeActivities(
   const { mergedActivity }: {
     mergedActivity: TidePeriodProps[],
   } = changeTimes.reduce((acc, time) => {
-    const last1El: TidePeriodProps = activity1ByTime[String(time)] || acc.last1El;
-    const last2El: TidePeriodProps = activity2ByTime[String(time)] || acc.last2El;
+    const last1El: TidePeriodProps = activity1ByTime[(time)] || acc.last1El;
+    const last2El: TidePeriodProps = activity2ByTime[(time)] || acc.last2El;
     acc.mergedActivity.push({
       startTime: time,
       value: last1El.value + last2El.value,
@@ -194,7 +194,7 @@ const hitStat = {
   hitSmallestInterval: 0,
 };
 
-function getTideHeightRef(time, moonPropsList, log = false) {
+function getTideHeightRef(time: number, moonPropsList: MoonProps[], log = false) {
   const activity = makeActivityArr(moonPropsList);
   if (log) console.log(`find ${time}`);
   if (R.isEmpty(activity)) {
@@ -307,7 +307,7 @@ function getTideHeight(time: number, moonPropsList: MoonProps[]): number {
 // //   period: 270,
 // //   offset: 0,
 // }];
-const moonPropsList = [{
+const moonPropsList: MoonProps[] = [{
   period: 180,
   offset: 120,
 }, {
@@ -315,14 +315,14 @@ const moonPropsList = [{
   offset: 120,
 }];
 
-function makeActivityArr(moonPropsList2) {
+function makeActivityArr(moonPropsList2: MoonProps[]) {
   return moonPropsList2.reduce((acc, moonProps) => {
     const newActivity = getMoonActivity(moonProps);
     return mergeActivities(acc, newActivity);
   }, []);
 }
 
-function manaHeightStats(manaHeightList) {
+function manaHeightStats(manaHeightList: string[]) {
   return manaHeightList.reduce((acc, num) => {
     const key = Number(num);
     if (acc[key] === undefined) {
@@ -331,7 +331,7 @@ function manaHeightStats(manaHeightList) {
       acc[key]++;
     }
     return acc;
-  }, {});
+  }, {} as Record<number, number>);
 }
 
 // const activity = makeActivityArr(moonPropsList);

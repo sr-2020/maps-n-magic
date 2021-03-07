@@ -11,4 +11,8 @@ if (typeof process === 'object') {
 if (isNode) {
   // @ts-ignore
   delete global.window;
+  // @ts-ignore
+  delete global.document;
+  // @ts-ignore
+  delete global.navigator;
 }

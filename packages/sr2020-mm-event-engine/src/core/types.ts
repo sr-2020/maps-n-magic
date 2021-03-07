@@ -16,9 +16,9 @@ export interface GMAction extends GMTyped {
 // export type GMLogger = unknown;
 
 export interface GMLogger {
-  info: (...args) => void;
-  error: (...args) => void;
-  customChild?: (baseLogger: GMLogger, ...args) => GMLogger;
+  info: (...args: unknown[]) => void;
+  error: (...args: unknown[]) => void;
+  customChild?: (baseLogger: GMLogger, ...args: unknown[]) => GMLogger;
 }
 
 export interface Metadata {

@@ -128,8 +128,8 @@ export interface SRLatLngBounds {
   contains: (pt: SRLatLng) => boolean;
   getNorthWest: () => SRLatLng;
   getSouthEast: () => SRLatLng;
-  extend: (SRLatLng) => void;
-  intersects: (SRLatLngBounds) => boolean;
+  extend: (pt: SRLatLng) => void;
+  intersects: (bounds: SRLatLngBounds) => boolean;
 }
 
 // export interface RawCharacterHealthState {

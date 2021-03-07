@@ -10,5 +10,19 @@ if (typeof process === 'object') {
 
 if (isNode) {
   // @ts-ignore
-  global.window = {};
+  global.window = {
+    screen: {}
+  };
+  // @ts-ignore
+  global.navigator = {
+    userAgent: '',
+    platform: ''
+  };
+  // @ts-ignore
+  global.document = {
+    documentElement: {
+      style: {}
+    },
+    createElement: () => ({})
+  };
 }

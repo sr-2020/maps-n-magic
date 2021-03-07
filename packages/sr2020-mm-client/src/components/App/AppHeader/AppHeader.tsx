@@ -62,8 +62,8 @@ interface AppHeaderProps {
   simulateGeoDataStream: boolean;
   waitingForGeolocation: boolean;
   gameModel: any;
-  onUploadFileSelected: any;
-  downloadDatabaseAsFile: any;
+  // onUploadFileSelected: any;
+  // downloadDatabaseAsFile: any;
   jumpToUserCoords: any;
   switchMovementMode: any;
 };
@@ -126,7 +126,7 @@ export class AppHeader extends Component<AppHeaderProps, AppHeaderState> {
     // const { expanded } = this.state;
     const {
       t, gameModel, waitingForGeolocation, simulateGeoDataStream,
-      onUploadFileSelected, downloadDatabaseAsFile, jumpToUserCoords, switchMovementMode,
+      jumpToUserCoords, switchMovementMode,
     } = this.props;
 
     // if (!something) {
@@ -172,8 +172,8 @@ export class AppHeader extends Component<AppHeaderProps, AppHeaderState> {
           <Dropdown as={Nav.Item} alignRight>
             <Dropdown.Toggle as={Nav.Link} className="tw-text-lg">{t('actionMenu')}</Dropdown.Toggle>
             <Dropdown.Menu style={{ zIndex: 2000 }}>
-              <UploadDatabaseButton onChange={onUploadFileSelected} />
-              <DownloadDatabaseButton onClick={downloadDatabaseAsFile} />
+              {/* <UploadDatabaseButton onChange={onUploadFileSelected} />
+              <DownloadDatabaseButton onClick={downloadDatabaseAsFile} /> */}
               <Dropdown.Divider />
               {/* <JumpToUserCoordsSwitch
                 onClick={jumpToUserCoords}

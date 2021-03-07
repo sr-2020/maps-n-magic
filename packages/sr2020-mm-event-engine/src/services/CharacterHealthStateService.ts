@@ -71,11 +71,11 @@ export class CharacterHealthStateService extends AbstractService {
     return R.clone(this.characterHealthStates[id]);
   }
 
-  putCharHealth(action) {
+  putCharHealth(action: unknown) {
     this.emit('putCharHealthRequested', action);
   }
 
-  putCharLocation(action) {
+  putCharLocation(action: unknown) {
     // this.logger.info('putCharLocationRequested', action);
     this.emit('putCharLocationRequested', action);
   }

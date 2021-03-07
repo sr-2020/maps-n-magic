@@ -13,6 +13,7 @@
     "allowSyntheticDefaultImports": true,
     "strict": false,
     "noImplicitThis": true,
+    // "noImplicitAny": true,
     "alwaysStrict": true,
     "strictBindCallApply": true,
     // "strictFunctionTypes": true,

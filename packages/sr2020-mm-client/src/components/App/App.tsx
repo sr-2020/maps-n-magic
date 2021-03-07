@@ -23,6 +23,11 @@ import {
   Translator
 } from 'sr2020-mm-client-core';
 
+import { 
+  GameModel,
+  EventEngine
+} from "sr2020-mm-event-engine";
+
 import {
   makeGameModel,
 } from 'sr2020-mm-client-event-engine/configs/clientEventEngine';
@@ -53,6 +58,7 @@ import { BeaconRecordEditor } from '../BeaconRecordEditor';
 import { RescueServiceMessageSender } from '../RescueServiceMessageSender';
 
 import { MapRoutes } from '../MapRoutes';
+import { WithTranslation } from 'react-i18next';
 
 const STORAGE_KEY = 'AR_POC';
 
@@ -71,15 +77,14 @@ const initialDatabase = {};
 //   initialDatabase = JSON.parse(initialDatabaseStr);
 // }
 
-interface AppProps {
-  t: any;
+interface AppProps extends WithTranslation {
 };
 interface AppState {
   simulateGeoDataStream: boolean;
-  translator: any;
+  translator: Translator;
   waitingForGeolocation: boolean;
-  gameServer: any;
-  gameModel: any;
+  gameServer: EventEngine;
+  gameModel: GameModel;
   initialized: boolean;
 };
 
@@ -104,13 +109,13 @@ export class App extends Component<AppProps, AppState> {
       gameModel: null,
       initialized: false,
     };
+    // onUploadFileSelected
+    // downloadDatabaseAsFile
+    // onSaveDataInLs
     const funcs = `
     switchMovementMode
     jumpToUserCoords
-    onUploadFileSelected
-    downloadDatabaseAsFile
     onGetPosition
-    onSaveDataInLs
     `.split('\n').map(R.trim).filter(R.pipe(R.isEmpty, R.not));
 
     funcs.forEach((funcName) => (this[funcName] = this[funcName].bind(this)));
@@ -125,24 +130,24 @@ export class App extends Component<AppProps, AppState> {
       gameModel,
       initialized: true,
     });
-    this.saveDataInLsId = setInterval(this.onSaveDataInLs, 10000);
+    // this.saveDataInLsId = setInterval(this.onSaveDataInLs, 10000);
     // this.watchGeolocationId = navigator.geolocation.watchPosition(this.onGetPosition);
     // setInterval(this.onGetPosition, 1000);
-    window.addEventListener('beforeunload', this.onSaveDataInLs);
+    // window.addEventListener('beforeunload', this.onSaveDataInLs);
   }
 
   componentWillUnmount() {
     clearInterval(this.saveDataInLsId);
     // navigator.geolocation.clearWatch(this.watchGeolocationId);
     this.soundStage.dispose();
-    window.removeEventListener('beforeunload', this.onSaveDataInLs);
+    // window.removeEventListener('beforeunload', this.onSaveDataInLs);
   }
 
-  onSaveDataInLs() {
-    // console.log('saving app state in local storage');
-    const database2 = this.prepareDataForJson();
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(database2));
-  }
+  // onSaveDataInLs() {
+  //   // console.log('saving app state in local storage');
+  //   const database2 = this.prepareDataForJson();
+  //   localStorage.setItem(STORAGE_KEY, JSON.stringify(database2));
+  // }
 
   onGetPosition(position) {
     // console.log(position.coords.latitude, position.coords.longitude);
@@ -189,31 +194,31 @@ export class App extends Component<AppProps, AppState> {
     });
   }
 
-  onUploadFileSelected(evt) {
-    readJsonFile(evt).then((database2) => {
-      // console.log(database2.appState);
-      this.setState((state) => {
-        state.gameServer.dispose();
+  // onUploadFileSelected(evt) {
+  //   readJsonFile(evt).then((database2) => {
+  //     // console.log(database2.appState);
+  //     this.setState((state) => {
+  //       state.gameServer.dispose();
 
-        const { gameModel, gameServer } = makeGameModel(database2);
-        this.soundStage.subscribeOnModel(gameModel);
-        return {
-          gameServer,
-          gameModel,
-        };
-      });
-    });
-  }
+  //       const { gameModel, gameServer } = makeGameModel(database2);
+  //       this.soundStage.subscribeOnModel(gameModel);
+  //       return {
+  //         gameServer,
+  //         gameModel,
+  //       };
+  //     });
+  //   });
+  // }
 
-  prepareDataForJson() {
-    const { gameModel } = this.state;
-    return gameModel.getData();
-  }
+  // prepareDataForJson() {
+  //   const { gameModel } = this.state;
+  //   return gameModel.getData();
+  // }
 
-  downloadDatabaseAsFile() {
-    const database2 = this.prepareDataForJson();
-    json2File(database2, makeFileName('SR_acoustic_poc', 'json', new Date()));
-  }
+  // downloadDatabaseAsFile() {
+  //   const database2 = this.prepareDataForJson();
+  //   json2File(database2, makeFileName('SR_acoustic_poc', 'json', new Date()));
+  // }
 
   switchMovementMode(e) {
     e.stopPropagation();
@@ -303,8 +308,8 @@ export class App extends Component<AppProps, AppState> {
                       gameModel={gameModel}
                       waitingForGeolocation={waitingForGeolocation}
                       simulateGeoDataStream={simulateGeoDataStream}
-                      onUploadFileSelected={this.onUploadFileSelected}
-                      downloadDatabaseAsFile={this.downloadDatabaseAsFile}
+                      // onUploadFileSelected={this.onUploadFileSelected}
+                      // downloadDatabaseAsFile={this.downloadDatabaseAsFile}
                       jumpToUserCoords={this.jumpToUserCoords}
                       switchMovementMode={this.switchMovementMode}
                     />

@@ -28,19 +28,21 @@ export class AbstractService {
   }
 
   // eslint-disable-next-line class-methods-use-this
-  setData(database) {}
+  // setData() {}
 
   // eslint-disable-next-line class-methods-use-this
-  getData() {
-    return {};
-  }
+  // getData() {
+  //   return {};
+  // }
 
   // eslint-disable-next-line class-methods-use-this
   dispose() {}
 
   execute<T>(action: GMAction): T {
     const includes = this.metadata.actions.includes(action.type);
+    // @ts-ignore
     if (includes && !!this[action.type]) {
+      // @ts-ignore
       return this[action.type](action);
     }
     if (!includes) {
@@ -54,7 +56,9 @@ export class AbstractService {
 
   get<T>(request: GMRequest): T {
     const includes = this.metadata.requests.includes(request.type);
+    // @ts-ignore
     if (includes && !!this[typeToGetter(request.type)]) {
+      // @ts-ignore
       return this[typeToGetter(request.type)](request);
     }
     if (!includes) {
@@ -66,7 +70,7 @@ export class AbstractService {
     // return onDefaultRequest(request);
   }
 
-  emit(event: string, ...args): boolean {
+  emit(event: string, ...args: unknown[]): boolean {
     // console.log('emit', args[0]);
     if (!this.metadata.emitEvents.includes(event)) {
       throw new Error(`Event ${event} is not in emit events list of ${this.constructor.name}`);
