@@ -4,6 +4,7 @@ export * from './BgRectangle';
 export * from './BgTitleOverlay';
 export * from './LocationCentroid';
 export * from './LocNeighborLine';
+export * from './ManaOceanLocation';
 
 export interface Sound {
   name: string;

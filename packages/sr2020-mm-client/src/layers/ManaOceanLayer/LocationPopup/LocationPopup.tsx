@@ -1,18 +1,34 @@
 import React, { Component } from 'react';
 import './LocationPopup.css';
 import * as R from 'ramda';
+import { WithTranslation } from "react-i18next";
 
 import ReactDOM from 'react-dom';
-import classNames from 'classnames';
-import * as moment from 'moment-timezone';
+// import classNames from 'classnames';
+import moment from 'moment-timezone';
 
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faTimes } from '@fortawesome/free-solid-svg-icons';
 import Button from 'react-bootstrap/Button';
 
-import FormControl from 'react-bootstrap/FormControl';
+// import FormControl from 'react-bootstrap/FormControl';
+import { 
+  LocationRecordOptions, 
+  GameModel 
+} from "sr2020-mm-event-engine";
 
-export class LocationPopup extends Component {
+interface LocationPopupProps {
+  onClose: () => void;
+  id: number;
+  locOptions: LocationRecordOptions;
+  gameModel: GameModel;
+  locationPopupDom: HTMLElement;
+}
+
+export class LocationPopup extends Component<
+  LocationPopupProps &
+  WithTranslation
+> {
   constructor(props) {
     super(props);
     this.state = {
@@ -34,7 +50,7 @@ export class LocationPopup extends Component {
   // eslint-disable-next-line max-lines-per-function
   makeContent() {
     const {
-      label, onChange, t, id, locOptions, gameModel,
+      t, id, locOptions, gameModel,
     } = this.props;
 
     const { effectList } = locOptions;
@@ -44,6 +60,7 @@ export class LocationPopup extends Component {
     const unselectedButton = 'tw-bg-gray-300 hover:tw-bg-gray-400 tw-text-gray-800';
 
     function getEffectLabel(effect) {
+      // @ts-ignore
       const str = t(`manaEffect_${effect.type}`);
       const startStr = moment(effect.start).format('HH:mm');
       const endStr = effect.end ? (`-${moment(effect.end).format('HH:mm')}`) : '';

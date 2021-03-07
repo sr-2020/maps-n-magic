@@ -1,11 +1,29 @@
 import React, { Component } from 'react';
-import { L } from "sr2020-mm-client-core";
+import { WithLocationRecords } from '../../dataHOCs';
+import { WithTranslation } from "react-i18next";
+import { L, CommonLayerProps } from "sr2020-mm-client-core";
 import * as R from 'ramda';
-import * as moment from 'moment-timezone';
+import moment from 'moment-timezone';
 import './ManaOceanLayer.css';
 
-import { isGeoLocation, getArrDiff } from 'sr2020-mm-event-engine';
+import { 
+  isGeoLocation, 
+  getArrDiff, 
+  LocationRecord,
+  LocationRecordOptions,
+  ArrDiff,
+  ArrDiffUpdate,
+  GameModel,
+  ManaOceanEffect,
+  RitualLocationEffect
+} from 'sr2020-mm-event-engine';
+
 import { LocationPopup } from './LocationPopup';
+
+import { 
+  ManaOceanLocation,
+  manaOceanLocation
+} from "../../types";
 
 // const manaFillColors = { // based on h202
 //   1: 'white', // hsla(202, 60%, 90%, 1)
@@ -38,7 +56,7 @@ const filterLocationRecords = R.pipe(
   R.filter(isNotEmptyPolygon),
 );
 
-function hasLocationDifference(item, prevItem) {
+function hasLocationDifference(item: LocationRecord, prevItem: LocationRecord) {
   // polygon, label, options.manaLevel
   return !R.equals(item.polygon, prevItem.polygon)
     || !R.equals(item.label, prevItem.label)
@@ -46,7 +64,31 @@ function hasLocationDifference(item, prevItem) {
     || item.options.manaLevel !== prevItem.options.manaLevel;
 }
 
-export class ManaOceanLayer extends Component {
+function isPermanentEffect(effect: ManaOceanEffect): effect is RitualLocationEffect {
+  return (effect as RitualLocationEffect).permanent === true;
+}
+
+interface ManaOceanLayerProps {
+  enableByDefault: boolean;
+  gameModel: GameModel;
+}
+interface ManaOceanLayerState {
+  curLocation: {
+    id: number;
+    locOptions: LocationRecordOptions
+  } | null;
+}
+
+export class ManaOceanLayer extends Component<
+  ManaOceanLayerProps &
+  WithLocationRecords &
+  WithTranslation &
+  CommonLayerProps,
+  ManaOceanLayerState
+> {
+  locationPopupDom: HTMLElement;
+  locationPopup: L.Popup;
+
   group = L.layerGroup([]);
 
   nameKey = 'manaOceanLayer';
@@ -81,12 +123,12 @@ export class ManaOceanLayer extends Component {
     console.log('InnerManaOceanLayer2 mounted');
   }
 
-  componentDidUpdate(prevProps) {
+  componentDidUpdate(prevProps: WithLocationRecords) {
     const {
-      translator, locationRecords,
+      locationRecords,
     } = this.props;
     if (prevProps.locationRecords !== locationRecords) {
-      const diff = getArrDiff(
+      const diff = getArrDiff<LocationRecord>(
         filterLocationRecords(locationRecords),
         filterLocationRecords(prevProps.locationRecords),
         R.prop('id'),
@@ -98,10 +140,10 @@ export class ManaOceanLayer extends Component {
     //   this.clear();
     //   this.populate();
     }
-    if (prevProps.translator !== translator) {
-      // this.clear();
-      // this.populate();
-    }
+    // if (prevProps.translator !== translator) {
+    //   // this.clear();
+    //   // this.populate();
+    // }
     console.log('InnerManaOceanLayer2 did update');
   }
 
@@ -116,7 +158,7 @@ export class ManaOceanLayer extends Component {
     };
   }
 
-  updateLocations({ added = [], removed = [], updated = [] }) {
+  updateLocations({ added = [], removed = [], updated = [] }: Partial<ArrDiff<LocationRecord>>) {
     R.map(this.createLocation, added);
     R.map(this.updateLocation, updated);
     R.map(this.removeLocation, removed);
@@ -126,13 +168,13 @@ export class ManaOceanLayer extends Component {
     this.group.clearLayers();
   }
 
-  updateLocation({ item }) {
-    const { t } = this.props;
-    const loc = this.group.getLayers().find((loc2) => loc2.options.id === item.id);
+  updateLocation({ item }: ArrDiffUpdate<LocationRecord>) {
+    // const { t } = this.props;
+    const loc = this.group.getLayers().find((loc2: ManaOceanLocation) => loc2.options.id === item.id) as ManaOceanLocation;
     loc.setLatLngs([item.polygon[0]]);
     const { manaLevel } = item.options;
     loc.setStyle({ fillColor: manaFillColors[manaLevel] || defaultColor });
-    L.setOptions(loc, { label: item.label, locOptions: item.options });
+    L.Util.setOptions(loc, { label: item.label, locOptions: item.options });
     const that = this;
     loc.on('mouseover', function (e) {
       loc.bindTooltip(that.getLocationTooltip(this.options.label, item.options, item.id));
@@ -140,15 +182,16 @@ export class ManaOceanLayer extends Component {
     });
   }
 
-  createLocation(locationData) {
+  createLocation(locationData: LocationRecord) {
     const {
       polygon, label, id, layer_id, options,
     } = locationData;
-    const { t, translator } = this.props;
+    // const { t, translator } = this.props;
     // const manaLevel = (id % 5) + 1;
     // const manaLevel = 5;
     // const manaLevel = 1;
-    const loc = L.polygon([polygon[0]], {
+    // const loc = L.polygon([polygon[0]], {
+    const loc = manaOceanLocation([polygon[0]], {
       // id, label, layer_id, color: options.color, weight: options.weight, fillOpacity: options.fillOpacity,
       // id, label, layer_id, color: '#2d3748', weight: 2, dashArray: [10], fillColor: manaFillColors[manaLevel], fillOpacity: 1,
       id, label, layer_id, color: '#1a202c', locOptions: options, weight: 2, dashArray: [7], fillColor: manaFillColors[options.manaLevel] || defaultColor, fillOpacity: 1,
@@ -168,7 +211,7 @@ export class ManaOceanLayer extends Component {
   }
 
   // eslint-disable-next-line max-lines-per-function
-  getLocationTooltip(label, locOptions, locId) {
+  getLocationTooltip(label: string, locOptions: LocationRecordOptions, locId: number) {
     const { t } = this.props;
     // const { effects = [] } = locOptions.manaLevelModifiers;
     const { effectList = [] } = locOptions;
@@ -192,18 +235,19 @@ export class ManaOceanLayer extends Component {
 
     const strings2 = R.sortBy(R.identity, R.keys(effectGroups)).map((effectType) => {
       const timeArr = effectGroups[effectType].map((effect) => {
-        const {
-          start, end, permanent,
-        } = effect;
+        const { start } = effect;
         const startStr = moment(start).format('HH:mm');
-        if (permanent) {
+        if (isPermanentEffect(effect)) {
           return startStr;
+        } else {
+          const { end } = effect;
+          const endStr = moment(end).format('HH:mm');
+          return `${startStr}-${endStr}`;
         }
-        const endStr = moment(end).format('HH:mm');
-        return `${startStr}-${endStr}`;
       });
 
       const firstEffect = effectGroups[effectType][0];
+      // @ts-ignore
       const str = t(`manaEffect_${effectType}`, { manaLevelChange: firstEffect.manaLevelChange });
       const timeSubArr = R.take(3, timeArr);
       const timeStr = timeSubArr.join(', ') + (timeArr.length > timeSubArr.length ? ', ...' : '');
@@ -233,15 +277,15 @@ export class ManaOceanLayer extends Component {
     return output.join('<br/>');
   }
 
-  removeLocation(locationData) {
-    const location = this.group.getLayers().find((loc2) => loc2.options.id === locationData.id);
+  removeLocation(locationData: LocationRecord) {
+    const location = this.group.getLayers().find((loc2: ManaOceanLocation) => loc2.options.id === locationData.id);
     this.group.removeLayer(location);
   }
 
   onLocationClick = (e) => {
     const { layerCommunicator } = this.props;
     const {
-      id, label, layer_id, locOptions,
+      id, locOptions,
     } = e.target.options;
     this.setState({
       curLocation: {

@@ -25,12 +25,14 @@ export function isGeoLocation(location: LocationRecord): boolean {
 
 const notEquals = R.pipe(R.equals, R.not);
 
+export interface ArrDiffUpdate<T> {
+  item: T,
+  prevItem: T
+};
+
 export interface ArrDiff<T>{
   added: T[];
-  updated: {
-    item: T,
-    prevItem: T
-  }[];
+  updated: ArrDiffUpdate<T>[];
   removed: T[];
   unchanged: T[];
 }
