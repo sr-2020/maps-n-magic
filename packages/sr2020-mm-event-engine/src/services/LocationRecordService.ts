@@ -20,7 +20,8 @@ const defaultStyleOptions = {
   fillOpacity: 0.2,
 };
 
-const extractPolygonData = (list: LocationRecord[]) => list.filter(isGeoLocation).map(R.pick(['id', 'polygon']));
+const extractPolygonData = (list: LocationRecord[]): Pick<LocationRecord, 'id'|'polygon'>[] => 
+  list.filter(isGeoLocation).map(R.pick(['id', 'polygon']));
 
 const metadata: Metadata = {
   actions: [

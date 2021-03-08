@@ -23,7 +23,7 @@ export class GameModel extends EventEmitter {
 
   services: AbstractService[];
 
-  // migrator: any;
+  // migrator: unknown;
 
   constructor(logger: GMLogger) {
     super();

@@ -11,7 +11,7 @@ import {  } from "../core/types";
 
 import { UserRecord } from "../types";
 
-const arr = `37232
+const arr: string[] = `37232
 37232
 Саша Терещенко
 37445
@@ -57,10 +57,9 @@ interface HardcodedUser {
   name: string;
 }
 
-// : HardcodedUser[]
-
-const userList = (R.map(R.zipObj(['userId', 'joinId', 'name']), R.splitEvery(3, arr)));
-const userDict = R.indexBy(R.prop('userId'), userList);
+const userList: HardcodedUser[] = 
+  (R.map(R.zipObj(['userId', 'joinId', 'name']), R.splitEvery(3, arr)));
+const userDict: Record<string, HardcodedUser> = R.indexBy(R.prop('userId'), userList);
 
 // console.log(characterDict);
 
@@ -93,7 +92,7 @@ export class UserRecordService extends AbstractService {
     this.userRecords = userRecords || [];
     this.userRecords.forEach((user) => {
       user.name = '';
-      if (userDict[user.id]) {
+      if (userDict[user.id] !== undefined) {
         user.name = userDict[user.id].name;
       }
     });

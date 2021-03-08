@@ -4,7 +4,7 @@ import {
   AbstractService, 
   Metadata, 
   GameModel, 
-  GMLogger 
+  GMLogger
 } from '../core';
 
 import { 
@@ -105,7 +105,7 @@ export class CharacterHealthStateService extends AbstractService {
     if (!prevCharacterHealthState || !locationRecord) {
       return;
     }
-    const characterHealthState = {
+    const characterHealthState: RawCharacterHealthState = {
       ...prevCharacterHealthState,
       locationId,
       locationLabel: locationRecord.label,

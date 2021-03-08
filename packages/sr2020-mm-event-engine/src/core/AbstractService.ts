@@ -77,7 +77,7 @@ export class AbstractService {
     return this.gameModel.emit(event, ...args);
   }
 
-  on(event: string, listener: (...args: any[]) => void): GameModel {
+  on(event: string, listener: (...args: unknown[]) => void): GameModel {
     if (this.gameModel === null) {
       throw new Error(`Service ${this.constructor.name} is not initialized`);
     }
@@ -87,7 +87,7 @@ export class AbstractService {
     return this.gameModel.on(event, listener);
   }
 
-  off(event: string, listener: (...args: any[]) => void): GameModel {
+  off(event: string, listener: (...args: unknown[]) => void): GameModel {
     if (this.gameModel === null) {
       throw new Error(`Service ${this.constructor.name} is not initialized`);
     }

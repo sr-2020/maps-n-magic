@@ -7,7 +7,7 @@ import {
   GMLogger 
 } from '../core';
 
-import { UserRecord, SettingsCatalog, SettingsKeys, SettingsValues } from "../types";
+import { SettingsCatalog, SettingsKeys, SettingsValues } from "../types";
 
 
 // import { defaultManaOceanSettings } from '../api/constants';
