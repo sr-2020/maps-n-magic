@@ -4,10 +4,14 @@ import {
   getArrDiff, isGeoLocation, sample,
 } from '../utils';
 import { makeTriangulationData } from '../utils/makeTriangulationData';
-import { AbstractService } from '../core/AbstractService';
 import { LocationRecord, TriangulationData } from "../types";
 
-import { Metadata } from "../core/types";
+import { 
+  AbstractService, 
+  Metadata, 
+  GameModel, 
+  GMLogger 
+} from '../core';
 
 // duplicated in LocationHolder
 const defaultStyleOptions = {
@@ -61,19 +65,18 @@ type LocationIdObj = {locationId: number};
 export class LocationRecordService extends AbstractService {
   locationRecords: LocationRecord[];
 
-  neighborsIndex: TriangulationData;
+  neighborsIndex: TriangulationData | null;
 
-  constructor() {
-    super();
+  constructor(gameModel: GameModel, logger: GMLogger) {
+    super(gameModel, logger);
     this.setMetadata(metadata);
     this.locationRecords = [];
     this.neighborsIndex = null;
   }
 
   setData(
-    { locationRecords }: LocationRecordsObj = { locationRecords: null }
+    { locationRecords }: LocationRecordsObj = { locationRecords: [] }
   ): void {
-    locationRecords = locationRecords || [];
     this.updateTriangulation(locationRecords, this.locationRecords);
     this.locationRecords = locationRecords;
     this.locationRecords.forEach((loc) => {
@@ -94,10 +97,11 @@ export class LocationRecordService extends AbstractService {
     return [...this.locationRecords];
   }
 
-  getLocationRecord({ id }: { id: number }): LocationRecord {
+  getLocationRecord({ id }: { id: number }): LocationRecord | null {
     const locationRecord = this.locationRecords.find((br) => br.id === id);
     if (locationRecord === undefined) {
       this.logger.error('location record not found, locationId', id);
+      return null;
       // this.logger.info(R.pluck('id', this.locationRecords));
     }
     return R.clone(locationRecord);
@@ -142,32 +146,40 @@ export class LocationRecordService extends AbstractService {
     }
   }
 
-  getTriangulationData(): TriangulationData {
+  getTriangulationData(): TriangulationData | null {
     return this.neighborsIndex;
   }
 
   getNeighborList({ locationId }: LocationIdObj): LocationRecord[] {
+    if(this.neighborsIndex === null) {
+      return [];
+    }
     const { neighborsIndex } = this.neighborsIndex;
     // console.log('neighborsIndex', neighborsIndex);
-    const neighborsIdList = neighborsIndex.get(Number(locationId));
+    const neighborsIdList = neighborsIndex.get(Number(locationId)) || [];
     if (neighborsIdList.length === 0) {
-      return null;
+      return [];
     }
     const neighborList = this.locationRecords.filter((el) => neighborsIdList.includes(el.id));
     return neighborList;
   }
 
-  getNeighborOrRandomLocation({ locationId }: LocationIdObj) {
+  getNeighborOrRandomLocation({ locationId }: LocationIdObj): LocationRecord | null {
+    if(this.neighborsIndex === null) {
+      return null;
+    }
     const { neighborsIndex } = this.neighborsIndex;
     // console.log(neighborsIndex);
-    let neighborsList: number[] = neighborsIndex.get(Number(locationId));
+    let neighborsList: number[] = neighborsIndex.get(Number(locationId)) || [];
+    // If location has no neighbors take all available loc ids except locationId one.
     if (neighborsList.length === 0) {
       neighborsList = R.without([locationId], Array.from(neighborsIndex.keys()));
     }
-    if (neighborsList.length === 0) {
+
+    const neighborLocationId: number = sample(neighborsList);
+    if (neighborLocationId === null) {
       return null;
     }
-    const neighborLocationId: number = sample(neighborsList);
     return this.getLocationRecord({ id: neighborLocationId });
   }
 

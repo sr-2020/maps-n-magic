@@ -81,9 +81,9 @@ export function getArrDiff<T>(
 
 // export function latLngsToBounds(latLngs: SRLatLng[]): SRLatLngBounds {
 export function latLngsToBounds(latLngs: L.LatLngLiteral[]): L.LatLngBounds {
-  if(latLngs.length === 0) {
-    return null;
-  }
+  // if(latLngs.length === 0) {
+  //   return null;
+  // }
   const bounds = new L.LatLngBounds(latLngs[0], latLngs[0]);
   latLngs.forEach(bounds.extend.bind(bounds));
   return bounds;
@@ -131,7 +131,9 @@ export function randomInteger(min: number, max: number): number {
   return Math.floor(rand);
 }
 
-export function sample<T>(arr: T[]): T | null {
+export function sample(arr: readonly []): null;
+export function sample<T>(arr: readonly T[]): T;
+export function sample<T>(arr: readonly T[]): T | null {
   if (arr.length === 0) {
     return null;
   }

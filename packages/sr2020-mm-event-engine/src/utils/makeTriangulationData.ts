@@ -57,6 +57,15 @@ const clusterConnectionsNum = 3;
 // 111100 meters in lat
 // 63995 meters in lng
 
+const getArrMedian: (distArr: {
+  minDist: number;
+  locId1: number;
+  locId2: number;
+}[]) => number = R.pipe(
+  R.pluck('minDist'),
+  R.median,
+);
+
 function getPrecalcData(data: LocPolygonData[]): TriangulationPrecalcData[] {
   return data.map((loc) => {
     // const loc = data[0];
@@ -248,13 +257,13 @@ function edgeSetToNeighborsIndex(
     const [locId1Str, locId2Str] = edgeIdToPair(edgeId);
     const locId1 = Number(locId1Str);
     const locId2 = Number(locId2Str);
-    let neighborsList1: number[] = neighborsIndex.get(locId1);
+    let neighborsList1: number[] | undefined = neighborsIndex.get(locId1);
     if (neighborsList1 === undefined) {
       neighborsList1 = [];
       neighborsIndex.set(locId1, neighborsList1);
     }
     neighborsList1.push(locId2);
-    let neighborsList2: number[] = neighborsIndex.get(locId2);
+    let neighborsList2: number[] | undefined = neighborsIndex.get(locId2);
     if (neighborsList2 === undefined) {
       neighborsList2 = [];
       neighborsIndex.set(locId2, neighborsList2);
@@ -275,6 +284,7 @@ function collectClusters(neighborsIndex: Map<number, number[]>): LocCluster[] {
       return;
     }
     invClusters[locationId] = clusterId;
+    // @ts-ignore
     neighborsList.forEach((nextLocId) => setClusterId(nextLocId, neighborsIndex.get(nextLocId), clusterId));
   }
 
@@ -288,10 +298,10 @@ function collectClusters(neighborsIndex: Map<number, number[]>): LocCluster[] {
     return String(clusterIdCounter);
   }
 
-  [...neighborsIndex.keys()].forEach((locationId) => {
+  [...neighborsIndex.entries()].forEach(([locationId, neighborsList]) => {
     if (!isInCluster(locationId)) {
       const clusterId: string = getNextClusterId();
-      setClusterId(locationId, neighborsIndex.get(locationId), clusterId);
+      setClusterId(locationId, neighborsList, clusterId);
     }
   });
 
@@ -345,10 +355,7 @@ function connectClustersCloserThanMedian(
   const edgeSet = new Set();
   const clusterDists = getClusterDists(precalcData, clusterList);
   const distArr = R.flatten(clusterDists);
-  const median = R.pipe(
-    R.pluck('minDist'),
-    R.median,
-  )(distArr);
+  const median = getArrMedian(distArr);
   const divider = 1.25;
   distArr.filter((el) => el.minDist < median / divider).forEach(({ locId1, locId2 }) => {
     edgeSet.add(pairToEdgeId(locId1, locId2));
@@ -393,7 +400,10 @@ function getClusterDists(precalcData: TriangulationPrecalcData[], clusterList: L
         clusterId1: cluster1.clusterId,
         clusterId2: cluster2.clusterId,
       }));
-      const minObj: ClusterDist = R.reduce(R.minBy(R.prop('minDist')), { minDist: Infinity }, distArr) as ClusterDist;
+      const getMinDist: (distArr: ClusterDist[]) => ClusterDist = 
+        // @ts-ignore
+        R.reduce(R.minBy(R.prop('minDist')), { minDist: Infinity } as ClusterDist);
+      const minObj: ClusterDist =  getMinDist(distArr);
       return minObj;
     });
     return dists;
@@ -404,10 +414,7 @@ function locMedianBasedApproach(precalcData: TriangulationPrecalcData[]) {
   const edgeSet = new Set();
   const locIndex = R.indexBy(R.prop('locationId'), precalcData);
   const distArr = getDistArr(locIndex, R.keys(locIndex), R.keys(locIndex));
-  const median = R.pipe(
-    R.pluck('minDist'),
-    R.median,
-  )(distArr);
+  const median = getArrMedian(distArr);
   const divider = 3;
   distArr.filter((el) => el.minDist < median / divider).forEach(({ locId1, locId2 }) => {
     edgeSet.add(pairToEdgeId(locId1, locId2));
@@ -482,12 +489,13 @@ export function makeConnectionsByTriangulation(data: LocPolygonData[]): Set<Edge
 
 function connectClustersWithGreedyTree(clusterDists: ClusterDist[][]): Set<EdgeId> {
   const edgeSet = new Set<EdgeId>();
-  // @ts-ignore
-  const arr: ClusterDist[] = R.pipe(
+  const filterClusterDists: (clusterDists: ClusterDist[][]) => ClusterDist[] = R.pipe(
+    // @ts-ignore
     R.flatten,
     R.filter(({ locId1, locId2 }) => locId1 < locId2),
     R.sortBy(R.prop('minDist')),
-  )(clusterDists);
+  );
+  const arr: ClusterDist[] = filterClusterDists(clusterDists);
 
   // (clusterDists).filter();
   let clusterIndex: {[key: string]: string} = {};

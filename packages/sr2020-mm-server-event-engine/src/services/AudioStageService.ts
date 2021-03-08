@@ -4,7 +4,9 @@ import {
   AbstractService, 
   Metadata,
   LocationRecord,
-  CharacterLocationData
+  CharacterLocationData,
+  GameModel,
+  GMLogger
 } from 'sr2020-mm-event-engine';
 
 const metadata: Metadata = {
@@ -30,8 +32,8 @@ export class AudioStageService extends AbstractService {
     manaLevel: number;
   }>;
 
-  constructor() {
-    super();
+  constructor(gameModel: GameModel, logger: GMLogger) {
+    super(gameModel, logger);
     this.setMetadata(metadata);
     // When we get location mana update we want to update sound stage for all character at that location.
     // When character steps in new location we want to get current location mana level.
@@ -50,8 +52,8 @@ export class AudioStageService extends AbstractService {
     this.onPutLocationRecords = this.onPutLocationRecords.bind(this);
   }
 
-  init(gameModel, logger) {
-    super.init(gameModel, logger);
+  init() {
+    super.init();
     this.on('characterLocationChanged', this.onCharacterLocationChanged);
     this.on('putLocationRecords', this.onPutLocationRecords);
   }

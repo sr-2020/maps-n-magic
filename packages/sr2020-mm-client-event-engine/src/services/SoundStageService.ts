@@ -1,6 +1,6 @@
 import * as R from 'ramda';
 
-import { AbstractService, Metadata } from 'sr2020-mm-event-engine';
+import { AbstractService, Metadata, GameModel, GMLogger } from 'sr2020-mm-event-engine';
 
 const metadata: Metadata = {
   actions: [
@@ -33,8 +33,8 @@ export class SoundStageService extends AbstractService {
   backgroundVolume: number;
   rotationVolume: number;
 
-  constructor() {
-    super();
+  constructor(gameModel: GameModel, logger: GMLogger) {
+    super(gameModel, logger);
     this.setMetadata(metadata);
     this.backgroundSound = null;
     this.rotationSounds = [];

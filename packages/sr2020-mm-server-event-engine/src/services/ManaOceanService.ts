@@ -127,8 +127,8 @@ export class ManaOceanService extends AbstractService {
 
   lastManaUpdateTimestamp: number;
 
-  constructor() {
-    super();
+  constructor(gameModel: GameModel, logger: GMLogger) {
+    super(gameModel, logger);
     this.setMetadata(metadata);
     this.prevTideHeight = null;
     this.tideLevelTimerId = null;
@@ -139,8 +139,8 @@ export class ManaOceanService extends AbstractService {
     // this.manaOceanSettings = R.clone(defaultManaOceanSettings);
   }
 
-  init(gameModel: GameModel, logger: GMLogger): void {
-    super.init(gameModel, logger);
+  init(): void {
+    super.init();
     if (this.tideLevelTimerId === null) {
       this.tideLevelTimerId = setInterval(this.onTideLevelUpdate, TIDE_LEVEL_UPDATE_INTERVAL);
     } else {

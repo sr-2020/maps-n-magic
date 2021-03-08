@@ -1,6 +1,6 @@
 import * as R from 'ramda';
 
-import { AbstractService, Metadata } from 'sr2020-mm-event-engine';
+import { AbstractService, Metadata, GameModel, GMLogger } from 'sr2020-mm-event-engine';
 
 import { defaultBackgroundImages } from './DefaultBackgroundImages';
 
@@ -27,8 +27,8 @@ export class BackgroundImageService extends AbstractService {
   backgroundImages: BackgroundImage[];
   maxBackgroundImageId: number;
 
-  constructor() {
-    super();
+  constructor(gameModel: GameModel, logger: GMLogger) {
+    super(gameModel, logger);
     this.setMetadata(metadata);
     this.backgroundImages = R.clone(defaultBackgroundImages);
     this.maxBackgroundImageId = 1;

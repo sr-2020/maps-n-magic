@@ -1,8 +1,13 @@
 import * as R from 'ramda';
 
-import { AbstractService } from '../core/AbstractService';
+import { 
+  AbstractService, 
+  Metadata, 
+  GameModel, 
+  GMLogger 
+} from '../core';
 
-import { Metadata } from "../core/types";
+import {  } from "../core/types";
 
 import { UserRecord } from "../types";
 
@@ -77,13 +82,13 @@ const metadata: Metadata = {
 export class UserRecordService extends AbstractService {
   userRecords: UserRecord[];
 
-  constructor() {
-    super();
+  constructor(gameModel: GameModel, logger: GMLogger) {
+    super(gameModel, logger);
     this.setMetadata(metadata);
     this.userRecords = [];
   }
 
-  setData({ userRecords }: { userRecords: UserRecord[] } = { userRecords: null }): void {
+  setData({ userRecords }: { userRecords: UserRecord[] } = { userRecords: [] }): void {
     // this.logger.info('userRecords', userRecords);
     this.userRecords = userRecords || [];
     this.userRecords.forEach((user) => {
@@ -104,8 +109,8 @@ export class UserRecordService extends AbstractService {
     return [...this.userRecords];
   }
 
-  getUserRecord({ id }: {id: number}): UserRecord {
-    const record: UserRecord = this.userRecords.find((br) => br.id === id);
+  getUserRecord({ id }: {id: number}): UserRecord | undefined {
+    const record: UserRecord | undefined = this.userRecords.find((br) => br.id === id);
     return R.clone(record);
   }
 

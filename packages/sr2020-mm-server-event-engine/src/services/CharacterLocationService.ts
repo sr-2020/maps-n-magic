@@ -3,6 +3,8 @@ import * as R from 'ramda';
 import { 
   AbstractService, 
   Metadata,
+  GMLogger,
+  GameModel,
   CharacterLocationData
 } from 'sr2020-mm-event-engine';
 
@@ -29,8 +31,8 @@ export class CharacterLocationService extends AbstractService {
 
   char2locIndex: Map<number, number>;
 
-  constructor() {
-    super();
+  constructor(gameModel: GameModel, logger: GMLogger) {
+    super(gameModel, logger);
     this.setMetadata(metadata);
     // Map(
     //   locationId,

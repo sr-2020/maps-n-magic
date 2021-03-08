@@ -1,8 +1,11 @@
 import * as R from 'ramda';
 
-import { AbstractService } from '../core/AbstractService';
-
-import { Metadata } from "../core/types";
+import { 
+  AbstractService, 
+  Metadata, 
+  GameModel, 
+  GMLogger 
+} from '../core';
 
 const metadata: Metadata = {
   actions: [
@@ -18,8 +21,8 @@ const metadata: Metadata = {
 };
 
 export class NotificationService extends AbstractService {
-  constructor() {
-    super();
+  constructor(gameModel: GameModel, logger: GMLogger) {
+    super(gameModel, logger);
     this.setMetadata(metadata);
   }
 

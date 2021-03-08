@@ -1,8 +1,11 @@
 import * as R from 'ramda';
 
-import { AbstractService } from '../core/AbstractService';
-
-import { Metadata } from "../core/types";
+import { 
+  AbstractService, 
+  Metadata, 
+  GameModel, 
+  GMLogger 
+} from '../core';
 
 import { 
   CharacterHealthStates, 
@@ -37,8 +40,8 @@ const metadata: Metadata = {
 export class CharacterHealthStateService extends AbstractService {
   characterHealthStates: CharacterHealthStates;
 
-  constructor() {
-    super();
+  constructor(gameModel: GameModel, logger: GMLogger) {
+    super(gameModel, logger);
     this.setMetadata(metadata);
     // {
     //   "51935": {

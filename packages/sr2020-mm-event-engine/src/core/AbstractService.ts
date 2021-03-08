@@ -6,9 +6,9 @@ import { Metadata, GMAction, GMRequest, GMLogger } from "./types";
 import { stringToType, typeToGetter } from "./utils";
 
 export class AbstractService {
-  logger: GMLogger;
+  // logger: GMLogger;
 
-  gameModel: GameModel;
+  // gameModel: GameModel;
 
   metadata: Metadata = {
     actions: [],
@@ -19,13 +19,9 @@ export class AbstractService {
     listenEvents: [],
   };
 
-  constructor() {
-  }
+  constructor(public gameModel: GameModel, public logger: GMLogger) {}
 
-  init(gameModel: GameModel, logger: GMLogger) {
-    this.gameModel = gameModel;
-    this.logger = logger;
-  }
+  init() {}
 
   // eslint-disable-next-line class-methods-use-this
   // setData() {}
@@ -71,6 +67,9 @@ export class AbstractService {
   }
 
   emit(event: string, ...args: unknown[]): boolean {
+    if (this.gameModel === null) {
+      throw new Error(`Service ${this.constructor.name} is not initialized`);
+    }
     // console.log('emit', args[0]);
     if (!this.metadata.emitEvents.includes(event)) {
       throw new Error(`Event ${event} is not in emit events list of ${this.constructor.name}`);
@@ -79,6 +78,9 @@ export class AbstractService {
   }
 
   on(event: string, listener: (...args: any[]) => void): GameModel {
+    if (this.gameModel === null) {
+      throw new Error(`Service ${this.constructor.name} is not initialized`);
+    }
     if (!this.metadata.listenEvents.includes(event)) {
       throw new Error(`Event ${event} is not in listen events list of ${this.constructor.name}`);
     }
@@ -86,6 +88,9 @@ export class AbstractService {
   }
 
   off(event: string, listener: (...args: any[]) => void): GameModel {
+    if (this.gameModel === null) {
+      throw new Error(`Service ${this.constructor.name} is not initialized`);
+    }
     if (!this.metadata.listenEvents.includes(event)) {
       throw new Error(`Event ${event} is not in listen events list of ${this.constructor.name}`);
     }
@@ -103,6 +108,9 @@ export class AbstractService {
   //   return this.gameModel.get(rawRequest);
   // }
   getFromModel<T extends GMRequest, K>(rawRequest: T | string): K {
+    if (this.gameModel === null) {
+      throw new Error(`Service ${this.constructor.name} is not initialized`);
+    }
     const request: T = stringToType<T>(rawRequest);
 
     const { needRequests } = this.metadata;
@@ -114,6 +122,9 @@ export class AbstractService {
   }
 
   executeOnModel<T extends GMAction, K>(rawAction: T | string): K {
+    if (this.gameModel === null) {
+      throw new Error(`Service ${this.constructor.name} is not initialized`);
+    }
     const action: T = stringToType<T>(rawAction);
 
     const { needActions } = this.metadata;

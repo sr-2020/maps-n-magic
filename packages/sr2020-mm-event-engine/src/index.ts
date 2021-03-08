@@ -1,8 +1,5 @@
 // export * as utils from './utils';
-export * from './core/types';
-export { AbstractService } from './core/AbstractService'; 
-export { GameModel } from './core/GameModel'; 
-export { EventEngine } from './core/EventEngine'; 
+export * from './core';
 
 export { BeaconRecordService } from './services/BeaconRecordService'; 
 export { CharacterHealthStateService } from './services/CharacterHealthStateService'; 

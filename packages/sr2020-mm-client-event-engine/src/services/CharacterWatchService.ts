@@ -1,6 +1,6 @@
 import * as R from 'ramda';
 
-import { AbstractService, Metadata, LocationRecord } from 'sr2020-mm-event-engine';
+import { AbstractService, Metadata, LocationRecord, GameModel, GMLogger } from 'sr2020-mm-event-engine';
 
 const metadata: Metadata = {
   actions: [
@@ -29,16 +29,16 @@ export class CharacterWatchService extends AbstractService {
   characterId: number | null;
   locationId: number | null;
 
-  constructor() {
-    super();
+  constructor(gameModel: GameModel, logger: GMLogger) {
+    super(gameModel, logger);
     this.setMetadata(metadata);
     this.characterId = null;
     this.locationId = null;
     this.onLocationRecordsChanged2 = this.onLocationRecordsChanged2.bind(this);
   }
 
-  init(gameModel, logger) {
-    super.init(gameModel, logger);
+  init() {
+    super.init();
     this.on('locationRecordsChanged2', this.onLocationRecordsChanged2);
   }
 

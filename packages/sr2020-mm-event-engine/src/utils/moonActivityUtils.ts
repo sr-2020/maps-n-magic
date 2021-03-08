@@ -87,7 +87,8 @@ function addEndpointsToActivity(fullActivity: TidePeriodProps[]) {
   return (activity: TidePeriodProps[]): TidePeriodProps[] => {
     const newActivity: TidePeriodProps[] = [...activity];
 
-    if (R.head(newActivity).startTime !== 0) {
+    const head = R.head(newActivity);
+    if (head !== undefined && head.startTime !== 0) {
       const nonNegativeTimeindex = fullActivity.findIndex((el) => el.startTime >= 0);
       const negativeEl = fullActivity[nonNegativeTimeindex - 1];
       newActivity.unshift({
@@ -95,10 +96,11 @@ function addEndpointsToActivity(fullActivity: TidePeriodProps[]) {
         value: negativeEl.value,
       });
     }
-    if (R.last(newActivity).startTime !== fullDay) {
+    const last = R.last(newActivity);
+    if (last !== undefined && last.startTime !== fullDay) {
       newActivity.push({
         startTime: fullDay,
-        value: R.last(newActivity).value,
+        value: last.value,
       });
     }
     return newActivity;
@@ -140,7 +142,6 @@ export function mergeActivities(
     [x: number]: TidePeriodProps;
   } = R.indexBy(R.prop('startTime'), activity2);
 
-  // @ts-ign_ore
   const changeTimes: number[] = R.uniq([...R.pluck('startTime', activity1), ...R.pluck('startTime', activity2)]);
   changeTimes.sort((a, b) => a - b);
   // console.log(activity1);
@@ -161,8 +162,8 @@ export function mergeActivities(
     // console.log(last1El.value, last2El.value);
     return acc;
   }, {
-    last1El: { value: 0 },
-    last2El: { value: 0 },
+    last1El: { value: 0, startTime: -1 },
+    last2El: { value: 0, startTime: -1 },
     mergedActivity: [],
   } as {
     last1El: TidePeriodProps,
@@ -184,6 +185,7 @@ export function collectStatistics(activity: TidePeriodProps[]): Record<string, n
   const range: number[] = R.range(-2, 3);
   range.forEach((level) => (els[level] = els[level] || []));
 
+  // @ts-ignore
   return R.mapObjIndexed((arr) => R.sum(R.pluck('intervalDuration', arr)), els);
 }
 
@@ -315,11 +317,11 @@ const moonPropsList: MoonProps[] = [{
   offset: 120,
 }];
 
-function makeActivityArr(moonPropsList2: MoonProps[]) {
+function makeActivityArr(moonPropsList2: MoonProps[]): TidePeriodProps[] {
   return moonPropsList2.reduce((acc, moonProps) => {
     const newActivity = getMoonActivity(moonProps);
     return mergeActivities(acc, newActivity);
-  }, []);
+  }, [] as TidePeriodProps[]);
 }
 
 function manaHeightStats(manaHeightList: string[]) {

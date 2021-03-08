@@ -1,7 +1,13 @@
 import * as R from 'ramda';
 import moment from 'moment-timezone';
 
-import { AbstractService, isClinicallyDead, Metadata } from 'sr2020-mm-event-engine';
+import { 
+  AbstractService, 
+  isClinicallyDead, 
+  Metadata,
+  GMLogger,
+  GameModel
+} from 'sr2020-mm-event-engine';
 
 const RESCUE_SERVICE_UPDATE_INTERVAL = 5000; // ms
 const RESCUE_SERVICE_PUSH_INTERVAL = 10 * 60000; // 10 minutes
@@ -25,8 +31,8 @@ export class RescueServicePushService extends AbstractService {
 
   characterIndex: any;
 
-  constructor() {
-    super();
+  constructor(gameModel: GameModel, logger: GMLogger) {
+    super(gameModel, logger);
     this.setMetadata(metadata);
     this.informCharacterTimerId = null;
     this.characterIndex = new Map();
@@ -34,8 +40,8 @@ export class RescueServicePushService extends AbstractService {
     this.onCharacterHealthStateChanged = this.onCharacterHealthStateChanged.bind(this);
   }
 
-  init(gameModel, logger) {
-    super.init(gameModel, logger);
+  init() {
+    super.init();
     if (this.informCharacterTimerId === null) {
       this.informCharacterTimerId = setInterval(this.onInformCharacterTimeout, RESCUE_SERVICE_UPDATE_INTERVAL);
     } else {

@@ -1,5 +1,5 @@
 import * as R from 'ramda';
-import { AbstractService, Metadata } from 'sr2020-mm-event-engine';
+import { AbstractService, Metadata, GameModel, GMLogger } from 'sr2020-mm-event-engine';
 
 const sortByNameCaseInsensitive = R.sortBy(R.compose(R.toLower, R.prop('name')));
 
@@ -21,8 +21,8 @@ interface Sound {
 export class SoundService2 extends AbstractService {
   sounds: Sound[];
 
-  constructor() {
-    super();
+  constructor(gameModel: GameModel, logger: GMLogger) {
+    super(gameModel, logger);
     this.setMetadata(metadata);
     this.sounds = [];
   }

@@ -31,20 +31,24 @@ export class GameModel extends EventEmitter {
     this.actionMap = {};
     this.requestMap = {};
     this.verificator = new GameModelVerificator();
-    this.onDefaultAction = this.onDefaultAction.bind(this);
-    this.onDefaultRequest = this.onDefaultRequest.bind(this);
+    this.services = [];
   }
 
-  init(services: AbstractService[]) {
-    this.services = services;
-    services.forEach((service) => {
-      this.logger.info('Creating service', service.constructor.name);
+  init(serviceClasses: typeof AbstractService[]) {
+    // this.services = services;
+    serviceClasses.forEach((serviceClass) => {
+      
+      // this.logger.info('Creating service', service.constructor.name);
+      this.logger.info('Creating service', serviceClass.name);
       let childLogger = this.logger;
       if (this.logger.customChild) {
-        childLogger = this.logger.customChild(this.logger, { service: service.constructor.name });
+        // childLogger = this.logger.customChild(this.logger, { service: service.constructor.name });
+        childLogger = this.logger.customChild(this.logger, { service: serviceClass.name });
       }
+      const service = new serviceClass(this, childLogger);
       // const service: AbstractService = new ServiceClass(childLogger);
-      service.init(this, childLogger);
+      // service.init(this, childLogger);
+      service.init();
       this.registerService(service);
       return service;
     });
@@ -94,26 +98,15 @@ export class GameModel extends EventEmitter {
     if (service) {
       return service.execute<T>(action);
     }
-
-    this.onDefaultAction(action);
-  }
-
-  // eslint-disable-next-line class-methods-use-this
-  onDefaultAction(action: GMAction): void {
     throw new Error(`Unknown action ${JSON.stringify(action)}`);
   }
 
   get<T>(rawRequest: GMRequest | string): T {
     const request = stringToType<GMRequest>(rawRequest);
     const service = this.requestMap[request.type];
-    if (service) {
+    if (service !== undefined) {
       return service.get(request);
     }
-    this.onDefaultRequest(request);
-  }
-
-  // eslint-disable-next-line class-methods-use-this
-  onDefaultRequest(request: GMRequest): void {
     throw new Error(`Unknown request ${JSON.stringify(request)}`);
   }
 

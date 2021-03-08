@@ -14,7 +14,7 @@ export class EventEngine {
 
   dataBindings: AbstractDataBinding[];
 
-  constructor(services2: AbstractService[], logger: GMLogger) {
+  constructor(services2: typeof AbstractService[], logger: GMLogger) {
     this.gameModel = new GameModel(logger);
     this.gameModel.init(services2);
     this.dataBindings = [];

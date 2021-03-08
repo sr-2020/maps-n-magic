@@ -43,20 +43,20 @@ import { CharacterLocationListener } from '../api/position/CharacterLocationList
 import { SpellCastsListener } from '../api/spellCasts/SpellCastsListener';
 import { PushNotificationEmitter } from '../api/pushNotificationEmitter';
 
-const services: AbstractService[] = [
-  new LocationRecordService(),
-  new BeaconRecordService(),
-  new NotificationService(),
-  new CharacterHealthStateService(),
-  new UserRecordService(),
-  new SettingsService(),
-  new ManaOceanService(),
-  new ManaOceanEnableService(),
-  new MassacreService(),
-  new PushNotificationService(),
-  new AudioStageService(),
-  new CharacterLocationService(),
-  new RescueServicePushService(),
+const services: typeof AbstractService[] = [
+  LocationRecordService,
+  BeaconRecordService,
+  NotificationService,
+  CharacterHealthStateService,
+  UserRecordService,
+  SettingsService,
+  ManaOceanService,
+  ManaOceanEnableService,
+  MassacreService,
+  PushNotificationService,
+  AudioStageService,
+  CharacterLocationService,
+  RescueServicePushService,
 ];
 
 // eslint-disable-next-line max-lines-per-function

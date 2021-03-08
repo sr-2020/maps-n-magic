@@ -13,9 +13,9 @@ const navLinks = [{
 }, {
   to: '/beaconEditor2',
   tKey: 'beaconEditor2',
-}, {
-  to: '/map2',
-  tKey: 'locationsAndBeaconsEditor',
+// }, {
+//   to: '/map2',
+//   tKey: 'locationsAndBeaconsEditor',
 }];
 
 const navLinks2 = [{
