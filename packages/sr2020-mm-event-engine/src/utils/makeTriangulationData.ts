@@ -13,7 +13,6 @@ import {
   TriangulationData, 
   LocPolygonData, 
   SRLatLng, 
-  SRLatLngBounds,
   EdgeId
 } from "../types";
 

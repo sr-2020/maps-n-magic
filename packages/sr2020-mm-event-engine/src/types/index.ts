@@ -1,3 +1,6 @@
+import * as ManaOcean from "./manaOcean";
+export * from "./manaOcean";
+
 export interface UserRecord {
   // created_at: "2020-05-03 07:58:52"
   // id: 10207
@@ -64,46 +67,8 @@ export interface LocationRecordOptions {
   weight: number;
   fillOpacity: number;
   manaLevel: number;
-  effectList: ManaOceanEffect[];
+  effectList: ManaOcean.ManaOceanEffect[];
 };
-
-export interface AbstractManaOceanEffect {
-  id: string;
-  start: number;
-  manaLevelChange: number;
-  locationId: number;
-}
-
-export interface RitualLocationEffect extends AbstractManaOceanEffect {
-  type: 'ritualLocation',
-  permanent: true;
-  neighborId?: number;
-}
-
-export interface PowerSpellEffect extends AbstractManaOceanEffect {
-  type: 'powerSpell';
-  end: number;
-}
-
-export interface SpellEffect extends AbstractManaOceanEffect {
-  type: 'inputStream' | 'outputStream',
-  end: number;
-  range: number[];
-  prevNeighborIds?: number[];
-}
-
-export interface MassacreEffect extends AbstractManaOceanEffect {
-  type: 'massacre';
-  end: number;
-}
-
-export type ManaOceanEffect = 
-  RitualLocationEffect | 
-  PowerSpellEffect | 
-  SpellEffect | 
-  MassacreEffect;
-
-
 
 export type LocPolygonData = Pick<LocationRecord, "id" | "polygon"> & {
   centroid?: SRLatLng
@@ -124,14 +89,6 @@ export interface TriangulationData {
   edgeSet: Set<EdgeId>;
 }
 
-export interface SRLatLngBounds {
-  contains: (pt: SRLatLng) => boolean;
-  getNorthWest: () => SRLatLng;
-  getSouthEast: () => SRLatLng;
-  extend: (pt: SRLatLng) => void;
-  intersects: (bounds: SRLatLngBounds) => boolean;
-}
-
 // export interface RawCharacterHealthState {
 //   //   55817: {locationId: 3215, locationLabel: "Межрайонье 1", healthState: "clinically_dead",…}
 //   // healthState: "clinically_dead"
@@ -150,53 +107,22 @@ export interface SettingsData {
 
 }
 
-export interface ManaOceanSettingsData extends SettingsData {
-  minManaLevel: number;
-  neutralManaLevel: number;
-  maxManaLevel: number;
-  visibleMoonPeriod: number;
-  visibleMoonNewMoonTime: number;
-  visibleMoonManaTideHeight: number;
-  invisibleMoonPeriod: number;
-  invisibleMoonNewMoonTime: number;
-  invisibleMoonManaTideHeight: number;
-  // moscowTime: number;
-};
-
-export interface ManaOceanEffectSettingsData extends SettingsData {
-  massacreDelay: number;
-  massacreDuration: number;
-  powerSpellBoundary: number;
-  powerSpellDelay: number;
-  powerSpellDuration: number;
-  ritualMembersBoundary: number;
-  ritualDelay: number;
-  spellDurationItem: number;
-  spellProbabilityPerPower: number;
-  spellDurationPerPower: number;
-}
-
-export interface MoonProps {
-  period: number;
-  offset: number;
-}
-
-export interface TidePeriodProps {
-  startTime: number;
-  value: number;
-  intervalDuration?: number;
-};
-
 export interface SettingsCatalog {
-  manaOcean?: ManaOceanSettingsData;
-  manaOceanEffects?: ManaOceanEffectSettingsData
+  manaOcean?: ManaOcean.ManaOceanSettingsData;
+  manaOceanEffects?: ManaOcean.ManaOceanEffectSettingsData
 };
-
-
 
 export type SettingsKeys = keyof SettingsCatalog;
 
-export type SettingsValues = ManaOceanSettingsData | ManaOceanEffectSettingsData;
+export type SettingsValues = 
+  ManaOcean.ManaOceanSettingsData | 
+  ManaOcean.ManaOceanEffectSettingsData;
+
+export interface CharacterLocationData {
+  characterId: number;
+  locationId: number;
+  prevLocationId: number;
+};
 
 
 export interface RawCharacterHealthState {
@@ -228,9 +154,3 @@ export interface CharacterHealthStatesByLocation {
   location: LocationRecord;
   locationId: number;
 }
-
-export interface CharacterLocationData {
-  characterId: number;
-  locationId: number;
-  prevLocationId: number;
-};

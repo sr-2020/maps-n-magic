@@ -14,7 +14,6 @@ import {
   LocationRecord, 
   SRLatLng, 
   SRPolygon, 
-  SRLatLngBounds, 
   EdgeId,
   RawCharacterHealthState
 } from "../types";
@@ -79,7 +78,6 @@ export function getArrDiff<T>(
   return diff;
 }
 
-// export function latLngsToBounds(latLngs: SRLatLng[]): SRLatLngBounds {
 export function latLngsToBounds(latLngs: L.LatLngLiteral[]): L.LatLngBounds {
   // if(latLngs.length === 0) {
   //   return null;

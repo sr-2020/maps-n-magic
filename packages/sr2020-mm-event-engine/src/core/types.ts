@@ -1,5 +1,3 @@
-import { Interface } from "readline";
-
 export interface GMTyped {
   type: string;
   [key: string]: any;

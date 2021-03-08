@@ -13,18 +13,3 @@ export * from './utils';
 export * from './utils/moonActivityUtils';
 
 export * from './types';
-
-
-// export {
-//   UserRecord,
-//   LocationRecord,
-//   BeaconRecord,
-//   SRLatLng,
-//   SRPolygon,
-//   LocPolygonData,
-//   EdgeId,
-//   TriangulationData,
-//   SRLatLngBounds,
-//   RawCharacterHealthState,
-//   SettingsData
-// } from './types';
