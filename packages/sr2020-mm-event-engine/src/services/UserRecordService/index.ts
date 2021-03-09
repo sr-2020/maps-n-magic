@@ -7,8 +7,6 @@ import {
   GMLogger 
 } from '../../core';
 
-import {  } from "../../core/types";
-
 import { UserRecord } from "../../types";
 
 const arr: string[] = `37232
