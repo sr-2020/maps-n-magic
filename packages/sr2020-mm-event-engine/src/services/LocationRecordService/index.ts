@@ -2,16 +2,16 @@ import * as R from 'ramda';
 
 import {
   getArrDiff, isGeoLocation, sample,
-} from '../utils';
-import { makeTriangulationData } from '../utils/makeTriangulationData';
-import { LocationRecord, TriangulationData } from "../types";
+} from '../../utils';
+import { makeTriangulationData } from '../../utils/makeTriangulationData';
+import { LocationRecord, TriangulationData } from "../../types";
 
 import { 
   AbstractService, 
   Metadata, 
   GameModel, 
   GMLogger 
-} from '../core';
+} from '../../core';
 
 // duplicated in LocationHolder
 const defaultStyleOptions = {

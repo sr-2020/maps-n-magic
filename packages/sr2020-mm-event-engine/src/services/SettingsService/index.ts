@@ -5,9 +5,9 @@ import {
   Metadata, 
   GameModel, 
   GMLogger 
-} from '../core';
+} from '../../core';
 
-import { SettingsCatalog, SettingsKeys, SettingsValues } from "../types";
+import { SettingsCatalog, SettingsKeys, SettingsValues } from "../../types";
 
 
 // import { defaultManaOceanSettings } from '../api/constants';

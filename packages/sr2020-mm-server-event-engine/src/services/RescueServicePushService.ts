@@ -6,7 +6,8 @@ import {
   isClinicallyDead, 
   Metadata,
   GMLogger,
-  GameModel
+  GameModel,
+  ECharacterHealthStateChanged
 } from 'sr2020-mm-event-engine';
 
 const RESCUE_SERVICE_UPDATE_INTERVAL = 5000; // ms
@@ -27,9 +28,12 @@ const metadata: Metadata = {
 };
 
 export class RescueServicePushService extends AbstractService {
-  informCharacterTimerId: any;
+  informCharacterTimerId: NodeJS.Timeout | null;
 
-  characterIndex: any;
+  characterIndex: Map<number, {
+    msgId: number;
+    timestamp: number;
+  }>;
 
   constructor(gameModel: GameModel, logger: GMLogger) {
     super(gameModel, logger);
@@ -54,7 +58,7 @@ export class RescueServicePushService extends AbstractService {
     if (this.informCharacterTimerId !== null) {
       clearInterval(this.informCharacterTimerId);
     }
-    this.on('characterHealthStateChanged', this.onCharacterHealthStateChanged);
+    this.off('characterHealthStateChanged', this.onCharacterHealthStateChanged);
   }
 
   // {
@@ -69,7 +73,7 @@ export class RescueServicePushService extends AbstractService {
   //     "personName": "Новый персонаж в группе Мастера и приложение !!!(Без страховки)!!!"
   //   }
   // }
-  onCharacterHealthStateChanged(data) {
+  onCharacterHealthStateChanged(data: ECharacterHealthStateChanged) {
     const { characterId, characterHealthState } = data;
     // this.logger.info(data);
     if (isClinicallyDead(characterHealthState)) {

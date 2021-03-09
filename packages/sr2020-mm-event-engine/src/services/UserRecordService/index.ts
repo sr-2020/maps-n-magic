@@ -5,11 +5,11 @@ import {
   Metadata, 
   GameModel, 
   GMLogger 
-} from '../core';
+} from '../../core';
 
-import {  } from "../core/types";
+import {  } from "../../core/types";
 
-import { UserRecord } from "../types";
+import { UserRecord } from "../../types";
 
 const arr: string[] = `37232
 37232

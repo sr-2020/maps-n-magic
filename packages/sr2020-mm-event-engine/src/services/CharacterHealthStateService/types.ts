@@ -79,7 +79,7 @@ export type ECharacterHealthStatesLoaded = Typed<'characterHealthStatesLoaded', 
   characterHealthStates: CharacterHealthStates;
 }>;
 
-export type Events = EPutCharHealthRequested |
+export type CharacterHealthStateEvents = EPutCharHealthRequested |
   EPutCharLocationRequested |
   EPutCharLocationConfirmed |
   ECharacterHealthStateChanged |

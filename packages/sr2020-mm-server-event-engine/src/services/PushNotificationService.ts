@@ -4,8 +4,20 @@ import {
   AbstractService, 
   Metadata,
   GMLogger,
-  GameModel
+  GameModel,
+  Typed
 } from 'sr2020-mm-event-engine';
+
+export interface PushNotificationArgs {
+  characterId: number;
+  title: string;
+  message: string;
+}
+
+export type PushNotification = Typed<'pushNotification', PushNotificationArgs>;
+export type EPushNotification = Typed<'pushNotification', PushNotificationArgs>;
+
+export type PushNotificationEvents = EPushNotification;
 
 const metadata: Metadata = {
   actions: [
@@ -20,17 +32,18 @@ const metadata: Metadata = {
   needRequests: []
 };
 
-export class PushNotificationService extends AbstractService {
+export class PushNotificationService extends AbstractService<PushNotificationEvents> {
   constructor(gameModel: GameModel, logger: GMLogger) {
     super(gameModel, logger);
     this.setMetadata(metadata);
   }
 
-  pushNotification(data) {
+  pushNotification(data: PushNotification) {
     // this.logger.info('pushNotification', data);
-    this.emit('pushNotification', {
-      type: 'pushNotification',
+    this.emit2({
       ...data,
+      type: 'pushNotification',
     });
   }
 }
+

@@ -5,9 +5,9 @@ import {
   Metadata, 
   GameModel, 
   GMLogger 
-} from '../core';
+} from '../../core';
 
-import { BeaconRecord } from "../types";
+import { BeaconRecord } from "../../types";
 
 type BeaconRecordsObj = { beaconRecords: BeaconRecord[] };
 type BeaconRecordObj = { beaconRecord: BeaconRecord };

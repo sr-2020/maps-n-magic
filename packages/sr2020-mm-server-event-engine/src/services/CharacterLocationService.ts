@@ -27,22 +27,22 @@ const metadata: Metadata = {
   needActions: []
 };
 export class CharacterLocationService extends AbstractService {
+  // Map(
+  //   locationId,
+  //   characterSet: Set(characterId)
+  // )
   loc2charIndex: Map<number, Set<number>>;
 
+  // Map(
+  //   characterId,
+  //   locationId
+  // )
   char2locIndex: Map<number, number>;
 
   constructor(gameModel: GameModel, logger: GMLogger) {
     super(gameModel, logger);
     this.setMetadata(metadata);
-    // Map(
-    //   locationId,
-    //   characterSet: Set(characterId)
-    // )
     this.loc2charIndex = new Map();
-    // Map(
-    //   characterId,
-    //   locationId
-    // )
     this.char2locIndex = new Map();
     this.setCharacterLocation = this.setCharacterLocation.bind(this);
   }

@@ -5,7 +5,7 @@ import {
   Metadata, 
   GameModel, 
   GMLogger 
-} from '../core';
+} from '../../core';
 
 const metadata: Metadata = {
   actions: [

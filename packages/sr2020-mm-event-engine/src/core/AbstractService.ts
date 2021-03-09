@@ -94,7 +94,8 @@ export class AbstractService<M extends GMEvent = {type:'undefined'}> {
     return this.gameModel.emit(event.type, event);
   }
 
-  on(event: string, listener: (...args: unknown[]) => void): GameModel {
+  // on(event: string, listener: (...args: unknown[]) => void): GameModel {
+  on(event: string, listener: (...args: any[]) => void): GameModel {
     if (this.gameModel === null) {
       throw new Error(`Service ${this.constructor.name} is not initialized`);
     }
@@ -104,7 +105,8 @@ export class AbstractService<M extends GMEvent = {type:'undefined'}> {
     return this.gameModel.on(event, listener);
   }
 
-  off(event: string, listener: (...args: unknown[]) => void): GameModel {
+  // off(event: string, listener: (...args: unknown[]) => void): GameModel {
+  off(event: string, listener: (...args: any[]) => void): GameModel {
     if (this.gameModel === null) {
       throw new Error(`Service ${this.constructor.name} is not initialized`);
     }

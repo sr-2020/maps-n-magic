@@ -25,10 +25,12 @@ import {
   SetCharacterHealthStates,
   GetCharacterHealthStates,
   GetCharacterHealthState,
-  Events
+  CharacterHealthStateEvents
 } from "./types";
 
-export class CharacterHealthStateService extends AbstractService<Events> {
+export * from './types';
+
+export class CharacterHealthStateService extends AbstractService<CharacterHealthStateEvents> {
   characterHealthStates: CharacterHealthStates;
 
   constructor(gameModel: GameModel, logger: GMLogger) {
