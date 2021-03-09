@@ -2,10 +2,16 @@ import * as R from 'ramda';
 
 import { GameModel } from "./GameModel";
 
-import { Metadata, GMAction, GMRequest, GMLogger } from "./types";
+import { 
+  Metadata, 
+  GMAction, 
+  GMRequest, 
+  GMLogger,
+  GMEvent
+} from "./types";
 import { stringToType, typeToGetter } from "./utils";
 
-export class AbstractService {
+export class AbstractService<M extends GMEvent = {type:'undefined'}> {
   // logger: GMLogger;
 
   // gameModel: GameModel;
@@ -75,6 +81,17 @@ export class AbstractService {
       throw new Error(`Event ${event} is not in emit events list of ${this.constructor.name}`);
     }
     return this.gameModel.emit(event, ...args);
+  }
+
+  emit2(event: M): boolean {
+    if (this.gameModel === null) {
+      throw new Error(`Service ${this.constructor.name} is not initialized`);
+    }
+    // console.log('emit', args[0]);
+    if (!this.metadata.emitEvents.includes(event.type)) {
+      throw new Error(`Event ${event} is not in emit events list of ${this.constructor.name}`);
+    }
+    return this.gameModel.emit(event.type, event);
   }
 
   on(event: string, listener: (...args: unknown[]) => void): GameModel {

@@ -4,40 +4,31 @@ import {
   AbstractService, 
   Metadata, 
   GameModel, 
-  GMLogger
-} from '../core';
+  GMLogger,
+  Req,
+  Res,
+} from '../../core';
 
 import { 
   CharacterHealthStates, 
   RawCharacterHealthState,
-  LocationRecord
-} from "../types";
+  LocationRecord,
+  CharacterHealthState
+} from "../../types";
 
+import { 
+  metadata,
+  PutCharHealth,
+  PutCharHealthConfirmed,
+  PutCharLocation,
+  PutCharLocationConfirmed,
+  SetCharacterHealthStates,
+  GetCharacterHealthStates,
+  GetCharacterHealthState,
+  Events
+} from "./types";
 
-const metadata: Metadata = {
-  actions: [
-    'putCharHealth',
-    'putCharHealthConfirmed',
-    'putCharLocation',
-    'putCharLocationConfirmed',
-    'setCharacterHealthStates',
-  ],
-  requests: [
-    'characterHealthState', 'characterHealthStates',
-  ],
-  emitEvents: [
-    'putCharHealthRequested',
-    'putCharLocationRequested',
-    'characterHealthStateChanged',
-    'characterHealthStatesLoaded',
-    'putCharLocationConfirmed',
-  ],
-  listenEvents: [],
-  needRequests: ['locationRecord'],
-  needActions: [],
-};
-
-export class CharacterHealthStateService extends AbstractService {
+export class CharacterHealthStateService extends AbstractService<Events> {
   characterHealthStates: CharacterHealthStates;
 
   constructor(gameModel: GameModel, logger: GMLogger) {
@@ -58,29 +49,31 @@ export class CharacterHealthStateService extends AbstractService {
 
   // this is a virtual service without real persistence
   // eslint-disable-next-line class-methods-use-this
-  setData() {
-  }
+  // setData() {
+  // }
 
   // eslint-disable-next-line class-methods-use-this
-  getData() {
-    return {};
-  }
+  // getData() {
+  //   return {};
+  // }
 
-  getCharacterHealthStates(): CharacterHealthStates {
+  getCharacterHealthStates(arg: Req<GetCharacterHealthStates>): Res<GetCharacterHealthStates> {
     return R.clone(this.characterHealthStates);
   }
 
-  getCharacterHealthState({ id }: { id:number }): RawCharacterHealthState {
+  getCharacterHealthState({ id }: Req<GetCharacterHealthState>): Res<GetCharacterHealthState> {
     return R.clone(this.characterHealthStates[id]);
   }
 
-  putCharHealth(action: unknown) {
-    this.emit('putCharHealthRequested', action);
+  putCharHealth(action: PutCharHealth): void {
+    // this.emit('putCharHealthRequested', action);
+    this.emit2({...action, type: 'putCharHealthRequested'});
   }
 
-  putCharLocation(action: unknown) {
+  putCharLocation(action: PutCharLocation) {
     // this.logger.info('putCharLocationRequested', action);
-    this.emit('putCharLocationRequested', action);
+    // this.emit('putCharLocationRequested', action);
+    this.emit2({...action, type: 'putCharLocationRequested'});
   }
 
   getLocation(locationId: number): LocationRecord {
@@ -90,18 +83,16 @@ export class CharacterHealthStateService extends AbstractService {
     });
   }
 
-  putCharLocationConfirmed(action: { 
-    characterId: number, 
-    locationId: number 
-  } ): void {
+  putCharLocationConfirmed(action: PutCharLocationConfirmed): void {
     const { characterId, locationId } = action;
     const prevCharacterHealthState = this.characterHealthStates[characterId];
     const locationRecord = this.getLocation(locationId);
     // this.logger.info('putCharLocationConfirmed', action);
-    this.emit('putCharLocationConfirmed', {
-      ...action,
-      type: 'putCharLocationConfirmed',
-    });
+    // this.emit('putCharLocationConfirmed', {
+    //   ...action,
+    //   type: 'putCharLocationConfirmed',
+    // });
+    this.emit2({...action, type: 'putCharLocationConfirmed'});
     if (!prevCharacterHealthState || !locationRecord) {
       return;
     }
@@ -114,22 +105,29 @@ export class CharacterHealthStateService extends AbstractService {
       ...this.characterHealthStates,
       [characterId]: characterHealthState,
     };
-    this.emit('characterHealthStateChanged', {
+    // this.emit('characterHealthStateChanged', {
+    //   characterId,
+    //   characterHealthState,
+    //   type: 'characterHealthStateChanged',
+    //   prevCharacterHealthState,
+    // });
+    this.emit2({
+      type: 'characterHealthStateChanged',
       characterId,
       characterHealthState,
-      type: 'characterHealthStateChanged',
       prevCharacterHealthState,
     });
-    this.emit('characterHealthStatesLoaded', {
+    // this.emit('characterHealthStatesLoaded', {
+    //   type: 'characterHealthStatesLoaded',
+    //   characterHealthStates: this.characterHealthStates,
+    // });
+    this.emit2({
       type: 'characterHealthStatesLoaded',
       characterHealthStates: this.characterHealthStates,
     });
   }
 
-  putCharHealthConfirmed(action: { 
-    characterId: number, 
-    characterHealthState: RawCharacterHealthState 
-  }): void {
+  putCharHealthConfirmed(action: PutCharHealthConfirmed): void {
     const { characterId, characterHealthState } = action;
     // console.log('putCharHealthConfirmed', characterId, characterHealthState);
     const prevCharacterHealthState = this.characterHealthStates[characterId];
@@ -138,24 +136,35 @@ export class CharacterHealthStateService extends AbstractService {
       ...this.characterHealthStates,
       [characterId]: characterHealthState,
     };
-    this.emit('characterHealthStateChanged', {
+    // this.emit('characterHealthStateChanged', {
+    //   ...action,
+    //   type: 'characterHealthStateChanged',
+    //   prevCharacterHealthState,
+    // });
+    this.emit2({
       ...action,
       type: 'characterHealthStateChanged',
       prevCharacterHealthState,
     });
-    this.emit('characterHealthStatesLoaded', {
+    // this.emit('characterHealthStatesLoaded', {
+    //   type: 'characterHealthStatesLoaded',
+    //   characterHealthStates: this.characterHealthStates,
+    // });
+    this.emit2({
       type: 'characterHealthStatesLoaded',
       characterHealthStates: this.characterHealthStates,
     });
     // console.log({ characterId, characterHealthState, prevCharacterHealthState });
   }
 
-  setCharacterHealthStates({ characterHealthStates }: {
-    characterHealthStates: CharacterHealthStates
-  }): void {
+  setCharacterHealthStates({ characterHealthStates }: SetCharacterHealthStates): void {
     // console.log('characterHealthStates', characterHealthStates);
     this.characterHealthStates = characterHealthStates;
-    this.emit('characterHealthStatesLoaded', {
+    // this.emit('characterHealthStatesLoaded', {
+    //   type: 'characterHealthStatesLoaded',
+    //   characterHealthStates,
+    // });
+    this.emit2({
       type: 'characterHealthStatesLoaded',
       characterHealthStates,
     });
