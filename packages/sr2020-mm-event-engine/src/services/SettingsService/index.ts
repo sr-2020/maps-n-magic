@@ -4,36 +4,27 @@ import {
   AbstractService, 
   Metadata, 
   GameModel, 
-  GMLogger 
+  GMLogger,
+  Req,
+  Res
 } from '../../core';
 
 import { SettingsCatalog, SettingsKeys, SettingsValues } from "../../types";
 
-
 // import { defaultManaOceanSettings } from '../api/constants';
 
-const metadata: Metadata = {
-  actions: [
-    'postSettings',
-    'postSettingsConfirmed',
-    'setSettings',
-    'setSettingsCatalog',
-  ],
-  requests: [
-    'settingsCatalog',
-    'settings',
-  ],
-  emitEvents: [
-    'postSettings',
-    'postSettingsRequested',
-    'settingsChanged',
-  ],
-  listenEvents: [],
-  needActions: [],
-  needRequests: [],
-};
+import { 
+  metadata,
+  GetSettingsCatalog,
+  GetSettings,
+  PostSettings,
+  PostSettingsConfirmed,
+  SetSettings,
+  SetSettingsCatalog,
+  SettingsEvents
+} from "./types";
 
-export class SettingsService extends AbstractService {
+export class SettingsService extends AbstractService<SettingsEvents> {
   settingsCatalog: SettingsCatalog;
 
   constructor(gameModel: GameModel, logger: GMLogger) {
@@ -58,17 +49,17 @@ export class SettingsService extends AbstractService {
     // this.manaOceanSettings = R.clone(defaultManaOceanSettings);
   }
 
-  getData(): {settingsCatalog: SettingsCatalog} {
-    return {
-      settingsCatalog: this.getSettingsCatalog(),
-    };
-  }
+  // getData(): {settingsCatalog: SettingsCatalog} {
+  //   return {
+  //     settingsCatalog: this.getSettingsCatalog(),
+  //   };
+  // }
 
-  getSettingsCatalog(): SettingsCatalog {
+  getSettingsCatalog(arg: Req<GetSettingsCatalog>): Res<GetSettingsCatalog> {
     return R.clone(this.settingsCatalog);
   }
 
-  setSettingsCatalog({ settingsCatalog }: {settingsCatalog: SettingsCatalog}): void {
+  setSettingsCatalog({ settingsCatalog }: SetSettingsCatalog): void {
     const prevSettingsCatalog = this.settingsCatalog;
     let list: SettingsKeys[] = [];
     if (R.is(Object, settingsCatalog)) {
@@ -89,12 +80,13 @@ export class SettingsService extends AbstractService {
     });
   }
 
-  getSettings({ name }: { name: SettingsKeys }) {
+  getSettings({ name }: Req<GetSettings>): Res<GetSettings> {
     // this.logger.info('getSettings', name, this.settingsCatalog);
-    return R.clone(this.settingsCatalog[name]);
+    const value = this.settingsCatalog[name];
+    return R.clone(value);
   }
 
-  setSettings({ name, settings }: { name: SettingsKeys, settings: SettingsValues }): void {
+  setSettings({ name, settings }: SetSettings): void {
     // this.logger.info('setSettings', name, settings);
     const areEqual = R.equals(this.settingsCatalog[name], settings);
     this.setData({ settingsCatalog: { ...this.settingsCatalog, [name]: settings } });
@@ -108,14 +100,21 @@ export class SettingsService extends AbstractService {
     }
   }
 
-  postSettings = (action: unknown): void => {
-    this.emit('postSettingsRequested', action);
+  postSettings = (action: PostSettings): void => {
+    this.emit2({
+      ...action,
+      type: 'postSettingsRequested'
+    });
   }
 
-  postSettingsConfirmed({ name, settings }: { name: SettingsKeys, settings: SettingsValues }): void {
+  postSettingsConfirmed(action: PostSettingsConfirmed): void {
+    const { name, settings } = action;
     this.settingsCatalog = { ...this.settingsCatalog, [name]: settings };
-    this.emit('postSettings', { name, settings });
-    this.emit('settingsChanged', {
+    this.emit2({ 
+      ...action,
+      type: 'postSettings'
+    });
+    this.emit2({
       type: 'settingsChanged',
       name,
       settingsCatalog: this.settingsCatalog,

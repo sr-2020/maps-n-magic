@@ -10,8 +10,19 @@ import {
   AbstractService, 
   Metadata, 
   GameModel, 
-  GMLogger 
+  GMLogger,
+  Req,
+  Res
 } from '../../core';
+
+import { 
+  metadata,
+  GetLocationRecords,
+  GetLocationRecord,
+  GetTriangulationData,
+  GetNeighborList,
+  GetNeighborOrRandomLocation,
+} from "./types";
 
 // duplicated in LocationHolder
 const defaultStyleOptions = {
@@ -22,42 +33,6 @@ const defaultStyleOptions = {
 
 const extractPolygonData = (list: LocationRecord[]): Pick<LocationRecord, 'id'|'polygon'>[] => 
   list.filter(isGeoLocation).map(R.pick(['id', 'polygon']));
-
-const metadata: Metadata = {
-  actions: [
-    'postLocationRecord',
-    'deleteLocationRecord',
-    'putLocationRecord',
-    'putLocationRecords',
-    'postLocationRecordConfirmed',
-    'deleteLocationRecordConfirmed',
-    'putLocationRecordConfirmed',
-    'putLocationRecordsConfirmed',
-    'setLocationRecords',
-  ],
-  requests: [
-    'locationRecord',
-    'locationRecords',
-    'triangulationData',
-    'neighborOrRandomLocation',
-    'neighborList',
-  ],
-  emitEvents: [
-    'postLocationRecord',
-    'deleteLocationRecord',
-    'putLocationRecord',
-    'putLocationRecords',
-    'postLocationRecordRequested',
-    'deleteLocationRecordRequested',
-    'putLocationRecordRequested',
-    'putLocationRecordsRequested',
-    'locationRecordsChanged',
-    'locationRecordsChanged2',
-  ],
-  listenEvents: [],
-  needActions: [],
-  needRequests: []
-};
 
 type LocationRecordsObj = {locationRecords: LocationRecord[]};
 type LocationRecordObj = {locationRecord: LocationRecord};
@@ -88,17 +63,17 @@ export class LocationRecordService extends AbstractService {
     });
   }
 
-  getData(): LocationRecordsObj {
-    return {
-      locationRecords: this.getLocationRecords(),
-    };
-  }
+  // getData(): LocationRecordsObj {
+  //   return {
+  //     locationRecords: this.getLocationRecords(),
+  //   };
+  // }
 
-  getLocationRecords(): LocationRecord[] {
+  getLocationRecords(request: Req<GetLocationRecords>): Res<GetLocationRecords> {
     return [...this.locationRecords];
   }
 
-  getLocationRecord({ id }: { id: number }): LocationRecord | null {
+  getLocationRecord({ id }: Req<GetLocationRecord>): Res<GetLocationRecord> {
     const locationRecord = this.locationRecords.find((br) => br.id === id);
     if (locationRecord === undefined) {
       this.logger.error('location record not found, locationId', id);
@@ -119,7 +94,7 @@ export class LocationRecordService extends AbstractService {
     });
   }
 
-  innerSetLocationRecords(locationRecords: LocationRecord[]): void {
+  private innerSetLocationRecords(locationRecords: LocationRecord[]): void {
     this.updateTriangulation(locationRecords, this.locationRecords);
     this.locationRecords = locationRecords;
     this.emit('locationRecordsChanged2', {
@@ -129,7 +104,7 @@ export class LocationRecordService extends AbstractService {
   }
 
   // eslint-disable-next-line class-methods-use-this
-  updateTriangulation(locationRecords: LocationRecord[], prevLocations: LocationRecord[]): void {
+  private updateTriangulation(locationRecords: LocationRecord[], prevLocations: LocationRecord[]): void {
     const prevData = extractPolygonData(prevLocations);
     const nextData = extractPolygonData(locationRecords);
     const { unchanged } = getArrDiff(nextData, prevData, R.prop('id'));
@@ -147,11 +122,11 @@ export class LocationRecordService extends AbstractService {
     }
   }
 
-  getTriangulationData(): TriangulationData | null {
+  getTriangulationData(request: Req<GetTriangulationData>): Res<GetTriangulationData> {
     return this.neighborsIndex;
   }
 
-  getNeighborList({ locationId }: LocationIdObj): LocationRecord[] {
+  getNeighborList({ locationId }: Req<GetNeighborList>): Res<GetNeighborList> {
     if(this.neighborsIndex === null) {
       return [];
     }
@@ -165,7 +140,9 @@ export class LocationRecordService extends AbstractService {
     return neighborList;
   }
 
-  getNeighborOrRandomLocation({ locationId }: LocationIdObj): LocationRecord | null {
+  getNeighborOrRandomLocation(
+    { locationId }: Req<GetNeighborOrRandomLocation>
+  ): Res<GetNeighborOrRandomLocation> {
     if(this.neighborsIndex === null) {
       return null;
     }
@@ -181,7 +158,10 @@ export class LocationRecordService extends AbstractService {
     if (neighborLocationId === null) {
       return null;
     }
-    return this.getLocationRecord({ id: neighborLocationId });
+    return this.getLocationRecord({ 
+      type: 'locationRecord',
+      id: neighborLocationId
+    });
   }
 
   putLocationRecord(action: unknown): void {

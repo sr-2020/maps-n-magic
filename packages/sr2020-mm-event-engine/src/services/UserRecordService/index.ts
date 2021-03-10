@@ -4,10 +4,21 @@ import {
   AbstractService, 
   Metadata, 
   GameModel, 
-  GMLogger 
+  GMLogger,
+  Req,
+  Res
 } from '../../core';
 
 import { UserRecord } from "../../types";
+
+import { 
+  metadata,
+  GetUserRecord,
+  GetUserRecords,
+  ReloadUserRecords,
+  SetUserRecords,
+  UserRecordEvents,
+} from "./types";
 
 const arr: string[] = `37232
 37232
@@ -61,22 +72,7 @@ const userDict: Record<string, HardcodedUser> = R.indexBy(R.prop('userId'), user
 
 // console.log(characterDict);
 
-const metadata: Metadata = {
-  actions: [
-    'setUserRecords',
-    'reloadUserRecords',
-  ],
-  requests: ['userRecord', 'userRecords'],
-  emitEvents: [
-    'userRecordsChanged',
-    'reloadUserRecords',
-  ],
-  listenEvents: [],
-  needActions: [],
-  needRequests: [],
-};
-
-export class UserRecordService extends AbstractService {
+export class UserRecordService extends AbstractService<UserRecordEvents> {
   userRecords: UserRecord[];
 
   constructor(gameModel: GameModel, logger: GMLogger) {
@@ -96,31 +92,31 @@ export class UserRecordService extends AbstractService {
     });
   }
 
-  getData(): { userRecords: UserRecord[] } {
-    return {
-      userRecords: this.getUserRecords(),
-    };
-  }
+  // getData(): { userRecords: UserRecord[] } {
+  //   return {
+  //     userRecords: this.getUserRecords(),
+  //   };
+  // }
 
-  getUserRecords(): UserRecord[] {
+  getUserRecords(arg: Req<GetUserRecords>): Res<GetUserRecords> {
     return [...this.userRecords];
   }
 
-  getUserRecord({ id }: {id: number}): UserRecord | undefined {
+  getUserRecord({ id }: Req<GetUserRecord>): Res<GetUserRecord> {
     const record: UserRecord | undefined = this.userRecords.find((br) => br.id === id);
     return R.clone(record);
   }
 
-  setUserRecords({ userRecords }: { userRecords: UserRecord[] }): void {
+  setUserRecords({ userRecords }: SetUserRecords): void {
     this.setData({ userRecords });
-    this.emit('userRecordsChanged', {
+    this.emit2({
       type: 'userRecordsChanged',
       userRecords,
     });
   }
 
-  reloadUserRecords(): void {
-    this.emit('reloadUserRecords', {
+  reloadUserRecords(arg: ReloadUserRecords): void {
+    this.emit2({
       type: 'reloadUserRecords',
     });
     // console.log('reloadUserRecords');
