@@ -16,15 +16,17 @@ import {
 
 export const metadata: Metadata = {
   actions: [
-    'postLocationRecord',
-    'deleteLocationRecord',
+    // single location actions
     'putLocationRecord',
-    'putLocationRecords',
-    'postLocationRecordConfirmed',
-    'deleteLocationRecordConfirmed',
     'putLocationRecordConfirmed',
-    'putLocationRecordsConfirmed',
+    'postLocationRecord',
+    'postLocationRecordConfirmed',
+    'deleteLocationRecord',
+    'deleteLocationRecordConfirmed',
+    // multi location actions
     'setLocationRecords',
+    'putLocationRecords',
+    'putLocationRecordsConfirmed',
   ],
   requests: [
     'locationRecord',
@@ -34,14 +36,16 @@ export const metadata: Metadata = {
     'neighborList',
   ],
   emitEvents: [
-    'postLocationRecord',
-    'deleteLocationRecord',
-    'putLocationRecord',
-    'putLocationRecords',
+    // single location events
     'postLocationRecordRequested',
+    'postLocationRecord',
     'deleteLocationRecordRequested',
+    'deleteLocationRecord',
     'putLocationRecordRequested',
+    'putLocationRecord',
+    // multi location events
     'putLocationRecordsRequested',
+    'putLocationRecords',
     'locationRecordsChanged',
     'locationRecordsChanged2',
   ],
@@ -66,31 +70,48 @@ export type GetNeighborOrRandomLocation = (arg: Typed<'neighborOrRandomLocation'
 
 // actions
 
-// setLocationRecords({ locationRecords }: LocationRecordsObj): void 
-// putLocationRecord(action: unknown): void {
-// putLocationRecords(action: unknown): void {
-// postLocationRecord = (action: unknown): void => {
-// deleteLocationRecord = (action: unknown): void => {
-// putLocationRecordConfirmed({ locationRecord }: LocationRecordObj): void 
-// putLocationRecordsConfirmed({ locationRecords }: LocationRecordsObj): void 
-// deleteLocationRecordConfirmed({ locationRecord }: LocationRecordObj): void 
-// postLocationRecordConfirmed({ locationRecord }: LocationRecordObj): void 
+export type PutLocationRecordArgs = {
+  locationRecord: LocationRecord;
+};
 
-// type LocationRecordsObj = {locationRecords: LocationRecord[]};
-// type LocationRecordObj = {locationRecord: LocationRecord};
-// type LocationIdObj = {locationId: number};
+export type PutLocationRecord = Typed<'setLocationRecords', PutLocationRecordArgs>;
+export type PutLocationRecordConfirmed = Typed<'putLocationRecordConfirmed', PutLocationRecordArgs>;
+export type PostLocationRecord = Typed<'postLocationRecord', PutLocationRecordArgs>;
+export type PostLocationRecordConfirmed = Typed<'postLocationRecordConfirmed', PutLocationRecordArgs>;
+export type DeleteLocationRecord = Typed<'deleteLocationRecord', PutLocationRecordArgs>;
+export type DeleteLocationRecordConfirmed = Typed<'deleteLocationRecordConfirmed', PutLocationRecordArgs>;
 
-// export type PostSettingsArgs = {
-//   name: 'manaOcean';
-//   settings: ManaOceanSettingsData;
-// } | {
-//   name: 'manaOceanEffects';
-//   settings: ManaOceanEffectSettingsData;
-// };
+export type SetLocationRecordsArgs = {
+  locationRecords: LocationRecord[]
+};
 
-// export type PostSettings = Typed<'postSettings', PostSettingsArgs>;
-// export type PostSettingsConfirmed = Typed<'postSettingsConfirmed', PostSettingsArgs>;
-// export type SetSettings = Typed<'setSettings', PostSettingsArgs>;
-// export type SetSettingsCatalog = Typed<'setSettingsCatalog', {
-//   settingsCatalog: SettingsCatalog
-// }>;
+export type SetLocationRecords = Typed<'setLocationRecords', SetLocationRecordsArgs>;
+export type PutLocationRecords = Typed<'putLocationRecords', SetLocationRecordsArgs>;
+export type PutLocationRecordsConfirmed = Typed<'putLocationRecordsConfirmed', SetLocationRecordsArgs>;
+
+// events
+
+export type EPostLocationRecordRequested = Typed<'postLocationRecordRequested', PutLocationRecordArgs>;
+export type EPostLocationRecord = Typed<'postLocationRecord', PutLocationRecordArgs>;
+export type EDeleteLocationRecordRequested = Typed<'deleteLocationRecordRequested', PutLocationRecordArgs>;
+export type EDeleteLocationRecord = Typed<'deleteLocationRecord', PutLocationRecordArgs>;
+export type EPutLocationRecordRequested = Typed<'putLocationRecordRequested', PutLocationRecordArgs>;
+export type EPutLocationRecord = Typed<'putLocationRecord', PutLocationRecordArgs>;
+
+export type EPutLocationRecordsRequested = Typed<'putLocationRecordsRequested', SetLocationRecordsArgs>;
+export type EPutLocationRecords = Typed<'putLocationRecords', SetLocationRecordsArgs>;
+export type ELocationRecordsChanged = Typed<'locationRecordsChanged', SetLocationRecordsArgs>;
+export type ELocationRecordsChanged2 = Typed<'locationRecordsChanged2', SetLocationRecordsArgs>;
+
+export type LocationRecordEvents = 
+  EPostLocationRecordRequested |
+  EPostLocationRecord |
+  EDeleteLocationRecordRequested |
+  EDeleteLocationRecord |
+  EPutLocationRecordRequested |
+  EPutLocationRecord |
+  EPutLocationRecordsRequested |
+  EPutLocationRecords |
+  ELocationRecordsChanged |
+  ELocationRecordsChanged2
+;

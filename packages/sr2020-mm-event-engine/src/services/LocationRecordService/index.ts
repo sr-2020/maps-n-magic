@@ -22,6 +22,16 @@ import {
   GetTriangulationData,
   GetNeighborList,
   GetNeighborOrRandomLocation,
+  SetLocationRecords,
+  PutLocationRecords,
+  PutLocationRecordsConfirmed,
+  PutLocationRecord,
+  PutLocationRecordConfirmed,
+  PostLocationRecord,
+  PostLocationRecordConfirmed,
+  DeleteLocationRecord,
+  DeleteLocationRecordConfirmed,
+  LocationRecordEvents
 } from "./types";
 
 // duplicated in LocationHolder
@@ -38,7 +48,7 @@ type LocationRecordsObj = {locationRecords: LocationRecord[]};
 type LocationRecordObj = {locationRecord: LocationRecord};
 type LocationIdObj = {locationId: number};
 
-export class LocationRecordService extends AbstractService {
+export class LocationRecordService extends AbstractService<LocationRecordEvents> {
   locationRecords: LocationRecord[];
 
   neighborsIndex: TriangulationData | null;
@@ -83,12 +93,13 @@ export class LocationRecordService extends AbstractService {
     return R.clone(locationRecord);
   }
 
-  setLocationRecords({ locationRecords }: LocationRecordsObj): void {
+  setLocationRecords({ locationRecords }: SetLocationRecords): void {
     this.setData({ locationRecords });
-    this.emit('locationRecordsChanged', {
+    this.emit2({
       locationRecords,
+      type: 'locationRecordsChanged'
     });
-    this.emit('locationRecordsChanged2', {
+    this.emit2({
       type: 'locationRecordsChanged2',
       locationRecords,
     });
@@ -97,7 +108,7 @@ export class LocationRecordService extends AbstractService {
   private innerSetLocationRecords(locationRecords: LocationRecord[]): void {
     this.updateTriangulation(locationRecords, this.locationRecords);
     this.locationRecords = locationRecords;
-    this.emit('locationRecordsChanged2', {
+    this.emit2({
       type: 'locationRecordsChanged2',
       locationRecords,
     });
@@ -164,31 +175,65 @@ export class LocationRecordService extends AbstractService {
     });
   }
 
-  putLocationRecord(action: unknown): void {
-    this.emit('putLocationRecordRequested', action);
+  putLocationRecord(action: PutLocationRecord): void {
+    this.emit2({
+      ...action,
+      type: 'putLocationRecordRequested'
+    });
   }
 
-  putLocationRecords(action: unknown): void {
-    this.emit('putLocationRecordsRequested', action);
-  }
-
-  postLocationRecord = (action: unknown): void => {
-    this.emit('postLocationRecordRequested', action);
-  }
-
-  deleteLocationRecord = (action: unknown): void => {
-    this.emit('deleteLocationRecordRequested', action);
-  }
-
-  putLocationRecordConfirmed({ locationRecord }: LocationRecordObj): void {
+  putLocationRecordConfirmed({ locationRecord }: PutLocationRecordConfirmed): void {
     const index = this.locationRecords.findIndex((br) => br.id === locationRecord.id);
     const updatedLocationRecords = [...this.locationRecords];
     updatedLocationRecords[index] = locationRecord;
     this.innerSetLocationRecords(updatedLocationRecords);
-    this.emit('putLocationRecord', { locationRecord });
+    this.emit2({
+      type: 'putLocationRecord',
+      locationRecord 
+    });
   }
 
-  putLocationRecordsConfirmed({ locationRecords }: LocationRecordsObj): void {
+  postLocationRecord = (action: PostLocationRecord): void => {
+    this.emit2({
+      ...action,
+      type: 'postLocationRecordRequested'
+    });
+  }
+
+  postLocationRecordConfirmed({ locationRecord }: PostLocationRecordConfirmed): void {
+    // console.log('postBeaconRecord');
+    const updatedLocationRecords = [...this.locationRecords, locationRecord];
+    this.innerSetLocationRecords(updatedLocationRecords);
+    this.emit2({ 
+      locationRecord,
+      type: 'postLocationRecord'
+    });
+  }
+
+  deleteLocationRecord = (action: DeleteLocationRecord): void => {
+    this.emit2({
+      ...action,
+      type: 'deleteLocationRecordRequested'
+    });
+  }
+
+  deleteLocationRecordConfirmed({ locationRecord }: DeleteLocationRecordConfirmed): void {
+    const updatedLocationRecords = this.locationRecords.filter((br) => br.id !== locationRecord.id);
+    this.innerSetLocationRecords(updatedLocationRecords);
+    this.emit2({ 
+      locationRecord,
+      type: 'deleteLocationRecord'
+    });
+  }
+
+  putLocationRecords(action: PutLocationRecords): void {
+    this.emit2({
+      ...action,
+      type: 'putLocationRecordsRequested'
+    });
+  }
+
+  putLocationRecordsConfirmed({ locationRecords }: PutLocationRecordsConfirmed): void {
     // console.log('locationRecords', locationRecords);
     const locationRecordsIndex = R.indexBy(R.prop('id'), locationRecords);
     const updatedLocationRecords = this.locationRecords.map((locationRecord) => {
@@ -203,19 +248,11 @@ export class LocationRecordService extends AbstractService {
     //   this.locationRecords[index] = locationRecord;
     // });
     this.innerSetLocationRecords(updatedLocationRecords);
-    this.emit('putLocationRecords', { locationRecords });
+    this.emit2({ 
+      type: 'putLocationRecords',
+      locationRecords 
+    });
   }
 
-  deleteLocationRecordConfirmed({ locationRecord }: LocationRecordObj): void {
-    const updatedLocationRecords = this.locationRecords.filter((br) => br.id !== locationRecord.id);
-    this.innerSetLocationRecords(updatedLocationRecords);
-    this.emit('deleteLocationRecord', { locationRecord });
-  }
 
-  postLocationRecordConfirmed({ locationRecord }: LocationRecordObj): void {
-    // console.log('postBeaconRecord');
-    const updatedLocationRecords = [...this.locationRecords, locationRecord];
-    this.innerSetLocationRecords(updatedLocationRecords);
-    this.emit('postLocationRecord', { locationRecord });
-  }
 }
