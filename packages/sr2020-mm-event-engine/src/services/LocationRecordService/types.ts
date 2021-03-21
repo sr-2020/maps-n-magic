@@ -1,12 +1,7 @@
 import { 
-  AbstractService, 
   Metadata, 
-  GameModel, 
-  GMLogger,
   Typed,
   TypeOnly,
-  Req,
-  Res
 } from '../../core';
 
 import { 
@@ -15,6 +10,13 @@ import {
 } from "../../types";
 
 export const metadata: Metadata = {
+  requests: [
+    'locationRecord',
+    'locationRecords',
+    'triangulationData',
+    'neighborOrRandomLocation',
+    'neighborList',
+  ],
   actions: [
     // single location actions
     'putLocationRecord',
@@ -27,13 +29,6 @@ export const metadata: Metadata = {
     'setLocationRecords',
     'putLocationRecords',
     'putLocationRecordsConfirmed',
-  ],
-  requests: [
-    'locationRecord',
-    'locationRecords',
-    'triangulationData',
-    'neighborOrRandomLocation',
-    'neighborList',
   ],
   emitEvents: [
     // single location events
@@ -70,38 +65,38 @@ export type GetNeighborOrRandomLocation = (arg: Typed<'neighborOrRandomLocation'
 
 // actions
 
-export type PutLocationRecordArgs = {
+export type SingleLocationRecord = {
   locationRecord: LocationRecord;
 };
 
-export type PutLocationRecord = Typed<'setLocationRecords', PutLocationRecordArgs>;
-export type PutLocationRecordConfirmed = Typed<'putLocationRecordConfirmed', PutLocationRecordArgs>;
-export type PostLocationRecord = Typed<'postLocationRecord', PutLocationRecordArgs>;
-export type PostLocationRecordConfirmed = Typed<'postLocationRecordConfirmed', PutLocationRecordArgs>;
-export type DeleteLocationRecord = Typed<'deleteLocationRecord', PutLocationRecordArgs>;
-export type DeleteLocationRecordConfirmed = Typed<'deleteLocationRecordConfirmed', PutLocationRecordArgs>;
+export type PutLocationRecord = Typed<'putLocationRecord', SingleLocationRecord>;
+export type PutLocationRecordConfirmed = Typed<'putLocationRecordConfirmed', SingleLocationRecord>;
+export type PostLocationRecord = Typed<'postLocationRecord', SingleLocationRecord>;
+export type PostLocationRecordConfirmed = Typed<'postLocationRecordConfirmed', SingleLocationRecord>;
+export type DeleteLocationRecord = Typed<'deleteLocationRecord', SingleLocationRecord>;
+export type DeleteLocationRecordConfirmed = Typed<'deleteLocationRecordConfirmed', SingleLocationRecord>;
 
-export type SetLocationRecordsArgs = {
+export type LocationRecordList = {
   locationRecords: LocationRecord[]
 };
 
-export type SetLocationRecords = Typed<'setLocationRecords', SetLocationRecordsArgs>;
-export type PutLocationRecords = Typed<'putLocationRecords', SetLocationRecordsArgs>;
-export type PutLocationRecordsConfirmed = Typed<'putLocationRecordsConfirmed', SetLocationRecordsArgs>;
+export type SetLocationRecords = Typed<'setLocationRecords', LocationRecordList>;
+export type PutLocationRecords = Typed<'putLocationRecords', LocationRecordList>;
+export type PutLocationRecordsConfirmed = Typed<'putLocationRecordsConfirmed', LocationRecordList>;
 
 // events
 
-export type EPostLocationRecordRequested = Typed<'postLocationRecordRequested', PutLocationRecordArgs>;
-export type EPostLocationRecord = Typed<'postLocationRecord', PutLocationRecordArgs>;
-export type EDeleteLocationRecordRequested = Typed<'deleteLocationRecordRequested', PutLocationRecordArgs>;
-export type EDeleteLocationRecord = Typed<'deleteLocationRecord', PutLocationRecordArgs>;
-export type EPutLocationRecordRequested = Typed<'putLocationRecordRequested', PutLocationRecordArgs>;
-export type EPutLocationRecord = Typed<'putLocationRecord', PutLocationRecordArgs>;
+export type EPutLocationRecordRequested = Typed<'putLocationRecordRequested', SingleLocationRecord>;
+export type EPutLocationRecord = Typed<'putLocationRecord', SingleLocationRecord>;
+export type EPostLocationRecordRequested = Typed<'postLocationRecordRequested', SingleLocationRecord>;
+export type EPostLocationRecord = Typed<'postLocationRecord', SingleLocationRecord>;
+export type EDeleteLocationRecordRequested = Typed<'deleteLocationRecordRequested', SingleLocationRecord>;
+export type EDeleteLocationRecord = Typed<'deleteLocationRecord', SingleLocationRecord>;
 
-export type EPutLocationRecordsRequested = Typed<'putLocationRecordsRequested', SetLocationRecordsArgs>;
-export type EPutLocationRecords = Typed<'putLocationRecords', SetLocationRecordsArgs>;
-export type ELocationRecordsChanged = Typed<'locationRecordsChanged', SetLocationRecordsArgs>;
-export type ELocationRecordsChanged2 = Typed<'locationRecordsChanged2', SetLocationRecordsArgs>;
+export type EPutLocationRecordsRequested = Typed<'putLocationRecordsRequested', LocationRecordList>;
+export type EPutLocationRecords = Typed<'putLocationRecords', LocationRecordList>;
+export type ELocationRecordsChanged = Typed<'locationRecordsChanged', LocationRecordList>;
+export type ELocationRecordsChanged2 = Typed<'locationRecordsChanged2', LocationRecordList>;
 
 export type LocationRecordEvents = 
   EPostLocationRecordRequested |
@@ -115,3 +110,10 @@ export type LocationRecordEvents =
   ELocationRecordsChanged |
   ELocationRecordsChanged2
 ;
+
+
+// function assertIsRegExp(arg: unknown): asserts arg is RegExp {
+//   if (! (arg instanceof RegExp)) {
+//     throw new TypeError('Not a RegExp: ' + arg);
+//   }
+// }

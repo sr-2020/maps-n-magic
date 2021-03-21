@@ -45,8 +45,6 @@ const extractPolygonData = (list: LocationRecord[]): Pick<LocationRecord, 'id'|'
   list.filter(isGeoLocation).map(R.pick(['id', 'polygon']));
 
 type LocationRecordsObj = {locationRecords: LocationRecord[]};
-type LocationRecordObj = {locationRecord: LocationRecord};
-type LocationIdObj = {locationId: number};
 
 export class LocationRecordService extends AbstractService<LocationRecordEvents> {
   locationRecords: LocationRecord[];
