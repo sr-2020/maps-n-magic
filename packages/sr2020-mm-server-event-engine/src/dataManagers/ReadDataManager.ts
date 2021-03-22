@@ -1,33 +1,31 @@
 // eslint-disable-next-line max-classes-per-file
 import * as R from 'ramda';
 
-export function capitalizeFirstLetter(string) {
+import { GameModel } from "sr2020-mm-event-engine";
+
+import { DataProvider, ReadStrategy } from "./types";
+
+export function capitalizeFirstLetter(string: string): string {
   return string.charAt(0).toUpperCase() + string.slice(1);
 }
 
 export class ReadDataManager {
-  entities: any;
+  entities: {id: number}[];
 
-  gameModel: any;
+  plural: string;
 
-  entityName: any;
+  ccEntityName: string;
 
-  plural: any;
-
-  ccEntityName: any;
-
-  dataProvider: any;
-
-  readStrategy: any;
-
-  constructor(gameModel, dataProvider, entityName, readStrategy) {
+  constructor(
+    protected gameModel: GameModel, 
+    protected dataProvider: DataProvider, 
+    protected entityName: string, 
+    private readStrategy: ReadStrategy
+  ) {
     this.entities = [];
-    this.gameModel = gameModel;
     this.entityName = entityName;
     this.plural = `${entityName}s`;
     this.ccEntityName = capitalizeFirstLetter(entityName);
-    this.dataProvider = dataProvider;
-    this.readStrategy = readStrategy;
   }
 
   initialize() {
@@ -46,6 +44,7 @@ export class ReadDataManager {
         // console.log('no changes', this.ccEntityName);
         return;
       }
+      // @ts-ignore
       this.entities = entities;
       // console.log(entities);
       this.gameModel.execute({
@@ -55,8 +54,8 @@ export class ReadDataManager {
     }).catch(this.getErrorHandler(`Error on ${this.entityName} loading`));
   }
 
-  getErrorHandler(title) {
-    return (err) => {
+  getErrorHandler(title: string) {
+    return (err: {message?: unknown}) => {
       console.error(err);
       this.gameModel.execute({
         type: 'postNotification',

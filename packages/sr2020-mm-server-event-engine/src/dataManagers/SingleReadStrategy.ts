@@ -1,6 +1,8 @@
+import { DataManager } from "./types";
+
 export class SingleReadStrategy {
   // eslint-disable-next-line class-methods-use-this
-  initialize(dataManager) {
+  initialize(dataManager: DataManager) {
     dataManager.load();
   }
 

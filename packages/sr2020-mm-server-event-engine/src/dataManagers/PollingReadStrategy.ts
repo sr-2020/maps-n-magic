@@ -1,23 +1,22 @@
+import { GameModel } from "sr2020-mm-event-engine";
+
+import { DataManager } from "./types";
+
 export class PollingReadStrategy {
-  gameModel: any;
+  dataManager: DataManager;
 
-  timeout: any;
+  loadEntityIntervalId: NodeJS.Timeout;
 
-  reloadEventName: any;
-
-  dataManager: any;
-
-  loadEntityIntervalId: any;
-
-  constructor(gameModel, timeout, reloadEventName) {
-    this.gameModel = gameModel;
-    this.timeout = timeout;
-    this.reloadEventName = reloadEventName;
+  constructor(
+    private gameModel: GameModel, 
+    private timeout: number, 
+    private reloadEventName: string
+  ) {
     this.load = this.load.bind(this);
   }
 
   // eslint-disable-next-line class-methods-use-this
-  initialize(dataManager) {
+  initialize(dataManager: DataManager): void {
     this.dataManager = dataManager;
     this.subscribe('on');
     this.loadEntityIntervalId = setInterval(() => {
@@ -30,7 +29,7 @@ export class PollingReadStrategy {
     this.dataManager.load();
   }
 
-  subscribe(action) {
+  subscribe(action: 'on' | 'off') {
     if (this.reloadEventName) {
       this.gameModel[action](this.reloadEventName, this.load);
     }

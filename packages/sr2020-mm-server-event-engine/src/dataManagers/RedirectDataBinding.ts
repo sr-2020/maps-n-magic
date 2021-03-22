@@ -1,13 +1,11 @@
 import * as R from 'ramda';
+import { GameModel } from "sr2020-mm-event-engine";
 
 export class RedirectDataBinding {
-  gameModel: any;
-
-  redirectIndex: any;
-
-  constructor(gameModel, redirectIndex) {
-    this.gameModel = gameModel;
-    this.redirectIndex = redirectIndex;
+  constructor(
+    private gameModel: GameModel, 
+    private redirectIndex: Record<string, string>
+  ) {
     this.emit = this.emit.bind(this);
     this.subscribe('on', this.gameModel);
   }
@@ -16,7 +14,7 @@ export class RedirectDataBinding {
     this.subscribe('off', this.gameModel);
   }
 
-  subscribe(action, gameModel) {
+  subscribe(action: 'on' | 'off', gameModel: GameModel) {
     this.gameModel.logger.info('redirectIndex keys', R.keys(this.redirectIndex));
     // console.log('redirectIndex keys', R.keys(this.redirectIndex));
     R.keys(this.redirectIndex).forEach((eventName) => gameModel[action](eventName, this.emit(eventName)));
@@ -25,8 +23,8 @@ export class RedirectDataBinding {
   // This is bad decision (subscribe on generated function) because function will be not removed by event emitter unsubsription.
   // Fix it in the future.
   // For now this stuff is used by single game model so it shouldn't make problems in nearest time.
-  emit(eventName) {
-    return (action) => {
+  emit(eventName: string) {
+    return (action: object) => {
       // console.log('redirect action', eventName);
       this.gameModel.execute({
         ...action,

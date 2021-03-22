@@ -1,26 +1,30 @@
 // eslint-disable-next-line max-classes-per-file
 import * as R from 'ramda';
 
+import { GMLogger, GameModel } from "sr2020-mm-event-engine";
+
+import { ReadStrategy, DataProvider } from "./types";
 import { capitalizeFirstLetter } from './ReadDataManager';
 
 export class SettingsDataManager {
-  settings: any;
+  settings: unknown;
 
-  defaultSettings: any;
+  defaultSettings: unknown;
 
-  logger: any;
+  logger: GMLogger;
 
-  gameModel: any;
+  ccSettingsName: string;
 
-  settingsName: any;
-
-  ccSettingsName: any;
-
-  dataProvider: any;
-
-  readStrategy: any;
-
-  constructor(gameModel, dataProvider, settingsName, readStrategy, rest) {
+  constructor(
+    private gameModel: GameModel, 
+    private dataProvider: DataProvider, 
+    private settingsName: string, 
+    private readStrategy: ReadStrategy, 
+    rest: {
+      defaultSettings: unknown,
+      logger: GMLogger
+    }
+  ) {
     // console.log('SettingsDataManager rest', args);
     // this.entities = [];
     if (R.isNil(rest.defaultSettings)) {
@@ -29,13 +33,13 @@ export class SettingsDataManager {
     this.settings = {};
     this.defaultSettings = rest.defaultSettings;
     this.logger = rest.logger;
-    this.gameModel = gameModel;
-    this.settingsName = settingsName;
+    // this.gameModel = gameModel;
+    // this.settingsName = settingsName;
     // this.plural = `${entityName}s`;
     this.ccSettingsName = (settingsName);
     // this.ccSettingsName = capitalizeFirstLetter(settingsName);
-    this.dataProvider = dataProvider;
-    this.readStrategy = readStrategy;
+    // this.dataProvider = dataProvider;
+    // this.readStrategy = readStrategy;
     this.onPostSettingsRequested = this.onPostSettingsRequested.bind(this);
   }
 
@@ -56,7 +60,7 @@ export class SettingsDataManager {
     this.subscribe('off', this.gameModel);
   }
 
-  subscribe(action, gameModel) {
+  subscribe(action: 'on' | 'off', gameModel: GameModel): void {
     // gameModel[action](`post${this.ccSettingsName}Requested`, this.onPostSettingsRequested);
     gameModel[action]('postSettingsRequested', this.onPostSettingsRequested);
     // gameModel[action](`put${this.ccEntityName}Requested`, this.onPutEntityRequested);
@@ -108,8 +112,8 @@ export class SettingsDataManager {
     // }).catch(this.getErrorHandler(`Error on ${this.settingsName} loading`));
   }
 
-  getErrorHandler(title) {
-    return (err) => {
+  getErrorHandler(title: string) {
+    return (err: {message?: unknown}) => {
       console.error(err);
       this.gameModel.execute({
         type: 'postNotification',
@@ -120,7 +124,7 @@ export class SettingsDataManager {
     };
   }
 
-  onPostSettingsRequested({ name, settings }) {
+  onPostSettingsRequested({ name, settings }: {name: string, settings: unknown}) {
     if (name !== this.ccSettingsName) {
       return;
     }
