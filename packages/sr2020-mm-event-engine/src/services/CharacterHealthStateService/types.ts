@@ -10,7 +10,7 @@ import {
   RawCharacterHealthState,
 } from "../../types";
 
-export const metadata: Metadata = {
+export const chssMetadata: Metadata = {
   actions: [
     'putCharHealth',
     'putCharHealthConfirmed',

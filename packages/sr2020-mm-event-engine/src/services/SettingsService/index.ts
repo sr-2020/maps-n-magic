@@ -14,7 +14,7 @@ import { SettingsCatalog, SettingsKeys, SettingsValues } from "../../types";
 // import { defaultManaOceanSettings } from '../api/constants';
 
 import { 
-  metadata,
+  ssMetadata,
   GetSettingsCatalog,
   GetSettings,
   PostSettings,
@@ -29,7 +29,7 @@ export class SettingsService extends AbstractService<SettingsEvents> {
 
   constructor(gameModel: GameModel, logger: GMLogger) {
     super(gameModel, logger);
-    this.setMetadata(metadata);
+    this.setMetadata(ssMetadata);
     this.settingsCatalog = {
       // manaOcean: R.clone(defaultManaOceanSettings),
     };

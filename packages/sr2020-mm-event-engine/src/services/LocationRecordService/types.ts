@@ -9,7 +9,7 @@ import {
   TriangulationData
 } from "../../types";
 
-export const metadata: Metadata = {
+export const lrsMetadata: Metadata = {
   requests: [
     'locationRecord',
     'locationRecords',

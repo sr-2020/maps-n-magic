@@ -12,7 +12,7 @@ import {
 import { BeaconRecord } from "../../types";
 
 import { 
-  metadata,
+  brsMetadata,
   GetBeaconRecords,
   PutBeaconRecord,
   PutBeaconRecordConfirmed,
@@ -31,7 +31,7 @@ export class BeaconRecordService extends AbstractService<BeaconRecordEvents> {
 
   constructor(gameModel: GameModel, logger: GMLogger) {
     super(gameModel, logger);
-    this.setMetadata(metadata);
+    this.setMetadata(brsMetadata);
     this.beaconRecords = [];
   }
 

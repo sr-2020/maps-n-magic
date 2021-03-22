@@ -6,11 +6,9 @@ import {
 
 import { 
   BeaconRecord
-  // LocationRecord,
-  // TriangulationData
 } from "../../types";
 
-export const metadata: Metadata = {
+export const brsMetadata: Metadata = {
   requests: ['beaconRecords'],
   actions: [
     'putBeaconRecord',

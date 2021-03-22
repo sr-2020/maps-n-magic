@@ -5,28 +5,21 @@ import {
   Metadata,
   GMLogger,
   GameModel,
-  CharacterLocationData
+  CharacterLocationData,
+  Req,
+  Res
 } from 'sr2020-mm-event-engine';
 
-const metadata: Metadata = {
-  actions: [
-    'setAllCharacterLocations',
-    'setCharacterLocation',
-    'emitCharacterLocationChanged',
-  ],
-  requests: [
-    'charactersFromLocation',
-  ],
-  emitEvents: [
-    'characterLocationChanged',
-  ],
-  listenEvents: [
-  ],
-  needRequests: [
-  ],
-  needActions: []
-};
-export class CharacterLocationService extends AbstractService {
+import { 
+  clMetadata,
+  GetCharactersFromLocation,
+  SetAllCharacterLocations,
+  SetCharacterLocation,
+  EmitCharacterLocationChanged,
+  CharacterLocationEvents
+} from "./types";
+
+export class CharacterLocationService extends AbstractService<CharacterLocationEvents> {
   // Map(
   //   locationId,
   //   characterSet: Set(characterId)
@@ -41,27 +34,29 @@ export class CharacterLocationService extends AbstractService {
 
   constructor(gameModel: GameModel, logger: GMLogger) {
     super(gameModel, logger);
-    this.setMetadata(metadata);
+    this.setMetadata(clMetadata);
     this.loc2charIndex = new Map();
     this.char2locIndex = new Map();
     this.setCharacterLocation = this.setCharacterLocation.bind(this);
   }
 
-  setAllCharacterLocations({ characterLocations }: {
-    characterLocations: CharacterLocationData[]
-  }): void {
-    characterLocations.forEach(this.setCharacterLocation);
+  setAllCharacterLocations({ characterLocations }: SetAllCharacterLocations): void {
+    characterLocations.forEach(el => this.setCharacterLocation({
+      type: 'setCharacterLocation',
+      ...el
+    }));
 
     // this.logger.info(characterLocations);
     // this.logger.info(this.loc2charIndex);
     // this.logger.info(this.char2locIndex);
   }
 
-  getCharactersFromLocation({ locationId }): Set<number> {
+  getCharactersFromLocation(request: Req<GetCharactersFromLocation>): Res<GetCharactersFromLocation> {
+    const { locationId } = request;
     return this.loc2charIndex.get(locationId) || new Set();
   }
 
-  setCharacterLocation({ characterId, locationId, prevLocationId }: CharacterLocationData): void {
+  setCharacterLocation({ characterId, locationId, prevLocationId }: SetCharacterLocation): void {
     const prevLocationId2 = this.char2locIndex.get(characterId);
     if (prevLocationId2 === locationId) {
       return;
@@ -80,7 +75,7 @@ export class CharacterLocationService extends AbstractService {
     // this.logger.info('loc2charIndex', this.loc2charIndex);
     // this.logger.info('char2locIndex', this.char2locIndex);
     // this.logger.info({ characterId, locationId, prevLocationId });
-    this.emit('characterLocationChanged', {
+    this.emit2({
       type: 'characterLocationChanged',
       locationId,
       characterId,
@@ -88,8 +83,8 @@ export class CharacterLocationService extends AbstractService {
     });
   }
 
-  emitCharacterLocationChanged({ characterId }) {
-    this.emit('characterLocationChanged', {
+  emitCharacterLocationChanged({ characterId }: EmitCharacterLocationChanged): void {
+    this.emit2({
       type: 'characterLocationChanged',
       locationId: this.char2locIndex.get(characterId) || null,
       characterId,

@@ -3,6 +3,7 @@ import winston from 'winston';
 import DailyRotateFile from 'winston-daily-rotate-file';
 import util from 'util';
 import * as R from 'ramda';
+import { GMLogger } from "sr2020-mm-event-engine";
 
 const {
   combine, timestamp, label, printf,
@@ -20,20 +21,24 @@ const myFormat = printf(({
   return `${timestamp} ${level}: ${stack || ''}`;
 });
 
-function objectConverter(key, value) {
+function objectConverter(key: unknown, value: unknown) {
   if (value instanceof Map || value instanceof Set) return [...value];
   return value;
 }
 
-function transform(info, opts) {
+function transform(info: {
+  message: string,
+}, opts: unknown) {
   // console.log('info', info);
   // console.log('opts', opts);
   // console.log('this', this);
+  // @ts-ignore
   const args = info[Symbol.for('splat')];
   // if (args) { info.message = util.format(info.message, ...args); }
   let arr = [info.message];
   if (args) {
     arr = [info.message, ...args];
+    // @ts-ignore
     info[Symbol.for('splat')] = [];
   }
   info.message = arr.map((el) => {
@@ -56,6 +61,7 @@ function utilFormatter() { return { transform }; }
 const customFormat = combine(
   // label({ label: 'root' }),
   timestamp({ format: 'YYYY-MM-DD HH:mm:ss.SSS' }),
+  // @ts-ignore
   utilFormatter(),
   myFormat,
 );
@@ -116,7 +122,7 @@ winstonLogger.stream = {
   },
 };
 
-function customChild(logger, defaultMeta) {
+function customChild(logger: GMLogger, defaultMeta: object) {
   const childLogger = logger.child();
   childLogger.defaultMeta = { ...logger.defaultMeta, ...defaultMeta };
   childLogger.customChild = customChild;

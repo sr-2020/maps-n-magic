@@ -21,7 +21,9 @@ export interface GMLogger {
   info: (...args: unknown[]) => void;
   warn: (...args: unknown[]) => void;
   error: (...args: unknown[]) => void;
-  customChild?: (baseLogger: GMLogger, ...args: unknown[]) => GMLogger;
+  customChild?: (baseLogger: GMLogger, defaultMeta: object) => GMLogger;
+  child?: (options?: Object) => GMLogger;
+  defaultMeta?: object;
 }
 
 export interface Metadata {

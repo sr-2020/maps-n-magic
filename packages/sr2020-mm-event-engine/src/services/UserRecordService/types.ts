@@ -8,7 +8,7 @@ import {
   UserRecord
 } from "../../types";
 
-export const metadata: Metadata = {
+export const urMetadata: Metadata = {
   actions: [
     'setUserRecords',
     'reloadUserRecords',

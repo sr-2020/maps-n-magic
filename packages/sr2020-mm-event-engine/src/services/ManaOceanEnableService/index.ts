@@ -11,7 +11,7 @@ import {
   Res
 } from '../../core';
 
-const metadata: Metadata = {
+const moeMetadata: Metadata = {
   actions: [
     'setEnableManaOcean',
     'enableManaOceanConfirmed',
@@ -51,7 +51,7 @@ export class ManaOceanEnableService extends AbstractService<EnableManaOceanEvent
 
   constructor(gameModel: GameModel, logger: GMLogger) {
     super(gameModel, logger);
-    this.setMetadata(metadata);
+    this.setMetadata(moeMetadata);
     this.enableManaOcean = true;
   }
 

@@ -13,7 +13,7 @@ import {
   ManaOceanEffectSettingsData,
 } from "../../types";
 
-export const metadata: Metadata = {
+export const ssMetadata: Metadata = {
   actions: [
     'postSettings',
     'postSettingsConfirmed',

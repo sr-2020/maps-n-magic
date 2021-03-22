@@ -27,7 +27,7 @@ import {
 
 import { 
   SpellCast,
-} from "../types";
+} from "../../types";
 
 // import { manaOceanEffectSettings } from '../api/constants';
 

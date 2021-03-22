@@ -12,7 +12,7 @@ import {
 import { UserRecord } from "../../types";
 
 import { 
-  metadata,
+  urMetadata,
   GetUserRecord,
   GetUserRecords,
   ReloadUserRecords,
@@ -77,7 +77,7 @@ export class UserRecordService extends AbstractService<UserRecordEvents> {
 
   constructor(gameModel: GameModel, logger: GMLogger) {
     super(gameModel, logger);
-    this.setMetadata(metadata);
+    this.setMetadata(urMetadata);
     this.userRecords = [];
   }
 

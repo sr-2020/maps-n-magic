@@ -43,7 +43,7 @@ import { CharacterLocationListener } from '../api/position/CharacterLocationList
 import { SpellCastsListener } from '../api/spellCasts/SpellCastsListener';
 import { PushNotificationEmitter } from '../api/pushNotificationEmitter';
 
-const services: typeof AbstractService[] = [
+const services = [
   LocationRecordService,
   BeaconRecordService,
   NotificationService,
@@ -60,8 +60,9 @@ const services: typeof AbstractService[] = [
 ];
 
 // eslint-disable-next-line max-lines-per-function
-export function makeGameModel(database) {
+export function makeGameModel() {
   // const gameServer = new EventEngine(services, console);
+  // @ts-ignore
   const gameServer = new EventEngine(services, winstonLogger);
   // gameServer.setData(database);
   const gameModel = gameServer.getGameModel();

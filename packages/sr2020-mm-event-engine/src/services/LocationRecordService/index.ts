@@ -16,7 +16,7 @@ import {
 } from '../../core';
 
 import { 
-  metadata,
+  lrsMetadata,
   GetLocationRecords,
   GetLocationRecord,
   GetTriangulationData,
@@ -53,7 +53,7 @@ export class LocationRecordService extends AbstractService<LocationRecordEvents>
 
   constructor(gameModel: GameModel, logger: GMLogger) {
     super(gameModel, logger);
-    this.setMetadata(metadata);
+    this.setMetadata(lrsMetadata);
     this.locationRecords = [];
     this.neighborsIndex = null;
   }

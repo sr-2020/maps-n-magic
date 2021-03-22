@@ -17,7 +17,7 @@ import {
 } from "../../types";
 
 import { 
-  metadata,
+  chssMetadata,
   PutCharHealth,
   PutCharHealthConfirmed,
   PutCharLocation,
@@ -35,7 +35,7 @@ export class CharacterHealthStateService extends AbstractService<CharacterHealth
 
   constructor(gameModel: GameModel, logger: GMLogger) {
     super(gameModel, logger);
-    this.setMetadata(metadata);
+    this.setMetadata(chssMetadata);
     // {
     //   "51935": {
     //     "locationId": 3217,

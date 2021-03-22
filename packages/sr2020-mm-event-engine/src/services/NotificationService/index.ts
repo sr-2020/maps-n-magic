@@ -19,7 +19,7 @@ export type EPostNotification = Typed<'postNotification', PostNotificationArgs>;
 
 export type PostNotificationEvents = EPostNotification;
 
-const metadata: Metadata = {
+const nsMetadata: Metadata = {
   actions: [
     'postNotification',
   ],
@@ -35,7 +35,7 @@ const metadata: Metadata = {
 export class NotificationService extends AbstractService<PostNotificationEvents> {
   constructor(gameModel: GameModel, logger: GMLogger) {
     super(gameModel, logger);
-    this.setMetadata(metadata);
+    this.setMetadata(nsMetadata);
   }
 
   postNotification({ title = '', message = '', kind = 'info' }: PostNotification): void {
