@@ -1,6 +1,10 @@
 import fetch from 'isomorphic-fetch';
 
-export const gettable = (state) => ({
+export interface Gettable<T> {
+  get(): Promise<T[]>;
+}
+
+export const gettable = (state: {url: string}) => ({
   async get() {
     const response = await fetch(`${state.url}?limit=200`);
     if (!response.ok) {
@@ -12,7 +16,11 @@ export const gettable = (state) => ({
   },
 });
 
-export const getSettings = (state) => ({
+export interface GetSettings<T> {
+  get(): Promise<T>;
+}
+
+export const getSettings = (state: {url: string}) => ({
   async get() {
     const response = await fetch(state.url);
     if (!response.ok) {
@@ -72,8 +80,12 @@ export const getSettings = (state) => ({
 //     body: JSON.stringify({"test":100500})
 // })
 
-export const postSettings = (state) => ({
-  async post(settings) {
+export interface PostSettings<T> {
+  post(settings: T): Promise<T>;
+}
+
+export const postSettings = (state: {url: string}) => ({
+  async post(settings: unknown) {
     const response = await fetch(state.url, {
       method: 'POST',
       // headers: {
@@ -97,13 +109,17 @@ export const postSettings = (state) => ({
   },
 });
 
-export const postable = (state) => ({
-  async post({ props }) {
+export interface Postable<T> {
+  post({props}: {props: T}): Promise<T>;
+}
+
+export const postable = <T>(state: {url: string, defaultObject: T}) => ({
+  async post({ props }: {props: T}) {
     const response = await fetch(state.url, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json;charset=utf-8',
-        'X-User-Id': 1,
+        'X-User-Id': '1',
       },
       body: JSON.stringify({
         ...state.defaultObject,
@@ -120,13 +136,17 @@ export const postable = (state) => ({
   },
 });
 
-export const puttable = (state) => ({
-  async put({ id, props }) {
+export interface Puttable<T> {
+  put({id, props}: {id: number, props: T}): Promise<T>;
+}
+
+export const puttable = <T>(state: {url: string}) => ({
+  async put({ id, props }: {id: number, props: T}) {
     const response = await fetch(`${state.url}/${id}`, {
       method: 'PUT',
       headers: {
         'Content-Type': 'application/json;charset=utf-8',
-        'X-User-Id': 1,
+        'X-User-Id': '1',
       },
       body: JSON.stringify({
         ...props,
@@ -142,13 +162,17 @@ export const puttable = (state) => ({
   },
 });
 
-export const multiPuttable = (state) => ({
-  async putMultiple({ updates }) {
+export interface MultiPuttable<T> {
+  putMultiple({updates}: {updates: T[]}): Promise<T>;
+}
+
+export const multiPuttable = <T>(state: {url: string}) => ({
+  async putMultiple({ updates }: {updates: T}) {
     const response = await fetch(`${state.url}`, {
       method: 'PUT',
       headers: {
         'Content-Type': 'application/json;charset=utf-8',
-        'X-User-Id': 1,
+        'X-User-Id': '1',
       },
       body: JSON.stringify(updates),
     });
@@ -162,13 +186,17 @@ export const multiPuttable = (state) => ({
   },
 });
 
-export const deletable = (state) => ({
-  async delete({ id }) {
+export interface Deletable<T> {
+  deletable({id}: {id: number}): Promise<T>;
+}
+
+export const deletable = (state: {url: string}) => ({
+  async delete({ id }: {id: number}) {
     const response = await fetch(`${state.url}/${id}`, {
       method: 'DELETE',
       headers: {
         'Content-Type': 'application/json;charset=utf-8',
-        'X-User-Id': 1,
+        'X-User-Id': '1',
       },
     });
 

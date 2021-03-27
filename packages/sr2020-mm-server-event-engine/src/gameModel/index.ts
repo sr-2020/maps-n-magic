@@ -68,6 +68,25 @@ export function makeGameModel() {
   const gameModel = gameServer.getGameModel();
   // fillGameModelWithBots(gameModel);
 
+  // const {
+  //   gameModel, entityName, DataProvider, DataManager, ReadStrategy, ReadStrategyArgs = [],
+  // } = args;
+
+  // this.dataManager = new DataManager(
+  //   gameModel,
+  //   new DataProvider(),
+  //   entityName,
+  //   new ReadStrategy(gameModel, ...ReadStrategyArgs),
+  //   args,
+  // );
+  // this.dataManager.initialize();
+  const beaconRecordDataBinding = new CrudDataManager(
+    gameModel,
+    new BeaconRecordProvider(),
+    'beaconRecord',
+    new PollingReadStrategy(gameModel, 15000)
+  );
+
   gameServer.addDataBinding(new DataBinding({
     gameModel,
     entityName: 'beaconRecord',

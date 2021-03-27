@@ -28,7 +28,7 @@ export interface BeaconRecord {
   // location_id: null
   location_id: number;
   // ssid: "DF:8C:6D:50:E0:16"
-  ssid: number;
+  ssid: string;
 }
 
 // I mix two types of points - usual coordinates and meter coordinates.

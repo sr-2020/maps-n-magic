@@ -1,3 +1,11 @@
+import { 
+  BeaconRecord,
+  LocationRecordOptions,
+  LocationRecord,
+  ManaOceanEffectSettingsData,
+  ManaOceanSettingsData
+} from "sr2020-mm-event-engine";
+
 export const beaconsUrl = 'https://position.evarun.ru/api/v1/beacons';
 export const locationsUrl = 'https://position.evarun.ru/api/v1/locations';
 export const usersUrl = 'https://position.evarun.ru/api/v1/users';
@@ -11,7 +19,7 @@ export const pushServiceUrl = 'https://push.evarun.ru/send_notification';
 // const url = 'https://position.evarun.ru/api/v1/users';
 // const locationUrl = 'https://position.evarun.ru/api/v1/locations';
 
-export const defaultBeaconRecord = {
+export const defaultBeaconRecord: Omit<BeaconRecord, 'id'> = {
   ssid: '',
   bssid: '',
   location_id: null,
@@ -21,24 +29,26 @@ export const defaultBeaconRecord = {
 };
 
 // duplicated in LocationRecordService
-const defaultLocationStyleOptions = {
+const defaultLocationStyleOptions: LocationRecordOptions = {
   color: '#3388ff',
   weight: 3,
   fillOpacity: 0.2,
+  manaLevel: 0,
+  effectList: []
 };
 
-export const defaultLocationRecord = {
+export const defaultLocationRecord: Omit<LocationRecord, 'id'> = {
   label: '',
-  created_at: null,
-  updated_at: null,
-  polygon: [],
+  // created_at: null,
+  // updated_at: null,
+  polygon: [[]],
   options: {
     ...defaultLocationStyleOptions,
   },
   layer_id: 1,
 };
 
-export const defaultManaOceanSettings = {
+export const defaultManaOceanSettings: ManaOceanSettingsData = {
   minManaLevel: 1,
   neutralManaLevel: 4,
   maxManaLevel: 7,
@@ -48,10 +58,10 @@ export const defaultManaOceanSettings = {
   invisibleMoonPeriod: 270,
   invisibleMoonNewMoonTime: 120,
   invisibleMoonManaTideHeight: 1,
-  moscowTime: 0,
+  // moscowTime: 0,
 };
 
-export const manaOceanEffectSettings = {
+export const manaOceanEffectSettings: ManaOceanEffectSettingsData = {
   massacreDelay: 60000 * 15,
   massacreDuration: 60000 * 30,
   // massacreDelay: 15000,

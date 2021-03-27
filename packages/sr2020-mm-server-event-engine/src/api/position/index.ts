@@ -1,8 +1,25 @@
 // eslint-disable-next-line max-classes-per-file
 import * as R from 'ramda';
-import { fetchWithTimeout } from 'sr2020-mm-event-engine';
+import { 
+  fetchWithTimeout,
+  BeaconRecord,
+  LocationRecord
+} from 'sr2020-mm-event-engine';
 import {
-  gettable, postable, puttable, deletable, postSettings, getSettings, multiPuttable,
+  gettable, 
+  postable, 
+  puttable, 
+  deletable, 
+  postSettings, 
+  getSettings, 
+  multiPuttable,
+  Gettable,
+  Postable,
+  Puttable,
+  Deletable,
+  PostSettings,
+  GetSettings,
+  MultiPuttable
 } from './apiInterfaces';
 
 import {
@@ -16,15 +33,8 @@ import {
   defaultLocationRecord,
 } from '../constants';
 
-class ManageableResourceProvider {
-  url: any;
-
-  defaultObject: any;
-
-  constructor(url, defaultObject) {
-    this.url = url;
-    this.defaultObject = defaultObject;
-
+class ManageableResourceProvider<T> implements Gettable<T>, Postable<T>, Puttable<T>, Deletable<T> {
+  constructor(public url: string, public defaultObject: T) {
     return Object.assign(
       this,
       gettable(this),
@@ -33,17 +43,18 @@ class ManageableResourceProvider {
       deletable(this),
     );
   }
+  // all methods will be created by object assign
+  deletable({ id }: { id: number; }): Promise<T> { throw new Error('Method not implemented.'); }
+  put({ id, props }: {
+    id: number;
+    props: T;
+  }): Promise<T> { throw new Error('Method not implemented.'); }
+  post({ props }: { props: T; }): Promise<T> { throw new Error('Method not implemented.'); }
+  get(): Promise<T[]> { throw new Error('Method not implemented.'); }
 }
 
-class ManageablePlusResourceProvider {
-  url: any;
-
-  defaultObject: any;
-
-  constructor(url, defaultObject) {
-    this.url = url;
-    this.defaultObject = defaultObject;
-
+class ManageablePlusResourceProvider<T> implements Gettable<T>, Postable<T>, Puttable<T>, Deletable<T>, MultiPuttable<T>  {
+  constructor(public url: string, public defaultObject: T) {
     return Object.assign(
       this,
       gettable(this),
@@ -53,14 +64,19 @@ class ManageablePlusResourceProvider {
       multiPuttable(this),
     );
   }
+  // all methods will be created by object assign
+  deletable({ id }: { id: number; }): Promise<T> { throw new Error('Method not implemented.'); }
+  put({ id, props }: {
+    id: number;
+    props: T;
+  }): Promise<T> { throw new Error('Method not implemented.'); }
+  post({ props }: { props: T; }): Promise<T> { throw new Error('Method not implemented.'); }
+  get(): Promise<T[]> { throw new Error('Method not implemented.'); }
+  putMultiple({ updates }: { updates: T[]; }): Promise<T> { throw new Error('Method not implemented.');}
 }
 
 class SettingsResourceProvider {
-  url: any;
-
-  constructor(url) {
-    this.url = url;
-
+  constructor(public url: string) {
     return Object.assign(
       this,
       postSettings(this),
@@ -70,11 +86,7 @@ class SettingsResourceProvider {
 }
 
 class GettableResourceProvider {
-  url: any;
-
-  constructor(url) {
-    this.url = url;
-
+  constructor(public url: string) {
     return Object.assign(
       this,
       gettable(this),
@@ -82,13 +94,14 @@ class GettableResourceProvider {
   }
 }
 
-export class RemoteBeaconRecordProvider extends ManageableResourceProvider {
+export class RemoteBeaconRecordProvider extends ManageableResourceProvider<Omit<BeaconRecord, 'id'>>
+   {
   constructor() {
     super(beaconsUrl, defaultBeaconRecord);
   }
 }
 
-export class RemoteLocationRecordProvider extends ManageablePlusResourceProvider {
+export class RemoteLocationRecordProvider extends ManageablePlusResourceProvider<Omit<LocationRecord, 'id'>> {
   constructor() {
     super(locationsUrl, defaultLocationRecord);
   }
@@ -122,12 +135,12 @@ export class ManaOceanEffectSettingsProvider extends SettingsResourceProvider {
   }
 }
 
-export async function innerPostUserPosition(characterId, beacon) {
+export async function innerPostUserPosition(characterId: number, beacon: BeaconRecord) {
   return fetchWithTimeout(positionUrl, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json;charset=utf-8',
-      'X-User-Id': characterId,
+      'X-User-Id': String(characterId),
     },
     body: JSON.stringify({
       beacons: [{

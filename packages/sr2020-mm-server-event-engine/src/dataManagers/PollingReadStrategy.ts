@@ -10,7 +10,7 @@ export class PollingReadStrategy {
   constructor(
     private gameModel: GameModel, 
     private timeout: number, 
-    private reloadEventName: string
+    private reloadEventName?: string
   ) {
     this.load = this.load.bind(this);
   }
