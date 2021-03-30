@@ -1,11 +1,11 @@
 // Imports the Google Cloud client library
 // const { PubSub } = require('@google-cloud/pubsub');
-import { PubSub } from '@google-cloud/pubsub';
+import { PubSub, Message } from '@google-cloud/pubsub';
 // import moment from 'moment-timezone';
 // import { bodyConditions } from 'sr2020-mm-data/gameConstants';
 // import { randomInteger } from '../../utils';
 
-let subscriptionName;
+let subscriptionName: string;
 
 if (process.env.NODE_ENV === 'production') {
   subscriptionName = 'mm-rescue-service-prod';
@@ -19,16 +19,23 @@ const timeout = 60;
 // Creates a client; cache this for further use
 const pubSubClient = new PubSub();
 
-export function listenHealthChanges(callback, simulateMessages = false) {
+export type HealthChangeMessage = {
+  characterId: number,
+  stateFrom: string, 
+  stateTo: string, 
+  timestamp: number,
+}
+
+export function listenHealthChanges(callback: (msg: HealthChangeMessage) => void, simulateMessages = false) {
   // References an existing subscription
   const subscription = pubSubClient.subscription(subscriptionName);
 
   // Create an event handler to handle messages
   let messageCount = 0;
-  const messageHandler = (message) => {
+  const messageHandler = (message: Message) => {
     // console.log(`Received message ${message.id}:`);
     // console.log(`\tData: ${message.data}`);
-    const parsedData = JSON.parse(message.data);
+    const parsedData: HealthChangeMessage = JSON.parse(message.data.toString());
     // console.log(`Data: ${JSON.stringify(parsedData, null, '  ')}`);
     // console.log(`\tAttributes: ${message.attributes}`);
     messageCount += 1;

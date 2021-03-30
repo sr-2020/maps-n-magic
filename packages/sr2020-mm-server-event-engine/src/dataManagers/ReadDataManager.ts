@@ -5,12 +5,18 @@ import { GameModel } from "sr2020-mm-event-engine";
 
 import { DataProvider, ReadStrategy } from "./types";
 
+import {
+  ManageablePlusResourceProvider,
+  ManageableResourceProvider,
+  GettableResourceProvider
+} from '../api/position';
+
 export function capitalizeFirstLetter(string: string): string {
   return string.charAt(0).toUpperCase() + string.slice(1);
 }
 
-export class ReadDataManager {
-  entities: {id: number}[];
+export class ReadDataManager<Entity, T extends GettableResourceProvider<Entity>> {
+  entities: Entity[];
 
   plural: string;
 
@@ -18,7 +24,7 @@ export class ReadDataManager {
 
   constructor(
     protected gameModel: GameModel, 
-    protected dataProvider: DataProvider, 
+    protected dataProvider: T, 
     protected entityName: string, 
     private readStrategy: ReadStrategy
   ) {
@@ -44,7 +50,6 @@ export class ReadDataManager {
         // console.log('no changes', this.ccEntityName);
         return;
       }
-      // @ts-ignore
       this.entities = entities;
       // console.log(entities);
       this.gameModel.execute({

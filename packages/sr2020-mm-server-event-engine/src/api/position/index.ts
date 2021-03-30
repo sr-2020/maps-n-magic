@@ -3,7 +3,10 @@ import * as R from 'ramda';
 import { 
   fetchWithTimeout,
   BeaconRecord,
-  LocationRecord
+  LocationRecord,
+  UserRecord,
+  ManaOceanEffectSettingsData,
+  ManaOceanSettingsData
 } from 'sr2020-mm-event-engine';
 import {
   gettable, 
@@ -33,8 +36,8 @@ import {
   defaultLocationRecord,
 } from '../constants';
 
-class ManageableResourceProvider<T> implements Gettable<T>, Postable<T>, Puttable<T>, Deletable<T> {
-  constructor(public url: string, public defaultObject: T) {
+export class ManageableResourceProvider<T> implements Gettable<T>, Postable<T>, Puttable<T>, Deletable<T> {
+  constructor(public url: string, public defaultObject: Omit<T, 'id'>) {
     return Object.assign(
       this,
       gettable(this),
@@ -44,17 +47,17 @@ class ManageableResourceProvider<T> implements Gettable<T>, Postable<T>, Puttabl
     );
   }
   // all methods will be created by object assign
-  deletable({ id }: { id: number; }): Promise<T> { throw new Error('Method not implemented.'); }
+  delete({ id }: { id: number; }): Promise<T> { throw new Error('Method not implemented.'); }
   put({ id, props }: {
     id: number;
     props: T;
   }): Promise<T> { throw new Error('Method not implemented.'); }
-  post({ props }: { props: T; }): Promise<T> { throw new Error('Method not implemented.'); }
+  post({ props }: { props: Omit<T, 'id'>; }): Promise<T> { throw new Error('Method not implemented.'); }
   get(): Promise<T[]> { throw new Error('Method not implemented.'); }
 }
 
-class ManageablePlusResourceProvider<T> implements Gettable<T>, Postable<T>, Puttable<T>, Deletable<T>, MultiPuttable<T>  {
-  constructor(public url: string, public defaultObject: T) {
+export class ManageablePlusResourceProvider<T> implements Gettable<T>, Postable<T>, Puttable<T>, Deletable<T>, MultiPuttable<T>  {
+  constructor(public url: string, public defaultObject: Omit<T, 'id'>) {
     return Object.assign(
       this,
       gettable(this),
@@ -65,17 +68,17 @@ class ManageablePlusResourceProvider<T> implements Gettable<T>, Postable<T>, Put
     );
   }
   // all methods will be created by object assign
-  deletable({ id }: { id: number; }): Promise<T> { throw new Error('Method not implemented.'); }
+  delete({ id }: { id: number; }): Promise<T> { throw new Error('Method not implemented.'); }
   put({ id, props }: {
     id: number;
     props: T;
   }): Promise<T> { throw new Error('Method not implemented.'); }
-  post({ props }: { props: T; }): Promise<T> { throw new Error('Method not implemented.'); }
+  post({ props }: { props: Omit<T, 'id'>; }): Promise<T> { throw new Error('Method not implemented.'); }
   get(): Promise<T[]> { throw new Error('Method not implemented.'); }
-  putMultiple({ updates }: { updates: T[]; }): Promise<T> { throw new Error('Method not implemented.');}
+  putMultiple({ updates }: { updates: T[]; }): Promise<T[]> { throw new Error('Method not implemented.');}
 }
 
-class SettingsResourceProvider {
+export class SettingsResourceProvider<T> implements PostSettings<T>, GetSettings<T> {
   constructor(public url: string) {
     return Object.assign(
       this,
@@ -83,31 +86,35 @@ class SettingsResourceProvider {
       getSettings(this),
     );
   }
+  // all methods will be created by object assign
+  get(): Promise<T> { throw new Error('Method not implemented.');}
+  post(settings: T): Promise<T> {throw new Error('Method not implemented.');}
 }
 
-class GettableResourceProvider {
+export class GettableResourceProvider<T> implements Gettable<T> {
   constructor(public url: string) {
     return Object.assign(
       this,
       gettable(this),
     );
   }
+  // all methods will be created by object assign
+  get(): Promise<T[]> { throw new Error('Method not implemented.'); }
 }
 
-export class RemoteBeaconRecordProvider extends ManageableResourceProvider<Omit<BeaconRecord, 'id'>>
-   {
+export class RemoteBeaconRecordProvider extends ManageableResourceProvider<BeaconRecord> {
   constructor() {
     super(beaconsUrl, defaultBeaconRecord);
   }
 }
 
-export class RemoteLocationRecordProvider extends ManageablePlusResourceProvider<Omit<LocationRecord, 'id'>> {
+export class RemoteLocationRecordProvider extends ManageablePlusResourceProvider<LocationRecord> {
   constructor() {
     super(locationsUrl, defaultLocationRecord);
   }
 }
 
-export class RemoteUsersRecordProvider extends GettableResourceProvider {
+export class RemoteUsersRecordProvider extends GettableResourceProvider<UserRecord> {
   constructor() {
     super(usersUrl);
   }
@@ -123,13 +130,13 @@ export class RemoteUsersRecordProvider extends GettableResourceProvider {
 //   }
 // }
 
-export class ManaOceanSettingsProvider extends SettingsResourceProvider {
+export class ManaOceanSettingsProvider extends SettingsResourceProvider<ManaOceanSettingsData> {
   constructor() {
     super(manaOceanConfigUrl);
   }
 }
 
-export class ManaOceanEffectSettingsProvider extends SettingsResourceProvider {
+export class ManaOceanEffectSettingsProvider extends SettingsResourceProvider<ManaOceanEffectSettingsData> {
   constructor() {
     super(manaOceanEffectConfigUrl);
   }

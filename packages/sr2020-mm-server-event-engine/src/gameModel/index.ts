@@ -7,7 +7,12 @@ import {
   UserRecordService,
   SettingsService,
   ManaOceanEnableService,
-  AbstractService
+  AbstractService,
+  BeaconRecord,
+  LocationRecord,
+  UserRecord,
+  ManaOceanSettingsData,
+  ManaOceanEffectSettingsData
 } from 'sr2020-mm-event-engine';
 
 import { ManaOceanService } from '../services/ManaOceanService';
@@ -22,7 +27,7 @@ import { LocationDataManager } from '../dataManagers/LocationDataManager';
 import { ReadDataManager } from '../dataManagers/ReadDataManager';
 import { SettingsDataManager } from '../dataManagers/SettingsDataManagers';
 import { PollingReadStrategy } from '../dataManagers/PollingReadStrategy';
-import { DataBinding } from '../dataManagers/DataBinding';
+// import { DataBinding } from '../dataManagers/DataBinding';
 import { RedirectDataBinding } from '../dataManagers/RedirectDataBinding';
 import { CharacterLocDataManager } from '../dataManagers/CharacterLocDataManager';
 
@@ -36,6 +41,8 @@ import {
   RemoteUsersRecordProvider as UserRecordProvider,
   ManaOceanSettingsProvider,
   ManaOceanEffectSettingsProvider,
+  ManageablePlusResourceProvider,
+  ManageableResourceProvider
 } from '../api/position';
 
 import { CharacterStatesListener } from '../api/characterStates/CharacterStatesListener';
@@ -68,70 +75,104 @@ export function makeGameModel() {
   const gameModel = gameServer.getGameModel();
   // fillGameModelWithBots(gameModel);
 
-  // const {
-  //   gameModel, entityName, DataProvider, DataManager, ReadStrategy, ReadStrategyArgs = [],
-  // } = args;
-
-  // this.dataManager = new DataManager(
-  //   gameModel,
-  //   new DataProvider(),
-  //   entityName,
-  //   new ReadStrategy(gameModel, ...ReadStrategyArgs),
-  //   args,
-  // );
-  // this.dataManager.initialize();
-  const beaconRecordDataBinding = new CrudDataManager(
+  const beaconRecordDataBinding = new CrudDataManager<BeaconRecord, BeaconRecordProvider>(
     gameModel,
     new BeaconRecordProvider(),
     'beaconRecord',
     new PollingReadStrategy(gameModel, 15000)
   );
+  gameServer.addDataBinding(beaconRecordDataBinding);
 
-  gameServer.addDataBinding(new DataBinding({
+  // gameServer.addDataBinding(new DataBinding({
+  //   gameModel,
+  //   entityName: 'beaconRecord',
+  //   DataProvider: BeaconRecordProvider,
+  //   DataManager: CrudDataManager,
+  //   ReadStrategy: PollingReadStrategy,
+  //   ReadStrategyArgs: [15000],
+  // }));
+
+  const locationRecordDataBinding = new LocationDataManager<LocationRecord, LocationRecordProvider>(
     gameModel,
-    entityName: 'beaconRecord',
-    DataProvider: BeaconRecordProvider,
-    DataManager: CrudDataManager,
-    ReadStrategy: PollingReadStrategy,
-    ReadStrategyArgs: [15000],
-  }));
-  gameServer.addDataBinding(new DataBinding({
+    new LocationRecordProvider(),
+    'locationRecord',
+    new PollingReadStrategy(gameModel, 15000)
+  );
+  gameServer.addDataBinding(locationRecordDataBinding);
+
+  // gameServer.addDataBinding(new DataBinding({
+  //   gameModel,
+  //   entityName: 'locationRecord',
+  //   DataProvider: LocationRecordProvider, // Implements primitive REST API calls
+  //   DataManager: LocationDataManager, // transform REST results to GM events and vice versa
+  //   ReadStrategy: PollingReadStrategy, // implements read strategy, used deep inside in data manager read part
+  //   ReadStrategyArgs: [15000],
+  // }));
+
+  const userRecordDataBinding = new ReadDataManager<UserRecord, UserRecordProvider>(
     gameModel,
-    entityName: 'locationRecord',
-    DataProvider: LocationRecordProvider, // Implements primitive REST API calls
-    DataManager: LocationDataManager, // transform REST results to GM events and vice versa
-    ReadStrategy: PollingReadStrategy, // implements read strategy, used deep inside in data manager read part
-    ReadStrategyArgs: [15000],
-  }));
-  gameServer.addDataBinding(new DataBinding({
+    new UserRecordProvider(),
+    'userRecord',
+    new PollingReadStrategy(gameModel, 15000, 'reloadUserRecords')
+  );
+  gameServer.addDataBinding(userRecordDataBinding);
+
+
+  // gameServer.addDataBinding(new DataBinding({
+  //   gameModel,
+  //   entityName: 'userRecord',
+  //   DataProvider: UserRecordProvider,
+  //   // DataProvider: UsersRecordProviderMock,
+  //   DataManager: ReadDataManager,
+  //   ReadStrategy: PollingReadStrategy,
+  //   ReadStrategyArgs: [15000, 'reloadUserRecords'],
+  // }));
+
+  const manaOceanSettingsDB = new SettingsDataManager<ManaOceanSettingsData, ManaOceanSettingsProvider>(
     gameModel,
-    entityName: 'userRecord',
-    DataProvider: UserRecordProvider,
-    // DataProvider: UsersRecordProviderMock,
-    DataManager: ReadDataManager,
-    ReadStrategy: PollingReadStrategy,
-    ReadStrategyArgs: [15000, 'reloadUserRecords'],
-  }));
-  gameServer.addDataBinding(new DataBinding({
+    new ManaOceanSettingsProvider(),
+    'manaOcean',
+    new PollingReadStrategy(gameModel, 15000),
+    {
+      defaultSettings: defaultManaOceanSettings,
+      logger: winstonLogger,
+    }
+  );
+  gameServer.addDataBinding(manaOceanSettingsDB);
+
+  // gameServer.addDataBinding(new DataBinding({
+  //   gameModel,
+  //   entityName: 'manaOcean',
+  //   DataProvider: ManaOceanSettingsProvider,
+  //   DataManager: SettingsDataManager,
+  //   ReadStrategy: PollingReadStrategy,
+  //   ReadStrategyArgs: [15000],
+  //   defaultSettings: defaultManaOceanSettings,
+  //   logger: winstonLogger,
+  // }));
+
+  const manaOceanEffectsSettingsDB = new SettingsDataManager<ManaOceanEffectSettingsData, ManaOceanEffectSettingsProvider>(
     gameModel,
-    entityName: 'manaOcean',
-    DataProvider: ManaOceanSettingsProvider,
-    DataManager: SettingsDataManager,
-    ReadStrategy: PollingReadStrategy,
-    ReadStrategyArgs: [15000],
-    defaultSettings: defaultManaOceanSettings,
-    logger: winstonLogger,
-  }));
-  gameServer.addDataBinding(new DataBinding({
-    gameModel,
-    entityName: 'manaOceanEffects',
-    DataProvider: ManaOceanEffectSettingsProvider,
-    DataManager: SettingsDataManager,
-    ReadStrategy: PollingReadStrategy,
-    ReadStrategyArgs: [15000],
-    defaultSettings: manaOceanEffectSettings,
-    logger: winstonLogger,
-  }));
+    new ManaOceanEffectSettingsProvider(),
+    'manaOceanEffects',
+    new PollingReadStrategy(gameModel, 15000),
+    {
+      defaultSettings: manaOceanEffectSettings,
+      logger: winstonLogger,
+    }
+  );
+  gameServer.addDataBinding(manaOceanEffectsSettingsDB);
+
+  // gameServer.addDataBinding(new DataBinding({
+  //   gameModel,
+  //   entityName: 'manaOceanEffects',
+  //   DataProvider: ManaOceanEffectSettingsProvider,
+  //   DataManager: SettingsDataManager,
+  //   ReadStrategy: PollingReadStrategy,
+  //   ReadStrategyArgs: [15000],
+  //   defaultSettings: manaOceanEffectSettings,
+  //   logger: winstonLogger,
+  // }));
 
   const charLocDM = new CharacterLocDataManager(
     gameModel,

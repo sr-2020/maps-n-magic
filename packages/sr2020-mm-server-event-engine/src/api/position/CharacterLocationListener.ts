@@ -1,5 +1,9 @@
 import * as R from 'ramda';
 import moment from 'moment-timezone';
+import { 
+  GameModel,
+  PutCharLocationArgs
+} from 'sr2020-mm-event-engine';
 // import { getCharacterLocation } from './getCharacterLocation';
 // import { getCharacterLifeStyle } from './getCharacterLifeStyle';
 import { listenCharacterLocations } from './listenCharacterLocations';
@@ -8,15 +12,16 @@ import { listenCharacterLocations } from './listenCharacterLocations';
 // const { getCharacterLocation } = require('./getCharacterLocation');
 
 export class CharacterLocationListener {
-  gameModel: any;
-
-  constructor(gameModel) {
-    this.gameModel = gameModel;
+  constructor(private gameModel: GameModel) {
     this.onMessageRecieved = this.onMessageRecieved.bind(this);
     listenCharacterLocations(this.onMessageRecieved, true);
   }
 
-  async onMessageRecieved(data) {
+  async onMessageRecieved(data: {
+    id: number,
+    locationId: number,
+    prevLocationId: number
+  }) {
     // console.log('onMessageRecieved');
     // const { characterId } = console.log(data);
     const {
@@ -30,7 +35,7 @@ export class CharacterLocationListener {
     this.updateState(id, locationId, prevLocationId);
   }
 
-  updateState(characterId, locationId, prevLocationId) {
+  updateState(characterId: number, locationId: number, prevLocationId: number) {
     // console.log('received timestamp', timestamp, ', cur moment().utc()', moment.utc().valueOf());
     this.gameModel.execute({
       type: 'putCharLocation',

@@ -15,7 +15,6 @@ export class PollingReadStrategy {
     this.load = this.load.bind(this);
   }
 
-  // eslint-disable-next-line class-methods-use-this
   initialize(dataManager: DataManager): void {
     this.dataManager = dataManager;
     this.subscribe('on');
@@ -35,7 +34,6 @@ export class PollingReadStrategy {
     }
   }
 
-  // eslint-disable-next-line class-methods-use-this
   dispose() {
     clearInterval(this.loadEntityIntervalId);
     this.subscribe('off');

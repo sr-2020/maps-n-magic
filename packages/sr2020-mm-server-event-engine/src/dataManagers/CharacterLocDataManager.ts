@@ -1,11 +1,19 @@
 // eslint-disable-next-line max-classes-per-file
 import * as R from 'ramda';
-import { PubSub } from '@google-cloud/pubsub';
+import { PubSub, Subscription, Message } from '@google-cloud/pubsub';
 import fetch from 'isomorphic-fetch';
+import { 
+  GMLogger, 
+  GameModel, 
+  CharacterLocationData,
+  UserRecord
+} from "sr2020-mm-event-engine";
 
 import { usersUrl } from '../api/constants';
 
-let subscriptionName;
+// import {  } from "../index";
+
+let subscriptionName: string;
 
 if (process.env.NODE_ENV === 'production') {
   subscriptionName = 'mm-char-loc-change-prod-2';
@@ -15,23 +23,20 @@ if (process.env.NODE_ENV === 'production') {
 }
 
 export class CharacterLocDataManager {
-  logger: any;
+  logger: GMLogger;
 
-  gameModel: any;
+  messageCount: number;
 
-  messageCount: any;
+  pubSubClient: PubSub;
 
-  pubSubClient: any;
+  subscription: Subscription;
 
-  subscription: any;
-
-  constructor(gameModel, logger) {
+  constructor(private gameModel: GameModel, logger: GMLogger) {
     let childLogger = logger;
     if (logger.customChild) {
       childLogger = logger.customChild(logger, { service: CharacterLocDataManager.name });
     }
     this.logger = childLogger;
-    this.gameModel = gameModel;
     this.messageCount = 0;
     this.messageHandler = this.messageHandler.bind(this);
   }
@@ -54,8 +59,8 @@ export class CharacterLocDataManager {
     this.subscription.off('message', this.messageHandler);
   }
 
-  messageHandler(message) {
-    const parsedData = JSON.parse(message.data);
+  messageHandler(message: Message) {
+    const parsedData = JSON.parse(message.data.toString());
     this.messageCount += 1;
     message.ack();
 
@@ -79,7 +84,7 @@ export class CharacterLocDataManager {
   async load() {
     const rawCharacterLocations = await this.getCharacterLocations();
 
-    const characterLocations = rawCharacterLocations.map((item) => ({
+    const characterLocations: CharacterLocationData[] = rawCharacterLocations.map((item) => ({
       characterId: item.id,
       locationId: item.location_id,
       prevLocationId: null,
@@ -92,12 +97,12 @@ export class CharacterLocDataManager {
   }
 
   // eslint-disable-next-line class-methods-use-this
-  async getCharacterLocations() {
+  async getCharacterLocations(): Promise<UserRecord[]> {
     const response = await fetch(usersUrl, {
       method: 'GET',
       headers: {
         'Content-Type': 'application/json;charset=utf-8',
-        'X-User-Id': 1,
+        'X-User-Id': "1",
       },
     });
 
@@ -114,8 +119,8 @@ export class CharacterLocDataManager {
     return response.json();
   }
 
-  getErrorHandler(title) {
-    return (err) => {
+  getErrorHandler(title: string) {
+    return (err: Error) => {
       this.logger.error(title, err);
       this.gameModel.execute({
         type: 'postNotification',

@@ -1,17 +1,25 @@
 import * as R from 'ramda';
 
-import { GameModel } from "sr2020-mm-event-engine";
+import { GameModel, Identifiable } from "sr2020-mm-event-engine";
 
 import { DataProvider, ReadStrategy } from "./types";
 
 import { ReadDataManager } from './ReadDataManager';
 
-export class CrudDataManager extends ReadDataManager {
+import {
+  ManageablePlusResourceProvider,
+  ManageableResourceProvider
+} from '../api/position';
+
+export class CrudDataManager<
+  Entity extends Identifiable, 
+  T extends ManageableResourceProvider<Entity>
+> extends ReadDataManager<Entity, T> {
   putEntityTimeoutIndex: {[key: number]: NodeJS.Timeout};
 
   constructor(
     gameModel: GameModel, 
-    dataProvider: DataProvider, 
+    dataProvider: T, 
     entityName: string, 
     readStrategy: ReadStrategy
   ) {
@@ -39,7 +47,7 @@ export class CrudDataManager extends ReadDataManager {
     gameModel[action](`delete${this.ccEntityName}Requested`, this.onDeleteEntityRequested);
   }
 
-  onPutEntityRequested({ id, props}:{id: number, props: unknown}) {
+  onPutEntityRequested({ id, props}:{id: number, props: Entity}) {
     clearTimeout(this.putEntityTimeoutIndex[id]);
 
     this.putEntityTimeoutIndex[id] = setTimeout(() => {
@@ -66,7 +74,7 @@ export class CrudDataManager extends ReadDataManager {
     }).catch(this.getErrorHandler(`Error on ${this.entityName} delete`));
   }
 
-  onPostEntityRequested({ props }: {props: unknown}) {
+  onPostEntityRequested({ props }: {props: Entity}) {
     this.dataProvider.post({ props }).then((entity) => {
       // @ts-ignore
       this.entities.push(entity);

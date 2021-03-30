@@ -1,18 +1,25 @@
 import * as R from 'ramda';
 
-import { GameModel } from "sr2020-mm-event-engine";
+import { GameModel, Identifiable } from "sr2020-mm-event-engine";
 
 import { DataProvider, ReadStrategy } from "./types";
 
 import { CrudDataManager } from './CrudDataManager';
 
-export class LocationDataManager extends CrudDataManager {
+import {
+  ManageablePlusResourceProvider,
+} from '../api/position';
+
+export class LocationDataManager<
+  Entity extends Identifiable, 
+  T extends ManageablePlusResourceProvider<Entity>
+> extends CrudDataManager<Entity, T> {
   // eslint-disable-next-line no-undef
   inputChangeTimeout2: NodeJS.Timeout;
 
   constructor(
     gameModel: GameModel, 
-    dataProvider: DataProvider, 
+    dataProvider: T, 
     entityName: string, 
     readStrategy: ReadStrategy
   ) {
@@ -30,7 +37,7 @@ export class LocationDataManager extends CrudDataManager {
     // gameModel[action](`delete${this.ccEntityName}Requested`, this.onDeleteEntityRequested);
   }
 
-  onPutEntitiesRequested({ updates }) {
+  onPutEntitiesRequested({ updates }: { updates: Entity[]; }) {
     clearTimeout(this.inputChangeTimeout2);
 
     this.inputChangeTimeout2 = setTimeout(() => {

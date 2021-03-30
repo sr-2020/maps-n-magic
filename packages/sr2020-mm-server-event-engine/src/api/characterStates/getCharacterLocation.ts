@@ -3,15 +3,18 @@ import fetch from 'isomorphic-fetch';
 
 import { usersUrl, locationsUrl } from '../constants';
 
-const locations = null;
+// const locations = null;
 
-export async function getCharacterLocation(characterId, simulateLocation = false) {
+export async function getCharacterLocation(characterId: number, simulateLocation = false): Promise<{
+  locationId: number | null,
+  locationLabel: string
+}> {
   const response = await fetch(`${usersUrl}/${characterId}`, {
   // const response = await fetch(`${url}`, {
     method: 'GET',
     headers: {
       'Content-Type': 'application/json;charset=utf-8',
-      'X-User-Id': 1,
+      'X-User-Id': "1",
     },
   });
 
@@ -53,7 +56,7 @@ async function getLocations() {
     method: 'GET',
     headers: {
       'Content-Type': 'application/json;charset=utf-8',
-      'X-User-Id': 1,
+      'X-User-Id': "1",
     },
   });
 

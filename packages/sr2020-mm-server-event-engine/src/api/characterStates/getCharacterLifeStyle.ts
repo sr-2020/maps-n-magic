@@ -3,7 +3,10 @@ import fetch from 'isomorphic-fetch';
 
 import { billingInsurance } from '../constants';
 
-export async function getCharacterLifeStyle(characterId) {
+export async function getCharacterLifeStyle(characterId: number): Promise<{
+  lifeStyle: string,
+  personName: string,
+}> {
   const response = await fetch(`${billingInsurance}?characterid=${characterId}`);
 
   if (!response.ok) {

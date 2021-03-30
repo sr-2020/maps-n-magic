@@ -163,7 +163,7 @@ export const puttable = <T>(state: {url: string}) => ({
 });
 
 export interface MultiPuttable<T> {
-  putMultiple({updates}: {updates: T[]}): Promise<T>;
+  putMultiple({updates}: {updates: T[]}): Promise<T[]>;
 }
 
 export const multiPuttable = <T>(state: {url: string}) => ({
@@ -187,7 +187,7 @@ export const multiPuttable = <T>(state: {url: string}) => ({
 });
 
 export interface Deletable<T> {
-  deletable({id}: {id: number}): Promise<T>;
+  delete({id}: {id: number}): Promise<T>;
 }
 
 export const deletable = (state: {url: string}) => ({

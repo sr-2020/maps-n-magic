@@ -1,22 +1,24 @@
 import * as R from 'ramda';
 import moment from 'moment-timezone';
+import { 
+  GameModel, RawCharacterHealthState
+} from 'sr2020-mm-event-engine';
 import { getCharacterLocation } from './getCharacterLocation';
 import { getCharacterLifeStyle } from './getCharacterLifeStyle';
 import { listenHealthChanges } from './listenHealthChanges';
+
+import { HealthChangeMessage } from "./listenHealthChanges";
 
 // const { listenHealthChanges } = require('./listenHealthChanges');
 // const { getCharacterLocation } = require('./getCharacterLocation');
 
 export class CharacterStatesListener {
-  gameModel: any;
-
-  constructor(gameModel) {
-    this.gameModel = gameModel;
+  constructor(private gameModel: GameModel) {
     this.onMessageRecieved = this.onMessageRecieved.bind(this);
     listenHealthChanges(this.onMessageRecieved, true);
   }
 
-  async onMessageRecieved(data) {
+  async onMessageRecieved(data: HealthChangeMessage) {
     // console.log('onMessageRecieved');
     // const { characterId } = console.log(data);
     const {
@@ -37,7 +39,7 @@ export class CharacterStatesListener {
     });
   }
 
-  updateState(characterId, characterHealthState) {
+  updateState(characterId: number, characterHealthState: RawCharacterHealthState) {
     // console.log('received timestamp', timestamp, ', cur moment().utc()', moment.utc().valueOf());
     this.gameModel.execute({
       type: 'putCharHealth',

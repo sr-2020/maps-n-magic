@@ -1,6 +1,10 @@
 import * as ManaOcean from "./manaOcean";
 export * from "./manaOcean";
 
+export interface Identifiable {
+  id: number;
+}
+
 export interface UserRecord {
   // created_at: "2020-05-03 07:58:52"
   // id: 10207

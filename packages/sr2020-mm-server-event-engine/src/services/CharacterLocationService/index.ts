@@ -68,8 +68,8 @@ export class CharacterLocationService extends AbstractService<CharacterLocationE
     }
     let curLocData = this.loc2charIndex.get(locationId);
     if (curLocData === undefined) {
-      this.loc2charIndex.set(locationId, new Set());
-      curLocData = this.loc2charIndex.get(locationId);
+      curLocData = new Set();
+      this.loc2charIndex.set(locationId, curLocData);
     }
     curLocData.add(characterId);
     // this.logger.info('loc2charIndex', this.loc2charIndex);

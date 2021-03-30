@@ -2,12 +2,12 @@
 
 // Imports the Google Cloud client library
 // const { PubSub } = require('@google-cloud/pubsub');
-import { PubSub } from '@google-cloud/pubsub';
+import { PubSub, Message } from '@google-cloud/pubsub';
 // import moment from 'moment-timezone';
 // import { bodyConditions } from 'sr2020-mm-data/gameConstants';
 // import { randomInteger } from '../../utils';
 
-let subscriptionName;
+let subscriptionName: string;
 
 if (process.env.NODE_ENV === 'production') {
   subscriptionName = 'mm-char-loc-change-prod';
@@ -21,16 +21,25 @@ const timeout = 60;
 // Creates a client; cache this for further use
 const pubSubClient = new PubSub();
 
-export function listenCharacterLocations(callback, simulateMessages = false) {
+type CharLocationMessage = {
+  id: number,
+  locationId: number,
+  prevLocationId: number
+}
+
+export function listenCharacterLocations(
+  callback: (data: CharLocationMessage) => void, 
+  simulateMessages = false
+) {
   // References an existing subscription
   const subscription = pubSubClient.subscription(subscriptionName);
 
   // Create an event handler to handle messages
   let messageCount = 0;
-  const messageHandler = (message) => {
+  const messageHandler = (message: Message) => {
     // console.log(`Received message ${message.id}:`);
     // console.log(`\tData: ${message.data}`);
-    const parsedData = JSON.parse(message.data);
+    const parsedData: CharLocationMessage = JSON.parse(message.data.toString());
     // console.log(`Data: ${JSON.stringify(parsedData, null, '  ')}`);
     // console.log(`\tAttributes: ${message.attributes}`);
     messageCount += 1;

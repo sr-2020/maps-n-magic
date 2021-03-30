@@ -35,7 +35,7 @@ export type GetCharactersFromLocation = (arg: Typed<'charactersFromLocation', {
 export type SetCharacterLocationData = {
   characterId: number, 
   locationId: number, 
-  prevLocationId: number
+  prevLocationId: number | null
 };
 
 export type SetAllCharacterLocations = Typed<'setAllCharacterLocations', {

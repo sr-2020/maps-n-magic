@@ -121,9 +121,9 @@ const metadata: Metadata = {
 };
 
 export class ManaOceanService extends AbstractService {
-  prevTideHeight: number;
+  prevTideHeight: number | null;
 
-  tideLevelTimerId: NodeJS.Timeout;
+  tideLevelTimerId: NodeJS.Timeout | null;
 
   lastManaUpdateTimestamp: number;
 
@@ -438,8 +438,7 @@ export class ManaOceanService extends AbstractService {
         manaLevelChange: 1,
         locationId,
       } as MassacreEffect;
-    }
-    if (effectType === 'powerSpell') {
+    } else { // if (effectType === 'powerSpell') {
       effect = {
         type: 'powerSpell',
         id: shortid.generate(),
@@ -512,7 +511,7 @@ export class ManaOceanService extends AbstractService {
         //   effects: [],
         // },
         effectList: [],
-        manaLevel: null,
+        manaLevel: 0,
       };
       newOptions.manaLevel = this.calcManaLevel([neutralManaLevel, tideHeight]);
       if (!R.isNil(newOptions)) {

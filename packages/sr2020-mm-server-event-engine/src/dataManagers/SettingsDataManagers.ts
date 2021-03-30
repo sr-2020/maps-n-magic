@@ -6,10 +6,14 @@ import { GMLogger, GameModel } from "sr2020-mm-event-engine";
 import { ReadStrategy, DataProvider } from "./types";
 import { capitalizeFirstLetter } from './ReadDataManager';
 
-export class SettingsDataManager {
-  settings: unknown;
+import {
+  SettingsResourceProvider
+} from '../api/position';
 
-  defaultSettings: unknown;
+export class SettingsDataManager<SettingsData, T extends SettingsResourceProvider<SettingsData>> {
+  settings: SettingsData;
+
+  defaultSettings: SettingsData;
 
   logger: GMLogger;
 
@@ -17,11 +21,11 @@ export class SettingsDataManager {
 
   constructor(
     private gameModel: GameModel, 
-    private dataProvider: DataProvider, 
+    private dataProvider: T, 
     private settingsName: string, 
     private readStrategy: ReadStrategy, 
     rest: {
-      defaultSettings: unknown,
+      defaultSettings: SettingsData,
       logger: GMLogger
     }
   ) {
@@ -30,7 +34,7 @@ export class SettingsDataManager {
     if (R.isNil(rest.defaultSettings)) {
       throw new Error(`Default settings not specified, settingsName ${settingsName}`);
     }
-    this.settings = {};
+    this.settings = null;
     this.defaultSettings = rest.defaultSettings;
     this.logger = rest.logger;
     // this.gameModel = gameModel;
@@ -124,7 +128,7 @@ export class SettingsDataManager {
     };
   }
 
-  onPostSettingsRequested({ name, settings }: {name: string, settings: unknown}) {
+  onPostSettingsRequested({ name, settings }: {name: string, settings: SettingsData}) {
     if (name !== this.ccSettingsName) {
       return;
     }
