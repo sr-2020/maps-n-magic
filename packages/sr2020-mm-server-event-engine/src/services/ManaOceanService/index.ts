@@ -125,7 +125,7 @@ export class ManaOceanService extends AbstractService {
 
   tideLevelTimerId: NodeJS.Timeout | null;
 
-  lastManaUpdateTimestamp: number;
+  // lastManaUpdateTimestamp: number;
 
   constructor(gameModel: GameModel, logger: GMLogger) {
     super(gameModel, logger);
@@ -879,7 +879,7 @@ export class ManaOceanService extends AbstractService {
 
   getNextTideHeight(curTimestamp: number, manaOceanSettings: ManaOceanSettingsData): number {
     if (this.prevTideHeight === null) {
-      this.lastManaUpdateTimestamp = curTimestamp;
+      // this.lastManaUpdateTimestamp = curTimestamp;
       // return -2;
       return 0;
     }

@@ -14,9 +14,8 @@ export class LocationDataManager<
   Entity extends Identifiable, 
   T extends ManageablePlusResourceProvider<Entity>
 > extends CrudDataManager<Entity, T> {
-  // eslint-disable-next-line no-undef
-  inputChangeTimeout2: NodeJS.Timeout;
-
+  inputChangeTimeout2: NodeJS.Timeout | null = null;
+ 
   constructor(
     gameModel: GameModel, 
     dataProvider: T, 
@@ -38,7 +37,9 @@ export class LocationDataManager<
   }
 
   onPutEntitiesRequested({ updates }: { updates: Entity[]; }) {
-    clearTimeout(this.inputChangeTimeout2);
+    if (this.inputChangeTimeout2 !== null){
+      clearTimeout(this.inputChangeTimeout2);
+    }
 
     this.inputChangeTimeout2 = setTimeout(() => {
       this.dataProvider.putMultiple({ updates }).then((entities) => {

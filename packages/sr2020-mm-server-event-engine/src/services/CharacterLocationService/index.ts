@@ -30,7 +30,7 @@ export class CharacterLocationService extends AbstractService<CharacterLocationE
   //   characterId,
   //   locationId
   // )
-  char2locIndex: Map<number, number>;
+  char2locIndex: Map<number, number | null>;
 
   constructor(gameModel: GameModel, logger: GMLogger) {
     super(gameModel, logger);
@@ -62,16 +62,18 @@ export class CharacterLocationService extends AbstractService<CharacterLocationE
       return;
     }
     this.char2locIndex.set(characterId, locationId);
-    const prevLocData = this.loc2charIndex.get(prevLocationId);
+    const prevLocData = prevLocationId !== null ? this.loc2charIndex.get(prevLocationId) : null;
     if (prevLocData) {
       prevLocData.delete(characterId);
     }
-    let curLocData = this.loc2charIndex.get(locationId);
-    if (curLocData === undefined) {
-      curLocData = new Set();
-      this.loc2charIndex.set(locationId, curLocData);
+    if (typeof locationId === 'number') {
+      let curLocData = locationId !== null ? this.loc2charIndex.get(locationId) : undefined;
+      if (curLocData === undefined) {
+        curLocData = new Set();
+        this.loc2charIndex.set(locationId, curLocData);
+      }
+      curLocData.add(characterId);
     }
-    curLocData.add(characterId);
     // this.logger.info('loc2charIndex', this.loc2charIndex);
     // this.logger.info('char2locIndex', this.char2locIndex);
     // this.logger.info({ characterId, locationId, prevLocationId });

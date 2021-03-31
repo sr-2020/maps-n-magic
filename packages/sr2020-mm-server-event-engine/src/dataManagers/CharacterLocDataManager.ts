@@ -27,9 +27,9 @@ export class CharacterLocDataManager {
 
   messageCount: number;
 
-  pubSubClient: PubSub;
+  pubSubClient: PubSub | null = null;
 
-  subscription: Subscription;
+  subscription: Subscription | null = null;
 
   constructor(private gameModel: GameModel, logger: GMLogger) {
     let childLogger = logger;
@@ -41,7 +41,6 @@ export class CharacterLocDataManager {
     this.messageHandler = this.messageHandler.bind(this);
   }
 
-  // eslint-disable-next-line class-methods-use-this
   async initialize() {
     try {
       this.pubSubClient = new PubSub();
@@ -54,9 +53,10 @@ export class CharacterLocDataManager {
     }
   }
 
-  // eslint-disable-next-line class-methods-use-this
   dispose() {
-    this.subscription.off('message', this.messageHandler);
+    if (this.subscription !== null) {
+      this.subscription.off('message', this.messageHandler);
+    }
   }
 
   messageHandler(message: Message) {
@@ -80,7 +80,6 @@ export class CharacterLocDataManager {
     });
   }
 
-  // eslint-disable-next-line class-methods-use-this
   async load() {
     const rawCharacterLocations = await this.getCharacterLocations();
 

@@ -30,7 +30,7 @@ export interface BeaconRecord {
   // lng: null
   lng: number;
   // location_id: null
-  location_id: number;
+  location_id: number | null;
   // ssid: "DF:8C:6D:50:E0:16"
   ssid: string;
 }
@@ -125,7 +125,7 @@ export type SettingsValues =
 export interface CharacterLocationData {
   characterId: number;
   locationId: number;
-  prevLocationId: number;
+  prevLocationId: number | null;
 };
 
 
@@ -136,7 +136,7 @@ export interface RawCharacterHealthState {
   // lifeStyle: "Страховка отсутствует"
   lifeStyle: string;
   // locationId: 3215
-  locationId: number;
+  locationId: number | null;
   // locationLabel: "Межрайонье 1"
   locationLabel: string;
   // personName: "Blaze ноябрь"

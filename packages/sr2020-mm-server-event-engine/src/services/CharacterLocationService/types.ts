@@ -34,7 +34,7 @@ export type GetCharactersFromLocation = (arg: Typed<'charactersFromLocation', {
 
 export type SetCharacterLocationData = {
   characterId: number, 
-  locationId: number, 
+  locationId: number | null, 
   prevLocationId: number | null
 };
 

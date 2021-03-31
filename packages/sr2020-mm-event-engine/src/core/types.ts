@@ -22,7 +22,7 @@ export interface GMLogger {
   warn: (...args: unknown[]) => void;
   error: (...args: unknown[]) => void;
   customChild?: (baseLogger: GMLogger, defaultMeta: object) => GMLogger;
-  child?: (options?: Object) => GMLogger;
+  child?: (options: Object) => GMLogger;
   defaultMeta?: object;
 }
 

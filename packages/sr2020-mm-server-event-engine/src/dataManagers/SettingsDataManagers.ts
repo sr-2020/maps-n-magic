@@ -11,7 +11,7 @@ import {
 } from '../api/position';
 
 export class SettingsDataManager<SettingsData, T extends SettingsResourceProvider<SettingsData>> {
-  settings: SettingsData;
+  settings: SettingsData | null;
 
   defaultSettings: SettingsData;
 

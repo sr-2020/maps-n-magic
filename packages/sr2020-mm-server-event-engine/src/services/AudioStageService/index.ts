@@ -29,7 +29,7 @@ const metadata: Metadata = {
 };
 export class AudioStageService extends AbstractService {
   locationIndex: Map<number, {
-    manaLevel: number;
+    manaLevel: number | null;
   }>;
 
   constructor(gameModel: GameModel, logger: GMLogger) {
@@ -101,7 +101,9 @@ export class AudioStageService extends AbstractService {
     });
     const soundStageUpdates = R.flatten(changedManaLevelLocs.map(({ locationId, manaLevel }) => {
       const data2 = this.locationIndex.get(locationId);
-      data2.manaLevel = manaLevel;
+      if (data2) {
+        data2.manaLevel = manaLevel;
+      }
       const characterSet = this.getFromModel<any, Set<number>>({
         type: 'charactersFromLocation',
         locationId,
@@ -132,7 +134,7 @@ export class AudioStageService extends AbstractService {
     //   characterSet.delete(characterId);
     // }
 
-    let manaLevel: number = null;
+    let manaLevel: number | null = null;
     if (locationId !== null) {
       const locationRecord = this.getLocation(locationId);
       if (!locationRecord) {

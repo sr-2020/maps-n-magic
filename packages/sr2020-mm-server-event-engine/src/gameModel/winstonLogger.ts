@@ -123,10 +123,13 @@ winstonLogger.stream = {
 };
 
 function customChild(logger: GMLogger, defaultMeta: object) {
-  const childLogger = logger.child();
-  childLogger.defaultMeta = { ...logger.defaultMeta, ...defaultMeta };
-  childLogger.customChild = customChild;
-  return childLogger;
+  if(logger.child) {
+    const childLogger = logger.child({});
+    childLogger.defaultMeta = { ...logger.defaultMeta, ...defaultMeta };
+    childLogger.customChild = customChild;
+    return childLogger;
+  }
+  return logger;
 }
 
 // @ts-ignore

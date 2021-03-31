@@ -79,7 +79,7 @@ export function makeGameModel() {
     gameModel,
     new BeaconRecordProvider(),
     'beaconRecord',
-    new PollingReadStrategy(gameModel, 15000)
+    new PollingReadStrategy(gameModel, 15000, winstonLogger)
   );
   gameServer.addDataBinding(beaconRecordDataBinding);
 
@@ -96,7 +96,7 @@ export function makeGameModel() {
     gameModel,
     new LocationRecordProvider(),
     'locationRecord',
-    new PollingReadStrategy(gameModel, 15000)
+    new PollingReadStrategy(gameModel, 15000, winstonLogger)
   );
   gameServer.addDataBinding(locationRecordDataBinding);
 
@@ -113,7 +113,7 @@ export function makeGameModel() {
     gameModel,
     new UserRecordProvider(),
     'userRecord',
-    new PollingReadStrategy(gameModel, 15000, 'reloadUserRecords')
+    new PollingReadStrategy(gameModel, 15000, winstonLogger, 'reloadUserRecords')
   );
   gameServer.addDataBinding(userRecordDataBinding);
 
@@ -132,7 +132,7 @@ export function makeGameModel() {
     gameModel,
     new ManaOceanSettingsProvider(),
     'manaOcean',
-    new PollingReadStrategy(gameModel, 15000),
+    new PollingReadStrategy(gameModel, 15000, winstonLogger),
     {
       defaultSettings: defaultManaOceanSettings,
       logger: winstonLogger,
@@ -155,7 +155,7 @@ export function makeGameModel() {
     gameModel,
     new ManaOceanEffectSettingsProvider(),
     'manaOceanEffects',
-    new PollingReadStrategy(gameModel, 15000),
+    new PollingReadStrategy(gameModel, 15000, winstonLogger),
     {
       defaultSettings: manaOceanEffectSettings,
       logger: winstonLogger,

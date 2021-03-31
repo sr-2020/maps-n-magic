@@ -1,18 +1,21 @@
-import { GameModel } from "sr2020-mm-event-engine";
+import { GameModel, GMLogger } from "sr2020-mm-event-engine";
 
 import { DataManager } from "./types";
 
 export class PollingReadStrategy {
-  dataManager: DataManager;
+  dataManager: DataManager | null;
 
-  loadEntityIntervalId: NodeJS.Timeout;
+  loadEntityIntervalId: NodeJS.Timeout | null;
 
   constructor(
     private gameModel: GameModel, 
     private timeout: number, 
+    private logger: GMLogger, 
     private reloadEventName?: string
   ) {
     this.load = this.load.bind(this);
+    this.loadEntityIntervalId = null;
+    this.dataManager = null;
   }
 
   initialize(dataManager: DataManager): void {
@@ -25,7 +28,11 @@ export class PollingReadStrategy {
   }
 
   load() {
-    this.dataManager.load();
+    if(this.dataManager !== null) {
+      this.dataManager.load();
+    } else {
+      this.logger.warn("Calling load on PollingReadStrategy without data manager.")
+    }
   }
 
   subscribe(action: 'on' | 'off') {
@@ -35,10 +42,9 @@ export class PollingReadStrategy {
   }
 
   dispose() {
-    clearInterval(this.loadEntityIntervalId);
+    if (this.loadEntityIntervalId !== null) {
+      clearInterval(this.loadEntityIntervalId);
+    }
     this.subscribe('off');
-    this.gameModel = null;
-    this.timeout = null;
-    this.reloadEventName = null;
   }
 }
