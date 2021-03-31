@@ -44,7 +44,7 @@ router.get('/file/:name', (req, res) => {
   // res.send(req.params.name);
   dbx.filesDownload({ path: `/sr_sounds/${req.params.name}` })
     .then((response) => {
-      let type;
+      let type = '';
       if (req.params.name.endsWith('.mp3')) {
         type = 'audio/mpeg';
       } else if (req.params.name.endsWith('.wav')) {

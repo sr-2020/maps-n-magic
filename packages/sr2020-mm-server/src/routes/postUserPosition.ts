@@ -7,7 +7,7 @@ const router = Router();
 
 router.post('/postUserPosition/:characterId', (req, res, next) => {
   const beacon = req.body;
-  innerPostUserPosition(req.params.characterId, beacon).then(() => {
+  innerPostUserPosition(Number(req.params.characterId), beacon).then(() => {
     res.sendStatus(200);
   }).catch((err) => {
     console.error(err);

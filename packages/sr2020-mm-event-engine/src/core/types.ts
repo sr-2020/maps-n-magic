@@ -24,6 +24,7 @@ export interface GMLogger {
   customChild?: (baseLogger: GMLogger, defaultMeta: object) => GMLogger;
   child?: (options: Object) => GMLogger;
   defaultMeta?: object;
+  stream?(options?: any): NodeJS.ReadableStream;
 }
 
 export interface Metadata {
@@ -66,3 +67,12 @@ type Function = (...arg: any) => any;
 export type Req<T extends Function> = Parameters<T>[0];
 // Response
 export type Res<T extends Function> = ReturnType<T>;
+
+export interface WebSocketInitClientConfig {
+  message: 'initClientConfig';
+  data: {
+    type: string,
+    payload: string;
+  }[];
+  forwardActions: string[];
+}

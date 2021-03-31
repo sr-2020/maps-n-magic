@@ -37,20 +37,21 @@ app.listen(port);
  * Normalize a port into a number, string, or false.
  */
 
-function normalizePort(val) {
-  const port2 = parseInt(val, 10);
-
-  if (Number.isNaN(port2)) {
-    // named pipe
-    return val;
+function normalizePort(val: string): string | number {
+  if (typeof val === 'string') {
+    const port2 = parseInt(val, 10);
+  
+    if (Number.isNaN(port2)) {
+      // named pipe
+      // return val;
+      throw new Error('Port is not a number: ' + val);
+    }
+    if (port2 >= 0) {
+      // port number
+      return port2;
+    }
   }
-
-  if (port2 >= 0) {
-    // port number
-    return port2;
-  }
-
-  return false;
+  throw new Error('Port is not a string: ' + val);
 }
 
 // /**

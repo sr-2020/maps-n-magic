@@ -11,6 +11,12 @@
   },
   "dependencies": {
     "@google-cloud/pubsub": "^2.6.0",
+    "@types/cookie-parser": "^1.4.2",
+    "@types/cors": "^2.8.10",
+    "@types/express-ws": "^3.0.0",
+    "@types/isomorphic-fetch": "0.0.35",
+    "@types/morgan": "^1.9.2",
+    "@types/ws": "^7.4.0",
     "cookie-parser": "~1.4.5",
     "cors": "^2.8.5",
     "debug": "~4.3.1",

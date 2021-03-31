@@ -8,6 +8,7 @@ import shortid from 'shortid';
 import cors from 'cors';
 
 import { makeGameModel, winstonLogger } from 'sr2020-mm-server-event-engine';
+import { WebSocketInitClientConfig } from 'sr2020-mm-event-engine';
 
 import { indexRouter } from './routes/index';
 import { fileListRouter } from './routes/fileList';
@@ -57,7 +58,7 @@ winstonLogger.info('process.env.NODE_ENV', process.env.NODE_ENV);
 
 // console.log('process.env.NODE_ENV', process.env.NODE_ENV);
 
-const { gameModel, gameServer } = makeGameModel({});
+const { gameModel, gameServer } = makeGameModel();
 
 export const app = Express();
 const wsApp = ExpressWs(app);
@@ -73,6 +74,7 @@ app.use(cors());
 // app.set('views', path.join(__dirname, 'views'));
 // app.set('view engine', 'jade');
 
+// @ts-ignore
 app.use(morganLogger('dev', { stream: winstonLogger.stream }));
 app.use(Express.json());
 app.use(Express.urlencoded({ extended: false }));
@@ -88,18 +90,18 @@ app.get('/ping', pingRouter);
 app.post('/postUserPosition/:characterId', postUserPosition);
 // app.all('/characterStates', characterStatesRouter);
 
-// @ts-ignore
-app.ws('/ws', (ws, req, next) => {
+wsApp.app.ws('/ws', (ws, req, next) => {
   ws.on('message', (msgStr) => {
     // console.log('msg:', msgStr);
-    const msg = JSON.parse(msgStr);
+    const msg = JSON.parse(msgStr.toString()) as {message?: string};
     if (msg.message && msg.message === 'initClientConfig') {
       const ip = req.connection.remoteAddress;
       const id = shortid.generate();
-      // @ts-ignore
-      const childLogger = winstonLogger.customChild(winstonLogger, { service: `ws_session_${id}` });
+      const childLogger = winstonLogger.customChild ? 
+        winstonLogger.customChild(winstonLogger, { service: `ws_session_${id}` }) :
+        winstonLogger;
       childLogger.info(ip, 'initClientConfig', msgStr);
-      new WebSocketWrapper(ws, gameModel, msg, childLogger);
+      new WebSocketWrapper(ws, gameModel, msg as WebSocketInitClientConfig, childLogger);
     }
   });
 });
@@ -113,6 +115,7 @@ app.use((req, res, next) => {
 });
 
 // error handler
+// @ts-ignore
 app.use((err, req, res, next) => {
   // set locals, only providing error in development
   res.locals.message = err.message;

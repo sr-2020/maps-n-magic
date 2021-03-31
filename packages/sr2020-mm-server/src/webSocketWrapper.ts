@@ -1,19 +1,14 @@
 import * as R from 'ramda';
+import WebSocket from "ws";
+import { GameModel, GMLogger, WebSocketInitClientConfig } from "sr2020-mm-event-engine";
 
 export class WebSocketWrapper {
-  ws: any;
-
-  gameModel: any;
-
-  initConfig: any;
-
-  logger: any;
-
-  constructor(ws, gameModel, initConfig, logger) {
-    this.ws = ws;
-    this.gameModel = gameModel;
-    this.initConfig = initConfig;
-    this.logger = logger;
+  constructor(
+    private ws: WebSocket, 
+    private gameModel: GameModel, 
+    private initConfig: WebSocketInitClientConfig, 
+    private logger: GMLogger
+  ) {
     this.onMessage = this.onMessage.bind(this);
     this.onClose = this.onClose.bind(this);
     this.onError = this.onError.bind(this);
@@ -39,8 +34,8 @@ export class WebSocketWrapper {
     });
   }
 
-  onMessage(msgStr) {
-    const msg = JSON.parse(msgStr);
+  onMessage(msgStr: WebSocket.Data) {
+    const msg = JSON.parse(msgStr.toString());
     if (R.is(String, msg)) {
       this.logger.info(msg);
     } else {
@@ -57,17 +52,17 @@ export class WebSocketWrapper {
     this.dispose();
   }
 
-  forwardAction(action) {
+  forwardAction(action: unknown) {
     // console.log('forwardAction', action.type);
     this.ws.send(JSON.stringify(action));
   }
 
-  subscribe(action) {
+  subscribe(action: 'on' | 'off') {
     const { forwardActions } = this.initConfig;
     forwardActions.forEach((actionType) => this.gameModel[action](actionType, this.forwardAction));
   }
 
-  subscribeWsConnection(action) {
+  subscribeWsConnection(action: 'on' | 'off') {
     this.ws[action]('message', this.onMessage);
     this.ws[action]('close', this.onClose);
     this.ws[action]('error', this.onError);
