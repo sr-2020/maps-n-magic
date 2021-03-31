@@ -67,15 +67,15 @@ export class SoundService2 extends AbstractService {
   //   // this._stop();
   // }
 
-  _getSounds = function () {
+  _getSounds () {
     return this.sounds;
   }
 
-  _getSound = function ({ name }) {
+  _getSound ({ name }) {
     return this.sounds.find((sound) => sound.name === name);
   }
 
-  _getSoundIndex = function (name) {
+  _getSoundIndex (name) {
     return this.sounds.findIndex((sound) => sound.name === name);
   }
 

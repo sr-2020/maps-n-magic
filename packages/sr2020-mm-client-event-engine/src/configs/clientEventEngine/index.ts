@@ -56,6 +56,7 @@ const services = [
 ];
 
 export function makeGameModel(database) {
+  // @ts-ignore
   const gameServer = new EventEngine(services, console);
   // gameServer.setData(database);
   const gameModel = gameServer.getGameModel();
