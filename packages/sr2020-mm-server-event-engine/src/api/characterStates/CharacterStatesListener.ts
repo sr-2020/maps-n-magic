@@ -12,6 +12,15 @@ import { HealthChangeMessage } from "./listenHealthChanges";
 // const { listenHealthChanges } = require('./listenHealthChanges');
 // const { getCharacterLocation } = require('./getCharacterLocation');
 
+const metadata = {
+  actions: [],
+  requests: [],
+  emitEvents: [],
+  listenEvents: [],
+  needRequests: [],
+  needActions: ['putCharHealth']
+};
+
 export class CharacterStatesListener {
   constructor(private gameModel: GameModel) {
     this.onMessageRecieved = this.onMessageRecieved.bind(this);

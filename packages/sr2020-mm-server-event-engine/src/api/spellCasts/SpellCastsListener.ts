@@ -11,6 +11,15 @@ import { SpellCast } from "../../types";
 // const { listenHealthChanges } = require('./listenHealthChanges');
 // const { getCharacterLocation } = require('./getCharacterLocation');
 
+const metadata = {
+  actions: [],
+  requests: [],
+  emitEvents: [],
+  listenEvents: [],
+  needRequests: [],
+  needActions: ['spellCast']
+};
+
 export class SpellCastsListener {
   gameModel: GameModel;
 

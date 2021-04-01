@@ -10,6 +10,15 @@ import {
   SettingsResourceProvider
 } from '../api/position';
 
+const metadata = {
+  actions: [],
+  requests: [],
+  emitEvents: [],
+  listenEvents: ['postSettingsRequested'],
+  needRequests: [],
+  needActions: ['setSettings','postNotification','postSettingsConfirmed']
+};
+
 export class SettingsDataManager<SettingsData, T extends SettingsResourceProvider<SettingsData>> {
   settings: SettingsData | null;
 

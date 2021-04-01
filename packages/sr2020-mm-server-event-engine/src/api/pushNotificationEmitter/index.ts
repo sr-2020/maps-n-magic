@@ -6,6 +6,15 @@ import {
 import { sendNotification } from './sendNotification';
 import { PushNotificationArgs } from "../../index";
 
+const metadata = {
+  actions: [],
+  requests: [],
+  emitEvents: [],
+  listenEvents: ['pushNotification'],
+  needRequests: [],
+  needActions: []
+};
+
 export class PushNotificationEmitter {
   constructor(
     private gameModel: GameModel, 

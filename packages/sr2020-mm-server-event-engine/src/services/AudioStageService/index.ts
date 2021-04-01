@@ -6,8 +6,20 @@ import {
   LocationRecord,
   CharacterLocationData,
   GameModel,
-  GMLogger
+  GMLogger,
+  Typed
 } from 'sr2020-mm-event-engine';
+
+interface SoundStageUpdate {
+  characterId: number;
+  backgroundSound: number;
+}
+
+export type ESoundStageChanged = Typed<'soundStageChanged', {
+  list: SoundStageUpdate[]
+}>;
+
+export type AudioStageEvents = ESoundStageChanged;
 
 const metadata: Metadata = {
   actions: [
@@ -27,7 +39,7 @@ const metadata: Metadata = {
   ],
   needActions: []
 };
-export class AudioStageService extends AbstractService {
+export class AudioStageService extends AbstractService<AudioStageEvents> {
   locationIndex: Map<number, {
     manaLevel: number | null;
   }>;
@@ -113,7 +125,7 @@ export class AudioStageService extends AbstractService {
         backgroundSound: manaLevel,
       }));
     }));
-    this.emit('soundStageChanged', {
+    this.emit2({
       type: 'soundStageChanged',
       list: soundStageUpdates,
     });

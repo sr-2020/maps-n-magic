@@ -71,6 +71,7 @@ export function makeGameModel() {
   // const gameServer = new EventEngine(services, console);
   // @ts-ignore
   const gameServer = new EventEngine(services, winstonLogger);
+  // const gameServer = new EventEngine([], winstonLogger);
   // gameServer.setData(database);
   const gameModel = gameServer.getGameModel();
   // fillGameModelWithBots(gameModel);
@@ -180,6 +181,16 @@ export function makeGameModel() {
   );
   charLocDM.initialize();
   gameServer.addDataBinding(charLocDM);
+
+  // const metadata = {
+  //   actions: [],
+  //   requests: [],
+  //   emitEvents: [],
+  //   listenEvents: [arg keys],
+  //   needRequests: [],
+  //   needActions: [arg values]
+  // };
+  
   gameServer.addDataBinding(new RedirectDataBinding(
     gameModel,
     {

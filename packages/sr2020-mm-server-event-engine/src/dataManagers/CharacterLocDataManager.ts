@@ -22,6 +22,15 @@ if (process.env.NODE_ENV === 'production') {
   subscriptionName = 'mm-char-loc-change-prod-2';
 }
 
+const metadata = {
+  actions: [],
+  requests: [],
+  emitEvents: [],
+  listenEvents: [],
+  needRequests: [],
+  needActions: ['setCharacterLocation', 'setAllCharacterLocations', 'postNotification']
+};
+
 export class CharacterLocDataManager {
   logger: GMLogger;
 
