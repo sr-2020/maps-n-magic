@@ -26,6 +26,17 @@ import {
 } from 'sr2020-mm-event-engine';
 
 import { 
+  LocationUpdate,
+  moMetadata,
+  SpellCastAction,
+  WipeManaOceanEffects,
+  AddManaEffect,
+  RemoveManaEffect
+} from "./types";
+
+import { EffectCollector } from "./EffectCollector";
+
+import { 
   SpellCast,
 } from "../../types";
 
@@ -39,86 +50,10 @@ const MANA_TIDE_UPDATE_INTERVAL: number = 10000; // millis
 
 // let counter = 1;
 
-interface LocationUpdate {
-  id: number;
-  body: {
-    options: LocationRecordOptions
-  }
-}
-
 type OptionsIndex = Record<number, {
   manaLevel: number,
   effectList: ManaOceanEffect[]
 }>
-
-class EffectCollector {
-  index: {
-    [locationId: number]: {
-      locationRecord: LocationRecord,
-      effects: ManaOceanEffect[]
-    }
-  } = {};
-
-  addEffect(locationRecord: LocationRecord, effect: ManaOceanEffect): void {
-    const { id } = locationRecord;
-    let record = this.index[id];
-    if (record === undefined) {
-      record = {
-        locationRecord,
-        effects: [],
-      };
-      this.index[id] = record;
-    }
-    record.effects.push(effect);
-  }
-
-  toLocationUpdates(): LocationUpdate[] {
-    return R.values(this.index).map(({ locationRecord, effects }) => {
-      const { effectList = [] } = locationRecord.options;
-      return {
-        id: locationRecord.id,
-        body: {
-          options: {
-            ...locationRecord.options,
-            effectList: R.concat(effectList, effects),
-          },
-        },
-      };
-    });
-  }
-}
-
-const metadata: Metadata = {
-  actions: [
-    'spellCast',
-    'wipeManaOceanEffects',
-    'removeManaEffect',
-    'addManaEffect',
-    // 'postManaOceanSettings',
-    // 'postManaOceanSettingsConfirmed',
-  ],
-  requests: [
-  ],
-  emitEvents: [
-    // 'postManaOceanSettings',
-    // 'postManaOceanSettingsRequested',
-  ],
-  needActions: [
-    'putLocationRecord',
-    'putLocationRecords',
-    'pushNotification',
-  ],
-  needRequests: [
-    // 'manaOceanSettings',
-    'settings',
-    'locationRecords',
-    'locationRecord',
-    'enableManaOcean',
-    'neighborOrRandomLocation',
-    'neighborList',
-  ],
-  listenEvents: ['massacreTriggered'],
-};
 
 export class ManaOceanService extends AbstractService {
   prevTideHeight: number | null;
@@ -129,7 +64,7 @@ export class ManaOceanService extends AbstractService {
 
   constructor(gameModel: GameModel, logger: GMLogger) {
     super(gameModel, logger);
-    this.setMetadata(metadata);
+    this.setMetadata(moMetadata);
     this.prevTideHeight = null;
     this.tideLevelTimerId = null;
     // this.manaModifiers = [];
@@ -156,7 +91,7 @@ export class ManaOceanService extends AbstractService {
     this.off('massacreTriggered', this.onMassacreTriggered);
   }
 
-  spellCast(data: SpellCast): void {
+  spellCast({ data }: SpellCastAction): void {
     this.logger.info('spellCast', data);
 
     // {
@@ -409,10 +344,7 @@ export class ManaOceanService extends AbstractService {
     });
   }
 
-  addManaEffect(data: {
-    locationId: number,
-    effectType: 'massacre' | 'powerSpell'
-  }): void {
+  addManaEffect(data: AddManaEffect): void {
     // this.logger.info('addManaEffect', data);
     const { locationId, effectType } = data;
     const locationRecord: LocationRecord = this.getLocation(locationId);
@@ -463,10 +395,7 @@ export class ManaOceanService extends AbstractService {
     });
   }
 
-  removeManaEffect(data: {
-    locationId: number,
-    effectId: string
-  }): void {
+  removeManaEffect(data: RemoveManaEffect): void {
     const { locationId, effectId } = data;
     const locationRecord: LocationRecord = this.getLocation(locationId);
     if (!locationRecord) {
@@ -490,7 +419,7 @@ export class ManaOceanService extends AbstractService {
     // this.logger.info('removeManaEffect', data);
   }
 
-  wipeManaOceanEffects(): void {
+  wipeManaOceanEffects(action: WipeManaOceanEffects): void {
     // this.logger.info('wipeManaOceanEffects');
     const manaOceanSettings: ManaOceanSettingsData = this.getSettings<ManaOceanSettingsData>('manaOcean');
     const locationRecords: LocationRecord[] = this.getFromModel<any, LocationRecord[]>('locationRecords');

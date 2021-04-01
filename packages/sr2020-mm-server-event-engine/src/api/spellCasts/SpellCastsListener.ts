@@ -24,7 +24,7 @@ export class SpellCastsListener {
     // console.log(data);
     this.gameModel.execute({
       type: 'spellCast',
-      ...data,
+      data,
     });
     // // console.log('onMessageRecieved');
     // // const { characterId } = console.log(data);
