@@ -1,4 +1,4 @@
-import { BackgroundImage } from "../types";
+import { BackgroundImage } from "../../types";
 
 // export const defaultBackgroundImages = [
 //   {
