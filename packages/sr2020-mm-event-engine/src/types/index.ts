@@ -209,3 +209,12 @@ export interface BackgroundImage {
   id: number;
   name: string;
 }
+
+export interface SoundStageData {
+  backgroundSound: string;
+  rotationSounds: string[];
+  rotationTimeout: number;
+  rotationSoundTimeout: number;
+  backgroundVolume: number;
+  rotationVolume: number;
+}

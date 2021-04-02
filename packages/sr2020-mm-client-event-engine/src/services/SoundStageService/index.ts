@@ -1,31 +1,28 @@
 import * as R from 'ramda';
 
-import { AbstractService, Metadata, GameModel, GMLogger } from 'sr2020-mm-event-engine';
+import { 
+  AbstractService, 
+  Metadata, 
+  GameModel, 
+  GMLogger,
+  Req,
+  Res
+} from 'sr2020-mm-event-engine';
 
-const metadata: Metadata = {
-  actions: [
-    'setBackgroundSound',
-    'rotationSoundsChange',
-    'clearSoundStage',
-    'setRotationTimeout',
-    'setRotationSoundTimeout',
-    'setRotationVolume',
-    'setBackgroundVolume',
-  ],
-  requests: ['soundStage'],
-  emitEvents: [
-    'backgroundSoundUpdate',
-    'rotationSoundsUpdate',
-    'rotationTimeoutUpdate',
-    'rotationSoundTimeoutUpdate',
-    'backgroundVolumeUpdate',
-    'rotationVolumeUpdate',
-  ],
-  needActions: [],
-  needRequests: [],
-  listenEvents: []
-};
-export class SoundStageService extends AbstractService {
+import { 
+  soundStageMetadata,
+  GetSoundStage,
+  SetBackgroundSound,
+  SetBackgroundVolume,
+  SetRotationSoundTimeout,
+  SetRotationTimeout,
+  SetRotationVolume,
+  ClearSoundStage,
+  RotationSoundsChange,
+  SoundStageEvents
+} from "./types";
+
+export class SoundStageService extends AbstractService<SoundStageEvents> {
   backgroundSound: string;
   rotationSounds: string[];
   rotationTimeout: number;
@@ -35,7 +32,7 @@ export class SoundStageService extends AbstractService {
 
   constructor(gameModel: GameModel, logger: GMLogger) {
     super(gameModel, logger);
-    this.setMetadata(metadata);
+    this.setMetadata(soundStageMetadata);
     this.backgroundSound = null;
     this.rotationSounds = [];
     this.rotationTimeout = 2000;
@@ -44,40 +41,41 @@ export class SoundStageService extends AbstractService {
     this.rotationVolume = 50;
   }
 
-  setData({ soundStageSettings = {} } = {}) {
-    // @ts-ignore
-    this.rotationTimeout = soundStageSettings.rotationTimeout || this.rotationTimeout;
-    // @ts-ignore
-    this.rotationSoundTimeout = soundStageSettings.rotationSoundTimeout || this.rotationSoundTimeout;
-    // @ts-ignore
-    this.backgroundVolume = soundStageSettings.backgroundVolume || this.backgroundVolume;
-    // @ts-ignore
-    this.rotationVolume = soundStageSettings.rotationVolume || this.rotationVolume;
-  }
+  // setData({ soundStageSettings = {} } = {}) {
+  //   // @ts-ignore
+  //   this.rotationTimeout = soundStageSettings.rotationTimeout || this.rotationTimeout;
+  //   // @ts-ignore
+  //   this.rotationSoundTimeout = soundStageSettings.rotationSoundTimeout || this.rotationSoundTimeout;
+  //   // @ts-ignore
+  //   this.backgroundVolume = soundStageSettings.backgroundVolume || this.backgroundVolume;
+  //   // @ts-ignore
+  //   this.rotationVolume = soundStageSettings.rotationVolume || this.rotationVolume;
+  // }
 
-  getData() {
-    return {
-      soundStageSettings: {
-        rotationTimeout: this.rotationTimeout,
-        rotationSoundTimeout: this.rotationSoundTimeout,
-        backgroundVolume: this.backgroundVolume,
-        rotationVolume: this.rotationVolume,
-      },
-    };
-  }
+  // getData() {
+  //   return {
+  //     soundStageSettings: {
+  //       rotationTimeout: this.rotationTimeout,
+  //       rotationSoundTimeout: this.rotationSoundTimeout,
+  //       backgroundVolume: this.backgroundVolume,
+  //       rotationVolume: this.rotationVolume,
+  //     },
+  //   };
+  // }
 
   // dispose() {
   //   // this._stop();
   // }
 
-  setBackgroundSound({ name }) {
+  setBackgroundSound({ name }: SetBackgroundSound) {
     this.backgroundSound = name;
-    this.emit('backgroundSoundUpdate', {
+    this.emit2({
+      type: 'backgroundSoundUpdate',
       backgroundSound: this.backgroundSound,
     });
   }
 
-  setRotationTimeout({ rotationTimeout }) {
+  setRotationTimeout({ rotationTimeout }: SetRotationTimeout) {
     if (!R.is(Number, rotationTimeout)) {
       return;
     }
@@ -88,12 +86,13 @@ export class SoundStageService extends AbstractService {
       rotationTimeout = 30000;
     }
     this.rotationTimeout = rotationTimeout;
-    this.emit('rotationTimeoutUpdate', {
+    this.emit2({
+      type: 'rotationTimeoutUpdate',
       rotationTimeout,
     });
   }
 
-  setRotationSoundTimeout({ rotationSoundTimeout }) {
+  setRotationSoundTimeout({ rotationSoundTimeout }: SetRotationSoundTimeout) {
     if (!R.is(Number, rotationSoundTimeout)) {
       return;
     }
@@ -104,12 +103,13 @@ export class SoundStageService extends AbstractService {
       rotationSoundTimeout = 30000;
     }
     this.rotationSoundTimeout = rotationSoundTimeout;
-    this.emit('rotationSoundTimeoutUpdate', {
+    this.emit2({
+      type: 'rotationSoundTimeoutUpdate',
       rotationSoundTimeout,
     });
   }
 
-  setBackgroundVolume({ backgroundVolume }) {
+  setBackgroundVolume({ backgroundVolume }: SetBackgroundVolume) {
     if (!R.is(Number, backgroundVolume)) {
       return;
     }
@@ -120,12 +120,13 @@ export class SoundStageService extends AbstractService {
       backgroundVolume = 100;
     }
     this.backgroundVolume = backgroundVolume;
-    this.emit('backgroundVolumeUpdate', {
+    this.emit2({
+      type: 'backgroundVolumeUpdate',
       backgroundVolume,
     });
   }
 
-  setRotationVolume({ rotationVolume }) {
+  setRotationVolume({ rotationVolume }: SetRotationVolume) {
     if (!R.is(Number, rotationVolume)) {
       return;
     }
@@ -136,39 +137,43 @@ export class SoundStageService extends AbstractService {
       rotationVolume = 100;
     }
     this.rotationVolume = rotationVolume;
-    this.emit('rotationVolumeUpdate', {
+    this.emit2({
+      type: 'rotationVolumeUpdate',
       rotationVolume,
     });
   }
 
-  clearSoundStage() {
+  clearSoundStage(arg: ClearSoundStage) {
     const hasBackgroundSound = !!this.backgroundSound;
     if (hasBackgroundSound) {
       this.backgroundSound = null;
-      this.emit('backgroundSoundUpdate', {
+      this.emit2({
+        type: 'backgroundSoundUpdate',
         backgroundSound: this.backgroundSound,
       });
     }
     const hasRotationSounds = this.rotationSounds.length !== 0;
     if (hasRotationSounds) {
       this.rotationSounds = [];
-      this.emit('rotationSoundsUpdate', {
+      this.emit2({
+        type: 'rotationSoundsUpdate',
         rotationSounds: this.rotationSounds,
       });
     }
   }
 
-  rotationSoundsChange({ added = [], removed = [] }) {
+  rotationSoundsChange({ added = [], removed = [] }: RotationSoundsChange) {
     const sounds = R.difference(this.rotationSounds, removed).concat(added);
     if (R.symmetricDifference(this.rotationSounds, sounds).length !== 0) {
       this.rotationSounds = sounds;
-      this.emit('rotationSoundsUpdate', {
+      this.emit2({
+        type: 'rotationSoundsUpdate',
         rotationSounds: this.rotationSounds,
       });
     }
   }
 
-  getSoundStage() {
+  getSoundStage(arg: Req<GetSoundStage>): Res<GetSoundStage> {
     return {
       backgroundSound: this.backgroundSound,
       rotationSounds: [...this.rotationSounds],
