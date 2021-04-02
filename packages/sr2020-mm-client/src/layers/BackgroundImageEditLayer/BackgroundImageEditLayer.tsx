@@ -3,10 +3,7 @@ import { L, LayersMeta, CommonLayerProps } from "sr2020-mm-client-core";
 import * as R from 'ramda';
 import './BackgroundImageEditLayer.css';
 
-import { getArrDiff, GameModel } from 'sr2020-mm-event-engine';
-import {
-  BackgroundImage
-} from 'sr2020-mm-client-event-engine/types';
+import { getArrDiff, GameModel, BackgroundImage } from 'sr2020-mm-event-engine';
 
 import { BackgroundImagePopup } from './BackgroundImagePopup';
 
@@ -86,7 +83,7 @@ export class BackgroundImageEditLayer extends Component<
   onCreateLayer(event) {
     const { gameModel, translator } = this.props;
     if (event.layer instanceof L.Rectangle) {
-      const rect = event.layer;
+      const rect = event.layer as L.Rectangle;
       console.log('rectangle created');
       const latlngs = translator.moveFrom(rect.getLatLngs());
       gameModel.execute({

@@ -1,61 +1,78 @@
 import * as R from 'ramda';
 
-import { AbstractService, Metadata, GameModel, GMLogger } from 'sr2020-mm-event-engine';
+import { 
+  AbstractService, 
+  Metadata, 
+  GameModel, 
+  GMLogger,
+  BackgroundImage,
+  Req,
+  Res
+} from 'sr2020-mm-event-engine';
 
 import { defaultBackgroundImages } from './DefaultBackgroundImages';
 
+import { 
+  backgroundImageMetadata,
+  GetBackgroundImages,
+  PostBackgroundImage,
+  PutBackgroundImage,
+  DeleteBackgroundImage,
+  BackgroundImageEvents
+} from "./types";
 
-import { BackgroundImage } from "../../types";
-
-const metadata: Metadata = {
-  actions: [
-    'putBackgroundImage',
-    'postBackgroundImage',
-    'deleteBackgroundImage',
-  ],
-  requests: ['backgroundImages'],
-  emitEvents: [
-    'putBackgroundImage',
-    'postBackgroundImage',
-    'deleteBackgroundImage',
-    'backgroundImagesChanged',
-  ],
-  listenEvents: [],
-  needRequests: [],
-  needActions: []
-};
-export class BackgroundImageService extends AbstractService {
+export class BackgroundImageService extends AbstractService<BackgroundImageEvents> {
   backgroundImages: BackgroundImage[];
   maxBackgroundImageId: number;
 
   constructor(gameModel: GameModel, logger: GMLogger) {
     super(gameModel, logger);
-    this.setMetadata(metadata);
+    this.setMetadata(backgroundImageMetadata);
     this.backgroundImages = R.clone(defaultBackgroundImages);
     this.maxBackgroundImageId = 1;
   }
 
   // @ts-ignore
-  setData({ backgroundImages } = {}) {
-    this.backgroundImages = backgroundImages || R.clone(defaultBackgroundImages);
-    this.maxBackgroundImageId = R.reduce(R.max, 1, R.pluck('id', this.backgroundImages)) as number;
-    this.emit('backgroundImagesChanged', {
-      type: 'backgroundImagesChanged',
-      backgroundImages,
-    });
-  }
+  // setData({ backgroundImages } = {}) {
+  //   this.backgroundImages = backgroundImages || R.clone(defaultBackgroundImages);
+  //   this.maxBackgroundImageId = R.reduce(R.max, 1, R.pluck('id', this.backgroundImages)) as number;
+  //   this.emit('backgroundImagesChanged', {
+  //     type: 'backgroundImagesChanged',
+  //     backgroundImages,
+  //   });
+  // }
 
-  getData() {
-    return {
-      backgroundImages: this.getBackgroundImages(),
-    };
-  }
+  // getData() {
+  //   return {
+  //     backgroundImages: this.getBackgroundImages(),
+  //   };
+  // }
 
-  getBackgroundImages() {
+  getBackgroundImages(request: Req<GetBackgroundImages>): Res<GetBackgroundImages> {
     return this.backgroundImages;
   }
 
-  putBackgroundImage({ id, props }) {
+  postBackgroundImage({ props }: PostBackgroundImage) {
+    this.maxBackgroundImageId++;
+    const backgroundImage: BackgroundImage = {
+      ...props,
+      image: 'images/noImage.svg',
+      id: this.maxBackgroundImageId,
+      name: `Image ${String(this.maxBackgroundImageId)}`,
+    };
+    this.backgroundImages = [...this.backgroundImages, backgroundImage];
+    this.emit2({ 
+      type: 'postBackgroundImage',
+      backgroundImage 
+    });
+    this.emit2({
+      type: 'backgroundImagesChanged',
+      backgroundImages: this.backgroundImages,
+    });
+    // return backgroundImage;
+  }
+
+  putBackgroundImage({ id, props }: PutBackgroundImage) {
     const index = this.backgroundImages.findIndex((bi) => bi.id === id);
     this.backgroundImages = [...this.backgroundImages];
     this.backgroundImages[index] = {
@@ -63,41 +80,28 @@ export class BackgroundImageService extends AbstractService {
       ...props,
       id,
     };
-    this.emit('putBackgroundImage', {
+    this.emit2({
+      type: 'putBackgroundImage',
       backgroundImage: this.backgroundImages[index],
     });
-    this.emit('backgroundImagesChanged', {
+    this.emit2({
       type: 'backgroundImagesChanged',
       backgroundImages: this.backgroundImages,
     });
   }
 
-  postBackgroundImage({ props }) {
-    this.maxBackgroundImageId++;
-    const backgroundImage = {
-      ...props,
-      image: 'images/noImage.svg',
-      id: this.maxBackgroundImageId,
-      name: `Image ${String(this.maxBackgroundImageId)}`,
-    };
-    this.backgroundImages = [...this.backgroundImages, backgroundImage];
-    this.emit('postBackgroundImage', { backgroundImage });
-    this.emit('backgroundImagesChanged', {
-      type: 'backgroundImagesChanged',
-      backgroundImages: this.backgroundImages,
-    });
-    return backgroundImage;
-  }
-
-  deleteBackgroundImage({ id }) {
+  deleteBackgroundImage({ id }: DeleteBackgroundImage) {
     const index = this.backgroundImages.findIndex((bi) => bi.id === id);
     const backgroundImage = this.backgroundImages[index];
     this.backgroundImages = R.remove(index, 1, this.backgroundImages);
-    this.emit('deleteBackgroundImage', { backgroundImage });
-    this.emit('backgroundImagesChanged', {
+    this.emit2({
+      type: 'deleteBackgroundImage',
+      backgroundImage
+    });
+    this.emit2({
       type: 'backgroundImagesChanged',
       backgroundImages: this.backgroundImages,
     });
-    return backgroundImage;
+    // return backgroundImage;
   }
 }

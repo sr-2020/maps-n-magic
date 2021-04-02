@@ -1,3 +1,5 @@
+import L from 'leaflet';
+
 import * as ManaOcean from "./manaOcean";
 export * from "./manaOcean";
 
@@ -198,3 +200,12 @@ export interface SpellCast {
   // targetCharacterId: '10246',
 }
 
+// export type RectLatLngs = L.LatLng[][] | L.LatLng[] | L.LatLng[][][];
+// export type RectLatLngs = L.LatLng[][];
+
+export interface BackgroundImage {
+  latlngs: L.LatLngLiteral[][];
+  image: string;
+  id: number;
+  name: string;
+}

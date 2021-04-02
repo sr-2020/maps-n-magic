@@ -7,9 +7,3 @@ export interface SoundStageData {
   rotationVolume: number;
 }
 
-export interface BackgroundImage {
-  latlngs: unknown[];
-  image: string;
-  id: number;
-  name: string;
-}

@@ -1,4 +1,4 @@
-import { BackgroundImage } from "../../types";
+import { BackgroundImage } from "sr2020-mm-event-engine";
 
 // export const defaultBackgroundImages = [
 //   {
