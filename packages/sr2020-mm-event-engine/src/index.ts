@@ -18,3 +18,4 @@ export * from './utils';
 export * from './utils/moonActivityUtils';
 
 export * from './types';
+export * from './serviceMetadata';

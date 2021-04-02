@@ -3,11 +3,9 @@ import {
   LocationRecordOptions,
   Typed,
   TypeOnly,
-} from 'sr2020-mm-event-engine';
-
-import { 
   SpellCast,
-} from "../../types";
+  TypeObjectOnly
+} from '../index';
 
 export interface LocationUpdate {
   id: number;
@@ -62,3 +60,20 @@ export type AddManaEffect = Typed<'addManaEffect', {
 }>;
 
 // events
+
+export type EWipeManaOceanEffects = TypeObjectOnly<'wipeManaOceanEffects'>;
+
+export type EAddManaEffect = Typed<'addManaEffect', {
+  locationId: number,
+  effectType: 'massacre' | 'powerSpell'
+}>;
+
+export type ERemoveManaEffect = Typed<'removeManaEffect', {
+  locationId: number,
+  effectId: string
+}>;
+
+export type ManaOceanStubEvents = 
+  EWipeManaOceanEffects |
+  EAddManaEffect |
+  ERemoveManaEffect;

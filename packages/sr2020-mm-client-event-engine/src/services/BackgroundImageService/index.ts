@@ -4,6 +4,7 @@ import { AbstractService, Metadata, GameModel, GMLogger } from 'sr2020-mm-event-
 
 import { defaultBackgroundImages } from './DefaultBackgroundImages';
 
+
 import { BackgroundImage } from "../../types";
 
 const metadata: Metadata = {

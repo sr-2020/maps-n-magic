@@ -1,4 +1,13 @@
-import { AbstractService, Metadata, GameModel, GMLogger } from 'sr2020-mm-event-engine';
+import { 
+  AbstractService,
+  Metadata, 
+  GameModel, 
+  GMLogger,
+  WipeManaOceanEffects,
+  AddManaEffect,
+  RemoveManaEffect,
+  ManaOceanStubEvents
+} from 'sr2020-mm-event-engine';
 
 const metadata: Metadata = {
   actions: [
@@ -16,28 +25,28 @@ const metadata: Metadata = {
   needRequests: [],
   listenEvents: [],
 };
-export class ClientEventStubService extends AbstractService {
+export class ManaOceanStubService extends AbstractService<ManaOceanStubEvents> {
 
   constructor(gameModel: GameModel, logger: GMLogger) {
     super(gameModel, logger);
     this.setMetadata(metadata);
   }
   
-  wipeManaOceanEffects() {
-    this.emit('wipeManaOceanEffects', {
+  wipeManaOceanEffects(action: WipeManaOceanEffects) {
+    this.emit2({
       type: 'wipeManaOceanEffects',
     });
   }
 
-  removeManaEffect(data) {
-    this.emit('removeManaEffect', {
+  removeManaEffect(data: RemoveManaEffect) {
+    this.emit2({
       type: 'removeManaEffect',
       ...data,
     });
   }
 
-  addManaEffect(data) {
-    this.emit('addManaEffect', {
+  addManaEffect(data: AddManaEffect) {
+    this.emit2({
       type: 'addManaEffect',
       ...data,
     });

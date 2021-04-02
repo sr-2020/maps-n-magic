@@ -60,6 +60,8 @@ export type Typed<T extends string, L = {}> = L & {type: T};
 // If some call is argumentless we can use any of "typeString" or {type: "typeString"}
 export type TypeOnly<T extends string> = T | {type: T};
 
+export type TypeObjectOnly<T extends string> = {type: T};
+
 // stub for generic function
 type Function = (...arg: any) => any;
 
