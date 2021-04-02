@@ -1,37 +1,31 @@
 import * as R from 'ramda';
 
-import { AbstractService, Metadata, LocationRecord, GameModel, GMLogger } from 'sr2020-mm-event-engine';
+import { 
+  AbstractService, 
+  Metadata, 
+  LocationRecord, 
+  GameModel, 
+  GMLogger,
+  Req,
+  Res
+} from 'sr2020-mm-event-engine';
 
-const metadata: Metadata = {
-  actions: [
-    'setCharacterId',
-    // fictive event, actually it is emitted by CharacterLocationService
-    'characterLocationChanged',
-  ],
-  requests: [
-    'characterId',
-    'characterLocationId',
-  ],
-  emitEvents: [
-    'characterIdChanged',
-    'emitCharacterLocationChanged',
-    // fictive event, actually it is emitted by CharacterLocationService
-    'characterLocationChanged',
-    'setBackgroundSound',
-  ],
-  listenEvents: [
-    'locationRecordsChanged2',
-  ],
-  needRequests: [],
-  needActions: []
-};
-export class CharacterWatchService extends AbstractService {
+import { 
+  characterWatchMetadata,
+  GetCharacterId,
+  GetCharacterLocationId,
+  SetCharacterId,
+  CharacterLocationChanged,
+  CharacterWatchEvents
+} from "./types";
+
+export class CharacterWatchService extends AbstractService<CharacterWatchEvents> {
   characterId: number | null;
   locationId: number | null;
 
   constructor(gameModel: GameModel, logger: GMLogger) {
     super(gameModel, logger);
-    this.setMetadata(metadata);
+    this.setMetadata(characterWatchMetadata);
     this.characterId = null;
     this.locationId = null;
     this.onLocationRecordsChanged2 = this.onLocationRecordsChanged2.bind(this);
@@ -46,6 +40,8 @@ export class CharacterWatchService extends AbstractService {
     this.off('locationRecordsChanged2', this.onLocationRecordsChanged2);
   }
 
+  // it is strange that it unconditionally updates background sound
+  // Seems we should check type of change.
   onLocationRecordsChanged2(data) {
     // this.logger.info('onLocationRecordsChanged2', data);
     if (this.locationId) {
@@ -53,28 +49,28 @@ export class CharacterWatchService extends AbstractService {
     }
   }
 
-  getCharacterId() {
+  getCharacterId(arg: Req<GetCharacterId>): Res<GetCharacterId> {
     return this.characterId;
   }
 
-  getCharacterLocationId() {
+  getCharacterLocationId(arg: Req<GetCharacterLocationId>): Res<GetCharacterLocationId> {
     return this.locationId;
   }
 
-  setCharacterId({ characterId }) {
+  setCharacterId({ characterId }: SetCharacterId) {
     this.characterId = characterId;
     this.locationId = null;
-    this.emit('characterIdChanged', {
+    this.emit2({
       type: 'characterIdChanged',
       characterId,
     });
-    this.emit('characterLocationChanged', {
+    this.emit2({
       type: 'characterLocationChanged',
       characterId,
       characterLocationId: this.locationId,
     });
     if (this.characterId !== null) {
-      this.emit('emitCharacterLocationChanged', {
+      this.emit2({
         type: 'emitCharacterLocationChanged',
         characterId,
       });
@@ -86,7 +82,7 @@ export class CharacterWatchService extends AbstractService {
     }
   }
 
-  characterLocationChanged(data) {
+  characterLocationChanged(data: CharacterLocationChanged) {
     if (this.characterId === null) {
       return;
     }
@@ -94,7 +90,7 @@ export class CharacterWatchService extends AbstractService {
     if (this.characterId === characterId) {
       this.logger.info('onCharacterLocationChanged', data);
       this.locationId = locationId;
-      this.emit('characterLocationChanged', {
+      this.emit2({
         type: 'characterLocationChanged',
         characterId,
         characterLocationId: locationId,
@@ -103,7 +99,7 @@ export class CharacterWatchService extends AbstractService {
     }
   }
 
-  updateBackgroundSound(locationId) {
+  private updateBackgroundSound(locationId) {
     const locationRecord = this.getLocation(locationId);
     if (locationRecord) {
       const { manaLevel } = locationRecord.options;
@@ -126,7 +122,7 @@ export class CharacterWatchService extends AbstractService {
     }
   }
 
-  getLocation(locationId): LocationRecord {
+  private getLocation(locationId: number): LocationRecord {
     return this.getFromModel({
       type: 'locationRecord',
       id: locationId,
