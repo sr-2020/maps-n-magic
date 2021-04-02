@@ -1,7 +1,34 @@
-export function capitalizeFirstLetter(string) {
+import { 
+  GameModel,
+  ELocationRecordsChanged2,
+  EBeaconRecordsChanged2,
+  ESettingsChanged,
+  EPostNotification,
+  ECharacterHealthStateChanged,
+  ECharacterHealthStatesLoaded,
+  EEnableManaOceanChanged,
+  EUserRecordsChanged
+} from "sr2020-mm-event-engine";
+
+import { ECharacterLocationChanged } from "../index";
+import { WSConnector } from '../api/WSConnector';
+
+export function capitalizeFirstLetter(string: string): string {
   return string.charAt(0).toUpperCase() + string.slice(1);
 }
 
+type ForwardServer2ClientEvent = 
+  ELocationRecordsChanged2 |
+  EBeaconRecordsChanged2 |
+  ESettingsChanged |
+  EPostNotification |
+  ECharacterHealthStateChanged |
+  ECharacterHealthStatesLoaded |
+  EEnableManaOceanChanged |
+  EUserRecordsChanged |
+  ECharacterLocationChanged;
+
+// In reality this is event list, not actions.
 const forwardServer2ClientActions = [
   'locationRecordsChanged2',
   'beaconRecordsChanged2',
@@ -11,7 +38,9 @@ const forwardServer2ClientActions = [
   'characterHealthStateChanged',
   'characterHealthStatesLoaded',
   'enableManaOceanChanged',
-  'setSettingsCatalog',
+  // TODO This is an action, not event.
+  // Check if it is really working. 
+  // 'setSettingsCatalog',
   'characterLocationChanged',
   'userRecordsChanged',
   // 'characterHealthStateChanged',
@@ -37,15 +66,10 @@ const forwardClient2ServerActions = [
 ];
 
 export class WsDataBinding {
-  gameModel: any;
-  wsConnection: any;
-
-  constructor({
-    gameModel, wsConnection,
-    // entityName, 
-  }) {
-    this.gameModel = gameModel;
-    this.wsConnection = wsConnection;
+  constructor(
+    private gameModel: GameModel, 
+    private wsConnection: WSConnector
+  ) {
     // this.entityName = entityName;
     // this.plural = `${entityName}s`;
     // this.ccEntityName = capitalizeFirstLetter(entityName);
@@ -96,17 +120,17 @@ export class WsDataBinding {
     this.subscribeWsConnection('off', this.wsConnection);
   }
 
-  subscribe(action, gameModel) {
+  subscribe(action: 'on' | 'off', gameModel: GameModel) {
     forwardClient2ServerActions.forEach((eventName) => gameModel[action](eventName, this.emit));
   }
 
-  subscribeWsConnection(action, wsConnection) {
+  subscribeWsConnection(action: 'on' | 'off', wsConnection: WSConnector) {
     wsConnection[action]('onOpen', this.initClientConfig);
     wsConnection[action]('onMessage', this.onMessage);
   }
 
   // eslint-disable-next-line max-lines-per-function
-  onMessage(data) {
+  onMessage(data: ForwardServer2ClientEvent) {
     const { type } = data;
     if (!forwardServer2ClientActions.includes(type)) {
       console.error('Unexpected action:', type, ', expected actions list:', forwardServer2ClientActions);
@@ -127,16 +151,20 @@ export class WsDataBinding {
       });
     }
 
-    if (type === 'setSettingsCatalog') {
-      const { settingsCatalog } = data;
-      this.gameModel.execute({
-        type: 'setSettingsCatalog',
-        settingsCatalog,
-      });
-    }
+    // TODO This is an action, not event.
+    // Check if it is really working. 
+    // if (type === 'setSettingsCatalog') {
+    //   const { settingsCatalog } = data;
+    //   this.gameModel.execute({
+    //     type: 'setSettingsCatalog',
+    //     settingsCatalog,
+    //   });
+    // }
 
     if (type === 'settingsChanged') {
-      const { name, settingsCatalog } = data;
+      // TODO Understand why TS can't resolve ESettingsChanged
+      // so it is necessary to expliticitely make type suggestion.
+      const { name, settingsCatalog } = data as ESettingsChanged;
       if (name && settingsCatalog) {
         this.gameModel.execute({
           type: 'setSettings',
@@ -194,7 +222,7 @@ export class WsDataBinding {
     // console.log('onMessage', data);
   }
 
-  emit(action) {
+  private emit(action: unknown) {
     this.wsConnection.send(action);
   }
 }

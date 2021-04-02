@@ -23,7 +23,7 @@ import {
 } from "./types";
 
 export class SoundStageService extends AbstractService<SoundStageEvents> {
-  backgroundSound: string;
+  backgroundSound: string | null;
   rotationSounds: string[];
   rotationTimeout: number;
   rotationSoundTimeout: number;

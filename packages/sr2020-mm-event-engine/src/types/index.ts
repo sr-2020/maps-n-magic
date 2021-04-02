@@ -211,7 +211,7 @@ export interface BackgroundImage {
 }
 
 export interface SoundStageData {
-  backgroundSound: string;
+  backgroundSound: string | null;
   rotationSounds: string[];
   rotationTimeout: number;
   rotationSoundTimeout: number;

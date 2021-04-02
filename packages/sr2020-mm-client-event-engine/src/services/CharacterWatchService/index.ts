@@ -7,7 +7,8 @@ import {
   GameModel, 
   GMLogger,
   Req,
-  Res
+  Res,
+  ELocationRecordsChanged2
 } from 'sr2020-mm-event-engine';
 
 import { 
@@ -42,7 +43,7 @@ export class CharacterWatchService extends AbstractService<CharacterWatchEvents>
 
   // it is strange that it unconditionally updates background sound
   // Seems we should check type of change.
-  onLocationRecordsChanged2(data) {
+  onLocationRecordsChanged2(data: ELocationRecordsChanged2) {
     // this.logger.info('onLocationRecordsChanged2', data);
     if (this.locationId) {
       this.updateBackgroundSound(this.locationId);
@@ -72,7 +73,7 @@ export class CharacterWatchService extends AbstractService<CharacterWatchEvents>
     if (this.characterId !== null) {
       this.emit2({
         type: 'emitCharacterLocationChanged',
-        characterId,
+        characterId: this.characterId,
       });
     } else {
       this.executeOnModel({
@@ -99,8 +100,8 @@ export class CharacterWatchService extends AbstractService<CharacterWatchEvents>
     }
   }
 
-  private updateBackgroundSound(locationId) {
-    const locationRecord = this.getLocation(locationId);
+  private updateBackgroundSound(locationId: number | null) {
+    const locationRecord = locationId !== null ? this.getLocation(locationId) : null;
     if (locationRecord) {
       const { manaLevel } = locationRecord.options;
       const soundName = this.getFromModel({

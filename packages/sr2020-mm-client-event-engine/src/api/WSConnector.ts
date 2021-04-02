@@ -1,13 +1,12 @@
 import { EventEmitter } from 'events';
-import { WS_URL } from '../settings';
+import { GameModel } from "sr2020-mm-event-engine";
+import { WS_URL } from './settings';
 
 export class WSConnector extends EventEmitter {
-  gameModel: any;
-  socket: any;
+  socket: WebSocket | null;
 
-  constructor(gameModel) {
+  constructor(private gameModel: GameModel) {
     super();
-    this.gameModel = gameModel;
     this.onOpen = this.onOpen.bind(this);
     this.onMessage = this.onMessage.bind(this);
     this.onClose = this.onClose.bind(this);
@@ -27,7 +26,7 @@ export class WSConnector extends EventEmitter {
     this.socket = socket;
   }
 
-  destroySocket() {
+  private destroySocket() {
     if (this.socket === null) {
       return;
     }
@@ -42,18 +41,18 @@ export class WSConnector extends EventEmitter {
     }
   }
 
-  onOpen(event) {
+  onOpen(event: Event): void {
     console.log('[open] WebSocket open');
     this.emit('onOpen');
     // this.isAlive = true;
   }
 
-  onMessage(event) {
+  onMessage(event: MessageEvent): void {
     // console.log(`[message] Received data from server: ${event.data}`);
     this.emit('onMessage', JSON.parse(event.data));
   }
 
-  onClose(event) {
+  onClose(event: CloseEvent): void {
     if (event.wasClean) {
       console.log(`[close] Connection closed cleanly, code=${event.code} reason=${event.reason}`);
     } else {
@@ -65,13 +64,15 @@ export class WSConnector extends EventEmitter {
     this.initConnection();
   }
 
-  onError(error) {
-    console.log(`[error] ${error.message}`);
+  onError(error: Event): void {
+    // TODO check if there is event or error
+    // console.log(`[error] ${error?.message}`);
+    console.log(`[error] ${error}`);
     // this.isAlive = false;
     this.initConnection();
   }
 
-  send(object) {
+  send(object: unknown): number {
     if (this.socket && this.socket.readyState === 1) {
       this.socket.send(JSON.stringify(object));
       return 0;

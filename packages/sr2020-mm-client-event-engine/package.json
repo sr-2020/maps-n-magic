@@ -18,5 +18,13 @@
   "scripts": {
     "ts:build": "tsc",
     "ts:watch": "tsc --watch --preserveWatchOutput"
-  }
+  },
+  "main": "dist/index.js",
+  "typings": "dist/index.d.ts",
+  "directories": {
+    "lib": "dist"
+  },
+  "files": [
+    "dist"
+  ]
 }

@@ -10,11 +10,11 @@ export const SERVER_URL = 'http://localhost:3001';
 
 export const POST_USER_POSITION = '/postUserPosition';
 
-export function joinUrl(...args) {
+export function joinUrl(...args: string[]): string {
   return args.join('');
 }
 
-let WS_URL;
+let WS_URL: string;
 if (process.env.NODE_ENV === 'production') {
   WS_URL = 'wss://maps-n-magic.evarun.ru/ws';
 } else {

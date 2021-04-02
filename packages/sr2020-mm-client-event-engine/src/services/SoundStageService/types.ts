@@ -62,7 +62,7 @@ export type RotationSoundsChange = Typed<'rotationSoundsChange', {
 // events
 
 export type EBackgroundSoundUpdate = Typed<'backgroundSoundUpdate', {
-  backgroundSound: string;
+  backgroundSound: string | null;
 }>;
 export type ERotationTimeoutUpdate = Typed<'rotationTimeoutUpdate', {
   rotationTimeout: number;

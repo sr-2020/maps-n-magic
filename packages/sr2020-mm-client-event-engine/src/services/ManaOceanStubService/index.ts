@@ -40,14 +40,12 @@ export class ManaOceanStubService extends AbstractService<ManaOceanStubEvents> {
 
   removeManaEffect(data: RemoveManaEffect) {
     this.emit2({
-      type: 'removeManaEffect',
       ...data,
     });
   }
 
   addManaEffect(data: AddManaEffect) {
     this.emit2({
-      type: 'addManaEffect',
       ...data,
     });
   }
