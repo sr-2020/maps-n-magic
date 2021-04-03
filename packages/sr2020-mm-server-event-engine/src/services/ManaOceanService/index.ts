@@ -22,23 +22,17 @@ import {
   SpellEffect,
   ManaOceanEffect,
   LocationRecordOptions,
-  MassacreEffect
-} from 'sr2020-mm-event-engine';
-
-import { 
+  MassacreEffect,
+  SpellCast,
   LocationUpdate,
   moMetadata,
   SpellCastAction,
   WipeManaOceanEffects,
   AddManaEffect,
   RemoveManaEffect
-} from "./types";
+} from 'sr2020-mm-event-engine';
 
 import { EffectCollector } from "./EffectCollector";
-
-import { 
-  SpellCast,
-} from "../../types";
 
 // import { manaOceanEffectSettings } from '../api/constants';
 

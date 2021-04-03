@@ -3,10 +3,9 @@ import moment from 'moment-timezone';
 // import { getCharacterLocation } from './getCharacterLocation';
 // import { getCharacterLifeStyle } from './getCharacterLifeStyle';
 // import { listenHealthChanges } from './listenHealthChanges';
-import { GameModel } from "sr2020-mm-event-engine";
+import { GameModel, SpellCast } from "sr2020-mm-event-engine";
 
 import { listenSpellCasts } from './listenSpellCasts';
-import { SpellCast } from "../../types";
 
 // const { listenHealthChanges } = require('./listenHealthChanges');
 // const { getCharacterLocation } = require('./getCharacterLocation');

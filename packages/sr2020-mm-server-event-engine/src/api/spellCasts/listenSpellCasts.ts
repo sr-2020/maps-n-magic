@@ -1,9 +1,9 @@
 // Imports the Google Cloud client library
 // const { PubSub } = require('@google-cloud/pubsub');
 import { PubSub, Message } from '@google-cloud/pubsub';
+import { SpellCast } from "sr2020-mm-event-engine";
 // import moment from 'moment-timezone';
 // import { bodyConditions } from 'sr2020-mm-data/gameConstants';
-import { SpellCast } from "../../types";
 
 let subscriptionName: string;
 

@@ -1,10 +1,9 @@
 import * as R from 'ramda';
 
-import { LocationUpdate } from "./types";
-
 import { 
   LocationRecord,
   ManaOceanEffect,
+  LocationUpdate
 } from 'sr2020-mm-event-engine';
 
 export class EffectCollector {
