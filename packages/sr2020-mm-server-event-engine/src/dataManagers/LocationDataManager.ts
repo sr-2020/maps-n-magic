@@ -1,6 +1,6 @@
 import * as R from 'ramda';
 
-import { GameModel, Identifiable } from "sr2020-mm-event-engine";
+import { GameModel, Identifiable, GMLogger } from "sr2020-mm-event-engine";
 
 import { DataProvider, ReadStrategy } from "./types";
 
@@ -20,9 +20,10 @@ export class LocationDataManager<
     gameModel: GameModel, 
     dataProvider: T, 
     entityName: string, 
-    readStrategy: ReadStrategy
+    readStrategy: ReadStrategy,
+    logger: GMLogger
   ) {
-    super(gameModel, dataProvider, entityName, readStrategy);
+    super(gameModel, dataProvider, entityName, readStrategy, logger);
     // this.onPostEntityRequested = this.onPostEntityRequested.bind(this);
     this.onPutEntitiesRequested = this.onPutEntitiesRequested.bind(this);
     // this.onDeleteEntityRequested = this.onDeleteEntityRequested.bind(this);

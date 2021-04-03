@@ -5,7 +5,7 @@ import './SoundManager.css';
 import Accordion from 'react-bootstrap/Accordion';
 import Card from 'react-bootstrap/Card';
 
-import { SoundStageData } from "sr2020-mm-client-event-engine/types";
+import { SoundStageData } from "sr2020-mm-event-engine";
 
 import { SoundStageEcho } from './SoundStageEcho';
 

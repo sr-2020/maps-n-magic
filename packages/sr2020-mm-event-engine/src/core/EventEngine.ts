@@ -2,6 +2,7 @@
 import { GameModel } from './GameModel';
 
 import { GMLogger } from "./types";
+import { getChildLogger } from "./utils";
 import { AbstractService } from "./AbstractService";
 import { AbstractDataBinding } from "./AbstractDataBinding";
 
@@ -15,7 +16,7 @@ export class EventEngine {
   dataBindings: AbstractDataBinding[];
 
   constructor(services2: typeof AbstractService[], logger: GMLogger) {
-    this.gameModel = new GameModel(logger);
+    this.gameModel = new GameModel(getChildLogger(logger, {service: 'GameModel'}));
     this.gameModel.init(services2);
     this.dataBindings = [];
   }

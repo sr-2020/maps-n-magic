@@ -1,7 +1,7 @@
 // eslint-disable-next-line max-classes-per-file
 import * as R from 'ramda';
 
-import { GameModel } from "sr2020-mm-event-engine";
+import { GameModel, GMLogger } from "sr2020-mm-event-engine";
 
 import { DataProvider, ReadStrategy } from "./types";
 
@@ -26,7 +26,8 @@ export class ReadDataManager<Entity, T extends GettableResourceProvider<Entity>>
     protected gameModel: GameModel, 
     protected dataProvider: T, 
     protected entityName: string, 
-    private readStrategy: ReadStrategy
+    private readStrategy: ReadStrategy,
+    protected logger: GMLogger, 
   ) {
     this.entities = [];
     this.entityName = entityName;
@@ -44,6 +45,7 @@ export class ReadDataManager<Entity, T extends GettableResourceProvider<Entity>>
   }
 
   load() {
+    this.logger.info(`Call to load ${this.entityName}`);
     // console.log(`load ${this.entityName}`);
     this.dataProvider.get().then((entities) => {
       if (R.equals(this.entities, entities)) {

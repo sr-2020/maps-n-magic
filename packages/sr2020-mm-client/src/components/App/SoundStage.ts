@@ -3,8 +3,8 @@
 import * as R from 'ramda';
 import { EventEmitter } from 'events';
 
-import { shuffle } from 'sr2020-mm-event-engine';
-import { SoundStageData } from 'sr2020-mm-client-event-engine/types';
+import { shuffle, SoundStageData } from 'sr2020-mm-event-engine';
+// import {  } from 'sr2020-mm-client-event-engine';
 import { AudioContextWrapper } from '../../utils/AudioContextWrapper';
 
 import { Sound, SoundCtl } from "../../types";

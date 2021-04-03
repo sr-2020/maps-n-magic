@@ -7,7 +7,9 @@ import {
   ECharacterHealthStateChanged,
   ECharacterHealthStatesLoaded,
   EEnableManaOceanChanged,
-  EUserRecordsChanged
+  EUserRecordsChanged,
+  ESetSettingsCatalog,
+  GMLogger
 } from "sr2020-mm-event-engine";
 
 import { ECharacterLocationChanged } from "../index";
@@ -26,7 +28,8 @@ type ForwardServer2ClientEvent =
   ECharacterHealthStatesLoaded |
   EEnableManaOceanChanged |
   EUserRecordsChanged |
-  ECharacterLocationChanged;
+  ECharacterLocationChanged |
+  ESetSettingsCatalog;
 
 // In reality this is event list, not actions.
 const forwardServer2ClientActions = [
@@ -38,15 +41,14 @@ const forwardServer2ClientActions = [
   'characterHealthStateChanged',
   'characterHealthStatesLoaded',
   'enableManaOceanChanged',
-  // TODO This is an action, not event.
-  // Check if it is really working. 
-  // 'setSettingsCatalog',
+  'setSettingsCatalog',
   'characterLocationChanged',
   'userRecordsChanged',
   // 'characterHealthStateChanged',
 ];
 
-const forwardClient2ServerActions = [
+// TODO try to get list of event types from event type interfaces
+const forwardClient2ServerEvents = [
   'postLocationRecordRequested',
   'putLocationRecordRequested',
   'putLocationRecordsRequested',
@@ -68,12 +70,13 @@ const forwardClient2ServerActions = [
 export class WsDataBinding {
   constructor(
     private gameModel: GameModel, 
-    private wsConnection: WSConnector
+    private wsConnection: WSConnector,
+    private logger: GMLogger
   ) {
     // this.entityName = entityName;
     // this.plural = `${entityName}s`;
     // this.ccEntityName = capitalizeFirstLetter(entityName);
-    this.emit = this.emit.bind(this);
+    this.sendToServer = this.sendToServer.bind(this);
     this.initClientConfig = this.initClientConfig.bind(this);
     this.onMessage = this.onMessage.bind(this);
     this.subscribe('on', this.gameModel);
@@ -121,7 +124,7 @@ export class WsDataBinding {
   }
 
   subscribe(action: 'on' | 'off', gameModel: GameModel) {
-    forwardClient2ServerActions.forEach((eventName) => gameModel[action](eventName, this.emit));
+    forwardClient2ServerEvents.forEach((eventName) => gameModel[action](eventName, this.sendToServer));
   }
 
   subscribeWsConnection(action: 'on' | 'off', wsConnection: WSConnector) {
@@ -133,7 +136,13 @@ export class WsDataBinding {
   onMessage(data: ForwardServer2ClientEvent) {
     const { type } = data;
     if (!forwardServer2ClientActions.includes(type)) {
-      console.error('Unexpected action:', type, ', expected actions list:', forwardServer2ClientActions);
+      this.logger.error('Unexpected action:', type, ', expected actions list:', forwardServer2ClientActions);
+      this.gameModel.execute({
+        type: 'postNotification',
+        title: 'Unexpected event: ' + type,
+        message: `Recieved unexpected event from server. Event is ignored.`,
+        kind: 'error',
+      })
       return;
     }
 
@@ -151,15 +160,20 @@ export class WsDataBinding {
       });
     }
 
-    // TODO This is an action, not event.
-    // Check if it is really working. 
-    // if (type === 'setSettingsCatalog') {
-    //   const { settingsCatalog } = data;
-    //   this.gameModel.execute({
-    //     type: 'setSettingsCatalog',
-    //     settingsCatalog,
-    //   });
-    // }
+    // This is synthetic transformation for transferring settings from server to client.
+    // We take all settings from server and transform it setSettings event sequence.
+    // Current settings implementation works with settings set separately.
+    // So transforming it to sequence is logical - we don't have batch settings processing now.
+    if (type === 'setSettingsCatalog') {
+      const { settingsCatalog } = data as ESetSettingsCatalog;
+      Object.keys(settingsCatalog).forEach(name => {
+        this.gameModel.execute({
+          type: 'setSettings',
+          name,
+          settings: settingsCatalog?.[name],
+        });
+      })
+    }
 
     if (type === 'settingsChanged') {
       // TODO Understand why TS can't resolve ESettingsChanged
@@ -222,7 +236,7 @@ export class WsDataBinding {
     // console.log('onMessage', data);
   }
 
-  private emit(action: unknown) {
+  private sendToServer(action: unknown) {
     this.wsConnection.send(action);
   }
 }

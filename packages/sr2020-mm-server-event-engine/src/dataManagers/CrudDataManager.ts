@@ -1,6 +1,6 @@
 import * as R from 'ramda';
 
-import { GameModel, Identifiable } from "sr2020-mm-event-engine";
+import { GameModel, Identifiable, GMLogger } from "sr2020-mm-event-engine";
 
 import { DataProvider, ReadStrategy } from "./types";
 
@@ -21,9 +21,10 @@ export class CrudDataManager<
     gameModel: GameModel, 
     dataProvider: T, 
     entityName: string, 
-    readStrategy: ReadStrategy
+    readStrategy: ReadStrategy,
+    logger: GMLogger, 
   ) {
-    super(gameModel, dataProvider, entityName, readStrategy);
+    super(gameModel, dataProvider, entityName, readStrategy, logger);
     this.onPostEntityRequested = this.onPostEntityRequested.bind(this);
     this.onPutEntityRequested = this.onPutEntityRequested.bind(this);
     this.onDeleteEntityRequested = this.onDeleteEntityRequested.bind(this);
@@ -47,11 +48,26 @@ export class CrudDataManager<
     gameModel[action](`delete${this.ccEntityName}Requested`, this.onDeleteEntityRequested);
   }
 
+  onPostEntityRequested({ props }: {props: Entity}) {
+    this.logger.debug(`Post requested, entity: ${this.entityName}`);
+    this.dataProvider.post({ props }).then((entity) => {
+      this.logger.debug(`Post confirmed, entity: ${this.entityName}, id ${entity.id}`);
+      // @ts-ignore
+      this.entities.push(entity);
+      this.gameModel.execute({
+        type: `post${this.ccEntityName}Confirmed`,
+        [this.entityName]: entity,
+      });
+    }).catch(this.getErrorHandler(`Error on ${this.entityName} post`));
+  }
+
   onPutEntityRequested({ id, props}:{id: number, props: Entity}) {
+    this.logger.debug(`Put requested, entity: ${this.entityName}, id ${id}`);
     clearTimeout(this.putEntityTimeoutIndex[id]);
 
     this.putEntityTimeoutIndex[id] = setTimeout(() => {
       this.dataProvider.put({ id, props }).then((entity: unknown) => {
+        this.logger.debug(`Put confirmed, entity: ${this.entityName}, id ${id}`);
         const index = this.entities.findIndex((br) => br.id === id);
         // @ts-ignore
         this.entities[index] = entity;
@@ -64,7 +80,9 @@ export class CrudDataManager<
   }
 
   onDeleteEntityRequested({ id }: { id: number }) {
+    this.logger.debug(`Delete requested, entity: ${this.entityName}, id ${id}`);
     this.dataProvider.delete({ id }).then(() => {
+      this.logger.debug(`Delete confirmed, entity: ${this.entityName}, id ${id}`);
       const entity = this.entities.find((br) => br.id === id);
       this.entities = this.entities.filter((br) => br.id !== id);
       this.gameModel.execute({
@@ -72,16 +90,5 @@ export class CrudDataManager<
         [this.entityName]: entity,
       });
     }).catch(this.getErrorHandler(`Error on ${this.entityName} delete`));
-  }
-
-  onPostEntityRequested({ props }: {props: Entity}) {
-    this.dataProvider.post({ props }).then((entity) => {
-      // @ts-ignore
-      this.entities.push(entity);
-      this.gameModel.execute({
-        type: `post${this.ccEntityName}Confirmed`,
-        [this.entityName]: entity,
-      });
-    }).catch(this.getErrorHandler(`Error on ${this.entityName} post`));
   }
 }

@@ -23,7 +23,13 @@ export class WebSocketWrapper {
     const { data } = this.initConfig;
     data.forEach((item) => {
       if (!this.gameModel.hasRequest(item.payload)) {
-        this.logger.info('GameModel unsupported request:', item.payload);
+        this.logger.error('GameModel unsupported request:', item.payload);
+        this.gameModel.execute({
+          type: 'postNotification',
+          title: `GameModel unsupported request`,
+          message: `Request type: ${item.payload}`,
+          kind: 'error',
+        });
         return;
       }
       // this.logger.info('sendingData', item.type, item.payload, this.gameModel.get(item.payload));
@@ -35,13 +41,24 @@ export class WebSocketWrapper {
   }
 
   onMessage(msgStr: WebSocket.Data) {
-    const msg = JSON.parse(msgStr.toString());
-    if (R.is(String, msg)) {
-      this.logger.info(msg);
-    } else {
-      this.logger.info(msg.type, msgStr);
+    try {
+      const msg = JSON.parse(msgStr.toString());
+      if (R.is(String, msg)) {
+        this.logger.info(msg);
+      } else {
+        this.logger.info(msg.type, msgStr);
+      }
+      // this.gameModel.execute(msg);
+      this.gameModel.emit(msg);
+    } catch(err) {
+      this.logger.error('Error on processing message:', msgStr, ', error', err);
+      this.gameModel.execute({
+        type: 'postNotification',
+        title: `Error on processing message`,
+        message: `Err: ${err.message || err}, message ${msgStr}`,
+        kind: 'error',
+      });
     }
-    this.gameModel.execute(msg);
   }
 
   onClose() {

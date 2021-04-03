@@ -3,10 +3,7 @@ import { L, LayersMeta, CommonLayerProps } from "sr2020-mm-client-core";
 import * as R from 'ramda';
 import './BackgroundImageEditLayer.css';
 
-import { getArrDiff } from 'sr2020-mm-event-engine';
-import {
-  BackgroundImage
-} from 'sr2020-mm-client-event-engine/types';
+import { getArrDiff, BackgroundImage } from 'sr2020-mm-event-engine';
 
 import { 
   bgRectangle,

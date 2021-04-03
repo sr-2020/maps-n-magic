@@ -66,7 +66,7 @@ const customFormat = combine(
   myFormat,
 );
 
-export const winstonLogger = winston.createLogger({
+const baseWinstonLogger = winston.createLogger({
   level: 'info',
   // format: winston.format.json(),
   format: customFormat,
@@ -106,7 +106,7 @@ export const winstonLogger = winston.createLogger({
 // `${info.level}: ${info.message} JSON.stringify({ ...rest }) `
 //
 if (process.env.NODE_ENV !== 'production') {
-  winstonLogger.add(new winston.transports.Console({
+  baseWinstonLogger.add(new winston.transports.Console({
     // format: winston.format.simple(),
     // format: winston.format.simple(),
     format: customFormat,
@@ -115,14 +115,14 @@ if (process.env.NODE_ENV !== 'production') {
   }));
 }
 
-winstonLogger.stream = {
+baseWinstonLogger.stream = {
   // @ts-ignore
   write(message, encoding) {
-    winstonLogger.info(message);
+    baseWinstonLogger.info(message);
   },
 };
 
-function customChild(logger: GMLogger, defaultMeta: object) {
+function customChild(logger: GMLogger, defaultMeta: object): GMLogger {
   if(logger.child) {
     const childLogger = logger.child({});
     childLogger.defaultMeta = { ...logger.defaultMeta, ...defaultMeta };
@@ -133,7 +133,16 @@ function customChild(logger: GMLogger, defaultMeta: object) {
 }
 
 // @ts-ignore
-winstonLogger.customChild = customChild;
+baseWinstonLogger.customChild = customChild;
+
+const winstonLogger = baseWinstonLogger as winston.Logger & {
+  stream: {
+    write(message, encoding);
+  },
+  customChild(logger: GMLogger, defaultMeta: object): GMLogger;
+}
+
+export { winstonLogger }
 
 // winstonLogger.defaultMeta = { service: 'root2323' };
 

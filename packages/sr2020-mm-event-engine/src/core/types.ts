@@ -18,9 +18,10 @@ export interface GMEvent {
 // export type GMLogger = unknown;
 
 export interface GMLogger {
-  info: (...args: unknown[]) => void;
-  warn: (...args: unknown[]) => void;
   error: (...args: unknown[]) => void;
+  warn: (...args: unknown[]) => void;
+  info: (...args: unknown[]) => void;
+  debug: (...args: unknown[]) => void;
   customChild?: (baseLogger: GMLogger, defaultMeta: object) => GMLogger;
   child?: (options: Object) => GMLogger;
   defaultMeta?: object;

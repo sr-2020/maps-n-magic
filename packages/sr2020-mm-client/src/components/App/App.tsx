@@ -30,7 +30,7 @@ import {
 
 import {
   makeGameModel,
-} from 'sr2020-mm-client-event-engine/configs/clientEventEngine';
+} from 'sr2020-mm-client-event-engine';
 
 import { AudioContextWrapper } from '../../utils/AudioContextWrapper';
 // import { SpiritEditor } from '../SpiritEditor';
@@ -122,7 +122,7 @@ export class App extends Component<AppProps, AppState> {
   }
 
   componentDidMount() {
-    const { gameModel, gameServer } = makeGameModel(initialDatabase);
+    const { gameModel, gameServer } = makeGameModel();
     this.soundStage.subscribeOnModel(gameModel);
     this.setState({
       translator: new Translator(mapDefaults.defaultCenter, null),

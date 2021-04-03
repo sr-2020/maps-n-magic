@@ -6,15 +6,13 @@ import { GameModelVerificator } from './GameModelVerificator';
 import { AbstractService } from './AbstractService';
 
 import { GMAction, GMRequest, GMLogger } from "./types";
-import { stringToType } from "./utils";
+import { stringToType, getChildLogger } from "./utils";
 
 export interface ServiceIndex {
   [index: string]: AbstractService;
 }
 
 export class GameModel extends EventEmitter {
-  logger: GMLogger;
-
   actionMap: ServiceIndex;
 
   requestMap: ServiceIndex;
@@ -25,9 +23,8 @@ export class GameModel extends EventEmitter {
 
   // migrator: unknown;
 
-  constructor(logger: GMLogger) {
+  constructor(private logger: GMLogger) {
     super();
-    this.logger = logger;
     this.actionMap = {};
     this.requestMap = {};
     this.verificator = new GameModelVerificator();
@@ -40,11 +37,7 @@ export class GameModel extends EventEmitter {
       
       // this.logger.info('Creating service', service.constructor.name);
       this.logger.info('Creating service', serviceClass.name);
-      let childLogger = this.logger;
-      if (this.logger.customChild) {
-        // childLogger = this.logger.customChild(this.logger, { service: service.constructor.name });
-        childLogger = this.logger.customChild(this.logger, { service: serviceClass.name });
-      }
+      const childLogger = getChildLogger(this.logger, { service: serviceClass.name });
       const service = new serviceClass(this, childLogger);
       // const service: AbstractService = new ServiceClass(childLogger);
       // service.init(this, childLogger);
@@ -99,6 +92,11 @@ export class GameModel extends EventEmitter {
       return service.execute<T>(action);
     }
     throw new Error(`Unknown action ${JSON.stringify(action)}`);
+  }
+
+  on(event: string | symbol, listener: (...args: any[]) => void): this {
+    this.logger.info(`Subscribe on GM event ${String(event)}`);
+    return super.on(event, listener);
   }
 
   get<T>(rawRequest: GMRequest | string): T {

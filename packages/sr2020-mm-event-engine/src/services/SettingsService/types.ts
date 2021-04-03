@@ -18,7 +18,7 @@ export const ssMetadata: Metadata = {
     'postSettings',
     'postSettingsConfirmed',
     'setSettings',
-    'setSettingsCatalog',
+    // 'setSettingsCatalog',
   ],
   requests: [
     'settingsCatalog',
@@ -28,6 +28,7 @@ export const ssMetadata: Metadata = {
     'postSettings',
     'postSettingsRequested',
     'settingsChanged',
+    'setSettingsCatalog',
   ],
   listenEvents: [],
   needActions: [],
@@ -64,6 +65,9 @@ export type EPostSettingsRequested = Typed<'postSettingsRequested', PostSettings
 export type EPostSettings = Typed<'postSettings', PostSettingsArgs>;
 export type ESettingsChanged = Typed<'settingsChanged', {
   name: 'manaOcean' | 'manaOceanEffects';
+  settingsCatalog: SettingsCatalog;
+}>;
+export type ESetSettingsCatalog = Typed<'setSettingsCatalog', {
   settingsCatalog: SettingsCatalog;
 }>;
 

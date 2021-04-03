@@ -1,10 +1,11 @@
 import * as R from 'ramda';
-import { GameModel } from "sr2020-mm-event-engine";
+import { GameModel, GMLogger } from "sr2020-mm-event-engine";
 
 export class RedirectDataBinding {
   constructor(
     private gameModel: GameModel, 
-    private redirectIndex: Record<string, string>
+    private redirectIndex: Record<string, string>,
+    private logger: GMLogger
   ) {
     this.emit = this.emit.bind(this);
     this.subscribe('on', this.gameModel);
@@ -15,7 +16,7 @@ export class RedirectDataBinding {
   }
 
   subscribe(action: 'on' | 'off', gameModel: GameModel) {
-    this.gameModel.logger.info('redirectIndex keys', R.keys(this.redirectIndex));
+    this.logger.info('redirectIndex keys', R.keys(this.redirectIndex));
     // console.log('redirectIndex keys', R.keys(this.redirectIndex));
     R.keys(this.redirectIndex).forEach((eventName) => gameModel[action](eventName, this.emit(eventName)));
   }

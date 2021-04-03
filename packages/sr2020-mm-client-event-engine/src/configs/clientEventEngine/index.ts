@@ -63,6 +63,6 @@ export function makeGameModel() {
   // fillGameModelWithBots(gameModel);
 
   const wsConnection = new WSConnector(gameModel);
-  gameServer.addDataBinding(new WsDataBinding(gameModel, wsConnection));
+  gameServer.addDataBinding(new WsDataBinding(gameModel, wsConnection, console));
   return { gameModel, gameServer };
 }

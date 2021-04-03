@@ -33,7 +33,7 @@ import { CharacterLocDataManager } from '../dataManagers/CharacterLocDataManager
 
 import { defaultManaOceanSettings, manaOceanEffectSettings } from '../api/constants';
 
-import { winstonLogger } from "./winstonLogger";
+import { winstonLogger as rootLogger } from "./winstonLogger";
 
 import {
   RemoteLocationRecordProvider as LocationRecordProvider,
@@ -70,18 +70,21 @@ const services = [
 export function makeGameModel() {
   // const gameServer = new EventEngine(services, console);
   // @ts-ignore
-  const gameServer = new EventEngine(services, winstonLogger);
-  // const gameServer = new EventEngine([], winstonLogger);
+  const gameServer = new EventEngine(services, rootLogger);
+  // const gameServer = new EventEngine([], rootLogger);
   // gameServer.setData(database);
   const gameModel = gameServer.getGameModel();
   // fillGameModelWithBots(gameModel);
 
+  const beaconRecordLogger = rootLogger.customChild(rootLogger, { service: 'BeaconRecordDB' });
   const beaconRecordDataBinding = new CrudDataManager<BeaconRecord, BeaconRecordProvider>(
     gameModel,
     new BeaconRecordProvider(),
     'beaconRecord',
-    new PollingReadStrategy(gameModel, 15000, winstonLogger)
+    new PollingReadStrategy(gameModel, 15000, beaconRecordLogger),
+    beaconRecordLogger
   );
+  beaconRecordDataBinding.initialize();
   gameServer.addDataBinding(beaconRecordDataBinding);
 
   // gameServer.addDataBinding(new DataBinding({
@@ -97,8 +100,10 @@ export function makeGameModel() {
     gameModel,
     new LocationRecordProvider(),
     'locationRecord',
-    new PollingReadStrategy(gameModel, 15000, winstonLogger)
+    new PollingReadStrategy(gameModel, 15000, rootLogger),
+    rootLogger
   );
+  locationRecordDataBinding.initialize();
   gameServer.addDataBinding(locationRecordDataBinding);
 
   // gameServer.addDataBinding(new DataBinding({
@@ -114,8 +119,10 @@ export function makeGameModel() {
     gameModel,
     new UserRecordProvider(),
     'userRecord',
-    new PollingReadStrategy(gameModel, 15000, winstonLogger, 'reloadUserRecords')
+    new PollingReadStrategy(gameModel, 15000, rootLogger, 'reloadUserRecords'),
+    rootLogger
   );
+  userRecordDataBinding.initialize();
   gameServer.addDataBinding(userRecordDataBinding);
 
 
@@ -133,12 +140,13 @@ export function makeGameModel() {
     gameModel,
     new ManaOceanSettingsProvider(),
     'manaOcean',
-    new PollingReadStrategy(gameModel, 15000, winstonLogger),
+    new PollingReadStrategy(gameModel, 15000, rootLogger),
     {
       defaultSettings: defaultManaOceanSettings,
-      logger: winstonLogger,
+      logger: rootLogger,
     }
   );
+  manaOceanSettingsDB.initialize();
   gameServer.addDataBinding(manaOceanSettingsDB);
 
   // gameServer.addDataBinding(new DataBinding({
@@ -149,19 +157,20 @@ export function makeGameModel() {
   //   ReadStrategy: PollingReadStrategy,
   //   ReadStrategyArgs: [15000],
   //   defaultSettings: defaultManaOceanSettings,
-  //   logger: winstonLogger,
+  //   logger: rootLogger,
   // }));
 
   const manaOceanEffectsSettingsDB = new SettingsDataManager<ManaOceanEffectSettingsData, ManaOceanEffectSettingsProvider>(
     gameModel,
     new ManaOceanEffectSettingsProvider(),
     'manaOceanEffects',
-    new PollingReadStrategy(gameModel, 15000, winstonLogger),
+    new PollingReadStrategy(gameModel, 15000, rootLogger),
     {
       defaultSettings: manaOceanEffectSettings,
-      logger: winstonLogger,
+      logger: rootLogger,
     }
   );
+  manaOceanEffectsSettingsDB.initialize();
   gameServer.addDataBinding(manaOceanEffectsSettingsDB);
 
   // gameServer.addDataBinding(new DataBinding({
@@ -172,12 +181,12 @@ export function makeGameModel() {
   //   ReadStrategy: PollingReadStrategy,
   //   ReadStrategyArgs: [15000],
   //   defaultSettings: manaOceanEffectSettings,
-  //   logger: winstonLogger,
+  //   logger: rootLogger,
   // }));
 
   const charLocDM = new CharacterLocDataManager(
     gameModel,
-    winstonLogger,
+    rootLogger,
   );
   charLocDM.initialize();
   gameServer.addDataBinding(charLocDM);
@@ -198,11 +207,12 @@ export function makeGameModel() {
       putCharLocationRequested: 'putCharLocationConfirmed',
       enableManaOceanRequested: 'enableManaOceanConfirmed',
     },
+    rootLogger
   ));
   const characterStatesListener = new CharacterStatesListener(gameModel);
   const characterLocationListener = new CharacterLocationListener(gameModel);
   const spellCastsListener = new SpellCastsListener(gameModel);
-  const pushNotificationEmitter = new PushNotificationEmitter(gameModel, winstonLogger);
+  const pushNotificationEmitter = new PushNotificationEmitter(gameModel, rootLogger);
   pushNotificationEmitter.initialize();
   return { gameModel, gameServer };
 }

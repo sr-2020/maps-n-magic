@@ -3,11 +3,7 @@ import { L, LayersMeta, CommonLayerProps } from "sr2020-mm-client-core";
 import * as R from 'ramda';
 import './BackgroundImageDisplayLayer.css';
 
-import {
-  BackgroundImage
-} from 'sr2020-mm-client-event-engine/types';
-
-import { getArrDiff, latLngsToBounds } from 'sr2020-mm-event-engine';
+import { getArrDiff, latLngsToBounds, BackgroundImage } from 'sr2020-mm-event-engine';
 
 import { 
   bgTitleOverlay,

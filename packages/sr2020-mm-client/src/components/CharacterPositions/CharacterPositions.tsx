@@ -18,7 +18,7 @@ import {
 } from 'sr2020-mm-event-engine';
 
 // TODO this call should be moved in event engine service
-import { postUserPosition } from 'sr2020-mm-client-event-engine/api/position';
+import { postUserPosition } from 'sr2020-mm-client-event-engine';
 
 import { CharacterDataList } from '../CharacterDataList';
 

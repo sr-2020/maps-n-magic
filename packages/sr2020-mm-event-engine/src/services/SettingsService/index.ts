@@ -59,26 +59,26 @@ export class SettingsService extends AbstractService<SettingsEvents> {
     return R.clone(this.settingsCatalog);
   }
 
-  setSettingsCatalog({ settingsCatalog }: SetSettingsCatalog): void {
-    const prevSettingsCatalog = this.settingsCatalog;
-    let list: SettingsKeys[] = [];
-    if (R.is(Object, settingsCatalog)) {
-      list = R.keys(settingsCatalog);
-    }
-    if (R.is(Object, prevSettingsCatalog)) {
-      list = R.uniq([...list, ...R.keys(prevSettingsCatalog)]);
-    }
-    this.settingsCatalog = settingsCatalog;
-    list.forEach((newKey) => {
-      if (!R.equals(this.settingsCatalog[newKey], prevSettingsCatalog[newKey])) {
-        this.emit('settingsChanged', {
-          type: 'settingsChanged',
-          name: newKey,
-          settingsCatalog: this.settingsCatalog,
-        });
-      }
-    });
-  }
+  // setSettingsCatalog({ settingsCatalog }: SetSettingsCatalog): void {
+  //   const prevSettingsCatalog = this.settingsCatalog;
+  //   let list: SettingsKeys[] = [];
+  //   if (R.is(Object, settingsCatalog)) {
+  //     list = R.keys(settingsCatalog);
+  //   }
+  //   if (R.is(Object, prevSettingsCatalog)) {
+  //     list = R.uniq([...list, ...R.keys(prevSettingsCatalog)]);
+  //   }
+  //   this.settingsCatalog = settingsCatalog;
+  //   list.forEach((newKey) => {
+  //     if (!R.equals(this.settingsCatalog[newKey], prevSettingsCatalog[newKey])) {
+  //       this.emit2({
+  //         type: 'settingsChanged',
+  //         name: newKey,
+  //         settingsCatalog: this.settingsCatalog,
+  //       });
+  //     }
+  //   });
+  // }
 
   getSettings({ name }: Req<GetSettings>): Res<GetSettings> {
     // this.logger.info('getSettings', name, this.settingsCatalog);
@@ -92,7 +92,7 @@ export class SettingsService extends AbstractService<SettingsEvents> {
     this.setData({ settingsCatalog: { ...this.settingsCatalog, [name]: settings } });
 
     if (!areEqual) {
-      this.emit('settingsChanged', {
+      this.emit2({
         type: 'settingsChanged',
         name,
         settingsCatalog: this.settingsCatalog,

@@ -4,10 +4,8 @@ import {
   UserRecord,
   ManaOceanEffectSettingsData,
   ManaOceanSettingsData,
-} from 'sr2020-mm-event-engine';
-import {
   BackgroundImage
-} from 'sr2020-mm-client-event-engine/types';
+} from 'sr2020-mm-event-engine';
 
 import { basicDataHOC } from './basicDataHOC';
 import { settingsDataHOC } from './settingsDataHOC';
