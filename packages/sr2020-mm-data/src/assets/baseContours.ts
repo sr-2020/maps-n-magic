@@ -1,4 +1,5 @@
 import * as R from 'ramda';
+import { GeoJSON, Feature, LineString } from "geojson";
 
 const baseClosedLLs = [
   [36.8720195, 54.9296674],
@@ -11,7 +12,7 @@ const baseClosedLLs = [
   [36.8727598, 54.9304504],
   [36.8723843, 54.9296675],
   [36.8720195, 54.9296674],
-].map(R.reverse);
+].map(el => R.reverse(el));
 
 const baseLLs = [
   [36.8706891, 54.9300497],
@@ -24,7 +25,7 @@ const baseLLs = [
   [36.8720195, 54.9296674],
   [36.8710324, 54.9300682],
   [36.8706891, 54.9300497],
-].map(R.reverse);
+].map(el => R.reverse(el));
 
 const baseCommonLLs = [
   [36.8706891, 54.9300497],
@@ -49,9 +50,9 @@ const baseCommonLLs = [
 
   [36.8710324, 54.9300682],
   [36.8706891, 54.9300497],
-].map(R.reverse);
+].map(el => R.reverse(el));
 
-const initialLineString = {
+const initialLineString: Feature<LineString> = {
   type: 'Feature',
   geometry: {
     type: 'LineString',
@@ -67,8 +68,8 @@ const initialLineString = {
   },
 };
 
-function contourToFeature(contour, props) {
-  const lineString = R.clone(initialLineString);
+function contourToFeature(contour, props): Feature<LineString> {
+  const lineString: Feature<LineString> = R.clone(initialLineString);
   lineString.geometry.coordinates = contour.map(([t1, t2]) => [t2, t1, 0]);
   lineString.properties = {
     ...lineString.properties,
@@ -77,7 +78,7 @@ function contourToFeature(contour, props) {
   return lineString;
 }
 
-const contourGeoJson = {
+const contourGeoJson: GeoJSON = {
   type: 'FeatureCollection',
   features: [
     contourToFeature(baseClosedLLs, {

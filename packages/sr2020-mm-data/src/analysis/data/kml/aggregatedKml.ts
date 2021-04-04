@@ -1,4 +1,6 @@
-export default {
+import { GeoJSON } from "geojson";
+
+export const staticGeoData: GeoJSON = {
   "type": "FeatureCollection",
   "features": [
     {
