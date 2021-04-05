@@ -1,20 +1,19 @@
 import React, { Component } from 'react';
 import './NotificationWatcher.css';
 
-// import { ErrorWatcherPropTypes } from '../../types';
+import { GameModel, NotificationData } from "sr2020-mm-event-engine";
+
 import { ToastWrapper } from './ToastWrapper';
 
 interface NotificationWatcherProps {
-  gameModel: any;
+  gameModel: GameModel;
 }
 interface NotificationWatcherState {
-  notifications: any[];
+  notifications: NotificationData[];
 }
 
 export class NotificationWatcher extends Component<NotificationWatcherProps, NotificationWatcherState> {
-  // static propTypes = ErrorWatcherPropTypes;
-
-  constructor(props) {
+  constructor(props: NotificationWatcherProps) {
     super(props);
     this.state = {
       notifications: [
@@ -52,7 +51,7 @@ export class NotificationWatcher extends Component<NotificationWatcherProps, Not
     console.log('NotificationWatcher mounted');
   }
 
-  componentDidUpdate(prevProps) {
+  componentDidUpdate(prevProps: NotificationWatcherProps) {
     const {
       gameModel,
     } = this.props;
@@ -71,20 +70,20 @@ export class NotificationWatcher extends Component<NotificationWatcherProps, Not
     console.log('NotificationWatcher will unmount');
   }
 
-  onPostNotifiaction(notification) {
+  onPostNotifiaction(notification: NotificationData) {
     // console.error(kind, title, message);
     this.setState(({ notifications }) => ({
       notifications: [...notifications, notification],
     }));
   }
 
-  onClearNotification(notification) {
+  onClearNotification(notification: NotificationData): void {
     this.setState(({ notifications }) => ({
       notifications: notifications.filter((n) => n !== notification),
     }));
   }
 
-  subscribe(action, gameModel) {
+  subscribe(action: 'on'|'off', gameModel: GameModel) {
     gameModel[action]('postNotification', this.onPostNotifiaction);
   }
 

@@ -1,19 +1,30 @@
-import React, { Component } from 'react';
+import React, { ChangeEventHandler, Component, ChangeEvent } from 'react';
 import './SoundSettingsForm.css';
 import * as R from 'ramda';
 
 import classNames from 'classnames';
+import { GameModel } from "sr2020-mm-event-engine";
+import { WithTranslation } from "react-i18next";
+
 import { TimeoutInput } from './TimeoutInput';
 import { InputLabel } from './InputLabel';
 
 // import { SoundSettingsFormPropTypes } from '../../../types';
 
-const e2Timeout = R.pipe(parseInt, R.multiply(1000));
-const e2Volume = parseInt;
+type strToNumber = (val: string) => number;
 
-interface SoundSettingsFormProps {
-  gameModel: any;
-  t: any;
+const e2Timeout: strToNumber = R.pipe(parseInt, R.multiply(1000));
+const e2Volume: strToNumber = parseInt;
+
+// this.onRotationSoundTimeoutChange = this.onParamChange('setRotationSoundTimeout', 'rotationSoundTimeout', e2Timeout);
+// this.onRotationTimeoutChange = this.onParamChange('setRotationTimeout', 'rotationTimeout', e2Timeout);
+// this.onBackgroundVolumeChange = this.onParamChange('setBackgroundVolume', 'backgroundVolume', e2Volume);
+// this.onRotationVolumeChange = this.onParamChange('setRotationVolume', 'rotationVolume', e2Volume);
+type ActionTypes = 'setRotationSoundTimeout' | 'setRotationTimeout' | 'setBackgroundVolume' | 'setRotationVolume';
+type PropNames = 'rotationSoundTimeout' | 'rotationTimeout' | 'backgroundVolume' | 'rotationVolume';
+
+interface SoundSettingsFormProps extends WithTranslation {
+  gameModel: GameModel;
 }
 interface SoundSettingsFormState {
   initialized: boolean;
@@ -24,13 +35,12 @@ interface SoundSettingsFormState {
 }
 
 export class SoundSettingsForm extends Component<SoundSettingsFormProps, SoundSettingsFormState> {
-  // static propTypes = SoundSettingsFormPropTypes;
-  onRotationSoundTimeoutChange: any;
-  onRotationTimeoutChange: any;
-  onBackgroundVolumeChange: any;
-  onRotationVolumeChange: any;
+  onRotationSoundTimeoutChange: ChangeEventHandler<HTMLInputElement>;
+  onRotationTimeoutChange: ChangeEventHandler<HTMLInputElement>;
+  onBackgroundVolumeChange: ChangeEventHandler<HTMLInputElement>;
+  onRotationVolumeChange: ChangeEventHandler<HTMLInputElement>;
 
-  constructor(props) {
+  constructor(props: SoundSettingsFormProps) {
     super(props);
     this.state = {
       rotationTimeout: null,
@@ -61,7 +71,7 @@ export class SoundSettingsForm extends Component<SoundSettingsFormProps, SoundSe
     console.log('SoundSettingsForm mounted');
   }
 
-  componentDidUpdate = (prevProps) => {
+  componentDidUpdate = (prevProps: SoundSettingsFormProps) => {
     if (prevProps.gameModel !== this.props.gameModel) {
       this.onGameModelUpdate(prevProps);
     }
@@ -73,7 +83,7 @@ export class SoundSettingsForm extends Component<SoundSettingsFormProps, SoundSe
     console.log('SoundSettingsForm will unmount');
   }
 
-  onGameModelUpdate(prevProps) {
+  onGameModelUpdate(prevProps: SoundSettingsFormProps) {
     const { gameModel } = this.props;
     this.unsubscribe(prevProps.gameModel);
     // this.onSoundUpdate();
@@ -89,14 +99,14 @@ export class SoundSettingsForm extends Component<SoundSettingsFormProps, SoundSe
     });
   }
 
-  onParamUpdate(data) {
+  onParamUpdate(data: SoundSettingsFormState) {
     this.setState({
       ...data,
     });
   }
 
-  onParamChange(type, prop, e2value) {
-    return (e) => {
+  onParamChange(type: ActionTypes, prop: PropNames, e2value: strToNumber) {
+    return (e: ChangeEvent<HTMLInputElement>) => {
       const { value } = e.target;
       const { gameModel } = this.props;
       gameModel.execute({
@@ -106,42 +116,58 @@ export class SoundSettingsForm extends Component<SoundSettingsFormProps, SoundSe
     };
   }
 
-  onTimeoutIncrement(prop, callback) {
+  onTimeoutIncrement(
+    prop: 'rotationSoundTimeout' | 'rotationTimeout', 
+    callback: ChangeEventHandler<HTMLInputElement>
+  ) {
     return () => {
       // eslint-disable-next-line react/destructuring-assignment
+      // @ts-ignore
       callback.apply(this, [{ target: { value: this.state[prop] / 1000 + 1 } }]);
     };
   }
 
-  onTimeoutDecrement(prop, callback) {
+  onTimeoutDecrement(
+    prop: 'rotationSoundTimeout' | 'rotationTimeout', 
+    callback: ChangeEventHandler<HTMLInputElement>
+  ) {
     return () => {
       // eslint-disable-next-line react/destructuring-assignment
+      // @ts-ignore
       callback.apply(this, [{ target: { value: this.state[prop] / 1000 - 1 } }]);
     };
   }
 
-  onVolumeIncrement(prop, callback) {
+  onVolumeIncrement(
+    prop: 'rotationVolume' | 'backgroundVolume', 
+    callback: ChangeEventHandler<HTMLInputElement>
+  ) {
     return () => {
       // eslint-disable-next-line react/destructuring-assignment
+      // @ts-ignore
       callback.apply(this, [{ target: { value: this.state[prop] + 10 } }]);
     };
   }
 
-  onVolumeDecrement(prop, callback) {
+  onVolumeDecrement(
+    prop: 'rotationVolume' | 'backgroundVolume', 
+    callback: ChangeEventHandler<HTMLInputElement>
+  ) {
     return () => {
       // eslint-disable-next-line react/destructuring-assignment
+      // @ts-ignore
       callback.apply(this, [{ target: { value: this.state[prop] - 10 } }]);
     };
   }
 
-  subscribe(gameModel) {
+  subscribe(gameModel: GameModel) {
     gameModel.on('rotationTimeoutUpdate', this.onParamUpdate);
     gameModel.on('rotationSoundTimeoutUpdate', this.onParamUpdate);
     gameModel.on('backgroundVolumeUpdate', this.onParamUpdate);
     gameModel.on('rotationVolumeUpdate', this.onParamUpdate);
   }
 
-  unsubscribe(gameModel) {
+  unsubscribe(gameModel: GameModel) {
     gameModel.off('rotationTimeoutUpdate', this.onParamUpdate);
     gameModel.off('rotationSoundTimeoutUpdate', this.onParamUpdate);
     gameModel.off('backgroundVolumeUpdate', this.onParamUpdate);

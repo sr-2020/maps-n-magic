@@ -19,7 +19,7 @@ import { saveAs } from 'file-saver';
 //   window.open('extras/doc/nims.html');
 // };
 
-const readJsonFile = (evt) => new Promise((resolve, reject) => {
+const readJsonFile = (evt: any) => new Promise((resolve, reject) => {
   // Retrieve the first (and only!) File from the FileList object
   const f = evt.target.files[0];
 
@@ -41,7 +41,7 @@ const readJsonFile = (evt) => new Promise((resolve, reject) => {
   }
 });
 
-const readBinaryFile = (evt) => new Promise((resolve, reject) => {
+const readBinaryFile = (evt: any) => new Promise((resolve, reject) => {
   // Retrieve the first (and only!) File from the FileList object
   const f = evt.target.files[0];
 
@@ -70,7 +70,7 @@ const windowsReservedRe = /^(con|prn|aux|nul|com[0-9]|lpt[0-9])(\..*)?$/i;
 // eslint-disable-next-line no-useless-escape
 const windowsTrailingRe = /[\. ]+$/;
 
-function sanitizeStr2FileName(input, replacement = '') {
+function sanitizeStr2FileName(input: string, replacement = ''): string {
   // replacement = replacement || '';
   const sanitized = input
     .replace(illegalRe, replacement)
@@ -81,18 +81,18 @@ function sanitizeStr2FileName(input, replacement = '') {
   return sanitized.substring(0, 255);
 }
 
-function makeFileName(root, extension, date) {
+function makeFileName(root: string, extension: string, date?: Date): string {
   date = date || new Date();
   const timeStr = dateFormat(date, 'dd-mmm-yyyy_HH-MM-ss');
   const fileName = `${root}_${timeStr}`;
   return `${sanitizeStr2FileName(fileName)}.${extension}`;
 }
 
-function json2File(str, fileName) {
-  str2File(JSON.stringify(str, null, '  '), fileName);
+function json2File(obj: any, fileName: string) {
+  str2File(JSON.stringify(obj, null, '  '), fileName);
 }
 
-function str2File(str, fileName) {
+function str2File(str: any, fileName: string) {
   const blob = new Blob([str], {
     type: 'text/plain;charset=utf-8',
   });

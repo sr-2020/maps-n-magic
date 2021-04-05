@@ -50,6 +50,7 @@ packages/sr2020-mm-data/src/analysis/data/kml/otherKml
 packages/pubSubTest/
 
 dist
+tsconfig.tsbuildinfo
 
 packages/outdated/sr2020-mm-ts-*
 

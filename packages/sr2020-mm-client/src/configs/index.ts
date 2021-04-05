@@ -1,6 +1,8 @@
-const maxZoom = 20;
+import { L, TileLayerData, MapDefaults } from "sr2020-mm-client-core";
 
-const osmTileLayer = {
+const maxZoom: number = 20;
+
+const osmTileLayer: TileLayerData = {
   urlTemplate: 'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
   options: {
     attribution: '&amp;copy <a href="http://osm.org/copyright">OpenStreetMap</a> contributors',
@@ -8,7 +10,7 @@ const osmTileLayer = {
   },
 };
 
-const googleTileLayer = {
+const googleTileLayer: TileLayerData = {
   urlTemplate: 'http://{s}.google.com/vt/lyrs=s&x={x}&y={y}&z={z}',
   options: {
     maxZoom,
@@ -37,9 +39,8 @@ const mapConfig = {
 mapConfig.center = [mapConfig.lat, mapConfig.lng];
 
 export const defaultCenter: [number, number] = mapConfig.center;
-export const defaultZoom = mapConfig.zoom;
 
-const defaultGeomanFeatures = {
+const defaultGeomanFeatures: L.PM.DrawControlOptions = {
   position: 'topleft',
   drawMarker: false,
   drawCircleMarker: false,
@@ -51,8 +52,8 @@ const defaultGeomanFeatures = {
   dragMode: false,
   cutPolygon: false,
   removalMode: false,
-  pinningOption: false,
-  snappingOption: false,
+  // pinningOption: false,
+  // snappingOption: false,
 };
 
 const markerEditorGeomanFeatures = {
@@ -69,13 +70,13 @@ const locationEditorGeomanFeatures = {
   removalMode: true,
 };
 
-const oldLocationAndMarkerGeomanConfig = {
+const oldLocationAndMarkerGeomanConfig: L.PM.DrawControlOptions = {
   ...defaultGeomanFeatures,
   ...markerEditorGeomanFeatures,
   ...locationEditorGeomanFeatures,
 };
 
-const backgroundEditorGeomanConfig = {
+export const backgroundEditorGeomanConfig: L.PM.DrawControlOptions = {
   ...defaultGeomanFeatures,
   drawRectangle: true,
   editMode: true,
@@ -83,22 +84,18 @@ const backgroundEditorGeomanConfig = {
   removalMode: true,
 };
 
-const locationsEditor2GeomanConfig = {
+export const locationsEditor2GeomanConfig: L.PM.DrawControlOptions = {
   ...defaultGeomanFeatures,
   ...locationEditorGeomanFeatures,
 };
 
-const beaconEditor2GeomanConfig = {
+export const beaconEditor2GeomanConfig: L.PM.DrawControlOptions = {
   ...defaultGeomanFeatures,
   ...markerEditorGeomanFeatures,
 };
 
-// osmSettings
-// const getTileConfiguration = () => googleSettings;
-
-const defaultTileLayer = googleTileLayer;
-
-export {
-  osmTileLayer, googleTileLayer, mapConfig, defaultTileLayer, backgroundEditorGeomanConfig,
-  oldLocationAndMarkerGeomanConfig, locationsEditor2GeomanConfig, beaconEditor2GeomanConfig,
-};
+export const mapDefaults: MapDefaults = {
+  defaultTileLayer: googleTileLayer,
+  defaultZoom: mapConfig.zoom,
+  defaultCenter: mapConfig.center
+}

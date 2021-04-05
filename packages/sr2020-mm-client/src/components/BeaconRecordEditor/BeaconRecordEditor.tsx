@@ -1,4 +1,9 @@
-import React, { Component } from 'react';
+import React, { 
+  ChangeEvent, 
+  Component, 
+  ChangeEventHandler,
+  MouseEvent 
+} from 'react';
 import './BeaconRecordEditor.css';
 import * as R from 'ramda';
 
@@ -12,21 +17,22 @@ import Button from 'react-bootstrap/Button';
 import OverlayTrigger from 'react-bootstrap/OverlayTrigger';
 import Form from 'react-bootstrap/Form';
 
+// declare type FormControlElement = HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement;
+
 import Dropdown from 'react-bootstrap/Dropdown';
 
-import { LocationRecord, BeaconRecord } from 'sr2020-mm-event-engine';
+import { LocationRecord, BeaconRecord, GameModel } from 'sr2020-mm-event-engine';
+import { WithTranslation } from "react-i18next";
 
 import { CreateBeaconPopover } from './CreateBeaconPopover';
+import { WithSortDataHOC } from "./SortDataHOC";
 
-interface BeaconRecordEditorProps {
-  gameModel: any;
-  t: any;
-  beaconRecords: BeaconRecord[];
-  sortedLocationList: LocationRecord[];
+interface BeaconRecordEditorProps extends WithTranslation, WithSortDataHOC {
+  gameModel: GameModel;
 }
 
 export class BeaconRecordEditor extends Component<BeaconRecordEditorProps> {
-  constructor(props) {
+  constructor(props: BeaconRecordEditorProps) {
     super(props);
     this.state = {
     };
@@ -44,7 +50,8 @@ export class BeaconRecordEditor extends Component<BeaconRecordEditorProps> {
     });
   }
 
-  handleInputChange(event): void {
+  // handleInputChange(event: ChangeEvent<HTMLFormElement>): void {
+  handleInputChange(event: ChangeEvent<HTMLInputElement>): void {
     const { target } = event;
     const { idStr } = event.target.dataset;
     const value = this.getTargetValue(target);
@@ -52,14 +59,14 @@ export class BeaconRecordEditor extends Component<BeaconRecordEditorProps> {
     this.putBeaconRecord(Number(idStr), name, value);
   }
 
-  onLocationSelect(event): void {
+  onLocationSelect(event: ChangeEvent<HTMLSelectElement>): void {
     const { value } = event.target;
     const { idStr } = event.target.dataset;
     const newValue = value === 'beaconHasNoLocation' ? null : Number(value);
     this.putBeaconRecord(Number(idStr), 'location_id', newValue);
   }
 
-  putBeaconRecord(id, name, value): void {
+  putBeaconRecord(id: number, name: string, value: null | number | boolean | string): void {
     const { gameModel } = this.props;
 
     gameModel.execute({
@@ -71,7 +78,7 @@ export class BeaconRecordEditor extends Component<BeaconRecordEditorProps> {
     });
   }
 
-  removeBeacon(e, id): void {
+  removeBeacon(e: MouseEvent, id: number): void {
     e.preventDefault();
     e.stopPropagation();
     const { gameModel } = this.props;
@@ -82,7 +89,7 @@ export class BeaconRecordEditor extends Component<BeaconRecordEditorProps> {
   }
 
   // eslint-disable-next-line class-methods-use-this
-  getTargetValue(target) {
+  getTargetValue(target: HTMLInputElement): boolean | number | string {
     switch (target.type) {
     case 'checkbox':
       return target.checked;
@@ -152,7 +159,12 @@ export class BeaconRecordEditor extends Component<BeaconRecordEditorProps> {
                     />
                   </td>
                   <td>
-                    <Form.Control as="select" defaultValue={beacon.location_id} data-id-str={beacon.id} onChange={this.onLocationSelect}>
+                    <Form.Control 
+                      as="select" 
+                      defaultValue={beacon.location_id} 
+                      data-id-str={beacon.id} 
+                      onChange={this.onLocationSelect}
+                    >
                       <option value="beaconHasNoLocation">{t('beaconHasNoLocation')}</option>
                       {
                         sortedLocationList.map((location) => (
@@ -195,7 +207,7 @@ export class BeaconRecordEditor extends Component<BeaconRecordEditorProps> {
                         <Dropdown.Menu>
                           <Dropdown.Item
                             as="button"
-                            onClick={(e) => this.removeBeacon(e, beacon.id)}
+                            onClick={(e: MouseEvent) => this.removeBeacon(e, beacon.id)}
                           >
                             {t('delete')}
                           </Dropdown.Item>

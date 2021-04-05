@@ -13,6 +13,7 @@ const POLL_INTERVAL = 15000; // ms
 
 interface ExternalSound {
   // .tag: "file"
+  ".tag": string;
   // client_modified: "2019-12-28T00:38:34Z"
   // content_hash: "d830e7f9084f3745427bbb988fe42ed9d9cf12479a482895162f39d89a593058"
   content_hash: string;
@@ -212,7 +213,7 @@ export class SoundWatcher extends Component<SoundWatcherProps, SoundWatcherState
     // });
   }
 
-  render() {
+  render(): null {
     return null;
   }
 }

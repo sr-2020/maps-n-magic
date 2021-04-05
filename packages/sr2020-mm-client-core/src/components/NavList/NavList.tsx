@@ -6,12 +6,15 @@ import {
 } from 'react-router-dom';
 import Nav from 'react-bootstrap/Nav';
 import classNames from 'classnames';
+import { WithTranslation, TFunction } from 'react-i18next';
+import { NavLinkData } from "../../types";
 
-// import { NavListPropTypes } from '../../types';
+interface NavListProps extends WithTranslation {
+  className?: string;
+  navLinks: NavLinkData[];
+}
 
-// interface 
-
-export function NavList(props) {
+export function NavList(props: NavListProps) {
   const { t, navLinks, className } = props;
 
   return (
@@ -32,5 +35,3 @@ export function NavList(props) {
     </Nav>
   );
 }
-
-// NavList.propTypes = NavListPropTypes;

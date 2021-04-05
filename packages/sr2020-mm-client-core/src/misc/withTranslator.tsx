@@ -1,7 +1,7 @@
 import React from 'react';
 import { TranslatorConsumer } from './translatorContext';
 
-export const withTranslator = (Wrapped) => (props) => (
+export const withTranslator = (Wrapped: any) => (props: any) => (
   <TranslatorConsumer>
     {
       (translator) => (

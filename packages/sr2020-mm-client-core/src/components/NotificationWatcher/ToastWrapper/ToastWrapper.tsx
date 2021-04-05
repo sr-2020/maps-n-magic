@@ -3,11 +3,13 @@ import './ToastWrapper.css';
 import moment from 'moment';
 import classNames from 'classnames';
 
+import { NotificationData } from "sr2020-mm-event-engine";
+
 import Toast from 'react-bootstrap/Toast';
 
 // import { ToastWrapperPropTypes } from '../../types';
 
-function kindToColor(kind) {
+function kindToColor(kind: NotificationData["kind"]) {
   switch (kind) {
   case 'error': return 'tw-border-red-500';
   case 'success': return 'tw-border-green-500';
@@ -18,7 +20,12 @@ function kindToColor(kind) {
   }
 }
 
-export function ToastWrapper(props) {
+interface ToastWrapperProps {
+  notification: NotificationData;
+  onClearNotification: (notification: NotificationData) => void;
+}
+
+export function ToastWrapper(props: ToastWrapperProps) {
   const { notification, onClearNotification } = props;
   const [showA, setShowA] = useState(true);
   // const toggleShowA = () => setShowA(!showA);

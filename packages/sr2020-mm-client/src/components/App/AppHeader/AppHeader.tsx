@@ -10,6 +10,9 @@ import Nav from 'react-bootstrap/Nav';
 import NavDropdown from 'react-bootstrap/NavDropdown';
 
 import Dropdown from 'react-bootstrap/Dropdown';
+import { WithTranslation } from 'react-i18next';
+import { GameModel } from "sr2020-mm-event-engine";
+import { NavLinkData } from "sr2020-mm-client-core";
 // import { ModelRunControl } from '../../ModelRunControl';
 
 import { DownloadDatabaseButton } from '../DownloadDatabaseButton';
@@ -36,7 +39,7 @@ import { WipeManaOceanEffectsButton } from '../WipeManaOceanEffectsButton';
 //   tKey: 'demo',
 // }];
 
-const navLinks = [{
+const navLinks: NavLinkData[] = [{
   to: '/mapsNav',
   tKey: 'mapsNav',
 }, {
@@ -57,15 +60,14 @@ const navLinks = [{
   tKey: 'beaconRecordEditor',
 }];
 
-interface AppHeaderProps {
-  t: any;
+interface AppHeaderProps extends WithTranslation {
   simulateGeoDataStream: boolean;
   waitingForGeolocation: boolean;
-  gameModel: any;
+  gameModel: GameModel;
   // onUploadFileSelected: any;
   // downloadDatabaseAsFile: any;
-  jumpToUserCoords: any;
-  switchMovementMode: any;
+  jumpToUserCoords: (e: React.MouseEvent<HTMLElement>) => void;
+  switchMovementMode: (e: React.MouseEvent<HTMLElement>) => void;
 };
 interface AppHeaderState {
 };
@@ -73,7 +75,7 @@ interface AppHeaderState {
 export class AppHeader extends Component<AppHeaderProps, AppHeaderState> {
   // static propTypes = AppHeaderPropTypes;
 
-  constructor(props) {
+  constructor(props: AppHeaderProps) {
     super(props);
     this.state = {
       // expanded: false,
@@ -97,7 +99,7 @@ export class AppHeader extends Component<AppHeaderProps, AppHeaderState> {
   //   this.setState(({ expanded }) => this.setState({ expanded: !expanded }));
   // }
 
-  getLink(navLink) {
+  getLink(navLink: NavLinkData) {
     const {
       t,
     } = this.props;

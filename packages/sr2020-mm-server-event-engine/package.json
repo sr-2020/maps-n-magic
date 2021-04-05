@@ -4,8 +4,8 @@
   "version": "1.0.0",
   "private": true,
   "scripts": {
-    "ts:build": "tsc",
-    "ts:watch": "tsc --watch --preserveWatchOutput"
+    "ts:build": "tsc --build",
+    "ts:watch": "tsc --build --watch --preserveWatchOutput"
   },
   "main": "dist/index.js",
   "typings": "dist/index.d.ts",

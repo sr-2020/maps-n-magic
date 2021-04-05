@@ -1,26 +1,24 @@
-import React, { Component } from 'react';
+import React, { ChangeEvent, Component } from 'react';
 import './ManaOceanEffectSettings.css';
 import * as R from 'ramda';
-
-// import { ManaOceanSettingsPropTypes } from '../../types';
 
 import Button from 'react-bootstrap/Button';
 import Form from 'react-bootstrap/Form';
 import Table from 'react-bootstrap/Table';
 import { prop } from 'ramda';
+import { WithTranslation } from "react-i18next";
+import { WithManaOceanEffectSettings } from "../../dataHOCs";
 
 import {
-  ManaOceanEffectSettingsData
+  GameModel
 } from 'sr2020-mm-event-engine';
 
-interface ManaOceanEffectSettingsProps {
-  t: any; 
-  manaOceanEffects: ManaOceanEffectSettingsData;
-  gameModel: any;
+interface ManaOceanEffectSettingsProps extends WithTranslation, WithManaOceanEffectSettings {
+  gameModel: GameModel;
 }
 
 export class ManaOceanEffectSettings extends Component<ManaOceanEffectSettingsProps> {
-  constructor(props) {
+  constructor(props: ManaOceanEffectSettingsProps) {
     super(props);
     this.state = {
     };
@@ -31,7 +29,7 @@ export class ManaOceanEffectSettings extends Component<ManaOceanEffectSettingsPr
     console.log('ManaOceanSettings mounted');
   }
 
-  componentDidUpdate(prevProps) {
+  componentDidUpdate() {
     console.log('ManaOceanSettings did update');
   }
 
@@ -40,12 +38,12 @@ export class ManaOceanEffectSettings extends Component<ManaOceanEffectSettingsPr
   }
 
   // eslint-disable-next-line class-methods-use-this
-  onChange(event) {
-    let { value } = event.target;
-    const { propName, multiplier } = event.target.dataset;
+  onChange(event: ChangeEvent<HTMLInputElement>) {
+    const { value } = event.currentTarget;
+    const { propName, multiplier } = event.currentTarget.dataset;
     const multiplier2 = Number(multiplier || 1);
-    value = (Number(value) * multiplier2);
-    if (Number.isNaN(value)) {
+    const numberValue = (Number(value) * multiplier2);
+    if (Number.isNaN(numberValue)) {
       return;
     }
 
@@ -53,7 +51,7 @@ export class ManaOceanEffectSettings extends Component<ManaOceanEffectSettingsPr
     case 'massacreDelay':
     case 'powerSpellDelay':
     case 'ritualDelay':
-      if (value < 0) {
+      if (numberValue < 0) {
         return;
       }
       break;
@@ -64,7 +62,7 @@ export class ManaOceanEffectSettings extends Component<ManaOceanEffectSettingsPr
     case 'spellDurationItem':
     case 'spellProbabilityPerPower':
     case 'spellDurationPerPower':
-      if (value <= 0) {
+      if (numberValue <= 0) {
         return;
       }
       break;
@@ -80,7 +78,7 @@ export class ManaOceanEffectSettings extends Component<ManaOceanEffectSettingsPr
       name: 'manaOceanEffects',
       settings: {
         ...manaOceanEffects,
-        [propName]: value,
+        [propName]: numberValue,
       },
     });
   }

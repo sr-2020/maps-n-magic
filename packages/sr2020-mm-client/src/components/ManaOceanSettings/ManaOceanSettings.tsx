@@ -1,5 +1,5 @@
 import { WithTranslation } from 'react-i18next';
-import React, { Component } from 'react';
+import React, { Component, ChangeEvent } from 'react';
 import './ManaOceanSettings.css';
 import * as R from 'ramda';
 
@@ -20,6 +20,8 @@ import {
   GameModel
 } from 'sr2020-mm-event-engine';
 
+import { WithManaOceanSettings } from '../../dataHOCs';
+
 import { TideChart } from './TideChart';
 import { Series } from './TideChart/TideChart';
 
@@ -29,8 +31,7 @@ function formatMinutesStats(minutes: number): string {
   return (minutes / 60).toFixed(1);
 }
 
-interface ManaOceanSettingsProps {
-  manaOcean: ManaOceanSettingsData;
+interface ManaOceanSettingsProps extends WithTranslation, WithManaOceanSettings {
   gameModel: GameModel; 
 }
 interface ManaOceanSettingsState {
@@ -38,10 +39,10 @@ interface ManaOceanSettingsState {
 }
 
 export class ManaOceanSettings extends Component<
-  ManaOceanSettingsProps & WithTranslation, ManaOceanSettingsState> {
+  ManaOceanSettingsProps, ManaOceanSettingsState> {
   moscowTimeUpdater: NodeJS.Timeout;
 
-  constructor(props) {
+  constructor(props: ManaOceanSettingsProps) {
     super(props);
     this.state = {
       // neutralManaLevel: 3,
@@ -63,7 +64,7 @@ export class ManaOceanSettings extends Component<
     console.log('ManaOceanSettings mounted');
   }
 
-  componentDidUpdate(prevProps) {
+  componentDidUpdate() {
     console.log('ManaOceanSettings did update');
   }
 
@@ -80,24 +81,24 @@ export class ManaOceanSettings extends Component<
     }));
   }
 
-  onChange(event) {
-    let { value } = event.target;
-    const { propName } = event.target.dataset;
-    value = Number(value);
-    if (Number.isNaN(value)) {
+  onChange(event: ChangeEvent<HTMLInputElement>) {
+    let { value } = event.currentTarget;
+    const { propName } = event.currentTarget.dataset;
+    const numberValue = Number(value);
+    if (Number.isNaN(numberValue)) {
       return;
     }
     switch (propName) {
     case 'neutralManaLevel':
     case 'visibleMoonManaTideHeight':
     case 'invisibleMoonManaTideHeight':
-      if (value <= 0) {
+      if (numberValue <= 0) {
         return;
       }
       break;
     case 'visibleMoonPeriod':
     case 'invisibleMoonPeriod':
-      if (value <= 0) {
+      if (numberValue <= 0) {
         return;
       }
       break;
@@ -114,7 +115,7 @@ export class ManaOceanSettings extends Component<
       name: 'manaOcean',
       settings: {
         ...manaOcean,
-        [propName]: value,
+        [propName]: numberValue,
       },
     });
     // const { manaOceanSettings, gameModel } = this.props;

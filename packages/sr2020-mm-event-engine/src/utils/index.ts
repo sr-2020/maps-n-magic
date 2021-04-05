@@ -6,7 +6,6 @@ import 'sr2020-mm-hacks-n-fixes/leafletUnwindowMP';
 import * as gi from '@thi.ng/geom-isec';
 import * as gcp from '@thi.ng/geom-closest-point';
 import clippingUtils from 'polygon-clipping';
-import { bodyConditionsSet } from 'sr2020-mm-data/gameConstants';
 import AbortController from 'abort-controller';
 import fetch from 'isomorphic-fetch';
 
@@ -15,7 +14,8 @@ import {
   SRLatLng, 
   SRPolygon, 
   EdgeId,
-  RawCharacterHealthState
+  RawCharacterHealthState,
+  BodyConditions
 } from "../types";
 
 export function isGeoLocation(location: LocationRecord): boolean {
@@ -112,7 +112,7 @@ export function getPolygonCentroid(polygon: SRPolygon): SRLatLng {
   };
 }
 
-export const isClinicallyDead = (charState: RawCharacterHealthState): boolean => charState.healthState === bodyConditionsSet.clinically_dead;
+export const isClinicallyDead = (charState: RawCharacterHealthState): boolean => charState.healthState === BodyConditions.Clinically_dead;
 
 
 // Check if it is necessary to show clinically dead character.

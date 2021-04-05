@@ -2,11 +2,15 @@ import React, { useRef, useEffect, useState } from 'react';
 import './RescueServiceSoundAlarm.css';
 import * as R from 'ramda';
 
-// const audio = null;
-let audioPromise = null;
-let audioPromiseResolved = false;
+import { GameModel } from "sr2020-mm-event-engine";
 
-function playSound(gameModel) {
+import { WithCharacterIdHealthListForAudio } from '../../dataHOCs';
+
+// const audio = null;
+let audioPromise: Promise<HTMLAudioElement> | null = null;
+let audioPromiseResolved: boolean = false;
+
+function playSound(gameModel: GameModel) {
   if (!audioPromise) {
     audioPromise = new Promise((resolve, reject) => {
       // audio = new Audio('http://localhost:3000/sounds/274682__jppi-stu__sw-school-pa-alert.wav');
@@ -33,7 +37,11 @@ function playSound(gameModel) {
   }
 }
 
-export function RescueServiceSoundAlarm(props) {
+interface RescueServiceSoundAlarmProps extends WithCharacterIdHealthListForAudio {
+  gameModel: GameModel;
+}
+
+export function RescueServiceSoundAlarm(props: RescueServiceSoundAlarmProps): null {
   const { characterIdHealthList, gameModel } = props;
   // const [list, setList] = useState([]);
   const prevList = usePrevious(characterIdHealthList);
@@ -46,8 +54,8 @@ export function RescueServiceSoundAlarm(props) {
   return null;
 }
 
-function usePrevious(value) {
-  const ref = useRef();
+function usePrevious(value: number[]): number[] {
+  const ref = useRef<number[]>();
   useEffect(() => {
     ref.current = value;
   });

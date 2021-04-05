@@ -12,23 +12,23 @@ import * as R from 'ramda';
 // timing: Timing.makeEaseInOut(Timing.poly(4)),
 
 export class Timing {
-  static linear(timeFraction){
+  static linear(timeFraction: number): number {
     return timeFraction;
   }
 
-  static quad(progress){
+  static quad(progress: number): number{
     return progress ** 2;
   }
 
   static poly = R.curry((x, progress) => (progress ** x));
 
-  static circ(timeFraction){
+  static circ(timeFraction: number): number {
     return 1 - Math.sin(Math.acos(timeFraction));
   }
 
   static back = R.curry((x, timeFraction) => (timeFraction ** 2) * ((x + 1) * timeFraction - x));
 
-  static bounce(timeFraction){
+  static bounce(timeFraction: number): number {
     for (let a = 0, b = 1; ; a += b, b /= 2) {
       if (timeFraction >= (7 - 4 * a) / 11) {
         return -(((11 - 6 * a - 11 * timeFraction) / 4) ** 2) + (b ** 2);
@@ -36,21 +36,32 @@ export class Timing {
     }
   }
 
-  static elastic = (x, timeFraction) => (2 ** (10 * (timeFraction - 1))) * Math.cos(((20 * Math.PI * x) / 3) * timeFraction);
+  static elastic = (x: number, timeFraction: number): number => 
+    (2 ** (10 * (timeFraction - 1))) * 
+    Math.cos(
+      ((20 * Math.PI * x) / 3) * timeFraction
+    );
 
-  static makeEaseOut = (timing) => function (timeFraction) {
-    return 1 - timing(1 - timeFraction);
-  };
+  static makeEaseOut = (timing: (timeFraction: number) => number) => 
+    function (timeFraction: number): number {
+      return 1 - timing(1 - timeFraction);
+    };
 
-  static makeEaseInOut = (timing) => function (timeFraction) {
-    if (timeFraction < 0.5) {
-      return timing(2 * timeFraction) / 2;
-    }
-    return (2 - timing(2 * (1 - timeFraction))) / 2;
-  };
+  static makeEaseInOut = (timing: (timeFraction: number) => number) => 
+    function (timeFraction: number): number {
+      if (timeFraction < 0.5) {
+        return timing(2 * timeFraction) / 2;
+      }
+      return (2 - timing(2 * (1 - timeFraction))) / 2;
+    };
 }
 
-export const animate = (options) => {
+export const animate = (options: {
+  duration: number;
+  timing: (timeFraction: number) => number,
+  draw: (ttt: number) => void;
+  loop?: boolean;
+}) => {
   let start = performance.now();
   const animation = {
     enable: true,

@@ -1,7 +1,7 @@
 import React from 'react';
 import { MapDefaultsConsumer } from './mapDefaultsContext';
 
-export const withMapDefaults = (Wrapped) => (props) => (
+export const withMapDefaults = (Wrapped: any) => (props: any) => (
   <MapDefaultsConsumer>
     {
       (mapDefaults) => (

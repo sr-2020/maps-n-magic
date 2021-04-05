@@ -1,10 +1,10 @@
 import React from 'react';
 import './MapsNav.css';
 
-import { NavList } from 'sr2020-mm-client-core';
-// import { NavList } from '../NavList';
+import { NavList, NavLinkData } from 'sr2020-mm-client-core';
+import { useTranslation } from "react-i18next";
 
-const navLinks = [{
+const navLinks: NavLinkData[] = [{
   to: '/backgroundEditorMap',
   tKey: 'buildingPlansEditor',
 }, {
@@ -18,7 +18,7 @@ const navLinks = [{
 //   tKey: 'locationsAndBeaconsEditor',
 }];
 
-const navLinks2 = [{
+const navLinks2: NavLinkData[] = [{
   to: '/rescueService',
   tKey: 'rescueService',
 }, {
@@ -29,7 +29,7 @@ const navLinks2 = [{
   tKey: 'audioEngineDemo',
 }];
 
-const navLinks3 = [{
+const navLinks3: NavLinkData[] = [{
   to: '/manaOceanSettings',
   tKey: 'manaOceanSettings',
 }, {
@@ -45,9 +45,8 @@ const navLinks3 = [{
 
 // import { MapsNavPropTypes } from '../../types';
 
-export function MapsNav(props) {
-  const { t } = props;
-
+export function MapsNav() {
+  const { t } = useTranslation();
   return (
     <div className="MapsNav tw-flex">
       <div className="tw-mx-8 tw-my-4">
@@ -65,5 +64,3 @@ export function MapsNav(props) {
     </div>
   );
 }
-
-// MapsNav.propTypes = MapsNavPropTypes;

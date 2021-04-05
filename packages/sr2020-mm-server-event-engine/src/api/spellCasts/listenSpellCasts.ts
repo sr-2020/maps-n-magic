@@ -3,7 +3,6 @@
 import { PubSub, Message } from '@google-cloud/pubsub';
 import { SpellCast } from "sr2020-mm-event-engine";
 // import moment from 'moment-timezone';
-// import { bodyConditions } from 'sr2020-mm-data/gameConstants';
 
 let subscriptionName: string;
 

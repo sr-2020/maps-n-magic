@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { Component, FormEvent } from 'react';
 import * as R from 'ramda';
 import * as moment from 'moment-timezone';
 
@@ -10,26 +10,34 @@ import Alert from 'react-bootstrap/Alert';
 import ToggleButtonGroup from 'react-bootstrap/ToggleButtonGroup';
 import ToggleButton from 'react-bootstrap/ToggleButton';
 
-import { isGeoLocation, UserRecord } from 'sr2020-mm-event-engine';
-import { bodyConditions, lifeStyleList } from 'sr2020-mm-data/gameConstants';
+import { 
+  isGeoLocation, 
+  UserRecord, 
+  GameModel,
+  LocationRecord,
+  bodyConditionsList, 
+  lifeStyleList, 
+  BodyConditions
+} from 'sr2020-mm-event-engine';
 
-interface RescueServiceMessageSenderProps {
-  gameModel: any;
-  t: any;
+import { WithTranslation } from "react-i18next";
+
+type BodyConditionsTKeys = `physicalBodyCondition_${Lowercase<keyof typeof BodyConditions>}`;
+
+interface RescueServiceMessageSenderProps extends WithTranslation {
+  gameModel: GameModel;
 };
 
 interface RescueServiceMessageSenderState {
-  sortedLocationList: any[];
+  sortedLocationList: LocationRecord[];
   users: UserRecord[];
-  locationIndex: any;
+  locationIndex: Record<number, LocationRecord>;
 };
 
 // userRecords
-
+// TODO reaplce gameModel subscription with data HOCs
 export class RescueServiceMessageSender extends Component<RescueServiceMessageSenderProps, RescueServiceMessageSenderState> {
-  // static propTypes = RescueServiceMessageSenderPropTypes;
-
-  constructor(props) {
+  constructor(props: RescueServiceMessageSenderProps) {
     super(props);
     this.state = {
       users: null,
@@ -55,7 +63,7 @@ export class RescueServiceMessageSender extends Component<RescueServiceMessageSe
     console.log('RescueServiceMessageSender mounted');
   }
 
-  componentDidUpdate(prevProps) {
+  componentDidUpdate(prevProps: RescueServiceMessageSenderProps) {
     const {
       gameModel,
     } = this.props;
@@ -81,20 +89,20 @@ export class RescueServiceMessageSender extends Component<RescueServiceMessageSe
   }
 
   // eslint-disable-next-line react/sort-comp
-  subscribe(action, gameModel) {
+  subscribe(action: 'on'|'off', gameModel: GameModel) {
     // gameModel[action]('beaconRecordsChanged', this.setBeaconRecords);
     gameModel[action]('locationRecordsChanged', this.setLocationRecords);
     gameModel[action]('userRecordsChanged', this.setUserRecords);
   }
 
   // eslint-disable-next-line react/sort-comp
-  setUserRecords({ userRecords }) {
+  setUserRecords({ userRecords }: { userRecords: UserRecord[] }) {
     this.setState({
       users: R.sortBy(R.prop('id'), userRecords),
     });
   }
 
-  setLocationRecords({ locationRecords }) {
+  setLocationRecords({ locationRecords }: { locationRecords: LocationRecord[] }) {
     const geoLocations = locationRecords.filter(isGeoLocation);
     this.setState({
       locationIndex: R.indexBy(R.prop('id'), geoLocations),
@@ -102,7 +110,7 @@ export class RescueServiceMessageSender extends Component<RescueServiceMessageSe
     });
   }
 
-  onSubmit(e) {
+  onSubmit(e: FormEvent<HTMLFormElement>) {
     const {
       gameModel,
     } = this.props;
@@ -145,7 +153,7 @@ export class RescueServiceMessageSender extends Component<RescueServiceMessageSe
   }
 
   // eslint-disable-next-line class-methods-use-this
-  getUserNameStr(user) {
+  getUserNameStr(user: UserRecord): string {
     return user.name !== '' ? ` (${user.name})` : '';
   }
 
@@ -178,14 +186,14 @@ export class RescueServiceMessageSender extends Component<RescueServiceMessageSe
           <Form.Group>
             <Form.Label>{t('physicalBodyCondition')}</Form.Label>
             <div>
-              <ToggleButtonGroup type="radio" name="healthStateRadio" defaultValue={bodyConditions[0]}>
+              <ToggleButtonGroup type="radio" name="healthStateRadio" defaultValue={bodyConditionsList[0]}>
                 {
-                  bodyConditions.map((value) => (
+                  bodyConditionsList.map((value) => (
                     <ToggleButton
                       key={value}
                       value={value}
                     >
-                      {t(`physicalBodyCondition_${value}`)}
+                      {t(`physicalBodyCondition_${value}` as BodyConditionsTKeys)}
                     </ToggleButton>
                   ))
                 }

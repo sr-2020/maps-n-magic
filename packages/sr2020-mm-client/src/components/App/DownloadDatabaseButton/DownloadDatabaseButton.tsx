@@ -2,10 +2,13 @@ import React, { Component } from 'react';
 import './DownloadDatabaseButton.css';
 
 import Dropdown from 'react-bootstrap/Dropdown';
+import { WithTranslation } from 'react-i18next';
 
-// import { DownloadDatabaseButtonPropTypes } from '../../types';
+interface DownloadDatabaseButtonProps extends WithTranslation {
+  onClick: (e: React.MouseEvent) => void;
+};
 
-export function DownloadDatabaseButton(props) {
+export function DownloadDatabaseButton(props: DownloadDatabaseButtonProps) {
   const {
     t, onClick,
   } = props;

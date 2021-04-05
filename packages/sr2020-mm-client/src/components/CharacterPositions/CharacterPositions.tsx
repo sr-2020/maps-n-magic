@@ -1,5 +1,5 @@
 /* eslint-disable react/sort-comp */
-import React, { Component } from 'react';
+import React, { Component, FormEvent } from 'react';
 import './CharacterPositions.css';
 
 import * as R from 'ramda';
@@ -19,6 +19,8 @@ import {
 
 // TODO this call should be moved in event engine service
 import { postUserPosition } from 'sr2020-mm-client-event-engine';
+import { GameModel } from "sr2020-mm-event-engine";
+import { WithTranslation } from "react-i18next";
 
 import { CharacterDataList } from '../CharacterDataList';
 
@@ -26,9 +28,8 @@ import { CharacterDataList } from '../CharacterDataList';
 type BeaconIndex = {[location_id: string]: BeaconRecord};
 type LocationIndex = {[location_id: string]: LocationRecord};
 
-interface CharacterPositionsProps {
-  gameModel: any;
-  t: any;
+interface CharacterPositionsProps extends WithTranslation {
+  gameModel: GameModel;
 };
 interface CharacterPositionsState {
   users: UserRecord[]; 
@@ -42,11 +43,13 @@ interface CharacterPositionsState {
 //   users, locationIndex, sortedLocationList, beaconIndex,
 // } = this.state;
 // const { t } = this.props;
-
+// TODO This component uses old approach with direct data subscription.
+// Current approach is using HOCs.
+// Switch this component to HOCs if it is necessary.
 export class CharacterPositions extends Component<CharacterPositionsProps, CharacterPositionsState> {
   // static propTypes = CharacterPositionsPropTypes;
 
-  constructor(props) {
+  constructor(props: CharacterPositionsProps) {
     super(props);
     this.state = {
       users: null,
@@ -79,7 +82,7 @@ export class CharacterPositions extends Component<CharacterPositionsProps, Chara
     console.log('CharacterPositions mounted');
   }
 
-  componentDidUpdate(prevProps) {
+  componentDidUpdate(prevProps: CharacterPositionsProps) {
     const {
       gameModel,
     } = this.props;
@@ -108,7 +111,7 @@ export class CharacterPositions extends Component<CharacterPositionsProps, Chara
   }
 
   // eslint-disable-next-line react/sort-comp
-  subscribe(action, gameModel) {
+  subscribe(action: 'on'|'off', gameModel: GameModel) {
     gameModel[action]('beaconRecordsChanged', this.setBeaconRecords);
     gameModel[action]('locationRecordsChanged', this.setLocationRecords);
     gameModel[action]('userRecordsChanged', this.setUserRecords);
@@ -138,13 +141,13 @@ export class CharacterPositions extends Component<CharacterPositionsProps, Chara
     });
   }
 
-  setUserRecords({ userRecords }) {
+  setUserRecords({ userRecords }: {userRecords: UserRecord[]}) {
     this.setState({
       users: R.sortBy(R.prop('id'), userRecords),
     });
   }
 
-  onSubmit(e) {
+  onSubmit(e: FormEvent<HTMLFormElement>) {
     const {
       gameModel,
     } = this.props;
@@ -174,7 +177,7 @@ export class CharacterPositions extends Component<CharacterPositionsProps, Chara
     });
   }
 
-  getLocationText(locationId) {
+  getLocationText(locationId: number): string {
     const { locationIndex } = this.state;
     if (locationIndex[locationId]) {
       return `${locationIndex[locationId].label}(${locationId})`;

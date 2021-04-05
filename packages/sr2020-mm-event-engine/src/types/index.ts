@@ -1,7 +1,10 @@
 import L from 'leaflet';
 
 import * as ManaOcean from "./manaOcean";
+export * from "./enums";
 export * from "./manaOcean";
+
+import { LifeStylesValues } from "./enums";
 
 export interface Identifiable {
   id: number;
@@ -136,7 +139,8 @@ export interface RawCharacterHealthState {
   // healthState: "clinically_dead"
   healthState: string;
   // lifeStyle: "Страховка отсутствует"
-  lifeStyle: string;
+  // lifeStyle: string;
+  lifeStyle: LifeStylesValues;
   // locationId: 3215
   locationId: number | null;
   // locationLabel: "Межрайонье 1"

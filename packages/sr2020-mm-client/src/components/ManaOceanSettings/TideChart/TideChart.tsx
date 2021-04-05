@@ -1,4 +1,4 @@
-import { WithTranslation } from 'react-i18next';
+import { WithTranslation, useTranslation } from 'react-i18next';
 import React from 'react';
 import './TideChart.css';
 import * as R from 'ramda';
@@ -14,10 +14,23 @@ import { fullDay, TidePeriodProps } from 'sr2020-mm-event-engine';
 
 const ticks = R.range(1, 24).map(R.multiply(60));
 
-function CustomTooltip(props) {
+interface CustomTooltipProps {
+  active?: boolean;
+  payload?: [{
+    payload: {
+      startTime: number;
+      value: unknown;
+      intervalDuration: unknown;
+    }
+  }];
+}
+
+function CustomTooltip(props: CustomTooltipProps) {
   const {
-    active, payload, label, t,
+    active, payload, 
+    // label
   } = props;
+  const { t } = useTranslation();
 
   if (active) {
     const rawEl = payload[0].payload;
@@ -34,16 +47,25 @@ function CustomTooltip(props) {
   return null;
 }
 
-function formatMinutes(minutes) {
+function formatMinutes(minutes: number): string {
   const hour = Math.floor(minutes / 60);
   const minute = (minutes % 60);
   const minuteStr = (minute < 10 ? '0' : '') + minute;
   return `${hour}:${minuteStr}`;
 }
 
-function CustomizedAxisTick(props) {
+interface CustomizedAxisTickProps {
+  x?: number;
+  y?: number;
+  payload?: {
+    value: number;
+  }
+}
+
+function CustomizedAxisTick(props: CustomizedAxisTickProps) {
   const {
-    x, y, stroke, payload,
+    x, y, payload,
+    // stroke, 
   } = props;
 
   return (
@@ -80,10 +102,11 @@ interface TideChartProps {
 }
 
 // eslint-disable-next-line max-lines-per-function
-export function TideChart(props: TideChartProps & WithTranslation) {
+export function TideChart(props: TideChartProps) {
   const {
-    series, className, t, moscowTime,
+    series, className, moscowTime,
   } = props;
+  const { t } = useTranslation();
 
   const {
     yDomain, yTicks, data, chartName, seriesName
@@ -116,7 +139,7 @@ export function TideChart(props: TideChartProps & WithTranslation) {
             >
               <Label value={t('tLabel_tideHeight')} offset={0} angle={-90} />
             </YAxis>
-            <Tooltip content={<CustomTooltip t={t} />} />
+            <Tooltip content={<CustomTooltip />} />
             {/* <Legend /> */}
             <defs>
               <linearGradient id="splitColor" x1="0" y1="0" x2="0" y2="1">
@@ -159,5 +182,3 @@ export function TideChart(props: TideChartProps & WithTranslation) {
 
   );
 }
-
-// TideChart.propTypes = TideChartPropTypes;

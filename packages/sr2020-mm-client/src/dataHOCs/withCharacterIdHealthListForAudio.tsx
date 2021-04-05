@@ -5,34 +5,44 @@ import {
   isRelevant,
   CharacterHealthStates, 
   CharacterHealthState,
+  RawCharacterHealthState
 } from 'sr2020-mm-event-engine';
 import * as moment from 'moment-timezone';
+
+import { charHealthIndexToList } from "./charHealthUtils";
+
+export interface WithCharacterIdHealthListForAudio {
+  [dstDataName]: number[]
+}
 
 const changeEventName = 'characterHealthStatesLoaded';
 const srcDataName = 'characterHealthStates';
 const dstDataName = 'characterIdHealthList';
 const initState: number[] = [];
 
-const objToList = (objItem2ListItem) => R.pipe(R.toPairs, R.map(objItem2ListItem));
-const mergeKeyNEntry = (idName) => ([id, data2]) => ({ [idName]: Number(id), ...data2 });
+// const mergeKeyNEntry2 = ([id, data2]) => ({ 'characterId': Number(id), ...data2 });
 
-function getUserNameStr(user) {
-  return user && user.name !== '' ? ` (${user.name})` : '';
-}
+// const objToList = (objItem2ListItem) => R.pipe(R.toPairs, R.map(objItem2ListItem));
+// const mergeKeyNEntry = (idName) => ([id, data2]) => ({ [idName]: Number(id), ...data2 });
+
+// function getUserNameStr(user) {
+//   return user && user.name !== '' ? ` (${user.name})` : '';
+// }
 
 // const labels = marker.options.clinicalDeathIds.map((id) => id + this.getUserNameStr(gameModel.get({
 //   type: 'userRecord',
 //   id: Number(id),
 // })));
 
-export const withCharacterIdHealthListForAudio = (Wrapped) => (props) => {
+export const withCharacterIdHealthListForAudio = (Wrapped: any) => (props: any) => {
   const { gameModel } = props;
   const [data, setData] = useState(initState);
 
-  function update(event) {
-    const newData: CharacterHealthStates = event[srcDataName];
+  function update(event: {[srcDataName]: CharacterHealthStates}) {
+    const newData = event[srcDataName];
 
-    const fullList = objToList(mergeKeyNEntry('characterId'))(newData) as CharacterHealthState[];
+    // const fullList = objToList(mergeKeyNEntry('characterId'))(newData) as CharacterHealthState[];
+    const fullList = charHealthIndexToList(newData);
     // const fullList2 = fullList.map((item) => {
     //   const userName = item.characterId + getUserNameStr(gameModel.get({
     //     type: 'userRecord',

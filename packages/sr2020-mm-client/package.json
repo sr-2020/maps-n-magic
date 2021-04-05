@@ -14,6 +14,7 @@
     "@types/leaflet": "^1.5.23",
     "@types/node": "^12.19.15",
     "@types/react": "^16.14.2",
+    "@types/react-document-title": "^2.0.4",
     "@types/react-dom": "^16.9.10",
     "bootstrap": "^4.5.2",
     "classnames": "^2.2.6",

@@ -1,5 +1,5 @@
 import i18n from 'i18next';
-import { initReactI18next } from 'react-i18next';
+import { DefaultNamespace, initReactI18next, TFuncKey, Resources } from 'react-i18next';
 import { translations } from 'sr2020-mm-translations';
 
 const resources = {
@@ -21,7 +21,9 @@ i18n
 
 export { i18n };
 
+// This stuff adds type checking of translation keys
 declare module 'react-i18next' {
   type DefaultResources = typeof resources['ru'];
   interface Resources extends DefaultResources {}
 }
+// type SRTKeys = TFuncKey<DefaultNamespace, Resources>

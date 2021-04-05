@@ -3,10 +3,16 @@ import React, {
 } from 'react';
 import { MapDefaultsContext } from '../../misc/mapDefaultsContext';
 import { SatelliteBackground } from '../SatelliteBackground';
+import { LayerCommunicator } from "../../../index";
 
 import './DefaultSatelliteBackground.css';
 
-export function DefaultSatelliteBackground(props) {
+interface DefaultSatelliteBackground {
+  enableByDefault: boolean;
+  layerCommunicator: LayerCommunicator;
+}
+
+export function DefaultSatelliteBackground(props: DefaultSatelliteBackground) {
   const {
     enableByDefault, layerCommunicator,
   } = props;

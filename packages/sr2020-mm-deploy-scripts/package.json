@@ -9,6 +9,12 @@
     "fs-extra": "^9.0.1"
   },
   "scripts": {
-    "deploy": "node ./deployScript"
+    "deploy": "node ./deployScript",
+    "ts:build-all": "tsc --build ../sr2020-mm-client-event-engine ../sr2020-mm-server",
+    "ts:watch-all": "tsc --build --watch ../sr2020-mm-client-event-engine ../sr2020-mm-server",
+    "ts:clean-all": "tsc --build --clean ../sr2020-mm-client-event-engine ../sr2020-mm-server"
+  },
+  "devDependencies": {
+    "typescript": "^4.1.2"
   }
 }

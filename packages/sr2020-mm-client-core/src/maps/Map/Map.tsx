@@ -8,6 +8,14 @@ import * as R from 'ramda';
 
 import { L } from "../../misc/leafletWrapper";
 
+import { 
+  LayerCommunicator, 
+  OnCreateLayerEvent,
+  OnRemoveLayerEvent,
+  SetLayersMetaEvent,
+  OpenPopupEvent
+} from "../../../index";
+
 import { EventEmitter } from 'events';
 
 // import { Map2PropTypes } from '../../../types';
@@ -38,7 +46,7 @@ interface MapState {
 
 export class Map extends Component<MapProps, MapState> {
   // static propTypes = Map2PropTypes;
-  layerCommunicator: EventEmitter;
+  layerCommunicator: LayerCommunicator;
 
   map: L.Map;
 
@@ -55,7 +63,7 @@ export class Map extends Component<MapProps, MapState> {
     this.closePopup = this.closePopup.bind(this);
     this.setLayersMeta = this.setLayersMeta.bind(this);
     this.removeLayersMeta = this.removeLayersMeta.bind(this);
-    this.addToMap = this.addToMap.bind(this);
+    // this.addToMap = this.addToMap.bind(this);
   }
 
   // eslint-disable-next-line max-lines-per-function
@@ -116,20 +124,17 @@ export class Map extends Component<MapProps, MapState> {
     this.communicatorSubscribe('off');
   }
 
-  onCreateLayer = (event): void => {
+  onCreateLayer = (event: OnCreateLayerEvent): void => {
     this.layerCommunicator.emit('onCreateLayer', event);
     console.log('TODO fix type in Map.onCreateLayer');
   }
 
-  onRemoveLayer = (event): void => {
+  onRemoveLayer = (event: OnRemoveLayerEvent): void => {
     this.layerCommunicator.emit('onRemoveLayer', event);
     console.log('TODO fix type in Map.onRemoveLayer');
   }
 
-  setLayersMeta({ layersMeta, enableByDefault }:{
-    layersMeta: LayersMeta,
-    enableByDefault: boolean
-  }): void {
+  setLayersMeta({ layersMeta, enableByDefault }: SetLayersMetaEvent): void {
     const { t } = this.props;
     if (enableByDefault) {
       Object.values(layersMeta).forEach((group) => group.addTo(this.map));
@@ -155,18 +160,18 @@ export class Map extends Component<MapProps, MapState> {
     this.layerCommunicator[action]('closePopup', this.closePopup);
     this.layerCommunicator[action]('setLayersMeta', this.setLayersMeta);
     this.layerCommunicator[action]('removeLayersMeta', this.removeLayersMeta);
-    this.layerCommunicator[action]('addToMap', this.addToMap);
+    // this.layerCommunicator[action]('addToMap', this.addToMap);
   }
 
-  openPopup({ popup }): void {
+  openPopup({ popup }: OpenPopupEvent): void {
     popup.openOn(this.map);
     console.log('TODO fix type in Map.openPopup');
   }
 
-  addToMap({ control }): void {
-    control.addTo(this.map);
-    console.log('TODO fix type in Map.addToMap');
-  }
+  // addToMap({ control }): void {
+  //   control.addTo(this.map);
+  //   console.log('TODO fix type in Map.addToMap');
+  // }
 
   closePopup(): void {
     this.map.closePopup();

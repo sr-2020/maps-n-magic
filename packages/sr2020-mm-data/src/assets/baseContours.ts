@@ -1,5 +1,5 @@
 import * as R from 'ramda';
-import { GeoJSON, Feature, LineString } from "geojson";
+import { GeoJSON, Feature, LineString, FeatureCollection } from "geojson";
 
 const baseClosedLLs = [
   [36.8720195, 54.9296674],
@@ -78,7 +78,7 @@ function contourToFeature(contour, props): Feature<LineString> {
   return lineString;
 }
 
-const contourGeoJson: GeoJSON = {
+const contourGeoJson: FeatureCollection = {
   type: 'FeatureCollection',
   features: [
     contourToFeature(baseClosedLLs, {

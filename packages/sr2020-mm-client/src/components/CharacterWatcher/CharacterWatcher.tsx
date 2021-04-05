@@ -1,5 +1,5 @@
 import * as R from 'ramda';
-import React from 'react';
+import React, { FormEvent, MouseEvent } from 'react';
 import './CharacterWatcher.css';
 import Form from 'react-bootstrap/Form';
 import Button from 'react-bootstrap/Button';
@@ -28,7 +28,7 @@ export function CharacterWatcher(props: CharacterWatcherProps) {
 
   const watchCharacterHistoryStr = localStorage.getItem(WATCH_CHARACTER_HISTORY_KEY);
 
-  let watchCharacterHistory = [];
+  let watchCharacterHistory: number[] = [];
   if (watchCharacterHistoryStr) {
     watchCharacterHistory = JSON.parse(watchCharacterHistoryStr);
   }
@@ -40,16 +40,16 @@ export function CharacterWatcher(props: CharacterWatcherProps) {
     });
   }
 
-  function onReselectCharacter(e) {
+  function onReselectCharacter(e: MouseEvent<HTMLElement>) {
     // eslint-disable-next-line no-shadow
-    const { characterId } = e.target.dataset;
+    const { characterId } = e.currentTarget.dataset;
     gameModel.execute({
       type: 'setCharacterId',
       characterId: Number(characterId),
     });
   }
 
-  function onSubmit(e) {
+  function onSubmit(e: FormEvent<HTMLFormElement>) {
     const form = e.currentTarget;
     e.stopPropagation();
     e.preventDefault();

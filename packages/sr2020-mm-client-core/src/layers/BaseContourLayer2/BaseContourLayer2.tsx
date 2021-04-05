@@ -1,11 +1,18 @@
 import React, { Component } from 'react';
 import './BaseContourLayer2.css';
 
-import { contourGeoJson } from 'sr2020-mm-data/assets/baseContours';
+import { contourGeoJson } from 'sr2020-mm-data';
 
 import { GeoJsonLayer } from '../GeoJsonLayer';
 
-export function BaseContourLayer2(props) {
+import { LayerCommunicator } from "../../../index";
+
+interface BaseContourLayer2 {
+  enableByDefault: boolean;
+  layerCommunicator: LayerCommunicator;
+}
+
+export function BaseContourLayer2(props: BaseContourLayer2) {
   return (
     <GeoJsonLayer
       {...props}

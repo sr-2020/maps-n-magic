@@ -1,12 +1,19 @@
 import React, { Component, useCallback } from 'react';
+import { useTranslation } from 'react-i18next';
 import './WipeManaOceanEffectsButton.css';
 
 import Dropdown from 'react-bootstrap/Dropdown';
+import { GameModel } from "sr2020-mm-event-engine";
 
-export function WipeManaOceanEffectsButton(props) {
+interface WipeManaOceanEffectsButtonProps {
+  gameModel: GameModel;
+}
+
+export function WipeManaOceanEffectsButton(props: WipeManaOceanEffectsButtonProps) {
   const {
-    t, gameModel,
+    gameModel,
   } = props;
+  const { t } = useTranslation();
 
   const onClick = useCallback(() => {
     gameModel.execute('wipeManaOceanEffects');

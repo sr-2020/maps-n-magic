@@ -1,6 +1,12 @@
 import React, { useState, useEffect } from 'react';
 
-export const withModelRunData = (Wrapped) => (props) => {
+export interface WithModelRunData {
+  isModelRunning: boolean;
+  speed: number;
+  onClick: (type: 'runModel' | 'stopModel', speed?: number) => () => void;
+}
+
+export const withModelRunData = (Wrapped: any) => (props: any) => {
   const { gameModel } = props;
 
   const [runState, setRunState] = useState({
@@ -26,7 +32,7 @@ export const withModelRunData = (Wrapped) => (props) => {
     };
   }, []);
 
-  function onClick(type, speed) {
+  function onClick(type: 'runModel' | 'stopModel', speed?: number): () => void {
     return () => {
       gameModel.execute({
         type,

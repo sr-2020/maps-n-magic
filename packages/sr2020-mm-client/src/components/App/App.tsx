@@ -31,6 +31,7 @@ import {
 import {
   makeGameModel,
 } from 'sr2020-mm-client-event-engine';
+import { WithTranslation } from 'react-i18next';
 
 import { AudioContextWrapper } from '../../utils/AudioContextWrapper';
 // import { SpiritEditor } from '../SpiritEditor';
@@ -39,7 +40,10 @@ import { AudioContextWrapper } from '../../utils/AudioContextWrapper';
 
 import { SoundManager } from '../SoundManager';
 
-import * as mapDefaults from '../../configs/map';
+// import { mapDefaults } from '../../configs/map';
+import { mapDefaults } from '../../configs';
+// import * as mapDefaults from '../../configs/map';
+// import { defaultCenter } from '../../configs/map';
 
 // import { GeoDataStreamSimulator } from '../GeoDataStreamSimulator';
 import { CharacterPositions } from '../CharacterPositions';
@@ -58,7 +62,7 @@ import { BeaconRecordEditor } from '../BeaconRecordEditor';
 import { RescueServiceMessageSender } from '../RescueServiceMessageSender';
 
 import { MapRoutes } from '../MapRoutes';
-import { WithTranslation } from 'react-i18next';
+
 
 const STORAGE_KEY = 'AR_POC';
 
@@ -99,7 +103,7 @@ export class App extends Component<AppProps, AppState> {
 
   // static propTypes = AppPropTypes;
 
-  constructor(props) {
+  constructor(props: AppProps) {
     super(props);
     this.state = {
       simulateGeoDataStream: false,
@@ -112,13 +116,16 @@ export class App extends Component<AppProps, AppState> {
     // onUploadFileSelected
     // downloadDatabaseAsFile
     // onSaveDataInLs
-    const funcs = `
-    switchMovementMode
-    jumpToUserCoords
-    onGetPosition
-    `.split('\n').map(R.trim).filter(R.pipe(R.isEmpty, R.not));
-
-    funcs.forEach((funcName) => (this[funcName] = this[funcName].bind(this)));
+    // const funcs = `
+    // switchMovementMode
+    // jumpToUserCoords
+    // onGetPosition
+    // `.split('\n').map(R.trim).filter(R.pipe(R.isEmpty, R.not));
+    
+    // funcs.forEach((funcName) => (this[funcName] = this[funcName].bind(this)));
+    this.switchMovementMode = this.switchMovementMode.bind(this);
+    this.jumpToUserCoords = this.jumpToUserCoords.bind(this);
+    this.onGetPosition = this.onGetPosition.bind(this);
   }
 
   componentDidMount() {
@@ -131,7 +138,7 @@ export class App extends Component<AppProps, AppState> {
       initialized: true,
     });
     // this.saveDataInLsId = setInterval(this.onSaveDataInLs, 10000);
-    // this.watchGeolocationId = navigator.geolocation.watchPosition(this.onGetPosition);
+    this.watchGeolocationId = navigator.geolocation.watchPosition(this.onGetPosition);
     // setInterval(this.onGetPosition, 1000);
     // window.addEventListener('beforeunload', this.onSaveDataInLs);
   }
@@ -149,7 +156,7 @@ export class App extends Component<AppProps, AppState> {
   //   localStorage.setItem(STORAGE_KEY, JSON.stringify(database2));
   // }
 
-  onGetPosition(position) {
+  onGetPosition(position: GeolocationPosition) {
     // console.log(position.coords.latitude, position.coords.longitude);
     // eslint-disable-next-line react/destructuring-assignment
     if (this.state.simulateGeoDataStream) {
@@ -167,13 +174,15 @@ export class App extends Component<AppProps, AppState> {
     });
 
     position = {
+      ...position,
       coords: {
+        ...position.coords,
         latitude: coords.lat,
         longitude: coords.lng,
       },
     };
 
-    const artificialPos = {
+    const artificialPos: GeolocationPosition = {
       coords: {
         accuracy: 10,
         altitude: null,
@@ -220,7 +229,7 @@ export class App extends Component<AppProps, AppState> {
   //   json2File(database2, makeFileName('SR_acoustic_poc', 'json', new Date()));
   // }
 
-  switchMovementMode(e) {
+  switchMovementMode(e: React.MouseEvent<HTMLElement>) {
     e.stopPropagation();
     e.preventDefault();
     this.setState(({ simulateGeoDataStream }) => ({
@@ -228,7 +237,7 @@ export class App extends Component<AppProps, AppState> {
     }));
   }
 
-  jumpToUserCoords(e) {
+  jumpToUserCoords(e: React.MouseEvent<HTMLElement>) {
     e.stopPropagation();
     e.preventDefault();
     this.setState((prevState) => {
@@ -261,7 +270,7 @@ export class App extends Component<AppProps, AppState> {
     // });
     // return;
 
-    const success = (position) => {
+    const success = (position: GeolocationPosition) => {
       const { latitude } = position.coords;
       const { longitude } = position.coords;
 
@@ -349,7 +358,6 @@ export class App extends Component<AppProps, AppState> {
                         This is problem of router implementation */}
                         {MapRoutes({
                           gameModel,
-                          mapDefaults,
                         })}
                         <Route path="/">
                           <Redirect to="/mapsNav" />

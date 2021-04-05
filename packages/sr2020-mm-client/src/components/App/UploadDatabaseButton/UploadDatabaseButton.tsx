@@ -5,6 +5,7 @@ import Dropdown from 'react-bootstrap/Dropdown';
 
 // import { UploadDatabaseButtonPropTypes } from '../../types';
 
+// @ts-ignore
 function uploadDatabaseFile(evt) {
   const input = evt.target.querySelector('input');
   if (input) {
@@ -13,6 +14,7 @@ function uploadDatabaseFile(evt) {
   }
 }
 
+// @ts-ignore
 export function UploadDatabaseButton(props) {
   const { t, onChange } = props;
 

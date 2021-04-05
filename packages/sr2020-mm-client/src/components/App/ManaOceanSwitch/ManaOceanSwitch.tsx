@@ -1,9 +1,17 @@
 import React, { useCallback } from 'react';
 import Dropdown from 'react-bootstrap/Dropdown';
 import Form from 'react-bootstrap/Form';
+import { GameModel } from "sr2020-mm-event-engine";
+import { WithTranslation } from 'react-i18next';
 import './ManaOceanSwitch.css';
 
-export function ManaOceanSwitch(props) {
+
+interface ManaOceanSwitchProps extends WithTranslation {
+  enableManaOcean: boolean;
+  gameModel: GameModel;
+};
+
+export function ManaOceanSwitch(props: ManaOceanSwitchProps) {
   const {
     t, enableManaOcean, gameModel,
   } = props;

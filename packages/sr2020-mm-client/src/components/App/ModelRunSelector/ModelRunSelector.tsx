@@ -10,10 +10,11 @@ import {
   faCheck,
 } from '@fortawesome/free-solid-svg-icons';
 import classNames from 'classnames';
+import { WithModelRunData } from "./withModelRunData";
 
 const speeds = [0.1, 1, 10, 20];
 
-export function ModelRunSelector(props) {
+export function ModelRunSelector(props: WithModelRunData) {
   const { isModelRunning, speed, onClick } = props;
   const { t } = useTranslation();
   return (

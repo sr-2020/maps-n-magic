@@ -3,7 +3,7 @@
 import * as R from 'ramda';
 import { EventEmitter } from 'events';
 
-import { shuffle, SoundStageData } from 'sr2020-mm-event-engine';
+import { shuffle, SoundStageData, GameModel, TimeoutType } from 'sr2020-mm-event-engine';
 // import {  } from 'sr2020-mm-client-event-engine';
 import { AudioContextWrapper } from '../../utils/AudioContextWrapper';
 
@@ -11,11 +11,6 @@ import { Sound, SoundCtl } from "../../types";
 
 type SoundCollection = {
   [name: string]: SoundCtl
-};
-
-enum TimeoutType {
-  'rotationTimeout',
-  'rotationSoundTimeout'
 };
 
 export class SoundStage extends EventEmitter {
@@ -49,7 +44,7 @@ export class SoundStage extends EventEmitter {
 
   rotationTimeoutId: NodeJS.Timeout | null = null;
 
-  gameModel: any = null;
+  gameModel: GameModel = null;
 
   constructor(context: AudioContextWrapper) {
     super();
@@ -74,7 +69,7 @@ export class SoundStage extends EventEmitter {
     clearTimeout(this.rotationTimeoutId);
   }
 
-  subscribe(action, gameModel): void {
+  subscribe(action: 'on'|'off', gameModel: GameModel): void {
     gameModel[action]('backgroundSoundUpdate', this.onBackgroundSoundUpdate);
     gameModel[action]('rotationSoundsUpdate', this.onRotationSoundsUpdate);
     gameModel[action]('rotationTimeoutUpdate', this.onRotationTimeoutUpdate);
@@ -83,7 +78,7 @@ export class SoundStage extends EventEmitter {
     gameModel[action]('rotationVolumeUpdate', this.onRotationVolumeUpdate);
   }
 
-  subscribeOnModel(gameModel): void {
+  subscribeOnModel(gameModel: GameModel): void {
     if (this.gameModel !== gameModel) {
       if (this.gameModel) {
         this.subscribe('off', this.gameModel);
@@ -121,6 +116,7 @@ export class SoundStage extends EventEmitter {
         name: this.backgroundSound,
       });
       if (sound) {
+        // @ts-ignore
         this.startSound(this.backgroundSources, this.backgroundSound, sound.buffer, this.backgroundVolume / 100, true);
       } else {
         console.warn(`Sound not found: ${this.backgroundSound}`);
@@ -190,6 +186,7 @@ export class SoundStage extends EventEmitter {
   }
 
   onSoundEnded(collection: SoundCollection) {
+    // @ts-ignore
     return (e) => {
       // console.log('onSoundEnded');
       this.stopSound(collection, e.target.customData.soundName);

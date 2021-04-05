@@ -4,8 +4,9 @@ import './SoundManager.css';
 
 import Accordion from 'react-bootstrap/Accordion';
 import Card from 'react-bootstrap/Card';
+import { WithTranslation } from "react-i18next";
 
-import { SoundStageData } from "sr2020-mm-event-engine";
+import { SoundStageData, GameModel, TimeoutType } from "sr2020-mm-event-engine";
 
 import { SoundStageEcho } from './SoundStageEcho';
 
@@ -16,10 +17,9 @@ import { SoundStage } from './../App/SoundStage';
 
 import { Sound } from "../../types";
 
-interface SoundManagerProps {
-  gameModel: any;
+interface SoundManagerProps extends WithTranslation {
+  gameModel: GameModel;
   soundStage: SoundStage;
-  t: any;
 };
 interface SoundManagerState {
   sounds: Sound[];
@@ -33,7 +33,7 @@ interface SoundManagerState {
 export class SoundManager extends Component<SoundManagerProps, SoundManagerState> {
   // static propTypes = SoundManagerPropTypes;
 
-  constructor(props) {
+  constructor(props: SoundManagerProps) {
     super(props);
     console.log('SoundManager constructing');
     this.state = {
@@ -64,14 +64,14 @@ export class SoundManager extends Component<SoundManagerProps, SoundManagerState
     this.subscribeOnSoundStage(this.props.soundStage);
   }
 
-  componentDidUpdate = (prevProps) => {
+  componentDidUpdate = (prevProps: SoundManagerProps) => {
     console.log('SoundManager did update');
     if (prevProps.gameModel !== this.props.gameModel) {
       this.onGameModelUpdate(prevProps);
     }
   }
 
-  onGameModelUpdate(prevProps) {
+  onGameModelUpdate(prevProps: SoundManagerProps) {
     this.unsubscribe(prevProps.gameModel);
     this.onSoundUpdate();
     this.onSoundStageUpdate();
@@ -107,7 +107,10 @@ export class SoundManager extends Component<SoundManagerProps, SoundManagerState
     });
   }
 
-  onCurrentTimeoutUpdate({ currentTimeout, currentTimeoutType }) {
+  onCurrentTimeoutUpdate({ currentTimeout, currentTimeoutType }:{
+    currentTimeout: number;
+    currentTimeoutType: TimeoutType
+  }) {
     this.setState({
       currentTimeout,
       currentTimeoutType,
@@ -124,14 +127,14 @@ export class SoundManager extends Component<SoundManagerProps, SoundManagerState
     soundStage.off('currentTimeoutUpdate', this.onCurrentTimeoutUpdate);
   }
 
-  subscribe(gameModel) {
+  subscribe(gameModel: GameModel) {
     gameModel.on('soundLoaded', this.onSoundUpdate);
     gameModel.on('soundsRemoved', this.onSoundUpdate);
     gameModel.on('rotationSoundsUpdate', this.onSoundStageUpdate);
     gameModel.on('backgroundSoundUpdate', this.onSoundStageUpdate);
   }
 
-  unsubscribe(gameModel) {
+  unsubscribe(gameModel: GameModel) {
     gameModel.off('soundLoaded', this.onSoundUpdate);
     gameModel.off('soundsRemoved', this.onSoundUpdate);
     gameModel.off('rotationSoundsUpdate', this.onSoundStageUpdate);

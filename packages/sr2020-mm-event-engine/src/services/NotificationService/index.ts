@@ -8,14 +8,14 @@ import {
   Typed
 } from '../../core';
 
-export interface PostNotificationArgs {
+export interface NotificationData {
   title: string;
   message: string;
   kind: 'error' | 'success' | 'warning' | 'info';
 }
 
-export type PostNotification = Typed<'postNotification', PostNotificationArgs>;
-export type EPostNotification = Typed<'postNotification', PostNotificationArgs>;
+export type PostNotification = Typed<'postNotification', NotificationData>;
+export type EPostNotification = Typed<'postNotification', NotificationData>;
 
 export type PostNotificationEvents = EPostNotification;
 

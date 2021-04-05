@@ -1,10 +1,18 @@
 import React from 'react';
 import './InputLabel.css';
+import { useTranslation } from "react-i18next";
+import { SRTKey } from "sr2020-mm-client-core";
 
 // import { InputLabelPropTypes } from '../../types';
 
-export function InputLabel(props) {
-  const { t, translationKey, htmlFor } = props;
+interface InputLabelProps {
+  htmlFor: string;
+  translationKey: SRTKey;
+}
+
+export function InputLabel(props: InputLabelProps) {
+  const { translationKey, htmlFor } = props;
+  const { t } = useTranslation();
 
   return (
     <label

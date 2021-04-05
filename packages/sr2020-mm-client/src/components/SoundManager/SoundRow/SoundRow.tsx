@@ -6,6 +6,7 @@ import {
   faPlayCircle, faMusic, faStopCircle, faSpinner,
 } from '@fortawesome/free-solid-svg-icons';
 import classNames from 'classnames';
+import { WithTranslation } from "react-i18next";
 
 import { formatBytes, formatDuration } from '../../../utils/miscUtils';
 
@@ -13,12 +14,11 @@ import { formatBytes, formatDuration } from '../../../utils/miscUtils';
 
 import { Sound } from "../../../types";
 
-interface SoundRowProps {
+interface SoundRowProps extends WithTranslation{
   sound: Sound,
   isSelected: boolean;
   selectBackgroundSound: (soundName: string) => void;
   selectRotationSound: (soundName: string) => void;
-  t: any;
   isInRotation: boolean;
   isBackground: boolean;
   playbackIndex: number;
@@ -27,7 +27,7 @@ interface SoundRowProps {
 export class SoundRow extends Component<SoundRowProps> {
   // static propTypes = SoundRowPropTypes;
 
-  constructor(props) {
+  constructor(props: SoundRowProps) {
     super(props);
     this.state = {
     };
@@ -45,7 +45,7 @@ export class SoundRow extends Component<SoundRowProps> {
     console.log('SoundRow will unmount');
   }
 
-  getActiveIcon(sound) {
+  getActiveIcon(sound: Sound) {
     return faPlayCircle;
     // if (sound.status === 'loading') {
     //   return faSpinner;

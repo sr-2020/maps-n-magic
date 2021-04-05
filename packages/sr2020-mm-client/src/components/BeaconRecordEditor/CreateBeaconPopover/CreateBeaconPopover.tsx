@@ -1,9 +1,10 @@
-import React, { Component } from 'react';
+import React, { Component, RefObject, ChangeEvent, FormEvent } from 'react';
 import './CreateBeaconPopover.css';
 import * as R from 'ramda';
 
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faPlus, faEllipsisH } from '@fortawesome/free-solid-svg-icons';
+import { WithTranslation } from "react-i18next";
 
 import Popover from 'react-bootstrap/Popover';
 import Button from 'react-bootstrap/Button';
@@ -12,7 +13,7 @@ import Form from 'react-bootstrap/Form';
 
 const macAddressPattern = R.repeat('[0-9a-fA-F]{2}', 6).join(':');
 
-function formatMacValue(str) {
+function formatMacValue(str: string): string {
   const macLength = 12;
   if (str.length > macLength) {
     str = str.substring(0, macLength);
@@ -20,10 +21,12 @@ function formatMacValue(str) {
     str += R.repeat('_', macLength - str.length).join('');
   }
   // const newStr = str.substring(0, macLength) + (macLength > str.length) ? R.repeat('_', macLength - str.length).join('') : '';
-  return R.pipe(
+  // @ts-ignore
+  const addColons: (arg: string) => string = R.pipe(
     R.splitEvery(2),
     R.join(':'),
-  )(str);
+  );
+  return addColons(str);
 }
 
 // window.posMap = [
@@ -39,8 +42,7 @@ function formatMacValue(str) {
 
 // import { CreateBeaconPopoverPropTypes } from '../../types';
 
-interface CreateBeaconPopoverProps {
-  t: any;
+interface CreateBeaconPopoverProps extends WithTranslation {
   createBeacon: (macAddress: string) => void
 }
 interface CreateBeaconPopoverState {
@@ -50,9 +52,9 @@ interface CreateBeaconPopoverState {
 export class CreateBeaconPopover extends Component<CreateBeaconPopoverProps, CreateBeaconPopoverState> {
   // static propTypes = CreateBeaconPopoverPropTypes;
 
-  newBeaconMacInput: any;
+  newBeaconMacInput: HTMLInputElement;
 
-  constructor(props) {
+  constructor(props: CreateBeaconPopoverProps) {
     super(props);
     this.state = {
       macAddress: '',
@@ -74,7 +76,7 @@ export class CreateBeaconPopover extends Component<CreateBeaconPopoverProps, Cre
   }
 
 
-  onMacAddressChange(e) {
+  onMacAddressChange(e: ChangeEvent<HTMLInputElement>) {
     const { value, selectionStart } = e.target;
     const cleanValue = value.replace(/(:|_)/g, '');
 
@@ -104,7 +106,7 @@ export class CreateBeaconPopover extends Component<CreateBeaconPopoverProps, Cre
     });
   }
 
-  setMacAddressPosition(changeIndex, selectionStart) {
+  setMacAddressPosition(changeIndex: number, selectionStart: number) {
     setTimeout(() => {
       if (this.newBeaconMacInput) {
         // this.newBeaconMacInput.focus();
@@ -116,7 +118,8 @@ export class CreateBeaconPopover extends Component<CreateBeaconPopoverProps, Cre
     }, 50);
   }
 
-  getCreateBeaconPopover(t) {
+  getCreateBeaconPopover() {
+    const { t } = this.props;
     const { macAddress } = this.state;
     return (
       <Popover id="popover-basic">
@@ -141,7 +144,7 @@ export class CreateBeaconPopover extends Component<CreateBeaconPopoverProps, Cre
                 pattern={macAddressPattern}
                 value={formatMacValue(macAddress)}
                 onChange={this.onMacAddressChange}
-                ref={(el) => (this.newBeaconMacInput = el)}
+                ref={(el: HTMLInputElement) => (this.newBeaconMacInput = el)}
               />
               {/* <Form.Text className="text-muted">
                 {t('macAddressInfoAdvice')}
@@ -158,7 +161,7 @@ export class CreateBeaconPopover extends Component<CreateBeaconPopoverProps, Cre
     );
   }
 
-  handleBeaconSubmit(event) {
+  handleBeaconSubmit(event: FormEvent<HTMLFormElement>) {
     const form = event.currentTarget;
     event.preventDefault();
     event.stopPropagation();
@@ -189,7 +192,7 @@ export class CreateBeaconPopover extends Component<CreateBeaconPopoverProps, Cre
       <OverlayTrigger
         trigger="click"
         placement="right"
-        overlay={this.getCreateBeaconPopover(t)}
+        overlay={this.getCreateBeaconPopover()}
         rootClose
         rootCloseEvent="click"
       >

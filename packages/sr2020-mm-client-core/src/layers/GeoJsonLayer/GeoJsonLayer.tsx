@@ -6,6 +6,8 @@ import './GeoJsonLayer.css';
 import * as R from 'ramda';
 
 import L from 'leaflet';
+import type { FeatureCollection, Feature } from "geojson";
+import { LayerCommunicator } from "../../../index";
 import { TranslatorContext } from '../../misc/translatorContext';
 
 // "stroke": "#ffd600",
@@ -16,13 +18,13 @@ import { TranslatorContext } from '../../misc/translatorContext';
 
 const styleProps = ['stroke', 'stroke-opacity', 'stroke-width', 'fill', 'fill-opacity'];
 
-const transformName = (name) => {
+const transformName = (name: string): string => {
   if (name === 'stroke') return 'color';
   if (name === 'fill') return 'fillColor';
   return camelize(name);
 };
 
-function camelize(str) {
+function camelize(str: string): string {
   return str;
   // const arr = str.split('-');
   // const capital = arr.map((item, index) => (index ? item.charAt(0).toUpperCase() + item.slice(1).toLowerCase() : item));
@@ -31,8 +33,16 @@ function camelize(str) {
   // return capitalString;
 }
 
+interface GeoJsonLayerProps {
+  enableByDefault: boolean;
+  layerCommunicator: LayerCommunicator;
+  layerNameKey: string;
+  geoData: FeatureCollection;
+  grayscale?: boolean;
+}
+
 // eslint-disable-next-line max-lines-per-function
-export function GeoJsonLayer(props) {
+export function GeoJsonLayer(props: GeoJsonLayerProps): null {
   const [group] = useState(L.layerGroup([]));
   const {
     enableByDefault, layerCommunicator, layerNameKey, geoData, grayscale = false,
@@ -52,7 +62,7 @@ export function GeoJsonLayer(props) {
     };
   }, []);
 
-  const makeStyles = function (properties) {
+  const makeStyles = function (properties: Record<string, any>): Record<string, any> {
     return R.pipe(
       R.keys,
       R.filter(R.includes(R.__, styleProps)),
@@ -63,14 +73,14 @@ export function GeoJsonLayer(props) {
         }
         acc[transformName(prop)] = value;
         return acc;
-      }, {}),
+      }, {} as Record<string, any>),
     )(properties);
   };
 
   useEffect(() => {
     geoData.features.forEach((feature) => {
       feature = translator.geoJsonMoveTo(feature);
-      const style = function (feature2) {
+      const style = function (feature2: Feature) {
         const { properties } = feature2;
         // console.log(properties.name, makeStyles(properties));
         return makeStyles(properties);

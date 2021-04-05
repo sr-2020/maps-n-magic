@@ -4,7 +4,6 @@
 // const { PubSub } = require('@google-cloud/pubsub');
 import { PubSub, Message } from '@google-cloud/pubsub';
 // import moment from 'moment-timezone';
-// import { bodyConditions } from 'sr2020-mm-data/gameConstants';
 // import { randomInteger } from '../../utils';
 
 let subscriptionName: string;

@@ -1,6 +1,6 @@
-import { GeoJSON } from "geojson";
+import { GeoJSON, FeatureCollection } from "geojson";
 
-export const staticGeoData: GeoJSON = {
+export const staticGeoData: FeatureCollection = {
   "type": "FeatureCollection",
   "features": [
     {

@@ -4,7 +4,11 @@ import * as moment from 'moment-timezone';
 import { useTranslation } from 'react-i18next';
 import classNames from 'classnames';
 
-function formatTime(curTime, eventTimestamp) {
+import { CharacterHealthState } from "sr2020-mm-event-engine";
+
+import { WithCharacterHealthListForTable } from '../../dataHOCs';
+
+function formatTime(curTime: number, eventTimestamp: number) {
   let delta = Math.floor((curTime - eventTimestamp) / 1000);
   if (delta < 0) {
     delta = 0;
@@ -21,7 +25,7 @@ function formatTime(curTime, eventTimestamp) {
   );
 }
 
-export function RescueServiceTable(props) {
+export function RescueServiceTable(props: WithCharacterHealthListForTable) {
   const { characterHealthList } = props;
   const { t } = useTranslation();
 
@@ -47,7 +51,7 @@ export function RescueServiceTable(props) {
         </div>
       )}
       {
-        characterHealthList.map((character, i, arr) => (
+        characterHealthList.map((character: CharacterHealthState, i, arr) => (
           <div
             key={character.characterId}
             className={classNames('tw-flex ', {

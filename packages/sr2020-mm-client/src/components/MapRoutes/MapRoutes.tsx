@@ -5,6 +5,11 @@ import {
   Route,
 } from 'react-router-dom';
 
+import { GameModel } from "sr2020-mm-event-engine";
+
+
+// import * as MapDefaults from '../../configs/map';
+
 // import { CommonMap } from '../../maps/CommonMap';
 import { BackgroundEditorMap } from '../../maps/BackgroundEditorMap';
 import { LocationEditorMap } from '../../maps/LocationEditorMap';
@@ -16,14 +21,21 @@ import { CharacterWatcher } from '../CharacterWatcher';
 
 import { MapsNav } from '../MapsNav';
 
+import { 
+  backgroundEditorGeomanConfig, 
+  locationsEditor2GeomanConfig, 
+  beaconEditor2GeomanConfig,
+} from '../../configs';
+
+interface MapRoutesProps {
+  gameModel: GameModel;
+}
+
 // eslint-disable-next-line max-lines-per-function
-export function MapRoutes(props) {
+export function MapRoutes(props: MapRoutesProps) {
   const {
-    gameModel, mapDefaults,
+    gameModel,
   } = props;
-  const {
-    backgroundEditorGeomanConfig, oldLocationAndMarkerGeomanConfig, locationsEditor2GeomanConfig, beaconEditor2GeomanConfig,
-  } = mapDefaults;
 
   return [
     <Route path="/mapsNav" key="mapsNav">

@@ -1,10 +1,10 @@
 import React, { Component } from 'react';
 import './SoundStageEcho.css';
-
-// import { SoundStageEchoPropTypes } from '../../../types';
+import { GameModel, SoundStageData } from "sr2020-mm-event-engine";
+import { EBackgroundSoundUpdate, ERotationSoundsUpdate } from "sr2020-mm-client-event-engine";
 
 interface SoundStageEchoProps {
-  gameModel: any;
+  gameModel: GameModel;
 };
 interface SoundStageEchoState {
   backgroundSound: string;
@@ -12,9 +12,8 @@ interface SoundStageEchoState {
 };
 
 export class SoundStageEcho extends Component<SoundStageEchoProps, SoundStageEchoState> {
-  // static propTypes = SoundStageEchoPropTypes;
 
-  constructor(props) {
+  constructor(props: SoundStageEchoProps) {
     super(props);
     this.state = {
       backgroundSound: null,
@@ -29,7 +28,7 @@ export class SoundStageEcho extends Component<SoundStageEchoProps, SoundStageEch
     console.log('SoundStageEcho mounted');
   }
 
-  componentDidUpdate = (prevProps) => {
+  componentDidUpdate = (prevProps: SoundStageEchoProps) => {
     if (prevProps.gameModel !== this.props.gameModel) {
       this.unsubscribe(prevProps.gameModel);
       this.initialize();
@@ -43,13 +42,13 @@ export class SoundStageEcho extends Component<SoundStageEchoProps, SoundStageEch
     console.log('SoundStageEcho will unmount');
   }
 
-  onBackgroundSoundUpdate({ backgroundSound }) {
+  onBackgroundSoundUpdate({ backgroundSound }: EBackgroundSoundUpdate) {
     this.setState({
       backgroundSound,
     });
   }
 
-  onRotationSoundsUpdate({ rotationSounds }) {
+  onRotationSoundsUpdate({ rotationSounds }: ERotationSoundsUpdate) {
     this.setState({
       rotationSounds: [...rotationSounds],
     });
@@ -57,7 +56,7 @@ export class SoundStageEcho extends Component<SoundStageEchoProps, SoundStageEch
 
   initialize() {
     const { gameModel } = this.props;
-    const soundStage = gameModel.get('soundStage');
+    const soundStage = gameModel.get<SoundStageData>('soundStage');
     this.setState({
       backgroundSound: soundStage.backgroundSound,
       rotationSounds: [...soundStage.rotationSounds],
@@ -65,12 +64,12 @@ export class SoundStageEcho extends Component<SoundStageEchoProps, SoundStageEch
     this.subscribe(gameModel);
   }
 
-  subscribe(gameModel) {
+  subscribe(gameModel: GameModel) {
     gameModel.on('backgroundSoundUpdate', this.onBackgroundSoundUpdate);
     gameModel.on('rotationSoundsUpdate', this.onRotationSoundsUpdate);
   }
 
-  unsubscribe(gameModel) {
+  unsubscribe(gameModel: GameModel) {
     gameModel.off('backgroundSoundUpdate', this.onBackgroundSoundUpdate);
     gameModel.off('rotationSoundsUpdate', this.onRotationSoundsUpdate);
   }
