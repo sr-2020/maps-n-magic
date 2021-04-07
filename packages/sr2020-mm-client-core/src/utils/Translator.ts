@@ -6,19 +6,34 @@ import type {
   Point,
   LineString
 } from 'geojson';
+import type { 
+  LatLngExpression,
+  LatLngLiteral,
+  LatLngTuple,
+  LatLng
+} from "leaflet";
+
+// export interface LatLngLiteral {
+//   lat: number;
+//   lng: number;
+// }
+
+// export type LatLngTuple = [number, number];
+
+// export type LatLngExpression = LatLng | LatLngLiteral | LatLngTuple;
 
 // function isFish(pet: Fish | Bird): pet is Fish {
 //   return (pet as Fish).swim !== undefined;
 // }
 
-type LocalLatLng = {lat: number, lng: number};
-type LocalPoint = [number, number];
-type LocalLocation = {latlngs: [LocalLatLng[]]};
-type LocalPolygon = (LocalPoint | LocalLatLng)[];
+// type LocalLatLng = {lat: number, lng: number};
+// type LocalPoint = [number, number];
+type LocalLocation = {latlngs: [LatLngLiteral[]]};
+type LocalPolygon = LatLng[] | LatLngTuple[] | LatLngLiteral[];
 type LocalCompositePolygon = LocalPolygon[][];
 
-type TranslatableElement = LocalLatLng |
-  LocalPoint |
+type TranslatableElement = LatLngLiteral |
+  LatLngTuple |
   LocalLocation |
   LocalPolygon |
   LocalCompositePolygon;
@@ -92,7 +107,7 @@ export class Translator {
 
 
 
-  _moveBeacon(beacon: LocalLatLng, func: op): LocalLatLng {
+  _moveBeacon(beacon: LatLngLiteral, func: op): LatLngLiteral {
     return {
       ...beacon,
       lat: func(beacon.lat, this.deltaLat),
@@ -117,14 +132,22 @@ export class Translator {
   }
 
   _movePolygon(polygon: LocalPolygon, func: op): LocalPolygon {
+    if (polygon.length === 0) {
+      return [];
+    }
+    if(_isPoint(polygon[0])) {
+      return (polygon as LatLngTuple[]).map((point) => this._movePoint(point, func));
+    } else {
+      return (polygon as LatLngLiteral[]).map((point) => this._moveBeacon(point, func));
+    }
     // return polygon.map((point) => (this._isPoint(point) ? this._movePoint(point, func) : this._moveBeacon(point, func)));
-    return polygon.map((point) => (_isPoint(point) ? 
-      this._movePoint(point as LocalPoint, func) : 
-      this._moveBeacon(point as LocalLatLng, func)
-    ));
+    // return polygon.map((point) => (_isPoint(point) ? 
+    //   this._movePoint(point as LatLngTuple, func) : 
+    //   this._moveBeacon(point as LatLngLiteral, func)
+    // ));
   }
 
-  _movePoint(point: LocalPoint, func: op): LocalPoint {
+  _movePoint(point: LatLngTuple, func: op): LatLngTuple {
     return [
       func(point[0], this.deltaLat),
       func(point[1], this.deltaLng),

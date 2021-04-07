@@ -1,8 +1,10 @@
-import React, { Component } from 'react';
+import React, { Component, MouseEventHandler } from 'react';
 import './JumpToUserCoordsSwitch.css';
 
 import Dropdown from 'react-bootstrap/Dropdown';
 import Form from 'react-bootstrap/Form';
+import { WithTranslation } from "react-i18next";
+import { Translator } from "sr2020-mm-client-core";
 
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import {
@@ -11,11 +13,11 @@ import {
 
 // import { JumpToUserCoordsSwitchPropTypes } from '../../types';
 
-interface JumpToUserCoordsSwitchProps {
-  t: any;
+interface JumpToUserCoordsSwitchProps extends WithTranslation {
   waitingForGeolocation: boolean;
-  translator: any;
-  onClick: any;
+  translator: Translator;
+  onClick: MouseEventHandler;
+  // onClick: MouseEventHandler<HTMLInputElement>;
 };
 
 export function JumpToUserCoordsSwitch(props: JumpToUserCoordsSwitchProps) {

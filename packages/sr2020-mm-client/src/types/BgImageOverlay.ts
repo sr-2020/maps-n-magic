@@ -5,7 +5,11 @@ export interface BgImageOverlayOptions extends L.ImageOverlayOptions {
 }
 
 export interface BgImageOverlay extends L.ImageOverlay {
-  constructor(imageUrl: string, bounds: L.LatLngBoundsExpression, options?: BgImageOverlayOptions);
+  constructor(
+    imageUrl: string, 
+    bounds: L.LatLngBoundsExpression, 
+    options?: BgImageOverlayOptions
+  ): BgImageOverlay;
   options: BgImageOverlayOptions;
 }
 

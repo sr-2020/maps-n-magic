@@ -3,21 +3,19 @@ import './FractionList.css';
 
 import * as R from 'ramda';
 
-// import { FractionListPropTypes } from '../../../types';
+import { GameModel } from "sr2020-mm-event-engine";
 
 const sort = R.sortBy(R.toLower);
 
 interface FractionListProps {
-  spiritService: any;
+  spiritService: GameModel;
 }
 interface FractionListState {
   fractions: string[];
 }
 
 export class FractionList extends Component<FractionListProps, FractionListState> {
-  // static propTypes = FractionListPropTypes;
-
-  constructor(props) {
+  constructor(props: FractionListProps) {
     super(props);
     this.state = {
       fractions: [],
@@ -28,7 +26,7 @@ export class FractionList extends Component<FractionListProps, FractionListState
   componentDidMount = () => {
     const { spiritService } = this.props;
     // const fractions = spiritService.getSpiritFractionsList();
-    const fractions = spiritService.get('spiritFractionsList');
+    const fractions = spiritService.get<string[]>('spiritFractionsList');
     this.setState({
       fractions: sort(fractions),
     });
@@ -36,7 +34,7 @@ export class FractionList extends Component<FractionListProps, FractionListState
     this.props.spiritService.on('fractionChange', this.onFractionChange);
   }
 
-  componentDidUpdate = (prevProps) => {
+  componentDidUpdate = (prevProps: FractionListProps) => {
     console.log('FractionList did update');
     if (prevProps.spiritService === this.props.spiritService) {
       return;
@@ -44,12 +42,12 @@ export class FractionList extends Component<FractionListProps, FractionListState
     this.onUpdate(prevProps);
   }
 
-  onUpdate(prevProps) {
+  onUpdate(prevProps: FractionListProps) {
     prevProps.spiritService.off('fractionChange', this.onFractionChange);
 
     const { spiritService } = this.props;
     // const fractions = spiritService.getSpiritFractionsList();
-    const fractions = spiritService.get('spiritFractionsList');
+    const fractions = spiritService.get<string[]>('spiritFractionsList');
     this.setState({
       fractions: sort(fractions),
     });
@@ -61,7 +59,7 @@ export class FractionList extends Component<FractionListProps, FractionListState
     this.props.spiritService.off('fractionChange', this.onFractionChange);
   }
 
-  onFractionChange({ fractions }) {
+  onFractionChange({ fractions }:{ fractions: string[] }) {
     this.setState({
       fractions: sort(fractions),
     });

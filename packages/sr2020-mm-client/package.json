@@ -16,6 +16,7 @@
     "@types/react": "^16.14.2",
     "@types/react-document-title": "^2.0.4",
     "@types/react-dom": "^16.9.10",
+    "@types/react-highlighter": "^0.3.4",
     "bootstrap": "^4.5.2",
     "classnames": "^2.2.6",
     "d3-delaunay": "^5.3.0",

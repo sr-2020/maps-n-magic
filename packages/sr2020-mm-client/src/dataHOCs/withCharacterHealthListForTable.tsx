@@ -4,9 +4,10 @@ import {
   isClinicallyDead, 
   isRelevant,
   CharacterHealthStates, 
-  CharacterHealthState
+  CharacterHealthState,
+  lifeStyleScore,
+  GameModel
 } from 'sr2020-mm-event-engine';
-import { lifeStyleScore } from 'sr2020-mm-data';
 import * as moment from 'moment-timezone';
 
 import { charHealthIndexToList } from "./charHealthUtils";
@@ -32,7 +33,7 @@ export interface WithCharacterHealthListForTable {
 //   id: Number(id),
 // })));
 
-export const withCharacterHealthListForTable = (Wrapped: any) => (props: any) => {
+export const withCharacterHealthListForTable = (Wrapped: any) => (props: object & {gameModel: GameModel}) => {
   const { gameModel } = props;
   const [data, setData] = useState(initState);
 

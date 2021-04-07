@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { Component, FormEvent, MouseEvent } from 'react';
 import './AbilitiesInput.css';
 
 import Button from 'react-bootstrap/Button';
@@ -7,6 +7,8 @@ import InputGroup from 'react-bootstrap/InputGroup';
 import FormControl from 'react-bootstrap/FormControl';
 import Form from 'react-bootstrap/Form';
 import classNames from 'classnames';
+import { GameModel, Spirit } from "sr2020-mm-event-engine";
+import { WithTranslation } from "react-i18next";
 
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faTimes } from '@fortawesome/free-solid-svg-icons';
@@ -16,11 +18,10 @@ import * as R from 'ramda';
 
 const sort = R.sortBy(R.toLower);
 
-interface AbilitiesInputProps {
-  spiritService: any;
-  id: any;
-  t: any;
-  className?: any;
+interface AbilitiesInputProps extends WithTranslation {
+  spiritService: GameModel;
+  id: number;
+  className?: string;
 }
 interface AbilitiesInputState {
   initialized: boolean;
@@ -31,7 +32,7 @@ interface AbilitiesInputState {
 export class AbilitiesInput extends Component<AbilitiesInputProps, AbilitiesInputState> {
   // static propTypes = AbilitiesInputPropTypes;
 
-  constructor(props) {
+  constructor(props: AbilitiesInputProps) {
     super(props);
     this.state = {
       initialized: false,
@@ -45,7 +46,7 @@ export class AbilitiesInput extends Component<AbilitiesInputProps, AbilitiesInpu
     const { id, spiritService } = this.props;
     this.setState({
       // abilities: sort(spiritService.getSpirit(id).abilities),
-      abilities: sort(spiritService.get({
+      abilities: sort(spiritService.get<Spirit>({
         type: 'spirit',
         id,
       }).abilities),
@@ -55,7 +56,7 @@ export class AbilitiesInput extends Component<AbilitiesInputProps, AbilitiesInpu
     });
   }
 
-  componentDidUpdate(prevProps) {
+  componentDidUpdate(prevProps: AbilitiesInputProps) {
     if (prevProps.id === this.props.id) {
       return;
     }
@@ -65,7 +66,7 @@ export class AbilitiesInput extends Component<AbilitiesInputProps, AbilitiesInpu
     // eslint-disable-next-line react/no-did-update-set-state
     this.setState({
       // abilities: spiritService.getSpirit(id).abilities,
-      abilities: spiritService.get({
+      abilities: spiritService.get<Spirit>({
         type: 'spirit',
         id,
       }).abilities,
@@ -75,7 +76,7 @@ export class AbilitiesInput extends Component<AbilitiesInputProps, AbilitiesInpu
     // console.log('AbilitiesInput did update');
   }
 
-  onSubmit(e) {
+  onSubmit(e: FormEvent<HTMLFormElement>) {
     const form = e.currentTarget;
     e.stopPropagation();
     e.preventDefault();
@@ -106,7 +107,7 @@ export class AbilitiesInput extends Component<AbilitiesInputProps, AbilitiesInpu
     }
   }
 
-  removeAbility(e, ability) {
+  removeAbility(e: MouseEvent, ability: string) {
     const { id, spiritService } = this.props;
     const { abilities } = this.state;
     const newAbilities = abilities.filter((ab) => ab !== ability);
@@ -151,7 +152,7 @@ export class AbilitiesInput extends Component<AbilitiesInputProps, AbilitiesInpu
           {abilities.map((ability) => (
             <ButtonGroup key={ability} className="tw-mr-2 tw-mb-2">
               <Button variant="secondary">{ability}</Button>
-              <Button variant="secondary" onClick={(e) => this.removeAbility(e, ability)}><FontAwesomeIcon icon={faTimes} /></Button>
+              <Button variant="secondary" onClick={(e: MouseEvent) => this.removeAbility(e, ability)}><FontAwesomeIcon icon={faTimes} /></Button>
             </ButtonGroup>
           ))}
 

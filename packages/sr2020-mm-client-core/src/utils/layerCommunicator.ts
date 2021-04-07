@@ -16,8 +16,13 @@ export interface RemoveLayersMetaEvent {
 export interface OnCreateLayerEvent {
   layer: L.Layer;
 }
+// TODO 
 export interface OnRemoveLayerEvent {
-  layer: L.Layer;
+  layer: L.Layer & {
+    options: {
+      id: number;
+    }
+  };
 }
 
 export type OpenPopupEventHandlerFn = (event: OpenPopupEvent) => void;

@@ -222,3 +222,17 @@ export interface SoundStageData {
   backgroundVolume: number;
   rotationVolume: number;
 }
+
+export interface Spirit {
+  id: number;
+  name: string,
+  aura: string,
+  fraction: string,
+  story: string,
+  abilities: [],
+
+  latLng: L.LatLngLiteral,
+  plane: string,
+  hitPoints: number,
+  maxHitPoints: number,
+}

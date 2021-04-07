@@ -1,16 +1,16 @@
-import React, { Component } from 'react';
+import React, { ChangeEvent, Component } from 'react';
 import './Search.css';
 
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faSearch, faTimes } from '@fortawesome/free-solid-svg-icons';
+import { WithTranslation } from "react-i18next";
 
 import classNames from 'classnames';
 // import { SearchPropTypes } from '../../../../types';
 
-interface SearchProps {
-  t: any;
-  className: any;
-  placeholder: any;
+interface SearchProps extends WithTranslation {
+  className: string;
+  placeholder: string;
   onSearchChange: (value: string) => void
 }
 interface SearchState {
@@ -24,7 +24,7 @@ interface SearchState {
 export class Search extends Component<SearchProps, SearchState> {
   // static propTypes = SearchPropTypes;
 
-  constructor(props) {
+  constructor(props: SearchProps) {
     super(props);
     this.state = {
       searchStr: '',
@@ -75,12 +75,12 @@ export class Search extends Component<SearchProps, SearchState> {
     });
   }
 
-  onChange(e) {
+  onChange(e: ChangeEvent<HTMLInputElement>) {
     this.setState({
-      searchStr: e.target.value,
+      searchStr: e.currentTarget.value,
     });
     // eslint-disable-next-line react/destructuring-assignment
-    this.props.onSearchChange(e.target.value);
+    this.props.onSearchChange(e.currentTarget.value);
   }
 
 

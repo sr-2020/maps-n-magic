@@ -5,7 +5,8 @@ import {
   LocationRecord,
   CharacterHealthStates, 
   CharacterHealthState,
-  CharacterHealthStatesByLocation
+  CharacterHealthStatesByLocation,
+  GameModel
 } from 'sr2020-mm-event-engine';
 import * as moment from 'moment-timezone';
 
@@ -27,12 +28,18 @@ export interface WithCharacterHealthStatesForMap {
   [dstDataName]: CharacterHealthStatesByLocation[]
 };
 
+interface IndexValue {
+  characters: CharacterHealthState[];
+  location: LocationRecord;
+  locationId: number;
+}
+
 // const labels = marker.options.clinicalDeathIds.map((id) => id + this.getUserNameStr(gameModel.get({
 //   type: 'userRecord',
 //   id: Number(id),
 // })));
 
-export const withCharacterHealthStatesForMap = (Wrapped: any) => (props: any) => {
+export const withCharacterHealthStatesForMap = (Wrapped: any) => (props: object & {gameModel: GameModel}) => {
   const { gameModel } = props;
   const [data, setData] = useState(initState);
 
@@ -71,7 +78,8 @@ export const withCharacterHealthStatesForMap = (Wrapped: any) => (props: any) =>
 
     // const objToList(mergeKeyNEntry('locationId'))(locationIndex);
     const list = R.values(updatedIndex);
-    const isDrawableLoc = (el) => el.location && !R.equals(el.location.polygon, {});
+    // @ts-ignore
+    const isDrawableLoc = (el: IndexValue) => el.location && !R.equals(el.location.polygon, {});
     const filteredList = list.filter(isDrawableLoc);
     if (list.length !== filteredList.length) {
       console.error('Some locations not found or not valid', list.filter((el) => !isDrawableLoc(el)));

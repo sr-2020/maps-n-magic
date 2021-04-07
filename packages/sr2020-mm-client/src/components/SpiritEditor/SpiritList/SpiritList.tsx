@@ -1,4 +1,5 @@
-import React, { Component } from 'react';
+import React, { Component, MouseEvent, FormEvent } from 'react';
+import { RouteComponentProps } from 'react-router';
 import './SpiritList.css';
 
 import Popover from 'react-bootstrap/Popover';
@@ -13,32 +14,30 @@ import {
   NavLink, Route, Redirect,
 } from 'react-router-dom';
 import Highlight from 'react-highlighter';
+import { WithTranslation } from "react-i18next";
+
+import { Spirit, GameModel } from "sr2020-mm-event-engine";
+import { EPutSpirit } from "sr2020-mm-client-event-engine";
 
 import { Search } from './Search';
 
-// import { SpiritListPropTypes } from '../../../types';
-
 const sort = R.sortBy(R.pipe(R.prop('name'), R.toLower));
 
-const spiritLink = (spirit) => `/spiritEditor/${spirit.id}#${spirit.name}`;
+const spiritLink = (spirit: Spirit) => `/spiritEditor/${spirit.id}#${spirit.name}`;
 
-interface SpiritListProps {
-  z: any;
-  t: any;
-  history: any;
-  spiritService: any;
+interface SpiritListProps extends WithTranslation, RouteComponentProps {
+  spiritService: GameModel;
 }
 interface SpiritListState {
-  spirits: any[],
+  spirits: Spirit[],
   removedSpiritIndex: number,
   searchStr: string,
 }
 
 export class SpiritList extends Component<SpiritListProps, SpiritListState> {
-  // static propTypes = SpiritListPropTypes;
-  newSpiritInput: any;
+  newSpiritInput: HTMLInputElement;
 
-  constructor(props) {
+  constructor(props: SpiritListProps) {
     super(props);
     this.state = {
       spirits: [],
@@ -53,7 +52,7 @@ export class SpiritList extends Component<SpiritListProps, SpiritListState> {
   componentDidMount = () => {
     // console.log('SpiritList mounted');
     // const spirits = this.props.spiritService.getSpirits();
-    const spirits = this.props.spiritService.get('spirits');
+    const spirits = this.props.spiritService.get<Spirit[]>('spirits');
 
     const spirits2 = sort(spirits || []);
     this.setState({
@@ -62,14 +61,14 @@ export class SpiritList extends Component<SpiritListProps, SpiritListState> {
     this.props.spiritService.on('putSpirit', this.onPutSpirit);
   }
 
-  componentDidUpdate = (prevProps) => {
+  componentDidUpdate = (prevProps: SpiritListProps) => {
     if (prevProps.spiritService === this.props.spiritService) {
       return;
     }
     prevProps.spiritService.off('putSpirit', this.onPutSpirit);
     this.props.spiritService.on('putSpirit', this.onPutSpirit);
     // const spirits = this.props.spiritService.getSpirits();
-    const spirits = this.props.spiritService.get('spirits');
+    const spirits = this.props.spiritService.get<Spirit[]>('spirits');
     const spirits2 = sort(spirits || []);
     // eslint-disable-next-line react/no-did-update-set-state
     this.setState({
@@ -86,13 +85,13 @@ export class SpiritList extends Component<SpiritListProps, SpiritListState> {
   }
 
   // eslint-disable-next-line react/sort-comp
-  onPutSpirit(changedSpirit) {
+  onPutSpirit({spirit}: EPutSpirit) {
     const { spirits } = this.state;
     const newSpirits = spirits.map((spirit) => {
-      if (changedSpirit.id !== spirit.id) {
+      if (spirit.id !== spirit.id) {
         return spirit;
       }
-      return changedSpirit;
+      return spirit;
     });
 
     this.setState({
@@ -101,7 +100,7 @@ export class SpiritList extends Component<SpiritListProps, SpiritListState> {
     });
   }
 
-  onSearchChange(searchStr) {
+  onSearchChange(searchStr: string) {
     this.setState({
       searchStr,
     });
@@ -165,13 +164,13 @@ export class SpiritList extends Component<SpiritListProps, SpiritListState> {
                 <Dropdown.Menu>
                   <Dropdown.Item
                     as="button"
-                    onClick={(e) => this.cloneSpirit(e, spirit.id)}
+                    onClick={(e: MouseEvent) => this.cloneSpirit(e, spirit.id)}
                   >
                     {t('clone')}
                   </Dropdown.Item>
                   <Dropdown.Item
                     as="button"
-                    onClick={(e) => this.removeSpirit(e, spirit.id)}
+                    onClick={(e: MouseEvent) => this.removeSpirit(e, spirit.id)}
                   >
                     {t('delete')}
                   </Dropdown.Item>
@@ -201,7 +200,8 @@ export class SpiritList extends Component<SpiritListProps, SpiritListState> {
       ));
   }
 
-  getCreateSpiritPopover(t) {
+  getCreateSpiritPopover() {
+    const { t } = this.props;
     return (
       <Popover id="popover-basic">
         <Popover.Title as="h3">{t('enterSpiritName')}</Popover.Title>
@@ -211,7 +211,7 @@ export class SpiritList extends Component<SpiritListProps, SpiritListState> {
               <Form.Control
                 type="text"
                 required
-                ref={(el) => (this.newSpiritInput = el)}
+                ref={(el: HTMLInputElement) => (this.newSpiritInput = el)}
               />
             </Form.Group>
             <div className="tw-text-right">
@@ -225,13 +225,13 @@ export class SpiritList extends Component<SpiritListProps, SpiritListState> {
     );
   }
 
-  createNewSpirit(spiritName) {
+  createNewSpirit(spiritName: string) {
     const { spiritService, history } = this.props;
     // const spirit = spiritService.postSpirit({ name: spiritName });
     const spirit = spiritService.execute({
       type: 'postSpirit',
       props: { name: spiritName },
-    });
+    }) as Spirit;
     history.push(spiritLink(spirit));
     this.setState((state) => {
       const spirits = sort([...state.spirits, spirit]);
@@ -242,17 +242,17 @@ export class SpiritList extends Component<SpiritListProps, SpiritListState> {
     });
   }
 
-  cloneSpirit(e, id) {
+  cloneSpirit(e: MouseEvent, id: number) {
     e.preventDefault();
     e.stopPropagation();
     const { spiritService, history } = this.props;
     // const spirit = spiritService.cloneSpirit(id);
-    const spirit = spiritService.execute({
+    const spirit = spiritService.execute<Spirit>({
       type: 'cloneSpirit',
       id,
     });
     history.push(spiritLink(spirit));
-    this.setState((state) => {
+    this.setState((state: SpiritListState) => {
       const spirits = sort([...state.spirits, spirit]);
       return {
         spirits,
@@ -261,7 +261,7 @@ export class SpiritList extends Component<SpiritListProps, SpiritListState> {
     });
   }
 
-  removeSpirit(e, id) {
+  removeSpirit(e: MouseEvent, id: number) {
     e.preventDefault();
     e.stopPropagation();
     const { spiritService } = this.props;
@@ -281,7 +281,7 @@ export class SpiritList extends Component<SpiritListProps, SpiritListState> {
     });
   }
 
-  handleSpiritSubmit(event) {
+  handleSpiritSubmit(event: FormEvent<HTMLFormElement>) {
     const form = event.currentTarget;
     event.preventDefault();
     event.stopPropagation();
@@ -313,7 +313,7 @@ export class SpiritList extends Component<SpiritListProps, SpiritListState> {
           <OverlayTrigger
             trigger="click"
             placement="right"
-            overlay={this.getCreateSpiritPopover(t)}
+            overlay={this.getCreateSpiritPopover()}
             rootClose
             rootCloseEvent="click"
           >

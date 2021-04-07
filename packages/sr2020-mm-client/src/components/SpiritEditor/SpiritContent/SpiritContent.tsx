@@ -1,31 +1,30 @@
-import React, { Component } from 'react';
+import React, { Component, ChangeEvent } from 'react';
 import './SpiritContent.css';
 
 import Form from 'react-bootstrap/Form';
 import DocumentTitle from 'react-document-title';
-// import { SpiritContentPropTypes } from '../../../types';
+import { WithTranslation } from "react-i18next";
+import { GameModel, Spirit } from "sr2020-mm-event-engine";
 
 import { AbilitiesInput } from './AbilitiesInput';
 
-interface SpiritContentProps {
-  id: any;
-  spiritService: any;
-  t: any;
+interface SpiritContentProps extends WithTranslation {
+  id: number;
+  spiritService: GameModel;
 }
 interface SpiritContentState {
   initialized: boolean;
-  name: any;
-  fraction: any;
-  story: any;
-  maxHitPoints: any;
+  name: string;
+  fraction: string;
+  story: string;
+  maxHitPoints: number;
 }
 
 type spiritFields = 'name' | 'fraction' | 'story' | 'maxHitPoints';
 
 export class SpiritContent extends Component<SpiritContentProps, SpiritContentState> {
-  // static propTypes = SpiritContentPropTypes;
 
-  constructor(props) {
+  constructor(props: SpiritContentProps) {
     super(props);
     this.state = {
       initialized: false,
@@ -44,7 +43,7 @@ export class SpiritContent extends Component<SpiritContentProps, SpiritContentSt
     this.setState(this._getNewState(id, spiritService));
   }
 
-  componentDidUpdate = (prevProps) => {
+  componentDidUpdate(prevProps: SpiritContentProps) {
     if (prevProps.id === this.props.id) {
       return;
     }
@@ -56,7 +55,7 @@ export class SpiritContent extends Component<SpiritContentProps, SpiritContentSt
   }
 
   // eslint-disable-next-line class-methods-use-this
-  getTargetValue(target) {
+  getTargetValue(target: HTMLInputElement) {
     switch (target.type) {
     case 'checkbox':
       return target.checked;
@@ -67,21 +66,19 @@ export class SpiritContent extends Component<SpiritContentProps, SpiritContentSt
     }
   }
 
-  _getNewState = (id, spiritService) => ({
+  _getNewState = (id: number, spiritService: GameModel) => ({
     // ...spiritService.getSpirit(id),
-    ...spiritService.get({
+    ...spiritService.get<Spirit>({
       type: 'spirit',
       id,
     }),
     initialized: true,
   })
 
-  handleInputChange(event) {
+  handleInputChange(event: ChangeEvent<HTMLInputElement>) {
     const { target } = event;
     const value = this.getTargetValue(target);
-    const { name }: {
-      name: spiritFields;
-    } = target;
+    const name = target.name as spiritFields;
     const { id, spiritService } = this.props;
 
     // spiritService.putSpirit(id, {

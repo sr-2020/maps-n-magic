@@ -5,7 +5,8 @@ import {
   isRelevant,
   CharacterHealthStates, 
   CharacterHealthState,
-  RawCharacterHealthState
+  RawCharacterHealthState,
+  GameModel
 } from 'sr2020-mm-event-engine';
 import * as moment from 'moment-timezone';
 
@@ -34,7 +35,7 @@ const initState: number[] = [];
 //   id: Number(id),
 // })));
 
-export const withCharacterIdHealthListForAudio = (Wrapped: any) => (props: any) => {
+export const withCharacterIdHealthListForAudio = (Wrapped: any) => (props: object & {gameModel: GameModel}) => {
   const { gameModel } = props;
   const [data, setData] = useState(initState);
 

@@ -4,6 +4,7 @@ import './SoundWatcher.css';
 
 // TODO this call should be moved in event engine service
 import { getSound, getSoundList } from 'sr2020-mm-client-event-engine';
+import { GameModel } from 'sr2020-mm-event-engine';
 import { AudioContextWrapper } from '../../utils/AudioContextWrapper';
 
 import { Sound } from "../../types";
@@ -35,9 +36,8 @@ type IndexByName = (sounds: Sound[]) => SoundMap;
 const indexByName = R.indexBy(R.prop('name')) as IndexByName;
 
 interface SoundWatcherProps {
-  gameModel: any;
+  gameModel: GameModel;
   context: AudioContextWrapper;
-  // t: any;
 };
 interface SoundWatcherState {
   // users: UserRecord[]; 

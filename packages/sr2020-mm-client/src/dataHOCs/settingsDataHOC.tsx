@@ -1,11 +1,12 @@
 import React, { useState, useEffect } from 'react';
+import { GameModel } from "sr2020-mm-event-engine";
 
-export const settingsDataHOC = function (changeEventName, dataName, initState) {
-  return (Wrapped) => (props) => {
+export const settingsDataHOC = function <T>(changeEventName: string, dataName: string, initState: T) {
+  return (Wrapped: any) => (props: object & {gameModel: GameModel}) => {
     const { gameModel } = props;
     const [data, setData] = useState(initState);
 
-    function update(event) {
+    function update(event: any) {
       setData(event.settingsCatalog?.[dataName] || initState);
     }
 

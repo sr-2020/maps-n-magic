@@ -3,7 +3,13 @@ import { L, LayersMeta, CommonLayerProps } from "sr2020-mm-client-core";
 import * as R from 'ramda';
 import './BackgroundImageDisplayLayer.css';
 
-import { getArrDiff, latLngsToBounds, BackgroundImage } from 'sr2020-mm-event-engine';
+import { 
+  getArrDiff, 
+  latLngsToBounds, 
+  BackgroundImage,
+  ArrDiff,
+  ArrDiffUpdate
+} from 'sr2020-mm-event-engine';
 
 import { 
   bgTitleOverlay,
@@ -12,8 +18,8 @@ import {
   BgImageOverlay
 } from "../../types";
 
-function getTitleLatLngBounds(latlngs) {
-  const bounds = latLngsToBounds(latlngs);
+function getTitleLatLngBounds(latlngs: L.LatLngLiteral[][]): L.LatLngBounds {
+  const bounds = latLngsToBounds(latlngs[0]);
   const nw = bounds.getNorthWest();
   const ne = L.latLng({
     // lat: nw.lat + 0.0005 / 2,
@@ -26,7 +32,7 @@ function getTitleLatLngBounds(latlngs) {
   return L.latLngBounds(nw, ne);
 }
 
-function createTitle(imageData) {
+function createTitle(imageData: BackgroundImage) {
   const { id, name, latlngs } = imageData;
   const svgElement = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
   svgElement.setAttribute('xmlns', 'http://www.w3.org/2000/svg');
@@ -47,17 +53,17 @@ function createTitle(imageData) {
   return titleRect;
 }
 
-function setTitleText(svgElement, text) {
+function setTitleText(svgElement: SVGElement, text: string) {
   svgElement.innerHTML = `<text x="0" y="80" class="svg-title-text">${text}</text>`;
 }
 
-interface BackgroundImageDisplayLayerProps {
+interface BackgroundImageDisplayLayerProps extends CommonLayerProps {
   imageClassName: string;
   enableByDefault: boolean;
   backgroundImages: BackgroundImage[];
 }
 
-export class BackgroundImageDisplayLayer extends Component<BackgroundImageDisplayLayerProps & CommonLayerProps> {
+export class BackgroundImageDisplayLayer extends Component<BackgroundImageDisplayLayerProps> {
   imageGroup: L.LayerGroup<L.ImageOverlay> = L.layerGroup([]);
 
   titleGroup = L.layerGroup([]);
@@ -70,7 +76,7 @@ export class BackgroundImageDisplayLayer extends Component<BackgroundImageDispla
 
   imagePopup: L.Popup;
 
-  constructor(props) {
+  constructor(props: BackgroundImageDisplayLayerProps) {
     super(props);
     this.state = {
       // curBackgroundImage: null,
@@ -92,13 +98,14 @@ export class BackgroundImageDisplayLayer extends Component<BackgroundImageDispla
       layersMeta: this.getLayersMeta(),
       enableByDefault,
     });
-    this.updateBackgroundImages({
-      added: (backgroundImages),
-    });
+    R.map(this.createBackgroundImage, backgroundImages);
+    // this.updateBackgroundImages({
+    //   added: (backgroundImages),
+    // });
     // console.log('BackgroundImageDisplayLayer mounted');
   }
 
-  componentDidUpdate(prevProps) {
+  componentDidUpdate(prevProps: BackgroundImageDisplayLayerProps) {
     const {
       translator, backgroundImages,
     } = this.props;
@@ -134,7 +141,7 @@ export class BackgroundImageDisplayLayer extends Component<BackgroundImageDispla
     };
   }
 
-  updateBackgroundImages({ added = [], removed = [], updated = [] }) {
+  updateBackgroundImages({ added = [], removed = [], updated = [] }: ArrDiff<BackgroundImage>) {
     R.map(this.createBackgroundImage, added);
     R.map(this.updateBackgroundImage, updated);
     R.map(this.removeBackgroundImage, removed);
@@ -145,7 +152,7 @@ export class BackgroundImageDisplayLayer extends Component<BackgroundImageDispla
     this.titleGroup.clearLayers();
   }
 
-  createBackgroundImage(imageData) {
+  createBackgroundImage(imageData: BackgroundImage) {
     const { imageClassName = '' } = this.props;
     // const imagesData = gameModel.get('backgroundImages').map(translator.moveTo);
 
@@ -155,7 +162,7 @@ export class BackgroundImageDisplayLayer extends Component<BackgroundImageDispla
     const titleRect = createTitle(imageData);
     this.titleGroup.addLayer(titleRect);
     // const imageLayer = L.imageOverlay(image, latlngs, {
-    const imageLayer = bgImageOverlay(image, latlngs, {
+    const imageLayer = bgImageOverlay(image, latLngsToBounds(latlngs[0]), {
       id,
       className: imageClassName,
       errorOverlayUrl: 'images/noImage.svg',
@@ -163,19 +170,19 @@ export class BackgroundImageDisplayLayer extends Component<BackgroundImageDispla
     this.imageGroup.addLayer(imageLayer);
   }
 
-  updateBackgroundImage({ item }) {
+  updateBackgroundImage({ item }: ArrDiffUpdate<BackgroundImage>) {
     const {
       latlngs, name, id, image,
     } = item;
     const imageLayer = this.imageGroup.getLayers().find((image2: BgImageOverlay) => image2.options.id === id) as BgImageOverlay;
-    imageLayer.setBounds(latlngs);
+    imageLayer.setBounds(latLngsToBounds(latlngs[0]));
     imageLayer.setUrl(image);
     const title = this.titleGroup.getLayers().find((title2: BgTitleOverlay) => title2.options.id === id) as BgTitleOverlay;
     setTitleText(title.getElement(), name);
     title.setBounds(getTitleLatLngBounds(latlngs));
   }
 
-  removeBackgroundImage(imageData) {
+  removeBackgroundImage(imageData: BackgroundImage) {
     const { id } = imageData;
     const image = this.imageGroup.getLayers().find((image2: BgImageOverlay) => image2.options.id === id);
     this.imageGroup.removeLayer(image);
@@ -183,7 +190,7 @@ export class BackgroundImageDisplayLayer extends Component<BackgroundImageDispla
     this.titleGroup.removeLayer(title);
   }
 
-  render() {
+  render(): null {
     return null;
   }
 }

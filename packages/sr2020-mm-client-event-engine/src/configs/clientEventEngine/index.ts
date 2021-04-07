@@ -14,7 +14,7 @@ import {
 // import { UserService } from '../../services/UserService';
 // import { BotService } from '../../services/BotService/BotService';
 // import { TickerService } from '../../services/TickerService';
-// import { SpiritService } from '../../services/SpiritService';
+import { SpiritService } from '../../services/SpiritService';
 // import { SoundService2 } from '../../services/SoundService2';
 import { SoundStageService } from '../../services/SoundStageService';
 // import { BeaconService } from '../../services/BeaconService';
@@ -35,7 +35,7 @@ const services = [
   // UserService,
   // BotService,
   // TickerService,
-  // SpiritService,
+  SpiritService,
   // SoundService2,
   SoundStageService,
   // BeaconService,

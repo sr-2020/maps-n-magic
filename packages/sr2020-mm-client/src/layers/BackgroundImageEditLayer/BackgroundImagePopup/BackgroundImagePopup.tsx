@@ -1,10 +1,10 @@
-import React, { ChangeEventHandler, Component } from 'react';
+import React, { ChangeEventHandler, Component, KeyboardEvent, SyntheticEvent } from 'react';
 import './BackgroundImagePopup.css';
 import { WithTranslation } from "react-i18next";
 
 import ReactDOM from 'react-dom';
 
-interface BackgroundImagePopupProps {
+interface BackgroundImagePopupProps extends WithTranslation {
   imagePopupDom: HTMLElement;
   onClose: () => void;
   name: string;
@@ -13,11 +13,10 @@ interface BackgroundImagePopupProps {
 }
 
 export class BackgroundImagePopup extends Component<
-  BackgroundImagePopupProps &
-  WithTranslation
+  BackgroundImagePopupProps
 > {
 
-  constructor(props) {
+  constructor(props: BackgroundImagePopupProps) {
     super(props);
     this.state = {
     };
@@ -36,14 +35,14 @@ export class BackgroundImagePopup extends Component<
     console.log('BackgroundImagePopup will unmount');
   }
 
-  _handleKeyDown = (e) => {
+  _handleKeyDown = (e: KeyboardEvent<HTMLInputElement>) => {
     if (e.key === 'Enter') {
       this.props.onClose();
     }
   }
 
-  addDefaultSrc(ev) {
-    ev.target.src = 'images/noImage.svg';
+  addDefaultSrc(ev: SyntheticEvent<HTMLImageElement>) {
+    ev.currentTarget.src = 'images/noImage.svg';
   }
 
   // eslint-disable-next-line max-lines-per-function

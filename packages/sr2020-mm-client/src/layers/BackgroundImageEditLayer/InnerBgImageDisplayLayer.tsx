@@ -3,14 +3,14 @@ import { L, LayersMeta, CommonLayerProps } from "sr2020-mm-client-core";
 import * as R from 'ramda';
 import './BackgroundImageEditLayer.css';
 
-import { getArrDiff, BackgroundImage } from 'sr2020-mm-event-engine';
+import { getArrDiff, BackgroundImage, ArrDiff, ArrDiffUpdate } from 'sr2020-mm-event-engine';
 
 import { 
   bgRectangle,
   BgRectangle
 } from "../../types";
 
-interface BackgroundImageEditLayerProps {
+interface BackgroundImageEditLayerProps extends CommonLayerProps{
   enableByDefault: boolean;
   backgroundImages: BackgroundImage[];
   onRectangleClick: L.LeafletEventHandlerFn;
@@ -18,13 +18,13 @@ interface BackgroundImageEditLayerProps {
 }
 
 export class InnerBgImageDisplayLayer extends Component<
-  BackgroundImageEditLayerProps & CommonLayerProps
+  BackgroundImageEditLayerProps
 > {
   rectangleGroup = L.layerGroup([]);
 
   rectangleGroupNameKey = 'rectangleGroupLayer';
 
-  constructor(props) {
+  constructor(props: BackgroundImageEditLayerProps) {
     super(props);
     this.state = {
     };
@@ -41,13 +41,14 @@ export class InnerBgImageDisplayLayer extends Component<
       layersMeta: this.getLayersMeta(),
       enableByDefault,
     });
-    this.updateBackgroundImages({
-      added: (backgroundImages),
-    });
+    R.map(this.createBackgroundImage, backgroundImages);
+    // this.updateBackgroundImages({
+    //   added: (backgroundImages),
+    // });
     console.log('InnerManaOceanLayer2 mounted');
   }
 
-  componentDidUpdate(prevProps) {
+  componentDidUpdate(prevProps: BackgroundImageEditLayerProps) {
     const {
       translator, backgroundImages,
     } = this.props;
@@ -82,7 +83,7 @@ export class InnerBgImageDisplayLayer extends Component<
     };
   }
 
-  updateBackgroundImages({ added = [], removed = [], updated = [] }) {
+  updateBackgroundImages({ added = [], removed = [], updated = [] }: ArrDiff<BackgroundImage>) {
     R.map(this.createBackgroundImage, added);
     R.map(this.updateBackgroundImage, updated);
     R.map(this.removeBackgroundImage, removed);
@@ -92,7 +93,7 @@ export class InnerBgImageDisplayLayer extends Component<
     this.rectangleGroup.clearLayers();
   }
 
-  createBackgroundImage(imageData) {
+  createBackgroundImage(imageData: BackgroundImage) {
     // const { imageClassName = '' } = this.props;
     const { onRectangleClick, onRectangleEdit } = this.props;
     // const imagesData = gameModel.get('backgroundImages').map(translator.moveTo);
@@ -101,7 +102,8 @@ export class InnerBgImageDisplayLayer extends Component<
       latlngs, name, id, image,
     } = imageData;
     // const rectangle = L.rectangle(latlngs, {
-    const rectangle = bgRectangle(latlngs, {
+    // TODO fix type cast
+    const rectangle = bgRectangle(latlngs as any, {
       id, name, image,
     });
     rectangle.on('click', onRectangleClick);
@@ -109,7 +111,7 @@ export class InnerBgImageDisplayLayer extends Component<
     this.rectangleGroup.addLayer(rectangle);
   }
 
-  updateBackgroundImage({ item }) {
+  updateBackgroundImage({ item }: ArrDiffUpdate<BackgroundImage>) {
     const {
       latlngs, name, id, image,
     } = item;
@@ -118,13 +120,13 @@ export class InnerBgImageDisplayLayer extends Component<
     L.Util.setOptions(rect, { name, image });
   }
 
-  removeBackgroundImage(imageData) {
+  removeBackgroundImage(imageData: BackgroundImage) {
     const { id } = imageData;
     const rect = this.rectangleGroup.getLayers().find((rect2: BgRectangle) => rect2.options.id === id);
     this.rectangleGroup.removeLayer(rect);
   }
 
-  render() {
+  render(): null {
     return null;
   }
 }

@@ -1,5 +1,11 @@
-import React, { ChangeEventHandler, Component } from 'react';
-import { L, LayersMeta, CommonLayerProps } from "sr2020-mm-client-core";
+import React, { ChangeEventHandler, Component, ChangeEvent } from 'react';
+import { 
+  L, 
+  LayersMeta, 
+  CommonLayerProps,
+  OnCreateLayerEvent,
+  OnRemoveLayerEvent
+} from "sr2020-mm-client-core";
 import * as R from 'ramda';
 import './BackgroundImageEditLayer.css';
 
@@ -10,7 +16,7 @@ import { BackgroundImagePopup } from './BackgroundImagePopup';
 import { BackgroundImageDisplayLayer } from '../BackgroundImageDisplayLayer';
 import { InnerBgImageDisplayLayer } from './InnerBgImageDisplayLayer';
 
-interface BackgroundImageEditLayerProps {
+interface BackgroundImageEditLayerProps extends CommonLayerProps {
   gameModel: GameModel;
   enableByDefault: boolean;
   backgroundImages: BackgroundImage[];
@@ -24,14 +30,14 @@ interface BackgroundImageEditLayerState {
 }
 
 export class BackgroundImageEditLayer extends Component<
-  BackgroundImageEditLayerProps & CommonLayerProps, 
+  BackgroundImageEditLayerProps, 
   BackgroundImageEditLayerState
 > {
   imagePopupDom: HTMLElement;
 
   imagePopup: L.Popup;
 
-  constructor(props) {
+  constructor(props: BackgroundImageEditLayerProps) {
     super(props);
     this.state = {
       curBackgroundImage: null,
@@ -39,6 +45,8 @@ export class BackgroundImageEditLayer extends Component<
     this.onCreateLayer = this.onCreateLayer.bind(this);
     this.onRemoveLayer = this.onRemoveLayer.bind(this);
     this.closePopup = this.closePopup.bind(this);
+    this.onRectangleClick = this.onRectangleClick.bind(this);
+    this.onRectangleEdit = this.onRectangleEdit.bind(this);
   }
 
   componentDidMount() {
@@ -52,7 +60,7 @@ export class BackgroundImageEditLayer extends Component<
     console.log('InnerManaOceanLayer2 mounted');
   }
 
-  componentDidUpdate(prevProps) {
+  componentDidUpdate() {
     // const {
     //   translator, backgroundImages,
     // } = this.props;
@@ -74,18 +82,18 @@ export class BackgroundImageEditLayer extends Component<
     console.log('InnerManaOceanLayer2 will unmount');
   }
 
-  communicatorSubscribe(action) {
+  communicatorSubscribe(action: 'on'|'off') {
     const { layerCommunicator } = this.props;
     layerCommunicator[action]('onCreateLayer', this.onCreateLayer);
     layerCommunicator[action]('onRemoveLayer', this.onRemoveLayer);
   }
 
-  onCreateLayer(event) {
+  onCreateLayer(event: OnCreateLayerEvent) {
     const { gameModel, translator } = this.props;
     if (event.layer instanceof L.Rectangle) {
       const rect = event.layer as L.Rectangle;
       console.log('rectangle created');
-      const latlngs = translator.moveFrom(rect.getLatLngs());
+      const latlngs = translator.moveFrom(rect.getLatLngs()[0] as L.LatLng[]); // as L.LatLng[][]
       gameModel.execute({
         type: 'postBackgroundImage',
         props: { latlngs },
@@ -94,7 +102,7 @@ export class BackgroundImageEditLayer extends Component<
     }
   }
 
-  onRemoveLayer(event) {
+  onRemoveLayer(event: OnRemoveLayerEvent) {
     const {
       gameModel, layerCommunicator,
     } = this.props;
@@ -111,7 +119,7 @@ export class BackgroundImageEditLayer extends Component<
     }
   }
 
-  onRectangleClick = (e) => {
+  onRectangleClick(e: L.LeafletMouseEvent) {
     const { layerCommunicator } = this.props;
     const {
       name, id, image,
@@ -128,7 +136,7 @@ export class BackgroundImageEditLayer extends Component<
     });
   }
 
-  onRectangleEdit = (e) => {
+  onRectangleEdit(e: L.LeafletMouseEvent) {
     const {
       gameModel, layerCommunicator,
     } = this.props;
@@ -152,7 +160,7 @@ export class BackgroundImageEditLayer extends Component<
     layerCommunicator.emit('closePopup');
   }
 
-  onBackgroundImageChange = (prop: 'name' | 'image') => (e) => {
+  onBackgroundImageChange = (prop: 'name' | 'image') => (e: ChangeEvent<HTMLInputElement>) => {
     const { value } = e.target;
     const { gameModel } = this.props;
     const { id } = this.state.curBackgroundImage;

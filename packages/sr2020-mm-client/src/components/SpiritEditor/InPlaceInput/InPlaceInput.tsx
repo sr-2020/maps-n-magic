@@ -3,12 +3,12 @@ import './InPlaceInput.css';
 
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faEdit } from '@fortawesome/free-solid-svg-icons';
+import { WithTranslation } from "react-i18next";
 
 // import { InPlaceInputPropTypes } from '../../types';
 
-interface InPlaceInputProps {
+interface InPlaceInputProps extends WithTranslation {
   value: any;
-  t: any;
 }
 interface InPlaceInputState {
   editMode: boolean;
@@ -17,7 +17,7 @@ interface InPlaceInputState {
 export class InPlaceInput extends Component<InPlaceInputProps, InPlaceInputState> {
   // static propTypes = InPlaceInputPropTypes;
 
-  constructor(props) {
+  constructor(props: InPlaceInputProps) {
     super(props);
     this.state = {
       editMode: false,

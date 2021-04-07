@@ -4,19 +4,18 @@ import './SpiritEditor.css';
 import {
   Route,
 } from 'react-router-dom';
-// import { SpiritEditorPropTypes } from '../../types';
+import { GameModel } from "sr2020-mm-event-engine";
 
 import { SpiritList } from './SpiritList';
 import { SpiritContent } from './SpiritContent';
 import { FractionList } from './FractionList';
 
 interface SpiritEditorProps {
-  spiritService: any;
+  spiritService: GameModel;
 }
 
 // eslint-disable-next-line react/prefer-stateless-function
 export class SpiritEditor extends Component<SpiritEditorProps> {
-  // static propTypes = SpiritEditorPropTypes;
 
   // eslint-disable-next-line max-lines-per-function
   render() {

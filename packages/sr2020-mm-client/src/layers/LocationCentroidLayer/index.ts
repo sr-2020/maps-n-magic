@@ -5,4 +5,6 @@ import { withTriangulationData } from '../../dataHOCs';
 
 const tmp = pipe(withTranslation(), withTriangulationData)(LocationCentroidLayer);
 
+const m = withTriangulationData(LocationCentroidLayer);
+
 export { tmp as LocationCentroidLayer };

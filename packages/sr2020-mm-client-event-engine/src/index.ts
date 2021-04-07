@@ -4,6 +4,7 @@ export * from './services/CharacterWatchService/index';
 export * from './services/CharacterWatchService/types';
 export * from './services/SoundStageService/index';
 export * from './services/SoundStageService/types';
+export * from './services/SpiritService';
 
 export * from './api/position';
 export * from './api/sounds';

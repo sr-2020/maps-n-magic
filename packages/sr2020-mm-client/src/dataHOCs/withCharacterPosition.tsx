@@ -1,18 +1,21 @@
 import React, { useState, useEffect } from 'react';
+import { GameModel } from "sr2020-mm-event-engine";
+import { ECharacterLocationChanged } from "sr2020-mm-client-event-engine";
 
 const changeEventName = 'characterLocationChanged';
 const dataName = 'characterLocationId';
-const initState = null;
+const initState: ECharacterLocationChanged["characterLocationId"] = null;
 
 export interface WithCharacterPosition {
   characterLocationId: number;
 }
 
-export const withCharacterPosition = (Wrapped) => (props) => {
+// export const withCharacterPosition = (Wrapped: any) => (props: object & {gameModel: GameModel}) => {
+export const withCharacterPosition = (Wrapped: any) => (props: any) => {
   const { gameModel } = props;
   const [data, setData] = useState(initState);
 
-  function update(event) {
+  function update(event: any) {
     setData(event[dataName]);
   }
 
