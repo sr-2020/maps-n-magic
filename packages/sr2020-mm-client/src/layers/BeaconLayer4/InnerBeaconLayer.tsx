@@ -3,28 +3,25 @@ import { WithTranslation } from 'react-i18next';
 import { L, CommonLayerProps } from "sr2020-mm-client-core";
 import * as R from 'ramda';
 
-import { getArrDiff } from 'sr2020-mm-event-engine';
+import { getArrDiff, BeaconRecord, ArrDiffUpdate } from 'sr2020-mm-event-engine';
 import { WithLatLngBeacons } from "./withLatLngBeacons";
 
 import { Beacon, makeBeacon } from "../../types";
 
-interface InnerBeaconLayerProps {
+interface InnerBeaconLayerProps extends CommonLayerProps, WithTranslation, WithLatLngBeacons {
   enableByDefault: boolean;
   onBeaconClick: L.LeafletEventHandlerFn;
   onBeaconEdit: L.LeafletEventHandlerFn;
 }
 
 export class InnerBeaconLayer extends Component<
-  InnerBeaconLayerProps & 
-  CommonLayerProps & 
-  WithTranslation &
-  WithLatLngBeacons
+  InnerBeaconLayerProps
 > {
   group = L.layerGroup([]);
 
   nameKey = 'beaconsLayer';
 
-  constructor(props) {
+  constructor(props: InnerBeaconLayerProps) {
     super(props);
     this.state = {
     };
@@ -47,7 +44,7 @@ export class InnerBeaconLayer extends Component<
     console.log('InnerManaOceanLayer2 mounted');
   }
 
-  componentDidUpdate(prevProps) {
+  componentDidUpdate(prevProps: InnerBeaconLayerProps) {
     const {
       translator, latLngBeaconRecords,
     } = this.props;
@@ -92,7 +89,7 @@ export class InnerBeaconLayer extends Component<
     this.group.clearLayers();
   }
 
-  createBeacon(beaconRecord) {
+  createBeacon(beaconRecord: BeaconRecord) {
     const { t } = this.props;
     const { onBeaconClick, onBeaconEdit } = this.props;
     // const imagesData = gameModel.get('backgroundImages').map(translator.moveTo);
@@ -118,7 +115,7 @@ export class InnerBeaconLayer extends Component<
     this.group.addLayer(beacon);
   }
 
-  updateBeacon({ item }) {
+  updateBeacon({ item }: ArrDiffUpdate<BeaconRecord>) {
     const {
       lat, lng, label, id,
     } = item;
@@ -127,13 +124,13 @@ export class InnerBeaconLayer extends Component<
     L.Util.setOptions(marker, { label });
   }
 
-  removeBeacon(beaconRecord) {
+  removeBeacon(beaconRecord: BeaconRecord) {
     const { id } = beaconRecord;
     const marker = this.group.getLayers().find((marker2: Beacon) => marker2.options.id === id);
     this.group.removeLayer(marker);
   }
 
-  render() {
+  render(): null {
     return null;
   }
 }

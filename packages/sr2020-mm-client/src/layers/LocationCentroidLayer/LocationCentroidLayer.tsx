@@ -6,25 +6,23 @@ import './LocationCentroidLayer.css';
 import { WithTriangulationData } from '../../dataHOCs';
 
 import {
-  getArrDiff, TriangulationCentroid
+  getArrDiff, TriangulationCentroid, ArrDiffUpdate
 } from 'sr2020-mm-event-engine';
 
 import { makeLocationCentroid, LocationCentroid } from "../../types";
 
-interface LocationCentroidLayerProps {
+interface LocationCentroidLayerProps extends CommonLayerProps, WithTriangulationData {
   enableByDefault: boolean;
 }
 
 export class LocationCentroidLayer extends Component<
-  LocationCentroidLayerProps &
-  CommonLayerProps &
-  WithTriangulationData
+  LocationCentroidLayerProps
 > {
   group = L.layerGroup([]);
 
   nameKey = 'locationCentroidLayer';
 
-  constructor(props) {
+  constructor(props: LocationCentroidLayerProps) {
     super(props);
     this.state = {
     };
@@ -47,7 +45,7 @@ export class LocationCentroidLayer extends Component<
     // console.log('LocationCentroidLayer mounted');
   }
 
-  componentDidUpdate(prevProps) {
+  componentDidUpdate(prevProps: LocationCentroidLayerProps) {
     const {
       translator, centroids,
     } = this.props;
@@ -83,7 +81,7 @@ export class LocationCentroidLayer extends Component<
     this.group.clearLayers();
   }
 
-  createMarker(dataItem) {
+  createMarker(dataItem: TriangulationCentroid) {
     const { locationId, centroidLatLng } = dataItem;
     // const marker2 = L.marker(centroidLatLng, {
     const marker2 = makeLocationCentroid(centroidLatLng, {
@@ -92,18 +90,18 @@ export class LocationCentroidLayer extends Component<
     this.group.addLayer(marker2);
   }
 
-  updateMarker({ item }) {
-    const { location, centroidLatLng } = item;
+  updateMarker({ item }: ArrDiffUpdate<TriangulationCentroid>) {
+    const { centroidLatLng } = item;
     const marker = this.group.getLayers().find((marker2: LocationCentroid) => marker2.options.locationId === item.locationId) as LocationCentroid;
     marker.setLatLng(centroidLatLng);
   }
 
-  removeMarker(locationData) {
+  removeMarker(locationData: TriangulationCentroid) {
     const marker = this.group.getLayers().find((loc2: LocationCentroid) => loc2.options.locationId === locationData.locationId);
     this.group.removeLayer(marker);
   }
 
-  render() {
+  render(): null {
     return null;
   }
 }

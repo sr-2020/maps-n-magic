@@ -3,11 +3,17 @@ import { L } from "sr2020-mm-client-core";
 import * as R from 'ramda';
 
 
-import { getArrDiff } from 'sr2020-mm-event-engine';
+import { getArrDiff, LocationRecord } from 'sr2020-mm-event-engine';
 
-import { layerIdToLayerName, locationTypes, locationTypeSequence } from './LocationLayerTypes';
+import { 
+  layerIdToLayerName, 
+  locationTypeSequence, 
+  locationTypesEnum,
+} from './LocationLayerTypes';
 
 import { LocationGroupLayer } from './LocationGroupLayer';
+
+import { WithLocationRecords } from '../../dataHOCs';
 
 const isNotEmptyPolygon = R.pipe(
   R.prop('polygon'),
@@ -15,15 +21,21 @@ const isNotEmptyPolygon = R.pipe(
   R.not,
 );
 
-const defaultGroups = R.keys(layerIdToLayerName).reduce((acc, layerId) => {
+const defaultGroups = Object.keys(locationTypesEnum).reduce((acc, layerId: locationTypesEnum) => {
   acc[layerId] = [];
   return acc;
-}, {});
+}, {} as Record<keyof typeof locationTypesEnum, LocationRecord[]>);
 
-export function InnerLocationLayer(props) {
+interface InnerLocationLayerProps extends WithLocationRecords {
+
+}
+
+export function InnerLocationLayer(props: InnerLocationLayerProps) {
   const { locationRecords } = props;
 
-  const locationGroups = R.groupBy(R.prop('layer_id'), locationRecords.filter(isNotEmptyPolygon));
+  const locationGroups = R.groupBy(lr => {
+    return layerIdToLayerName[lr.layer_id];
+  }, locationRecords.filter(isNotEmptyPolygon)) as Record<keyof typeof locationTypesEnum, LocationRecord[]>;
 
   const mergedGroups = { ...defaultGroups, ...locationGroups };
   return (
@@ -32,7 +44,7 @@ export function InnerLocationLayer(props) {
         locationTypeSequence.map((layerId) => (
           <LocationGroupLayer
             {...props}
-            layerId={layerId}
+            // layerId={layerId}
             geoLayerName={layerIdToLayerName[layerId]}
             nameKey={`locationsLayer_${layerIdToLayerName[layerId]}`}
             locationRecords={mergedGroups[layerId]}

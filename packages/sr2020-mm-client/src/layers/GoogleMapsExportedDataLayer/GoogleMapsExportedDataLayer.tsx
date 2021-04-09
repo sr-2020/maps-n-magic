@@ -2,16 +2,25 @@ import React from 'react';
 import * as R from 'ramda';
 import './GoogleMapsExportedDataLayer.css';
 import { staticGeoData } from 'sr2020-mm-data';
-import { GeoJsonLayer } from 'sr2020-mm-client-core';
+import { GeoJsonLayer, LayerCommunicator } from 'sr2020-mm-client-core';
+import { FeatureCollection } from 'geojson';
 
 const featureGroups = R.groupBy((feature) => feature.geometry.type, staticGeoData.features);
 
 const layersGeoData = R.toPairs(R.mapObjIndexed((arr) => ({
   type: 'FeatureCollection',
   features: arr,
-}), featureGroups));
+} as FeatureCollection), featureGroups));
 
-export function GoogleMapsExportedDataLayer(props) {
+interface GoogleMapsExportedDataLayerProps {
+  enableByDefault: boolean;
+  layerCommunicator: LayerCommunicator;
+  grayscale?: boolean;
+  // layerNameKey: string;
+  // geoData: FeatureCollection;
+}
+
+export function GoogleMapsExportedDataLayer(props: GoogleMapsExportedDataLayerProps) {
   return (
     <>
       {

@@ -11,7 +11,7 @@ const isLatLngBeacon = (beacon: BeaconRecord) => beacon.lat !== null && beacon.l
 
 const filterBeacons = R.filter(isLatLngBeacon);
 
-export const withLatLngBeacons = (Wrapped) => (props: {
+export const withLatLngBeacons = (Wrapped: any) => (props: {
   beaconRecords: BeaconRecord[]
 }) => {
   const { beaconRecords } = props;

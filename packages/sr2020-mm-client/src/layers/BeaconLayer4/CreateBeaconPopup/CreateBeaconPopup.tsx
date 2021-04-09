@@ -8,7 +8,7 @@ import classNames from 'classnames';
 
 import { CurBeacon } from "../BeaconLayer4";
 
-interface CreateBeaconPopupProp {
+interface CreateBeaconPopupProp extends WithTranslation {
   freeBeaconIds: number[];
   domContainer: HTMLElement;
   latLng: L.LatLng;
@@ -17,12 +17,10 @@ interface CreateBeaconPopupProp {
   curBeacon: CurBeacon;
 }
 
-export class CreateBeaconPopup extends Component<
-  CreateBeaconPopupProp & WithTranslation
-> {
+export class CreateBeaconPopup extends Component<CreateBeaconPopupProp> {
   // static propTypes = CreateBeaconPopupPropTypes;
 
-  constructor(props) {
+  constructor(props: CreateBeaconPopupProp) {
     super(props);
     this.state = {
     };

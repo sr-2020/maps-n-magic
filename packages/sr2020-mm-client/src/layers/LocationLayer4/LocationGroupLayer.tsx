@@ -3,12 +3,12 @@ import { L, CommonLayerProps } from "sr2020-mm-client-core";
 import { WithTranslation } from "react-i18next";
 import * as R from 'ramda';
 
-import { getArrDiff } from 'sr2020-mm-event-engine';
+import { getArrDiff, LocationRecord, ArrDiffUpdate } from 'sr2020-mm-event-engine';
 
 import { WithLocationRecords } from '../../dataHOCs';
 import { BasicLocation, basicLocation } from "../../types";
 
-interface LocationGroupLayerProps {
+interface LocationGroupLayerProps extends CommonLayerProps, WithTranslation, WithLocationRecords {
   enableByDefault: boolean;
   enableLayerIndex: any;
   geoLayerName: any;
@@ -17,15 +17,32 @@ interface LocationGroupLayerProps {
   onLocationEdit: any;
 }
 
+type TooltipTemplate = 'unknownLocationTypeTooltip' | 'geoLocationTooltip' | 'regionTooltip' | 'gameLocationTooltip';
+
+function getTooltipTemplate(layer_id: number): TooltipTemplate {
+  let tooltipTemplate: TooltipTemplate = 'unknownLocationTypeTooltip';
+  switch (layer_id) {
+  case 1:
+    tooltipTemplate = 'geoLocationTooltip';
+    break;
+  case 2:
+    tooltipTemplate = 'regionTooltip';
+    break;
+  case 3:
+    tooltipTemplate = 'gameLocationTooltip';
+    break;
+  default:
+    tooltipTemplate = 'unknownLocationTypeTooltip';
+  }
+  return tooltipTemplate;
+}
+
 export class LocationGroupLayer extends Component<
-  LocationGroupLayerProps &
-  CommonLayerProps &
-  WithTranslation &
-  WithLocationRecords
+  LocationGroupLayerProps
 > {
   group = L.layerGroup([]);
 
-  constructor(props) {
+  constructor(props: LocationGroupLayerProps) {
     super(props);
     this.state = {
     };
@@ -49,7 +66,7 @@ export class LocationGroupLayer extends Component<
     // console.log('LocationGroupLayer mounted');
   }
 
-  componentDidUpdate(prevProps) {
+  componentDidUpdate(prevProps: LocationGroupLayerProps) {
     const {
       translator, locationRecords,
     } = this.props;
@@ -95,7 +112,7 @@ export class LocationGroupLayer extends Component<
     this.group.clearLayers();
   }
 
-  createLocation(locationRecord) {
+  createLocation(locationRecord: LocationRecord) {
     const { t, onLocationClick, onLocationEdit } = this.props;
     const {
       polygon, label, id, layer_id, options,
@@ -105,21 +122,8 @@ export class LocationGroupLayer extends Component<
       id, label, layer_id, color: options.color, weight: options.weight, fillOpacity: options.fillOpacity,
     });
     loc.on('mouseover', function (this: BasicLocation, e) {
-      let tooltipTemplate;
-      switch (layer_id) {
-      case 1:
-        tooltipTemplate = 'geoLocationTooltip';
-        break;
-      case 2:
-        tooltipTemplate = 'regionTooltip';
-        break;
-      case 3:
-        tooltipTemplate = 'gameLocationTooltip';
-        break;
-      default:
-        tooltipTemplate = 'unknownLocationTypeTooltip';
-      }
-      loc.bindTooltip(t(tooltipTemplate, { name: this.options.label }));
+
+      loc.bindTooltip(t(getTooltipTemplate(layer_id), { name: this.options.label }));
       this.openTooltip();
     });
     loc.on('mouseout', function (this: BasicLocation, e) {
@@ -134,7 +138,7 @@ export class LocationGroupLayer extends Component<
     this.group.addLayer(loc);
   }
 
-  updateLocation({ item }) {
+  updateLocation({ item }: ArrDiffUpdate<LocationRecord>) {
     const {
       polygon, label, id, layer_id, options,
     } = item;
@@ -144,13 +148,13 @@ export class LocationGroupLayer extends Component<
     location.setStyle({ color: options.color, weight: options.weight, fillOpacity: options.fillOpacity });
   }
 
-  removeLocation(locationRecord) {
+  removeLocation(locationRecord: LocationRecord) {
     const { id } = locationRecord;
     const location = this.group.getLayers().find((layer: BasicLocation) => layer.options.id === id);
     this.group.removeLayer(location);
   }
 
-  render() {
+  render(): null {
     return null;
   }
 }

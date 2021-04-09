@@ -9,25 +9,23 @@ import {
 
 import {
   getPolygonCentroid,
+  LocationRecord
 } from 'sr2020-mm-event-engine';
 
-interface CharacterLocationLayerProps {
+interface CharacterLocationLayerProps extends CommonLayerProps, WithLocationRecords, WithCharacterPosition {
   enableByDefault: boolean;
 }
 
 export class CharacterLocationLayer extends Component<
-  CharacterLocationLayerProps &
-  CommonLayerProps &
-  WithLocationRecords &
-  WithCharacterPosition
+  CharacterLocationLayerProps
 > {
   group = L.layerGroup([]);
 
   nameKey = 'characterLocationLayer';
 
-  marker = null;
+  marker: L.Marker = null;
 
-  constructor(props) {
+  constructor(props: CharacterLocationLayerProps) {
     super(props);
     this.state = {
     };
@@ -63,12 +61,12 @@ export class CharacterLocationLayer extends Component<
     this.group.clearLayers();
   }
 
-  createMarker(location) {
+  createMarker(location: LocationRecord) {
     this.marker = L.marker(getPolygonCentroid(location.polygon));
     this.group.addLayer(this.marker);
   }
 
-  updateMarker(location) {
+  updateMarker(location: LocationRecord) {
     this.marker.setLatLng(getPolygonCentroid(location.polygon));
   }
 
@@ -79,7 +77,7 @@ export class CharacterLocationLayer extends Component<
     }
   }
 
-  render() {
+  render(): null {
     const {
       locationRecords, characterLocationId,
     } = this.props;

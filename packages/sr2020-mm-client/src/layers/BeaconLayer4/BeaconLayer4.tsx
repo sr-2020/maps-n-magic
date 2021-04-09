@@ -2,7 +2,12 @@ import React, { Component } from 'react';
 import { WithTranslation } from 'react-i18next';
 import './BeaconLayer4.css';
 
-import { L, CommonLayerProps } from "sr2020-mm-client-core";
+import { 
+  L, 
+  CommonLayerProps,
+  OnCreateLayerEvent,
+  OnRemoveLayerEvent
+} from "sr2020-mm-client-core";
 import * as R from 'ramda';
 
 import { GameModel, BeaconRecord } from 'sr2020-mm-event-engine';
@@ -13,7 +18,7 @@ import { WithLatLngBeacons } from "./withLatLngBeacons";
 import { getFreeBeaconIds } from './beaconUtils';
 import { InnerBeaconLayer } from './InnerBeaconLayer';
 
-interface BeaconLayer4Props {
+interface BeaconLayer4Props extends CommonLayerProps, WithTranslation, WithLatLngBeacons {
   gameModel: GameModel;
   beaconRecords: BeaconRecord[];
   enableByDefault: boolean;
@@ -30,17 +35,14 @@ interface BeaconLayer4State {
 }
 
 export class BeaconLayer4 extends Component<
-  BeaconLayer4Props & 
-  CommonLayerProps &
-  WithTranslation &
-  WithLatLngBeacons,
+  BeaconLayer4Props,
   BeaconLayer4State
 > {
   beaconPopupContainer: HTMLElement;
 
   createBeaconPopup: L.Popup;
 
-  constructor(props) {
+  constructor(props: BeaconLayer4Props) {
     super(props);
     this.state = {
       curBeacon: null,
@@ -51,6 +53,8 @@ export class BeaconLayer4 extends Component<
     // this.onPutBeaconRecord = this.onPutBeaconRecord.bind(this);
     this.onSelectBeacon = this.onSelectBeacon.bind(this);
     this.closePopup = this.closePopup.bind(this);
+    this.onBeaconEdit = this.onBeaconEdit.bind(this);
+    this.onBeaconClick = this.onBeaconClick.bind(this);
   }
 
   componentDidMount() {
@@ -70,13 +74,13 @@ export class BeaconLayer4 extends Component<
   }
 
   // eslint-disable-next-line react/sort-comp
-  communicatorSubscribe(action) {
+  communicatorSubscribe(action: 'on'|'off') {
     const { layerCommunicator } = this.props;
     layerCommunicator[action]('onCreateLayer', this.onCreateLayer);
     layerCommunicator[action]('onRemoveLayer', this.onRemoveLayer);
   }
 
-  onCreateLayer(event) {
+  onCreateLayer(event: OnCreateLayerEvent) {
     const { translator, layerCommunicator } = this.props;
     if (event.layer instanceof L.Marker) {
       const beacon = event.layer as L.Marker;
@@ -91,7 +95,7 @@ export class BeaconLayer4 extends Component<
     }
   }
 
-  onRemoveLayer(event) {
+  onRemoveLayer(event: OnRemoveLayerEvent) {
     const {
       gameModel, translator, layerCommunicator,
     } = this.props;
@@ -110,7 +114,7 @@ export class BeaconLayer4 extends Component<
     }
   }
 
-  onBeaconClick = (e) => {
+  onBeaconClick(e: L.LeafletMouseEvent) {
     const { layerCommunicator, translator } = this.props;
     const {
       label, id, markers, manaLevel,
@@ -128,7 +132,7 @@ export class BeaconLayer4 extends Component<
     });
   }
 
-  onBeaconEdit = (e) => {
+  onBeaconEdit(e: L.LeafletMouseEvent) {
     const {
       gameModel, translator,
     } = this.props;
