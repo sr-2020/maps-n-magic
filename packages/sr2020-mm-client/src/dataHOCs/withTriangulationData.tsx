@@ -20,13 +20,15 @@ import {
 } from 'sr2020-mm-event-engine';
 import { ELocationRecordsChanged2 } from 'sr2020-mm-event-engine';
 
+export interface TriangulationEdge {
+  edgeId: string;
+  centroidLatLng1: L.LatLngLiteral;
+  centroidLatLng2: L.LatLngLiteral;
+}
+
 export interface WithTriangulationData {
   centroids: TriangulationCentroid[];
-  edges: {
-    edgeId: string;
-    centroidLatLng1: L.LatLngLiteral;
-    centroidLatLng2: L.LatLngLiteral;
-  }[]
+  edges: TriangulationEdge[]
 }
 
 const changeEventName = 'locationRecordsChanged2';

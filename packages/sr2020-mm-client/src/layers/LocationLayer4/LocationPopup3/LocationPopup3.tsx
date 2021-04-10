@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { Component, KeyboardEvent } from 'react';
 import './LocationPopup3.css';
 import * as R from 'ramda';
 
@@ -7,16 +7,17 @@ import classNames from 'classnames';
 import { WithTranslation } from "react-i18next";
 
 import FormControl from 'react-bootstrap/FormControl';
-import { layerNameToLayerId, locationTypes, locationTypesEnum } from '../LocationLayerTypes';
+import { locationTypeSequence, locationTypeToTypeTkey } from '../LocationLayerTypes';
 
 import { GOOGLE_MAPS_COLOR_PALETTE as COLOR_PALETTE } from 'sr2020-mm-client-core';
 
-
 // console.log('COLOR_PALETTE', COLOR_PALETTE);
 
-interface LocationPopup3Props {
+export type EditableLocFields = 'label' | 'layer_id' | 'color' | 'fillOpacity' | 'weight';
+
+interface LocationPopup3Props extends WithTranslation {
   locationPopupDom: HTMLElement;
-  onChange: any;
+  onChange: (prop: EditableLocFields) => (e: {target: {value: string}}) => void;
   label: string;
   layer_id: number;
   color: string;
@@ -26,12 +27,11 @@ interface LocationPopup3Props {
 }
 
 export class LocationPopup3 extends Component<
-  LocationPopup3Props &
-  WithTranslation
+  LocationPopup3Props
 > {
   // static propTypes = LocationPopup3PropTypes;
 
-  constructor(props) {
+  constructor(props: LocationPopup3Props) {
     super(props);
     this.state = {
       // unattachedList: [],
@@ -39,13 +39,14 @@ export class LocationPopup3 extends Component<
       // selectedAddMarker: null,
       // selectedRemoveMarker: null,
     };
+    this._handleKeyDown = this._handleKeyDown.bind(this);
   }
 
   componentDidMount = () => {
     // this.updateComponentState();
   }
 
-  componentDidUpdate = (prevProps) => {
+  componentDidUpdate = () => {
     // const {
     //   label, allBeacons, attachedMarkers, manaLevel,
     // } = this.props;
@@ -59,7 +60,7 @@ export class LocationPopup3 extends Component<
     // this.updateComponentState();
   }
 
-  _handleKeyDown = (e) => {
+  _handleKeyDown(e: KeyboardEvent<HTMLInputElement>) {
     if (e.key === 'Enter') {
       this.props.onClose();
     }
@@ -105,22 +106,22 @@ export class LocationPopup3 extends Component<
 
           <div className="tw-flex">
             {
-              locationTypes.map((locationType, i) => (
+              locationTypeSequence.map((locationType, i) => (
                 <button
-                  key={locationType}
+                  key={locationType.name}
                   className={classNames(common,
-                    layerNameToLayerId[locationType] === String(layer_id) ? selectedButton : unselectedButton,
+                    locationType.id === layer_id ? selectedButton : unselectedButton,
                     {
                       'tw-rounded-l': i === 0,
                       'tw-rounded-r': i === 2,
                     })}
                   type="button"
-                  value={layerNameToLayerId[locationType]}
-                  onClick={onChange('layer_id')}
+                  // value={locationType.id}
+                  // onClick={onChange('layer_id')}
+                  onClick={() => onChange('layer_id')({ target: { value: String(locationType.id) } })}
                 >
                   {
-                    // @ts-ignore
-                    t(`locationType_${locationType}`)
+                    t(locationTypeToTypeTkey(locationType.name))
                   }
                 </button>
               ))

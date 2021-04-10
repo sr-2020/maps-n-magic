@@ -9,7 +9,7 @@ export interface ManaOceanLocationOptions extends L.PolylineOptions {
 }
 
 export interface ManaOceanLocation extends L.Polygon {
-  constructor(latlngs: L.LatLngExpression[] | L.LatLngExpression[][], options?: ManaOceanLocationOptions);
+  constructor(latlngs: L.LatLngExpression[] | L.LatLngExpression[][], options?: ManaOceanLocationOptions): ManaOceanLocation;
   options: ManaOceanLocationOptions;
 }
 

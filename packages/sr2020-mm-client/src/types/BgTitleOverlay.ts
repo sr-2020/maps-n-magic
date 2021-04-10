@@ -5,7 +5,7 @@ export interface BgTitleOverlayOptions extends L.ImageOverlayOptions {
 }
 
 export interface BgTitleOverlay extends L.SVGOverlay {
-  constructor(svgImage: string | SVGElement, bounds: L.LatLngBoundsExpression, options?: BgTitleOverlayOptions);
+  constructor(svgImage: string | SVGElement, bounds: L.LatLngBoundsExpression, options?: BgTitleOverlayOptions): BgTitleOverlay;
   options: BgTitleOverlayOptions;
 }
 

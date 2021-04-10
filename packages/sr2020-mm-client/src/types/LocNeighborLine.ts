@@ -5,7 +5,7 @@ export interface LocNeighborLineOptions extends L.PolylineOptions {
 }
 
 export interface LocNeighborLine extends L.Polyline {
-  constructor(latlngs: L.LatLngExpression[] | L.LatLngExpression[][], options?: LocNeighborLineOptions);
+  constructor(latlngs: L.LatLngExpression[] | L.LatLngExpression[][], options?: LocNeighborLineOptions): LocNeighborLine;
   options: LocNeighborLineOptions;
 }
 

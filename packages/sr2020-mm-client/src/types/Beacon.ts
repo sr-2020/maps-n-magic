@@ -6,7 +6,7 @@ export interface BeaconOptions extends L.MarkerOptions {
 }
 
 export interface Beacon extends L.Marker {
-  constructor(latlng: L.LatLngExpression, options?: BeaconOptions);
+  constructor(latlng: L.LatLngExpression, options?: BeaconOptions): Beacon;
   options: BeaconOptions;
 }
 

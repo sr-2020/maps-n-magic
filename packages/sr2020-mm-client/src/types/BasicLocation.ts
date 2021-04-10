@@ -7,7 +7,7 @@ export interface BasicLocationOptions extends L.PolylineOptions {
 }
 
 export interface BasicLocation extends L.Polygon {
-  constructor(latlngs: L.LatLngExpression[] | L.LatLngExpression[][], options?: BasicLocationOptions);
+  constructor(latlngs: L.LatLngExpression[] | L.LatLngExpression[][], options?: BasicLocationOptions): BasicLocation;
   options: BasicLocationOptions;
 }
 

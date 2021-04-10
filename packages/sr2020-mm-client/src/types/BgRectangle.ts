@@ -7,7 +7,7 @@ export interface BgRectangleOptions extends L.PolylineOptions {
 }
 
 export interface BgRectangle extends L.Rectangle {
-  constructor(latLngBounds: L.LatLngBoundsExpression, options?: BgRectangleOptions);
+  constructor(latLngBounds: L.LatLngBoundsExpression, options?: BgRectangleOptions): BgRectangle;
   options: BgRectangleOptions;
 }
 

@@ -30,20 +30,18 @@ function hasDifference(
 const preFilterCharacters = (list: CharacterHealthStatesByLocation[]) => 
   list.filter((item) => item.characters.some(isClinicallyDead));
 
-interface RescueServiceLayer2Props {
+interface RescueServiceLayer2Props extends CommonLayerProps, WithCharacterHealthStatesForMap {
   enableByDefault: boolean;
 }
 
 export class RescueServiceLayer2 extends Component<
-  RescueServiceLayer2Props &
-  CommonLayerProps &
-  WithCharacterHealthStatesForMap
+  RescueServiceLayer2Props
 > {
   group = L.layerGroup([]);
 
   nameKey = 'rescueServiceLayer';
 
-  constructor(props) {
+  constructor(props: RescueServiceLayer2Props) {
     super(props);
     this.state = {
     };
@@ -69,7 +67,7 @@ export class RescueServiceLayer2 extends Component<
     // console.log('RescueServiceLayer2 mounted');
   }
 
-  componentDidUpdate(prevProps) {
+  componentDidUpdate(prevProps: RescueServiceLayer2Props) {
     const {
       translator, characterHealthByLocations,
     } = this.props;
@@ -151,7 +149,7 @@ export class RescueServiceLayer2 extends Component<
     this.group.removeLayer(marker);
   }
 
-  render() {
+  render(): null {
     // const { characterHealthByLocations } = this.props;
     // console.log('characterHealthByLocations', characterHealthByLocations);
     return null;

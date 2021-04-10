@@ -1,14 +1,26 @@
 import React, { Component } from 'react';
 import './LocationLayer4.css';
 
-import { L, CommonLayerProps } from "sr2020-mm-client-core";
+import { 
+  L, 
+  CommonLayerProps,
+  OnCreateLayerEvent,
+  OnRemoveLayerEvent 
+} from "sr2020-mm-client-core";
 import { GameModel, LocationRecord } from "sr2020-mm-event-engine";
 // import * as R from 'ramda';
 
-import { LocationPopup3 } from './LocationPopup3';
-import { InnerLocationLayer } from './InnerLocationLayer';
+import { LocationPopup3, EditableLocFields } from './LocationPopup3';
+import { InnerLocationLayer, InnerLocationLayerProps } from './InnerLocationLayer';
 
-interface LocationLayer4Props {
+type LocPropChange = 
+  { prop: 'label', value: string } |
+  { prop: 'layer_id', value: number } |
+  { prop: 'color', value: string } |
+  { prop: 'fillOpacity', value: number } |
+  { prop: 'weight', value: number };
+
+interface LocationLayer4Props extends CommonLayerProps, InnerLocationLayerProps {
   gameModel: GameModel;
   editable: boolean;
 }
@@ -26,15 +38,14 @@ interface LocationLayer4State {
 }
 
 export class LocationLayer4 extends Component<
-  LocationLayer4Props &
-  CommonLayerProps,
+  LocationLayer4Props,
   LocationLayer4State
 > {
   locationPopupDom: HTMLElement;
 
   locationPopup: L.Popup;
 
-  constructor(props) {
+  constructor(props: LocationLayer4Props) {
     super(props);
     this.state = {
       curLocation: null,
@@ -42,6 +53,9 @@ export class LocationLayer4 extends Component<
     this.onCreateLayer = this.onCreateLayer.bind(this);
     this.onRemoveLayer = this.onRemoveLayer.bind(this);
     this.closePopup = this.closePopup.bind(this);
+    this.onLocationClick = this.onLocationClick.bind(this);
+    this.onLocationEdit = this.onLocationEdit.bind(this);
+    this.onLocationChange = this.onLocationChange.bind(this);
   }
 
   componentDidMount() {
@@ -60,28 +74,30 @@ export class LocationLayer4 extends Component<
     // console.log('LocationLayer4 will unmount');
   }
 
-  communicatorSubscribe(action) {
+  communicatorSubscribe(action: 'on'|'off') {
     const { layerCommunicator } = this.props;
     layerCommunicator[action]('onCreateLayer', this.onCreateLayer);
     layerCommunicator[action]('onRemoveLayer', this.onRemoveLayer);
   }
 
-  onCreateLayer(event) {
+  onCreateLayer(event: OnCreateLayerEvent) {
     const { gameModel, translator } = this.props;
     if (event.layer instanceof L.Polygon) {
       const location = event.layer;
+      // @ts-ignore
       const latlngs = translator.moveFrom({
         latlngs: location.getLatLngs(),
       });
       gameModel.execute({
         type: 'postLocationRecord',
+        // @ts-ignore
         props: { polygon: latlngs.latlngs },
       });
       location.remove();
     }
   }
 
-  onRemoveLayer(event) {
+  onRemoveLayer(event: OnRemoveLayerEvent) {
     const {
       gameModel, layerCommunicator,
     } = this.props;
@@ -95,7 +111,7 @@ export class LocationLayer4 extends Component<
     }
   }
 
-  onLocationClick = (e) => {
+  onLocationClick(e: L.LeafletMouseEvent) {
     const { layerCommunicator, editable } = this.props;
     if (!editable) {
       return;
@@ -120,7 +136,7 @@ export class LocationLayer4 extends Component<
     });
   }
 
-  onLocationEdit = (e) => {
+  onLocationEdit(e: L.LeafletEvent) {
     const {
       gameModel, translator, layerCommunicator, editable,
     } = this.props;
@@ -148,36 +164,43 @@ export class LocationLayer4 extends Component<
     layerCommunicator.emit('closePopup');
   }
 
-  onLocationChange = (prop) => (e) => {
-    let { value } = e.target;
-    const { gameModel, editable } = this.props;
-    if (!editable) {
-      return;
-    }
-    const { id } = this.state.curLocation;
-    if (prop === 'weight') {
-      value = Number(value);
-      if (value < 0 || value > 20) {
+  onLocationChange(prop: EditableLocFields) {
+    return (e: {target: {value: string}}) => {
+      const { value } = e.target;
+      const { gameModel, editable } = this.props;
+      if (!editable) {
         return;
       }
-    }
-    if (prop === 'fillOpacity') {
-      value = Number(value);
-      if (value < 0 || value > 100) {
-        return;
+      const { id } = this.state.curLocation;
+      if (prop === 'weight') {
+        const value2 = Number(value);
+        if (value2 < 0 || value2 > 20) {
+          return;
+        }
+        this.onLocationChange2({prop, value: value2});
+      } else if (prop === 'fillOpacity') {
+        let value2 = Number(value);
+        if (value2 < 0 || value2 > 100) {
+          return;
+        }
+        value2 = 1 - value2 / 100;
+        this.onLocationChange2({prop, value: value2});
+      } else if (prop === 'layer_id') {
+        const value2 = Number(value);
+        this.onLocationChange2({prop, value: value2});
+      } else {
+        this.onLocationChange2({prop, value});
       }
-      value = 1 - value / 100;
-    }
-    this.onLocationChange2(prop, value);
-    this.setState((state) => {
-      const curLocation = { ...state.curLocation, [prop]: value };
-      return ({
-        curLocation,
+      this.setState((state) => {
+        const curLocation = { ...state.curLocation, [prop]: value };
+        return ({
+          curLocation,
+        });
       });
-    });
-  }
+    }
+  } 
 
-  onLocationChange2(prop, value) {
+  onLocationChange2({prop, value}: LocPropChange) {
     const { gameModel } = this.props;
     const { id } = this.state.curLocation;
     if (prop === 'label') {
@@ -190,7 +213,6 @@ export class LocationLayer4 extends Component<
       });
     }
     if (prop === 'layer_id') {
-      value = Number(value);
       gameModel.execute({
         type: 'putLocationRecord',
         id,

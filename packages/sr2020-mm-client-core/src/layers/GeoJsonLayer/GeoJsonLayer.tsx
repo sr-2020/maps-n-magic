@@ -16,6 +16,8 @@ import { TranslatorContext } from '../../misc/translatorContext';
 // "fill": "#ffd600",
 // "fill-opacity": 0.16862745098039217
 
+type GeoJsonStyleProps = 'stroke' | 'stroke-opacity' | 'stroke-width' | 'fill' | 'fill-opacity';
+
 const styleProps = ['stroke', 'stroke-opacity', 'stroke-width', 'fill', 'fill-opacity'];
 
 const transformName = (name: string): string => {

@@ -45,7 +45,6 @@ interface MapState {
 }
 
 export class Map extends Component<MapProps, MapState> {
-  // static propTypes = Map2PropTypes;
   layerCommunicator: LayerCommunicator;
 
   map: L.Map;

@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { Component, KeyboardEvent, MouseEvent } from 'react';
 import './LocationPopup.css';
 import * as R from 'ramda';
 import { WithTranslation } from "react-i18next";
@@ -14,10 +14,11 @@ import Button from 'react-bootstrap/Button';
 // import FormControl from 'react-bootstrap/FormControl';
 import { 
   LocationRecordOptions, 
-  GameModel 
+  GameModel,
+  ManaOceanEffect
 } from "sr2020-mm-event-engine";
 
-interface LocationPopupProps {
+interface LocationPopupProps extends WithTranslation {
   onClose: () => void;
   id: number;
   locOptions: LocationRecordOptions;
@@ -26,22 +27,22 @@ interface LocationPopupProps {
 }
 
 export class LocationPopup extends Component<
-  LocationPopupProps &
-  WithTranslation
+  LocationPopupProps
 > {
-  constructor(props) {
+  constructor(props: LocationPopupProps) {
     super(props);
     this.state = {
     };
+    this._handleKeyDown = this._handleKeyDown.bind(this);
   }
 
   componentDidMount = () => {
   }
 
-  componentDidUpdate = (prevProps) => {
+  componentDidUpdate = () => {
   }
 
-  _handleKeyDown = (e) => {
+  _handleKeyDown(e: KeyboardEvent<HTMLInputElement>) {
     if (e.key === 'Enter') {
       this.props.onClose();
     }
@@ -59,15 +60,14 @@ export class LocationPopup extends Component<
     const selectedButton = 'tw-bg-blue-500 hover:tw-bg-blue-700 tw-text-white';
     const unselectedButton = 'tw-bg-gray-300 hover:tw-bg-gray-400 tw-text-gray-800';
 
-    function getEffectLabel(effect) {
-      // @ts-ignore
-      const str = t(`manaEffect_${effect.type}`);
+    function getEffectLabel(effect: ManaOceanEffect): string {
+      const str = t(`manaEffect_${effect.type}` as const);
       const startStr = moment(effect.start).format('HH:mm');
-      const endStr = effect.end ? (`-${moment(effect.end).format('HH:mm')}`) : '';
+      const endStr = 'end' in effect ? (`-${moment(effect.end).format('HH:mm')}`) : '';
       return `${str}, ${startStr + endStr}, мана ${effect.manaLevelChange}`;
     }
 
-    function onButtonClick(event) {
+    function onButtonClick(event: MouseEvent<HTMLElement>) {
       const { effectId } = event.currentTarget.dataset;
       gameModel.execute({
         type: 'removeManaEffect',
@@ -81,7 +81,7 @@ export class LocationPopup extends Component<
       // });
     }
 
-    function onAddEffect(event) {
+    function onAddEffect(event: MouseEvent<HTMLElement>) {
       const { effectType } = event.currentTarget.dataset;
       gameModel.execute({
         type: 'addManaEffect',

@@ -5,7 +5,7 @@ export interface LocationCentroidOptions extends L.MarkerOptions {
 }
 
 export interface LocationCentroid extends L.Marker {
-  constructor(latlng: L.LatLngExpression, options?: LocationCentroidOptions);
+  constructor(latlng: L.LatLngExpression, options?: LocationCentroidOptions): LocationCentroid;
   options: LocationCentroidOptions;
 }
 

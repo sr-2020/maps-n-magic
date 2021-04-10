@@ -9,9 +9,10 @@ import {
   layerIdToLayerName, 
   locationTypeSequence, 
   locationTypesEnum,
+  locationTypeToLayerTkey
 } from './LocationLayerTypes';
 
-import { LocationGroupLayer } from './LocationGroupLayer';
+import { LocationGroupLayer, LocationGroupLayerProps } from './LocationGroupLayer';
 
 import { WithLocationRecords } from '../../dataHOCs';
 
@@ -26,7 +27,9 @@ const defaultGroups = Object.keys(locationTypesEnum).reduce((acc, layerId: locat
   return acc;
 }, {} as Record<keyof typeof locationTypesEnum, LocationRecord[]>);
 
-interface InnerLocationLayerProps extends WithLocationRecords {
+// type SubProps = Pick<LocationGroupLayerProps, 'geoLayerName'>;
+
+export interface InnerLocationLayerProps extends WithLocationRecords, LocationGroupLayerProps {
 
 }
 
@@ -41,13 +44,12 @@ export function InnerLocationLayer(props: InnerLocationLayerProps) {
   return (
     <>
       {
-        locationTypeSequence.map((layerId) => (
+        locationTypeSequence.map((locationType) => (
           <LocationGroupLayer
             {...props}
-            // layerId={layerId}
-            geoLayerName={layerIdToLayerName[layerId]}
-            nameKey={`locationsLayer_${layerIdToLayerName[layerId]}`}
-            locationRecords={mergedGroups[layerId]}
+            geoLayerName={locationType.name}
+            nameKey={locationTypeToLayerTkey(locationType.name)}
+            locationRecords={mergedGroups[locationType.name]}
           />
         ))
       }

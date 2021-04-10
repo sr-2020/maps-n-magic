@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { L, CommonLayerProps } from "sr2020-mm-client-core";
+import { L, CommonLayerProps, SRTKey } from "sr2020-mm-client-core";
 import { WithTranslation } from "react-i18next";
 import * as R from 'ramda';
 
@@ -8,13 +8,20 @@ import { getArrDiff, LocationRecord, ArrDiffUpdate } from 'sr2020-mm-event-engin
 import { WithLocationRecords } from '../../dataHOCs';
 import { BasicLocation, basicLocation } from "../../types";
 
-interface LocationGroupLayerProps extends CommonLayerProps, WithTranslation, WithLocationRecords {
+import { 
+  layerIdToLayerName, 
+  locationTypeSequence, 
+  locationTypesEnum,
+  locationTypeToLayerTkey
+} from './LocationLayerTypes';
+
+export interface LocationGroupLayerProps extends CommonLayerProps, WithTranslation, WithLocationRecords {
   enableByDefault: boolean;
-  enableLayerIndex: any;
-  geoLayerName: any;
-  nameKey: any;
-  onLocationClick: any;
-  onLocationEdit: any;
+  enableLayerIndex: Partial<Record<keyof typeof locationTypesEnum, boolean>>;
+  geoLayerName: locationTypesEnum;
+  nameKey: SRTKey & string;
+  onLocationClick: L.LeafletEventHandlerFn;
+  onLocationEdit: L.LeafletEventHandlerFn;
 }
 
 type TooltipTemplate = 'unknownLocationTypeTooltip' | 'geoLocationTooltip' | 'regionTooltip' | 'gameLocationTooltip';

@@ -33,7 +33,7 @@ import {
 //   5: '#0081cc', // hsla(202, 100%, 40%, 1)
 // };
 
-const manaFillColors = { // based on h202
+const manaFillColors: Record<number, string> = { // based on h202
   1: '#ee2b45', // hsla(352, 85%, 55%, 1)
   2: '#e87d8b', // hsla(352, 70%, 70%, 1)
   3: '#eec4c9', // hsla(352, 55%, 85%, 1)
@@ -68,7 +68,7 @@ function isPermanentEffect(effect: ManaOceanEffect): effect is RitualLocationEff
   return (effect as RitualLocationEffect).permanent === true;
 }
 
-interface ManaOceanLayerProps {
+interface ManaOceanLayerProps extends WithLocationRecords, WithTranslation, CommonLayerProps {
   enableByDefault: boolean;
   gameModel: GameModel;
 }
@@ -80,10 +80,7 @@ interface ManaOceanLayerState {
 }
 
 export class ManaOceanLayer extends Component<
-  ManaOceanLayerProps &
-  WithLocationRecords &
-  WithTranslation &
-  CommonLayerProps,
+  ManaOceanLayerProps,
   ManaOceanLayerState
 > {
   locationPopupDom: HTMLElement;
@@ -93,7 +90,7 @@ export class ManaOceanLayer extends Component<
 
   nameKey = 'manaOceanLayer';
 
-  constructor(props) {
+  constructor(props: ManaOceanLayerProps) {
     super(props);
     this.state = {
       curLocation: null,
@@ -282,7 +279,7 @@ export class ManaOceanLayer extends Component<
     this.group.removeLayer(location);
   }
 
-  onLocationClick = (e) => {
+  onLocationClick(e: L.LeafletMouseEvent) {
     const { layerCommunicator } = this.props;
     const {
       id, locOptions,

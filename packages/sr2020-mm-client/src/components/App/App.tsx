@@ -197,10 +197,10 @@ export class App extends Component<AppProps, AppState> {
     };
 
     // eslint-disable-next-line react/destructuring-assignment
-    this.state.gameModel.execute({
-      type: 'updateUserPosition',
-      pos: artificialPos,
-    });
+    // this.state.gameModel.execute({
+    //   type: 'updateUserPosition',
+    //   pos: artificialPos,
+    // });
   }
 
   // onUploadFileSelected(evt) {

@@ -7,18 +7,22 @@ import * as R from 'ramda';
 // export const locationTypes = ['region', 'geoLocation', 'gameLocation'];
 export const locationIdSequence = [2, 1, 3];
 
-
 export enum locationTypesEnum {
   region = 'region',
   geoLocation = 'geoLocation',
   gameLocation = 'gameLocation',
 }
 
-export const locationTypeSequence = [
-  locationTypesEnum.region, 
-  locationTypesEnum.geoLocation, 
-  locationTypesEnum.gameLocation
-];
+export const locationTypeSequence = [{
+  id: 2,
+  name: locationTypesEnum.region, 
+}, {
+  id: 1,
+  name: locationTypesEnum.geoLocation, 
+}, {
+  id: 3,
+  name: locationTypesEnum.gameLocation, 
+}];
 
 // export enum locationTypesEnum {
 //   region = 2,
@@ -40,3 +44,15 @@ export const layerIdToLayerName: Record<number, keyof typeof locationTypesEnum> 
 
 // export const layerNameToLayerId = 
 //   R.invertObj(layerIdToLayerName) as Record<keyof typeof locationTypesEnum, number>;
+
+type LocationTypesTKeys = `locationType_${keyof typeof locationTypesEnum}`;
+
+export function locationTypeToTypeTkey(locType: locationTypesEnum): LocationTypesTKeys {
+  return `locationType_${locType}` as const;
+}
+
+type LocationLayersTKeys = `locationsLayer_${keyof typeof locationTypesEnum}`;
+
+export function locationTypeToLayerTkey(locType: locationTypesEnum): LocationLayersTKeys {
+  return `locationsLayer_${locType}` as const;
+}

@@ -3,28 +3,26 @@ import { L, CommonLayerProps } from "sr2020-mm-client-core";
 import * as R from 'ramda';
 import './LocationNeighborLayer.css';
 
-import { WithTriangulationData } from '../../dataHOCs';
+import { WithTriangulationData, TriangulationEdge } from '../../dataHOCs';
 
 import {
-  getArrDiff,
+  getArrDiff, ArrDiff, ArrDiffUpdate
 } from 'sr2020-mm-event-engine';
 
 import { locNeighborLine, LocNeighborLine } from "../../types";
 
-interface LocationNeighborLayerProps {
+interface LocationNeighborLayerProps extends CommonLayerProps, WithTriangulationData {
   enableByDefault: boolean;
 }
 
 export class LocationNeighborLayer extends Component<
-  LocationNeighborLayerProps &
-  CommonLayerProps &
-  WithTriangulationData
+  LocationNeighborLayerProps
 > {
   group = L.layerGroup([]);
 
   nameKey = 'locationNeighborLayer';
 
-  constructor(props) {
+  constructor(props: LocationNeighborLayerProps) {
     super(props);
     this.state = {
     };
@@ -41,13 +39,14 @@ export class LocationNeighborLayer extends Component<
       layersMeta: this.getLayersMeta(),
       enableByDefault,
     });
-    this.updateEdges({
-      added: edges,
-    });
+    R.map(this.createEdge, edges);
+    // this.updateEdges({
+    //   added: edges,
+    // });
     // console.log('LocationNeighborLayer mounted');
   }
 
-  componentDidUpdate(prevProps) {
+  componentDidUpdate(prevProps: LocationNeighborLayerProps) {
     const {
       translator, edges,
     } = this.props;
@@ -73,7 +72,7 @@ export class LocationNeighborLayer extends Component<
     };
   }
 
-  updateEdges({ added = [], removed = [], updated = [] }) {
+  updateEdges({ added = [], removed = [], updated = [] }: ArrDiff<TriangulationEdge>) {
     R.map(this.createEdge, added);
     R.map(this.updateEdge, updated);
     R.map(this.removeEdge, removed);
@@ -83,7 +82,7 @@ export class LocationNeighborLayer extends Component<
     this.group.clearLayers();
   }
 
-  createEdge(dataItem) {
+  createEdge(dataItem: TriangulationEdge) {
     const { edgeId, centroidLatLng1, centroidLatLng2 } = dataItem;
     // const edge = L.polyline([centroidLatLng1, centroidLatLng2], {
     const edge = locNeighborLine([centroidLatLng1, centroidLatLng2], {
@@ -93,19 +92,19 @@ export class LocationNeighborLayer extends Component<
     this.group.addLayer(edge);
   }
 
-  updateEdge({ item }) {
+  updateEdge({ item }: ArrDiffUpdate<TriangulationEdge>) {
     const { edgeId, centroidLatLng1, centroidLatLng2 } = item;
     const edge = this.group.getLayers().find((edge2: LocNeighborLine) => edge2.options.edgeId === item.edgeId) as LocNeighborLine;
     // marker.setLatLng(centroidLatLng);
     edge.setLatLngs([centroidLatLng1, centroidLatLng2]);
   }
 
-  removeEdge(locationData) {
+  removeEdge(locationData: TriangulationEdge) {
     const edge = this.group.getLayers().find((loc2: LocNeighborLine) => loc2.options.edgeId === locationData.edgeId);
     this.group.removeLayer(edge);
   }
 
-  render() {
+  render(): null {
     return null;
   }
 }

@@ -1,6 +1,7 @@
 import React from 'react';
 import './AudioEngineDemo.css';
 
+import { GameModel } from "sr2020-mm-event-engine";
 import { 
   DefaultSatelliteBackground,
   BaseContourLayer2,
@@ -10,7 +11,11 @@ import { BackgroundImageDisplayLayer } from '../../layers/BackgroundImageDisplay
 import { ManaOceanLayer } from '../../layers/ManaOceanLayer';
 import { CharacterLocationLayer } from '../../layers/CharacterLocationLayer';
 
-export function AudioEngineDemo(props) {
+interface AudioEngineDemoProps {
+  gameModel: GameModel;
+}
+
+export function AudioEngineDemo(props: AudioEngineDemoProps) {
   const {
     gameModel,
   } = props;
@@ -22,7 +27,9 @@ export function AudioEngineDemo(props) {
         gameModel,
       }}
     >
+      {/* @ts-ignore */}
       <DefaultSatelliteBackground enableByDefault={false} />
+      {/* @ts-ignore */}
       <BaseContourLayer2
         enableByDefault
         grayscale

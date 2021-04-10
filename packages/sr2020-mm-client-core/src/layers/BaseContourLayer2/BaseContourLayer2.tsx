@@ -10,6 +10,7 @@ import { LayerCommunicator } from "../../../index";
 interface BaseContourLayer2 {
   enableByDefault: boolean;
   layerCommunicator: LayerCommunicator;
+  grayscale?: boolean;
 }
 
 export function BaseContourLayer2(props: BaseContourLayer2) {
