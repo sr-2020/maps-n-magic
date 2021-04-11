@@ -73,7 +73,7 @@ export class Translator {
     return this.defaultCenter;
   }
 
-  getVirtualCenter() {
+  getVirtualCenter(): [number, number] | null {
     return this.virtualCenter;
   }
 

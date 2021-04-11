@@ -1,10 +1,12 @@
 // eslint-disable-next-line max-classes-per-file
 import { WithTranslation } from 'react-i18next';
 import React, { Component } from 'react';
-import { Translator } from "../../utils/Translator";
 import * as R from 'ramda';
 
 // import '../../../utils/gpxConverter';
+import { EventEmitter } from 'events';
+
+import { applyLeafletGeomanTranslation, getZoomTranslation } from 'sr2020-mm-translations/leaflet';
 
 import { L } from "../../misc/leafletWrapper";
 
@@ -16,11 +18,7 @@ import {
   OpenPopupEvent
 } from "../../../index";
 
-import { EventEmitter } from 'events';
-
-// import { Map2PropTypes } from '../../../types';
-
-import { applyLeafletGeomanTranslation, getZoomTranslation } from 'sr2020-mm-translations/leaflet';
+import { Translator } from "../../utils/Translator";
 
 // eslint-disable-next-line import/extensions
 import 'leaflet.locatecontrol/dist/L.Control.Locate.min.js';
@@ -30,14 +28,14 @@ import './Map.css';
 
 import { LayersMeta } from "../../types";
 
+import { WithMapDefaults } from '../../misc/withMapDefaults';
+import { WithTranslator } from '../../misc/withTranslator';
+
 // console.log(L);
 L.Icon.Default.imagePath = './images/leafletImages/';
 
-interface MapProps extends WithTranslation {
+interface MapProps extends WithTranslation, WithMapDefaults, WithTranslator {
   geomanConfig: L.PM.DrawControlOptions;
-  defaultCenter: L.LatLngTuple;
-  defaultZoom: number;
-  translator: Translator;
   commonPropsExtension: object;
 }
 interface MapState {
@@ -68,15 +66,15 @@ export class Map extends Component<MapProps, MapState> {
   // eslint-disable-next-line max-lines-per-function
   componentDidMount(): void {
     const {
-      geomanConfig, defaultCenter, defaultZoom,
+      geomanConfig, mapDefaults,
     } = this.props;
 
     this.layerCommunicator = new EventEmitter();
 
     // @ts-ignore
     this.map = L.map(this.mapEl, {
-      center: defaultCenter,
-      zoom: defaultZoom,
+      center: mapDefaults?.defaultCenter,
+      zoom: mapDefaults?.defaultZoom,
       zoomControl: false,
     });
 
@@ -111,11 +109,14 @@ export class Map extends Component<MapProps, MapState> {
 
   componentDidUpdate(prevProps: MapProps): void {
     const {
-      translator, defaultCenter,
+      translator, mapDefaults,
     } = this.props;
     if (prevProps.translator !== translator) {
-      this.map.panTo(translator.getVirtualCenter() || defaultCenter);
-      console.log('position changed');
+      const newCenter = translator?.getVirtualCenter() || mapDefaults?.defaultCenter;
+      if(newCenter) {
+        this.map.panTo(newCenter);
+        console.log('position changed');
+      }
     }
     // console.log('Map did update');
   }
