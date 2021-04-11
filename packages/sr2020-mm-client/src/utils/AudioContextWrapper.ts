@@ -1,7 +1,7 @@
 import { SoundCtl } from "../types";
 
 export class AudioContextWrapper {
-  context: AudioContext = null;
+  context: AudioContext;
 
   constructor() {
     this.context = createContext();

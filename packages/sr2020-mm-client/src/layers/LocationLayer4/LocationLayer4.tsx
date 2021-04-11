@@ -34,7 +34,7 @@ interface LocationLayer4State {
     weight: number;
     fillOpacity: number;
     // manaLevel: number;
-  };
+  } | null;
 }
 
 export class LocationLayer4 extends Component<
@@ -171,7 +171,7 @@ export class LocationLayer4 extends Component<
       if (!editable) {
         return;
       }
-      const { id } = this.state.curLocation;
+      // const { id } = this.state.curLocation;
       if (prop === 'weight') {
         const value2 = Number(value);
         if (value2 < 0 || value2 > 20) {
@@ -191,6 +191,7 @@ export class LocationLayer4 extends Component<
       } else {
         this.onLocationChange2({prop, value});
       }
+      // @ts-ignore
       this.setState((state) => {
         const curLocation = { ...state.curLocation, [prop]: value };
         return ({
@@ -202,6 +203,7 @@ export class LocationLayer4 extends Component<
 
   onLocationChange2({prop, value}: LocPropChange) {
     const { gameModel } = this.props;
+    if(!this.state.curLocation) return;
     const { id } = this.state.curLocation;
     if (prop === 'label') {
       gameModel.execute({
@@ -273,9 +275,9 @@ export class LocationLayer4 extends Component<
     return (
       <>
         <InnerLocationLayer
+          {...this.props}
           onLocationClick={this.onLocationClick}
           onLocationEdit={this.onLocationEdit}
-          {...this.props}
         />
         {
           this.getLocationPopup()

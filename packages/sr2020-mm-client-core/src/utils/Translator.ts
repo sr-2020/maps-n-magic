@@ -58,9 +58,9 @@ export class Translator {
 
   constructor(
     private defaultCenter: [number, number], // [lat, lng]
-    private virtualCenter: [number, number]  // [lat, lng]
+    private virtualCenter: [number, number] | null  // [lat, lng]
   ) {
-    if (virtualCenter) {
+    if (this.virtualCenter !== null) {
       this.deltaLat = this.virtualCenter[0] - this.defaultCenter[0];
       this.deltaLng = this.virtualCenter[1] - this.defaultCenter[1];
     }

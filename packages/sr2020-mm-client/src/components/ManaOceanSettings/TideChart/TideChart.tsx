@@ -32,7 +32,7 @@ function CustomTooltip(props: CustomTooltipProps) {
   } = props;
   const { t } = useTranslation();
 
-  if (active) {
+  if (active && payload) {
     const rawEl = payload[0].payload;
     const formattedTime = formatMinutes(rawEl.startTime);
     return (
@@ -67,6 +67,10 @@ function CustomizedAxisTick(props: CustomizedAxisTickProps) {
     x, y, payload,
     // stroke, 
   } = props;
+
+  if (!payload) {
+    return null;
+  }
 
   return (
     <g transform={`translate(${x},${y})`}>

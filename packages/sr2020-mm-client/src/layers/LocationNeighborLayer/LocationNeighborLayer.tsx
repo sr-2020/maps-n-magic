@@ -101,7 +101,7 @@ export class LocationNeighborLayer extends Component<
 
   removeEdge(locationData: TriangulationEdge) {
     const edge = this.group.getLayers().find((loc2: LocNeighborLine) => loc2.options.edgeId === locationData.edgeId);
-    this.group.removeLayer(edge);
+    edge && this.group.removeLayer(edge);
   }
 
   render(): null {

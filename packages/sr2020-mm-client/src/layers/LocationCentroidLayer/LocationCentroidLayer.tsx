@@ -6,7 +6,7 @@ import './LocationCentroidLayer.css';
 import { WithTriangulationData } from '../../dataHOCs';
 
 import {
-  getArrDiff, TriangulationCentroid, ArrDiffUpdate
+  getArrDiff, TriangulationCentroid, ArrDiffUpdate, ArrDiff
 } from 'sr2020-mm-event-engine';
 
 import { makeLocationCentroid, LocationCentroid } from "../../types";
@@ -39,9 +39,10 @@ export class LocationCentroidLayer extends Component<
       layersMeta: this.getLayersMeta(),
       enableByDefault,
     });
-    this.updateMarkers({
-      added: centroids,
-    });
+    R.map(this.createMarker, centroids);
+    // this.updateMarkers({
+    //   added: centroids,
+    // });
     // console.log('LocationCentroidLayer mounted');
   }
 
@@ -71,7 +72,7 @@ export class LocationCentroidLayer extends Component<
     };
   }
 
-  updateMarkers({ added = [], removed = [], updated = [] }) {
+  updateMarkers({ added = [], removed = [], updated = [] }: ArrDiff<TriangulationCentroid>) {
     R.map(this.createMarker, added);
     R.map(this.updateMarker, updated);
     R.map(this.removeMarker, removed);
@@ -98,7 +99,7 @@ export class LocationCentroidLayer extends Component<
 
   removeMarker(locationData: TriangulationCentroid) {
     const marker = this.group.getLayers().find((loc2: LocationCentroid) => loc2.options.locationId === locationData.locationId);
-    this.group.removeLayer(marker);
+    marker && this.group.removeLayer(marker);
   }
 
   render(): null {

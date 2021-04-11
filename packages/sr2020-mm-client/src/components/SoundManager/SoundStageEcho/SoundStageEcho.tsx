@@ -7,7 +7,7 @@ interface SoundStageEchoProps {
   gameModel: GameModel;
 };
 interface SoundStageEchoState {
-  backgroundSound: string;
+  backgroundSound: string | null;
   rotationSounds: string[];
 };
 

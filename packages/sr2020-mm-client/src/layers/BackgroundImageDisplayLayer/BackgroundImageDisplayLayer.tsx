@@ -53,7 +53,8 @@ function createTitle(imageData: BackgroundImage) {
   return titleRect;
 }
 
-function setTitleText(svgElement: SVGElement, text: string) {
+function setTitleText(svgElement: SVGElement | undefined, text: string) {
+  if(!svgElement) return;
   svgElement.innerHTML = `<text x="0" y="80" class="svg-title-text">${text}</text>`;
 }
 
@@ -185,9 +186,9 @@ export class BackgroundImageDisplayLayer extends Component<BackgroundImageDispla
   removeBackgroundImage(imageData: BackgroundImage) {
     const { id } = imageData;
     const image = this.imageGroup.getLayers().find((image2: BgImageOverlay) => image2.options.id === id);
-    this.imageGroup.removeLayer(image);
+    image && this.imageGroup.removeLayer(image);
     const title = this.titleGroup.getLayers().find((title2: BgTitleOverlay) => title2.options.id === id);
-    this.titleGroup.removeLayer(title);
+    title && this.titleGroup.removeLayer(title);
   }
 
   render(): null {

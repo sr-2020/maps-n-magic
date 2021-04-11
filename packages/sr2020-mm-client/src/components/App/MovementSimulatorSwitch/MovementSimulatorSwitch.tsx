@@ -1,12 +1,13 @@
-import React, { Component } from 'react';
+import React, { Component, MouseEventHandler } from 'react';
 import './MovementSimulatorSwitch.css';
 
 import Dropdown from 'react-bootstrap/Dropdown';
 import Form from 'react-bootstrap/Form';
 import { useTranslation } from 'react-i18next';
+import { DropdownItemProps } from 'react-bootstrap/DropdownItem';
 
 interface MovementSimulatorSwitchProps {
-  onClick: (e: React.MouseEvent) => void;
+  onClick: MouseEventHandler<DropdownItemProps>;
   simulateGeoDataStream: boolean;
 }
 

@@ -7,11 +7,11 @@ const defaults: IconOptions = {
   iconAnchor: [12, 41],
   popupAnchor: [1, -34],
   shadowSize: [41, 41],
-  iconUrl: null
+  iconUrl: `./images/leafletImages/marker-icon-2x.png`
 };
 
 export enum iconColors {
-  black,
+  black = 1,
   blue,
   green,
   grey,
@@ -25,14 +25,18 @@ const usedIcons: {
   [color in iconColors]?: Icon
 } = {};
 
-export const getIcon = (color: iconColors) => {
+export const getIcon = (color: iconColors): L.Icon<L.IconOptions> => {
   if (iconColors[color] !== undefined) {
     throw new Error(`Unexpected color ${color}`);
   }
-  if (!usedIcons[color]) {
+  let icon = usedIcons[color];
+  if (icon !== undefined) {
+    return icon;
+  } else {
     const opts = R.clone(defaults);
     opts.iconUrl = `./images/leafletImages/marker-icon-2x-${color}.png`;
-    usedIcons[color] = new L.Icon(opts);
+    icon = new L.Icon(opts);
+    usedIcons[color] = icon;
+    return icon;
   }
-  return usedIcons[color];
 };

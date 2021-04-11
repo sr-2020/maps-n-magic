@@ -11,13 +11,12 @@ import {
   faSpinner,
 } from '@fortawesome/free-solid-svg-icons';
 
-// import { JumpToUserCoordsSwitchPropTypes } from '../../types';
+import { DropdownItemProps } from 'react-bootstrap/DropdownItem';
 
 interface JumpToUserCoordsSwitchProps extends WithTranslation {
   waitingForGeolocation: boolean;
   translator: Translator;
-  onClick: MouseEventHandler;
-  // onClick: MouseEventHandler<HTMLInputElement>;
+  onClick: MouseEventHandler<DropdownItemProps>;
 };
 
 export function JumpToUserCoordsSwitch(props: JumpToUserCoordsSwitchProps) {

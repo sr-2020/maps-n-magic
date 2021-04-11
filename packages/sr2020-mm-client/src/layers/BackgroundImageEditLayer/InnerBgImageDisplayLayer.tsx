@@ -123,7 +123,7 @@ export class InnerBgImageDisplayLayer extends Component<
   removeBackgroundImage(imageData: BackgroundImage) {
     const { id } = imageData;
     const rect = this.rectangleGroup.getLayers().find((rect2: BgRectangle) => rect2.options.id === id);
-    this.rectangleGroup.removeLayer(rect);
+    rect && this.rectangleGroup.removeLayer(rect);
   }
 
   render(): null {

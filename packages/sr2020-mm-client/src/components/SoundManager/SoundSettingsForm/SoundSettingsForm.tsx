@@ -43,9 +43,13 @@ export class SoundSettingsForm extends Component<SoundSettingsFormProps, SoundSe
   constructor(props: SoundSettingsFormProps) {
     super(props);
     this.state = {
+      // @ts-ignore
       rotationTimeout: null,
+      // @ts-ignore
       rotationSoundTimeout: null,
+      // @ts-ignore
       backgroundVolume: null,
+      // @ts-ignore
       rotationVolume: null,
       initialized: false,
     };

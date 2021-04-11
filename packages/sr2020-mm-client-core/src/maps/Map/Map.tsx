@@ -41,7 +41,7 @@ interface MapProps extends WithTranslation {
   commonPropsExtension: object;
 }
 interface MapState {
-  map: L.Map;
+  // map: L.Map;
 }
 
 export class Map extends Component<MapProps, MapState> {
@@ -51,12 +51,12 @@ export class Map extends Component<MapProps, MapState> {
 
   layerControl: L.Control.Layers;
 
-  mapEl: HTMLElement;
+  mapEl: HTMLElement | null;
 
   constructor(props: MapProps) {
     super(props);
     this.state = {
-      map: null,
+      // map: null,
     };
     this.openPopup = this.openPopup.bind(this);
     this.closePopup = this.closePopup.bind(this);
@@ -73,6 +73,7 @@ export class Map extends Component<MapProps, MapState> {
 
     this.layerCommunicator = new EventEmitter();
 
+    // @ts-ignore
     this.map = L.map(this.mapEl, {
       center: defaultCenter,
       zoom: defaultZoom,
@@ -177,7 +178,7 @@ export class Map extends Component<MapProps, MapState> {
   }
 
   render(): JSX.Element {
-    const { map } = this.state;
+    // const { map } = this.state;
 
     const {
       children, commonPropsExtension = {}, translator,
@@ -195,7 +196,7 @@ export class Map extends Component<MapProps, MapState> {
           className="Map tw-h-full"
           ref={(map2) => (this.mapEl = map2)}
         />
-        {map && React.Children.map(children, (child) => React.cloneElement(
+        {this.map && React.Children.map(children, (child) => React.cloneElement(
           // @ts-ignore
           child, {
           ...mapProps,

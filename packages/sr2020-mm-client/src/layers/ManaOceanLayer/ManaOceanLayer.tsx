@@ -276,7 +276,7 @@ export class ManaOceanLayer extends Component<
 
   removeLocation(locationData: LocationRecord) {
     const location = this.group.getLayers().find((loc2: ManaOceanLocation) => loc2.options.id === locationData.id);
-    this.group.removeLayer(location);
+    location && this.group.removeLayer(location);
   }
 
   onLocationClick(e: L.LeafletMouseEvent) {

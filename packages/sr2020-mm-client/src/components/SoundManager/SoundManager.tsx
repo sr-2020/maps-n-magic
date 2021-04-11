@@ -23,10 +23,10 @@ interface SoundManagerProps extends WithTranslation {
 };
 interface SoundManagerState {
   sounds: Sound[];
-  soundStageState: SoundStageData;
+  soundStageState: SoundStageData | null;
   initialized: boolean;
   playbackRotation: any[]; 
-  currentTimeout: number;
+  currentTimeout: number | null;
   currentTimeoutType: any;
 };
 
@@ -168,7 +168,7 @@ export class SoundManager extends Component<SoundManagerProps, SoundManagerState
       sounds, soundStageState, initialized, playbackRotation, currentTimeout, currentTimeoutType,
     } = this.state;
 
-    if (!initialized) {
+    if (!initialized || !soundStageState) {
       return null;
     }
 

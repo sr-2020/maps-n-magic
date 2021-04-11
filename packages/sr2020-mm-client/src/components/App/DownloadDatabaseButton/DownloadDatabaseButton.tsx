@@ -3,9 +3,10 @@ import './DownloadDatabaseButton.css';
 
 import Dropdown from 'react-bootstrap/Dropdown';
 import { WithTranslation } from 'react-i18next';
+import { DropdownItemProps } from 'react-bootstrap/DropdownItem';
 
 interface DownloadDatabaseButtonProps extends WithTranslation {
-  onClick: (e: React.MouseEvent) => void;
+  onClick: React.MouseEventHandler<DropdownItemProps>;
 };
 
 export function DownloadDatabaseButton(props: DownloadDatabaseButtonProps) {

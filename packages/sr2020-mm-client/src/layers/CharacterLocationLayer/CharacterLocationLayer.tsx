@@ -23,7 +23,7 @@ export class CharacterLocationLayer extends Component<
 
   nameKey = 'characterLocationLayer';
 
-  marker: L.Marker = null;
+  marker: L.Marker | null = null;
 
   constructor(props: CharacterLocationLayerProps) {
     super(props);
@@ -67,7 +67,7 @@ export class CharacterLocationLayer extends Component<
   }
 
   updateMarker(location: LocationRecord) {
-    this.marker.setLatLng(getPolygonCentroid(location.polygon));
+    this.marker && this.marker.setLatLng(getPolygonCentroid(location.polygon));
   }
 
   removeMarker() {
@@ -84,7 +84,7 @@ export class CharacterLocationLayer extends Component<
     if (characterLocationId && locationRecords) {
       const location = locationRecords.find((loc) => loc.id === characterLocationId);
       // @ts-ignore
-      if (location.polygon && !R.equals(location.polygon, {})) {
+      if (location?.polygon && !R.equals(location.polygon, {})) {
         if (this.marker) {
           this.updateMarker(location);
         } else {

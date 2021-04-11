@@ -3,7 +3,7 @@ import { WithTranslation } from 'react-i18next';
 import { L, CommonLayerProps } from "sr2020-mm-client-core";
 import * as R from 'ramda';
 
-import { getArrDiff, BeaconRecord, ArrDiffUpdate } from 'sr2020-mm-event-engine';
+import { getArrDiff, BeaconRecord, ArrDiffUpdate, ArrDiff } from 'sr2020-mm-event-engine';
 import { WithLatLngBeacons } from "./withLatLngBeacons";
 
 import { Beacon, makeBeacon } from "../../types";
@@ -38,9 +38,10 @@ export class InnerBeaconLayer extends Component<
       layersMeta: this.getLayersMeta(),
       enableByDefault,
     });
-    this.updateBeacons({
-      added: (latLngBeaconRecords),
-    });
+    R.map(this.createBeacon, latLngBeaconRecords);
+    // this.updateBeacons({
+    //   added: (latLngBeaconRecords),
+    // });
     console.log('InnerManaOceanLayer2 mounted');
   }
 
@@ -79,7 +80,7 @@ export class InnerBeaconLayer extends Component<
     };
   }
 
-  updateBeacons({ added = [], removed = [], updated = [] }) {
+  updateBeacons({ added = [], removed = [], updated = [] }: ArrDiff<BeaconRecord>) {
     R.map(this.createBeacon, added);
     R.map(this.updateBeacon, updated);
     R.map(this.removeBeacon, removed);
@@ -127,7 +128,7 @@ export class InnerBeaconLayer extends Component<
   removeBeacon(beaconRecord: BeaconRecord) {
     const { id } = beaconRecord;
     const marker = this.group.getLayers().find((marker2: Beacon) => marker2.options.id === id);
-    this.group.removeLayer(marker);
+    marker && this.group.removeLayer(marker);
   }
 
   render(): null {

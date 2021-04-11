@@ -20,6 +20,7 @@ import Form from 'react-bootstrap/Form';
 // declare type FormControlElement = HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement;
 
 import Dropdown from 'react-bootstrap/Dropdown';
+import { DropdownItemProps } from 'react-bootstrap/DropdownItem';
 
 import { LocationRecord, BeaconRecord, GameModel } from 'sr2020-mm-event-engine';
 import { WithTranslation } from "react-i18next";
@@ -78,7 +79,7 @@ export class BeaconRecordEditor extends Component<BeaconRecordEditorProps> {
     });
   }
 
-  removeBeacon(e: MouseEvent, id: number): void {
+  removeBeacon(e: MouseEvent<DropdownItemProps>, id: number): void {
     e.preventDefault();
     e.stopPropagation();
     const { gameModel } = this.props;
@@ -161,7 +162,7 @@ export class BeaconRecordEditor extends Component<BeaconRecordEditorProps> {
                   <td>
                     <Form.Control 
                       as="select" 
-                      defaultValue={beacon.location_id} 
+                      defaultValue={beacon.location_id !== null ? beacon.location_id : undefined} 
                       data-id-str={beacon.id} 
                       onChange={this.onLocationSelect}
                     >
@@ -207,7 +208,7 @@ export class BeaconRecordEditor extends Component<BeaconRecordEditorProps> {
                         <Dropdown.Menu>
                           <Dropdown.Item
                             as="button"
-                            onClick={(e: MouseEvent) => this.removeBeacon(e, beacon.id)}
+                            onClick={(e: MouseEvent<DropdownItemProps>) => this.removeBeacon(e, beacon.id)}
                           >
                             {t('delete')}
                           </Dropdown.Item>

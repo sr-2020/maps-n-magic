@@ -28,9 +28,13 @@ export class SpiritContent extends Component<SpiritContentProps, SpiritContentSt
     super(props);
     this.state = {
       initialized: false,
+      // @ts-ignore
       name: null,
+      // @ts-ignore
       fraction: null,
+      // @ts-ignore
       story: null,
+      // @ts-ignore
       maxHitPoints: null,
     };
     this.handleInputChange = this.handleInputChange.bind(this);

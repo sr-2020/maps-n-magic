@@ -14,7 +14,7 @@ interface CreateBeaconPopupProp extends WithTranslation {
   latLng: L.LatLng;
   onClose: () => void;
   onSelect: (latLng: L.LatLng, id: number) => void;
-  curBeacon: CurBeacon;
+  curBeacon: CurBeacon | null;
 }
 
 export class CreateBeaconPopup extends Component<CreateBeaconPopupProp> {

@@ -8,6 +8,7 @@ import OverlayTrigger from 'react-bootstrap/OverlayTrigger';
 import Form from 'react-bootstrap/Form';
 import * as R from 'ramda';
 import Dropdown from 'react-bootstrap/Dropdown';
+import { DropdownItemProps } from 'react-bootstrap/DropdownItem';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faPlus, faEllipsisH } from '@fortawesome/free-solid-svg-icons';
 import {
@@ -30,7 +31,7 @@ interface SpiritListProps extends WithTranslation, RouteComponentProps {
 }
 interface SpiritListState {
   spirits: Spirit[],
-  removedSpiritIndex: number,
+  removedSpiritIndex: number | null,
   searchStr: string,
 }
 
@@ -164,13 +165,13 @@ export class SpiritList extends Component<SpiritListProps, SpiritListState> {
                 <Dropdown.Menu>
                   <Dropdown.Item
                     as="button"
-                    onClick={(e: MouseEvent) => this.cloneSpirit(e, spirit.id)}
+                    onClick={(e: MouseEvent<DropdownItemProps>) => this.cloneSpirit(e, spirit.id)}
                   >
                     {t('clone')}
                   </Dropdown.Item>
                   <Dropdown.Item
                     as="button"
-                    onClick={(e: MouseEvent) => this.removeSpirit(e, spirit.id)}
+                    onClick={(e: MouseEvent<DropdownItemProps>) => this.removeSpirit(e, spirit.id)}
                   >
                     {t('delete')}
                   </Dropdown.Item>
@@ -242,7 +243,7 @@ export class SpiritList extends Component<SpiritListProps, SpiritListState> {
     });
   }
 
-  cloneSpirit(e: MouseEvent, id: number) {
+  cloneSpirit(e: MouseEvent<DropdownItemProps>, id: number) {
     e.preventDefault();
     e.stopPropagation();
     const { spiritService, history } = this.props;
@@ -261,7 +262,7 @@ export class SpiritList extends Component<SpiritListProps, SpiritListState> {
     });
   }
 
-  removeSpirit(e: MouseEvent, id: number) {
+  removeSpirit(e: MouseEvent<DropdownItemProps>, id: number) {
     e.preventDefault();
     e.stopPropagation();
     const { spiritService } = this.props;

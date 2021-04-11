@@ -3,7 +3,7 @@ import { L, CommonLayerProps, SRTKey } from "sr2020-mm-client-core";
 import { WithTranslation } from "react-i18next";
 import * as R from 'ramda';
 
-import { getArrDiff, LocationRecord, ArrDiffUpdate } from 'sr2020-mm-event-engine';
+import { getArrDiff, LocationRecord, ArrDiffUpdate, ArrDiff } from 'sr2020-mm-event-engine';
 
 import { WithLocationRecords } from '../../dataHOCs';
 import { BasicLocation, basicLocation } from "../../types";
@@ -67,9 +67,10 @@ export class LocationGroupLayer extends Component<
       layersMeta: this.getLayersMeta(),
       enableByDefault: enableLayerIndex[geoLayerName] || enableByDefault,
     });
-    this.updateLocations({
-      added: (locationRecords),
-    });
+    R.map(this.createLocation, locationRecords);
+    // this.updateLocations({
+    //   added: (locationRecords),
+    // });
     // console.log('LocationGroupLayer mounted');
   }
 
@@ -109,7 +110,7 @@ export class LocationGroupLayer extends Component<
     };
   }
 
-  updateLocations({ added = [], removed = [], updated = [] }) {
+  updateLocations({ added = [], removed = [], updated = [] }: ArrDiff<LocationRecord>) {
     R.map(this.createLocation, added);
     R.map(this.updateLocation, updated);
     R.map(this.removeLocation, removed);
@@ -158,7 +159,7 @@ export class LocationGroupLayer extends Component<
   removeLocation(locationRecord: LocationRecord) {
     const { id } = locationRecord;
     const location = this.group.getLayers().find((layer: BasicLocation) => layer.options.id === id);
-    this.group.removeLayer(location);
+    location && this.group.removeLayer(location);
   }
 
   render(): null {

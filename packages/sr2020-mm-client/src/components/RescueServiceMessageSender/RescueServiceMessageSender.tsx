@@ -29,9 +29,9 @@ interface RescueServiceMessageSenderProps extends WithTranslation {
 };
 
 interface RescueServiceMessageSenderState {
-  sortedLocationList: LocationRecord[];
-  users: UserRecord[];
-  locationIndex: Record<number, LocationRecord>;
+  sortedLocationList: LocationRecord[] | null;
+  users: UserRecord[] | null;
+  locationIndex: Record<number, LocationRecord> | null;
 };
 
 // userRecords
@@ -128,7 +128,7 @@ export class RescueServiceMessageSender extends Component<RescueServiceMessageSe
       return;
     }
     const characterId = Number(characterId1);
-    if (Number.isNaN(characterId)) {
+    if (Number.isNaN(characterId) || !sortedLocationList || !users) {
       return;
     }
 
@@ -143,11 +143,11 @@ export class RescueServiceMessageSender extends Component<RescueServiceMessageSe
       characterId,
       characterHealthState: {
         locationId: locationId === -1 ? null : locationId,
-        locationLabel: locationId === -1 ? 'N/A' : location.label,
+        locationLabel: locationId === -1 || location === undefined ? 'N/A' : location.label,
         healthState: data.get('healthStateRadio'),
         timestamp: moment.utc().valueOf(),
         lifeStyle: data.get('lifeStyleRadio'),
-        personName: user.name || `id ${characterId}`,
+        personName: user?.name || `id ${characterId}`,
       },
     });
   }
@@ -164,7 +164,7 @@ export class RescueServiceMessageSender extends Component<RescueServiceMessageSe
     } = this.state;
     const { t } = this.props;
 
-    if (!users || !locationIndex) {
+    if (!users || !locationIndex || !sortedLocationList) {
       return <div> Loading data... </div>;
     }
 

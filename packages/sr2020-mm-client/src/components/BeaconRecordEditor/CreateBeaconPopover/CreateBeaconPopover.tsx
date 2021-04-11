@@ -77,12 +77,14 @@ export class CreateBeaconPopover extends Component<CreateBeaconPopoverProps, Cre
 
 
   onMacAddressChange(e: ChangeEvent<HTMLInputElement>) {
-    const { value, selectionStart } = e.target;
+    const { value, selectionStart } = e.currentTarget;
     const cleanValue = value.replace(/(:|_)/g, '');
+
+    const selectionStart2 = selectionStart !== null ? selectionStart : 0;
 
     const isMatch = /^[0-9a-fA-F]*$/.test(cleanValue);
     if (!isMatch) {
-      this.setMacAddressPosition(cleanValue.length, selectionStart - 1);
+      this.setMacAddressPosition(cleanValue.length, selectionStart2 - 1);
       return;
     }
 
@@ -99,7 +101,7 @@ export class CreateBeaconPopover extends Component<CreateBeaconPopoverProps, Cre
       // if (changeIndex === macAddress.length) { // char at the end of the string
       //   return;
       // }
-      this.setMacAddressPosition(changeIndex + 1, selectionStart + ((selectionStart + 1) % 3 === 0 ? 1 : 0));
+      this.setMacAddressPosition(changeIndex + 1, selectionStart2 + ((selectionStart2 + 1) % 3 === 0 ? 1 : 0));
       return {
         macAddress: cleanValue,
       };

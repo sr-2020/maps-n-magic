@@ -25,13 +25,17 @@ const readJsonFile = (evt: any) => new Promise((resolve, reject) => {
 
   if (f) {
     const r = new FileReader();
-    r.onload = (e) => {
-      const contents = e.target.result;
-      try {
-        const object = JSON.parse(contents as string);
-        resolve(object);
-      } catch (err) {
-        reject(err);
+    r.onload = function(this: FileReader, e: ProgressEvent<FileReader>) {
+      if(e.target === null) {
+        reject(new Error('File reader target is null'));
+      } else {
+        const contents = e.target.result;
+        try {
+          const object = JSON.parse(contents as string);
+          resolve(object);
+        } catch (err) {
+          reject(err);
+        }
       }
     };
     r.readAsText(f);
@@ -47,12 +51,16 @@ const readBinaryFile = (evt: any) => new Promise((resolve, reject) => {
 
   if (f) {
     const r = new FileReader();
-    r.onload = (e) => {
-      const contents = e.target.result;
-      resolve({
-        name: f.name,
-        buffer: contents,
-      });
+    r.onload = function(this: FileReader, e: ProgressEvent<FileReader>) {
+      if(e.target === null) {
+        reject(new Error('File reader target is null'));
+      } else {
+        const contents = e.target.result;
+        resolve({
+          name: f.name,
+          buffer: contents,
+        });
+      }
     };
     r.readAsArrayBuffer(f);
   } else {

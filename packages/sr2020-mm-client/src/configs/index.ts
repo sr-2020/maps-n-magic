@@ -25,7 +25,7 @@ const mapConfig = {
   // lng: 36.87105243803666,
   lng: 36.87405243803666,
   zoom: 17,
-  center: null as [number, number]
+  center: [0, 0] as [number, number]
 };
 
 // initial data config

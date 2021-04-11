@@ -81,10 +81,11 @@ export function GeoJsonLayer(props: GeoJsonLayerProps): null {
 
   useEffect(() => {
     geoData.features.forEach((feature) => {
-      feature = translator.geoJsonMoveTo(feature);
+      feature = translator !== null ? translator.geoJsonMoveTo(feature) : feature;
       const style = function (feature2: Feature) {
         const { properties } = feature2;
         // console.log(properties.name, makeStyles(properties));
+        // @ts-ignore
         return makeStyles(properties);
       };
       const geoJsonObj = L.geoJSON(feature, {

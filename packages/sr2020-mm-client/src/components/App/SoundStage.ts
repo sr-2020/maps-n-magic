@@ -14,21 +14,21 @@ type SoundCollection = {
 };
 
 export class SoundStage extends EventEmitter {
-  context: AudioContextWrapper = null;
+  // context: AudioContextWrapper = null;
 
   backgroundSound: string | null = null;
 
   rotationSounds: string[] = [];
 
   // timeout between sounds in rotation
-  rotationTimeout: number = null;
+  rotationTimeout: number | null = null;
 
   // timeout between rotations
-  rotationSoundTimeout: number = null;
+  rotationSoundTimeout: number | null = null;
 
-  backgroundVolume: number = null;
+  backgroundVolume: number | null = null;
 
-  rotationVolume: number = null;
+  rotationVolume: number | null = null;
 
   // immediate rotation data
 
@@ -40,15 +40,14 @@ export class SoundStage extends EventEmitter {
 
   currentTimeout: number | null = null;
 
-  currentTimeoutType: TimeoutType = null;
+  currentTimeoutType: TimeoutType | null = null;
 
   rotationTimeoutId: NodeJS.Timeout | null = null;
 
-  gameModel: GameModel = null;
+  gameModel: GameModel | null = null;
 
-  constructor(context: AudioContextWrapper) {
+  constructor(private context: AudioContextWrapper) {
     super();
-    this.context = context;
     this.onBackgroundSoundUpdate = this.onBackgroundSoundUpdate.bind(this);
     this.onRotationSoundsUpdate = this.onRotationSoundsUpdate.bind(this);
     this.onRotationTimeoutUpdate = this.onRotationTimeoutUpdate.bind(this);
@@ -66,7 +65,9 @@ export class SoundStage extends EventEmitter {
     // this.playbackRotation = [];
     this._setPlaybackRotation([]);
     this.stopAllSounds();
-    clearTimeout(this.rotationTimeoutId);
+    if (this.rotationTimeoutId !== null) {
+      clearTimeout(this.rotationTimeoutId);
+    }
   }
 
   subscribe(action: 'on'|'off', gameModel: GameModel): void {
@@ -84,25 +85,24 @@ export class SoundStage extends EventEmitter {
         this.subscribe('off', this.gameModel);
       }
       this.gameModel = gameModel;
-      this.initialize();
+      // this.initialize();
+      const soundStage: SoundStageData = this.gameModel.get('soundStage');
+      this.onBackgroundSoundUpdate(soundStage);
+      this.onRotationSoundsUpdate(soundStage);
+      this.onRotationTimeoutUpdate(soundStage);
+      this.onRotationSoundTimeoutUpdate(soundStage);
+      this.onBackgroundVolumeUpdate(soundStage);
+      this.onRotationVolumeUpdate(soundStage);
+      // this.backgroundSound = soundStage.backgroundSound;
+      // this.rotationSounds = [...soundStage.rotationSounds];
+      this.subscribe('on', this.gameModel);
+      console.log('SoundStage initialize');
     }
   }
 
-  initialize(): void {
-    const soundStage: SoundStageData = this.gameModel.get('soundStage');
-    this.onBackgroundSoundUpdate(soundStage);
-    this.onRotationSoundsUpdate(soundStage);
-    this.onRotationTimeoutUpdate(soundStage);
-    this.onRotationSoundTimeoutUpdate(soundStage);
-    this.onBackgroundVolumeUpdate(soundStage);
-    this.onRotationVolumeUpdate(soundStage);
-    // this.backgroundSound = soundStage.backgroundSound;
-    // this.rotationSounds = [...soundStage.rotationSounds];
-    this.subscribe('on', this.gameModel);
-    console.log('SoundStage initialize');
-  }
-
-  onBackgroundSoundUpdate({ backgroundSound }: SoundStageData): void {
+  private onBackgroundSoundUpdate({ backgroundSound }: SoundStageData): void {
+    // should never happen
+    if (this.gameModel === null) return;
     if (this.backgroundSound === backgroundSound) {
       return;
     }
@@ -177,11 +177,13 @@ export class SoundStage extends EventEmitter {
 
   startRotationSound(): void {
     // console.log('startRotationSound');
+    if (this.gameModel === null) return;
     const sound: Sound = this.gameModel.get({
       type: 'sound',
       name: this.playbackRotation[0],
     });
     console.log('start', this.playbackRotation[0]);
+    // @ts-ignore
     this.startSound(this.rotationSources, this.playbackRotation[0], sound.buffer, this.rotationVolume / 100);
   }
 
@@ -193,19 +195,23 @@ export class SoundStage extends EventEmitter {
       this._setPlaybackRotation(R.tail(this.playbackRotation));
       if (this.playbackRotation.length > 0) {
         console.log('startTimeout');
-        this.rotationTimeoutId = setTimeout(() => {
-          this.startRotationSound();
-          this.setCurrentTimeout(null, null);
-        }, this.rotationTimeout);
-        this.setCurrentTimeout(this.rotationTimeout, TimeoutType.rotationTimeout);
+        if(this.rotationTimeout !== null) {
+          this.rotationTimeoutId = setTimeout(() => {
+            this.startRotationSound();
+            this.setCurrentTimeout(null, null);
+          }, this.rotationTimeout);
+          this.setCurrentTimeout(this.rotationTimeout, TimeoutType.rotationTimeout);
+        }
       } else if (this.rotationSounds.length > 0) {
         console.log('startTimeout');
-        this.rotationTimeoutId = setTimeout(() => {
-          this.rotationTimeoutId = null;
-          this.generateAndStartRotation();
-          this.setCurrentTimeout(null, null);
-        }, this.rotationSoundTimeout);
-        this.setCurrentTimeout(this.rotationSoundTimeout, TimeoutType.rotationSoundTimeout);
+        if(this.rotationSoundTimeout !== null) {
+          this.rotationTimeoutId = setTimeout(() => {
+            this.rotationTimeoutId = null;
+            this.generateAndStartRotation();
+            this.setCurrentTimeout(null, null);
+          }, this.rotationSoundTimeout);
+          this.setCurrentTimeout(this.rotationSoundTimeout, TimeoutType.rotationSoundTimeout);
+        }
       } else {
         this.rotationTimeoutId = null;
       }
@@ -213,7 +219,7 @@ export class SoundStage extends EventEmitter {
     };
   }
 
-  setCurrentTimeout(currentTimeout: number, currentTimeoutType: TimeoutType): void {
+  setCurrentTimeout(currentTimeout: number | null, currentTimeoutType: TimeoutType | null): void {
     this.currentTimeout = currentTimeout;
     this.currentTimeoutType = currentTimeoutType;
     this.emit('currentTimeoutUpdate', { currentTimeout, currentTimeoutType });
@@ -245,10 +251,10 @@ export class SoundStage extends EventEmitter {
   }
 
   startSound(collection: SoundCollection, soundName: string, buffer: AudioBuffer, volume: number, loop: boolean = false): void {
-    let ctl = collection[soundName];
+    let ctl: SoundCtl | undefined = collection[soundName];
     if (ctl) {
       this.stopSound(collection, soundName);
-      ctl = null;
+      ctl = undefined;
     }
     if (!ctl) {
       ctl = this.context.createSource(buffer);

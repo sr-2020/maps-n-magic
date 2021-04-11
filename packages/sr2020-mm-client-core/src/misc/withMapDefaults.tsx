@@ -8,8 +8,8 @@ export const withMapDefaults = (Wrapped: any) => (props: any) => (
         <Wrapped
           // eslint-disable-next-line react/jsx-props-no-spreading
           {...props}
-          defaultZoom={mapDefaults.defaultZoom}
-          defaultCenter={mapDefaults.defaultCenter}
+          // defaultZoom={mapDefaults.defaultZoom}
+          // defaultCenter={mapDefaults.defaultCenter}
           mapDefaults={mapDefaults}
         />
       )

@@ -32,10 +32,10 @@ interface CharacterPositionsProps extends WithTranslation {
   gameModel: GameModel;
 };
 interface CharacterPositionsState {
-  users: UserRecord[]; 
-  locationIndex: LocationIndex;
-  sortedLocationList: LocationRecord[];
-  beaconIndex: BeaconIndex;
+  users: UserRecord[] | null; 
+  locationIndex: LocationIndex | null;
+  sortedLocationList: LocationRecord[] | null;
+  beaconIndex: BeaconIndex | null;
 };
 
 
@@ -163,7 +163,7 @@ export class CharacterPositions extends Component<CharacterPositionsProps, Chara
     const characterId = Number(rawCharacterId);
     const locationId = Number(form.locationId.value.trim());
 
-    if (Number.isNaN(characterId) || Number.isNaN(locationId) || !beaconIndex[locationId]) {
+    if (Number.isNaN(characterId) || Number.isNaN(locationId) || !beaconIndex || !beaconIndex[locationId]) {
       return;
     }
 
@@ -179,7 +179,7 @@ export class CharacterPositions extends Component<CharacterPositionsProps, Chara
 
   getLocationText(locationId: number): string {
     const { locationIndex } = this.state;
-    if (locationIndex[locationId]) {
+    if (locationIndex !== null && locationIndex[locationId]) {
       return `${locationIndex[locationId].label}(${locationId})`;
     }
     return 'N/A';
@@ -192,7 +192,7 @@ export class CharacterPositions extends Component<CharacterPositionsProps, Chara
     } = this.state;
     const { t } = this.props;
 
-    if (!users || !locationIndex || !beaconIndex) {
+    if (!users || !locationIndex || !beaconIndex || !sortedLocationList) {
       return <div> Loading data... </div>;
     }
 

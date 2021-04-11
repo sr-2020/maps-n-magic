@@ -12,15 +12,15 @@ import * as moment from 'moment-timezone';
 
 import { charHealthIndexToList } from "./charHealthUtils";
 
-export interface WithCharacterIdHealthListForAudio {
-  [dstDataName]: number[]
-}
 
 const changeEventName = 'characterHealthStatesLoaded';
 const srcDataName = 'characterHealthStates';
 const dstDataName = 'characterIdHealthList';
 const initState: number[] = [];
 
+export interface WithCharacterIdHealthListForAudio {
+  'characterIdHealthList': number[]
+}
 // const mergeKeyNEntry2 = ([id, data2]) => ({ 'characterId': Number(id), ...data2 });
 
 // const objToList = (objItem2ListItem) => R.pipe(R.toPairs, R.map(objItem2ListItem));

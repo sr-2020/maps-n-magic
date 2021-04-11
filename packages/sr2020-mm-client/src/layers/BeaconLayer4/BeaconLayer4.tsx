@@ -30,8 +30,8 @@ export interface CurBeacon {
 }
 
 interface BeaconLayer4State {
-  beaconLatLng: L.LatLng;
-  curBeacon: CurBeacon;
+  beaconLatLng: L.LatLng | null;
+  curBeacon: CurBeacon | null;
 }
 
 export class BeaconLayer4 extends Component<

@@ -87,8 +87,8 @@ interface AppState {
   simulateGeoDataStream: boolean;
   translator: Translator;
   waitingForGeolocation: boolean;
-  gameServer: EventEngine;
-  gameModel: GameModel;
+  gameServer: EventEngine | null;
+  gameModel: GameModel | null;
   initialized: boolean;
 };
 
@@ -292,14 +292,13 @@ export class App extends Component<AppProps, AppState> {
 
   // eslint-disable-next-line max-lines-per-function
   render() {
-    // eslint-disable-next-line react/destructuring-assignment
-    if (!this.state.initialized) {
-      return null;
-    }
-
     const {
       simulateGeoDataStream, waitingForGeolocation, gameModel, translator,
     } = this.state;
+    // eslint-disable-next-line react/destructuring-assignment
+    if (!this.state.initialized || gameModel === null) {
+      return null;
+    }
 
     const {
       t,

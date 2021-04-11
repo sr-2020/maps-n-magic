@@ -8,6 +8,7 @@ import { GameModel } from 'sr2020-mm-event-engine';
 import { AudioContextWrapper } from '../../utils/AudioContextWrapper';
 
 import { Sound } from "../../types";
+import { assert } from 'console';
 
 const POLL_INTERVAL = 15000; // ms
 
@@ -88,7 +89,7 @@ export class SoundWatcher extends Component<SoundWatcherProps, SoundWatcherState
     console.log('SoundWatcher will unmount');
   }
 
-  getSound(name: string): Sound {
+  getSound(name: string): Sound | undefined {
     return this.sounds.find((sound) => sound.name === name);
   }
 
@@ -177,6 +178,9 @@ export class SoundWatcher extends Component<SoundWatcherProps, SoundWatcherState
 
   async loadSound(name: string): Promise<void> {
     const sound = this.getSound(name);
+    if(sound === undefined) {
+      throw new Error('loadSound ' + name + ' but not found in sounds collection');
+    }
     if (sound.status !== 'unloaded') {
       return;
     }
@@ -193,6 +197,10 @@ export class SoundWatcher extends Component<SoundWatcherProps, SoundWatcherState
   soundLoaded(name: string, result: AudioBuffer): void {
     console.log('soundLoaded', name);
     const sound = this.getSound(name);
+    if(sound === undefined) {
+      throw new Error('soundLoaded ' + name + ' but not found in sounds collection');
+    }
+    // assert(sound !== undefined);
     sound.status = 'loaded';
     sound.buffer = result;
     this.props.gameModel.execute({

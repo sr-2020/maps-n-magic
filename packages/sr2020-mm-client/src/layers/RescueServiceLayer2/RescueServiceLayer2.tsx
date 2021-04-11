@@ -61,9 +61,10 @@ export class RescueServiceLayer2 extends Component<
       layersMeta: this.getLayersMeta(),
       enableByDefault,
     });
-    this.updateMarkers({
-      added: preFilterCharacters(characterHealthByLocations),
-    });
+    R.map(this.createMarker, preFilterCharacters(characterHealthByLocations));
+    // this.updateMarkers({
+    //   added: preFilterCharacters(characterHealthByLocations),
+    // });
     // console.log('RescueServiceLayer2 mounted');
   }
 
@@ -102,7 +103,7 @@ export class RescueServiceLayer2 extends Component<
     };
   }
 
-  updateMarkers({ added = [], removed = [], updated = [] }) {
+  updateMarkers({ added = [], removed = [], updated = [] }: ArrDiff<CharacterHealthStatesByLocation>) {
     R.map(this.createMarker, added);
     R.map(this.updateMarker, updated);
     R.map(this.removeMarker, removed);
@@ -146,7 +147,7 @@ export class RescueServiceLayer2 extends Component<
   removeMarker(locationData: CharacterHealthStatesByLocation) {
     const marker = this.group.getLayers().find((loc2: LocationCentroid) => 
       loc2.options.locationId === locationData.locationId);
-    this.group.removeLayer(marker);
+      marker && this.group.removeLayer(marker);
   }
 
   render(): null {

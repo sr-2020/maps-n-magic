@@ -163,6 +163,7 @@ export class BackgroundImageEditLayer extends Component<
   onBackgroundImageChange = (prop: 'name' | 'image') => (e: ChangeEvent<HTMLInputElement>) => {
     const { value } = e.target;
     const { gameModel } = this.props;
+    if(!this.state.curBackgroundImage) return;
     const { id } = this.state.curBackgroundImage;
 
     if (prop === 'name' || prop === 'image') {
@@ -176,6 +177,7 @@ export class BackgroundImageEditLayer extends Component<
       });
     }
 
+    // @ts-ignore
     this.setState((state) => {
       const curBackgroundImage = { ...state.curBackgroundImage, [prop]: value };
       return ({
