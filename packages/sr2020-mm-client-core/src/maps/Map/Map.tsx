@@ -6,7 +6,7 @@ import * as R from 'ramda';
 // import '../../../utils/gpxConverter';
 import { EventEmitter } from 'events';
 
-import { applyLeafletGeomanTranslation, getZoomTranslation } from 'sr2020-mm-translations/leaflet';
+import { applyLeafletGeomanTranslation, getZoomTranslation } from 'sr2020-mm-translations';
 
 import { L } from "../../misc/leafletWrapper";
 

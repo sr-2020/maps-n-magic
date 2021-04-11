@@ -3,6 +3,7 @@ import { spiritDictionary } from './spirits';
 import { manaOceanDictionary } from './manaOcean';
 import { soundDictionary } from './sounds';
 import { gameConstantsDictionary } from './gameConstants';
+export * from './leaflet';
 
 export const translations = {
   ru: {

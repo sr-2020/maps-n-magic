@@ -26,5 +26,8 @@
   ],
   "exclude": [
     "./src/static"
+  ],
+  "references": [
+      { "path": "../sr2020-mm-server-event-engine" }
   ]
  }

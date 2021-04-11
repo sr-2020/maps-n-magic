@@ -1,10 +1,13 @@
 import * as R from 'ramda';
 import fetch from 'isomorphic-fetch';
+import { 
+  LifeStylesValues, LifeStyles
+} from 'sr2020-mm-event-engine';
 
 import { billingInsurance } from '../constants';
 
 export async function getCharacterLifeStyle(characterId: number): Promise<{
-  lifeStyle: string,
+  lifeStyle: LifeStylesValues,
   personName: string,
 }> {
   const response = await fetch(`${billingInsurance}?characterid=${characterId}`);
@@ -17,7 +20,7 @@ export async function getCharacterLifeStyle(characterId: number): Promise<{
       console.error(err);
     }
     return {
-      lifeStyle: 'Unknown',
+      lifeStyle: LifeStyles.Unknown,
       personName: 'N/A',
     };
   }
@@ -30,7 +33,7 @@ export async function getCharacterLifeStyle(characterId: number): Promise<{
     };
   }
   return {
-    lifeStyle: 'Unknown',
+    lifeStyle: LifeStyles.Unknown,
     personName: 'N/A',
   };
 }
