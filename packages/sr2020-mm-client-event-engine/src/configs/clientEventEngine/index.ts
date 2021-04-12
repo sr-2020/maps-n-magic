@@ -24,7 +24,7 @@ import { SoundStageService } from '../../services/SoundStageService';
 import { BaseVersion } from '../../services/BaseVersion';
 import { BackgroundImageService } from '../../services/BackgroundImageService';
 import { ManaOceanStubService } from '../../services/ManaOceanStubService';
-import { CharacterWatchService } from '../../services/CharacterWatchService';
+import { TrackedCharacterService } from '../../services/TrackedCharacterService';
 
 // import { fillGameModelWithBots } from './GameModelFiller';
 import { WsDataBinding } from '../../dataManagers/WsDataBinding';
@@ -52,7 +52,7 @@ const services = [
   SettingsService,
   ManaOceanEnableService,
   ManaOceanStubService,
-  CharacterWatchService,
+  TrackedCharacterService,
 ];
 
 export function makeGameModel() {

@@ -5,7 +5,7 @@ import { EventEmitter } from 'events';
 import { GameModelVerificator } from './GameModelVerificator';
 import { AbstractService } from './AbstractService';
 
-import { GMAction, GMRequest, GMLogger } from "./types";
+import { GMAction, GMRequest, GMLogger, GMTyped } from "./types";
 import { stringToType, getChildLogger } from "./utils";
 
 export interface ServiceIndex {
@@ -87,6 +87,17 @@ export class GameModel extends EventEmitter {
 
   execute<T>(rawAction: GMAction | string): T {
     const action = stringToType<GMAction>(rawAction);
+    const service = this.actionMap[action.type];
+    if (service) {
+      return service.execute<T>(action);
+    }
+    throw new Error(`Unknown action ${JSON.stringify(action)}`);
+  }
+
+  // What I want - I want to explicitly require generic type to validate action.
+  // It is not enough to set it to never + it doesn't work with extends.
+  execute2<ActionType extends GMTyped, T = unknown>(rawAction: ActionType): T {
+    const action = stringToType<GMAction>((rawAction as unknown) as GMTyped);
     const service = this.actionMap[action.type];
     if (service) {
       return service.execute<T>(action);

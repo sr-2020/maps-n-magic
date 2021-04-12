@@ -1,7 +1,7 @@
 // eslint-disable-next-line max-classes-per-file
 import * as R from 'ramda';
 
-import { GameModel, GMLogger } from "sr2020-mm-event-engine";
+import { GameModel, GMLogger, PostNotification } from "sr2020-mm-event-engine";
 
 import { DataProvider, ReadStrategy } from "./types";
 
@@ -62,12 +62,12 @@ export class ReadDataManager<Entity, T extends GettableResourceProvider<Entity>>
   }
 
   getErrorHandler(title: string) {
-    return (err: {message?: unknown}) => {
+    return (err: Error) => {
       console.error(err);
-      this.gameModel.execute({
+      this.gameModel.execute2<PostNotification>({
         type: 'postNotification',
         title,
-        message: err.message || err,
+        message: err.message || String(err),
         kind: 'error',
       });
     };

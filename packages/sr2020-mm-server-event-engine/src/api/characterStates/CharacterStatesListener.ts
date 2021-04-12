@@ -1,7 +1,7 @@
 import * as R from 'ramda';
 import moment from 'moment-timezone';
 import { 
-  GameModel, RawCharacterHealthState
+  GameModel, RawCharacterHealthState, PutCharHealth
 } from 'sr2020-mm-event-engine';
 import { getCharacterLocation } from './getCharacterLocation';
 import { getCharacterLifeStyle } from './getCharacterLifeStyle';
@@ -50,7 +50,7 @@ export class CharacterStatesListener {
 
   updateState(characterId: number, characterHealthState: RawCharacterHealthState) {
     // console.log('received timestamp', timestamp, ', cur moment().utc()', moment.utc().valueOf());
-    this.gameModel.execute({
+    this.gameModel.execute2<PutCharHealth>({
       type: 'putCharHealth',
       characterId,
       characterHealthState,

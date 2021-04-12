@@ -15,7 +15,9 @@ import Button from 'react-bootstrap/Button';
 import { 
   LocationRecordOptions, 
   GameModel,
-  ManaOceanEffect
+  ManaOceanEffect,
+  AddManaEffect,
+  RemoveManaEffect,
 } from "sr2020-mm-event-engine";
 
 interface LocationPopupProps extends WithTranslation {
@@ -69,7 +71,7 @@ export class LocationPopup extends Component<
 
     function onButtonClick(event: MouseEvent<HTMLElement>) {
       const { effectId } = event.currentTarget.dataset;
-      gameModel.execute({
+      effectId && gameModel.execute2<RemoveManaEffect>({
         type: 'removeManaEffect',
         effectId,
         locationId: id,
@@ -83,9 +85,13 @@ export class LocationPopup extends Component<
 
     function onAddEffect(event: MouseEvent<HTMLElement>) {
       const { effectType } = event.currentTarget.dataset;
-      gameModel.execute({
+      // effectType in 
+      if (effectType === undefined || !['massacre','powerSpell'].includes(effectType)) {
+        throw new Error('Unexpected mana ocean effect type: ' + effectType);
+      }
+      gameModel.execute2<AddManaEffect>({
         type: 'addManaEffect',
-        effectType,
+        effectType: effectType as 'massacre' | 'powerSpell',
         locationId: id,
       });
       // console.log({

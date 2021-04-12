@@ -1,7 +1,15 @@
 // eslint-disable-next-line max-classes-per-file
 import * as R from 'ramda';
 
-import { GMLogger, GameModel } from "sr2020-mm-event-engine";
+import { 
+  GMLogger, 
+  GameModel, 
+  PostNotification,
+  PostSettingsConfirmed,
+  EPostSettingsRequested,
+  SettingsData,
+  SetSettings
+} from "sr2020-mm-event-engine";
 
 import { ReadStrategy, DataProvider } from "./types";
 import { capitalizeFirstLetter } from './ReadDataManager';
@@ -19,10 +27,10 @@ const metadata = {
   needActions: ['setSettings','postNotification','postSettingsConfirmed']
 };
 
-export class SettingsDataManager<SettingsData, T extends SettingsResourceProvider<SettingsData>> {
-  settings: SettingsData | null;
+export class SettingsDataManager<U extends SettingsData, T extends SettingsResourceProvider<U>> {
+  settings: U | null;
 
-  defaultSettings: SettingsData;
+  defaultSettings: U;
 
   logger: GMLogger;
 
@@ -34,7 +42,7 @@ export class SettingsDataManager<SettingsData, T extends SettingsResourceProvide
     private settingsName: string, 
     private readStrategy: ReadStrategy, 
     rest: {
-      defaultSettings: SettingsData,
+      defaultSettings: U,
       logger: GMLogger
     }
   ) {
@@ -112,11 +120,14 @@ export class SettingsDataManager<SettingsData, T extends SettingsResourceProvide
     // this.gameModel.logger.info('settings', settings);
     // throw new Error('sdfsdfsd');
     this.settings = settings;
-    this.gameModel.execute({
+    this.gameModel.execute2<SetSettings>({
       // type: `set${this.ccSettingsName}`,
       // [this.settingsName]: R.clone(this.settings),
       type: 'setSettings',
+      // TODO - make explicit connection between settingsData and settingsName
+      // @ts-ignore
       name: this.settingsName,
+      // @ts-ignore
       settings: R.clone(this.settings),
     });
     // });
@@ -126,32 +137,35 @@ export class SettingsDataManager<SettingsData, T extends SettingsResourceProvide
   }
 
   getErrorHandler(title: string) {
-    return (err: {message?: unknown}) => {
+    return (err: Error) => {
       console.error(err);
-      this.gameModel.execute({
+      this.gameModel.execute2<PostNotification>({
         type: 'postNotification',
         title,
-        message: err.message || err,
+        message: err.message || String(err),
         kind: 'error',
       });
     };
   }
 
-  onPostSettingsRequested({ name, settings }: {name: string, settings: SettingsData}) {
+  onPostSettingsRequested({ name, settings }: EPostSettingsRequested) {
     if (name !== this.ccSettingsName) {
       return;
     }
 
+    // TODO - make explicit connection between settingsData and settingsName
+    // @ts-ignore
     this.dataProvider.post(settings).then((settings2) => {
     // this.dataProvider.post(null).then((settings2) => {
       // this.entities.push(entity);
       this.settings = settings2;
       // console.log('onPostSettingsRequested', name, settings, settings2);
-      this.gameModel.execute({
+      this.gameModel.execute2<PostSettingsConfirmed>({
         // type: `post${this.ccSettingsName}Confirmed`,
         // [this.settingsName]: settings2,
         type: 'postSettingsConfirmed',
         name,
+        // @ts-ignore
         settings: settings2,
       });
     }).catch(this.getErrorHandler(`Error on ${this.ccSettingsName} post`));

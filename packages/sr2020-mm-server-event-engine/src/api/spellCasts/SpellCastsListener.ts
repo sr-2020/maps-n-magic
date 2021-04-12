@@ -3,7 +3,7 @@ import moment from 'moment-timezone';
 // import { getCharacterLocation } from './getCharacterLocation';
 // import { getCharacterLifeStyle } from './getCharacterLifeStyle';
 // import { listenHealthChanges } from './listenHealthChanges';
-import { GameModel, SpellCast } from "sr2020-mm-event-engine";
+import { GameModel, SpellCast, SpellCastAction } from "sr2020-mm-event-engine";
 
 import { listenSpellCasts } from './listenSpellCasts';
 
@@ -30,7 +30,7 @@ export class SpellCastsListener {
 
   async onMessageRecieved(data: SpellCast): Promise<void> {
     // console.log(data);
-    this.gameModel.execute({
+    this.gameModel.execute2<SpellCastAction>({
       type: 'spellCast',
       data,
     });

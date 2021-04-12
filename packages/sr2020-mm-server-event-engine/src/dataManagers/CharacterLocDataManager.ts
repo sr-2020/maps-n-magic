@@ -6,7 +6,10 @@ import {
   GMLogger, 
   GameModel, 
   CharacterLocationData,
-  UserRecord
+  UserRecord,
+  PostNotification,
+  SetAllCharacterLocations, 
+  SetCharacterLocation
 } from "sr2020-mm-event-engine";
 
 import { usersUrl } from '../api/constants';
@@ -81,7 +84,7 @@ export class CharacterLocDataManager {
     // }
     this.logger.info(parsedData);
 
-    this.gameModel.execute({
+    this.gameModel.execute2<SetCharacterLocation>({
       type: 'setCharacterLocation',
       characterId: parsedData.id,
       locationId: parsedData.locationId,
@@ -98,7 +101,7 @@ export class CharacterLocDataManager {
       prevLocationId: null,
     }));
     // this.logger.info(characterLocations);
-    this.gameModel.execute({
+    this.gameModel.execute2<SetAllCharacterLocations>({
       type: 'setAllCharacterLocations',
       characterLocations,
     });
@@ -130,10 +133,10 @@ export class CharacterLocDataManager {
   getErrorHandler(title: string) {
     return (err: Error) => {
       this.logger.error(title, err);
-      this.gameModel.execute({
+      this.gameModel.execute2<PostNotification>({
         type: 'postNotification',
         title,
-        message: err.message || err,
+        message: err.message || String(err),
         kind: 'error',
       });
     };

@@ -1,5 +1,7 @@
 import { 
   GameModel,
+  GMLogger,
+  // ForwardServer2Client events
   ELocationRecordsChanged2,
   EBeaconRecordsChanged2,
   ESettingsChanged,
@@ -9,10 +11,24 @@ import {
   EEnableManaOceanChanged,
   EUserRecordsChanged,
   ESetSettingsCatalog,
-  GMLogger
+  ECharacterLocationChanged,
+  // error and forwarding notification
+  PostNotification,
+  // executed actions from server 2 client
+  SetLocationRecords,
+  SetBeaconRecords,
+  SetSettings,
+  PutCharHealthConfirmed,
+  SetCharacterHealthStates,
+  EnableManaOceanConfirmed,
+  SetUserRecords,
+  
+  //???
+  // characterLocationChanged
 } from "sr2020-mm-event-engine";
 
-import { ECharacterLocationChanged } from "../index";
+import { TrackedCharacterLocationChanged } from "../index";
+
 import { WSConnector } from '../api/WSConnector';
 
 export function capitalizeFirstLetter(string: string): string {
@@ -137,7 +153,7 @@ export class WsDataBinding {
     const { type } = data;
     if (!forwardServer2ClientActions.includes(type)) {
       this.logger.error('Unexpected action:', type, ', expected actions list:', forwardServer2ClientActions);
-      this.gameModel.execute({
+      this.gameModel.execute2<PostNotification>({
         type: 'postNotification',
         title: 'Unexpected event: ' + type,
         message: `Recieved unexpected event from server. Event is ignored.`,
@@ -146,15 +162,15 @@ export class WsDataBinding {
       return;
     }
 
-    if (type === 'locationRecordsChanged2') {
-      this.gameModel.execute({
+    if (data.type === 'locationRecordsChanged2') {
+      this.gameModel.execute2<SetLocationRecords>({
         ...data,
         type: 'setLocationRecords',
       });
     }
 
-    if (type === 'beaconRecordsChanged2') {
-      this.gameModel.execute({
+    if (data.type === 'beaconRecordsChanged2') {
+      this.gameModel.execute2<SetBeaconRecords>({
         ...data,
         type: 'setBeaconRecords',
       });
@@ -164,25 +180,27 @@ export class WsDataBinding {
     // We take all settings from server and transform it setSettings event sequence.
     // Current settings implementation works with settings set separately.
     // So transforming it to sequence is logical - we don't have batch settings processing now.
-    if (type === 'setSettingsCatalog') {
-      const { settingsCatalog } = data as ESetSettingsCatalog;
+    if (data.type === 'setSettingsCatalog') {
+      const { settingsCatalog } = data;
       Object.keys(settingsCatalog).forEach(name => {
-        this.gameModel.execute({
+        this.gameModel.execute2<SetSettings>({
           type: 'setSettings',
+          // TODO - think about better settings structure
+          // @ts-ignore
           name,
           settings: settingsCatalog?.[name],
         });
       })
     }
 
-    if (type === 'settingsChanged') {
-      // TODO Understand why TS can't resolve ESettingsChanged
-      // so it is necessary to expliticitely make type suggestion.
-      const { name, settingsCatalog } = data as ESettingsChanged;
+    if (data.type === 'settingsChanged') {
+      const { name, settingsCatalog } = data;
       if (name && settingsCatalog) {
-        this.gameModel.execute({
+        this.gameModel.execute2<SetSettings>({
           type: 'setSettings',
           name,
+          // TODO - think about better settings structure
+          // @ts-ignore
           settings: settingsCatalog?.[name],
         });
       }
@@ -194,43 +212,46 @@ export class WsDataBinding {
     //   });
     // }
 
-    if (type === 'characterHealthStateChanged') {
-      this.gameModel.execute({
+    if (data.type === 'characterHealthStateChanged') {
+      this.gameModel.execute2<PutCharHealthConfirmed>({
         ...data,
         type: 'putCharHealthConfirmed',
       });
     }
 
-    if (type === 'characterHealthStatesLoaded') {
-      this.gameModel.execute({
+    if (data.type === 'characterHealthStatesLoaded') {
+      this.gameModel.execute2<SetCharacterHealthStates>({
         ...data,
         type: 'setCharacterHealthStates',
       });
     }
 
-    if (type === 'enableManaOceanChanged') {
-      this.gameModel.execute({
+    if (data.type === 'enableManaOceanChanged') {
+      this.gameModel.execute2<EnableManaOceanConfirmed>({
         ...data,
         type: 'enableManaOceanConfirmed',
       });
     }
 
-    if (type === 'userRecordsChanged') {
-      this.gameModel.execute({
+    if (data.type === 'userRecordsChanged') {
+      this.gameModel.execute2<SetUserRecords>({
         ...data,
         type: 'setUserRecords',
       });
     }
 
-    if (type === 'characterLocationChanged') {
-      this.gameModel.execute(data);
+    if (data.type === 'characterLocationChanged') {
+      this.gameModel.execute2<TrackedCharacterLocationChanged>({
+        ...data,
+        type: "trackedCharacterLocationChanged"
+      });
     }
 
     // 'characterHealthStateChanged',
     // 'characterHealthStatesLoaded'
 
-    if (type === 'postNotification') {
-      this.gameModel.execute(data);
+    if (data.type === 'postNotification') {
+      this.gameModel.execute2<PostNotification>(data);
     }
 
     // console.log('onMessage', data);

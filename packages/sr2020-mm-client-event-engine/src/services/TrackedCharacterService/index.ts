@@ -8,25 +8,25 @@ import {
   GMLogger,
   Req,
   Res,
-  ELocationRecordsChanged2
+  ELocationRecordsChanged2,
 } from 'sr2020-mm-event-engine';
 
 import { 
-  characterWatchMetadata,
-  GetCharacterId,
-  GetCharacterLocationId,
-  SetCharacterId,
-  CharacterLocationChanged,
-  CharacterWatchEvents
+  trackedCharacterMetadata,
+  GetTrackedCharacterId,
+  GetTrackedCharacterLocationId,
+  TrackedCharacterLocationChanged,
+  SetTrackedCharacterId,
+  TrackedCharacterEvents
 } from "./types";
 
-export class CharacterWatchService extends AbstractService<CharacterWatchEvents> {
+export class TrackedCharacterService extends AbstractService<TrackedCharacterEvents> {
   characterId: number | null;
   locationId: number | null;
 
   constructor(gameModel: GameModel, logger: GMLogger) {
     super(gameModel, logger);
-    this.setMetadata(characterWatchMetadata);
+    this.setMetadata(trackedCharacterMetadata);
     this.characterId = null;
     this.locationId = null;
     this.onLocationRecordsChanged2 = this.onLocationRecordsChanged2.bind(this);
@@ -50,29 +50,29 @@ export class CharacterWatchService extends AbstractService<CharacterWatchEvents>
     }
   }
 
-  getCharacterId(arg: Req<GetCharacterId>): Res<GetCharacterId> {
+  getTrackedCharacterId(arg: Req<GetTrackedCharacterId>): Res<GetTrackedCharacterId> {
     return this.characterId;
   }
 
-  getCharacterLocationId(arg: Req<GetCharacterLocationId>): Res<GetCharacterLocationId> {
+  getTrackedCharacterLocationId(arg: Req<GetTrackedCharacterLocationId>): Res<GetTrackedCharacterLocationId> {
     return this.locationId;
   }
 
-  setCharacterId({ characterId }: SetCharacterId) {
+  setTrackedCharacterId({ characterId }: SetTrackedCharacterId) {
     this.characterId = characterId;
     this.locationId = null;
     this.emit2({
-      type: 'characterIdChanged',
+      type: 'trackedCharacterIdChanged',
       characterId,
     });
     this.emit2({
-      type: 'characterLocationChanged',
+      type: 'trackedCharacterLocationChanged',
       characterId,
       characterLocationId: this.locationId,
     });
     if (this.characterId !== null) {
       this.emit2({
-        type: 'emitCharacterLocationChanged',
+        type: 'emitTrackedCharacterLocationChanged',
         characterId: this.characterId,
       });
     } else {
@@ -83,7 +83,7 @@ export class CharacterWatchService extends AbstractService<CharacterWatchEvents>
     }
   }
 
-  characterLocationChanged(data: CharacterLocationChanged) {
+  trackedCharacterLocationChanged(data: TrackedCharacterLocationChanged) {
     if (this.characterId === null) {
       return;
     }
@@ -92,7 +92,7 @@ export class CharacterWatchService extends AbstractService<CharacterWatchEvents>
       this.logger.info('onCharacterLocationChanged', data);
       this.locationId = locationId;
       this.emit2({
-        type: 'characterLocationChanged',
+        type: 'trackedCharacterLocationChanged',
         characterId,
         characterLocationId: locationId,
       });

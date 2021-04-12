@@ -2,7 +2,8 @@ import * as R from 'ramda';
 import moment from 'moment-timezone';
 import { 
   GameModel,
-  PutCharLocationArgs
+  PutCharLocationArgs,
+  PutCharLocation
 } from 'sr2020-mm-event-engine';
 // import { getCharacterLocation } from './getCharacterLocation';
 // import { getCharacterLifeStyle } from './getCharacterLifeStyle';
@@ -46,7 +47,7 @@ export class CharacterLocationListener {
 
   updateState(characterId: number, locationId: number, prevLocationId: number) {
     // console.log('received timestamp', timestamp, ', cur moment().utc()', moment.utc().valueOf());
-    this.gameModel.execute({
+    this.gameModel.execute2<PutCharLocation>({
       type: 'putCharLocation',
       characterId,
       locationId,

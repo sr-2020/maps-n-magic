@@ -3,7 +3,7 @@ import {
   Typed,
   TypeOnly,
   CharacterLocationData
-} from 'sr2020-mm-event-engine';
+} from '../index';
 
 export const clMetadata: Metadata = {
   requests: [

@@ -1,10 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import { GameModel } from "sr2020-mm-event-engine";
-import { ECharacterLocationChanged } from "sr2020-mm-client-event-engine";
+import { ETrackedCharacterLocationChanged } from "sr2020-mm-client-event-engine";
 
-const changeEventName = 'characterLocationChanged';
+const changeEventName = 'trackedCharacterLocationChanged';
 const dataName = 'characterLocationId';
-const initState: ECharacterLocationChanged["characterLocationId"] = null;
+const initState: ETrackedCharacterLocationChanged["characterLocationId"] = null;
 
 export interface WithCharacterPosition {
   characterLocationId: number;

@@ -1,6 +1,6 @@
 import * as R from 'ramda';
 import WebSocket from "ws";
-import { GameModel, GMLogger, WebSocketInitClientConfig } from "sr2020-mm-event-engine";
+import { GameModel, GMLogger, WebSocketInitClientConfig, PostNotification } from "sr2020-mm-event-engine";
 
 export class WebSocketWrapper {
   constructor(
@@ -24,7 +24,7 @@ export class WebSocketWrapper {
     data.forEach((item) => {
       if (!this.gameModel.hasRequest(item.payload)) {
         this.logger.error('GameModel unsupported request:', item.payload);
-        this.gameModel.execute({
+        this.gameModel.execute2<PostNotification>({
           type: 'postNotification',
           title: `GameModel unsupported request`,
           message: `Request type: ${item.payload}`,
@@ -52,7 +52,7 @@ export class WebSocketWrapper {
       this.gameModel.emit(msg);
     } catch(err) {
       this.logger.error('Error on processing message:', msgStr, ', error', err);
-      this.gameModel.execute({
+      this.gameModel.execute2<PostNotification>({
         type: 'postNotification',
         title: `Error on processing message`,
         message: `Err: ${err.message || err}, message ${msgStr}`,

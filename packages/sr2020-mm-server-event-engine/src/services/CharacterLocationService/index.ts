@@ -7,17 +7,14 @@ import {
   GameModel,
   CharacterLocationData,
   Req,
-  Res
-} from 'sr2020-mm-event-engine';
-
-import { 
+  Res,
   clMetadata,
   GetCharactersFromLocation,
   SetAllCharacterLocations,
   SetCharacterLocation,
   EmitCharacterLocationChanged,
   CharacterLocationEvents
-} from "./types";
+} from 'sr2020-mm-event-engine';
 
 export class CharacterLocationService extends AbstractService<CharacterLocationEvents> {
   // Map(
