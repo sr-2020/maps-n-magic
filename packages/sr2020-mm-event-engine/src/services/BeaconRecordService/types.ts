@@ -43,12 +43,22 @@ export type GetBeaconRecords = (arg: TypeOnly<'beaconRecords'>) => BeaconRecord[
 export type SingleBeaconRecord = {
   beaconRecord: BeaconRecord;
 };
+export type PostBeaconArgs = {
+  props: Partial<Omit<BeaconRecord, 'id'>>
+};
+export type PutBeaconArgs = {
+  id: number;
+  props: Partial<Omit<BeaconRecord, 'id'>>;
+};
+export type DeleteBeaconArgs = {
+  id: number;
+};
 
-export type PutBeaconRecord = Typed<'putBeaconRecord', SingleBeaconRecord>;
-export type PutBeaconRecordConfirmed = Typed<'putBeaconRecordConfirmed', SingleBeaconRecord>;
-export type PostBeaconRecord = Typed<'postBeaconRecord', SingleBeaconRecord>;
+export type PostBeaconRecord = Typed<'postBeaconRecord', PostBeaconArgs>;
 export type PostBeaconRecordConfirmed = Typed<'postBeaconRecordConfirmed', SingleBeaconRecord>;
-export type DeleteBeaconRecord = Typed<'deleteBeaconRecord', SingleBeaconRecord>;
+export type PutBeaconRecord = Typed<'putBeaconRecord', PutBeaconArgs>;
+export type PutBeaconRecordConfirmed = Typed<'putBeaconRecordConfirmed', SingleBeaconRecord>;
+export type DeleteBeaconRecord = Typed<'deleteBeaconRecord', DeleteBeaconArgs>;
 export type DeleteBeaconRecordConfirmed = Typed<'deleteBeaconRecordConfirmed', SingleBeaconRecord>;
 
 export type BeaconRecordList = {
@@ -59,11 +69,11 @@ export type SetBeaconRecords = Typed<'setBeaconRecords', BeaconRecordList>;
 
 // events
 
-export type EPutBeaconRecordRequested = Typed<'putBeaconRecordRequested', SingleBeaconRecord>;
-export type EPutBeaconRecord = Typed<'putBeaconRecord', SingleBeaconRecord>;
-export type EPostBeaconRecordRequested = Typed<'postBeaconRecordRequested', SingleBeaconRecord>;
+export type EPostBeaconRecordRequested = Typed<'postBeaconRecordRequested', PostBeaconArgs>;
 export type EPostBeaconRecord = Typed<'postBeaconRecord', SingleBeaconRecord>;
-export type EDeleteBeaconRecordRequested = Typed<'deleteBeaconRecordRequested', SingleBeaconRecord>;
+export type EPutBeaconRecordRequested = Typed<'putBeaconRecordRequested', PutBeaconArgs>;
+export type EPutBeaconRecord = Typed<'putBeaconRecord', SingleBeaconRecord>;
+export type EDeleteBeaconRecordRequested = Typed<'deleteBeaconRecordRequested', DeleteBeaconArgs>;
 export type EDeleteBeaconRecord = Typed<'deleteBeaconRecord', SingleBeaconRecord>;
 
 export type EBeaconRecordsChanged = Typed<'beaconRecordsChanged', BeaconRecordList>;

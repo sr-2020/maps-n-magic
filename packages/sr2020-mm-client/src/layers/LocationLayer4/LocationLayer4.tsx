@@ -7,7 +7,15 @@ import {
   OnCreateLayerEvent,
   OnRemoveLayerEvent 
 } from "sr2020-mm-client-core";
-import { GameModel, LocationRecord } from "sr2020-mm-event-engine";
+import { 
+  GameModel, 
+  LocationRecord,
+  PostLocationRecord,
+  DeleteLocationRecord,
+  PutLocationRecord
+} from "sr2020-mm-event-engine";
+
+import { BasicLocation } from "../../types";
 // import * as R from 'ramda';
 
 import { LocationPopup3, EditableLocFields } from './LocationPopup3';
@@ -85,13 +93,15 @@ export class LocationLayer4 extends Component<
     if (event.layer instanceof L.Polygon) {
       const location = event.layer;
       // @ts-ignore
-      const latlngs = translator.moveFrom({
-        latlngs: location.getLatLngs(),
-      });
-      gameModel.execute({
+      // const latlngs = translator.moveFrom({
+      //   latlngs: location.getLatLngs(),
+      // });
+      const latlngs = location.getLatLngs();
+      gameModel.execute2<PostLocationRecord>({
         type: 'postLocationRecord',
+        // TODO check how this function works
         // @ts-ignore
-        props: { polygon: latlngs.latlngs },
+        props: { polygon: latlngs },
       });
       location.remove();
     }
@@ -143,15 +153,18 @@ export class LocationLayer4 extends Component<
     if (!editable) {
       return;
     }
-    const location = e.target;
-    const latlngs = translator.moveFrom({
-      latlngs: location.getLatLngs(),
-    });
-    gameModel.execute({
+    const location: BasicLocation = e.target;
+    const latlngs = location.getLatLngs();
+    // const latlngs = translator.moveFrom({
+    //   latlngs: location.getLatLngs(),
+    // });
+    gameModel.execute2<PutLocationRecord>({
       type: 'putLocationRecord',
       id: location.options.id,
       props: {
-        polygon: latlngs.latlngs,
+        // TODO check how this function works
+        // @ts-ignore
+        polygon: latlngs,
       },
     });
     this.closePopup();
@@ -201,40 +214,42 @@ export class LocationLayer4 extends Component<
     }
   } 
 
-  onLocationChange2({prop, value}: LocPropChange) {
+  onLocationChange2(propChange: LocPropChange) {
     const { gameModel } = this.props;
     if(!this.state.curLocation) return;
     const { id } = this.state.curLocation;
-    if (prop === 'label') {
-      gameModel.execute({
+    if (propChange.prop === 'label') {
+      gameModel.execute2<PutLocationRecord>({
         type: 'putLocationRecord',
         id,
         props: {
-          [prop]: value,
+          [propChange.prop]: propChange.value,
         },
       });
     }
-    if (prop === 'layer_id') {
-      gameModel.execute({
+    if (propChange.prop === 'layer_id') {
+      gameModel.execute2<PutLocationRecord>({
         type: 'putLocationRecord',
         id,
         props: {
-          [prop]: value,
+          [propChange.prop]: propChange.value,
         },
       });
     }
-    if (prop === 'weight' || prop === 'fillOpacity' || prop === 'color') {
+    if (propChange.prop === 'weight' || 
+        propChange.prop === 'fillOpacity' || 
+        propChange.prop === 'color') {
       const locationRecord = gameModel.get<LocationRecord>({
         type: 'locationRecord',
         id,
       });
-      gameModel.execute({
+      gameModel.execute2<PutLocationRecord>({
         type: 'putLocationRecord',
         id,
         props: {
           options: {
             ...locationRecord.options,
-            [prop]: value,
+            [propChange.prop]: propChange.value,
           },
         },
       });

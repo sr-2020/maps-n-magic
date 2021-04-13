@@ -173,6 +173,23 @@ export class LocationRecordService extends AbstractService<LocationRecordEvents>
     });
   }
 
+  postLocationRecord = (action: PostLocationRecord): void => {
+    this.emit2({
+      ...action,
+      type: 'postLocationRecordRequested'
+    });
+  }
+
+  postLocationRecordConfirmed({ locationRecord }: PostLocationRecordConfirmed): void {
+    // console.log('postBeaconRecord');
+    const updatedLocationRecords = [...this.locationRecords, locationRecord];
+    this.innerSetLocationRecords(updatedLocationRecords);
+    this.emit2({ 
+      locationRecord,
+      type: 'postLocationRecord'
+    });
+  }
+
   putLocationRecord(action: PutLocationRecord): void {
     this.emit2({
       ...action,
@@ -188,23 +205,6 @@ export class LocationRecordService extends AbstractService<LocationRecordEvents>
     this.emit2({
       type: 'putLocationRecord',
       locationRecord 
-    });
-  }
-
-  postLocationRecord = (action: PostLocationRecord): void => {
-    this.emit2({
-      ...action,
-      type: 'postLocationRecordRequested'
-    });
-  }
-
-  postLocationRecordConfirmed({ locationRecord }: PostLocationRecordConfirmed): void {
-    // console.log('postBeaconRecord');
-    const updatedLocationRecords = [...this.locationRecords, locationRecord];
-    this.innerSetLocationRecords(updatedLocationRecords);
-    this.emit2({ 
-      locationRecord,
-      type: 'postLocationRecord'
     });
   }
 

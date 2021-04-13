@@ -168,7 +168,11 @@ export class App extends Component<AppProps, AppState> {
     // eslint-disable-next-line react/destructuring-assignment
     const { translator } = this.state;
 
-    const coords = translator.moveFrom({
+    // const coords = translator.moveFrom({
+    //   lat: position.coords.latitude,
+    //   lng: position.coords.longitude,
+    // });
+    const coords = ({
       lat: position.coords.latitude,
       lng: position.coords.longitude,
     });

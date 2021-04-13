@@ -93,7 +93,8 @@ export class BackgroundImageEditLayer extends Component<
     if (event.layer instanceof L.Rectangle) {
       const rect = event.layer as L.Rectangle;
       console.log('rectangle created');
-      const latlngs = translator.moveFrom(rect.getLatLngs()[0] as L.LatLng[]); // as L.LatLng[][]
+      // const latlngs = translator.moveFrom(rect.getLatLngs()[0] as L.LatLng[]); // as L.LatLng[][]
+      const latlngs = rect.getLatLngs(); // as L.LatLng[][]
       gameModel.execute({
         type: 'postBackgroundImage',
         props: { latlngs },

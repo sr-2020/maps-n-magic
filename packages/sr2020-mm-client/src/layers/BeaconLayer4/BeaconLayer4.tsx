@@ -84,7 +84,8 @@ export class BeaconLayer4 extends Component<
     const { translator, layerCommunicator } = this.props;
     if (event.layer instanceof L.Marker) {
       const beacon = event.layer as L.Marker;
-      const latlng = translator.moveFrom(beacon.getLatLng());
+      // const latlng = translator.moveFrom(beacon.getLatLng());
+      const latlng = beacon.getLatLng();
       this.setState({
         beaconLatLng: latlng,
       });
@@ -119,7 +120,8 @@ export class BeaconLayer4 extends Component<
     const {
       label, id, markers, manaLevel,
     } = e.target.options;
-    const latlng = translator.moveFrom(e.target.getLatLng());
+    // const latlng = translator.moveFrom(e.target.getLatLng());
+    const latlng = e.target.getLatLng();
     this.setState({
       curBeacon: {
         id,
@@ -137,7 +139,8 @@ export class BeaconLayer4 extends Component<
       gameModel, translator,
     } = this.props;
     const beacon = e.target;
-    const latlng = translator.moveFrom(beacon.getLatLng());
+    // const latlng = translator.moveFrom(beacon.getLatLng());
+    const latlng = beacon.getLatLng();
     gameModel.execute({
       type: 'putBeaconRecord',
       id: beacon.options.id,

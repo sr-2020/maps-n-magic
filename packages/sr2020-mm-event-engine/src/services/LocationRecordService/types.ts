@@ -68,10 +68,17 @@ export type GetNeighborOrRandomLocation = (arg: Typed<'neighborOrRandomLocation'
 export type SingleLocationRecord = {
   locationRecord: LocationRecord;
 };
+export type PutLocationArgs = {
+  id: number;
+  props: Partial<Omit<LocationRecord, 'id'>>;
+};
+export type PostLocationArgs = {
+  props: Partial<Omit<LocationRecord, 'id'>>
+};
 
-export type PutLocationRecord = Typed<'putLocationRecord', SingleLocationRecord>;
+export type PutLocationRecord = Typed<'putLocationRecord', PutLocationArgs>;
 export type PutLocationRecordConfirmed = Typed<'putLocationRecordConfirmed', SingleLocationRecord>;
-export type PostLocationRecord = Typed<'postLocationRecord', SingleLocationRecord>;
+export type PostLocationRecord = Typed<'postLocationRecord', PostLocationArgs>;
 export type PostLocationRecordConfirmed = Typed<'postLocationRecordConfirmed', SingleLocationRecord>;
 export type DeleteLocationRecord = Typed<'deleteLocationRecord', SingleLocationRecord>;
 export type DeleteLocationRecordConfirmed = Typed<'deleteLocationRecordConfirmed', SingleLocationRecord>;
@@ -86,9 +93,9 @@ export type PutLocationRecordsConfirmed = Typed<'putLocationRecordsConfirmed', L
 
 // events
 
-export type EPutLocationRecordRequested = Typed<'putLocationRecordRequested', SingleLocationRecord>;
+export type EPutLocationRecordRequested = Typed<'putLocationRecordRequested', PutLocationArgs>;
 export type EPutLocationRecord = Typed<'putLocationRecord', SingleLocationRecord>;
-export type EPostLocationRecordRequested = Typed<'postLocationRecordRequested', SingleLocationRecord>;
+export type EPostLocationRecordRequested = Typed<'postLocationRecordRequested', PostLocationArgs>;
 export type EPostLocationRecord = Typed<'postLocationRecord', SingleLocationRecord>;
 export type EDeleteLocationRecordRequested = Typed<'deleteLocationRecordRequested', SingleLocationRecord>;
 export type EDeleteLocationRecord = Typed<'deleteLocationRecord', SingleLocationRecord>;

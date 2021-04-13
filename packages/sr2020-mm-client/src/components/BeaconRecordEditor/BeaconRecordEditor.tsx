@@ -22,7 +22,15 @@ import Form from 'react-bootstrap/Form';
 import Dropdown from 'react-bootstrap/Dropdown';
 import { DropdownItemProps } from 'react-bootstrap/DropdownItem';
 
-import { LocationRecord, BeaconRecord, GameModel } from 'sr2020-mm-event-engine';
+import { 
+  LocationRecord, 
+  BeaconRecord, 
+  GameModel,
+  PostBeaconRecord,
+  PutBeaconRecord,
+  DeleteBeaconRecord,
+  BeaconPropChange
+} from 'sr2020-mm-event-engine';
 import { WithTranslation } from "react-i18next";
 
 import { CreateBeaconPopover } from './CreateBeaconPopover';
@@ -45,7 +53,7 @@ export class BeaconRecordEditor extends Component<BeaconRecordEditorProps> {
   createBeacon(macAddress: string): void {
     const { gameModel } = this.props;
     // console.log('createBeacon', this.state.beaconRecords.length);
-    gameModel.execute({
+    gameModel.execute2<PostBeaconRecord>({
       type: 'postBeaconRecord',
       props: { bssid: macAddress },
     });
@@ -55,26 +63,30 @@ export class BeaconRecordEditor extends Component<BeaconRecordEditorProps> {
   handleInputChange(event: ChangeEvent<HTMLInputElement>): void {
     const { target } = event;
     const { idStr } = event.target.dataset;
-    const value = this.getTargetValue(target);
-    const { name } = target;
-    this.putBeaconRecord(Number(idStr), name, value);
+    const value = this.getTargetValue(target) as string;
+    const name = target.name as 'bssid' | 'label';
+    if(!['bssid','label'].includes(name)) {
+      throw new Error('Unexpected beacon record prop name: ' + name);
+    }
+    this.putBeaconRecord(Number(idStr), {prop: name, value});
   }
 
   onLocationSelect(event: ChangeEvent<HTMLSelectElement>): void {
     const { value } = event.target;
     const { idStr } = event.target.dataset;
     const newValue = value === 'beaconHasNoLocation' ? null : Number(value);
-    this.putBeaconRecord(Number(idStr), 'location_id', newValue);
+    this.putBeaconRecord(Number(idStr), {prop: 'location_id', value: newValue});
   }
 
-  putBeaconRecord(id: number, name: string, value: null | number | boolean | string): void {
+  // putBeaconRecord(id: number, name: string, value: null | number | boolean | string): void {
+  putBeaconRecord(id: number, propChange: BeaconPropChange): void {
     const { gameModel } = this.props;
 
-    gameModel.execute({
+    gameModel.execute2<PutBeaconRecord>({
       type: 'putBeaconRecord',
       id,
       props: {
-        [name]: value,
+        [propChange.prop]: propChange.value,
       },
     });
   }
@@ -83,7 +95,7 @@ export class BeaconRecordEditor extends Component<BeaconRecordEditorProps> {
     e.preventDefault();
     e.stopPropagation();
     const { gameModel } = this.props;
-    gameModel.execute({
+    gameModel.execute2<DeleteBeaconRecord>({
       type: 'deleteBeaconRecord',
       id,
     });

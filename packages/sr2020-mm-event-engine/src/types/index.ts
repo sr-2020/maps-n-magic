@@ -40,6 +40,14 @@ export interface BeaconRecord {
   ssid: string;
 }
 
+export type BeaconPropChange = 
+  { prop: 'bssid', value: string } |
+  { prop: 'label', value: string } |
+  { prop: 'lat', value: number } |
+  { prop: 'lng', value: number } |
+  { prop: 'location_id', value: number | null } |
+  { prop: 'ssid', value: string };
+
 // I mix two types of points - usual coordinates and meter coordinates.
 // This is two very different types of points.
 // Need consider reworking this concept.
