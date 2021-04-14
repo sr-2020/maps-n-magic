@@ -10,7 +10,8 @@ import { WithTranslation } from "react-i18next";
 import { WithManaOceanEffectSettings } from "../../dataHOCs";
 
 import {
-  GameModel
+  GameModel,
+  PostSettings
 } from 'sr2020-mm-event-engine';
 
 interface ManaOceanEffectSettingsProps extends WithTranslation, WithManaOceanEffectSettings {
@@ -73,7 +74,7 @@ export class ManaOceanEffectSettings extends Component<ManaOceanEffectSettingsPr
     // console.log('propName', propName, value);
 
     const { manaOceanEffects, gameModel } = this.props;
-    gameModel.execute({
+    gameModel.execute2<PostSettings>({
       type: 'postSettings',
       name: 'manaOceanEffects',
       settings: {

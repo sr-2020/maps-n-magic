@@ -10,7 +10,11 @@ import {
 } from "sr2020-mm-client-core";
 import * as R from 'ramda';
 
-import { GameModel, BeaconRecord } from 'sr2020-mm-event-engine';
+import { 
+  GameModel, 
+  BeaconRecord,
+  PutBeaconRecord,
+} from 'sr2020-mm-event-engine';
 
 import { CreateBeaconPopup } from './CreateBeaconPopup';
 import { WithLatLngBeacons } from "./withLatLngBeacons";
@@ -102,7 +106,7 @@ export class BeaconLayer4 extends Component<
     } = this.props;
     if (event.layer instanceof L.Marker) {
       const beacon = event.layer;
-      gameModel.execute({
+      gameModel.execute2<PutBeaconRecord>({
         type: 'putBeaconRecord',
         id: beacon.options.id,
         props: {
@@ -141,7 +145,7 @@ export class BeaconLayer4 extends Component<
     const beacon = e.target;
     // const latlng = translator.moveFrom(beacon.getLatLng());
     const latlng = beacon.getLatLng();
-    gameModel.execute({
+    gameModel.execute2<PutBeaconRecord>({
       type: 'putBeaconRecord',
       id: beacon.options.id,
       props: {
@@ -172,7 +176,7 @@ export class BeaconLayer4 extends Component<
     this.setState({
       beaconLatLng: null,
     });
-    gameModel.execute({
+    gameModel.execute2<PutBeaconRecord>({
       type: 'putBeaconRecord',
       id,
       props: {
@@ -180,7 +184,7 @@ export class BeaconLayer4 extends Component<
       },
     });
     if (curBeacon) {
-      gameModel.execute({
+      gameModel.execute2<PutBeaconRecord>({
         type: 'putBeaconRecord',
         id: curBeacon.id,
         props: {

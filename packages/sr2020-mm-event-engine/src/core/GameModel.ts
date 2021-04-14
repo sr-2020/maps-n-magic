@@ -96,7 +96,7 @@ export class GameModel extends EventEmitter {
 
   // What I want - I want to explicitly require generic type to validate action.
   // It is not enough to set it to never + it doesn't work with extends.
-  execute2<ActionType extends GMTyped, T = unknown>(rawAction: ActionType): T {
+  execute2<ActionType extends GMTyped | string, T = unknown>(rawAction: ActionType): T {
     const action = stringToType<GMAction>((rawAction as unknown) as GMTyped);
     const service = this.actionMap[action.type];
     if (service) {

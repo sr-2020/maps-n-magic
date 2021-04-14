@@ -73,7 +73,7 @@ export const withEnableManaOcean = basicDataHOC(
   true,
 );
 export const withCharacterId = basicDataHOC(
-  'characterIdChanged',
+  'trackedCharacterIdChanged',
   'characterId',
   true,
 );

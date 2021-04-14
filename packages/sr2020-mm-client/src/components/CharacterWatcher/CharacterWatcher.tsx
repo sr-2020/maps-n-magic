@@ -5,15 +5,15 @@ import Form from 'react-bootstrap/Form';
 import Button from 'react-bootstrap/Button';
 
 import { CharacterDataList } from '../CharacterDataList';
-import { UserRecord } from "sr2020-mm-event-engine";
-// import { UserRecord } from "../../types";
+import { UserRecord, GameModel } from "sr2020-mm-event-engine";
+import { SetTrackedCharacterId } from "sr2020-mm-client-event-engine";
 
 const WATCH_CHARACTER_HISTORY_KEY = 'watchCharacterHistory';
 
 interface CharacterWatcherProps {
   characterId: number;
   userRecords: UserRecord[];
-  gameModel: any;
+  gameModel: GameModel;
   children: any;
   characterLocationId: number;
 }
@@ -34,8 +34,8 @@ export function CharacterWatcher(props: CharacterWatcherProps) {
   }
 
   function onWatchCancel() {
-    gameModel.execute({
-      type: 'setCharacterId',
+    gameModel.execute2<SetTrackedCharacterId>({
+      type: 'setTrackedCharacterId',
       characterId: null,
     });
   }
@@ -43,8 +43,8 @@ export function CharacterWatcher(props: CharacterWatcherProps) {
   function onReselectCharacter(e: MouseEvent<HTMLElement>) {
     // eslint-disable-next-line no-shadow
     const { characterId } = e.currentTarget.dataset;
-    gameModel.execute({
-      type: 'setCharacterId',
+    gameModel.execute2<SetTrackedCharacterId>({
+      type: 'setTrackedCharacterId',
       characterId: Number(characterId),
     });
   }
@@ -59,8 +59,8 @@ export function CharacterWatcher(props: CharacterWatcherProps) {
       return;
     }
 
-    gameModel.execute({
-      type: 'setCharacterId',
+    gameModel.execute2<SetTrackedCharacterId>({
+      type: 'setTrackedCharacterId',
       characterId: characterId2,
     });
     if (!watchCharacterHistory.includes(characterId2)) {

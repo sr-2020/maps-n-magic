@@ -17,7 +17,9 @@ import {
   LocationRecord,
   bodyConditionsList, 
   lifeStyleList, 
-  BodyConditions
+  BodyConditions,
+  PutCharHealth,
+  LifeStylesValues
 } from 'sr2020-mm-event-engine';
 
 import { WithTranslation } from "react-i18next";
@@ -138,14 +140,16 @@ export class RescueServiceMessageSender extends Component<RescueServiceMessageSe
 
     const user = users.find((el) => el.id === characterId);
 
-    gameModel.execute({
+    gameModel.execute2<PutCharHealth>({
       type: 'putCharHealth',
       characterId,
       characterHealthState: {
         locationId: locationId === -1 ? null : locationId,
         locationLabel: locationId === -1 || location === undefined ? 'N/A' : location.label,
+        // @ts-ignore
         healthState: data.get('healthStateRadio'),
         timestamp: moment.utc().valueOf(),
+        // @ts-ignore
         lifeStyle: data.get('lifeStyleRadio'),
         personName: user?.name || `id ${characterId}`,
       },

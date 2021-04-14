@@ -1,9 +1,9 @@
 import React from 'react';
 import * as R from 'ramda';
-import { BeaconRecord } from 'sr2020-mm-event-engine';
+import { BeaconRecord, LatLngBeaconRecord } from 'sr2020-mm-event-engine';
 
 export interface WithLatLngBeacons {
-  latLngBeaconRecords: BeaconRecord[];
+  latLngBeaconRecords: LatLngBeaconRecord[];
 }
 
 const isLatLngBeacon = (beacon: BeaconRecord) => beacon.lat !== null && beacon.lat !== 0

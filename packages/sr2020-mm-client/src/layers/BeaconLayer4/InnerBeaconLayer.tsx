@@ -3,7 +3,13 @@ import { WithTranslation } from 'react-i18next';
 import { L, CommonLayerProps } from "sr2020-mm-client-core";
 import * as R from 'ramda';
 
-import { getArrDiff, BeaconRecord, ArrDiffUpdate, ArrDiff } from 'sr2020-mm-event-engine';
+import { 
+  getArrDiff, 
+  BeaconRecord, 
+  ArrDiffUpdate, 
+  ArrDiff,
+  LatLngBeaconRecord
+} from 'sr2020-mm-event-engine';
 import { WithLatLngBeacons } from "./withLatLngBeacons";
 
 import { Beacon, makeBeacon } from "../../types";
@@ -80,7 +86,7 @@ export class InnerBeaconLayer extends Component<
     };
   }
 
-  updateBeacons({ added = [], removed = [], updated = [] }: ArrDiff<BeaconRecord>) {
+  updateBeacons({ added = [], removed = [], updated = [] }: ArrDiff<LatLngBeaconRecord>) {
     R.map(this.createBeacon, added);
     R.map(this.updateBeacon, updated);
     R.map(this.removeBeacon, removed);
@@ -90,7 +96,7 @@ export class InnerBeaconLayer extends Component<
     this.group.clearLayers();
   }
 
-  createBeacon(beaconRecord: BeaconRecord) {
+  createBeacon(beaconRecord: LatLngBeaconRecord) {
     const { t } = this.props;
     const { onBeaconClick, onBeaconEdit } = this.props;
     // const imagesData = gameModel.get('backgroundImages').map(translator.moveTo);
@@ -116,7 +122,7 @@ export class InnerBeaconLayer extends Component<
     this.group.addLayer(beacon);
   }
 
-  updateBeacon({ item }: ArrDiffUpdate<BeaconRecord>) {
+  updateBeacon({ item }: ArrDiffUpdate<LatLngBeaconRecord>) {
     const {
       lat, lng, label, id,
     } = item;
@@ -125,7 +131,7 @@ export class InnerBeaconLayer extends Component<
     L.Util.setOptions(marker, { label });
   }
 
-  removeBeacon(beaconRecord: BeaconRecord) {
+  removeBeacon(beaconRecord: LatLngBeaconRecord) {
     const { id } = beaconRecord;
     const marker = this.group.getLayers().find((marker2: Beacon) => marker2.options.id === id);
     marker && this.group.removeLayer(marker);

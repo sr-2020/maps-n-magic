@@ -31,13 +31,18 @@ export interface BeaconRecord {
   // label: "Нджин"
   label: string;
   // lat: null
-  lat: number;
+  lat: number | null;
   // lng: null
-  lng: number;
+  lng: number | null;
   // location_id: null
   location_id: number | null;
   // ssid: "DF:8C:6D:50:E0:16"
   ssid: string;
+}
+
+export interface LatLngBeaconRecord extends BeaconRecord {
+  lat: number;
+  lng: number;
 }
 
 export type BeaconPropChange = 

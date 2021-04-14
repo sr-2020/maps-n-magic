@@ -9,7 +9,16 @@ import {
 import * as R from 'ramda';
 import './BackgroundImageEditLayer.css';
 
-import { getArrDiff, GameModel, BackgroundImage } from 'sr2020-mm-event-engine';
+import { 
+  getArrDiff, 
+  GameModel, 
+  BackgroundImage 
+} from 'sr2020-mm-event-engine';
+import { 
+  PostBackgroundImage,
+  PutBackgroundImage,
+  DeleteBackgroundImage
+} from "sr2020-mm-client-event-engine";
 
 import { BackgroundImagePopup } from './BackgroundImagePopup';
 
@@ -95,8 +104,9 @@ export class BackgroundImageEditLayer extends Component<
       console.log('rectangle created');
       // const latlngs = translator.moveFrom(rect.getLatLngs()[0] as L.LatLng[]); // as L.LatLng[][]
       const latlngs = rect.getLatLngs(); // as L.LatLng[][]
-      gameModel.execute({
+      gameModel.execute2<PostBackgroundImage>({
         type: 'postBackgroundImage',
+        // @ts-ignore
         props: { latlngs },
       });
       rect.remove();
@@ -113,7 +123,7 @@ export class BackgroundImageEditLayer extends Component<
       console.log('rectangle removed');
       // this.imageLayer.onRemoveImage(event.layer, gameModel);
       layerCommunicator.emit('closePopup');
-      gameModel.execute({
+      gameModel.execute2<DeleteBackgroundImage>({
         type: 'deleteBackgroundImage',
         id: rect.options.id,
       });
@@ -142,7 +152,7 @@ export class BackgroundImageEditLayer extends Component<
       gameModel, layerCommunicator,
     } = this.props;
     const rectangle = e.target;
-    gameModel.execute({
+    gameModel.execute2<PutBackgroundImage>({
       type: 'putBackgroundImage',
       id: rectangle.options.id,
       props: {
@@ -169,7 +179,7 @@ export class BackgroundImageEditLayer extends Component<
 
     if (prop === 'name' || prop === 'image') {
       // rectangle.options[prop] = value;
-      gameModel.execute({
+      gameModel.execute2<PutBackgroundImage>({
         type: 'putBackgroundImage',
         id,
         props: {

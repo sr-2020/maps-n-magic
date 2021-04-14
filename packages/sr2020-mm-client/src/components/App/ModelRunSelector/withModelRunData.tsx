@@ -32,6 +32,7 @@ export const withModelRunData = (Wrapped: any) => (props: any) => {
     };
   }, []);
 
+  // used in TickerService which is commented out
   function onClick(type: 'runModel' | 'stopModel', speed?: number): () => void {
     return () => {
       gameModel.execute({
