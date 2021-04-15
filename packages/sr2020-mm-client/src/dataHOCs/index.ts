@@ -4,10 +4,23 @@ import {
   UserRecord,
   ManaOceanEffectSettingsData,
   ManaOceanSettingsData,
-  BackgroundImage
+  BackgroundImage,
+  EBeaconRecordsChanged2,
+  ELocationRecordsChanged2,
+  EUserRecordsChanged,
+  EEnableManaOceanChanged,
+  Req,
+  Res
 } from 'sr2020-mm-event-engine';
 
+import { 
+  EBackgroundImagesChange,
+  ETrackedCharacterIdChanged,
+  GetBackgroundImages,
+} from "sr2020-mm-client-event-engine";
+
 import { basicDataHOC } from './basicDataHOC';
+import { basicDataHOC2 } from './basicDataHOC2';
 import { settingsDataHOC } from './settingsDataHOC';
 
 export * from './withCharacterPosition';
@@ -47,10 +60,29 @@ export const withManaOceanEffectSettings = settingsDataHOC(
   'manaOceanEffects',
   {},
 );
-export const withBackgroundImages = basicDataHOC(
+// export const withBackgroundImages = basicDataHOC(
+//   'backgroundImagesChanged',
+//   'backgroundImages',
+//   [],
+// );
+
+// type StringTypeOnly<T extends (type: string | {type: string}) => any> = (type: string) => U;
+type StringTypeOnly<
+  T extends (type: string | {type: string}) => any, 
+  In = Req<T>,
+  Out = Res<T>
+> = (type: Exclude<In, {type: string}>) => Out;
+
+// type f = StringTypeOnly<GetBackgroundImages>;
+
+export const withBackgroundImages = basicDataHOC2<
+  BackgroundImage[],
+  StringTypeOnly<GetBackgroundImages>,
+  'backgroundImagesChanged'
+  // EBackgroundImagesChange
+>(
   'backgroundImagesChanged',
   'backgroundImages',
-  [],
 );
 export const withBeaconRecords = basicDataHOC(
   'beaconRecordsChanged2',

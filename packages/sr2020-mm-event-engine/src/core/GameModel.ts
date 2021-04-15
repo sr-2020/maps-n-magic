@@ -5,7 +5,7 @@ import { EventEmitter } from 'events';
 import { GameModelVerificator } from './GameModelVerificator';
 import { AbstractService } from './AbstractService';
 
-import { GMAction, GMRequest, GMLogger, GMTyped } from "./types";
+import { GMAction, GMRequest, GMLogger, GMTyped, GMEvent, Req, Res } from "./types";
 import { stringToType, getChildLogger } from "./utils";
 
 export interface ServiceIndex {
@@ -110,7 +110,24 @@ export class GameModel extends EventEmitter {
     return super.on(event, listener);
   }
 
+  on2<Event extends GMEvent>(event: Event["type"], listener: (event: Event) => void): this {
+    this.logger.info(`Subscribe on GM event ${String(event)}`);
+    return super.on(event, listener);
+  }
+
   get<T>(rawRequest: GMRequest | string): T {
+    const request = stringToType<GMRequest>(rawRequest);
+    const service = this.requestMap[request.type];
+    if (service !== undefined) {
+      return service.get(request);
+    }
+    throw new Error(`Unknown request ${JSON.stringify(request)}`);
+  }
+
+  get2<
+    RequestHandler extends (type: string) => StateType, 
+    StateType = Res<RequestHandler>
+  >(rawRequest: Req<RequestHandler>): StateType {
     const request = stringToType<GMRequest>(rawRequest);
     const service = this.requestMap[request.type];
     if (service !== undefined) {

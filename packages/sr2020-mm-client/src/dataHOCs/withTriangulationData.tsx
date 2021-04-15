@@ -43,7 +43,8 @@ export interface GameModelable {
 }
 
 export const withTriangulationData = (Wrapped: any) => (props: any) => {
-  const { gameModel } = props;
+  // const { gameModel } = props;
+  const gameModel: GameModel = props.gameModel;
   const [data, setData] = useState(initState);
 
   function update(event: any) {
