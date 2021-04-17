@@ -204,13 +204,6 @@ export class LocationLayer4 extends Component<
       } else {
         this.onLocationChange2({prop, value});
       }
-      // @ts-ignore
-      this.setState((state) => {
-        const curLocation = { ...state.curLocation, [prop]: value };
-        return ({
-          curLocation,
-        });
-      });
     }
   } 
 
@@ -254,6 +247,15 @@ export class LocationLayer4 extends Component<
         },
       });
     }
+    this.setState((state) => {
+      if (state.curLocation == null) {
+        return state;
+      }
+      const curLocation = { ...state.curLocation, [propChange.prop]: propChange.value };
+      return ({
+        curLocation,
+      });
+    });
   }
 
   getLocationPopup() {

@@ -16,7 +16,8 @@ import {
   TriangulationCentroid,
   TriangulationData,
   SRLatLng,
-  GameModel
+  GameModel,
+  GetTriangulationData
 } from 'sr2020-mm-event-engine';
 import { ELocationRecordsChanged2 } from 'sr2020-mm-event-engine';
 
@@ -47,8 +48,12 @@ export const withTriangulationData = (Wrapped: any) => (props: any) => {
   const gameModel: GameModel = props.gameModel;
   const [data, setData] = useState(initState);
 
-  function update(event: any) {
-    const triangulationData: TriangulationData = gameModel.get(dataName);
+  function update(triangulationData: TriangulationData | null) {
+    if (triangulationData === null) {
+      return;
+    }
+
+    // const  = gameModel.get(dataName);
 
     // const centroids = [...triangulationData.keys()].map((locationId) => ({
     //   locationId,
@@ -76,13 +81,14 @@ export const withTriangulationData = (Wrapped: any) => (props: any) => {
   }
 
   useEffect(() => {
-    gameModel.on(changeEventName, update);
-    update({
-      [dataName]: gameModel.get(dataName),
-    });
+    function onChange() {
+      update(gameModel.get(dataName));
+    }
+    gameModel.on(changeEventName, onChange);
+    update(gameModel.get2<GetTriangulationData>(dataName));
 
     return () => {
-      gameModel.off(changeEventName, update);
+      gameModel.off(changeEventName, onChange);
     };
   }, [gameModel]);
 

@@ -45,11 +45,11 @@ export class WebSocketWrapper {
       const msg = JSON.parse(msgStr.toString());
       if (R.is(String, msg)) {
         this.logger.info(msg);
+        this.gameModel.emit(msg);
       } else {
         this.logger.info(msg.type, msgStr);
+        this.gameModel.emit(msg.type, msg);
       }
-      // this.gameModel.execute(msg);
-      this.gameModel.emit(msg);
     } catch(err) {
       this.logger.error('Error on processing message:', msgStr, ', error', err);
       this.gameModel.execute2<PostNotification>({

@@ -5,7 +5,7 @@ import { EventEmitter } from 'events';
 import { GameModelVerificator } from './GameModelVerificator';
 import { AbstractService } from './AbstractService';
 
-import { GMAction, GMRequest, GMLogger, GMTyped, GMEvent, Req, Res } from "./types";
+import { GMAction, GMRequest, GMLogger, GMTyped, GMEvent, Req, Res, TypeOnly } from "./types";
 import { stringToType, getChildLogger } from "./utils";
 
 export interface ServiceIndex {
@@ -115,6 +115,11 @@ export class GameModel extends EventEmitter {
     return super.on(event, listener);
   }
 
+  emit(event: string | symbol, ...args: any[]): boolean {
+    this.logger.info(`listenerCount for ${event.toString()} is ${super.listenerCount(event)}`);
+    return super.emit(event, ...args);
+  }
+
   get<T>(rawRequest: GMRequest | string): T {
     const request = stringToType<GMRequest>(rawRequest);
     const service = this.requestMap[request.type];
@@ -125,7 +130,7 @@ export class GameModel extends EventEmitter {
   }
 
   get2<
-    RequestHandler extends (type: string) => StateType, 
+    RequestHandler extends (type: any) => StateType, 
     StateType = Res<RequestHandler>
   >(rawRequest: Req<RequestHandler>): StateType {
     const request = stringToType<GMRequest>(rawRequest);

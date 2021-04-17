@@ -3,8 +3,15 @@
 import * as R from 'ramda';
 import { EventEmitter } from 'events';
 
-import { shuffle, SoundStageData, GameModel, TimeoutType } from 'sr2020-mm-event-engine';
-// import {  } from 'sr2020-mm-client-event-engine';
+import { 
+  shuffle, 
+  SoundStageData, 
+  GameModel, 
+  TimeoutType,
+} from 'sr2020-mm-event-engine';
+import { 
+  GetSoundStage,
+} from 'sr2020-mm-client-event-engine';
 import { AudioContextWrapper } from '../../utils/AudioContextWrapper';
 
 import { Sound, SoundCtl } from "../../types";
@@ -86,7 +93,7 @@ export class SoundStage extends EventEmitter {
       }
       this.gameModel = gameModel;
       // this.initialize();
-      const soundStage: SoundStageData = this.gameModel.get('soundStage');
+      const soundStage = this.gameModel.get2<GetSoundStage>('soundStage');
       this.onBackgroundSoundUpdate(soundStage);
       this.onRotationSoundsUpdate(soundStage);
       this.onRotationTimeoutUpdate(soundStage);

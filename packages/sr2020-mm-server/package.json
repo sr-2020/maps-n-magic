@@ -45,9 +45,9 @@
   },
   "nodemonConfig": {
     "watch": [
-      "src/",
-      "../sr2020-mm-event-engine",
-      "../sr2020-mm-server-event-engine"
+      "dist/",
+      "../sr2020-mm-event-engine/dist",
+      "../sr2020-mm-server-event-engine/dist"
     ],
     "ignore": [
       "node_modules/*"
