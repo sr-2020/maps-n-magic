@@ -11,12 +11,10 @@ import {
 export const urMetadata: Metadata = {
   actions: [
     'setUserRecords',
-    'reloadUserRecords',
   ],
   requests: ['userRecord', 'userRecords'],
   emitEvents: [
     'userRecordsChanged',
-    'reloadUserRecords',
   ],
   listenEvents: [],
   needActions: [],
@@ -35,14 +33,17 @@ export type GetUserRecord = (arg: Typed<'userRecord', {
 export type SetUserRecords = Typed<'setUserRecords', {
   userRecords: UserRecord[];
 }>;
-export type ReloadUserRecords = TypeOnly<'reloadUserRecords'>;
 
 // events
 
 export type EUserRecordsChanged = Typed<'userRecordsChanged', {
   userRecords: UserRecord[];
 }>;
+
+// This event relates to UserRecordService
+// This service neither emits not not listen it.
+// It is used only by API to force refresh user positions.
+// See userRecordDataBinding declaration.
 export type EReloadUserRecords = Typed<'reloadUserRecords'>;
 
-export type UserRecordEvents = EUserRecordsChanged |
-  EReloadUserRecords;
+export type UserRecordEvents = EUserRecordsChanged;

@@ -15,7 +15,7 @@ import {
   BeaconRecord, 
   UserRecord, 
   LocationRecord,
-  ReloadUserRecords
+  EReloadUserRecords
 } from 'sr2020-mm-event-engine';
 
 // TODO this call should be moved in event engine service
@@ -172,7 +172,7 @@ export class CharacterPositions extends Component<CharacterPositionsProps, Chara
 
     postUserPosition(characterId, beacon).then((result) => {
       if (!result.ok) throw new Error(result.toString());
-      gameModel.execute2<ReloadUserRecords>('reloadUserRecords');
+      gameModel.emit2<EReloadUserRecords>({type: 'reloadUserRecords'});
     }).catch((error) => {
       console.error(error);
     });

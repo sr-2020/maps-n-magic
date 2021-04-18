@@ -22,7 +22,25 @@ import {
   SetCharacterHealthStates,
   EnableManaOceanConfirmed,
   SetUserRecords,
-  
+  // executed actions from client 2 server
+  EPostLocationRecordRequested,
+  EPutLocationRecordRequested,
+  EPutLocationRecordsRequested,
+  EDeleteLocationRecordRequested,
+  EPostBeaconRecordRequested,
+  EPutBeaconRecordRequested,
+  EDeleteBeaconRecordRequested,
+  EPostSettingsRequested,
+  EPutCharHealthRequested,
+  EEnableManaOceanRequested,
+  EWipeManaOceanEffects,
+  ERemoveManaEffect,
+  EAddManaEffect,
+  // not event, seems not used, need to check
+  EmitCharacterLocationChanged,
+  // 'emitCharacterLocationChanged',
+  EReloadUserRecords
+
   //???
   // characterLocationChanged
 } from "sr2020-mm-event-engine";
@@ -63,8 +81,26 @@ const forwardServer2ClientActions = [
   // 'characterHealthStateChanged',
 ];
 
+type ForwarClient2ServerEventTypes = 
+  EPostLocationRecordRequested["type"] |
+  EPutLocationRecordRequested["type"] |
+  EPutLocationRecordsRequested["type"] |
+  EDeleteLocationRecordRequested["type"] |
+  EPostBeaconRecordRequested["type"] |
+  EPutBeaconRecordRequested["type"] |
+  EDeleteBeaconRecordRequested["type"] |
+  EPostSettingsRequested["type"] |
+  EPutCharHealthRequested["type"] |
+  EEnableManaOceanRequested["type"] |
+  EWipeManaOceanEffects["type"] |
+  ERemoveManaEffect["type"] |
+  EAddManaEffect["type"] |
+  // not event
+  EmitCharacterLocationChanged["type"] |
+  EReloadUserRecords["type"];
+
 // TODO try to get list of event types from event type interfaces
-const forwardClient2ServerEvents = [
+const forwardClient2ServerEvents: ForwarClient2ServerEventTypes[] = [
   'postLocationRecordRequested',
   'putLocationRecordRequested',
   'putLocationRecordsRequested',

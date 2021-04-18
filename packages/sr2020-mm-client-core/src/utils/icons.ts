@@ -11,14 +11,14 @@ const defaults: IconOptions = {
 };
 
 export enum iconColors {
-  black = 1,
-  blue,
-  green,
-  grey,
-  orange,
-  red,
-  violet,
-  yellow,
+  black = 'black',
+  blue = 'blue',
+  green = 'green',
+  grey = 'grey',
+  orange = 'orange',
+  red = 'red',
+  violet = 'violet',
+  yellow = 'yellow',
 };
 
 const usedIcons: {
@@ -26,9 +26,9 @@ const usedIcons: {
 } = {};
 
 export const getIcon = (color: iconColors): L.Icon<L.IconOptions> => {
-  if (iconColors[color] !== undefined) {
-    throw new Error(`Unexpected color ${color}`);
-  }
+  // if (iconColors[color] !== undefined) {
+  //   throw new Error(`Unexpected color ${color}`);
+  // }
   let icon = usedIcons[color];
   if (icon !== undefined) {
     return icon;

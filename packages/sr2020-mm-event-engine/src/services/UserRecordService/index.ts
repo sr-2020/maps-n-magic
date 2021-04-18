@@ -15,7 +15,6 @@ import {
   urMetadata,
   GetUserRecord,
   GetUserRecords,
-  ReloadUserRecords,
   SetUserRecords,
   UserRecordEvents,
 } from "./types";
@@ -113,12 +112,5 @@ export class UserRecordService extends AbstractService<UserRecordEvents> {
       type: 'userRecordsChanged',
       userRecords,
     });
-  }
-
-  reloadUserRecords(arg: ReloadUserRecords): void {
-    this.emit2({
-      type: 'reloadUserRecords',
-    });
-    // console.log('reloadUserRecords');
   }
 }
