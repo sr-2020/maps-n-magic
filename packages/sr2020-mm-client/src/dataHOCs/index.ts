@@ -29,6 +29,12 @@ export * from './withCharacterHealthStatesForMap';
 export * from './withCharacterHealthListForTable';
 export * from './withCharacterIdHealthListForAudio';
 
+// links in HOC typing
+// https://medium.com/@jrwebdev/react-higher-order-component-patterns-in-typescript-42278f7590fb
+// https://stackoverflow.com/questions/43680786/writing-a-react-higher-order-component-with-typescript
+// https://www.pluralsight.com/guides/higher-order-composition-typescript-react
+// https://habr.com/ru/company/sberbank/blog/354104/
+
 export interface WithManaOceanSettings {
   manaOcean: ManaOceanSettingsData;
 }

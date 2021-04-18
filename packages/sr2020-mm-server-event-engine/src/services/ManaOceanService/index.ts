@@ -26,11 +26,13 @@ import {
   SpellCast,
   LocationUpdate,
   moMetadata,
-  SpellCastAction,
-  WipeManaOceanEffects,
-  AddManaEffect,
-  RemoveManaEffect
+  ESpellCast,
+  EAddManaEffect,
+  ERemoveManaEffect,
+  EWipeManaOceanEffects
 } from 'sr2020-mm-event-engine';
+
+import { EMassacreTriggered } from "../../index";
 
 import { EffectCollector } from "./EffectCollector";
 
@@ -64,6 +66,10 @@ export class ManaOceanService extends AbstractService {
     // this.manaModifiers = [];
     this.onTideLevelUpdate = this.onTideLevelUpdate.bind(this);
     this.onMassacreTriggered = this.onMassacreTriggered.bind(this);
+    this.spellCast = this.spellCast.bind(this);
+    this.addManaEffect = this.addManaEffect.bind(this);
+    this.removeManaEffect = this.removeManaEffect.bind(this);
+    this.wipeManaOceanEffects = this.wipeManaOceanEffects.bind(this);
     // this.getManaOptions = this.getManaOptions.bind(this);
     // this.manaOceanSettings = R.clone(defaultManaOceanSettings);
   }
@@ -75,17 +81,25 @@ export class ManaOceanService extends AbstractService {
     } else {
       this.logger.error('tideLevelTimer already initialized');
     }
-    this.on('massacreTriggered', this.onMassacreTriggered);
+    this.on2<EMassacreTriggered>('massacreTriggered', this.onMassacreTriggered);
+    this.on2<ESpellCast>('spellCast', this.spellCast);
+    this.on2<EAddManaEffect>('addManaEffect', this.addManaEffect);
+    this.on2<ERemoveManaEffect>('removeManaEffect', this.removeManaEffect);
+    this.on2<EWipeManaOceanEffects>('wipeManaOceanEffects', this.wipeManaOceanEffects);
   }
 
   dispose(): void {
     if (this.tideLevelTimerId !== null) {
       clearInterval(this.tideLevelTimerId);
     }
-    this.off('massacreTriggered', this.onMassacreTriggered);
+    this.off2<EMassacreTriggered>('massacreTriggered', this.onMassacreTriggered);
+    this.off2<ESpellCast>('spellCast', this.spellCast);
+    this.off2<EAddManaEffect>('addManaEffect', this.addManaEffect);
+    this.off2<ERemoveManaEffect>('removeManaEffect', this.removeManaEffect);
+    this.off2<EWipeManaOceanEffects>('wipeManaOceanEffects', this.wipeManaOceanEffects);
   }
 
-  spellCast({ data }: SpellCastAction): void {
+  spellCast({ data }: ESpellCast): void {
     this.logger.info('spellCast', data);
 
     // {
@@ -275,10 +289,7 @@ export class ManaOceanService extends AbstractService {
     } as PowerSpellEffect);
   }
 
-  onMassacreTriggered(data: {
-    locationId: number,
-    timestamp: number
-  }): void {
+  onMassacreTriggered(data: EMassacreTriggered): void {
     const { locationId, timestamp } = data;
     // {
     //   type: 'massacreTriggered',
@@ -338,7 +349,7 @@ export class ManaOceanService extends AbstractService {
     });
   }
 
-  addManaEffect(data: AddManaEffect): void {
+  addManaEffect(data: EAddManaEffect): void {
     // this.logger.info('addManaEffect', data);
     const { locationId, effectType } = data;
     const locationRecord: LocationRecord = this.getLocation(locationId);
@@ -389,7 +400,7 @@ export class ManaOceanService extends AbstractService {
     });
   }
 
-  removeManaEffect(data: RemoveManaEffect): void {
+  removeManaEffect(data: ERemoveManaEffect): void {
     const { locationId, effectId } = data;
     const locationRecord: LocationRecord = this.getLocation(locationId);
     if (!locationRecord) {
@@ -413,7 +424,7 @@ export class ManaOceanService extends AbstractService {
     // this.logger.info('removeManaEffect', data);
   }
 
-  wipeManaOceanEffects(action: WipeManaOceanEffects): void {
+  wipeManaOceanEffects(action: EWipeManaOceanEffects): void {
     // this.logger.info('wipeManaOceanEffects');
     const manaOceanSettings: ManaOceanSettingsData = this.getSettings<ManaOceanSettingsData>('manaOcean');
     const locationRecords: LocationRecord[] = this.getFromModel<any, LocationRecord[]>('locationRecords');

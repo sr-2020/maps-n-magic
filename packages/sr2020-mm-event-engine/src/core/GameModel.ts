@@ -120,6 +120,10 @@ export class GameModel extends EventEmitter {
     return super.emit(event, ...args);
   }
 
+  emit2<Event extends GMEvent>(event: Event): boolean {
+    return this.emit(event.type, event);
+  }
+
   get<T>(rawRequest: GMRequest | string): T {
     const request = stringToType<GMRequest>(rawRequest);
     const service = this.requestMap[request.type];

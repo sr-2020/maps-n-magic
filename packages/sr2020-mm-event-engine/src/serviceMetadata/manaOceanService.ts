@@ -16,10 +16,6 @@ export interface LocationUpdate {
 
 export const moMetadata: Metadata = {
   actions: [
-    'spellCast',
-    'wipeManaOceanEffects',
-    'removeManaEffect',
-    'addManaEffect',
   ],
   requests: [],
   emitEvents: [],
@@ -36,32 +32,26 @@ export const moMetadata: Metadata = {
     'neighborOrRandomLocation',
     'neighborList',
   ],
-  listenEvents: ['massacreTriggered'],
+  listenEvents: [
+    'massacreTriggered',
+    'spellCast',
+    'wipeManaOceanEffects',
+    'removeManaEffect',
+    'addManaEffect',
+  ],
 };
 
 // requests
 
 // actions
 
-export type SpellCastAction = Typed<'spellCast', {
-  data: SpellCast
-}>;
-
-export type WipeManaOceanEffects = TypeOnly<'wipeManaOceanEffects'>;
-
-export type RemoveManaEffect = Typed<'removeManaEffect', {
-  locationId: number,
-  effectId: string
-}>;
-
-export type AddManaEffect = Typed<'addManaEffect', {
-  locationId: number,
-  effectType: 'massacre' | 'powerSpell'
-}>;
-
 // events
 
 export type EWipeManaOceanEffects = TypeObjectOnly<'wipeManaOceanEffects'>;
+
+export type ESpellCast = Typed<'spellCast', {
+  data: SpellCast
+}>;
 
 export type EAddManaEffect = Typed<'addManaEffect', {
   locationId: number,

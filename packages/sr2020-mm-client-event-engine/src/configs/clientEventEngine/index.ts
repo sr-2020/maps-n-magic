@@ -23,7 +23,7 @@ import { SoundStageService } from '../../services/SoundStageService';
 // import { UserWatcher } from '../../services/UserWatcher';
 import { BaseVersion } from '../../services/BaseVersion';
 import { BackgroundImageService } from '../../services/BackgroundImageService';
-import { ManaOceanStubService } from '../../services/ManaOceanStubService';
+// import { ManaOceanStubService } from '../../services/ManaOceanStubService';
 import { TrackedCharacterService } from '../../services/TrackedCharacterService';
 
 // import { fillGameModelWithBots } from './GameModelFiller';
@@ -51,7 +51,7 @@ const services = [
   UserRecordService,
   SettingsService,
   ManaOceanEnableService,
-  ManaOceanStubService,
+  // ManaOceanStubService,
   TrackedCharacterService,
 ];
 

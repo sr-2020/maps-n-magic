@@ -105,6 +105,10 @@ export class AbstractService<M extends GMEvent = {type:'undefined'}> {
     return this.gameModel.on(event, listener);
   }
 
+  on2<EData extends {type: string}>(event: EData["type"], listener: (arg: EData) => void): GameModel {
+    return this.on(event, listener);
+  }
+
   // off(event: string, listener: (...args: unknown[]) => void): GameModel {
   off(event: string, listener: (...args: any[]) => void): GameModel {
     if (this.gameModel === null) {
@@ -114,6 +118,10 @@ export class AbstractService<M extends GMEvent = {type:'undefined'}> {
       throw new Error(`Event ${event} is not in listen events list of ${this.constructor.name}`);
     }
     return this.gameModel.off(event, listener);
+  }
+
+  off2<EData extends {type: string}>(event: EData["type"], listener: (arg: EData) => void): GameModel {
+    return this.off(event, listener);
   }
 
   // getFromModel(rawRequest: GMRequest | string) {
