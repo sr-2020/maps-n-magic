@@ -23,7 +23,7 @@ export const appDictionary = {
   audioEngineDemo: 'Демо аудио движка',
   specificMaps: 'Конечные карты',
   debuggingTools: 'Инструменты отладки',
-  characterPositions: 'Позиции персонажей',
+  characterPositions: 'Переместить персонажа в локацию',
   manaOcean: 'Океан маны',
   manaOceanLayer: 'Океан маны',
   rescueServiceLayer: 'МЧС',

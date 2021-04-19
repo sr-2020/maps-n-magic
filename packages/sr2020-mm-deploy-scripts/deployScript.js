@@ -1,9 +1,9 @@
 const fs = require('fs-extra');
 
-const pathToStatic = '../sr2020-mm-server/src/static';
-const pathToStaticTA = `${pathToStatic}/trackAnalysis`;
+const pathToStatic = '../sr2020-mm-server/dist/static';
+// const pathToStaticTA = `${pathToStatic}/trackAnalysis`;
 const pathToClientBuild = '../sr2020-mm-client/build';
-const pathToTrackAnalysis = '../sr2020-mm-track-analysis/build';
+// const pathToTrackAnalysis = '../sr2020-mm-track-analysis/build';
 
 async function runDeploy() {
   try {
@@ -14,8 +14,8 @@ async function runDeploy() {
     }
     console.log('Copy client to static dir');
     await fs.copy(pathToClientBuild, pathToStatic);
-    console.log('Copy track analysis to static dir');
-    await fs.copy(pathToTrackAnalysis, pathToStaticTA);
+    // console.log('Copy track analysis to static dir');
+    // await fs.copy(pathToTrackAnalysis, pathToStaticTA);
     console.log('Deploy finished!');
   } catch (err) {
     console.error(err);
