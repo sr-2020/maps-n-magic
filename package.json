@@ -6,6 +6,7 @@
   "scripts": {
     "bootstrap:hoist": "lerna bootstrap --hoist",
     "bootstrap": "lerna bootstrap",
+    "install-local-deps": "lerna run install-local-deps",
     "bootstrap:server": "lerna bootstrap --scope sr2020-mm-server --include-dependencies",
     "start": "lerna run start --stream",
     "start:server": "lerna run start:server",
