@@ -20,7 +20,10 @@ import { MassacreService } from '../services/MassacreService';
 import { PushNotificationService } from '../services/PushNotificationService';
 import { AudioStageService } from '../services/AudioStageService';
 import { CharacterLocationService } from '../services/CharacterLocationService';
-import { RescueServicePushService } from '../services/RescueServicePushService';
+// Push notifications delivery was unstable so decided to disable this feature
+// if we don't have better solution.
+// For details see https://trello.com/c/giDbdVGa/628-фантомные-кс-пуши-в-уведомлении
+// import { RescueServicePushService } from '../services/RescueServicePushService';
 
 import { CrudDataManager } from '../dataManagers/CrudDataManager';
 import { LocationDataManager } from '../dataManagers/LocationDataManager';
@@ -63,7 +66,7 @@ const services = [
   PushNotificationService,
   AudioStageService,
   CharacterLocationService,
-  RescueServicePushService,
+  // RescueServicePushService,
 ];
 
 // eslint-disable-next-line max-lines-per-function
