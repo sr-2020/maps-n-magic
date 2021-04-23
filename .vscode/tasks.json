@@ -1,0 +1,14 @@
+{
+	"version": "2.0.0",
+	"tasks": [
+    {
+      "type": "npm",
+      "script": "watch:server",
+      "path": "packages/sr2020-mm-server/",
+      "group": "rebuild",
+      "problemMatcher": [],
+      "label": "npm: watch:server - packages/sr2020-mm-server",
+      "detail": "nodemon --inspect -r esm -r dotenv/config ./dist/bin/www"
+    }
+  ]
+}

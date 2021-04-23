@@ -6,6 +6,7 @@ export interface Gettable<T> {
 
 export const gettable = (state: {url: string}) => ({
   async get() {
+    // console.log('gettable url', `${state.url}?limit=200`);
     const response = await fetch(`${state.url}?limit=200`);
     if (!response.ok) {
       const text = await response.text();
@@ -22,6 +23,7 @@ export interface GetSettings<T> {
 
 export const getSettings = (state: {url: string}) => ({
   async get() {
+    // console.log('getSettings url', state.url);
     const response = await fetch(state.url);
     if (!response.ok) {
       if (response.status === 404) {

@@ -46,6 +46,7 @@
   "nodemonConfig": {
     "watch": [
       "dist/",
+      ".env",
       "../sr2020-mm-event-engine/dist",
       "../sr2020-mm-server-event-engine/dist"
     ],
