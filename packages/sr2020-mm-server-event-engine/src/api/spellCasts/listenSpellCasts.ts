@@ -7,10 +7,9 @@ import { SpellCast } from "sr2020-mm-event-engine";
 let subscriptionName: string;
 
 if (process.env.NODE_ENV === 'production') {
-  subscriptionName = 'mm-mana-ocean-spell-cast-prod';
+  subscriptionName = 'mm2-mana-ocean-spell-cast-prod';
 } else {
-  // subscriptionName = 'mm-mana-ocean-spell-cast-dev';
-  subscriptionName = 'mm-mana-ocean-spell-cast-prod';
+  subscriptionName = 'mm2-mana-ocean-spell-cast-dev';
 }
 console.log('subscriptionName', subscriptionName);
 const timeout = 60;

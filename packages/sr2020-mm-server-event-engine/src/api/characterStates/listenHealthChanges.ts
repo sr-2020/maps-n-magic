@@ -7,10 +7,9 @@ import { PubSub, Message } from '@google-cloud/pubsub';
 let subscriptionName: string;
 
 if (process.env.NODE_ENV === 'production') {
-  subscriptionName = 'mm-rescue-service-prod';
+  subscriptionName = 'mm2-rescue-service-prod';
 } else {
-  // subscriptionName = 'mm-rescue-service-dev';
-  subscriptionName = 'mm-rescue-service-prod';
+  subscriptionName = 'mm2-rescue-service-dev';
 }
 console.log('subscriptionName', subscriptionName);
 const timeout = 60;

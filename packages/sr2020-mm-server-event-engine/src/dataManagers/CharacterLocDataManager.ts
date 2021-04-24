@@ -19,10 +19,9 @@ import { usersUrl } from '../api/constants';
 let subscriptionName: string;
 
 if (process.env.NODE_ENV === 'production') {
-  subscriptionName = 'mm-char-loc-change-prod-2';
+  subscriptionName = 'mm2-char-loc-change-prod-2';
 } else {
-  // subscriptionName = 'mm-char-loc-change-dev-2';
-  subscriptionName = 'mm-char-loc-change-prod-2';
+  subscriptionName = 'mm2-char-loc-change-dev-2';
 }
 
 const metadata = {

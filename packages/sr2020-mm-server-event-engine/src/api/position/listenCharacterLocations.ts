@@ -9,10 +9,9 @@ import { PubSub, Message } from '@google-cloud/pubsub';
 let subscriptionName: string;
 
 if (process.env.NODE_ENV === 'production') {
-  subscriptionName = 'mm-char-loc-change-prod';
+  subscriptionName = 'mm2-char-loc-change-prod';
 } else {
-  // subscriptionName = 'mm-char-loc-change-dev';
-  subscriptionName = 'mm-char-loc-change-prod';
+  subscriptionName = 'mm2-char-loc-change-dev';
 }
 console.log('subscriptionName', subscriptionName);
 const timeout = 60;
