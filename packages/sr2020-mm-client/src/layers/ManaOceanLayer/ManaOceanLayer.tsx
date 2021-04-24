@@ -244,8 +244,7 @@ export class ManaOceanLayer extends Component<
       });
 
       const firstEffect = effectGroups[effectType][0];
-      // @ts-ignore
-      const str = t(`manaEffect_${effectType}`, { manaLevelChange: firstEffect.manaLevelChange });
+      const str = t(`manaEffect_${effectType}` as const, { manaLevelChange: firstEffect.manaLevelChange });
       const timeSubArr = R.take(3, timeArr);
       const timeStr = timeSubArr.join(', ') + (timeArr.length > timeSubArr.length ? ', ...' : '');
       const { length } = effectGroups[effectType];
