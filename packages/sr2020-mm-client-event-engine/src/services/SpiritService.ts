@@ -18,17 +18,17 @@ import {
 
 const defaultSpirit: Omit<Spirit, "id"> = {
   name: '',
-  aura: '',
+  // aura: '',
   fraction: '',
   story: '',
   abilities: [],
 
-  latLng: {
-    lat: 0,
-    lng: 0,
-  },
-  plane: 'subastral',
-  hitPoints: 10,
+  // latLng: {
+  //   lat: 0,
+  //   lng: 0,
+  // },
+  // plane: 'subastral',
+  // hitPoints: 10,
   maxHitPoints: 10,
 };
 

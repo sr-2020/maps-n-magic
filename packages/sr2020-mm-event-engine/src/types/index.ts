@@ -239,13 +239,13 @@ export interface SoundStageData {
 export interface Spirit {
   id: number;
   name: string,
-  aura: string,
+  // aura: string,
   fraction: string,
   story: string,
-  abilities: [],
+  abilities: string[],
 
-  latLng: L.LatLngLiteral,
-  plane: string,
-  hitPoints: number,
+  // latLng: L.LatLngLiteral,
+  // plane: string,
+  // hitPoints: number,
   maxHitPoints: number,
 }

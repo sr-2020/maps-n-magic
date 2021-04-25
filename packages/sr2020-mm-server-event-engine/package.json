@@ -19,6 +19,7 @@
   "dependencies": {
     "@google-cloud/pubsub": "^2.6.0",
     "@types/isomorphic-fetch": "0.0.35",
+    "ajv": "^8.1.0",
     "isomorphic-fetch": "^3.0.0",
     "moment": "^2.29.1",
     "moment-timezone": "^0.5.32",
