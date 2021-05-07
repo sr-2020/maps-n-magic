@@ -16,7 +16,8 @@ export function joinUrl(...args: string[]): string {
 
 let WS_URL: string;
 if (process.env.NODE_ENV === 'production') {
-  WS_URL = 'wss://maps-n-magic.evarun.ru/ws';
+  // WS_URL = 'wss://maps-n-magic2.evarun.ru/ws';
+  WS_URL = 'wss://localhost/ws';
 } else {
   WS_URL = 'ws://localhost:3001/ws';
 }
