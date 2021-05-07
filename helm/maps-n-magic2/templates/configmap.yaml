@@ -4,3 +4,6 @@ metadata:
   name: {{ .Release.Name }}-configmap
 data:
   SKIP_PREFLIGHT_CHECK: {{ .Values.app.skipPreflightCheck | quote }}
+  PGHOST: {{ .Values.app.dbHost | quote }}
+  PGPORT: {{ .Values.app.dbPort | quote }}
+  PGDATABASE: {{ .Values.app.dbName | quote }}

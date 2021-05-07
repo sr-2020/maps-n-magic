@@ -6,6 +6,9 @@ replicaCount: 1
 
 app:
   skipPreflightCheck: true
+  dbHost: postgres13
+  dbPort: 5432
+  dbName: mm
 
 image:
   repository: sr2020/maps-n-magic2
