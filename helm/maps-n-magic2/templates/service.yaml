@@ -1,0 +1,14 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: maps-n-magic2
+  labels:
+    run: maps-n-magic2
+spec:
+  type: {{ .Values.service.type }}
+  ports:
+    - name: http
+      port: {{ .Values.service.port }}
+      targetPort: 3001
+  selector:
+    run: maps-n-magic2

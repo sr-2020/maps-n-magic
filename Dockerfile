@@ -11,11 +11,16 @@ COPY lerna.json /app/lerna.json
 COPY ./packages /app/packages
 
 RUN npm i -g lerna
+RUN npm i
+RUN npm run bootstrap
+RUN npm run install-local-deps
 RUN npm run bootstrap
 
 COPY .env.example /app/packages/sr2020-mm-track-analysis/.env
 COPY .env.example /app/packages/sr2020-mm-client/.env
 COPY ./packages/sr2020-mm-server/.env.example /app/packages/sr2020-mm-server/.env
+
+COPY tsconfig.json /app/tsconfig.json
 
 RUN npm run build-and-deploy
 
