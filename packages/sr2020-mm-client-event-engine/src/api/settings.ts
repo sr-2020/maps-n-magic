@@ -1,6 +1,6 @@
 export const AUDIO_RETRANSLATOR = {
   // SOUND_URL: 'http://localhost:3001',
-  SOUND_URL: 'https://maps-n-magic.evarun.ru',
+  SOUND_URL: 'https://maps-n-magic2.evarun.ru',
   // SOUND_URL: '',
   SOUND_LIST_ROUTE: '/fileList',
   SOUND_ROUTE: '/file',
@@ -16,8 +16,8 @@ export function joinUrl(...args: string[]): string {
 
 let WS_URL: string;
 if (process.env.NODE_ENV === 'production') {
-  // WS_URL = 'wss://maps-n-magic2.evarun.ru/ws';
-  WS_URL = 'wss://localhost/ws';
+  WS_URL = 'wss://maps-n-magic2.evarun.ru/ws';
+  // WS_URL = 'wss://localhost/ws';
 } else {
   WS_URL = 'ws://localhost:3001/ws';
 }
