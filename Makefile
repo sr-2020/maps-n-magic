@@ -1,7 +1,7 @@
 DOCKER_COMPOSE_VERSION := 1.24.0
 NAMESPACE := sr2020
 SERVICE := platform
-IMAGE := $(or ${image},${image},maps-n-magic)
+IMAGE := $(or ${image},${image},maps-n-magic2)
 GIT_TAG := $(shell git tag -l --points-at HEAD | cut -d "v" -f 2)
 TAG := :$(or ${tag},${tag},$(or ${GIT_TAG},${GIT_TAG},latest))
 ENV := $(or ${env},${env},local)

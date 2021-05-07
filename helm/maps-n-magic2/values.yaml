@@ -1,0 +1,29 @@
+# Default values for mychart.
+# This is a YAML-formatted file.
+# Declare variables to be passed into your templates.
+
+replicaCount: 1
+
+app:
+  skipPreflightCheck: true
+  dbHost: postgres13
+  dbPort: 5432
+  dbName: mm
+
+image:
+  repository: sr2020/maps-n-magic2
+  tag: latest
+  pullPolicy: Always
+
+service:
+  type: NodePort
+  port: 80
+
+# resources
+resources:
+  limits:
+    cpu: 50m
+    memory: 128Mi
+  requests:
+    cpu: 50m
+    memory: 128Mi
