@@ -56,3 +56,28 @@ spec:
                 secretKeyRef:
                   name: postgres
                   key: password
+            - name: GATEWAY_URL
+              valueFrom:
+                configMapKeyRef:
+                  name: {{ .Release.Name }}-configmap
+                  key: GATEWAY_URL
+            - name: POSITION_URL
+              valueFrom:
+                configMapKeyRef:
+                  name: {{ .Release.Name }}-configmap
+                  key: POSITION_URL
+            - name: BILLING_URL
+              valueFrom:
+                configMapKeyRef:
+                  name: {{ .Release.Name }}-configmap
+                  key: BILLING_URL
+            - name: PUSH_URL
+              valueFrom:
+                configMapKeyRef:
+                  name: {{ .Release.Name }}-configmap
+                  key: PUSH_URL
+            - name: MODEL_ENGINE_URL
+              valueFrom:
+                configMapKeyRef:
+                  name: {{ .Release.Name }}-configmap
+                  key: MODEL_ENGINE_URL
