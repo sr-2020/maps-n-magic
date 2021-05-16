@@ -8,7 +8,8 @@ import {
   PostSettingsConfirmed,
   EPostSettingsRequested,
   SettingsData,
-  SetSettings
+  SetSettings,
+  AbstractEventProcessor
 } from "sr2020-mm-event-engine";
 
 import { ReadStrategy, DataProvider } from "./types";
@@ -27,33 +28,35 @@ const metadata = {
   needActions: ['setSettings','postNotification','postSettingsConfirmed']
 };
 
-export class SettingsDataManager<U extends SettingsData, T extends SettingsResourceProvider<U>> {
+export class SettingsDataManager<U extends SettingsData, T extends SettingsResourceProvider<U>>
+  extends AbstractEventProcessor {
   settings: U | null;
 
   defaultSettings: U;
 
-  logger: GMLogger;
+  // logger: GMLogger;
 
   ccSettingsName: string;
 
   constructor(
-    private gameModel: GameModel, 
+    protected gameModel: GameModel, 
     private dataProvider: T, 
     private settingsName: string, 
     private readStrategy: ReadStrategy, 
-    rest: {
-      defaultSettings: U,
-      logger: GMLogger
-    }
+    // rest: {
+    defaultSettings: U,
+    protected logger: GMLogger
+    // }
   ) {
+    super(gameModel, logger);
     // console.log('SettingsDataManager rest', args);
     // this.entities = [];
-    if (R.isNil(rest.defaultSettings)) {
+    if (R.isNil(defaultSettings)) {
       throw new Error(`Default settings not specified, settingsName ${settingsName}`);
     }
     this.settings = null;
-    this.defaultSettings = rest.defaultSettings;
-    this.logger = rest.logger;
+    this.defaultSettings = defaultSettings;
+    // this.logger = rest.logger;
     // this.gameModel = gameModel;
     // this.settingsName = settingsName;
     // this.plural = `${entityName}s`;
@@ -64,8 +67,8 @@ export class SettingsDataManager<U extends SettingsData, T extends SettingsResou
     this.onPostSettingsRequested = this.onPostSettingsRequested.bind(this);
   }
 
-  initialize() {
-    this.readStrategy.initialize(this);
+  init() {
+    this.readStrategy.init(this);
     // super.initialize();
     this.subscribe('on', this.gameModel);
     // this.onPostSettingsRequested({

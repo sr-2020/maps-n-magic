@@ -31,8 +31,8 @@ export class CrudDataManager<
     this.putEntityTimeoutIndex = {};
   }
 
-  initialize() {
-    super.initialize();
+  init() {
+    super.init();
     this.subscribe('on', this.gameModel);
   }
 

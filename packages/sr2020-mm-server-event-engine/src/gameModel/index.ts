@@ -12,7 +12,15 @@ import {
   LocationRecord,
   UserRecord,
   ManaOceanSettingsData,
-  ManaOceanEffectSettingsData
+  ManaOceanEffectSettingsData,
+  StubEventProcessor,
+  // redirect events
+  EPutCharHealthRequested,
+  EPutCharHealthConfirmed,
+  EPutCharLocationRequested,
+  EPutCharLocationConfirmed,
+  EEnableManaOceanRequested,
+  EEnableManaOceanConfirmed,
 } from 'sr2020-mm-event-engine';
 
 import { ManaOceanService } from '../services/ManaOceanService';
@@ -32,6 +40,7 @@ import { SettingsDataManager } from '../dataManagers/SettingsDataManagers';
 import { PollingReadStrategy } from '../dataManagers/PollingReadStrategy';
 // import { DataBinding } from '../dataManagers/DataBinding';
 import { RedirectDataBinding } from '../dataManagers/RedirectDataBinding';
+import { RedirectDataBinding2, StrictEventBinding } from '../dataManagers/RedirectDataBinding2';
 import { CharacterLocDataManager } from '../dataManagers/CharacterLocDataManager';
 
 import { defaultManaOceanSettings, manaOceanEffectSettings } from '../api/constants';
@@ -52,6 +61,12 @@ import { CharacterStatesListener } from '../api/characterStates/CharacterStatesL
 import { CharacterLocationListener } from '../api/position/CharacterLocationListener';
 import { SpellCastsListener } from '../api/spellCasts/SpellCastsListener';
 import { PushNotificationEmitter } from '../api/pushNotificationEmitter';
+
+type EventBindingList = 
+  StrictEventBinding<EPutCharHealthRequested, EPutCharHealthConfirmed> |
+  StrictEventBinding<EPutCharLocationRequested, EPutCharLocationConfirmed> |
+  StrictEventBinding<EEnableManaOceanRequested, EEnableManaOceanConfirmed>
+;
 
 const services = [
   LocationRecordService,
@@ -87,7 +102,7 @@ export function makeGameModel() {
     new PollingReadStrategy(gameModel, 15000, beaconRecordLogger),
     beaconRecordLogger
   );
-  beaconRecordDataBinding.initialize();
+  beaconRecordDataBinding.init();
   gameServer.addDataBinding(beaconRecordDataBinding);
 
   // gameServer.addDataBinding(new DataBinding({
@@ -106,7 +121,7 @@ export function makeGameModel() {
     new PollingReadStrategy(gameModel, 15000, rootLogger),
     rootLogger
   );
-  locationRecordDataBinding.initialize();
+  locationRecordDataBinding.init();
   gameServer.addDataBinding(locationRecordDataBinding);
 
   // gameServer.addDataBinding(new DataBinding({
@@ -125,7 +140,7 @@ export function makeGameModel() {
     new PollingReadStrategy(gameModel, 15000, rootLogger, 'reloadUserRecords'),
     rootLogger
   );
-  userRecordDataBinding.initialize();
+  userRecordDataBinding.init();
   gameServer.addDataBinding(userRecordDataBinding);
 
 
@@ -144,12 +159,10 @@ export function makeGameModel() {
     new ManaOceanSettingsProvider(),
     'manaOcean',
     new PollingReadStrategy(gameModel, 15000, rootLogger),
-    {
-      defaultSettings: defaultManaOceanSettings,
-      logger: rootLogger,
-    }
+    defaultManaOceanSettings,
+    rootLogger,
   );
-  manaOceanSettingsDB.initialize();
+  manaOceanSettingsDB.init();
   gameServer.addDataBinding(manaOceanSettingsDB);
 
   // gameServer.addDataBinding(new DataBinding({
@@ -168,12 +181,10 @@ export function makeGameModel() {
     new ManaOceanEffectSettingsProvider(),
     'manaOceanEffects',
     new PollingReadStrategy(gameModel, 15000, rootLogger),
-    {
-      defaultSettings: manaOceanEffectSettings,
-      logger: rootLogger,
-    }
+    manaOceanEffectSettings,
+    rootLogger,
   );
-  manaOceanEffectsSettingsDB.initialize();
+  manaOceanEffectsSettingsDB.init();
   gameServer.addDataBinding(manaOceanEffectsSettingsDB);
 
   // gameServer.addDataBinding(new DataBinding({
@@ -191,31 +202,51 @@ export function makeGameModel() {
     gameModel,
     rootLogger,
   );
-  charLocDM.initialize();
+  charLocDM.init();
   gameServer.addDataBinding(charLocDM);
 
-  // const metadata = {
-  //   actions: [],
-  //   requests: [],
-  //   emitEvents: [],
-  //   listenEvents: [arg keys],
-  //   needRequests: [],
-  //   needActions: [arg values]
-  // };
-  
-  gameServer.addDataBinding(new RedirectDataBinding(
+  // gameServer.addDataBinding(new RedirectDataBinding(
+  //   gameModel,
+  //   {
+  //     putCharHealthRequested: 'putCharHealthConfirmed',
+  //     putCharLocationRequested: 'putCharLocationConfirmed',
+  //     enableManaOceanRequested: 'enableManaOceanConfirmed',
+  //   },
+  //   rootLogger
+  // ));
+  gameServer.addDataBinding(new RedirectDataBinding2<EventBindingList>(
     gameModel,
-    {
-      putCharHealthRequested: 'putCharHealthConfirmed',
-      putCharLocationRequested: 'putCharLocationConfirmed',
-      enableManaOceanRequested: 'enableManaOceanConfirmed',
-    },
+    [
+      {from: 'putCharHealthRequested', to: 'putCharHealthConfirmed'},
+      {from: 'putCharLocationRequested', to: 'putCharLocationConfirmed'},
+      {from: 'enableManaOceanRequested', to: 'enableManaOceanConfirmed'},
+    ],
     rootLogger
   ));
-  const characterStatesListener = new CharacterStatesListener(gameModel);
-  const characterLocationListener = new CharacterLocationListener(gameModel);
-  const spellCastsListener = new SpellCastsListener(gameModel);
+  gameServer.addDataBinding(new CharacterStatesListener(gameModel, rootLogger));
+  gameServer.addDataBinding(new CharacterLocationListener(gameModel, rootLogger));
+  gameServer.addDataBinding(new SpellCastsListener(gameModel, rootLogger));
   const pushNotificationEmitter = new PushNotificationEmitter(gameModel, rootLogger);
-  pushNotificationEmitter.initialize();
+  pushNotificationEmitter.init();
+  gameServer.addDataBinding(pushNotificationEmitter);
+  gameServer.addDataBinding(new StubEventProcessor(
+    gameModel, 
+    rootLogger, {
+      emitEvents: [
+        // event from client to set character location
+        "emitCharacterLocationChanged",
+        // mana ocean control events
+        "addManaEffect",
+        "removeManaEffect",
+        "wipeManaOceanEffects",
+        // used to forward character health states from server to client
+        "setCharacterHealthStates"
+      ]
+    }
+  ));
+
+  gameModel.verifyEvents();
+  gameModel.finishVerification();
+
   return { gameModel, gameServer };
 }

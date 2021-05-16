@@ -14,7 +14,6 @@ import {
 const moeMetadata: Metadata = {
   actions: [
     'setEnableManaOcean',
-    'enableManaOceanConfirmed',
     // 'enableManaOceanChanged',
   ],
   requests: [
@@ -26,7 +25,9 @@ const moeMetadata: Metadata = {
   ],
   needActions: [],
   needRequests: [],
-  listenEvents: [],
+  listenEvents: [
+    'enableManaOceanConfirmed',
+  ],
 };
 
 export interface SetEnableManaOceanArgs {
@@ -34,7 +35,8 @@ export interface SetEnableManaOceanArgs {
 }
 
 export type SetEnableManaOcean = Typed<'setEnableManaOcean', SetEnableManaOceanArgs>;
-export type EnableManaOceanConfirmed = Typed<'enableManaOceanConfirmed', SetEnableManaOceanArgs>;
+// export type EnableManaOceanConfirmed = Typed<'enableManaOceanConfirmed', SetEnableManaOceanArgs>;
+export type EEnableManaOceanConfirmed = Typed<'enableManaOceanConfirmed', SetEnableManaOceanArgs>;
 // export type EnableManaOceanChanged = Typed<'enableManaOceanChanged', SetEnableManaOceanArgs>;
 
 export type GetEnableManaOcean = (arg: TypeOnly<'enableManaOcean'>) => boolean;
@@ -42,17 +44,28 @@ export type GetEnableManaOcean = (arg: TypeOnly<'enableManaOcean'>) => boolean;
 export type EEnableManaOceanRequested = Typed<'enableManaOceanRequested', SetEnableManaOceanArgs>;
 export type EEnableManaOceanChanged = Typed<'enableManaOceanChanged', SetEnableManaOceanArgs>;
 
-export type EnableManaOceanEvents = EEnableManaOceanRequested |
+export type EnableManaOceanEmitEvents = EEnableManaOceanRequested |
   EEnableManaOceanChanged;
+export type EnableManaOceanListenEvents = EEnableManaOceanConfirmed;
 
 
-export class ManaOceanEnableService extends AbstractService<EnableManaOceanEvents> {
+export class ManaOceanEnableService extends AbstractService<EnableManaOceanEmitEvents, EnableManaOceanListenEvents> {
   enableManaOcean: boolean;
 
   constructor(gameModel: GameModel, logger: GMLogger) {
     super(gameModel, logger);
     this.setMetadata(moeMetadata);
     this.enableManaOcean = true;
+    this.enableManaOceanConfirmed = this.enableManaOceanConfirmed.bind(this);
+  }
+
+  init(): void {
+    super.init();
+    this.on2('enableManaOceanConfirmed', this.enableManaOceanConfirmed);
+  }
+  
+  dispose(): void {
+    this.off2('enableManaOceanConfirmed', this.enableManaOceanConfirmed);
   }
 
   getEnableManaOcean(request: Req<GetEnableManaOcean>): Res<GetEnableManaOcean> {
@@ -70,7 +83,7 @@ export class ManaOceanEnableService extends AbstractService<EnableManaOceanEvent
     });
   }
 
-  enableManaOceanConfirmed({ enableManaOcean }: EnableManaOceanConfirmed): void {
+  enableManaOceanConfirmed({ enableManaOcean }: EEnableManaOceanConfirmed): void {
     if (this.enableManaOcean === enableManaOcean) {
       return;
     }

@@ -1,5 +1,6 @@
 import * as R from 'ramda';
 import { AbstractService } from './AbstractService';
+import { AbstractEventProcessor } from './AbstractEventProcessor';
 import { ServiceIndex } from './GameModel';
 
 export class GameModelVerificator {
@@ -31,8 +32,12 @@ export class GameModelVerificator {
     }
   }
 
-  verifyServices(services: AbstractService[]): void {
-    const allEmittedEvents = R.flatten(services.map((service) => service.metadata.emitEvents || []));
+  verifyEvents(services: AbstractService[], eventProcessors: AbstractEventProcessor[]): void {
+    // console.log('services', services.length);
+    const allServiceEmittedEvents = R.flatten(services.map((service) => service.metadata.emitEvents || []));
+    const allEPEmittedEvents = R.flatten(eventProcessors.map((ep) => ep.getMetadata().emitEvents || []));
+    const allEmittedEvents = [...allServiceEmittedEvents, ...allEPEmittedEvents];
+    // console.log(allEmittedEvents);
     services.forEach((service) => {
       const { listenEvents = [] } = service.metadata;
       const diff = R.difference(listenEvents, allEmittedEvents);
@@ -40,6 +45,16 @@ export class GameModelVerificator {
         diff.forEach((eventname) => {
           const serviceName = service.constructor.name;
           this.initErrors.push(`No event emitter for ${eventname} which is expected by ${serviceName}`);
+        });
+      }
+    });
+    eventProcessors.forEach((ep) => {
+      const { listenEvents = [] } = ep.getMetadata();
+      const diff = R.difference(listenEvents, allEmittedEvents);
+      if (!R.isEmpty(diff)) {
+        diff.forEach((eventname) => {
+          const epName = ep.constructor.name;
+          this.initErrors.push(`No event emitter for ${eventname} which is expected by ${epName}`);
         });
       }
     });

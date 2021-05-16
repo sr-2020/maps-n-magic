@@ -4,7 +4,7 @@ export interface DataManager {
 
 export interface ReadStrategy {
   dispose(): void;
-  initialize(dataManager: DataManager): void;
+  init(dataManager: DataManager): void;
 }
 
 export interface DataProvider {

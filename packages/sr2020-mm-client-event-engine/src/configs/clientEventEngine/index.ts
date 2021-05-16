@@ -7,6 +7,7 @@ import {
   UserRecordService,
   SettingsService,
   ManaOceanEnableService,
+  StubEventProcessor
 } from 'sr2020-mm-event-engine';
 
 // import { Migrator } from './Migrator';
@@ -64,5 +65,25 @@ export function makeGameModel() {
 
   const wsConnection = new WSConnector(gameModel);
   gameServer.addDataBinding(new WsDataBinding(gameModel, wsConnection, console));
+
+  gameServer.addDataBinding(new StubEventProcessor(
+    gameModel, 
+    console, {
+      emitEvents: [
+        // confirmations received from server
+        "putCharHealthConfirmed",
+        "putCharLocationConfirmed",
+        "enableManaOceanConfirmed",
+        // used to forward character health states from server to client
+        "setCharacterHealthStates",
+        // expected from server
+        "characterLocationChanged"
+      ]
+    }
+  ));
+
+  gameModel.verifyEvents();
+  gameModel.finishVerification();
+
   return { gameModel, gameServer };
 }

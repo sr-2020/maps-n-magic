@@ -10,13 +10,18 @@ import {
   Res,
   clMetadata,
   GetCharactersFromLocation,
-  SetAllCharacterLocations,
-  SetCharacterLocation,
-  EmitCharacterLocationChanged,
-  CharacterLocationEvents
+  // EmitCharacterLocationChanged,
+  CharacterLocationEmitEvents,
+  CharacterLocationListenEvents,
+  ESetAllCharacterLocations,
+  ESetCharacterLocation,
+  EEmitCharacterLocationChanged,
 } from 'sr2020-mm-event-engine';
 
-export class CharacterLocationService extends AbstractService<CharacterLocationEvents> {
+export class CharacterLocationService extends AbstractService<
+  CharacterLocationEmitEvents,
+  CharacterLocationListenEvents
+> {
   // Map(
   //   locationId,
   //   characterSet: Set(characterId)
@@ -34,10 +39,25 @@ export class CharacterLocationService extends AbstractService<CharacterLocationE
     this.setMetadata(clMetadata);
     this.loc2charIndex = new Map();
     this.char2locIndex = new Map();
+    this.setAllCharacterLocations = this.setAllCharacterLocations.bind(this);
     this.setCharacterLocation = this.setCharacterLocation.bind(this);
+    this.emitCharacterLocationChanged = this.emitCharacterLocationChanged.bind(this);
   }
 
-  setAllCharacterLocations({ characterLocations }: SetAllCharacterLocations): void {
+  init(): void {
+    super.init();
+    this.on2('setAllCharacterLocations', this.setAllCharacterLocations);
+    this.on2('setCharacterLocation', this.setCharacterLocation);
+    this.on2('emitCharacterLocationChanged', this.emitCharacterLocationChanged);
+  }
+  
+  dispose(): void {
+    this.off2('setAllCharacterLocations', this.setAllCharacterLocations);
+    this.off2('setCharacterLocation', this.setCharacterLocation);
+    this.off2('emitCharacterLocationChanged', this.emitCharacterLocationChanged);
+  }
+
+  setAllCharacterLocations({ characterLocations }: ESetAllCharacterLocations): void {
     characterLocations.forEach(el => this.setCharacterLocation({
       type: 'setCharacterLocation',
       ...el
@@ -53,7 +73,7 @@ export class CharacterLocationService extends AbstractService<CharacterLocationE
     return this.loc2charIndex.get(locationId) || new Set();
   }
 
-  setCharacterLocation({ characterId, locationId, prevLocationId }: SetCharacterLocation): void {
+  setCharacterLocation({ characterId, locationId, prevLocationId }: ESetCharacterLocation): void {
     const prevLocationId2 = this.char2locIndex.get(characterId);
     if (prevLocationId2 === locationId) {
       return;
@@ -82,7 +102,7 @@ export class CharacterLocationService extends AbstractService<CharacterLocationE
     });
   }
 
-  emitCharacterLocationChanged({ characterId }: EmitCharacterLocationChanged): void {
+  emitCharacterLocationChanged({ characterId }: EEmitCharacterLocationChanged): void {
     this.emit2({
       type: 'characterLocationChanged',
       locationId: this.char2locIndex.get(characterId) || null,

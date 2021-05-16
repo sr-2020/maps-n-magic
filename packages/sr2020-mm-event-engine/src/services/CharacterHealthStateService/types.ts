@@ -12,23 +12,19 @@ import {
 
 export const chssMetadata: Metadata = {
   actions: [
-    'putCharHealth',
-    'putCharHealthConfirmed',
-    'putCharLocation',
-    'putCharLocationConfirmed',
-    'setCharacterHealthStates',
   ],
   requests: [
     'characterHealthState', 'characterHealthStates',
   ],
   emitEvents: [
-    'putCharHealthRequested',
-    'putCharLocationRequested',
-    'putCharLocationConfirmed',
     'characterHealthStateChanged',
     'characterHealthStatesLoaded',
   ],
-  listenEvents: [],
+  listenEvents: [
+    'putCharHealthConfirmed',
+    'putCharLocationConfirmed',
+    'setCharacterHealthStates',
+  ],
   needRequests: ['locationRecord'],
   needActions: [],
 };
@@ -40,9 +36,6 @@ export type GetCharacterHealthState = (arg: Typed<'characterHealthState', {
 }>) => RawCharacterHealthState;
 
 export type GetCharacterHealthStates = (arg: TypeOnly<'characterHealthStates'>) => CharacterHealthStates;
-
-// type t1 = Request<CharacterHealthState>;
-// type t2 = Response<CharacterHealthState>;
 
 // actions
 
@@ -57,19 +50,10 @@ export interface PutCharLocationArgs {
   prevLocationId: number;
 }
 
-export type PutCharHealth = Typed<'putCharHealth', PutCharHealthArgs>;
-export type PutCharHealthConfirmed = Typed<'putCharHealthConfirmed', PutCharHealthArgs>;
-export type PutCharLocation = Typed<'putCharLocation', PutCharLocationArgs>;
-export type PutCharLocationConfirmed = Typed<'putCharLocationConfirmed', PutCharLocationArgs>;
-export type SetCharacterHealthStates = Typed<'setCharacterHealthStates', {
-  characterHealthStates: CharacterHealthStates;
-}>;
-
 // events
 
 export type EPutCharHealthRequested = Typed<'putCharHealthRequested', PutCharHealthArgs>;
 export type EPutCharLocationRequested = Typed<'putCharLocationRequested', PutCharLocationArgs>;
-export type EPutCharLocationConfirmed = Typed<'putCharLocationConfirmed', PutCharLocationArgs>;
 export type ECharacterHealthStateChanged = Typed<'characterHealthStateChanged', {
   characterId: number;
   characterHealthState: RawCharacterHealthState;
@@ -79,8 +63,18 @@ export type ECharacterHealthStatesLoaded = Typed<'characterHealthStatesLoaded', 
   characterHealthStates: CharacterHealthStates;
 }>;
 
-export type CharacterHealthStateEvents = EPutCharHealthRequested |
+export type CharacterHealthStateEmitEvents = 
   EPutCharLocationRequested |
-  EPutCharLocationConfirmed |
   ECharacterHealthStateChanged |
   ECharacterHealthStatesLoaded;
+
+export type EPutCharHealthConfirmed = Typed<'putCharHealthConfirmed', PutCharHealthArgs>;
+export type EPutCharLocationConfirmed = Typed<'putCharLocationConfirmed', PutCharLocationArgs>;
+export type ESetCharacterHealthStates = Typed<'setCharacterHealthStates', {
+  characterHealthStates: CharacterHealthStates;
+}>;
+
+export type CharacterHealthStateListenEvents = 
+  EPutCharHealthConfirmed |
+  EPutCharLocationConfirmed |
+  ESetCharacterHealthStates;

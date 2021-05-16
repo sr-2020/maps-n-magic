@@ -6,7 +6,8 @@ import {
   GMLogger,
   GameModel,
   RawCharacterHealthState,
-  Typed
+  Typed,
+  ECharacterHealthStateChanged
 } from 'sr2020-mm-event-engine';
 
 export type EMassacreTriggered = Typed<'massacreTriggered', {
@@ -14,7 +15,8 @@ export type EMassacreTriggered = Typed<'massacreTriggered', {
   timestamp,
 }>;
 
-export type MassacreEvents = EMassacreTriggered;
+export type MassacreEmitEvents = EMassacreTriggered;
+export type MassacreListenEvents = ECharacterHealthStateChanged;
 
 const metadata: Metadata = {
   actions: [
@@ -26,7 +28,7 @@ const metadata: Metadata = {
   needRequests: [],
   needActions: []
 };
-export class MassacreService extends AbstractService<EMassacreTriggered> {
+export class MassacreService extends AbstractService<MassacreEmitEvents, MassacreListenEvents> {
   // key - locationId, 
   // value - array of timestamps when character falled in state 'wounded'
   characterHealthStats: Record<number, number[]>;
@@ -40,17 +42,14 @@ export class MassacreService extends AbstractService<EMassacreTriggered> {
 
   init() {
     super.init();
-    this.on('characterHealthStateChanged', this.onCharHealthChanged);
+    this.on2('characterHealthStateChanged', this.onCharHealthChanged);
   }
 
   dispose() {
-    this.off('characterHealthStateChanged', this.onCharHealthChanged);
+    this.off2('characterHealthStateChanged', this.onCharHealthChanged);
   }
 
-  onCharHealthChanged(data: { 
-    characterId: number, 
-    characterHealthState: RawCharacterHealthState
-  }) {
+  onCharHealthChanged(data: ECharacterHealthStateChanged): void {
     // this.logger.info('massacre service', data);
     const { characterId, characterHealthState } = data;
     const { locationId, healthState, timestamp } = characterHealthState;

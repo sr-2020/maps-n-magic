@@ -18,9 +18,12 @@ import {
   SetLocationRecords,
   SetBeaconRecords,
   SetSettings,
-  PutCharHealthConfirmed,
-  SetCharacterHealthStates,
-  EnableManaOceanConfirmed,
+  // PutCharHealthConfirmed,
+  // SetCharacterHealthStates,
+  EPutCharHealthConfirmed,
+  ESetCharacterHealthStates,
+  // EnableManaOceanConfirmed,
+  EEnableManaOceanConfirmed,
   SetUserRecords,
   // executed actions from client 2 server
   EPostLocationRecordRequested,
@@ -37,12 +40,13 @@ import {
   ERemoveManaEffect,
   EAddManaEffect,
   // not event, seems not used, need to check
-  EmitCharacterLocationChanged,
+  EEmitCharacterLocationChanged,
   // 'emitCharacterLocationChanged',
-  EReloadUserRecords
+  EReloadUserRecords,
 
   //???
   // characterLocationChanged
+  AbstractEventProcessor
 } from "sr2020-mm-event-engine";
 
 import { TrackedCharacterLocationChanged } from "../index";
@@ -81,7 +85,7 @@ const forwardServer2ClientActions = [
   // 'characterHealthStateChanged',
 ];
 
-type ForwarClient2ServerEventTypes = 
+type ForwardClient2ServerEventTypes = 
   EPostLocationRecordRequested["type"] |
   EPutLocationRecordRequested["type"] |
   EPutLocationRecordsRequested["type"] |
@@ -95,12 +99,12 @@ type ForwarClient2ServerEventTypes =
   EWipeManaOceanEffects["type"] |
   ERemoveManaEffect["type"] |
   EAddManaEffect["type"] |
+  EEmitCharacterLocationChanged["type"] |
   // not event
-  EmitCharacterLocationChanged["type"] |
   EReloadUserRecords["type"];
 
 // TODO try to get list of event types from event type interfaces
-const forwardClient2ServerEvents: ForwarClient2ServerEventTypes[] = [
+const forwardClient2ServerEvents: ForwardClient2ServerEventTypes[] = [
   'postLocationRecordRequested',
   'putLocationRecordRequested',
   'putLocationRecordsRequested',
@@ -119,12 +123,13 @@ const forwardClient2ServerEvents: ForwarClient2ServerEventTypes[] = [
   'reloadUserRecords',
 ];
 
-export class WsDataBinding {
+export class WsDataBinding extends AbstractEventProcessor {
   constructor(
-    private gameModel: GameModel, 
+    protected gameModel: GameModel, 
     private wsConnection: WSConnector,
-    private logger: GMLogger
+    protected logger: GMLogger
   ) {
+    super(gameModel, logger);
     // this.entityName = entityName;
     // this.plural = `${entityName}s`;
     // this.ccEntityName = capitalizeFirstLetter(entityName);
@@ -134,6 +139,10 @@ export class WsDataBinding {
     this.subscribe('on', this.gameModel);
     this.subscribeWsConnection('on', this.wsConnection);
     this.initClientConfig();
+    this.setMetadata({
+      emitEvents: forwardClient2ServerEvents,
+      listenEvents: forwardServer2ClientActions
+    });
   }
 
   initClientConfig() {
@@ -249,21 +258,24 @@ export class WsDataBinding {
     // }
 
     if (data.type === 'characterHealthStateChanged') {
-      this.gameModel.execute2<PutCharHealthConfirmed>({
+      // this.gameModel.execute2<PutCharHealthConfirmed>({
+      this.gameModel.emit2<EPutCharHealthConfirmed>({
         ...data,
         type: 'putCharHealthConfirmed',
       });
     }
 
     if (data.type === 'characterHealthStatesLoaded') {
-      this.gameModel.execute2<SetCharacterHealthStates>({
+      // this.gameModel.execute2<SetCharacterHealthStates>({
+      this.gameModel.emit2<ESetCharacterHealthStates>({
         ...data,
         type: 'setCharacterHealthStates',
       });
     }
 
     if (data.type === 'enableManaOceanChanged') {
-      this.gameModel.execute2<EnableManaOceanConfirmed>({
+      // this.gameModel.execute2<EnableManaOceanConfirmed>({
+      this.gameModel.emit2<EEnableManaOceanConfirmed>({
         ...data,
         type: 'enableManaOceanConfirmed',
       });

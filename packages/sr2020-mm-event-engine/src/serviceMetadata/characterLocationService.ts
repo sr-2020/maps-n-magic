@@ -10,14 +10,17 @@ export const clMetadata: Metadata = {
     'charactersFromLocation',
   ],
   actions: [
-    'setAllCharacterLocations',
-    'setCharacterLocation',
-    'emitCharacterLocationChanged',
+    // 'setAllCharacterLocations',
+    // 'setCharacterLocation',
+    // 'emitCharacterLocationChanged',
   ],
   emitEvents: [
     'characterLocationChanged',
   ],
   listenEvents: [
+    'setAllCharacterLocations',
+    'setCharacterLocation',
+    'emitCharacterLocationChanged',
   ],
   needRequests: [
   ],
@@ -32,24 +35,43 @@ export type GetCharactersFromLocation = (arg: Typed<'charactersFromLocation', {
 
 // actions
 
+// export type SetCharacterLocationData = {
+//   characterId: number, 
+//   locationId: number | null, 
+//   prevLocationId: number | null
+// };
+
+// export type SetAllCharacterLocations = Typed<'setAllCharacterLocations', {
+//   characterLocations: CharacterLocationData[]
+// }>;
+// export type SetCharacterLocation = Typed<'setCharacterLocation', SetCharacterLocationData>;
+// export type EmitCharacterLocationChanged = Typed<'emitCharacterLocationChanged', {
+//   characterId: number, 
+// }>;
+
+// events
+
+export type ECharacterLocationChanged = Typed<'characterLocationChanged', SetCharacterLocationData>;
+
+export type CharacterLocationEmitEvents = 
+  ECharacterLocationChanged
+;
+
 export type SetCharacterLocationData = {
   characterId: number, 
   locationId: number | null, 
   prevLocationId: number | null
 };
 
-export type SetAllCharacterLocations = Typed<'setAllCharacterLocations', {
+export type ESetAllCharacterLocations = Typed<'setAllCharacterLocations', {
   characterLocations: CharacterLocationData[]
 }>;
-export type SetCharacterLocation = Typed<'setCharacterLocation', SetCharacterLocationData>;
-export type EmitCharacterLocationChanged = Typed<'emitCharacterLocationChanged', {
+export type ESetCharacterLocation = Typed<'setCharacterLocation', SetCharacterLocationData>;
+export type EEmitCharacterLocationChanged = Typed<'emitCharacterLocationChanged', {
   characterId: number, 
 }>;
 
-// events
-
-export type ECharacterLocationChanged = Typed<'characterLocationChanged', SetCharacterLocationData>;
-
-export type CharacterLocationEvents = 
-  ECharacterLocationChanged
-;
+export type CharacterLocationListenEvents = 
+  ESetAllCharacterLocations |
+  ESetCharacterLocation |
+  EEmitCharacterLocationChanged;

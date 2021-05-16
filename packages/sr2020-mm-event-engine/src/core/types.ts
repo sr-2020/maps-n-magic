@@ -15,6 +15,10 @@ export interface GMEvent {
   type: string;
 }
 
+export interface DefaultGMEvent {
+  type:'undefined';
+}
+
 // export type GMLogger = unknown;
 
 export interface GMLogger {
@@ -34,6 +38,11 @@ export interface Metadata {
   emitEvents: string[];
   needActions: string[];
   needRequests: string[];
+  listenEvents: string[];
+};
+
+export interface EventProcessorMetadata {
+  emitEvents: string[];
   listenEvents: string[];
 };
 

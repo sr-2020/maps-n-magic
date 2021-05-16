@@ -3,7 +3,13 @@ import moment from 'moment-timezone';
 // import { getCharacterLocation } from './getCharacterLocation';
 // import { getCharacterLifeStyle } from './getCharacterLifeStyle';
 // import { listenHealthChanges } from './listenHealthChanges';
-import { GameModel, SpellCast, ESpellCast } from "sr2020-mm-event-engine";
+import { 
+  GameModel, 
+  SpellCast, 
+  ESpellCast, 
+  AbstractEventProcessor,
+  GMLogger 
+} from "sr2020-mm-event-engine";
 
 import { listenSpellCasts } from './listenSpellCasts';
 
@@ -19,13 +25,17 @@ const metadata = {
   needActions: ['spellCast']
 };
 
-export class SpellCastsListener {
-  gameModel: GameModel;
+export class SpellCastsListener extends AbstractEventProcessor {
+  // gameModel: GameModel;
 
-  constructor(gameModel: GameModel) {
-    this.gameModel = gameModel;
+  constructor(protected gameModel: GameModel, logger: GMLogger) {
+    super(gameModel, logger);
+    // this.gameModel = gameModel;
     this.onMessageRecieved = this.onMessageRecieved.bind(this);
     listenSpellCasts(this.onMessageRecieved, true);
+    this.setMetadata({
+      emitEvents: ["spellCast"],
+    });
   }
 
   async onMessageRecieved(data: SpellCast): Promise<void> {

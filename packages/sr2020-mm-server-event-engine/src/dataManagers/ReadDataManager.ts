@@ -1,7 +1,7 @@
 // eslint-disable-next-line max-classes-per-file
 import * as R from 'ramda';
 
-import { GameModel, GMLogger, PostNotification } from "sr2020-mm-event-engine";
+import { GameModel, GMLogger, PostNotification, AbstractEventProcessor } from "sr2020-mm-event-engine";
 
 import { DataProvider, ReadStrategy } from "./types";
 
@@ -15,7 +15,7 @@ export function capitalizeFirstLetter(string: string): string {
   return string.charAt(0).toUpperCase() + string.slice(1);
 }
 
-export class ReadDataManager<Entity, T extends GettableResourceProvider<Entity>> {
+export class ReadDataManager<Entity, T extends GettableResourceProvider<Entity>> extends AbstractEventProcessor {
   entities: Entity[];
 
   plural: string;
@@ -29,14 +29,15 @@ export class ReadDataManager<Entity, T extends GettableResourceProvider<Entity>>
     private readStrategy: ReadStrategy,
     protected logger: GMLogger, 
   ) {
+    super(gameModel, logger);
     this.entities = [];
     this.entityName = entityName;
     this.plural = `${entityName}s`;
     this.ccEntityName = capitalizeFirstLetter(entityName);
   }
 
-  initialize() {
-    this.readStrategy.initialize(this);
+  init() {
+    this.readStrategy.init(this);
   }
 
   // eslint-disable-next-line class-methods-use-this

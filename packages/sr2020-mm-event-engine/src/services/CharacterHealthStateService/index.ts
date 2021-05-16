@@ -18,19 +18,26 @@ import {
 
 import { 
   chssMetadata,
-  PutCharHealth,
-  PutCharHealthConfirmed,
-  PutCharLocation,
-  PutCharLocationConfirmed,
-  SetCharacterHealthStates,
+  // PutCharHealth,
+  // PutCharHealthConfirmed,
+  // PutCharLocation,
+  // PutCharLocationConfirmed,
+  // SetCharacterHealthStates,
   GetCharacterHealthStates,
   GetCharacterHealthState,
-  CharacterHealthStateEvents
+  CharacterHealthStateEmitEvents,
+  EPutCharLocationConfirmed,
+  EPutCharHealthConfirmed,
+  ESetCharacterHealthStates,
+  CharacterHealthStateListenEvents
 } from "./types";
 
 export * from './types';
 
-export class CharacterHealthStateService extends AbstractService<CharacterHealthStateEvents> {
+export class CharacterHealthStateService extends AbstractService<
+  CharacterHealthStateEmitEvents, 
+  CharacterHealthStateListenEvents
+> {
   characterHealthStates: CharacterHealthStates;
 
   constructor(gameModel: GameModel, logger: GMLogger) {
@@ -47,6 +54,22 @@ export class CharacterHealthStateService extends AbstractService<CharacterHealth
     //   }
     // }
     this.characterHealthStates = {};
+    this.putCharHealthConfirmed = this.putCharHealthConfirmed.bind(this);
+    this.putCharLocationConfirmed = this.putCharLocationConfirmed.bind(this);
+    this.setCharacterHealthStates = this.setCharacterHealthStates.bind(this);
+  }
+
+  init(): void {
+    super.init();
+    this.on2('putCharHealthConfirmed', this.putCharHealthConfirmed);
+    this.on2('putCharLocationConfirmed', this.putCharLocationConfirmed);
+    this.on2('setCharacterHealthStates', this.setCharacterHealthStates);
+  }
+  
+  dispose(): void {
+    this.off2('putCharHealthConfirmed', this.putCharHealthConfirmed);
+    this.off2('putCharLocationConfirmed', this.putCharLocationConfirmed);
+    this.off2('setCharacterHealthStates', this.setCharacterHealthStates);
   }
 
   // this is a virtual service without real persistence
@@ -67,16 +90,16 @@ export class CharacterHealthStateService extends AbstractService<CharacterHealth
     return R.clone(this.characterHealthStates[id]);
   }
 
-  putCharHealth(action: PutCharHealth): void {
-    // this.emit('putCharHealthRequested', action);
-    this.emit2({...action, type: 'putCharHealthRequested'});
-  }
+  // putCharHealth(action: PutCharHealth): void {
+  //   // this.emit('putCharHealthRequested', action);
+  //   this.emit2({...action, type: 'putCharHealthRequested'});
+  // }
 
-  putCharLocation(action: PutCharLocation) {
-    // this.logger.info('putCharLocationRequested', action);
-    // this.emit('putCharLocationRequested', action);
-    this.emit2({...action, type: 'putCharLocationRequested'});
-  }
+  // putCharLocation(action: PutCharLocation) {
+  //   // this.logger.info('putCharLocationRequested', action);
+  //   // this.emit('putCharLocationRequested', action);
+  //   this.emit2({...action, type: 'putCharLocationRequested'});
+  // }
 
   getLocation(locationId: number): LocationRecord {
     return this.getFromModel<any, LocationRecord>({
@@ -85,7 +108,7 @@ export class CharacterHealthStateService extends AbstractService<CharacterHealth
     });
   }
 
-  putCharLocationConfirmed(action: PutCharLocationConfirmed): void {
+  putCharLocationConfirmed(action: EPutCharLocationConfirmed): void {
     const { characterId, locationId } = action;
     const prevCharacterHealthState = this.characterHealthStates[characterId];
     const locationRecord = this.getLocation(locationId);
@@ -94,7 +117,7 @@ export class CharacterHealthStateService extends AbstractService<CharacterHealth
     //   ...action,
     //   type: 'putCharLocationConfirmed',
     // });
-    this.emit2({...action, type: 'putCharLocationConfirmed'});
+    // this.emit2({...action, type: 'putCharLocationConfirmed'});
     if (!prevCharacterHealthState || !locationRecord) {
       return;
     }
@@ -129,7 +152,7 @@ export class CharacterHealthStateService extends AbstractService<CharacterHealth
     });
   }
 
-  putCharHealthConfirmed(action: PutCharHealthConfirmed): void {
+  putCharHealthConfirmed(action: EPutCharHealthConfirmed): void {
     const { characterId, characterHealthState } = action;
     // console.log('putCharHealthConfirmed', characterId, characterHealthState);
     const prevCharacterHealthState = this.characterHealthStates[characterId];
@@ -159,7 +182,7 @@ export class CharacterHealthStateService extends AbstractService<CharacterHealth
     // console.log({ characterId, characterHealthState, prevCharacterHealthState });
   }
 
-  setCharacterHealthStates({ characterHealthStates }: SetCharacterHealthStates): void {
+  setCharacterHealthStates({ characterHealthStates }: ESetCharacterHealthStates): void {
     // console.log('characterHealthStates', characterHealthStates);
     this.characterHealthStates = characterHealthStates;
     // this.emit('characterHealthStatesLoaded', {

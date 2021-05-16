@@ -16,7 +16,7 @@ export class RedirectDataBinding {
   }
 
   subscribe(action: 'on' | 'off', gameModel: GameModel) {
-    this.logger.info('redirectIndex keys', R.keys(this.redirectIndex));
+    // this.logger.info('redirectIndex keys', R.keys(this.redirectIndex));
     // console.log('redirectIndex keys', R.keys(this.redirectIndex));
     R.keys(this.redirectIndex).forEach((eventName) => gameModel[action](eventName, this.emit(eventName)));
   }

@@ -18,7 +18,7 @@ export class PollingReadStrategy {
     this.dataManager = null;
   }
 
-  initialize(dataManager: DataManager): void {
+  init(dataManager: DataManager): void {
     this.dataManager = dataManager;
     this.subscribe('on');
     this.loadEntityIntervalId = setInterval(() => {

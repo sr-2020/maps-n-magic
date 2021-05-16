@@ -4,6 +4,7 @@ import { EventEmitter } from 'events';
 
 import { GameModelVerificator } from './GameModelVerificator';
 import { AbstractService } from './AbstractService';
+import { AbstractEventProcessor } from "./AbstractEventProcessor";
 
 import { GMAction, GMRequest, GMLogger, GMTyped, GMEvent, Req, Res, TypeOnly } from "./types";
 import { stringToType, getChildLogger } from "./utils";
@@ -21,6 +22,9 @@ export class GameModel extends EventEmitter {
 
   services: AbstractService[];
 
+  // mostly data bindings are here
+  eventProcessors: AbstractEventProcessor[];
+
   // migrator: unknown;
 
   constructor(private logger: GMLogger) {
@@ -29,29 +33,30 @@ export class GameModel extends EventEmitter {
     this.requestMap = {};
     this.verificator = new GameModelVerificator();
     this.services = [];
+    this.eventProcessors = [];
   }
 
-  init(serviceClasses: typeof AbstractService[]) {
-    // this.services = services;
-    serviceClasses.forEach((serviceClass) => {
+  // init(serviceClasses: typeof AbstractService[]) {
+  //   // this.services = services;
+  //   serviceClasses.forEach((serviceClass) => {
       
-      // this.logger.info('Creating service', service.constructor.name);
-      this.logger.info('Creating service', serviceClass.name);
-      const childLogger = getChildLogger(this.logger, { service: serviceClass.name });
-      const service = new serviceClass(this, childLogger);
-      // const service: AbstractService = new ServiceClass(childLogger);
-      // service.init(this, childLogger);
-      service.init();
-      this.registerService(service);
-      return service;
-    });
+  //     // this.logger.info('Creating service', service.constructor.name);
+  //     this.logger.info('Creating service', serviceClass.name);
+  //     const childLogger = getChildLogger(this.logger, { service: serviceClass.name });
+  //     const service = new serviceClass(this, childLogger);
+  //     // const service: AbstractService = new ServiceClass(childLogger);
+  //     // service.init(this, childLogger);
+  //     service.init();
+  //     this.registerService(service);
+  //     return service;
+  //   });
 
-    this.verificator.verifyServices(this.services);
+  //   this.verificator.verifyServices(this.services);
 
-    this.verificator.finishVerification();
+  //   this.verificator.finishVerification();
 
-    // this.migrator = migrator;
-  }
+  //   // this.migrator = migrator;
+  // }
 
   // setData(database) {
   //   if (this.migrator) {
@@ -65,6 +70,7 @@ export class GameModel extends EventEmitter {
   // }
 
   registerService(service: AbstractService): void {
+    this.services.push(service);
     const { actions = [], requests = [] } = service.metadata;
     const localActionMap: ServiceIndex = R.fromPairs(actions.map((action) => [action, service]));
     this.verificator.checkActionOverrides(service, actions, this.actionMap);
@@ -79,6 +85,10 @@ export class GameModel extends EventEmitter {
       ...this.requestMap,
       ...localRequestsMap,
     };
+  }
+
+  registerEventProcessor(eventProcessor: AbstractEventProcessor) {
+    this.eventProcessors.push(eventProcessor);
   }
 
   hasRequest(request: string): boolean {
@@ -106,17 +116,17 @@ export class GameModel extends EventEmitter {
   }
 
   on(event: string | symbol, listener: (...args: any[]) => void): this {
-    this.logger.info(`Subscribe on GM event ${String(event)}`);
+    // this.logger.info(`Subscribe on GM event ${String(event)}`);
     return super.on(event, listener);
   }
 
   on2<Event extends GMEvent>(event: Event["type"], listener: (event: Event) => void): this {
-    this.logger.info(`Subscribe on GM event ${String(event)}`);
+    // this.logger.info(`Subscribe on GM event ${String(event)}`);
     return super.on(event, listener);
   }
 
   emit(event: string | symbol, ...args: any[]): boolean {
-    this.logger.info(`listenerCount for ${event.toString()} is ${super.listenerCount(event)}`);
+    // this.logger.info(`listenerCount for ${event.toString()} is ${super.listenerCount(event)}`);
     return super.emit(event, ...args);
   }
 
@@ -147,5 +157,14 @@ export class GameModel extends EventEmitter {
 
   dispose(): void {
     this.services.forEach((service) => service.dispose());
+    this.eventProcessors.forEach((ep) => ep.dispose());
+  }
+
+  verifyEvents(){
+    this.verificator.verifyEvents(this.services, this.eventProcessors);
+  }
+
+  finishVerification() {
+    this.verificator.finishVerification();
   }
 }

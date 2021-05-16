@@ -18,7 +18,8 @@ import {
   bodyConditionsList, 
   lifeStyleList, 
   BodyConditions,
-  PutCharHealth,
+  // PutCharHealth,
+  EPutCharHealthRequested,
   LifeStylesValues
 } from 'sr2020-mm-event-engine';
 
@@ -140,8 +141,9 @@ export class RescueServiceMessageSender extends Component<RescueServiceMessageSe
 
     const user = users.find((el) => el.id === characterId);
 
-    gameModel.execute2<PutCharHealth>({
-      type: 'putCharHealth',
+    // gameModel.execute2<PutCharHealth>({
+    gameModel.emit2<EPutCharHealthRequested>({
+      type: 'putCharHealthRequested',
       characterId,
       characterHealthState: {
         locationId: locationId === -1 ? null : locationId,

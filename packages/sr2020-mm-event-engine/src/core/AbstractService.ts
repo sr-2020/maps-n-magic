@@ -7,11 +7,17 @@ import {
   GMAction, 
   GMRequest, 
   GMLogger,
-  GMEvent
+  GMEvent,
+  DefaultGMEvent
 } from "./types";
 import { stringToType, typeToGetter } from "./utils";
 
-export class AbstractService<M extends GMEvent = {type:'undefined'}> {
+type GameModelServiceAPI = Pick<GameModel, "emit" | "off" | "on" | "get" | "execute">;
+
+export class AbstractService<
+  EmitEvent extends GMEvent = DefaultGMEvent,
+  ListenEvent extends GMEvent = DefaultGMEvent,
+> {
   // logger: GMLogger;
 
   // gameModel: GameModel;
@@ -25,7 +31,7 @@ export class AbstractService<M extends GMEvent = {type:'undefined'}> {
     listenEvents: [],
   };
 
-  constructor(public gameModel: GameModel, public logger: GMLogger) {}
+  constructor(public gameModel: GameModelServiceAPI, public logger: GMLogger) {}
 
   init() {}
 
@@ -83,7 +89,7 @@ export class AbstractService<M extends GMEvent = {type:'undefined'}> {
     return this.gameModel.emit(event, ...args);
   }
 
-  emit2(event: M): boolean {
+  emit2(event: EmitEvent): boolean {
     if (this.gameModel === null) {
       throw new Error(`Service ${this.constructor.name} is not initialized`);
     }
@@ -105,9 +111,12 @@ export class AbstractService<M extends GMEvent = {type:'undefined'}> {
     return this.gameModel.on(event, listener);
   }
 
-  on2<EData extends {type: string}>(event: EData["type"], listener: (arg: EData) => void): GameModel {
+  on2<T extends ListenEvent>(event: T["type"], listener: (arg: T) => void): GameModel {
     return this.on(event, listener);
   }
+  // on2<EData extends {type: string}>(event: EData["type"], listener: (arg: EData) => void): GameModel {
+  //   return this.on(event, listener);
+  // }
 
   // off(event: string, listener: (...args: unknown[]) => void): GameModel {
   off(event: string, listener: (...args: any[]) => void): GameModel {
@@ -120,9 +129,12 @@ export class AbstractService<M extends GMEvent = {type:'undefined'}> {
     return this.gameModel.off(event, listener);
   }
 
-  off2<EData extends {type: string}>(event: EData["type"], listener: (arg: EData) => void): GameModel {
+  off2<T extends ListenEvent>(event: T["type"], listener: (arg: T) => void): GameModel {
     return this.off(event, listener);
   }
+  // off2<EData extends {type: string}>(event: EData["type"], listener: (arg: EData) => void): GameModel {
+  //   return this.off(event, listener);
+  // }
 
   // getFromModel(rawRequest: GMRequest | string) {
   //   const request: GMRequest = stringToType<GMRequest>(rawRequest);

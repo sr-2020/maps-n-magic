@@ -29,7 +29,8 @@ import {
   ESpellCast,
   EAddManaEffect,
   ERemoveManaEffect,
-  EWipeManaOceanEffects
+  EWipeManaOceanEffects,
+  DefaultGMEvent
 } from 'sr2020-mm-event-engine';
 
 import { EMassacreTriggered } from "../../index";
@@ -51,7 +52,19 @@ type OptionsIndex = Record<number, {
   effectList: ManaOceanEffect[]
 }>
 
-export class ManaOceanService extends AbstractService {
+type ManaOceanListenEvent = 
+  EMassacreTriggered |
+  ESpellCast |
+  EAddManaEffect |
+  ERemoveManaEffect |
+  EWipeManaOceanEffects;
+    // this.on2<EMassacreTriggered>('massacreTriggered', this.onMassacreTriggered);
+    // this.on2<ESpellCast>('spellCast', this.spellCast);
+    // this.on2<EAddManaEffect>('addManaEffect', this.addManaEffect);
+    // this.on2<ERemoveManaEffect>('removeManaEffect', this.removeManaEffect);
+    // this.on2<EWipeManaOceanEffects>('wipeManaOceanEffects', this.wipeManaOceanEffects);
+
+export class ManaOceanService extends AbstractService<DefaultGMEvent, ManaOceanListenEvent> {
   prevTideHeight: number | null;
 
   tideLevelTimerId: NodeJS.Timeout | null;
@@ -81,22 +94,32 @@ export class ManaOceanService extends AbstractService {
     } else {
       this.logger.error('tideLevelTimer already initialized');
     }
-    this.on2<EMassacreTriggered>('massacreTriggered', this.onMassacreTriggered);
-    this.on2<ESpellCast>('spellCast', this.spellCast);
-    this.on2<EAddManaEffect>('addManaEffect', this.addManaEffect);
-    this.on2<ERemoveManaEffect>('removeManaEffect', this.removeManaEffect);
-    this.on2<EWipeManaOceanEffects>('wipeManaOceanEffects', this.wipeManaOceanEffects);
+    this.on2('massacreTriggered', this.onMassacreTriggered);
+    this.on2('spellCast', this.spellCast);
+    this.on2('addManaEffect', this.addManaEffect);
+    this.on2('removeManaEffect', this.removeManaEffect);
+    this.on2('wipeManaOceanEffects', this.wipeManaOceanEffects);
+    // this.on2<EMassacreTriggered>('massacreTriggered', this.onMassacreTriggered);
+    // this.on2<ESpellCast>('spellCast', this.spellCast);
+    // this.on2<EAddManaEffect>('addManaEffect', this.addManaEffect);
+    // this.on2<ERemoveManaEffect>('removeManaEffect', this.removeManaEffect);
+    // this.on2<EWipeManaOceanEffects>('wipeManaOceanEffects', this.wipeManaOceanEffects);
   }
 
   dispose(): void {
     if (this.tideLevelTimerId !== null) {
       clearInterval(this.tideLevelTimerId);
     }
-    this.off2<EMassacreTriggered>('massacreTriggered', this.onMassacreTriggered);
-    this.off2<ESpellCast>('spellCast', this.spellCast);
-    this.off2<EAddManaEffect>('addManaEffect', this.addManaEffect);
-    this.off2<ERemoveManaEffect>('removeManaEffect', this.removeManaEffect);
-    this.off2<EWipeManaOceanEffects>('wipeManaOceanEffects', this.wipeManaOceanEffects);
+    this.off2('massacreTriggered', this.onMassacreTriggered);
+    this.off2('spellCast', this.spellCast);
+    this.off2('addManaEffect', this.addManaEffect);
+    this.off2('removeManaEffect', this.removeManaEffect);
+    this.off2('wipeManaOceanEffects', this.wipeManaOceanEffects);
+    // this.off2<EMassacreTriggered>('massacreTriggered', this.onMassacreTriggered);
+    // this.off2<ESpellCast>('spellCast', this.spellCast);
+    // this.off2<EAddManaEffect>('addManaEffect', this.addManaEffect);
+    // this.off2<ERemoveManaEffect>('removeManaEffect', this.removeManaEffect);
+    // this.off2<EWipeManaOceanEffects>('wipeManaOceanEffects', this.wipeManaOceanEffects);
   }
 
   spellCast({ data }: ESpellCast): void {

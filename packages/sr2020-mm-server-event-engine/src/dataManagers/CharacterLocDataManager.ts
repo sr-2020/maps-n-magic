@@ -8,8 +8,9 @@ import {
   CharacterLocationData,
   UserRecord,
   PostNotification,
-  SetAllCharacterLocations, 
-  SetCharacterLocation
+  ESetAllCharacterLocations, 
+  ESetCharacterLocation,
+  AbstractEventProcessor
 } from "sr2020-mm-event-engine";
 
 import { usersUrl } from '../api/constants';
@@ -33,7 +34,7 @@ const metadata = {
   needActions: ['setCharacterLocation', 'setAllCharacterLocations', 'postNotification']
 };
 
-export class CharacterLocDataManager {
+export class CharacterLocDataManager extends AbstractEventProcessor {
   logger: GMLogger;
 
   messageCount: number;
@@ -42,7 +43,8 @@ export class CharacterLocDataManager {
 
   subscription: Subscription | null = null;
 
-  constructor(private gameModel: GameModel, logger: GMLogger) {
+  constructor(protected gameModel: GameModel, logger: GMLogger) {
+    super(gameModel, logger);
     let childLogger = logger;
     if (logger.customChild) {
       childLogger = logger.customChild(logger, { service: CharacterLocDataManager.name });
@@ -50,9 +52,12 @@ export class CharacterLocDataManager {
     this.logger = childLogger;
     this.messageCount = 0;
     this.messageHandler = this.messageHandler.bind(this);
+    this.setMetadata({
+      emitEvents: ["setCharacterLocation", "setAllCharacterLocations"]
+    })
   }
 
-  async initialize() {
+  async init() {
     try {
       this.pubSubClient = new PubSub();
       await this.load();
@@ -83,7 +88,7 @@ export class CharacterLocDataManager {
     // }
     this.logger.info(parsedData);
 
-    this.gameModel.execute2<SetCharacterLocation>({
+    this.gameModel.emit2<ESetCharacterLocation>({
       type: 'setCharacterLocation',
       characterId: parsedData.id,
       locationId: parsedData.locationId,
@@ -100,7 +105,7 @@ export class CharacterLocDataManager {
       prevLocationId: null,
     }));
     // this.logger.info(characterLocations);
-    this.gameModel.execute2<SetAllCharacterLocations>({
+    this.gameModel.emit2<ESetAllCharacterLocations>({
       type: 'setAllCharacterLocations',
       characterLocations,
     });
