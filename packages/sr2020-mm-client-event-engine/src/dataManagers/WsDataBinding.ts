@@ -13,7 +13,7 @@ import {
   ESetSettingsCatalog,
   ECharacterLocationChanged,
   // error and forwarding notification
-  PostNotification,
+  // PostNotification,
   // executed actions from server 2 client
   SetLocationRecords,
   SetBeaconRecords,
@@ -198,7 +198,7 @@ export class WsDataBinding extends AbstractEventProcessor {
     const { type } = data;
     if (!forwardServer2ClientActions.includes(type)) {
       this.logger.error('Unexpected action:', type, ', expected actions list:', forwardServer2ClientActions);
-      this.gameModel.execute2<PostNotification>({
+      this.gameModel.emit2<EPostNotification>({
         type: 'postNotification',
         title: 'Unexpected event: ' + type,
         message: `Recieved unexpected event from server. Event is ignored.`,
@@ -299,7 +299,7 @@ export class WsDataBinding extends AbstractEventProcessor {
     // 'characterHealthStatesLoaded'
 
     if (data.type === 'postNotification') {
-      this.gameModel.execute2<PostNotification>(data);
+      this.gameModel.emit2<EPostNotification>(data);
     }
 
     // console.log('onMessage', data);

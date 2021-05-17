@@ -4,7 +4,7 @@ import * as R from 'ramda';
 import { 
   GMLogger, 
   GameModel, 
-  PostNotification,
+  EPostNotification,
   PostSettingsConfirmed,
   EPostSettingsRequested,
   SettingsData,
@@ -22,10 +22,10 @@ import {
 const metadata = {
   actions: [],
   requests: [],
-  emitEvents: [],
+  emitEvents: ['postNotification'],
   listenEvents: ['postSettingsRequested'],
   needRequests: [],
-  needActions: ['setSettings','postNotification','postSettingsConfirmed']
+  needActions: ['setSettings','postSettingsConfirmed']
 };
 
 export class SettingsDataManager<U extends SettingsData, T extends SettingsResourceProvider<U>>
@@ -142,7 +142,7 @@ export class SettingsDataManager<U extends SettingsData, T extends SettingsResou
   getErrorHandler(title: string) {
     return (err: Error) => {
       console.error(err);
-      this.gameModel.execute2<PostNotification>({
+      this.gameModel.emit2<EPostNotification>({
         type: 'postNotification',
         title,
         message: err.message || String(err),

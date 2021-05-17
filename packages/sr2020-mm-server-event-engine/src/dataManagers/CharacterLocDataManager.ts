@@ -7,7 +7,7 @@ import {
   GameModel, 
   CharacterLocationData,
   UserRecord,
-  PostNotification,
+  EPostNotification,
   ESetAllCharacterLocations, 
   ESetCharacterLocation,
   AbstractEventProcessor
@@ -28,10 +28,10 @@ if (process.env.NODE_ENV === 'production') {
 const metadata = {
   actions: [],
   requests: [],
-  emitEvents: [],
+  emitEvents: ['postNotification'],
   listenEvents: [],
   needRequests: [],
-  needActions: ['setCharacterLocation', 'setAllCharacterLocations', 'postNotification']
+  needActions: ['setCharacterLocation', 'setAllCharacterLocations']
 };
 
 export class CharacterLocDataManager extends AbstractEventProcessor {
@@ -137,7 +137,7 @@ export class CharacterLocDataManager extends AbstractEventProcessor {
   getErrorHandler(title: string) {
     return (err: Error) => {
       this.logger.error(title, err);
-      this.gameModel.execute2<PostNotification>({
+      this.gameModel.emit2<EPostNotification>({
         type: 'postNotification',
         title,
         message: err.message || String(err),

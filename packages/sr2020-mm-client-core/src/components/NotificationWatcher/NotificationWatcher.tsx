@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import './NotificationWatcher.css';
 
-import { GameModel, NotificationData } from "sr2020-mm-event-engine";
+import { GameModel, NotificationData, EPostNotification } from "sr2020-mm-event-engine";
 
 import { ToastWrapper } from './ToastWrapper';
 
@@ -39,7 +39,7 @@ export class NotificationWatcher extends Component<NotificationWatcherProps, Not
         // },
       ],
     };
-    this.onPostNotifiaction = this.onPostNotifiaction.bind(this);
+    this.onPostNotification = this.onPostNotification.bind(this);
     this.onClearNotification = this.onClearNotification.bind(this);
   }
 
@@ -47,7 +47,7 @@ export class NotificationWatcher extends Component<NotificationWatcherProps, Not
     const {
       gameModel,
     } = this.props;
-    this.subscribe('on', gameModel);
+    this.subscribe('on2', gameModel);
     console.log('NotificationWatcher mounted');
   }
 
@@ -57,7 +57,7 @@ export class NotificationWatcher extends Component<NotificationWatcherProps, Not
     } = this.props;
     if (prevProps.gameModel !== gameModel) {
       this.subscribe('off', prevProps.gameModel);
-      this.subscribe('on', gameModel);
+      this.subscribe('on2', gameModel);
     }
     console.log('NotificationWatcher did update');
   }
@@ -70,7 +70,7 @@ export class NotificationWatcher extends Component<NotificationWatcherProps, Not
     console.log('NotificationWatcher will unmount');
   }
 
-  onPostNotifiaction(notification: NotificationData) {
+  onPostNotification(notification: EPostNotification) {
     // console.error(kind, title, message);
     this.setState(({ notifications }) => ({
       notifications: [...notifications, notification],
@@ -83,8 +83,8 @@ export class NotificationWatcher extends Component<NotificationWatcherProps, Not
     }));
   }
 
-  subscribe(action: 'on'|'off', gameModel: GameModel) {
-    gameModel[action]('postNotification', this.onPostNotifiaction);
+  subscribe(action: 'on2'|'off', gameModel: GameModel) {
+    gameModel[action]('postNotification', this.onPostNotification);
   }
 
   render() {

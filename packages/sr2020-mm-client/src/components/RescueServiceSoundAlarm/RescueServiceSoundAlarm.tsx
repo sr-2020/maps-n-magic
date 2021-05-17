@@ -2,7 +2,7 @@ import React, { useRef, useEffect, useState } from 'react';
 import './RescueServiceSoundAlarm.css';
 import * as R from 'ramda';
 
-import { GameModel, PostNotification } from "sr2020-mm-event-engine";
+import { GameModel, EPostNotification } from "sr2020-mm-event-engine";
 
 import { WithCharacterIdHealthListForAudio } from '../../dataHOCs';
 
@@ -27,7 +27,7 @@ function playSound(gameModel: GameModel) {
   if (audioPromiseResolved) {
     audioPromise.then((audio) => audio.play()).catch((err) => {
       console.error('Some conditions are not meets', err);
-      gameModel.execute2<PostNotification>({
+      gameModel.emit2<EPostNotification>({
         type: 'postNotification',
         title: 'Запрещено воспроизведение звука',
         message: 'Действие 1. Попробуйте закрыть это сообщение (серьезно, это не шутка).',

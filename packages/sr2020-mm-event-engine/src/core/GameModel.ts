@@ -168,3 +168,6 @@ export class GameModel extends EventEmitter {
     this.verificator.finishVerification();
   }
 }
+
+
+export type GameModelServiceAPI = Pick<GameModel, "emit" | "off" | "on" | "get" | "execute">;

@@ -2,7 +2,7 @@ import {
   EventEngine,
   LocationRecordService,
   BeaconRecordService,
-  NotificationService,
+  // NotificationService,
   CharacterHealthStateService,
   UserRecordService,
   SettingsService,
@@ -71,7 +71,7 @@ type EventBindingList =
 const services = [
   LocationRecordService,
   BeaconRecordService,
-  NotificationService,
+  // NotificationService,
   CharacterHealthStateService,
   UserRecordService,
   SettingsService,
@@ -105,15 +105,6 @@ export function makeGameModel() {
   beaconRecordDataBinding.init();
   gameServer.addDataBinding(beaconRecordDataBinding);
 
-  // gameServer.addDataBinding(new DataBinding({
-  //   gameModel,
-  //   entityName: 'beaconRecord',
-  //   DataProvider: BeaconRecordProvider,
-  //   DataManager: CrudDataManager,
-  //   ReadStrategy: PollingReadStrategy,
-  //   ReadStrategyArgs: [15000],
-  // }));
-
   const locationRecordDataBinding = new LocationDataManager<LocationRecord, LocationRecordProvider>(
     gameModel,
     new LocationRecordProvider(),
@@ -124,15 +115,6 @@ export function makeGameModel() {
   locationRecordDataBinding.init();
   gameServer.addDataBinding(locationRecordDataBinding);
 
-  // gameServer.addDataBinding(new DataBinding({
-  //   gameModel,
-  //   entityName: 'locationRecord',
-  //   DataProvider: LocationRecordProvider, // Implements primitive REST API calls
-  //   DataManager: LocationDataManager, // transform REST results to GM events and vice versa
-  //   ReadStrategy: PollingReadStrategy, // implements read strategy, used deep inside in data manager read part
-  //   ReadStrategyArgs: [15000],
-  // }));
-
   const userRecordDataBinding = new ReadDataManager<UserRecord, UserRecordProvider>(
     gameModel,
     new UserRecordProvider(),
@@ -142,17 +124,6 @@ export function makeGameModel() {
   );
   userRecordDataBinding.init();
   gameServer.addDataBinding(userRecordDataBinding);
-
-
-  // gameServer.addDataBinding(new DataBinding({
-  //   gameModel,
-  //   entityName: 'userRecord',
-  //   DataProvider: UserRecordProvider,
-  //   // DataProvider: UsersRecordProviderMock,
-  //   DataManager: ReadDataManager,
-  //   ReadStrategy: PollingReadStrategy,
-  //   ReadStrategyArgs: [15000, 'reloadUserRecords'],
-  // }));
 
   const manaOceanSettingsDB = new SettingsDataManager<ManaOceanSettingsData, ManaOceanSettingsProvider>(
     gameModel,
@@ -165,17 +136,6 @@ export function makeGameModel() {
   manaOceanSettingsDB.init();
   gameServer.addDataBinding(manaOceanSettingsDB);
 
-  // gameServer.addDataBinding(new DataBinding({
-  //   gameModel,
-  //   entityName: 'manaOcean',
-  //   DataProvider: ManaOceanSettingsProvider,
-  //   DataManager: SettingsDataManager,
-  //   ReadStrategy: PollingReadStrategy,
-  //   ReadStrategyArgs: [15000],
-  //   defaultSettings: defaultManaOceanSettings,
-  //   logger: rootLogger,
-  // }));
-
   const manaOceanEffectsSettingsDB = new SettingsDataManager<ManaOceanEffectSettingsData, ManaOceanEffectSettingsProvider>(
     gameModel,
     new ManaOceanEffectSettingsProvider(),
@@ -187,17 +147,6 @@ export function makeGameModel() {
   manaOceanEffectsSettingsDB.init();
   gameServer.addDataBinding(manaOceanEffectsSettingsDB);
 
-  // gameServer.addDataBinding(new DataBinding({
-  //   gameModel,
-  //   entityName: 'manaOceanEffects',
-  //   DataProvider: ManaOceanEffectSettingsProvider,
-  //   DataManager: SettingsDataManager,
-  //   ReadStrategy: PollingReadStrategy,
-  //   ReadStrategyArgs: [15000],
-  //   defaultSettings: manaOceanEffectSettings,
-  //   logger: rootLogger,
-  // }));
-
   const charLocDM = new CharacterLocDataManager(
     gameModel,
     rootLogger,
@@ -205,15 +154,6 @@ export function makeGameModel() {
   charLocDM.init();
   gameServer.addDataBinding(charLocDM);
 
-  // gameServer.addDataBinding(new RedirectDataBinding(
-  //   gameModel,
-  //   {
-  //     putCharHealthRequested: 'putCharHealthConfirmed',
-  //     putCharLocationRequested: 'putCharLocationConfirmed',
-  //     enableManaOceanRequested: 'enableManaOceanConfirmed',
-  //   },
-  //   rootLogger
-  // ));
   gameServer.addDataBinding(new RedirectDataBinding2<EventBindingList>(
     gameModel,
     [

@@ -2,7 +2,7 @@ import {
   EventEngine,
   LocationRecordService,
   BeaconRecordService,
-  NotificationService,
+  // NotificationService,
   CharacterHealthStateService,
   UserRecordService,
   SettingsService,
@@ -46,7 +46,7 @@ const services = [
   // UserWatcher,
   BaseVersion,
   BeaconRecordService,
-  NotificationService,
+  // NotificationService,
   BackgroundImageService,
   CharacterHealthStateService,
   UserRecordService,
@@ -77,7 +77,9 @@ export function makeGameModel() {
         // used to forward character health states from server to client
         "setCharacterHealthStates",
         // expected from server
-        "characterLocationChanged"
+        "characterLocationChanged",
+        // such messages can be recieved from server to inform user about something
+        "postNotification"
       ]
     }
   ));

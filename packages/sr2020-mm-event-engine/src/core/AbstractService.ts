@@ -1,6 +1,6 @@
 import * as R from 'ramda';
 
-import { GameModel } from "./GameModel";
+import { GameModel, GameModelServiceAPI } from "./GameModel";
 
 import { 
   Metadata, 
@@ -11,8 +11,6 @@ import {
   DefaultGMEvent
 } from "./types";
 import { stringToType, typeToGetter } from "./utils";
-
-type GameModelServiceAPI = Pick<GameModel, "emit" | "off" | "on" | "get" | "execute">;
 
 export class AbstractService<
   EmitEvent extends GMEvent = DefaultGMEvent,

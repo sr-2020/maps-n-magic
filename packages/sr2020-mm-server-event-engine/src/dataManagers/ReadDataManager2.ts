@@ -15,7 +15,7 @@ export function capitalizeFirstLetter(string: string): string {
   return string.charAt(0).toUpperCase() + string.slice(1);
 }
 
-export class ReadDataManager<Entity, T extends GettableResourceProvider<Entity>> extends AbstractEventProcessor {
+export class ReadDataManager2<Entity, T extends GettableResourceProvider<Entity>> extends AbstractEventProcessor {
   entities: Entity[];
 
   plural: string;
@@ -34,9 +34,6 @@ export class ReadDataManager<Entity, T extends GettableResourceProvider<Entity>>
     this.entityName = entityName;
     this.plural = `${entityName}s`;
     this.ccEntityName = capitalizeFirstLetter(entityName);
-    this.setMetadata({
-      emitEvents: ['postNotification']
-    });
   }
 
   init() {
@@ -48,10 +45,11 @@ export class ReadDataManager<Entity, T extends GettableResourceProvider<Entity>>
     this.readStrategy.dispose();
   }
 
-  load() {
+  async load() {
     this.logger.info(`Call to load ${this.entityName}`);
     // console.log(`load ${this.entityName}`);
-    this.dataProvider.get().then((entities) => {
+    try {
+      const entities = await this.dataProvider.get();
       if (R.equals(this.entities, entities)) {
         // console.log('no changes', this.ccEntityName);
         return;
@@ -62,7 +60,9 @@ export class ReadDataManager<Entity, T extends GettableResourceProvider<Entity>>
         type: `set${this.ccEntityName}s`,
         [this.plural]: R.clone(this.entities),
       });
-    }).catch(this.getErrorHandler(`Error on ${this.entityName} loading`));
+    } catch(err) {
+      this.getErrorHandler(`Error on ${this.entityName} loading`)(err);
+    }
   }
 
   getErrorHandler(title: string) {
@@ -71,7 +71,7 @@ export class ReadDataManager<Entity, T extends GettableResourceProvider<Entity>>
       this.gameModel.emit2<EPostNotification>({
         type: 'postNotification',
         title,
-        message: err.message || String(err),
+        message: err?.message || String(err),
         kind: 'error',
       });
     };
