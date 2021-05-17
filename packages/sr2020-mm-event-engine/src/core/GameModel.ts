@@ -13,7 +13,7 @@ export interface ServiceIndex {
   [index: string]: AbstractService;
 }
 
-export class GameModel extends EventEmitter {
+export class GameModelImpl extends EventEmitter {
   actionMap: ServiceIndex;
 
   requestMap: ServiceIndex;
@@ -170,4 +170,18 @@ export class GameModel extends EventEmitter {
 }
 
 
-export type GameModelServiceAPI = Pick<GameModel, "emit" | "off" | "on" | "get" | "execute">;
+export type GameModel = Pick<
+  GameModelImpl, 
+  // requests
+  "get"        | 
+  "hasRequest" |
+  // actions
+  "execute"    |
+  "execute2"   |
+  // events
+  "on"         | 
+  "on2"        | 
+  "off"        |
+  "emit"       | 
+  "emit2"       
+>;

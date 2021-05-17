@@ -1,5 +1,5 @@
 // eslint-disable-next-line max-classes-per-file
-import { GameModel } from './GameModel';
+import { GameModel, GameModelImpl } from './GameModel';
 
 import { GMLogger } from "./types";
 import { getChildLogger } from "./utils";
@@ -12,13 +12,13 @@ import { AbstractEventProcessor } from "./AbstractEventProcessor";
 // }
 
 export class EventEngine {
-  gameModel: GameModel;
+  gameModel: GameModelImpl;
 
   dataBindings: AbstractDataBinding[];
 
   constructor(services2: typeof AbstractService[], logger: GMLogger) {
     // 
-    this.gameModel = new GameModel(getChildLogger(logger, {service: 'GameModel'}));
+    this.gameModel = new GameModelImpl(getChildLogger(logger, {service: 'GameModel'}));
     // this.gameModel.init(services2);
 
     services2.forEach((serviceClass) => {
@@ -43,6 +43,10 @@ export class EventEngine {
   }
 
   getGameModel(): GameModel {
+    return this.gameModel;
+  }
+
+  getGameModelImpl(): GameModelImpl {
     return this.gameModel;
   }
 

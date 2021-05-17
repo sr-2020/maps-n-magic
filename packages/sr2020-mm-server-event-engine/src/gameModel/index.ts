@@ -21,6 +21,7 @@ import {
   EPutCharLocationConfirmed,
   EEnableManaOceanRequested,
   EEnableManaOceanConfirmed,
+  GameModel,
 } from 'sr2020-mm-event-engine';
 
 import { ManaOceanService } from '../services/ManaOceanService';
@@ -85,13 +86,15 @@ const services = [
 ];
 
 // eslint-disable-next-line max-lines-per-function
-export function makeGameModel() {
+export function makeGameModel(): {
+  gameModel: GameModel, gameServer: EventEngine
+} {
   // const gameServer = new EventEngine(services, console);
   // @ts-ignore
   const gameServer = new EventEngine(services, rootLogger);
   // const gameServer = new EventEngine([], rootLogger);
   // gameServer.setData(database);
-  const gameModel = gameServer.getGameModel();
+  const gameModel = gameServer.getGameModelImpl();
   // fillGameModelWithBots(gameModel);
 
   const beaconRecordLogger = rootLogger.customChild(rootLogger, { service: 'BeaconRecordDB' });

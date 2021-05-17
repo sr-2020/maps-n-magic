@@ -1,6 +1,6 @@
 import * as R from 'ramda';
 
-import { GameModel, GameModelServiceAPI } from "./GameModel";
+import { GameModel } from "./GameModel";
 
 import { 
   Metadata, 
@@ -29,7 +29,7 @@ export class AbstractService<
     listenEvents: [],
   };
 
-  constructor(public gameModel: GameModelServiceAPI, public logger: GMLogger) {}
+  constructor(public gameModel: GameModel, public logger: GMLogger) {}
 
   init() {}
 

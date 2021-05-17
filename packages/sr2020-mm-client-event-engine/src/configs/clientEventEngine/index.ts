@@ -7,7 +7,8 @@ import {
   UserRecordService,
   SettingsService,
   ManaOceanEnableService,
-  StubEventProcessor
+  StubEventProcessor,
+  GameModel,
 } from 'sr2020-mm-event-engine';
 
 // import { Migrator } from './Migrator';
@@ -56,11 +57,13 @@ const services = [
   TrackedCharacterService,
 ];
 
-export function makeGameModel() {
+export function makeGameModel(): {
+  gameModel: GameModel, gameServer: EventEngine
+} {
   // @ts-ignore
   const gameServer = new EventEngine(services, console);
   // gameServer.setData(database);
-  const gameModel = gameServer.getGameModel();
+  const gameModel = gameServer.getGameModelImpl();
   // fillGameModelWithBots(gameModel);
 
   const wsConnection = new WSConnector(gameModel);
