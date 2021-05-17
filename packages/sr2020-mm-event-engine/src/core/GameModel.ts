@@ -174,6 +174,7 @@ export type GameModel = Pick<
   GameModelImpl, 
   // requests
   "get"        | 
+  "get2"       | 
   "hasRequest" |
   // actions
   "execute"    |
@@ -183,5 +184,6 @@ export type GameModel = Pick<
   "on2"        | 
   "off"        |
   "emit"       | 
-  "emit2"       
+  "emit2"      |
+  "listenerCount"
 >;
