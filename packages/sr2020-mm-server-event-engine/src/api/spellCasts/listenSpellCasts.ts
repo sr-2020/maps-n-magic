@@ -3,15 +3,8 @@
 import { PubSub, Message } from '@google-cloud/pubsub';
 import { SpellCast } from "sr2020-mm-event-engine";
 // import moment from 'moment-timezone';
+import { manaOceanSpellCastSubscriptionName } from "../constants";
 
-let subscriptionName: string;
-
-if (process.env.NODE_ENV === 'production') {
-  subscriptionName = 'mm2-mana-ocean-spell-cast-prod';
-} else {
-  subscriptionName = 'mm2-mana-ocean-spell-cast-dev';
-}
-console.log('subscriptionName', subscriptionName);
 const timeout = 60;
 
 // Creates a client; cache this for further use
@@ -22,7 +15,7 @@ export function listenSpellCasts(
   simulateMessages: boolean = false
 ) {
   // References an existing subscription
-  const subscription = pubSubClient.subscription(subscriptionName);
+  const subscription = pubSubClient.subscription(manaOceanSpellCastSubscriptionName);
 
   // Create an event handler to handle messages
   let messageCount = 0;

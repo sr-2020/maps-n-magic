@@ -5,15 +5,9 @@
 import { PubSub, Message } from '@google-cloud/pubsub';
 // import moment from 'moment-timezone';
 // import { randomInteger } from '../../utils';
+import { charLocChangeSubscriptionName } from "../constants";
 
-let subscriptionName: string;
 
-if (process.env.NODE_ENV === 'production') {
-  subscriptionName = 'mm2-char-loc-change-prod';
-} else {
-  subscriptionName = 'mm2-char-loc-change-dev';
-}
-console.log('subscriptionName', subscriptionName);
 const timeout = 60;
 
 // Creates a client; cache this for further use
@@ -30,7 +24,7 @@ export function listenCharacterLocations(
   simulateMessages = false
 ) {
   // References an existing subscription
-  const subscription = pubSubClient.subscription(subscriptionName);
+  const subscription = pubSubClient.subscription(charLocChangeSubscriptionName);
 
   // Create an event handler to handle messages
   let messageCount = 0;

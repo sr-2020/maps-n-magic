@@ -13,17 +13,9 @@ import {
   AbstractEventProcessor
 } from "sr2020-mm-event-engine";
 
-import { usersUrl } from '../api/constants';
+import { usersUrl, charLocChange2SubscriptionName } from '../api/constants';
 
 // import {  } from "../index";
-
-let subscriptionName: string;
-
-if (process.env.NODE_ENV === 'production') {
-  subscriptionName = 'mm2-char-loc-change-prod-2';
-} else {
-  subscriptionName = 'mm2-char-loc-change-dev-2';
-}
 
 const metadata = {
   actions: [],
@@ -61,8 +53,8 @@ export class CharacterLocDataManager extends AbstractEventProcessor {
     try {
       this.pubSubClient = new PubSub();
       await this.load();
-      this.logger.info('subscriptionName', subscriptionName);
-      this.subscription = this.pubSubClient.subscription(subscriptionName);
+      // this.logger.info('charLocChange2SubscriptionName', charLocChange2SubscriptionName);
+      this.subscription = this.pubSubClient.subscription(charLocChange2SubscriptionName);
       this.subscription.on('message', this.messageHandler);
     } catch (err) {
       this.getErrorHandler('Unexpected error')(err);

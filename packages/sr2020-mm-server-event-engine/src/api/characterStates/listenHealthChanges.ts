@@ -3,15 +3,8 @@
 import { PubSub, Message } from '@google-cloud/pubsub';
 // import moment from 'moment-timezone';
 // import { randomInteger } from '../../utils';
+import { rescueServiceSubscriptionName } from "../constants";
 
-let subscriptionName: string;
-
-if (process.env.NODE_ENV === 'production') {
-  subscriptionName = 'mm2-rescue-service-prod';
-} else {
-  subscriptionName = 'mm2-rescue-service-dev';
-}
-console.log('subscriptionName', subscriptionName);
 const timeout = 60;
 
 // Creates a client; cache this for further use
@@ -26,7 +19,7 @@ export type HealthChangeMessage = {
 
 export function listenHealthChanges(callback: (msg: HealthChangeMessage) => void, simulateMessages = false) {
   // References an existing subscription
-  const subscription = pubSubClient.subscription(subscriptionName);
+  const subscription = pubSubClient.subscription(rescueServiceSubscriptionName);
 
   // Create an event handler to handle messages
   let messageCount = 0;

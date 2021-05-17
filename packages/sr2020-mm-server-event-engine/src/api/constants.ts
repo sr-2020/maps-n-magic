@@ -18,7 +18,12 @@ assert(GATEWAY_URL != null, "GATEWAY_URL is not specified");
 assert(BILLING_URL != null, "BILLING_URL is not specified");
 assert(PUSH_URL != null, "PUSH_URL is not specified");
 
-console.log("urls", POSITION_URL, GATEWAY_URL, BILLING_URL, PUSH_URL);
+console.log("base urls", { 
+  POSITION_URL, 
+  GATEWAY_URL, 
+  BILLING_URL, 
+  PUSH_URL 
+});
 
 export const beaconsUrl = POSITION_URL + '/api/v1/beacons';
 export const locationsUrl = POSITION_URL + '/api/v1/locations';
@@ -32,6 +37,38 @@ export const pushServiceUrl = PUSH_URL + '/send_notification';
 // // /api/v1/users/{id}
 // const url = 'https://position.evarun.ru/api/v1/users';
 // const locationUrl = 'https://position.evarun.ru/api/v1/locations';
+
+let rescueServiceSubscriptionName: string;
+let charLocChangeSubscriptionName: string;
+let manaOceanSpellCastSubscriptionName: string;
+let charLocChange2SubscriptionName: string;
+
+if (process.env.NODE_ENV === 'production') {
+  rescueServiceSubscriptionName = 'mm2-rescue-service-prod';
+  charLocChangeSubscriptionName = 'mm2-char-loc-change-prod';
+  manaOceanSpellCastSubscriptionName = 'mm2-mana-ocean-spell-cast-prod';
+  charLocChange2SubscriptionName = 'mm2-char-loc-change-prod-2';
+} else {
+  rescueServiceSubscriptionName = 'mm2-rescue-service-dev';
+  charLocChangeSubscriptionName = 'mm2-char-loc-change-dev';
+  manaOceanSpellCastSubscriptionName = 'mm2-mana-ocean-spell-cast-dev';
+  charLocChange2SubscriptionName = 'mm2-char-loc-change-dev-2';
+}
+
+console.log('pubSub subscriptions', {
+  rescueServiceSubscriptionName,
+  charLocChangeSubscriptionName,
+  manaOceanSpellCastSubscriptionName,
+  charLocChange2SubscriptionName,
+})
+
+export { 
+  rescueServiceSubscriptionName,
+  charLocChangeSubscriptionName,
+  manaOceanSpellCastSubscriptionName,
+  charLocChange2SubscriptionName,
+};
+
 
 export const defaultBeaconRecord: Omit<BeaconRecord, 'id'> = {
   ssid: '',
