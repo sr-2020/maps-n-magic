@@ -11,3 +11,7 @@ export { logger as winstonLogger };
 export * from './services/CharacterLocationService';
 export * from './services/PushNotificationService';
 export * from './services/MassacreService';
+
+// export * from './testPg';
+
+import "./processTerminationHandler";
