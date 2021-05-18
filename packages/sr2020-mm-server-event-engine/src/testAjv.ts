@@ -1,6 +1,6 @@
 
-import Ajv, { JSONSchemaType } from "ajv";
-
+// import Ajv, { JSONSchemaType } from "ajv";
+import { validateSpirit } from "./api/spirits/validateSpirit";
 import { 
   Spirit
 } from 'sr2020-mm-event-engine';
@@ -44,56 +44,72 @@ const spirit: Spirit = {
   "id": 3
 };
 
+const defaultSpirit: Spirit = {
+  "id": 3,
+  name: '',
+  // aura: '',
+  fraction: '',
+  story: '',
+  abilities: [],
+
+  // latLng: {
+  //   lat: 0,
+  //   lng: 0,
+  // },
+  // plane: 'subastral',
+  // hitPoints: 10,
+  maxHitPoints: 10,
+};
 
 
 // const Ajv = require("ajv")
 // const ajv = new Ajv()
-const ajv = new Ajv({
-  allErrors: true,
-  removeAdditional: true,
-  useDefaults: true
-})
+// const ajv = new Ajv({
+//   allErrors: true,
+//   removeAdditional: true,
+//   useDefaults: true
+// })
 
-const schema: JSONSchemaType<Spirit> = {
-  type: "object",
-  properties: {
-    name: {type: "string", default: ""},
-    id: {type: "integer"},
-    // aura: {type: "string"},
-    fraction: {type: "string", default: ""},
-    story: {type: "string", default: ""},
-    abilities: {type: "array", items: {type: "string"}, default: []},
-    maxHitPoints: {type: "integer", minimum: 1, default: 10},
-    // latLng: {
-    //   type: "object",
-    //   properties: {
-    //   }
-    // }
-  },
-  required: ["name", "id", "fraction", "story", "abilities", "maxHitPoints"],
-  additionalProperties: false,
-}
+// const schema: JSONSchemaType<Spirit> = {
+//   type: "object",
+//   properties: {
+//     id: {type: "integer"},
+//     name: {type: "string", default: ""},
+//     // aura: {type: "string"},
+//     fraction: {type: "string", default: ""},
+//     story: {type: "string", default: ""},
+//     abilities: {type: "array", items: {type: "string"}, default: []},
+//     maxHitPoints: {type: "integer", minimum: 1, default: 10},
+//     // latLng: {
+//     //   type: "object",
+//     //   properties: {
+//     //   }
+//     // }
+//   },
+//   required: ["name", "id", "fraction", "story", "abilities", "maxHitPoints"],
+//   additionalProperties: false,
+// }
 
-const validate = ajv.compile(schema)
+// const validate = ajv.compile(schema)
 
 const data = {foo: 1, bar: "abc", sdf: 12}
-const valid = validate(spirit)
+const valid = validateSpirit(spirit)
 // if (!valid) 
-console.log(validate.errors)
+console.log(validateSpirit.errors)
 console.log(spirit)
 
 const spirit2 = {id: 12};
-const valid2 = validate(spirit2)
+const valid2 = validateSpirit(spirit2)
 // if (!valid) 
-console.log(validate.errors)
+console.log(validateSpirit.errors)
 console.log(spirit2)
 
-if (validate(spirit2)) {
+if (validateSpirit(spirit2)) {
   const t1 = spirit2;
   // data is MyData here
   // console.log(data.foo)
 } else {
-  console.log(validate.errors)
+  console.log(validateSpirit.errors)
 }
 
 

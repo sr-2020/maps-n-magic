@@ -1,5 +1,6 @@
 
 import { Client, Pool } from "pg";
+import { getSpirits, postSpirit } from "./api/spirits/apiInterfaces";
 
 // pg default env variables
 // PGUSER=dbuser \
@@ -38,20 +39,25 @@ async function poolSimpleSpiritCheck() {
   // await client.query(createTableText)
   const newSpirit = { name: 'spiritName', health: 10 };
   // create a new spirit
-  await pool.query('INSERT INTO spirit(data) VALUES($1)', [newSpirit])
-  const { rows } = await pool.query('SELECT * FROM spirit')
-  console.log(rows)
+  // const { rows: rows4 } = await pool.query('INSERT INTO spirit(data) VALUES($1) RETURNING *', [newSpirit])
+  // console.log('insert rows', rows4);
+  console.log('insert rows', await postSpirit(newSpirit));
+
+  
+
+  const rows = await getSpirits();
+  console.log(rows);
 
   // update spirit
   // UPDATE films SET kind = 'Dramatic' WHERE kind = 'Drama';
   await pool.query('UPDATE spirit SET data = $1 WHERE id = $2', [{ name: 'spiritName2', health: 20 }, rows[0].id]);
-  const { rows: rows3 } = await pool.query('SELECT * FROM spirit')
+  const rows3 = await getSpirits();
   console.log(rows3)
 
 
   await pool.query('DELETE FROM spirit WHERE id = $1', [rows[0].id]);
-  const { rows: rows2 } = await pool.query('SELECT * FROM spirit')
-  console.log(rows2)
+  const rows2 = await getSpirits();
+  console.log(rows2);
   await pool.end();
   /*
   output:
