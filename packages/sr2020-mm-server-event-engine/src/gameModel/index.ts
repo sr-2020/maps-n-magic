@@ -52,11 +52,14 @@ import {
   RemoteLocationRecordProvider as LocationRecordProvider,
   RemoteBeaconRecordProvider as BeaconRecordProvider,
   RemoteUsersRecordProvider as UserRecordProvider,
-  ManaOceanSettingsProvider,
-  ManaOceanEffectSettingsProvider,
   ManageablePlusResourceProvider,
   ManageableResourceProvider
 } from '../api/position';
+
+import {  
+  ManaOceanSettingsProvider,
+  ManaOceanEffectSettingsProvider,
+} from "../api/settings";
 
 import { CharacterStatesListener } from '../api/characterStates/CharacterStatesListener';
 import { CharacterLocationListener } from '../api/position/CharacterLocationListener';

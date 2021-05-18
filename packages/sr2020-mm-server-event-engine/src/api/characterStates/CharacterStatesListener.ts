@@ -33,7 +33,7 @@ export class CharacterStatesListener extends AbstractEventProcessor {
     listenHealthChanges(this.onMessageRecieved, true);
     this.setMetadata({
       emitEvents: ["putCharHealthRequested"]
-    })
+    });
   }
 
   async onMessageRecieved(data: HealthChangeMessage) {

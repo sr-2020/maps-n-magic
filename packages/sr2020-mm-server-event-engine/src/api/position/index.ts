@@ -5,33 +5,29 @@ import {
   BeaconRecord,
   LocationRecord,
   UserRecord,
-  ManaOceanEffectSettingsData,
-  ManaOceanSettingsData
 } from 'sr2020-mm-event-engine';
+
 import {
   gettable, 
   postable, 
   puttable, 
   deletable, 
-  postSettings, 
-  getSettings, 
   multiPuttable,
+} from './apiInterfaces';
+
+import {  
   Gettable,
   Postable,
   Puttable,
   Deletable,
-  PostSettings,
-  GetSettings,
   MultiPuttable
-} from './apiInterfaces';
+} from "../types";
 
 import {
   locationsUrl,
   beaconsUrl,
   usersUrl,
   positionUrl,
-  manaOceanConfigUrl,
-  manaOceanEffectConfigUrl,
   defaultBeaconRecord,
   defaultLocationRecord,
 } from '../constants';
@@ -78,19 +74,6 @@ export class ManageablePlusResourceProvider<T> implements Gettable<T>, Postable<
   putMultiple({ updates }: { updates: T[]; }): Promise<T[]> { throw new Error('Method not implemented.');}
 }
 
-export class SettingsResourceProvider<T> implements PostSettings<T>, GetSettings<T> {
-  constructor(public url: string) {
-    return Object.assign(
-      this,
-      postSettings(this),
-      getSettings(this),
-    );
-  }
-  // all methods will be created by object assign
-  get(): Promise<T> { throw new Error('Method not implemented.');}
-  post(settings: T): Promise<T> {throw new Error('Method not implemented.');}
-}
-
 export class GettableResourceProvider<T> implements Gettable<T> {
   constructor(public url: string) {
     return Object.assign(
@@ -129,18 +112,6 @@ export class RemoteUsersRecordProvider extends GettableResourceProvider<UserReco
 //     return R.clone(this.isEven ? [users[1]] : users);
 //   }
 // }
-
-export class ManaOceanSettingsProvider extends SettingsResourceProvider<ManaOceanSettingsData> {
-  constructor() {
-    super(manaOceanConfigUrl);
-  }
-}
-
-export class ManaOceanEffectSettingsProvider extends SettingsResourceProvider<ManaOceanEffectSettingsData> {
-  constructor() {
-    super(manaOceanEffectConfigUrl);
-  }
-}
 
 export async function innerPostUserPosition(characterId: number, beacon: BeaconRecord) {
   return fetchWithTimeout(positionUrl, {

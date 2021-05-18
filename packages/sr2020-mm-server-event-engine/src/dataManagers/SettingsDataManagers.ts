@@ -17,7 +17,7 @@ import { capitalizeFirstLetter } from './ReadDataManager';
 
 import {
   SettingsResourceProvider
-} from '../api/position';
+} from '../api/settings';
 
 const metadata = {
   actions: [],
