@@ -1,7 +1,7 @@
 // eslint-disable-next-line max-classes-per-file
 import * as R from 'ramda';
 
-import { GameModel, GMLogger, EPostNotification, AbstractEventProcessor } from "sr2020-mm-event-engine";
+import { GameModel, GMLogger, EPostNotification, AbstractEventProcessor, Identifiable } from "sr2020-mm-event-engine";
 
 import { DataProvider, ReadStrategy } from "./types";
 
@@ -11,11 +11,16 @@ import {
   GettableResourceProvider
 } from '../api/position';
 
+import { Gettable2 } from "../api/types";
+
 export function capitalizeFirstLetter(string: string): string {
   return string.charAt(0).toUpperCase() + string.slice(1);
 }
 
-export class ReadDataManager2<Entity, T extends GettableResourceProvider<Entity>> extends AbstractEventProcessor {
+export class ReadDataManager2<
+  Entity extends Identifiable, 
+  T extends Gettable2<Entity>
+> extends AbstractEventProcessor {
   entities: Entity[];
 
   plural: string;
@@ -23,17 +28,20 @@ export class ReadDataManager2<Entity, T extends GettableResourceProvider<Entity>
   ccEntityName: string;
 
   constructor(
-    protected gameModel: GameModel, 
+    gameModel: GameModel, 
     protected dataProvider: T, 
     protected entityName: string, 
     private readStrategy: ReadStrategy,
-    protected logger: GMLogger, 
+    logger: GMLogger, 
   ) {
     super(gameModel, logger);
     this.entities = [];
     this.entityName = entityName;
     this.plural = `${entityName}s`;
     this.ccEntityName = capitalizeFirstLetter(entityName);
+    this.setMetadata({
+      emitEvents: [`set${this.ccEntityName}s`, 'postNotification']
+    });
   }
 
   init() {
@@ -56,7 +64,7 @@ export class ReadDataManager2<Entity, T extends GettableResourceProvider<Entity>
       }
       this.entities = entities;
       // console.log(entities);
-      this.gameModel.execute({
+      this.gameModel.emit2({
         type: `set${this.ccEntityName}s`,
         [this.plural]: R.clone(this.entities),
       });

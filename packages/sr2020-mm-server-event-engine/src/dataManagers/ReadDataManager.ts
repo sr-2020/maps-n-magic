@@ -11,11 +11,13 @@ import {
   GettableResourceProvider
 } from '../api/position';
 
+import { Gettable } from "../api/types";
+
 export function capitalizeFirstLetter(string: string): string {
   return string.charAt(0).toUpperCase() + string.slice(1);
 }
 
-export class ReadDataManager<Entity, T extends GettableResourceProvider<Entity>> extends AbstractEventProcessor {
+export class ReadDataManager<Entity, T extends Gettable<Entity>> extends AbstractEventProcessor {
   entities: Entity[];
 
   plural: string;

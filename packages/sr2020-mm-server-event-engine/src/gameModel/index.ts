@@ -22,6 +22,7 @@ import {
   EEnableManaOceanRequested,
   EEnableManaOceanConfirmed,
   GameModel,
+  Spirit,
 } from 'sr2020-mm-event-engine';
 
 import { ManaOceanService } from '../services/ManaOceanService';
@@ -37,6 +38,8 @@ import { CharacterLocationService } from '../services/CharacterLocationService';
 import { CrudDataManager } from '../dataManagers/CrudDataManager';
 import { LocationDataManager } from '../dataManagers/LocationDataManager';
 import { ReadDataManager } from '../dataManagers/ReadDataManager';
+import { ReadDataManager2 } from '../dataManagers/ReadDataManager2';
+import { CrudDataManager2 } from '../dataManagers/CrudDataManager2';
 import { SettingsDataManager } from '../dataManagers/SettingsDataManagers';
 import { PollingReadStrategy } from '../dataManagers/PollingReadStrategy';
 // import { DataBinding } from '../dataManagers/DataBinding';
@@ -65,6 +68,7 @@ import { CharacterStatesListener } from '../api/characterStates/CharacterStatesL
 import { CharacterLocationListener } from '../api/position/CharacterLocationListener';
 import { SpellCastsListener } from '../api/spellCasts/SpellCastsListener';
 import { PushNotificationEmitter } from '../api/pushNotificationEmitter';
+import { SpiritProvider } from '../api/spirits';
 
 type EventBindingList = 
   StrictEventBinding<EPutCharHealthRequested, EPutCharHealthConfirmed> |
@@ -120,6 +124,20 @@ export function makeGameModel(): {
   );
   locationRecordDataBinding.init();
   gameServer.addDataBinding(locationRecordDataBinding);
+
+  
+
+  // const spiritDataBinding = new ReadDataManager2<Spirit, SpiritProvider>(
+  const spiritDataBinding = new CrudDataManager2<Spirit, SpiritProvider>(
+    gameModel,
+    new SpiritProvider(),
+    'spirit',
+    new PollingReadStrategy(gameModel, 15000, rootLogger),
+    rootLogger
+  );
+  spiritDataBinding.init();
+  gameServer.addDataBinding(spiritDataBinding);
+
 
   const userRecordDataBinding = new ReadDataManager<UserRecord, UserRecordProvider>(
     gameModel,
@@ -186,7 +204,11 @@ export function makeGameModel(): {
         "removeManaEffect",
         "wipeManaOceanEffects",
         // used to forward character health states from server to client
-        "setCharacterHealthStates"
+        "setCharacterHealthStates",
+        // temporary stubs for spirit service
+        'postSpiritRequested',
+        'putSpiritRequested',
+        'deleteSpiritRequested',
       ]
     }
   ));
