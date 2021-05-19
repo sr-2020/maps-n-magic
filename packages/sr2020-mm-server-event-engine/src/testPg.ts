@@ -1,20 +1,6 @@
 
 import { Client, Pool } from "pg";
-import { getSpirits, postSpirit } from "./api/spirits/apiInterfaces";
-
-// pg default env variables
-// PGUSER=dbuser \
-// PGHOST=database.server.com \
-// PGPASSWORD=secretpassword \
-// PGDATABASE=mydb \
-// PGPORT=3211 \
-
-// defaults
-// PGHOST='localhost'
-// PGUSER=process.env.USER
-// PGDATABASE=process.env.USER
-// PGPASSWORD=null
-// PGPORT=5432
+import { getSpirits, postSpirit, putSpirit, deleteSpirit } from "./api/spirits/apiInterfaces";
 
 async function simpleClientExample() {
     // clients will also use environment variables
@@ -26,17 +12,8 @@ async function simpleClientExample() {
   await client.end()
 }
 async function poolSimpleSpiritCheck() {
-  const pool = new Pool()
+  const pool = new Pool();
 
-  //     const createTableText = `
-  // CREATE EXTENSION IF NOT EXISTS "pgcrypto";
-  // CREATE TEMP TABLE IF NOT EXISTS users (
-  //   id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
-  //   data JSONB
-  // );
-  // `
-  // create our temp table
-  // await client.query(createTableText)
   const newSpirit = { name: 'spiritName', health: 10 };
   // create a new spirit
   // const { rows: rows4 } = await pool.query('INSERT INTO spirit(data) VALUES($1) RETURNING *', [newSpirit])
@@ -46,30 +23,23 @@ async function poolSimpleSpiritCheck() {
   
 
   const rows = await getSpirits();
-  console.log(rows);
+  console.log("after post", rows);
 
   // update spirit
   // UPDATE films SET kind = 'Dramatic' WHERE kind = 'Drama';
-  await pool.query('UPDATE spirit SET data = $1 WHERE id = $2', [{ name: 'spiritName2', health: 20 }, rows[0].id]);
+  // await pool.query('UPDATE spirit SET data = $1 WHERE id = $2', [{ name: 'spiritName2', health: 20 }, rows[0].id]);
+
+  await putSpirit({ ...rows[0], name: 'spiritName2' });
   const rows3 = await getSpirits();
-  console.log(rows3)
+  console.log("after put", rows3);
 
-
-  await pool.query('DELETE FROM spirit WHERE id = $1', [rows[0].id]);
+  // const rows = await getSpirits();
+  await deleteSpirit(rows[0].id);
+  // await pool.query('DELETE FROM spirit WHERE id = $1', [rows[0].id+25]);
   const rows2 = await getSpirits();
-  console.log(rows2);
+  console.log("after delete", rows2);
   await pool.end();
-  /*
-  output:
-  [{
-    id: 'd70195fd-608e-42dc-b0f5-eee975a621e9',
-    data: { email: 'brian.m.carlson@gmail.com' }
-  }]
-  */
 
-
-  // const res = await pool.query('SELECT NOW()')
-  // console.log(res);
 }
 async function poolExample() {
   // pools will use environment variables
