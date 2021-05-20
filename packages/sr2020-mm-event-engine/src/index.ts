@@ -13,6 +13,8 @@ export * from './services/SettingsService/index';
 export * from './services/SettingsService/types';
 export * from './services/UserRecordService/index'; 
 export * from './services/UserRecordService/types';
+export * from './services/SpiritService/index'; 
+export * from './services/SpiritService/types';
 
 export * from './utils';
 export * from './utils/moonActivityUtils';

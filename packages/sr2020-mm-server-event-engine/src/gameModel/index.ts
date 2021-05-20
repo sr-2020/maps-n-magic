@@ -1,5 +1,5 @@
 import { 
-  EventEngine,
+  // services
   LocationRecordService,
   BeaconRecordService,
   // NotificationService,
@@ -7,6 +7,9 @@ import {
   UserRecordService,
   SettingsService,
   ManaOceanEnableService,
+  SpiritService,
+  // 
+  EventEngine,
   AbstractService,
   BeaconRecord,
   LocationRecord,
@@ -89,6 +92,7 @@ const services = [
   PushNotificationService,
   AudioStageService,
   CharacterLocationService,
+  SpiritService,
   // RescueServicePushService,
 ];
 
