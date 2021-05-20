@@ -79,7 +79,7 @@ export class ReadDataManager2<
       this.gameModel.emit2<EPostNotification>({
         type: 'postNotification',
         title,
-        message: err?.message || String(err),
+        message: err.message || String(err),
         kind: 'error',
       });
     };
