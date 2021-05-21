@@ -1,5 +1,5 @@
 # builder
-FROM node:12.2.0 as BUILDER_FRONTEND
+FROM node:14.17.0 as BUILDER_FRONTEND
 
 WORKDIR /app
 
