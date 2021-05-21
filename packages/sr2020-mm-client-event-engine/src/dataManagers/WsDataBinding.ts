@@ -4,6 +4,7 @@ import {
   // ForwardServer2Client events
   ELocationRecordsChanged2,
   EBeaconRecordsChanged2,
+  ESpiritsChanged,
   ESettingsChanged,
   EPostNotification,
   ECharacterHealthStateChanged,
@@ -26,13 +27,21 @@ import {
   EEnableManaOceanConfirmed,
   SetUserRecords,
   // executed actions from client 2 server
+  // locations
   EPostLocationRecordRequested,
   EPutLocationRecordRequested,
   EPutLocationRecordsRequested,
   EDeleteLocationRecordRequested,
+  // beacons
   EPostBeaconRecordRequested,
   EPutBeaconRecordRequested,
   EDeleteBeaconRecordRequested,
+  // spirits
+  EPostSpiritRequested,
+  EPutSpiritRequested,
+  EDeleteSpiritRequested,
+  ESetSpirits,
+  // misc
   EPostSettingsRequested,
   EPutCharHealthRequested,
   EEnableManaOceanRequested,
@@ -43,10 +52,9 @@ import {
   EEmitCharacterLocationChanged,
   // 'emitCharacterLocationChanged',
   EReloadUserRecords,
-
   //???
   // characterLocationChanged
-  AbstractEventProcessor
+  AbstractEventProcessor,
 } from "sr2020-mm-event-engine";
 
 import { TrackedCharacterLocationChanged } from "../index";
@@ -60,6 +68,7 @@ export function capitalizeFirstLetter(string: string): string {
 type ForwardServer2ClientEvent = 
   ELocationRecordsChanged2 |
   EBeaconRecordsChanged2 |
+  ESpiritsChanged |
   ESettingsChanged |
   EPostNotification |
   ECharacterHealthStateChanged |
@@ -70,9 +79,10 @@ type ForwardServer2ClientEvent =
   ESetSettingsCatalog;
 
 // In reality this is event list, not actions.
-const forwardServer2ClientActions = [
+const forwardServer2ClientActions: ForwardServer2ClientEvent["type"][] = [
   'locationRecordsChanged2',
   'beaconRecordsChanged2',
+  'spiritsChanged',
   // 'manaOceanSettingsChanged',
   'settingsChanged',
   'postNotification',
@@ -85,33 +95,62 @@ const forwardServer2ClientActions = [
   // 'characterHealthStateChanged',
 ];
 
-type ForwardClient2ServerEventTypes = 
-  EPostLocationRecordRequested["type"] |
-  EPutLocationRecordRequested["type"] |
-  EPutLocationRecordsRequested["type"] |
-  EDeleteLocationRecordRequested["type"] |
-  EPostBeaconRecordRequested["type"] |
-  EPutBeaconRecordRequested["type"] |
-  EDeleteBeaconRecordRequested["type"] |
-  EPostSettingsRequested["type"] |
-  EPutCharHealthRequested["type"] |
-  EEnableManaOceanRequested["type"] |
-  EWipeManaOceanEffects["type"] |
-  ERemoveManaEffect["type"] |
-  EAddManaEffect["type"] |
-  EEmitCharacterLocationChanged["type"] |
+type WsEmitEvent = 
+  EPostNotification |
+  ESetSpirits |
+  EPutCharHealthConfirmed |
+  ESetCharacterHealthStates |
+  EEnableManaOceanConfirmed;
+
+const wsEmitEvents: WsEmitEvent["type"][] = [
+  'postNotification',
+  "enableManaOceanConfirmed",
+  "putCharHealthConfirmed",
+  "setCharacterHealthStates",
+  "setSpirits"
+];
+
+type ForwardClient2ServerEventTypes = (
+  // locations
+  EPostLocationRecordRequested |
+  EPutLocationRecordRequested |
+  EPutLocationRecordsRequested |
+  EDeleteLocationRecordRequested |
+  // beacons
+  EPostBeaconRecordRequested |
+  EPutBeaconRecordRequested |
+  EDeleteBeaconRecordRequested |
+  EPostSettingsRequested |
+  // spirits
+  EPostSpiritRequested |
+  EPutSpiritRequested |
+  EDeleteSpiritRequested |
+  // misc
+  EPutCharHealthRequested |
+  EEnableManaOceanRequested |
+  EWipeManaOceanEffects |
+  ERemoveManaEffect |
+  EAddManaEffect |
+  EEmitCharacterLocationChanged |
   // not event
-  EReloadUserRecords["type"];
+  EReloadUserRecords
+)["type"];
 
 // TODO try to get list of event types from event type interfaces
 const forwardClient2ServerEvents: ForwardClient2ServerEventTypes[] = [
+  // locations
   'postLocationRecordRequested',
   'putLocationRecordRequested',
   'putLocationRecordsRequested',
   'deleteLocationRecordRequested',
+  // beacons
   'postBeaconRecordRequested',
   'putBeaconRecordRequested',
   'deleteBeaconRecordRequested',
+  // spirits
+  'postSpiritRequested',
+  'putSpiritRequested',
+  'deleteSpiritRequested',
   // 'postManaOceanSettingsRequested',
   'postSettingsRequested',
   'putCharHealthRequested',
@@ -140,14 +179,16 @@ export class WsDataBinding extends AbstractEventProcessor {
     this.subscribeWsConnection('on', this.wsConnection);
     this.initClientConfig();
     this.setMetadata({
-      emitEvents: forwardClient2ServerEvents,
-      listenEvents: forwardServer2ClientActions
+      emitEvents: wsEmitEvents,
+      listenEvents: forwardClient2ServerEvents 
     });
   }
 
   initClientConfig() {
     const hasError = this.wsConnection.send({
       message: 'initClientConfig',
+      // TODO consider replacing getter-event pairs by
+      // trigger-event pairs for consistency
       data: [{
         type: 'locationRecordsChanged2',
         payload: 'locationRecords',
@@ -198,7 +239,7 @@ export class WsDataBinding extends AbstractEventProcessor {
     const { type } = data;
     if (!forwardServer2ClientActions.includes(type)) {
       this.logger.error('Unexpected action:', type, ', expected actions list:', forwardServer2ClientActions);
-      this.gameModel.emit2<EPostNotification>({
+      this.gameModel.emit2<WsEmitEvent>({
         type: 'postNotification',
         title: 'Unexpected event: ' + type,
         message: `Recieved unexpected event from server. Event is ignored.`,
@@ -218,6 +259,13 @@ export class WsDataBinding extends AbstractEventProcessor {
       this.gameModel.execute2<SetBeaconRecords>({
         ...data,
         type: 'setBeaconRecords',
+      });
+    }
+
+    if (data.type === 'spiritsChanged') {
+      this.gameModel.emit2<WsEmitEvent>({
+        ...data,
+        type: 'setSpirits',
       });
     }
 
@@ -259,7 +307,7 @@ export class WsDataBinding extends AbstractEventProcessor {
 
     if (data.type === 'characterHealthStateChanged') {
       // this.gameModel.execute2<PutCharHealthConfirmed>({
-      this.gameModel.emit2<EPutCharHealthConfirmed>({
+      this.gameModel.emit2<WsEmitEvent>({
         ...data,
         type: 'putCharHealthConfirmed',
       });
@@ -267,7 +315,7 @@ export class WsDataBinding extends AbstractEventProcessor {
 
     if (data.type === 'characterHealthStatesLoaded') {
       // this.gameModel.execute2<SetCharacterHealthStates>({
-      this.gameModel.emit2<ESetCharacterHealthStates>({
+      this.gameModel.emit2<WsEmitEvent>({
         ...data,
         type: 'setCharacterHealthStates',
       });
@@ -275,7 +323,7 @@ export class WsDataBinding extends AbstractEventProcessor {
 
     if (data.type === 'enableManaOceanChanged') {
       // this.gameModel.execute2<EnableManaOceanConfirmed>({
-      this.gameModel.emit2<EEnableManaOceanConfirmed>({
+      this.gameModel.emit2<WsEmitEvent>({
         ...data,
         type: 'enableManaOceanConfirmed',
       });
@@ -299,7 +347,7 @@ export class WsDataBinding extends AbstractEventProcessor {
     // 'characterHealthStatesLoaded'
 
     if (data.type === 'postNotification') {
-      this.gameModel.emit2<EPostNotification>(data);
+      this.gameModel.emit2<WsEmitEvent>(data);
     }
 
     // console.log('onMessage', data);

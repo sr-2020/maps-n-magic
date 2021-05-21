@@ -51,8 +51,11 @@ export type SpiritList = {
   spirits: Spirit[]
 };
 
+export type EPostSpiritRequested = Typed<'postSpiritRequested', SingleSpirit>;
 export type EPostSpirit = Typed<'postSpirit', SingleSpirit>;
+export type EPutSpiritRequested = Typed<'putSpiritRequested', SingleSpirit>;
 export type EPutSpirit = Typed<'putSpirit', SingleSpirit>;
+export type EDeleteSpiritRequested = Typed<'deleteSpiritRequested', SingleSpirit>;
 export type EDeleteSpirit = Typed<'deleteSpirit', SingleSpirit>;
 export type ESpiritsChanged = Typed<'spiritsChanged', SpiritList>;
 

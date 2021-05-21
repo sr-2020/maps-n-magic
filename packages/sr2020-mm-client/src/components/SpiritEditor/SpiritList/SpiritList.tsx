@@ -1,5 +1,5 @@
 import React, { Component, MouseEvent, FormEvent } from 'react';
-import { RouteComponentProps } from 'react-router';
+import { RouteComponentProps } from 'react-router-dom';
 import './SpiritList.css';
 
 import Popover from 'react-bootstrap/Popover';
@@ -17,8 +17,8 @@ import {
 import Highlight from 'react-highlighter';
 import { WithTranslation } from "react-i18next";
 
-import { Spirit, GameModel } from "sr2020-mm-event-engine";
-import { EPutSpirit } from "sr2020-mm-client-event-engine";
+import { Spirit, GameModel, EPutSpirit } from "sr2020-mm-event-engine";
+// import { EPutSpirit } from "sr2020-mm-client-event-engine";
 
 import { Search } from './Search';
 

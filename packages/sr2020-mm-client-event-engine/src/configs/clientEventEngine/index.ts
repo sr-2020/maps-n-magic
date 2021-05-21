@@ -7,6 +7,7 @@ import {
   UserRecordService,
   SettingsService,
   ManaOceanEnableService,
+  SpiritService,
   StubEventProcessor,
   GameModel,
 } from 'sr2020-mm-event-engine';
@@ -37,7 +38,7 @@ const services = [
   // UserService,
   // BotService,
   // TickerService,
-  // SpiritService,
+  SpiritService,
   // SoundService2,
   SoundStageService,
   // BeaconService,
@@ -77,12 +78,29 @@ export function makeGameModel(): {
         "putCharHealthConfirmed",
         "putCharLocationConfirmed",
         "enableManaOceanConfirmed",
+        // these events are required by SpiritService
+        // but they are not in s2c (server-to-client) forward list
+        // so just stub them
+        "postSpiritConfirmed",
+        "putSpiritConfirmed",
+        "deleteSpiritConfirmed",
+        // will be produced by client, not by game model
+        "postSpiritRequested",
+        "putSpiritRequested",
+        "deleteSpiritRequested",
         // used to forward character health states from server to client
         "setCharacterHealthStates",
         // expected from server
         "characterLocationChanged",
         // such messages can be recieved from server to inform user about something
-        "postNotification"
+        "postNotification",
+        // misc events produced by client
+        "putCharHealthRequested",
+        "wipeManaOceanEffects",
+        "removeManaEffect",
+        "addManaEffect",
+        "emitCharacterLocationChanged",
+        "reloadUserRecords",
       ]
     }
   ));
