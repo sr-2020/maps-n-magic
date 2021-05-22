@@ -68,17 +68,19 @@ export interface EventProcessorMetadata {
 export type Typed<T extends string, L = {}> = L & {type: T};
 
 // If some call is argumentless we can use any of "typeString" or {type: "typeString"}
-export type TypeOnly<T extends string> = T | {type: T};
+export type TypeOnly<T extends string = any> = T | {type: T};
 
 export type TypeObjectOnly<T extends string> = {type: T};
 
 // stub for generic function
-type Function = (...arg: any) => any;
+// type Function = (...arg: any) => any;
+
+export type RequestHandler<T extends any[] = any[], K = any> = (...arg: T) => K;
 
 // Request
-export type Req<T extends Function> = Parameters<T>[0];
+export type Req<T extends RequestHandler> = Parameters<T>[0];
 // Response
-export type Res<T extends Function> = ReturnType<T>;
+export type Res<T extends RequestHandler> = ReturnType<T>;
 
 export interface WebSocketInitClientConfig {
   message: 'initClientConfig';

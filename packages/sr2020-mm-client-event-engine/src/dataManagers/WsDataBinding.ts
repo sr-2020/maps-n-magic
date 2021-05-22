@@ -2,9 +2,6 @@ import {
   GameModel,
   GMLogger,
   // ForwardServer2Client events
-  ELocationRecordsChanged2,
-  EBeaconRecordsChanged2,
-  ESpiritsChanged,
   ESettingsChanged,
   EPostNotification,
   ECharacterHealthStateChanged,
@@ -32,15 +29,18 @@ import {
   EPutLocationRecordRequested,
   EPutLocationRecordsRequested,
   EDeleteLocationRecordRequested,
+  ELocationRecordsChanged2,
   // beacons
   EPostBeaconRecordRequested,
   EPutBeaconRecordRequested,
   EDeleteBeaconRecordRequested,
+  EBeaconRecordsChanged2,
   // spirits
   EPostSpiritRequested,
   EPutSpiritRequested,
   EDeleteSpiritRequested,
   ESetSpirits,
+  ESpiritsChanged,
   // misc
   EPostSettingsRequested,
   EPutCharHealthRequested,
@@ -55,6 +55,18 @@ import {
   //???
   // characterLocationChanged
   AbstractEventProcessor,
+  GMEvent,
+  RequestHandler,
+  Req,
+  Res,
+  TypeOnly,
+  GetLocationRecords,
+  GetBeaconRecords,
+  GetSettingsCatalog,
+  GetCharacterHealthStates,
+  GetEnableManaOcean,
+  GetUserRecords,
+  GetSpirits,
 } from "sr2020-mm-event-engine";
 
 import { TrackedCharacterLocationChanged } from "../index";
@@ -162,6 +174,34 @@ const forwardClient2ServerEvents: ForwardClient2ServerEventTypes[] = [
   'reloadUserRecords',
 ];
 
+export type PayloadToEventBinding<
+  PayloadHandler extends RequestHandler<[TypeOnly]>,
+  ToEvent extends GMEvent & {
+    [key in ReqValue]: ResValue
+  },
+  ReqValue extends string = Req<PayloadHandler>,
+  ResValue = Res<PayloadHandler>
+> = {
+  type: ToEvent["type"],
+  payload: Req<PayloadHandler>
+};
+
+type PayloadToEventBindings = 
+  PayloadToEventBinding<GetLocationRecords, ELocationRecordsChanged2> |
+  PayloadToEventBinding<GetBeaconRecords, EBeaconRecordsChanged2> |
+  PayloadToEventBinding<GetSettingsCatalog, ESetSettingsCatalog> |
+  PayloadToEventBinding<GetCharacterHealthStates, ECharacterHealthStatesLoaded> |
+  PayloadToEventBinding<GetEnableManaOcean, EEnableManaOceanChanged> |
+  PayloadToEventBinding<GetUserRecords, EUserRecordsChanged> |
+  PayloadToEventBinding<GetSpirits, ESpiritsChanged>
+;
+
+interface InitClientConfigMessage {
+  message: 'initClientConfig';
+  data: PayloadToEventBindings[];
+  forwardActions: string[];
+}
+
 export class WsDataBinding extends AbstractEventProcessor {
   constructor(
     protected gameModel: GameModel, 
@@ -185,7 +225,7 @@ export class WsDataBinding extends AbstractEventProcessor {
   }
 
   initClientConfig() {
-    const hasError = this.wsConnection.send({
+    const initMessage: InitClientConfigMessage = {
       message: 'initClientConfig',
       // TODO consider replacing getter-event pairs by
       // trigger-event pairs for consistency
@@ -211,9 +251,13 @@ export class WsDataBinding extends AbstractEventProcessor {
       }, {
         type: 'userRecordsChanged',
         payload: 'userRecords',
+      }, {
+        type: 'spiritsChanged',
+        payload: 'spirits',
       }],
       forwardActions: forwardServer2ClientActions,
-    });
+    }
+    const hasError = this.wsConnection.send(initMessage);
     // if (hasError) {
     //   setTimeout(this.initClientConfig, 1000);
     // }
@@ -253,6 +297,7 @@ export class WsDataBinding extends AbstractEventProcessor {
         ...data,
         type: 'setLocationRecords',
       });
+      return;
     }
 
     if (data.type === 'beaconRecordsChanged2') {
@@ -260,6 +305,7 @@ export class WsDataBinding extends AbstractEventProcessor {
         ...data,
         type: 'setBeaconRecords',
       });
+      return;
     }
 
     if (data.type === 'spiritsChanged') {
@@ -267,6 +313,7 @@ export class WsDataBinding extends AbstractEventProcessor {
         ...data,
         type: 'setSpirits',
       });
+      return;
     }
 
     // This is synthetic transformation for transferring settings from server to client.
@@ -284,6 +331,7 @@ export class WsDataBinding extends AbstractEventProcessor {
           settings: settingsCatalog?.[name],
         });
       })
+      return;
     }
 
     if (data.type === 'settingsChanged') {
@@ -297,6 +345,7 @@ export class WsDataBinding extends AbstractEventProcessor {
           settings: settingsCatalog?.[name],
         });
       }
+      return;
     }
     // if (type === 'manaOceanSettingsChanged') {
     //   this.gameModel.execute({
@@ -311,6 +360,7 @@ export class WsDataBinding extends AbstractEventProcessor {
         ...data,
         type: 'putCharHealthConfirmed',
       });
+      return;
     }
 
     if (data.type === 'characterHealthStatesLoaded') {
@@ -319,6 +369,7 @@ export class WsDataBinding extends AbstractEventProcessor {
         ...data,
         type: 'setCharacterHealthStates',
       });
+      return;
     }
 
     if (data.type === 'enableManaOceanChanged') {
@@ -327,6 +378,7 @@ export class WsDataBinding extends AbstractEventProcessor {
         ...data,
         type: 'enableManaOceanConfirmed',
       });
+      return;
     }
 
     if (data.type === 'userRecordsChanged') {
@@ -334,6 +386,7 @@ export class WsDataBinding extends AbstractEventProcessor {
         ...data,
         type: 'setUserRecords',
       });
+      return;
     }
 
     if (data.type === 'characterLocationChanged') {
@@ -341,6 +394,7 @@ export class WsDataBinding extends AbstractEventProcessor {
         ...data,
         type: "trackedCharacterLocationChanged"
       });
+      return;
     }
 
     // 'characterHealthStateChanged',
@@ -348,7 +402,17 @@ export class WsDataBinding extends AbstractEventProcessor {
 
     if (data.type === 'postNotification') {
       this.gameModel.emit2<WsEmitEvent>(data);
+      return;
     }
+
+    // default
+    this.logger.error('Action not processed:', type, ', expected actions list:', forwardServer2ClientActions);
+    this.gameModel.emit2<WsEmitEvent>({
+      type: 'postNotification',
+      title: 'Action not processed: ' + type,
+      message: `Recieved event from server. Event is ignored.`,
+      kind: 'error',
+    });
 
     // console.log('onMessage', data);
   }
