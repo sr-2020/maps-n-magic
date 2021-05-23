@@ -1,28 +1,52 @@
 import React, { useState, useEffect, ComponentType, Component } from 'react';
-import { GameModel } from "sr2020-mm-event-engine";
+import * as R from 'ramda';
+import { 
+  GameModel, 
+  // StrictGMEvent, 
+  DefaultGMEvent,
+  GMEvent,
+  GMEvent2,
+} from "sr2020-mm-event-engine";
 
 export interface GameModelable {
   gameModel: GameModel;
 }
 
-export const basicDataHOC = function<InitState>(
-  changeEventName: string, 
-  dataName: string, 
-  initState: InitState
+// Try in future separate types from basicDataHOC function
+// 
+// interface BasicDataHOC<
+//   T extends GMEvent2,
+//   InitState,
+//   DataName extends Omit<"type", keyof T> = Omit<"type", keyof T>,
+// > {
+//   changeEventName: T["type"];
+//   dataName: DataName;
+//   dataType: T[DataName];
+//   hocDataType: T[DataName] | InitState,
+//   WithHOC: {}
+// }
+
+export const basicDataHOC = function<
+  InitState,
+  T extends GMEvent = DefaultGMEvent,
+  DataName extends keyof T = keyof T,
+>(
+  changeEventName: T["type"], 
+  dataName: DataName, 
+  initState: InitState,
+  transformer: <M extends InitState | T[DataName]>(a: M) => M = R.identity
 ) {
   return (Wrapped: any) => (props: any) => {
     const { gameModel } = props;
-    const [data, setData] = useState(initState);
+    const [data, setData] = useState<InitState | T[DataName]>(initState);
 
-    function update(event: any) {
-      setData(event[dataName]);
+    function update(event: T) {
+      setData(transformer(event[dataName]));
     }
 
     useEffect(() => {
       gameModel.on(changeEventName, update);
-      update({
-        [dataName]: gameModel.get(dataName),
-      });
+      setData(transformer(gameModel.get(dataName)));
 
       return () => {
         gameModel.off(changeEventName, update);

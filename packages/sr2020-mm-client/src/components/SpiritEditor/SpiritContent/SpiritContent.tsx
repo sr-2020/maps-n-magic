@@ -4,21 +4,23 @@ import './SpiritContent.css';
 import Form from 'react-bootstrap/Form';
 import DocumentTitle from 'react-document-title';
 import { WithTranslation } from "react-i18next";
-import { GameModel, Spirit } from "sr2020-mm-event-engine";
+import { GameModel, Spirit, GetSpirit, EPutSpiritRequested } from "sr2020-mm-event-engine";
 
 import { AbilitiesInput } from './AbilitiesInput';
 
 interface SpiritContentProps extends WithTranslation {
   id: number;
-  spiritService: GameModel;
+  gameModel: GameModel;
 }
-interface SpiritContentState {
-  initialized: boolean;
+type SpiritContentState = {
+  initialized: false;
+} | {
+  initialized: true;
   name: string;
   fraction: string;
   story: string;
   maxHitPoints: number;
-}
+};
 
 type spiritFields = 'name' | 'fraction' | 'story' | 'maxHitPoints';
 
@@ -28,23 +30,15 @@ export class SpiritContent extends Component<SpiritContentProps, SpiritContentSt
     super(props);
     this.state = {
       initialized: false,
-      // @ts-ignore
-      name: null,
-      // @ts-ignore
-      fraction: null,
-      // @ts-ignore
-      story: null,
-      // @ts-ignore
-      maxHitPoints: null,
     };
     this.handleInputChange = this.handleInputChange.bind(this);
   }
 
   componentDidMount() {
     const {
-      id, spiritService,
+      id, gameModel,
     } = this.props;
-    this.setState(this._getNewState(id, spiritService));
+    this.setState(this._getNewState(id, gameModel));
   }
 
   componentDidUpdate(prevProps: SpiritContentProps) {
@@ -52,10 +46,10 @@ export class SpiritContent extends Component<SpiritContentProps, SpiritContentSt
       return;
     }
     const {
-      id, spiritService,
+      id, gameModel,
     } = this.props;
     // eslint-disable-next-line react/no-did-update-set-state
-    this.setState(this._getNewState(id, spiritService));
+    this.setState(this._getNewState(id, gameModel));
   }
 
   // eslint-disable-next-line class-methods-use-this
@@ -70,35 +64,36 @@ export class SpiritContent extends Component<SpiritContentProps, SpiritContentSt
     }
   }
 
-  _getNewState = (id: number, spiritService: GameModel) => ({
-    // ...spiritService.getSpirit(id),
-    ...spiritService.get<Spirit>({
+  _getNewState = (id: number, gameModel: GameModel) => {
+    const spirit = gameModel.get2<GetSpirit>({
       type: 'spirit',
       id,
-    }),
-    initialized: true,
-  })
+    });
+
+    if (spirit === undefined) {
+      return {initialized: false};
+    }
+    return {
+      ...spirit,
+      initialized: true,
+    }
+  }
 
   handleInputChange(event: ChangeEvent<HTMLInputElement>) {
     const { target } = event;
     const value = this.getTargetValue(target);
     const name = target.name as spiritFields;
-    const { id, spiritService } = this.props;
+    const { id, gameModel } = this.props;
 
-    // spiritService.putSpirit(id, {
-    //   [name]: value,
-    // });
-
-    spiritService.execute({
-      type: 'putSpirit',
+    gameModel.emit2<EPutSpiritRequested>({
+      type: 'putSpiritRequested',
       id,
       props: {
         [name]: value,
-      },
+      }
     });
 
-    // @ts-ignore
-    this.setState({[name]: value});
+    this.setState(prevState => ({...prevState, [name]: value}));
   }
 
   // eslint-disable-next-line max-lines-per-function
@@ -114,13 +109,14 @@ export class SpiritContent extends Component<SpiritContentProps, SpiritContentSt
     // plane: planePropTypes.isRequired,
     // hitPoints: number.isRequired,
 
-    const {
-      name, fraction, story, maxHitPoints, initialized,
-    } = this.state;
-    if (!initialized) {
+    const state = this.state;
+    if (!state.initialized) {
       return null;
     }
-    const { spiritService, id, t } = this.props;
+    const {
+      name, fraction, story, maxHitPoints, initialized,
+    } = state;
+    const { gameModel, id, t } = this.props;
 
     if (!id) {
       return (
@@ -164,6 +160,7 @@ export class SpiritContent extends Component<SpiritContentProps, SpiritContentSt
                     id="fractionInput"
                     value={fraction}
                     onChange={this.handleInputChange}
+                    disabled
                     list="fraction-datalist"
                   />
                 </div>
@@ -178,6 +175,7 @@ export class SpiritContent extends Component<SpiritContentProps, SpiritContentSt
                     id="maxHitPointsInput"
                     value={maxHitPoints}
                     onChange={this.handleInputChange}
+                    disabled
                     // list="fraction-datalist"
                   />
                 </div>
@@ -191,20 +189,20 @@ export class SpiritContent extends Component<SpiritContentProps, SpiritContentSt
                     id="storyInput"
                     rows={3}
                     value={story}
+                    disabled
                     onChange={this.handleInputChange}
                   />
                 </div>
               </div>
-              <div className="tw-table-row">
+              {/* <div className="tw-table-row">
                 <label htmlFor="newAbility" className="tw-table-cell">{t('abilities')}</label>
-                {/* <div className="table-cell">{abilities.join(', ') || 'None'}</div> */}
                 <div className="tw-table-cell">
                   <AbilitiesInput
-                    spiritService={spiritService}
+                    gameModel={gameModel}
                     id={id}
                   />
                 </div>
-              </div>
+              </div> */}
             </div>
 
 

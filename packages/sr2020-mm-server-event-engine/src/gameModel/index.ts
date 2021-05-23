@@ -213,6 +213,7 @@ export function makeGameModel(): {
         'postSpiritRequested',
         'putSpiritRequested',
         'deleteSpiritRequested',
+        'cloneSpiritRequested'
       ]
     }
   ));

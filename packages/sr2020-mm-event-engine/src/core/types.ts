@@ -14,9 +14,12 @@ export interface GMAction extends GMTyped {
 export interface GMEvent {
   type: string;
 }
+export interface GMEvent2 extends Record<string, unknown> {
+  type: string;
+}
 
 export interface DefaultGMEvent {
-  type:'undefined';
+  type: 'undefined';
 }
 
 // export type GMLogger = unknown;

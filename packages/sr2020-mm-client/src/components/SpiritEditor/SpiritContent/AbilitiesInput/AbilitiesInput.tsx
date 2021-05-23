@@ -19,10 +19,11 @@ import * as R from 'ramda';
 const sort = R.sortBy(R.toLower);
 
 interface AbilitiesInputProps extends WithTranslation {
-  spiritService: GameModel;
+  gameModel: GameModel;
   id: number;
   className?: string;
 }
+
 interface AbilitiesInputState {
   initialized: boolean;
   abilities: string[];
@@ -43,15 +44,15 @@ export class AbilitiesInput extends Component<AbilitiesInputProps, AbilitiesInpu
   }
 
   componentDidMount() {
-    const { id, spiritService } = this.props;
+    const { id, gameModel } = this.props;
     this.setState({
-      // abilities: sort(spiritService.getSpirit(id).abilities),
-      abilities: sort(spiritService.get<Spirit>({
+      // abilities: sort(gameModel.getSpirit(id).abilities),
+      abilities: sort(gameModel.get<Spirit>({
         type: 'spirit',
         id,
       }).abilities),
-      // allAbilities: spiritService.getSpiritAbilitiesList(),
-      allAbilities: spiritService.get('spiritAbilitiesList'),
+      // allAbilities: gameModel.getSpiritAbilitiesList(),
+      allAbilities: gameModel.get('spiritAbilitiesList'),
       initialized: true,
     });
   }
@@ -61,17 +62,17 @@ export class AbilitiesInput extends Component<AbilitiesInputProps, AbilitiesInpu
       return;
     }
     const {
-      id, spiritService,
+      id, gameModel,
     } = this.props;
     // eslint-disable-next-line react/no-did-update-set-state
     this.setState({
-      // abilities: spiritService.getSpirit(id).abilities,
-      abilities: spiritService.get<Spirit>({
+      // abilities: gameModel.getSpirit(id).abilities,
+      abilities: gameModel.get<Spirit>({
         type: 'spirit',
         id,
       }).abilities,
-      // allAbilities: spiritService.getSpiritAbilitiesList(),
-      allAbilities: spiritService.get('spiritAbilitiesList'),
+      // allAbilities: gameModel.getSpiritAbilitiesList(),
+      allAbilities: gameModel.get('spiritAbilitiesList'),
     });
     // console.log('AbilitiesInput did update');
   }
@@ -82,14 +83,14 @@ export class AbilitiesInput extends Component<AbilitiesInputProps, AbilitiesInpu
     e.preventDefault();
     // console.log('onsubmit');
     const { abilities } = this.state;
-    const { id, spiritService } = this.props;
+    const { id, gameModel } = this.props;
     if (form.checkValidity() === true) {
       const ability = form.newAbility.value.trim();
       if (!abilities.includes(ability)) {
-        // spiritService.putSpirit(id, {
+        // gameModel.putSpirit(id, {
         //   abilities: [...abilities, ability],
         // });
-        spiritService.execute({
+        gameModel.execute({
           type: 'putSpirit',
           id,
           props: {
@@ -98,8 +99,8 @@ export class AbilitiesInput extends Component<AbilitiesInputProps, AbilitiesInpu
         });
         this.setState(({ abilities: prevAbilities }) => ({
           abilities: sort([...prevAbilities, ability]),
-          // allAbilities: spiritService.getSpiritAbilitiesList(),
-          allAbilities: spiritService.get('spiritAbilitiesList'),
+          // allAbilities: gameModel.getSpiritAbilitiesList(),
+          allAbilities: gameModel.get('spiritAbilitiesList'),
         }));
         form.newAbility.value = '';
       }
@@ -108,13 +109,13 @@ export class AbilitiesInput extends Component<AbilitiesInputProps, AbilitiesInpu
   }
 
   removeAbility(e: MouseEvent, ability: string) {
-    const { id, spiritService } = this.props;
+    const { id, gameModel } = this.props;
     const { abilities } = this.state;
     const newAbilities = abilities.filter((ab) => ab !== ability);
-    // spiritService.putSpirit(id, {
+    // gameModel.putSpirit(id, {
     //   abilities: newAbilities,
     // });
-    spiritService.execute({
+    gameModel.execute({
       type: 'putSpirit',
       id,
       props: {
@@ -123,7 +124,7 @@ export class AbilitiesInput extends Component<AbilitiesInputProps, AbilitiesInpu
     });
     this.setState(({ abilities: prevAbilities }) => ({
       abilities: prevAbilities.filter((ab) => ab !== ability),
-      allAbilities: spiritService.get('spiritAbilitiesList'),
+      allAbilities: gameModel.get('spiritAbilitiesList'),
     }));
   }
 

@@ -101,6 +101,7 @@ export function makeGameModel(): {
         "addManaEffect",
         "emitCharacterLocationChanged",
         "reloadUserRecords",
+        "cloneSpiritRequested"
       ]
     }
   ));

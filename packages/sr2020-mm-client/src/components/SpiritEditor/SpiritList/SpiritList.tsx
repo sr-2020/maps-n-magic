@@ -17,20 +17,29 @@ import {
 import Highlight from 'react-highlighter';
 import { WithTranslation } from "react-i18next";
 
-import { Spirit, GameModel, EPutSpirit } from "sr2020-mm-event-engine";
+import { 
+  Spirit, 
+  GameModel, 
+  EPutSpirit, 
+  EPostSpiritRequested,
+  EDeleteSpiritRequested, 
+  ECloneSpiritRequested
+} from "sr2020-mm-event-engine";
+
+import { WithSpirits } from '../../../dataHOCs';
 // import { EPutSpirit } from "sr2020-mm-client-event-engine";
 
 import { Search } from './Search';
 
 const sort = R.sortBy(R.pipe(R.prop('name'), R.toLower));
 
-const spiritLink = (spirit: Spirit) => `/spiritEditor/${spirit.id}#${spirit.name}`;
+const spiritLink = (spirit: Spirit) => `/spiritEditor/${spirit.id}/${spirit.name}`;
 
-interface SpiritListProps extends WithTranslation, RouteComponentProps {
-  spiritService: GameModel;
+interface SpiritListProps extends WithTranslation, RouteComponentProps, WithSpirits {
+  gameModel: GameModel;
 }
 interface SpiritListState {
-  spirits: Spirit[],
+  // spirits: Spirit[],
   removedSpiritIndex: number | null,
   searchStr: string,
 }
@@ -41,11 +50,11 @@ export class SpiritList extends Component<SpiritListProps, SpiritListState> {
   constructor(props: SpiritListProps) {
     super(props);
     this.state = {
-      spirits: [],
+      // spirits: [],
       removedSpiritIndex: null,
       searchStr: '',
     };
-    this.onPutSpirit = this.onPutSpirit.bind(this);
+    // this.onPutSpirit = this.onPutSpirit.bind(this);
     this.onSearchChange = this.onSearchChange.bind(this);
     this.handleSpiritSubmit = this.handleSpiritSubmit.bind(this);
   }
@@ -53,53 +62,53 @@ export class SpiritList extends Component<SpiritListProps, SpiritListState> {
   componentDidMount = () => {
     // console.log('SpiritList mounted');
     // const spirits = this.props.spiritService.getSpirits();
-    const spirits = this.props.spiritService.get<Spirit[]>('spirits');
+    // const spirits = this.props.spiritService.get<Spirit[]>('spirits');
 
-    const spirits2 = sort(spirits || []);
-    this.setState({
-      spirits: spirits2,
-    });
-    this.props.spiritService.on('putSpirit', this.onPutSpirit);
+    // const spirits2 = sort(spirits || []);
+    // this.setState({
+    //   spirits: spirits2,
+    // });
+    // this.props.spiritService.on('putSpirit', this.onPutSpirit);
   }
 
   componentDidUpdate = (prevProps: SpiritListProps) => {
-    if (prevProps.spiritService === this.props.spiritService) {
-      return;
-    }
-    prevProps.spiritService.off('putSpirit', this.onPutSpirit);
-    this.props.spiritService.on('putSpirit', this.onPutSpirit);
-    // const spirits = this.props.spiritService.getSpirits();
-    const spirits = this.props.spiritService.get<Spirit[]>('spirits');
-    const spirits2 = sort(spirits || []);
-    // eslint-disable-next-line react/no-did-update-set-state
-    this.setState({
-      spirits: spirits2,
-      removedSpiritIndex: null,
-      searchStr: '',
-    });
+    // if (prevProps.spiritService === this.props.spiritService) {
+    //   return;
+    // }
+    // prevProps.spiritService.off('putSpirit', this.onPutSpirit);
+    // this.props.spiritService.on('putSpirit', this.onPutSpirit);
+    // // const spirits = this.props.spiritService.getSpirits();
+    // const spirits = this.props.spiritService.get<Spirit[]>('spirits');
+    // const spirits2 = sort(spirits || []);
+    // // eslint-disable-next-line react/no-did-update-set-state
+    // this.setState({
+    //   // spirits: spirits2,
+    //   removedSpiritIndex: null,
+    //   searchStr: '',
+    // });
     // console.log('SpiritList did update');
   }
 
   componentWillUnmount = () => {
     // console.log('SpiritList will unmount');
-    this.props.spiritService.off('putSpirit', this.onPutSpirit);
+    // this.props.spiritService.off('putSpirit', this.onPutSpirit);
   }
 
   // eslint-disable-next-line react/sort-comp
-  onPutSpirit({spirit}: EPutSpirit) {
-    const { spirits } = this.state;
-    const newSpirits = spirits.map((spirit) => {
-      if (spirit.id !== spirit.id) {
-        return spirit;
-      }
-      return spirit;
-    });
+  // onPutSpirit({spirit}: EPutSpirit) {
+  //   const { spirits } = this.state;
+  //   const newSpirits = spirits.map((spirit) => {
+  //     if (spirit.id !== spirit.id) {
+  //       return spirit;
+  //     }
+  //     return spirit;
+  //   });
 
-    this.setState({
-      spirits: sort(newSpirits),
-      removedSpiritIndex: null,
-    });
-  }
+  //   this.setState({
+  //     spirits: sort(newSpirits),
+  //     removedSpiritIndex: null,
+  //   });
+  // }
 
   onSearchChange(searchStr: string) {
     this.setState({
@@ -109,9 +118,13 @@ export class SpiritList extends Component<SpiritListProps, SpiritListState> {
 
   // eslint-disable-next-line max-lines-per-function
   getSpiritList() {
-    const { spirits, searchStr } = this.state;
-    const { t } = this.props;
+    const { searchStr } = this.state;
+    const { spirits, t } = this.props;
+    // const { t } = this.props;
     const lowerSearchStr = searchStr.toLowerCase();
+    if (spirits === null) {
+      return null;
+    }
     // eslint-disable-next-line max-lines-per-function
     return spirits.filter((spirit) => spirit.name.toLowerCase().includes(lowerSearchStr) || spirit.fraction.toLowerCase().includes(lowerSearchStr))
       // eslint-disable-next-line max-lines-per-function
@@ -227,58 +240,57 @@ export class SpiritList extends Component<SpiritListProps, SpiritListState> {
   }
 
   createNewSpirit(spiritName: string) {
-    const { spiritService, history } = this.props;
-    // const spirit = spiritService.postSpirit({ name: spiritName });
-    const spirit = spiritService.execute({
-      type: 'postSpirit',
+    const { gameModel, history } = this.props;
+    gameModel.emit2<EPostSpiritRequested>({
+      type: 'postSpiritRequested',
       props: { name: spiritName },
-    }) as Spirit;
-    history.push(spiritLink(spirit));
-    this.setState((state) => {
-      const spirits = sort([...state.spirits, spirit]);
-      return {
-        spirits,
-        removedSpiritIndex: null,
-      };
     });
+    // history.push(spiritLink(spirit));
+    // this.setState((state) => {
+    //   const spirits = sort([...state.spirits, spirit]);
+    //   return {
+    //     spirits,
+    //     removedSpiritIndex: null,
+    //   };
+    // });
   }
 
   cloneSpirit(e: MouseEvent<DropdownItemProps>, id: number) {
     e.preventDefault();
     e.stopPropagation();
-    const { spiritService, history } = this.props;
+    const { gameModel, history } = this.props;
     // const spirit = spiritService.cloneSpirit(id);
-    const spirit = spiritService.execute<Spirit>({
-      type: 'cloneSpirit',
+    // const spirit = 
+    gameModel.emit2<ECloneSpiritRequested>({
+      type: 'cloneSpiritRequested',
       id,
     });
-    history.push(spiritLink(spirit));
-    this.setState((state: SpiritListState) => {
-      const spirits = sort([...state.spirits, spirit]);
-      return {
-        spirits,
-        removedSpiritIndex: null,
-      };
-    });
+    // history.push(spiritLink(spirit));
+    // this.setState((state: SpiritListState) => {
+    //   const spirits = sort([...state.spirits, spirit]);
+    //   return {
+    //     spirits,
+    //     removedSpiritIndex: null,
+    //   };
+    // });
   }
 
   removeSpirit(e: MouseEvent<DropdownItemProps>, id: number) {
     e.preventDefault();
     e.stopPropagation();
-    const { spiritService } = this.props;
+    const { gameModel } = this.props;
     // spiritService.deleteSpirit(id);
-    spiritService.execute({
-      type: 'deleteSpirit',
+    gameModel.emit2<EDeleteSpiritRequested>({
+      type: 'deleteSpiritRequested',
       id,
     });
-    this.setState((state) => {
-      const index = state.spirits.findIndex((spirit) => spirit.id === id);
-      const spirits = state.spirits.filter((spirit) => spirit.id !== id);
-      // history.push(spiritLink(spirits[index] || spirits[index - 1]));
-      return {
-        spirits,
-        removedSpiritIndex: index,
-      };
+    const { spirits } = this.props;
+    if(spirits === null) {
+      return;
+    }
+    const index = spirits.findIndex((spirit) => spirit.id === id);
+    this.setState({
+      removedSpiritIndex: index,
     });
   }
 
@@ -295,8 +307,8 @@ export class SpiritList extends Component<SpiritListProps, SpiritListState> {
 
   // eslint-disable-next-line max-lines-per-function
   render() {
-    const { spirits, removedSpiritIndex } = this.state;
-    const { t } = this.props;
+    const { removedSpiritIndex } = this.state;
+    const { t, spirits } = this.props;
 
     // if (newSpirit) {
     //   return <Redirect to={spiritLink(newSpirit)} />;
@@ -338,15 +350,18 @@ export class SpiritList extends Component<SpiritListProps, SpiritListState> {
         </div>
         <Route
           path="/spiritEditor"
-          render={() => (spirits.length === 0
-            ? <div className="alert-block alert alert-info">{t('createSpirits')}</div>
-            : <Redirect to={spiritLink(spirits[0])} />)}
+          render={() => (spirits !== null && spirits.length > 0
+            ? <Redirect to={spiritLink(spirits[0])} />
+            : <div className="alert-block alert alert-info">{t('createSpirits')}</div>)}
           exact
         />
         <Route
           path="/spiritEditor/:id"
           render={({ match }) => {
             const { id } = match.params;
+            if (spirits === null) {
+              return null;
+            }
             if (!spirits.map(R.prop('id')).includes(Number(id))) {
               if (spirits.length === 0) {
                 return <Redirect to="/spiritEditor" />;

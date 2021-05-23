@@ -64,29 +64,33 @@ export class CrudDataManager2<
     gameModel[action](`delete${this.ccEntityName}Requested`, this.onDeleteEntityRequested);
   }
 
-  onPostEntityRequested({entity}: {entity: Partial<Omit<Entity, "id">>}): void {
+  onPostEntityRequested({props}: {props: Partial<Omit<Entity, "id">>}): void {
     this.logger.debug(`Post requested, entity: ${this.entityName}`);
-    this.dataProvider.post(entity).then((entity) => {
+    this.dataProvider.post(props).then((entity) => {
       this.logger.debug(`Post confirmed, entity: ${this.entityName}, id ${entity.id}`);
       this.entities.push(entity);
-      this.gameModel.execute({
+      this.gameModel.emit2({
         type: `post${this.ccEntityName}Confirmed`,
         [this.entityName]: entity,
       });
     }).catch(this.getErrorHandler(`Error on ${this.entityName} post`));
   }
 
-  onPutEntityRequested({entity}: {entity: Entity}): void {
-    const { id } = entity; 
+  onPutEntityRequested({ id, props }: {id: number, props: Partial<Omit<Entity, "id">>}): void {
+    const index = this.entities.findIndex((br) => br.id === id);
+    if (index === -1) {
+      this.logger.warn(`Put entity not exists: id ${id}`);
+      return;
+    }
+    const entity = {...this.entities[index], ...props};
     this.logger.debug(`Put requested, entity: ${this.entityName}, id ${id}`);
     clearTimeout(this.putEntityTimeoutIndex[id]);
-
     this.putEntityTimeoutIndex[id] = setTimeout(() => {
       this.dataProvider.put(entity).then((entity: Entity) => {
         this.logger.debug(`Put confirmed, entity: ${this.entityName}, id ${id}`);
         const index = this.entities.findIndex((br) => br.id === id);
         this.entities[index] = entity;
-        this.gameModel.execute({
+        this.gameModel.emit2({
           type: `put${this.ccEntityName}Confirmed`,
           [this.entityName]: entity,
         });
@@ -100,7 +104,7 @@ export class CrudDataManager2<
       this.logger.debug(`Delete confirmed, entity: ${this.entityName}, id ${id}`);
       const entity = this.entities.find((br) => br.id === id);
       this.entities = this.entities.filter((br) => br.id !== id);
-      this.gameModel.execute({
+      this.gameModel.emit2({
         type: `delete${this.ccEntityName}Confirmed`,
         [this.entityName]: entity,
       });

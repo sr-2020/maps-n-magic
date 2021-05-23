@@ -43,9 +43,9 @@ const navLinks: NavLinkData[] = [{
   to: '/mapsNav',
   tKey: 'mapsNav',
 }, {
-//   to: '/spiritEditor',
-//   tKey: 'spiritEditor',
-// }, {
+  to: '/spiritEditor',
+  tKey: 'spiritEditor',
+}, {
 //   to: '/soundManager2',
 //   tKey: 'soundManager2',
 // }, {

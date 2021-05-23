@@ -34,7 +34,7 @@ import {
 import { WithTranslation } from 'react-i18next';
 
 import { AudioContextWrapper } from '../../utils/AudioContextWrapper';
-// import { SpiritEditor } from '../SpiritEditor';
+import { SpiritEditor } from '../SpiritEditor';
 
 // import { AppPropTypes } from '../../types';
 
@@ -328,9 +328,9 @@ export class App extends Component<AppProps, AppState> {
 
                     <main className="tw-flex-auto tw-h-full">
                       <Switch>
-                        {/* <Route path="/spiritEditor">
-                          <SpiritEditor spiritService={gameModel} />
-                        </Route> */}
+                        <Route path="/spiritEditor">
+                          <SpiritEditor gameModel={gameModel} />
+                        </Route>
                         {/* <Route path="/soundManager2">
                           <SoundManager
                             gameModel={gameModel}

@@ -14,14 +14,17 @@ import { Spirit } from "../../types";
 import { 
   spiritMetadata,
   GetSpirits,
+  GetSpirit,
   EPutSpiritConfirmed,
   EPostSpiritConfirmed,
   EDeleteSpiritConfirmed,
   ESetSpirits,
   SpiritEmitEvents,
   SpiritListenEvents,
-  SpiritList
+  SpiritList,
+  ECloneSpiritRequested
 } from "./types";
+
 
 export class SpiritService extends AbstractService<SpiritEmitEvents, SpiritListenEvents> {
   spirits: Spirit[];
@@ -34,6 +37,7 @@ export class SpiritService extends AbstractService<SpiritEmitEvents, SpiritListe
     this.postSpiritConfirmed = this.postSpiritConfirmed.bind(this);
     this.putSpiritConfirmed = this.putSpiritConfirmed.bind(this);
     this.deleteSpiritConfirmed = this.deleteSpiritConfirmed.bind(this);
+    this.cloneSpiritRequested = this.cloneSpiritRequested.bind(this);
   }
 
   init() {
@@ -42,6 +46,7 @@ export class SpiritService extends AbstractService<SpiritEmitEvents, SpiritListe
     this.on2('postSpiritConfirmed', this.postSpiritConfirmed);
     this.on2('putSpiritConfirmed', this.putSpiritConfirmed);
     this.on2('deleteSpiritConfirmed', this.deleteSpiritConfirmed);
+    this.on2('cloneSpiritRequested', this.cloneSpiritRequested);
   }
 
   dispose() {
@@ -49,6 +54,7 @@ export class SpiritService extends AbstractService<SpiritEmitEvents, SpiritListe
     this.off2('postSpiritConfirmed', this.postSpiritConfirmed);
     this.off2('putSpiritConfirmed', this.putSpiritConfirmed);
     this.off2('deleteSpiritConfirmed', this.deleteSpiritConfirmed);
+    this.off2('cloneSpiritRequested', this.cloneSpiritRequested);
   }
 
   setData({ spirits = [] }: SpiritList) {
@@ -62,6 +68,11 @@ export class SpiritService extends AbstractService<SpiritEmitEvents, SpiritListe
 
   getSpirits(request: Req<GetSpirits>): Res<GetSpirits> {
     return [...this.spirits];
+  }
+
+  getSpirit ({ id }: Req<GetSpirit>): Res<GetSpirit> {
+    const spirit = this.spirits.find((spirit) => spirit.id === id);
+    return spirit !== undefined ? {...spirit} : undefined;
   }
 
   setSpirits({ spirits }: ESetSpirits ): void {
@@ -115,4 +126,31 @@ export class SpiritService extends AbstractService<SpiritEmitEvents, SpiritListe
     });
   }
 
+  cloneSpiritRequested(event: ECloneSpiritRequested): void {
+    const { id } = event;
+    const spirit = this.spirits.find((br) => br.id === id);
+    if (spirit === undefined) {
+      return;
+    }
+    this.emit2({
+      type: 'postSpiritRequested',
+      props: {
+        ...spirit,
+        name: this._makeSpiritName(spirit.name)
+      }
+    });
+  }
+
+  private _makeSpiritName(name: string): string {
+    const spiritMap = R.indexBy(R.prop('name'), this.spirits);
+    const base = `${name} клон`;
+    let newName = base;
+    let counter = 1;
+    // eslint-disable-next-line eqeqeq
+    while (spiritMap[newName] != undefined) {
+      newName = `${base} ${counter}`;
+      counter++;
+    }
+    return newName;
+  }
 }

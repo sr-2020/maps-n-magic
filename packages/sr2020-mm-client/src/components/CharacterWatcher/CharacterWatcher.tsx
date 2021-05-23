@@ -1,6 +1,7 @@
 import * as R from 'ramda';
 import React, { FormEvent, MouseEvent } from 'react';
 import './CharacterWatcher.css';
+import { WithCharacterId } from '../../dataHOCs';
 import Form from 'react-bootstrap/Form';
 import Button from 'react-bootstrap/Button';
 
@@ -10,8 +11,8 @@ import { SetTrackedCharacterId } from "sr2020-mm-client-event-engine";
 
 const WATCH_CHARACTER_HISTORY_KEY = 'watchCharacterHistory';
 
-interface CharacterWatcherProps {
-  characterId: number;
+interface CharacterWatcherProps extends WithCharacterId {
+  // characterId: number;
   userRecords: UserRecord[];
   gameModel: GameModel;
   children: any;

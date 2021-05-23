@@ -11,7 +11,7 @@ import { SpiritContent } from './SpiritContent';
 import { FractionList } from './FractionList';
 
 interface SpiritEditorProps {
-  spiritService: GameModel;
+  gameModel: GameModel;
 }
 
 // eslint-disable-next-line react/prefer-stateless-function
@@ -19,11 +19,11 @@ export class SpiritEditor extends Component<SpiritEditorProps> {
 
   // eslint-disable-next-line max-lines-per-function
   render() {
-    const { spiritService } = this.props;
+    const { gameModel } = this.props;
 
     return (
       <div className="SpiritEditor tw-h-full tw-flex">
-        <SpiritList spiritService={spiritService} />
+        <SpiritList gameModel={gameModel} />
         <Route
           path="/spiritEditor/:id"
           render={({ match }) => {
@@ -32,7 +32,7 @@ export class SpiritEditor extends Component<SpiritEditorProps> {
             return (
               <SpiritContent
                 id={Number(id)}
-                spiritService={spiritService}
+                gameModel={gameModel}
                 // spiritTmp={spiritService.getSpirit(Number(id))}
                 // spiritTmp={spiritService.get({
                 //   type: 'spirit',
@@ -42,7 +42,7 @@ export class SpiritEditor extends Component<SpiritEditorProps> {
             );
           }}
         />
-        <FractionList spiritService={spiritService} />
+        {/* <FractionList spiritService={spiritService} /> */}
       </div>
     );
   }

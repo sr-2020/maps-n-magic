@@ -1,7 +1,9 @@
+import * as R from 'ramda';
 import { 
   LocationRecord,
   BeaconRecord,
   UserRecord,
+  Spirit,
   ManaOceanEffectSettingsData,
   ManaOceanSettingsData,
   BackgroundImage,
@@ -10,7 +12,8 @@ import {
   EUserRecordsChanged,
   EEnableManaOceanChanged,
   Req,
-  Res
+  Res,
+  ESpiritsChanged
 } from 'sr2020-mm-event-engine';
 
 import { 
@@ -20,7 +23,7 @@ import {
 } from "sr2020-mm-client-event-engine";
 
 import { basicDataHOC } from './basicDataHOC';
-import { basicDataHOC2 } from './basicDataHOC2';
+// import { basicDataHOC2 } from './basicDataHOC2';
 import { settingsDataHOC } from './settingsDataHOC';
 
 export * from './withCharacterPosition';
@@ -54,7 +57,21 @@ export interface WithBeaconRecords {
 export interface WithUserRecords {
   userRecords: UserRecord[];
 }
+export interface WithSpirits {
+  spirits: Spirit[] | null;
+}
+export interface WithCharacterId {
+  characterId: number | null;
+}
 
+function sortBy(prop: string) {
+  return function(value: any) {
+    if (Array.isArray(value)) {
+      return R.sortBy(R.prop(prop), value);
+    }
+    return value;
+  }
+}
 
 export const withManaOceanSettings = settingsDataHOC(
   'settingsChanged',
@@ -66,7 +83,8 @@ export const withManaOceanEffectSettings = settingsDataHOC(
   'manaOceanEffects',
   {},
 );
-export const withBackgroundImages = basicDataHOC(
+
+export const withBackgroundImages = basicDataHOC<[], EBackgroundImagesChange>(
   'backgroundImagesChanged',
   'backgroundImages',
   [],
@@ -90,28 +108,38 @@ export const withBackgroundImages = basicDataHOC(
 //   'backgroundImagesChanged',
 //   'backgroundImages',
 // );
-export const withBeaconRecords = basicDataHOC(
+export const withBeaconRecords = basicDataHOC<[], EBeaconRecordsChanged2>(
   'beaconRecordsChanged2',
   'beaconRecords',
   [],
 );
-export const withLocationRecords = basicDataHOC(
+export const withLocationRecords = basicDataHOC<[], ELocationRecordsChanged2>(
   'locationRecordsChanged2',
   'locationRecords',
   [],
 );
-export const withUserRecords = basicDataHOC(
+export const withUserRecords = basicDataHOC<[], EUserRecordsChanged>(
   'userRecordsChanged',
   'userRecords',
   [],
 );
-export const withEnableManaOcean = basicDataHOC(
+
+export const withSpirits = basicDataHOC<null, ESpiritsChanged>(
+  'spiritsChanged',
+  'spirits',
+  null,
+  sortBy('name')
+);
+
+export const withEnableManaOcean = basicDataHOC<true, EEnableManaOceanChanged>(
   'enableManaOceanChanged',
   'enableManaOcean',
   true,
 );
-export const withCharacterId = basicDataHOC(
+
+export const withCharacterId = basicDataHOC<null, ETrackedCharacterIdChanged>(
   'trackedCharacterIdChanged',
   'characterId',
-  true,
+  null,
 );
+
