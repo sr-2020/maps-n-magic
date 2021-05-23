@@ -44,14 +44,18 @@
     "typescript": "^4.1.2"
   },
   "nodemonConfig": {
+    "verbose": true,
+    "delay": "1000",
     "watch": [
-      "dist/",
+      "dist",
       ".env",
       "../sr2020-mm-event-engine/dist",
       "../sr2020-mm-server-event-engine/dist"
     ],
     "ignore": [
-      "node_modules/*"
+      "node_modules/*",
+      "**/*.map",
+      "**/*.ts"
     ]
   }
 }
