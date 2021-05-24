@@ -3,12 +3,18 @@ import L from 'leaflet';
 import * as ManaOcean from "./manaOcean";
 export * from "./enums";
 export * from "./manaOcean";
+export * from "./features";
 
 import { LifeStylesValues } from "./enums";
 
-export interface Identifiable {
+export interface IntegerIdentifiable {
   id: number;
 }
+export interface StringIdentifiable {
+  id: string;
+}
+
+export type Identifiable = IntegerIdentifiable | StringIdentifiable;
 
 export interface UserRecord {
   // created_at: "2020-05-03 07:58:52"

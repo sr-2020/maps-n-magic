@@ -18,10 +18,6 @@ import {
   // MultiPuttable
 } from "../types";
 
-// interface EntityProvider<T extends Identifiable> {
-//   EntityType: T;
-// }
-
 export class SpiritProvider implements 
   Gettable2<Spirit>, 
   Postable2<Spirit>, 

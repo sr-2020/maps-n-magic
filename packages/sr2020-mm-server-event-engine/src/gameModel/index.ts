@@ -17,6 +17,7 @@ import {
   ManaOceanSettingsData,
   ManaOceanEffectSettingsData,
   StubEventProcessor,
+  Feature,
   // redirect events
   EPutCharHealthRequested,
   EPutCharHealthConfirmed,
@@ -72,6 +73,7 @@ import { CharacterLocationListener } from '../api/position/CharacterLocationList
 import { SpellCastsListener } from '../api/spellCasts/SpellCastsListener';
 import { PushNotificationEmitter } from '../api/pushNotificationEmitter';
 import { SpiritProvider } from '../api/spirits';
+import { FeatureProvider } from '../api/features';
 
 type EventBindingList = 
   StrictEventBinding<EPutCharHealthRequested, EPutCharHealthConfirmed> |
@@ -152,6 +154,16 @@ export function makeGameModel(): {
   );
   userRecordDataBinding.init();
   gameServer.addDataBinding(userRecordDataBinding);
+
+  const featureDataBinding = new ReadDataManager2<Feature, FeatureProvider>(
+    gameModel,
+    new FeatureProvider(),
+    'feature',
+    new PollingReadStrategy(gameModel, 60 * 60 * 1000, rootLogger), // 1 hour
+    rootLogger
+  );
+  featureDataBinding.init();
+  gameServer.addDataBinding(featureDataBinding);
 
   const manaOceanSettingsDB = new SettingsDataManager<ManaOceanSettingsData, ManaOceanSettingsProvider>(
     gameModel,
