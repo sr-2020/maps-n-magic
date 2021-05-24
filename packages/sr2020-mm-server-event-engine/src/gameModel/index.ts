@@ -8,6 +8,7 @@ import {
   SettingsService,
   ManaOceanEnableService,
   SpiritService,
+  FeatureService,
   // 
   EventEngine,
   AbstractService,
@@ -95,6 +96,7 @@ const services = [
   AudioStageService,
   CharacterLocationService,
   SpiritService,
+  FeatureService,
   // RescueServicePushService,
 ];
 

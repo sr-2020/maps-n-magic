@@ -15,6 +15,7 @@ export * from './services/UserRecordService/index';
 export * from './services/UserRecordService/types';
 export * from './services/SpiritService/index'; 
 export * from './services/SpiritService/types';
+export * from './services/FeatureService';
 
 export * from './utils';
 export * from './utils/moonActivityUtils';
