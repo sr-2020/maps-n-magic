@@ -6,6 +6,7 @@ import cookieParser from 'cookie-parser';
 import morganLogger from 'morgan';
 import shortid from 'shortid';
 import cors from 'cors';
+import * as core from 'express-serve-static-core';
 
 import { makeGameModel, winstonLogger } from 'sr2020-mm-server-event-engine';
 import { WebSocketInitClientConfig } from 'sr2020-mm-event-engine';
@@ -60,7 +61,7 @@ winstonLogger.info('process.env.NODE_ENV', process.env.NODE_ENV);
 
 const { gameModel, gameServer } = makeGameModel();
 
-export const app = Express();
+export const app: core.Express = Express();
 const wsApp = ExpressWs(app);
 
 // https://medium.com/@alexishevia/using-cors-in-express-cac7e29b005b

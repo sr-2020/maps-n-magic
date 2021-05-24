@@ -8,10 +8,10 @@
     "start:css": "postcss css/tailwind.src.css -o css/tailwind.css -w",
     "ts:bu___ild": "tsc",
     "ts:wa___tch": "tsc --watch",
-    "install-local-deps": "npm i --save file:../sr2020-mm-event-engine/node_modules/leaflet file:../sr2020-mm-client/node_modules/react file:../sr2020-mm-client/node_modules/react-i18next file:../sr2020-mm-client/node_modules/react-router-dom"
+    "install-local-deps": "npm i --save file:../sr2020-mm-event-engine/node_modules/leaflet file:../sr2020-mm-client/node_modules/react file:../sr2020-mm-client/node_modules/react-dom file:../sr2020-mm-client/node_modules/react-i18next file:../sr2020-mm-client/node_modules/react-router-dom",
+    "uninstall-local-deps": "npm uninstall react-router-dom react-i18next react-dom react leaflet"
   },
   "peerDependencies": {
-    "react-dom": "^17.0.1",
     "autoprefixer": "^9.8.6",
     "postcss-cli": "^7.1.2",
     "tailwindcss": "^1.8.2",
@@ -21,23 +21,19 @@
     "@geoman-io/leaflet-geoman-free": "^2.9.0",
     "@types/color": "^3.0.1",
     "@types/dateformat": "^3.0.1",
-    "@types/file-saver": "^2.0.1",
-    "@types/leaflet": "^1.5.23",
-    "classnames": "^2.2.6",
+    "@types/file-saver": "^2.0.2",
+    "@types/leaflet": "^1.7.0",
+    "classnames": "^2.3.1",
     "color": "^3.1.2",
     "file-saver": "^2.0.5",
     "leaflet.locatecontrol": "^0.72.0",
     "moment": "^2.27.0",
     "ramda": "^0.27.1",
-    "react-bootstrap": "^1.5.1",
-    "sr2020-mm-client-event-engine": "*",
-    "sr2020-mm-data": "*",
-    "sr2020-mm-event-engine": "*",
-    "sr2020-mm-translations": "*"
+    "react-bootstrap": "^1.6.0"
   },
   "devDependencies": {
-    "@types/ramda": "^0.27.38",
+    "@types/ramda": "^0.27.40",
     "@types/react-router-dom": "^5.1.7",
-    "typescript": "^4.1.2"
+    "typescript": "^4.2.4"
   }
 }

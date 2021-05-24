@@ -17,24 +17,24 @@
   ],
   "peerDependencies": {},
   "dependencies": {
-    "@google-cloud/pubsub": "^2.6.0",
+    "@google-cloud/pubsub": "^2.12.0",
     "@types/isomorphic-fetch": "0.0.35",
-    "ajv": "^8.1.0",
+    "ajv": "^8.5.0",
     "isomorphic-fetch": "^3.0.0",
     "moment": "^2.29.1",
-    "moment-timezone": "^0.5.32",
+    "moment-timezone": "^0.5.33",
     "pg": "^8.6.0",
     "ramda": "^0.27.1",
     "shortid": "^2.2.16",
     "sr2020-mm-data": "*",
     "sr2020-mm-event-engine": "*",
     "winston": "^3.3.3",
-    "winston-daily-rotate-file": "^4.5.0"
+    "winston-daily-rotate-file": "^4.5.5"
   },
   "devDependencies": {
-    "@types/pg": "^7.14.11",
-    "@types/ramda": "^0.27.38",
+    "@types/pg": "^8.6.0",
+    "@types/ramda": "^0.27.40",
     "@types/shortid": "0.0.29",
-    "typescript": "^4.1.2"
+    "typescript": "^4.2.4"
   }
 }
