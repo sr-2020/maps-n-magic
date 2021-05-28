@@ -27,7 +27,8 @@ import {
 const spirit: Spirit = {
   "name": "Ангара",
   // "aura": "",
-  "fraction": "Медведь",
+  // "fraction": "Медведь",
+  "fraction": 1,
   "story": "История медведя",
   "abilities": [
     "123",
@@ -48,7 +49,7 @@ const defaultSpirit: Spirit = {
   "id": 3,
   name: '',
   // aura: '',
-  fraction: '',
+  fraction: 1,
   story: '',
   abilities: [],
 

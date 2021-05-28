@@ -26,7 +26,7 @@ import {
   ECloneSpiritRequested
 } from "sr2020-mm-event-engine";
 
-import { WithSpirits } from '../../../dataHOCs';
+import { WithSpirits, WithSpiritFractions } from '../../../dataHOCs';
 // import { EPutSpirit } from "sr2020-mm-client-event-engine";
 
 import { Search } from './Search';
@@ -35,9 +35,13 @@ const sort = R.sortBy(R.pipe(R.prop('name'), R.toLower));
 
 const spiritLink = (spirit: Spirit) => `/spiritEditor/${spirit.id}/${spirit.name}`;
 
-interface SpiritListProps extends WithTranslation, RouteComponentProps, WithSpirits {
-  gameModel: GameModel;
-}
+interface SpiritListProps extends 
+  WithTranslation, 
+  RouteComponentProps, 
+  WithSpirits, 
+  WithSpiritFractions {
+    gameModel: GameModel;
+  }
 interface SpiritListState {
   // spirits: Spirit[],
   removedSpiritIndex: number | null,
@@ -119,14 +123,17 @@ export class SpiritList extends Component<SpiritListProps, SpiritListState> {
   // eslint-disable-next-line max-lines-per-function
   getSpiritList() {
     const { searchStr } = this.state;
-    const { spirits, t } = this.props;
+    const { spirits, t, spiritFractions } = this.props;
     // const { t } = this.props;
     const lowerSearchStr = searchStr.toLowerCase();
-    if (spirits === null) {
+    if (spirits === null || spiritFractions === null) {
       return null;
     }
+
+    const fractionIndex = R.indexBy(R.prop('id'), spiritFractions);
     // eslint-disable-next-line max-lines-per-function
-    return spirits.filter((spirit) => spirit.name.toLowerCase().includes(lowerSearchStr) || spirit.fraction.toLowerCase().includes(lowerSearchStr))
+    return spirits.filter((spirit) => spirit.name.toLowerCase().includes(lowerSearchStr) || fractionIndex[spirit.fraction].name.toLowerCase().includes(lowerSearchStr))
+    // return spirits.filter((spirit) => spirit.name.toLowerCase().includes(lowerSearchStr))
       // eslint-disable-next-line max-lines-per-function
       .map((spirit) => (
         <li key={spirit.id} className="SpiritListItem tw-relative">
@@ -202,11 +209,11 @@ export class SpiritList extends Component<SpiritListProps, SpiritListState> {
                 }
               </div>
               <div className="spirit-fraction tw-text-sm">
-                {spirit.fraction ? (
-                  <Highlight search={lowerSearchStr} matchClass="tw-p-0 tw-bg-yellow-400 tw-text-color-inherit">
-                    {spirit.fraction}
-                  </Highlight>
-                ) : t('noFraction')}
+                {/* {spirit.fraction ? ( */}
+                <Highlight search={lowerSearchStr} matchClass="tw-p-0 tw-bg-yellow-400 tw-text-color-inherit">
+                  {fractionIndex[spirit.fraction]?.name || ''}
+                </Highlight>
+                {/* // ) : t('noFraction')} */}
               </div>
             </div>
           </NavLink>
@@ -308,8 +315,11 @@ export class SpiritList extends Component<SpiritListProps, SpiritListState> {
   // eslint-disable-next-line max-lines-per-function
   render() {
     const { removedSpiritIndex } = this.state;
-    const { t, spirits } = this.props;
+    const { t, spirits, spiritFractions } = this.props;
 
+    if (spiritFractions === null) {
+      return null;
+    }
     // if (newSpirit) {
     //   return <Redirect to={spiritLink(newSpirit)} />;
     // }

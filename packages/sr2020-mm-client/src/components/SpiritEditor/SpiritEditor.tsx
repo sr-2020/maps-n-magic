@@ -14,36 +14,31 @@ interface SpiritEditorProps {
   gameModel: GameModel;
 }
 
-// eslint-disable-next-line react/prefer-stateless-function
-export class SpiritEditor extends Component<SpiritEditorProps> {
+export function SpiritEditor(props: SpiritEditorProps) {
+  const { gameModel } = props;
 
-  // eslint-disable-next-line max-lines-per-function
-  render() {
-    const { gameModel } = this.props;
+  return (
+    <div className="SpiritEditor tw-h-full tw-flex">
+      <SpiritList gameModel={gameModel} />
+      <Route
+        path="/spiritEditor/:id"
+        render={({ match }) => {
+          const { id } = match.params;
 
-    return (
-      <div className="SpiritEditor tw-h-full tw-flex">
-        <SpiritList gameModel={gameModel} />
-        <Route
-          path="/spiritEditor/:id"
-          render={({ match }) => {
-            const { id } = match.params;
-
-            return (
-              <SpiritContent
-                id={Number(id)}
-                gameModel={gameModel}
-                // spiritTmp={spiritService.getSpirit(Number(id))}
-                // spiritTmp={spiritService.get({
-                //   type: 'spirit',
-                //   id: Number(id),
-                // })}
-              />
-            );
-          }}
-        />
-        {/* <FractionList spiritService={spiritService} /> */}
-      </div>
-    );
-  }
+          return (
+            <SpiritContent
+              id={Number(id)}
+              gameModel={gameModel}
+              // spiritTmp={spiritService.getSpirit(Number(id))}
+              // spiritTmp={spiritService.get({
+              //   type: 'spirit',
+              //   id: Number(id),
+              // })}
+            />
+          );
+        }}
+      />
+      {/* <FractionList spiritService={spiritService} /> */}
+    </div>
+  );
 }

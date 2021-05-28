@@ -31,6 +31,10 @@ function rowToSpirit(row): Spirit | null {
       ...row.data,
       id: row.id,
     };
+    // TODO remove when all spirits will use fraction id
+    if (typeof (rawSpirit as any).fraction === 'string') {
+      (rawSpirit as any).fraction = 1;
+    }
     if (validateSpirit(rawSpirit)) {
       return rawSpirit;
     } else {

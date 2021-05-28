@@ -5,10 +5,11 @@ import Form from 'react-bootstrap/Form';
 import DocumentTitle from 'react-document-title';
 import { WithTranslation } from "react-i18next";
 import { GameModel, Spirit, GetSpirit, EPutSpiritRequested } from "sr2020-mm-event-engine";
+import { WithSpiritFractions } from '../../../dataHOCs';
 
 import { AbilitiesInput } from './AbilitiesInput';
 
-interface SpiritContentProps extends WithTranslation {
+interface SpiritContentProps extends WithTranslation, WithSpiritFractions {
   id: number;
   gameModel: GameModel;
 }
@@ -17,7 +18,7 @@ type SpiritContentState = {
 } | {
   initialized: true;
   name: string;
-  fraction: string;
+  fraction: number;
   story: string;
   maxHitPoints: number;
 };
@@ -53,13 +54,16 @@ export class SpiritContent extends Component<SpiritContentProps, SpiritContentSt
   }
 
   // eslint-disable-next-line class-methods-use-this
-  getTargetValue(target: HTMLInputElement) {
+  getTargetValue(name: spiritFields, target: HTMLInputElement) {
     switch (target.type) {
     case 'checkbox':
       return target.checked;
     case 'number':
       return Number(target.value);
     default:
+      if(name === 'fraction') {
+        return Number(target.value);
+      }
       return target.value;
     }
   }
@@ -81,8 +85,8 @@ export class SpiritContent extends Component<SpiritContentProps, SpiritContentSt
 
   handleInputChange(event: ChangeEvent<HTMLInputElement>) {
     const { target } = event;
-    const value = this.getTargetValue(target);
     const name = target.name as spiritFields;
+    const value = this.getTargetValue(name, target);
     const { id, gameModel } = this.props;
 
     gameModel.emit2<EPutSpiritRequested>({
@@ -116,7 +120,15 @@ export class SpiritContent extends Component<SpiritContentProps, SpiritContentSt
     const {
       name, fraction, story, maxHitPoints, initialized,
     } = state;
-    const { gameModel, id, t } = this.props;
+    const { gameModel, id, t, spiritFractions } = this.props;
+    
+    if(spiritFractions === null) {
+      return (
+        <div className="SpiritContent tw-flex-grow">
+          {t('spiritFractionsNotLoaded')}
+        </div>
+      );
+    }
 
     if (!id) {
       return (
@@ -153,16 +165,25 @@ export class SpiritContent extends Component<SpiritContentProps, SpiritContentSt
               <div className="tw-table-row">
                 <label htmlFor="fractionInput" className="tw-table-cell">{t('fraction')}</label>
                 <div className="tw-table-cell">
-                  <Form.Control
-                    name="fraction"
-                    type="text"
+                  <Form.Control 
+                    as="select" 
                     className="tw-w-2/4"
                     id="fractionInput"
+                    name="fraction"
                     value={fraction}
                     onChange={this.handleInputChange}
-                    disabled
-                    list="fraction-datalist"
-                  />
+                  >
+                    {
+                      spiritFractions.map((fraction) => (
+                        <option
+                          key={fraction.id}
+                          value={fraction.id}
+                        >
+                          {fraction.name}
+                        </option>
+                      ))
+                    }
+                  </Form.Control>
                 </div>
               </div>
               <div className="tw-table-row">

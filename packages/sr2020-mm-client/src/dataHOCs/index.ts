@@ -4,6 +4,7 @@ import {
   BeaconRecord,
   UserRecord,
   Spirit,
+  SpiritFraction,
   ManaOceanEffectSettingsData,
   ManaOceanSettingsData,
   BackgroundImage,
@@ -13,7 +14,8 @@ import {
   EEnableManaOceanChanged,
   Req,
   Res,
-  ESpiritsChanged
+  ESpiritsChanged,
+  ESpiritFractionsChanged,
 } from 'sr2020-mm-event-engine';
 
 import { 
@@ -59,6 +61,9 @@ export interface WithUserRecords {
 }
 export interface WithSpirits {
   spirits: Spirit[] | null;
+}
+export interface WithSpiritFractions {
+  spiritFractions: SpiritFraction[] | null;
 }
 export interface WithCharacterId {
   characterId: number | null;
@@ -129,6 +134,13 @@ export const withSpirits = basicDataHOC<null, ESpiritsChanged>(
   'spirits',
   null,
   sortBy('name')
+);
+
+export const withSpiritFractions = basicDataHOC<null, ESpiritFractionsChanged>(
+  'spiritFractionsChanged',
+  'spiritFractions',
+  null,
+  sortBy('id')
 );
 
 export const withEnableManaOcean = basicDataHOC<true, EEnableManaOceanChanged>(

@@ -246,7 +246,7 @@ export interface Spirit {
   id: number;
   name: string,
   // aura: string,
-  fraction: string,
+  fraction: number,
   story: string,
   abilities: string[],
 

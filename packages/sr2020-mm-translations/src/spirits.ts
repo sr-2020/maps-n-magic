@@ -8,6 +8,7 @@ export const spiritDictionary = {
   createSpirit: 'Создать духа',
   createSpirits: 'Создайте духов',
   youHaveNoSpirits: 'У вас нет духов',
+  spiritFractionsNotLoaded: 'Фракции духов еще не загружены',
   fraction: 'Фракция',
   story: 'История',
   abilities: 'Способности',
