@@ -49,6 +49,7 @@ import { mapDefaults } from '../../configs';
 import { CharacterPositions } from '../CharacterPositions';
 import { ManaOceanSettings } from '../ManaOceanSettings';
 import { ManaOceanEffectSettings } from '../ManaOceanEffectSettings';
+import { SpiritNav } from "../SpiritNav";
 
 // import { SoundMapper } from '../SoundMapper';
 
@@ -328,6 +329,9 @@ export class App extends Component<AppProps, AppState> {
 
                     <main className="tw-flex-auto tw-h-full">
                       <Switch>
+                        <Route path="/spiritNav">
+                          <SpiritNav />
+                        </Route>,
                         <Route path="/spiritEditor">
                           <SpiritEditor gameModel={gameModel} />
                         </Route>
