@@ -8,6 +8,7 @@ import {
   SettingsService,
   ManaOceanEnableService,
   SpiritService,
+  SpiritFractionService,
   StubEventProcessor,
   GameModel,
 } from 'sr2020-mm-event-engine';
@@ -39,6 +40,7 @@ const services = [
   // BotService,
   // TickerService,
   SpiritService,
+  SpiritFractionService,
   // SoundService2,
   SoundStageService,
   // BeaconService,
@@ -78,16 +80,22 @@ export function makeGameModel(): {
         "putCharHealthConfirmed",
         "putCharLocationConfirmed",
         "enableManaOceanConfirmed",
-        // these events are required by SpiritService
+        // SpiritService - these events are required by SpiritService
         // but they are not in s2c (server-to-client) forward list
         // so just stub them
         "postSpiritConfirmed",
         "putSpiritConfirmed",
         "deleteSpiritConfirmed",
-        // will be produced by client, not by game model
+        // SpiritService - will be produced by client, not by game model
         "postSpiritRequested",
         "putSpiritRequested",
         "deleteSpiritRequested",
+        // SpiritFractionService - these events are required by SpiritFractionService
+        // but they are not in s2c (server-to-client) forward list
+        // so just stub them
+        "putSpiritFractionConfirmed",
+        // SpiritFractionService - will be produced by client, not by game model
+        "putSpiritFractionRequested",
         // used to forward character health states from server to client
         "setCharacterHealthStates",
         // expected from server

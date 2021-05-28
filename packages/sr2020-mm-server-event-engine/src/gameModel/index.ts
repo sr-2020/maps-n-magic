@@ -8,6 +8,7 @@ import {
   SettingsService,
   ManaOceanEnableService,
   SpiritService,
+  SpiritFractionService,
   // FeatureService, // features/abilities are not used now - temporary commented out
   
   // 
@@ -98,6 +99,7 @@ const services = [
   AudioStageService,
   CharacterLocationService,
   SpiritService,
+  SpiritFractionService,
   // FeatureService,
   // RescueServicePushService,
 ];
