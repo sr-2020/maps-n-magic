@@ -255,3 +255,8 @@ export interface Spirit {
   // hitPoints: number,
   maxHitPoints: number,
 }
+
+export interface SpiritFraction {
+  id: number;
+  name: string;
+}

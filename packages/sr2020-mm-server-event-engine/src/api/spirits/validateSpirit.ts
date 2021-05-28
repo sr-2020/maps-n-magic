@@ -2,7 +2,8 @@
 import Ajv, { JSONSchemaType } from "ajv";
 
 import { 
-  Spirit
+  Spirit,
+  SpiritFraction
 } from 'sr2020-mm-event-engine';
 
 const ajv = new Ajv({
@@ -73,3 +74,15 @@ const genericRowSchema: JSONSchemaType<GenericRow> = {
 }
 
 export const validateGenericRow = ajv.compile(genericRowSchema);
+
+const spiritFractionSchema: JSONSchemaType<SpiritFraction> = {
+  type: "object",
+  properties: {
+    id: {type: "integer"},
+    name: {type: "string", default: ""},
+  },
+  required: ["name", "id"],
+  additionalProperties: false,
+}
+
+export const validateSpiritFraction = ajv.compile(spiritFractionSchema);

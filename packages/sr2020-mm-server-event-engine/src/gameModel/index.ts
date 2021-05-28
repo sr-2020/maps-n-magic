@@ -8,7 +8,8 @@ import {
   SettingsService,
   ManaOceanEnableService,
   SpiritService,
-  FeatureService,
+  // FeatureService, // features/abilities are not used now - temporary commented out
+  
   // 
   EventEngine,
   AbstractService,
@@ -28,6 +29,7 @@ import {
   EEnableManaOceanConfirmed,
   GameModel,
   Spirit,
+  SpiritFraction,
 } from 'sr2020-mm-event-engine';
 
 import { ManaOceanService } from '../services/ManaOceanService';
@@ -73,7 +75,7 @@ import { CharacterStatesListener } from '../api/characterStates/CharacterStatesL
 import { CharacterLocationListener } from '../api/position/CharacterLocationListener';
 import { SpellCastsListener } from '../api/spellCasts/SpellCastsListener';
 import { PushNotificationEmitter } from '../api/pushNotificationEmitter';
-import { SpiritProvider } from '../api/spirits';
+import { SpiritProvider, SpiritFractionProvider } from '../api/spirits';
 import { FeatureProvider } from '../api/features';
 
 type EventBindingList = 
@@ -96,7 +98,7 @@ const services = [
   AudioStageService,
   CharacterLocationService,
   SpiritService,
-  FeatureService,
+  // FeatureService,
   // RescueServicePushService,
 ];
 
@@ -134,8 +136,6 @@ export function makeGameModel(): {
   gameServer.addDataBinding(locationRecordDataBinding);
 
   
-
-  // const spiritDataBinding = new ReadDataManager2<Spirit, SpiritProvider>(
   const spiritDataBinding = new CrudDataManager2<Spirit, SpiritProvider>(
     gameModel,
     new SpiritProvider(),
@@ -147,6 +147,16 @@ export function makeGameModel(): {
   gameServer.addDataBinding(spiritDataBinding);
 
 
+  const spiritFractionDataBinding = new CrudDataManager2<SpiritFraction, SpiritFractionProvider>(
+    gameModel,
+    new SpiritFractionProvider(),
+    'spiritFraction',
+    new PollingReadStrategy(gameModel, 15000, rootLogger),
+    rootLogger
+  );
+  spiritFractionDataBinding.init();
+  gameServer.addDataBinding(spiritFractionDataBinding);
+
   const userRecordDataBinding = new ReadDataManager<UserRecord, UserRecordProvider>(
     gameModel,
     new UserRecordProvider(),
@@ -157,15 +167,15 @@ export function makeGameModel(): {
   userRecordDataBinding.init();
   gameServer.addDataBinding(userRecordDataBinding);
 
-  const featureDataBinding = new ReadDataManager2<Feature, FeatureProvider>(
-    gameModel,
-    new FeatureProvider(),
-    'feature',
-    new PollingReadStrategy(gameModel, 60 * 60 * 1000, rootLogger), // 1 hour
-    rootLogger
-  );
-  featureDataBinding.init();
-  gameServer.addDataBinding(featureDataBinding);
+  // const featureDataBinding = new ReadDataManager2<Feature, FeatureProvider>(
+  //   gameModel,
+  //   new FeatureProvider(),
+  //   'feature',
+  //   new PollingReadStrategy(gameModel, 60 * 60 * 1000, rootLogger), // 1 hour
+  //   rootLogger
+  // );
+  // featureDataBinding.init();
+  // gameServer.addDataBinding(featureDataBinding);
 
   const manaOceanSettingsDB = new SettingsDataManager<ManaOceanSettingsData, ManaOceanSettingsProvider>(
     gameModel,
@@ -223,11 +233,15 @@ export function makeGameModel(): {
         "wipeManaOceanEffects",
         // used to forward character health states from server to client
         "setCharacterHealthStates",
-        // temporary stubs for spirit service
+        // event from client to manage spirits
         'postSpiritRequested',
         'putSpiritRequested',
         'deleteSpiritRequested',
-        'cloneSpiritRequested'
+        'cloneSpiritRequested',
+        // temporary stubs for spirit fraction service
+        'postSpiritFractionRequested',
+        'putSpiritFractionRequested',
+        'deleteSpiritFractionRequested',
       ]
     }
   ));
