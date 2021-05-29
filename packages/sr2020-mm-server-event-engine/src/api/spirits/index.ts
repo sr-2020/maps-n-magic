@@ -1,7 +1,8 @@
 import { 
   Identifiable,
   Spirit,
-  SpiritFraction
+  SpiritFraction,
+  SpiritRoute,
 } from 'sr2020-mm-event-engine';
 
 import {
@@ -9,9 +10,19 @@ import {
   postSpirit,
   putSpirit,
   deleteSpirit,
+} from './spirits';
+
+import {
   getSpiritFractions,
   putSpiritFraction
-} from './apiInterfaces';
+} from './spiritFractions';
+
+import { 
+  getSpiritRoutes, 
+  postSpiritRoute, 
+  putSpiritRoute, 
+  deleteSpiritRoute 
+} from "./spiritRoutes";
 
 import {  
   Gettable2,
@@ -27,10 +38,10 @@ export class SpiritProvider implements
   Puttable2<Spirit>, 
   Deletable2<Spirit>
 {
-  delete = deleteSpirit;
   get = getSpirits;
   post = postSpirit;
   put = putSpirit;
+  delete = deleteSpirit;
 }
 export class SpiritFractionProvider implements 
   Gettable2<SpiritFraction>, 
@@ -46,4 +57,16 @@ export class SpiritFractionProvider implements
   delete(id: number): Promise<SpiritFraction | null> {
     throw new Error('Method delete SpiritFraction not implemented.');
   }
+}
+
+export class SpiritRouteProvider implements 
+  Gettable2<SpiritRoute>, 
+  Postable2<SpiritRoute>, 
+  Puttable2<SpiritRoute>, 
+  Deletable2<SpiritRoute>
+{
+  get = getSpiritRoutes;
+  post = postSpiritRoute;
+  put = putSpiritRoute;
+  delete = deleteSpiritRoute;
 }

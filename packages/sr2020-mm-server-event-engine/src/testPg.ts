@@ -1,6 +1,6 @@
 
 import { Client, Pool } from "pg";
-import { getSpirits, postSpirit, putSpirit, deleteSpirit } from "./api/spirits/apiInterfaces";
+import { getSpirits, postSpirit, putSpirit, deleteSpirit } from "./api/spirits/spirits";
 
 async function simpleClientExample() {
     // clients will also use environment variables

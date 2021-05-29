@@ -1,6 +1,6 @@
 
 // import Ajv, { JSONSchemaType } from "ajv";
-import { validateSpirit } from "./api/spirits/validateSpirit";
+import { validateSpirit } from "./api/spirits/validation";
 import { 
   Spirit
 } from 'sr2020-mm-event-engine';

@@ -3,7 +3,8 @@ import Ajv, { JSONSchemaType } from "ajv";
 
 import { 
   Spirit,
-  SpiritFraction
+  SpiritFraction,
+  SpiritRoute,
 } from 'sr2020-mm-event-engine';
 
 const ajv = new Ajv({
@@ -88,3 +89,30 @@ const spiritFractionSchema: JSONSchemaType<SpiritFraction> = {
 }
 
 export const validateSpiritFraction = ajv.compile(spiritFractionSchema);
+
+const spiritRouteSchema: JSONSchemaType<SpiritRoute> = {
+  type: "object",
+  properties: {
+    id: {type: "integer"},
+    name: {type: "string", default: ""},
+    waypoints: {type: "array", items: {type: "number"}, default: []},
+    waitTimeMinutes: {type: "integer"},
+  },
+  required: ["name", "id", "waypoints", "waitTimeMinutes"],
+  additionalProperties: false,
+}
+
+export const validateSpiritRoute = ajv.compile(spiritRouteSchema);
+
+const newSpiritRouteSchema: JSONSchemaType<Omit<SpiritRoute, "id">> = {
+  type: "object",
+  properties: {
+    name: {type: "string", default: ""},
+    waypoints: {type: "array", items: {type: "number"}, default: []},
+    waitTimeMinutes: {type: "integer"},
+  },
+  required: ["name", "waypoints", "waitTimeMinutes"],
+  additionalProperties: false,
+}
+
+export const validateNewSpiritRoute = ajv.compile(newSpiritRouteSchema);

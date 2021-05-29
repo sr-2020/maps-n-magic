@@ -260,3 +260,10 @@ export interface SpiritFraction {
   id: number;
   name: string;
 }
+
+export interface SpiritRoute {
+  id: number;
+  name: string;
+  waypoints: number[];
+  waitTimeMinutes: number;
+}
