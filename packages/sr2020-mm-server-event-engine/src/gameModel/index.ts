@@ -9,6 +9,7 @@ import {
   ManaOceanEnableService,
   SpiritService,
   SpiritFractionService,
+  SpiritRouteService,
   // FeatureService, // features/abilities are not used now - temporary commented out
   
   // 
@@ -31,6 +32,7 @@ import {
   GameModel,
   Spirit,
   SpiritFraction,
+  SpiritRoute,
 } from 'sr2020-mm-event-engine';
 
 import { ManaOceanService } from '../services/ManaOceanService';
@@ -76,7 +78,7 @@ import { CharacterStatesListener } from '../api/characterStates/CharacterStatesL
 import { CharacterLocationListener } from '../api/position/CharacterLocationListener';
 import { SpellCastsListener } from '../api/spellCasts/SpellCastsListener';
 import { PushNotificationEmitter } from '../api/pushNotificationEmitter';
-import { SpiritProvider, SpiritFractionProvider } from '../api/spirits';
+import { SpiritProvider, SpiritFractionProvider, SpiritRouteProvider } from '../api/spirits';
 import { FeatureProvider } from '../api/features';
 
 type EventBindingList = 
@@ -100,6 +102,7 @@ const services = [
   CharacterLocationService,
   SpiritService,
   SpiritFractionService,
+  SpiritRouteService,
   // FeatureService,
   // RescueServicePushService,
 ];
@@ -158,6 +161,16 @@ export function makeGameModel(): {
   );
   spiritFractionDataBinding.init();
   gameServer.addDataBinding(spiritFractionDataBinding);
+
+  const spiritRouteDataBinding = new CrudDataManager2<SpiritRoute, SpiritRouteProvider>(
+    gameModel,
+    new SpiritRouteProvider(),
+    'spiritRoute',
+    new PollingReadStrategy(gameModel, 15000, rootLogger),
+    rootLogger
+  );
+  spiritRouteDataBinding.init();
+  gameServer.addDataBinding(spiritRouteDataBinding);
 
   const userRecordDataBinding = new ReadDataManager<UserRecord, UserRecordProvider>(
     gameModel,
@@ -244,6 +257,11 @@ export function makeGameModel(): {
         'postSpiritFractionRequested',
         'putSpiritFractionRequested',
         'deleteSpiritFractionRequested',
+        // event from client to manage spirit routes
+        'postSpiritRouteRequested',
+        'putSpiritRouteRequested',
+        'deleteSpiritRouteRequested',
+        'cloneSpiritRouteRequested',
       ]
     }
   ));
