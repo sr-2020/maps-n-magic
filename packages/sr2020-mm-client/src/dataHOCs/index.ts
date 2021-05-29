@@ -16,6 +16,8 @@ import {
   Res,
   ESpiritsChanged,
   ESpiritFractionsChanged,
+  ESpiritRoutesChanged,
+  SpiritRoute,
 } from 'sr2020-mm-event-engine';
 
 import { 
@@ -64,6 +66,9 @@ export interface WithSpirits {
 }
 export interface WithSpiritFractions {
   spiritFractions: SpiritFraction[] | null;
+}
+export interface WithSpiritRoutes {
+  spiritRoutes: SpiritRoute[] | null;
 }
 export interface WithCharacterId {
   characterId: number | null;
@@ -141,6 +146,13 @@ export const withSpiritFractions = basicDataHOC<null, ESpiritFractionsChanged>(
   'spiritFractions',
   null,
   sortBy('id')
+);
+
+export const withSpiritRoutes = basicDataHOC<null, ESpiritRoutesChanged>(
+  'spiritRoutesChanged',
+  'spiritRoutes',
+  null,
+  sortBy('name')
 );
 
 export const withEnableManaOcean = basicDataHOC<true, EEnableManaOceanChanged>(
