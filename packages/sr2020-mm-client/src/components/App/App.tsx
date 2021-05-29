@@ -35,6 +35,7 @@ import { WithTranslation } from 'react-i18next';
 
 import { AudioContextWrapper } from '../../utils/AudioContextWrapper';
 import { SpiritEditor } from '../SpiritEditor';
+import { SpiritRouteEditor } from '../SpiritRouteEditor';
 
 // import { AppPropTypes } from '../../types';
 
@@ -334,6 +335,9 @@ export class App extends Component<AppProps, AppState> {
                         </Route>,
                         <Route path="/spiritEditor">
                           <SpiritEditor gameModel={gameModel} />
+                        </Route>
+                        <Route path="/spiritRouteEditor">
+                          <SpiritRouteEditor gameModel={gameModel} />
                         </Route>
                         {/* <Route path="/soundManager2">
                           <SoundManager

@@ -8,7 +8,7 @@ import { GameModel } from "sr2020-mm-event-engine";
 
 import { SpiritList } from './SpiritList';
 import { SpiritContent } from './SpiritContent';
-import { FractionList } from './FractionList';
+// import { FractionList } from './FractionList';
 
 interface SpiritEditorProps {
   gameModel: GameModel;
