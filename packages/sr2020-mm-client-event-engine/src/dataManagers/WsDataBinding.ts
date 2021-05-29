@@ -47,6 +47,13 @@ import {
   ESetSpiritFractions,
   ESpiritFractionsChanged,
   GetSpiritFractions,
+  // spirit route
+  EPostSpiritRouteRequested,
+  EPutSpiritRouteRequested,
+  EDeleteSpiritRouteRequested,
+  ESetSpiritRoutes,
+  ESpiritRoutesChanged,
+  GetSpiritRoutes,
   // misc
   EPostSettingsRequested,
   EPutCharHealthRequested,
@@ -88,14 +95,15 @@ type ForwardServer2ClientEvent =
   | EBeaconRecordsChanged2
   | ESpiritsChanged
   | ESpiritFractionsChanged
-  | ESettingsChanged
+  | ESpiritRoutesChanged
 
+  | ESettingsChanged
   | EPostNotification
   | ECharacterHealthStateChanged
   | ECharacterHealthStatesLoaded
   | EEnableManaOceanChanged
-  | EUserRecordsChanged
 
+  | EUserRecordsChanged
   | ECharacterLocationChanged
   | ESetSettingsCatalog
 ;
@@ -116,7 +124,8 @@ const forwardServer2ClientActions: ForwardServer2ClientEvent["type"][] = [
   'characterLocationChanged',
 
   'userRecordsChanged',
-  'spiritFractionsChanged'
+  'spiritFractionsChanged',
+  'spiritRoutesChanged',
   // 'characterHealthStateChanged',
 ];
 
@@ -124,6 +133,7 @@ type WsEmitEvent =
   | EPostNotification
   | ESetSpirits
   | ESetSpiritFractions
+  | ESetSpiritRoutes
   | EPutCharHealthConfirmed
   | ESetCharacterHealthStates
   | EEnableManaOceanConfirmed
@@ -135,7 +145,8 @@ const wsEmitEvents: WsEmitEvent["type"][] = [
   "putCharHealthConfirmed",
   "setCharacterHealthStates",
   "setSpirits",
-  "setSpiritFractions"
+  "setSpiritFractions",
+  "setSpiritRoutes",
 ];
 
 type ForwardClient2ServerEventTypes = (
@@ -155,6 +166,10 @@ type ForwardClient2ServerEventTypes = (
   | EDeleteSpiritRequested
   // spirit fractions
   | EPutSpiritFractionRequested
+  // spirits
+  | EPostSpiritRouteRequested
+  | EPutSpiritRouteRequested
+  | EDeleteSpiritRouteRequested
   // misc
   | EPutCharHealthRequested
   | EEnableManaOceanRequested
@@ -183,6 +198,10 @@ const forwardClient2ServerEvents: ForwardClient2ServerEventTypes[] = [
   'deleteSpiritRequested',
   // spirit fractions
   'putSpiritFractionRequested',
+  // spirit routes
+  'postSpiritRouteRequested',
+  'putSpiritRouteRequested',
+  'deleteSpiritRouteRequested',
   // 'postManaOceanSettingsRequested',
   'postSettingsRequested',
   'putCharHealthRequested',
@@ -215,6 +234,7 @@ type PayloadToEventBindings =
   | PayloadToEventBinding<GetUserRecords, EUserRecordsChanged>
   | PayloadToEventBinding<GetSpirits, ESpiritsChanged>
   | PayloadToEventBinding<GetSpiritFractions, ESpiritFractionsChanged>
+  | PayloadToEventBinding<GetSpiritRoutes, ESpiritRoutesChanged>
 ;
 
 interface InitClientConfigMessage {
@@ -278,6 +298,9 @@ export class WsDataBinding extends AbstractEventProcessor {
       }, {
         type: 'spiritFractionsChanged',
         payload: 'spiritFractions',
+      }, {
+        type: 'spiritRoutesChanged',
+        payload: 'spiritRoutes',
       }],
       forwardActions: forwardServer2ClientActions,
     }
@@ -344,6 +367,14 @@ export class WsDataBinding extends AbstractEventProcessor {
       this.gameModel.emit2<WsEmitEvent>({
         ...data,
         type: 'setSpiritFractions',
+      });
+      return;
+    }
+
+    if (data.type === 'spiritRoutesChanged') {
+      this.gameModel.emit2<WsEmitEvent>({
+        ...data,
+        type: 'setSpiritRoutes',
       });
       return;
     }
