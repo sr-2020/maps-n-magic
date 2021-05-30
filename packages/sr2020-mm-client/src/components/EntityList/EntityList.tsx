@@ -4,12 +4,12 @@ import './EntityList.css';
 
 import { WithTranslation } from "react-i18next";
 
-import { EntitiyListItem } from "../types";
-import { InnerEntityList,  } from "../InnerEntityList";
-import { InnerEntityRoutes } from "../InnerEntityRoutes";
-import { CreateEntityControl } from "../CreateEntityControl";
+import { EntitiyListItem } from "./types";
+import { InnerEntityList,  } from "./InnerEntityList";
+import { InnerEntityRoutes } from "./InnerEntityRoutes";
+import { CreateEntityControl } from "./CreateEntityControl";
 
-import { Search } from '../Search';
+import { Search } from './Search';
 import { SRTKey } from 'sr2020-mm-client-core';
 
 

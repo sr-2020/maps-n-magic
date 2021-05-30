@@ -14,14 +14,10 @@ import {
   ECloneSpiritRequested
 } from "sr2020-mm-event-engine";
 
-
-import { EntitiyListItem } from "./types";
 import { WithSpirits, WithSpiritFractions } from '../../../dataHOCs';
 
-import { EntityList } from "./EntityList";
+import { EntityList, EntitiyListItem, makeLinkGenerator } from "../../EntityList";
 
-// spiritEditor
-const makeLinkGenerator = (root: string) => (id: number, name: string) => `/${root}/${id}/${name}`;
 const spiritLink = makeLinkGenerator('spiritEditor');
 
 interface SpiritListProps extends 
