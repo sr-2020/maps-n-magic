@@ -309,7 +309,7 @@ export class App extends Component<AppProps, AppState> {
     const {
       t,
     } = this.props;
-
+    
     return (
       <React.StrictMode>
         <ErrorBoundry>

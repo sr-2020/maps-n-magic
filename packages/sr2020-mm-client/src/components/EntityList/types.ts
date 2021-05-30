@@ -4,4 +4,4 @@ export interface EntitiyListItem {
   subtitle: string;
 }
 
-export const makeLinkGenerator = (root: string) => (id: number, name: string) => `/${root}/${id}/${name}`;
+export const makeLinkGenerator = (root: string) => (id: number, name: string) => `/${root}/${id}#${name}`;

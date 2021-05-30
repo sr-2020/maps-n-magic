@@ -7,6 +7,7 @@ import {
 import { GameModel } from "sr2020-mm-event-engine";
 
 import { SpiritRouteList } from "./SpiritRouteList";
+import { SpiritRouteContent } from "./SpiritRouteContent";
 
 interface SpiritRouteEditorProps {
   gameModel: GameModel;
@@ -24,16 +25,11 @@ export function SpiritRouteEditor(props: SpiritRouteEditorProps) {
           const { id } = match.params;
 
           return (
-            12131
-            // <SpiritContent
-            //   id={Number(id)}
-            //   gameModel={gameModel}
-            //   // spiritTmp={spiritService.getSpirit(Number(id))}
-            //   // spiritTmp={spiritService.get({
-            //   //   type: 'spirit',
-            //   //   id: Number(id),
-            //   // })}
-            // />
+            <SpiritRouteContent
+              id={Number(id)}
+              gameModel={gameModel}
+              key={Number(id)}
+            />
           );
         }}
       />

@@ -142,7 +142,7 @@ export class SpiritContent extends Component<SpiritContentProps, SpiritContentSt
       <DocumentTitle title={name}>
 
         <div className="SpiritContent tw-flex-grow tw-px-16 tw-py-8 tw-overflow-auto">
-          <div className="SpiritContentWorkspace">
+          <div>
             <h2 className="tw-mb-8 tw-w-2/4">
               <Form.Control
                 name="name"
