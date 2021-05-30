@@ -1,0 +1,34 @@
+.EntityList {
+  flex-basis: 20rem;
+}
+
+
+/* .EntityListItem a:hover {
+  text-decoration: none;
+} */
+
+.EntityListItem a:hover .EntityMenuButton,
+.EntityListItem a:focus .EntityMenuButton {
+  opacity: 1;
+}
+
+.EntityMenuButton {
+  transition: all 0.2s ease-in-out;
+}
+
+.newEntityButton {
+  transition: all 0.2s ease-in-out;
+}
+
+.Search.focused + .newEntityButton {
+  width: 0;
+  padding: 0;
+  overflow: hidden;
+  margin-left: 0 !important;
+}
+
+a.active mark {
+  background-color: #d69e2e;
+}
+
+/* .Search.focused {} */

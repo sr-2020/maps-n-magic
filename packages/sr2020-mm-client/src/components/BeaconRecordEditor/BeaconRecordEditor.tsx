@@ -202,7 +202,7 @@ export class BeaconRecordEditor extends Component<BeaconRecordEditorProps> {
                         <Dropdown.Toggle className="
                             tw-btn
                             tw-btn-ghost
-                            SpiritMenuButton
+                            EntityMenuButton
                             tw-h-8
                             hover:tw-bg-indigo-300
                             active:tw-bg-indigo-600

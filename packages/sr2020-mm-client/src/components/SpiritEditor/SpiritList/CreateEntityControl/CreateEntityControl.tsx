@@ -14,7 +14,7 @@ import { SRTKey } from 'sr2020-mm-client-core';
 
 
 interface CreateEntityControlProps extends WithTranslation {
-  onCreateNewEntity: (entityName: string) => void;
+  onCreateEntity: (entityName: string) => void;
   controlTitle: SRTKey;
   formTitle: SRTKey;
   submitButtonText: SRTKey;
@@ -32,9 +32,9 @@ export class CreateEntityControl extends Component<CreateEntityControlProps> {
     const form = event.currentTarget;
     event.preventDefault();
     event.stopPropagation();
-    const { onCreateNewEntity } = this.props;
+    const { onCreateEntity } = this.props;
     if (form.checkValidity() === true) {
-      onCreateNewEntity(form.entityName.value);
+      onCreateEntity(form.entityName.value);
       form.entityName.value = '';
     }
   }

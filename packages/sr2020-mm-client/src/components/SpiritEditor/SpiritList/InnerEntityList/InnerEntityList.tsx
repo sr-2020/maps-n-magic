@@ -17,8 +17,8 @@ import { EntitiyListItem } from "../types";
 interface InnerEntityListProps extends WithTranslation {
   highlightStr: string;
   items: EntitiyListItem[];
-  clone: (e: MouseEvent<HTMLInputElement>) => void;
-  remove: (e: MouseEvent<HTMLInputElement>) => void;
+  onCloneEntity: (e: MouseEvent<HTMLInputElement>) => void;
+  onRemoveEntity: (e: MouseEvent<HTMLInputElement>) => void;
   makeLink: (id: number, name: string) => string;
 }
 
@@ -27,8 +27,8 @@ export function InnerEntityList(props: InnerEntityListProps) {
     t, 
     highlightStr,
     items,
-    clone, 
-    remove,
+    onCloneEntity, 
+    onRemoveEntity,
     makeLink
   } = props;
   
@@ -65,7 +65,7 @@ export function InnerEntityList(props: InnerEntityListProps) {
                   <Dropdown.Toggle className="
                       tw-btn
                       tw-btn-ghost
-                      SpiritMenuButton
+                      EntityMenuButton
                       tw-w-8
                       tw-h-8
                       hover:tw-bg-indigo-300
@@ -87,14 +87,14 @@ export function InnerEntityList(props: InnerEntityListProps) {
                     <Dropdown.Item
                       as="button"
                       data-id={id}
-                      onClick={clone as (e: MouseEvent<DropdownItemProps>) => void }
+                      onClick={onCloneEntity as (e: MouseEvent<DropdownItemProps>) => void }
                     >
                       {t('clone')}
                     </Dropdown.Item>
                     <Dropdown.Item
                       as="button"
                       data-id={id}
-                      onClick={remove as (e: MouseEvent<DropdownItemProps>) => void }
+                      onClick={onRemoveEntity as (e: MouseEvent<DropdownItemProps>) => void }
                     >
                       {t('delete')}
                     </Dropdown.Item>
