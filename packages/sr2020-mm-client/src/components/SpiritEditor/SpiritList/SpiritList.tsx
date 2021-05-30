@@ -6,8 +6,6 @@ import * as R from 'ramda';
 import { WithTranslation } from "react-i18next";
 
 import { 
-  Spirit,
-  SpiritFraction,
   GameModel, 
   EPostSpiritRequested,
   EDeleteSpiritRequested, 
@@ -74,7 +72,7 @@ export class SpiritList extends Component<SpiritListProps> {
   }
 
   render() {
-    const { t, spiritFractions } = this.props;
+    const { spiritFractions } = this.props;
 
     if (spiritFractions === null) {
       return null;

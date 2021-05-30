@@ -96,7 +96,7 @@ const spiritRouteSchema: JSONSchemaType<SpiritRoute> = {
     id: {type: "integer"},
     name: {type: "string", default: ""},
     waypoints: {type: "array", items: {type: "number"}, default: []},
-    waitTimeMinutes: {type: "integer"},
+    waitTimeMinutes: {type: "integer", default: 5},
   },
   required: ["name", "id", "waypoints", "waitTimeMinutes"],
   additionalProperties: false,
@@ -109,7 +109,7 @@ const newSpiritRouteSchema: JSONSchemaType<Omit<SpiritRoute, "id">> = {
   properties: {
     name: {type: "string", default: ""},
     waypoints: {type: "array", items: {type: "number"}, default: []},
-    waitTimeMinutes: {type: "integer"},
+    waitTimeMinutes: {type: "integer", default: 5},
   },
   required: ["name", "waypoints", "waitTimeMinutes"],
   additionalProperties: false,
