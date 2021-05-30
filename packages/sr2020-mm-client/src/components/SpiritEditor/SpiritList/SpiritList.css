@@ -3,20 +3,12 @@
 }
 
 
-.SpiritListItem {
-
-}
-
-.SpiritListItem:nth-child(2n) {
-  /* background-color: rgba(120, 120, 0, 0.5); */
-}
-
-/* .SpiritListItem a:hover {
+/* .EntityListItem a:hover {
   text-decoration: none;
 } */
 
-.SpiritListItem a:hover .SpiritMenuButton,
-.SpiritListItem a:focus .SpiritMenuButton {
+.EntityListItem a:hover .SpiritMenuButton,
+.EntityListItem a:focus .SpiritMenuButton {
   opacity: 1;
 }
 
@@ -24,11 +16,11 @@
   transition: all 0.2s ease-in-out;
 }
 
-.newSpiritButton {
+.newEntityButton {
   transition: all 0.2s ease-in-out;
 }
 
-.Search.focused + .newSpiritButton {
+.Search.focused + .newEntityButton {
   width: 0;
   padding: 0;
   overflow: hidden;

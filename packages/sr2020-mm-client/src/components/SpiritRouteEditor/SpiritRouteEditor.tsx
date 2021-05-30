@@ -6,9 +6,6 @@ import {
 } from 'react-router-dom';
 import { GameModel } from "sr2020-mm-event-engine";
 
-// import { SpiritList } from './SpiritList';
-// import { SpiritContent } from './SpiritContent';
-
 interface SpiritRouteEditorProps {
   gameModel: GameModel;
 }

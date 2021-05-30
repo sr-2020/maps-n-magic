@@ -200,7 +200,7 @@ export class CreateBeaconPopover extends Component<CreateBeaconPopoverProps, Cre
       >
         <button
           type="button"
-          className="tw-btn tw-btn-blue tw-whitespace-no-wrap tw-flex-grow-0 newSpiritButton tw-mb-2"
+          className="tw-btn tw-btn-blue tw-whitespace-no-wrap tw-flex-grow-0 newEntityButton tw-mb-2"
           onClick={() => {
             setTimeout(() => {
               if (this.newBeaconMacInput) {
