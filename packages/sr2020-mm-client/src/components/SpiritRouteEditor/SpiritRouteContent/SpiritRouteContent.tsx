@@ -55,6 +55,7 @@ export class SpiritRouteContent extends Component<
     this.handleInputChange = this.handleInputChange.bind(this);
     this.addWaypoint = this.addWaypoint.bind(this);
     this.removeWaypoint = this.removeWaypoint.bind(this);
+    this.reorderWaypoints = this.reorderWaypoints.bind(this);
   }
 
   addWaypoint(waypointId: number): void {
@@ -85,6 +86,31 @@ export class SpiritRouteContent extends Component<
       }
       const { waypoints } = prevState;
       const newWaypoints = R.remove(waypointIndex, 1, waypoints);
+      const { id, gameModel } = this.props;
+
+      gameModel.emit2<EPutSpiritRouteRequested>({
+        type: 'putSpiritRouteRequested',
+        id,
+        props: {
+          waypoints: newWaypoints,
+        }
+      });
+
+      return {...prevState, waypoints: newWaypoints};
+    });
+  }
+
+  reorderWaypoints(startIndex: number, endIndex: number): void {
+    this.setState((prevState) => {
+      if (!prevState.initialized) {
+        return;
+      }
+      const { waypoints } = prevState;
+
+      const newWaypoints = [...waypoints];
+      const [removed] = newWaypoints.splice(startIndex, 1);
+      newWaypoints.splice(endIndex, 0, removed);
+
       const { id, gameModel } = this.props;
 
       gameModel.emit2<EPutSpiritRouteRequested>({
@@ -185,6 +211,7 @@ export class SpiritRouteContent extends Component<
                     waypoints={waypoints}
                     addWaypoint={this.addWaypoint}
                     removeWaypoint={this.removeWaypoint}
+                    reorderWaypoints={this.reorderWaypoints}
                   />
                 </div>
               </div>

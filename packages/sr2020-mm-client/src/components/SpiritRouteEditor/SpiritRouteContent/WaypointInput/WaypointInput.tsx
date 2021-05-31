@@ -1,6 +1,16 @@
 import React, { Component, FormEvent, MouseEvent } from 'react';
 import './WaypointInput.css';
 
+import {
+  DragDropContext,
+  Draggable,
+  Droppable,
+  DroppableProvided,
+  DraggableLocation,
+  DropResult,
+  DroppableStateSnapshot, DraggableProvided, DraggableStateSnapshot
+} from 'react-beautiful-dnd';
+
 import Button from 'react-bootstrap/Button';
 import ButtonGroup from 'react-bootstrap/ButtonGroup';
 import InputGroup from 'react-bootstrap/InputGroup';
@@ -11,7 +21,7 @@ import { GameModel, isGeoLocation, LocationRecord } from "sr2020-mm-event-engine
 import { WithTranslation } from "react-i18next";
 
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faTimes } from '@fortawesome/free-solid-svg-icons';
+import { faTimes, faGripVertical } from '@fortawesome/free-solid-svg-icons';
 import * as R from 'ramda';
 
 import { WithLocationRecords } from '../../../../dataHOCs';
@@ -24,8 +34,29 @@ interface WaypointInputProps extends WithTranslation, WithLocationRecords {
   waypoints: number[];
   addWaypoint: (waypointId: number) => void;
   removeWaypoint: (waypointIndex: number) => void;
+  reorderWaypoints: (startIndex: number, endIndex: number) => void;
   className?: string;
 }
+
+// used dnd example
+// https://github.com/abeaudoin2013/react-beautiful-dnd-multi-list-typescript-example/blob/70d44b9efb0886434b8703add1b719e12f37afae/src/App.tsx#L72
+
+const grid:number = 8;
+
+const getItemStyle = (draggableStyle: any, isDragging: boolean):{} => ({
+  userSelect: 'none',
+  // padding: 2*grid,
+  // margin: `0 0 ${grid}px 0`,
+  // background: isDragging ? 'lightgreen' : 'tw- grey',
+  ...draggableStyle
+});
+
+const getListStyle = (isDraggingOver: boolean):{} => ({
+  // background: isDraggingOver ? 'lightblue' : 'lightgrey',
+  // padding: grid,
+  // width: 300,
+  // minHeight: 400
+});
 
 export class WaypointInput extends Component<WaypointInputProps> {
 
@@ -33,6 +64,7 @@ export class WaypointInput extends Component<WaypointInputProps> {
     super(props);
     this.onSubmit = this.onSubmit.bind(this);
     this.removeWaypoint = this.removeWaypoint.bind(this);
+    this.onDragEnd = this.onDragEnd.bind(this);
   }
 
   onSubmit(e: FormEvent<HTMLFormElement>) {
@@ -57,6 +89,18 @@ export class WaypointInput extends Component<WaypointInputProps> {
     removeWaypoint(Number(waypointIndex));
   }
 
+  public onDragEnd(result: DropResult):void {
+    const { source, destination } = result;
+
+    if (!destination) {
+      return;
+    }
+
+    const { reorderWaypoints } = this.props;
+
+    reorderWaypoints(source.index, destination.index);
+  }
+
   render() {
     const { t, className, locationRecords, waypoints } = this.props;
 
@@ -75,7 +119,60 @@ export class WaypointInput extends Component<WaypointInputProps> {
             </InputGroup.Append>
           </InputGroup>
         </Form>
-        <div className="tw-flex tw-flex-col tw-items-start">
+
+        <DragDropContext onDragEnd={this.onDragEnd}>
+          <Droppable droppableId="droppable">
+            {(provided:DroppableProvided, snapshot:DroppableStateSnapshot) => (
+              <div
+                ref={provided.innerRef}
+                {...provided.droppableProps}
+                style={getListStyle(snapshot.isDraggingOver)}
+              >
+                {waypoints.map((waypointId, index) => (
+                  <Draggable key={waypointId} draggableId={String(waypointId)} index={index}>
+                    {(providedDraggable:DraggableProvided, snapshotDraggable:DraggableStateSnapshot) => (
+                        <div>
+                          <div
+                            ref={providedDraggable.innerRef}
+                            {...providedDraggable.draggableProps}
+                            {...providedDraggable.dragHandleProps}
+                            className={classNames({
+                              "tw-bg-green-500": snapshotDraggable.isDragging,
+                              "tw-bg-gray-200": !snapshotDraggable.isDragging,
+                            })}
+
+                            
+                            style={getItemStyle(
+                              providedDraggable.draggableProps.style,
+                              snapshotDraggable.isDragging
+                            )}
+                          >
+                            <FontAwesomeIcon className="tw-mx-2 tw-text-gray-700" icon={faGripVertical} />
+                            <ButtonGroup key={waypointId} className="tw-mr-2 tw-mb-2 tw-flex-grow-0">
+                              <Button variant="secondary" className="tw-text-left">
+                                {`${geoLocationsIndex[waypointId]?.label || t('notAvailable')} (${waypointId})`}
+                              </Button>
+                              <Button 
+                                variant="secondary"
+                                data-waypoint-index={index}
+                                onClick={this.removeWaypoint}
+                              >
+                                <FontAwesomeIcon icon={faTimes} />
+                              </Button>
+                            </ButtonGroup>
+                          </div>
+                          {/* {providedDraggable.placeholder} */}
+                        </div>
+                      )}
+                  </Draggable>
+                ))}
+
+              </div>
+            )}
+          </Droppable>
+        </DragDropContext>
+
+        {/* <div className="tw-flex tw-flex-col tw-items-start">
           {waypoints.map((waypointId, i) => (
             <ButtonGroup key={waypointId} className="tw-mr-2 tw-mb-2 tw-flex-grow-0">
               <Button variant="secondary" className="tw-text-left">
@@ -90,7 +187,8 @@ export class WaypointInput extends Component<WaypointInputProps> {
               </Button>
             </ButtonGroup>
           ))}
-        </div>
+        </div> */}
+
         <datalist id="waypoints-datalist">
           {
           // eslint-disable-next-line jsx-a11y/control-has-associated-label
