@@ -24,4 +24,7 @@ export const spiritDictionary = {
   findSpiritRoute: 'Найти маршруты духов',
   createSpiritRoutes: 'Создайте маршруты духов',
   waitTimeMinutes: 'Время нахождения в локации, мин',
+  addWaypoint: 'Добавить остановку',
+  waypoints: 'Остановки',
+  notAvailable: 'Н/Д',
 };

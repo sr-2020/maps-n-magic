@@ -41,6 +41,7 @@ export * from './withCharacterIdHealthListForAudio';
 // https://stackoverflow.com/questions/43680786/writing-a-react-higher-order-component-with-typescript
 // https://www.pluralsight.com/guides/higher-order-composition-typescript-react
 // https://habr.com/ru/company/sberbank/blog/354104/
+// https://dev.to/busypeoples/notes-on-typescript-pick-exclude-and-higher-order-components-40cp
 
 export interface WithManaOceanSettings {
   manaOcean: ManaOceanSettingsData;

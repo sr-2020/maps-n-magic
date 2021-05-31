@@ -1,4 +1,5 @@
 import React, { Component, ChangeEvent } from 'react';
+import * as R from 'ramda';
 import './SpiritRouteContent.css';
 
 import Form from 'react-bootstrap/Form';
@@ -6,6 +7,8 @@ import { EPutSpiritRouteRequested, GameModel, GetSpiritRoute } from "sr2020-mm-e
 import DocumentTitle from 'react-document-title';
 
 import { WithTranslation } from "react-i18next";
+
+import { WaypointInput } from "./WaypointInput";
 
 interface SpiritRouteContentProps extends WithTranslation {
   id: number;
@@ -17,6 +20,7 @@ type SpiritRouteContentState = {
   initialized: true;
   name: string;
   waitTimeMinutes: number;
+  waypoints: number[];
 };
 
 type spiritRouteFields = 'name' | 'waitTimeMinutes';
@@ -40,6 +44,7 @@ export class SpiritRouteContent extends Component<
         initialized: true,
         name: spiritRoute.name,
         waitTimeMinutes: spiritRoute.waitTimeMinutes,
+        waypoints: spiritRoute.waypoints,
       };
     } else {
       this.state = {
@@ -48,6 +53,50 @@ export class SpiritRouteContent extends Component<
     }
 
     this.handleInputChange = this.handleInputChange.bind(this);
+    this.addWaypoint = this.addWaypoint.bind(this);
+    this.removeWaypoint = this.removeWaypoint.bind(this);
+  }
+
+  addWaypoint(waypointId: number): void {
+    this.setState((prevState) => {
+      if (!prevState.initialized) {
+        return;
+      }
+      const { waypoints } = prevState;
+      const newWaypoints = [...waypoints, waypointId];
+      const { id, gameModel } = this.props;
+
+      gameModel.emit2<EPutSpiritRouteRequested>({
+        type: 'putSpiritRouteRequested',
+        id,
+        props: {
+          waypoints: newWaypoints,
+        }
+      });
+
+      return {...prevState, waypoints: newWaypoints};
+    });
+  }
+
+  removeWaypoint(waypointIndex: number): void {
+    this.setState((prevState) => {
+      if (!prevState.initialized) {
+        return;
+      }
+      const { waypoints } = prevState;
+      const newWaypoints = R.remove(waypointIndex, 1, waypoints);
+      const { id, gameModel } = this.props;
+
+      gameModel.emit2<EPutSpiritRouteRequested>({
+        type: 'putSpiritRouteRequested',
+        id,
+        props: {
+          waypoints: newWaypoints,
+        }
+      });
+
+      return {...prevState, waypoints: newWaypoints};
+    });
   }
 
   handleInputChange(event: ChangeEvent<HTMLInputElement>) {
@@ -87,7 +136,7 @@ export class SpiritRouteContent extends Component<
       return null;
     }
     const {
-      name, waitTimeMinutes
+      name, waitTimeMinutes, waypoints
     } = state;
     const { gameModel, id, t } = this.props;
     return (
@@ -122,6 +171,20 @@ export class SpiritRouteContent extends Component<
                     onChange={this.handleInputChange}
                     min={1}
                     max={60}
+                  />
+                </div>
+              </div>
+            </div>
+
+            <div className="tw-table">
+              <div className="tw-table-row">
+                <label htmlFor="newWaypoint" className="tw-table-cell">{t('waypoints')}</label>
+                <div className="tw-table-cell">
+                  <WaypointInput
+                    gameModel={gameModel}
+                    waypoints={waypoints}
+                    addWaypoint={this.addWaypoint}
+                    removeWaypoint={this.removeWaypoint}
                   />
                 </div>
               </div>
