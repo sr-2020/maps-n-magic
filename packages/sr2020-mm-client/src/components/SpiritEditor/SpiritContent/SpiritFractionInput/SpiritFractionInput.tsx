@@ -20,7 +20,7 @@ export function SpiritFractionInput(props: SpiritFractionInputProps) {
 
   if (spiritFractions === null) {
     return (
-      <div className="SpiritContent tw-flex-grow">
+      <div className="SpiritFractionInput tw-flex-grow">
         {t('spiritFractionsNotLoaded')}
       </div>
     );

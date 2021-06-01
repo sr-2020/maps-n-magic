@@ -247,12 +247,15 @@ export interface TimetableItem {
   time: number; // minutes, from 0:00 to 23:59 (23*60 + 59 = 1439)
   speedPercent: number; // 25%, 50%, 75%, ... 200%
 }
+
+export type SpiritTimetable = TimetableItem[];
+
 export interface Spirit {
   id: number;
   name: string,
   // aura: string,
   fraction: number, // fraction id number
-  timetable: TimetableItem[];
+  timetable: SpiritTimetable;
 
   story: string,
   abilities: string[],

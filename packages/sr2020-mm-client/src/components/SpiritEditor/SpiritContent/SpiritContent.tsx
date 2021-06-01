@@ -4,9 +4,18 @@ import './SpiritContent.css';
 import Form from 'react-bootstrap/Form';
 import DocumentTitle from 'react-document-title';
 import { WithTranslation } from "react-i18next";
-import { GameModel, Spirit, GetSpirit, EPutSpiritRequested } from "sr2020-mm-event-engine";
+import { 
+  GameModel, 
+  Spirit, 
+  GetSpirit, 
+  EPutSpiritRequested,
+  SpiritTimetable,
+} from "sr2020-mm-event-engine";
 
 import { SpiritFractionInput } from "./SpiritFractionInput";
+import { RouteInput } from "./RouteInput";
+
+import { WithSpiritRoutes } from '../../../dataHOCs';
 
 // import { AbilitiesInput } from './AbilitiesInput';
 
@@ -33,7 +42,7 @@ import TimePicker, { TimePickerValue } from "react-time-picker";
 //   );
 // }
 
-interface SpiritContentProps extends WithTranslation {
+interface SpiritContentProps extends WithTranslation, WithSpiritRoutes {
   id: number;
   gameModel: GameModel;
 }
@@ -45,9 +54,16 @@ type SpiritContentState = {
   fraction: number;
   story: string;
   maxHitPoints: number;
+  timetable: SpiritTimetable;
 };
 
-type spiritFields = 'name' | 'fraction' | 'story' | 'maxHitPoints';
+type spiritFields = 
+  | 'name' 
+  | 'fraction' 
+  | 'story' 
+  | 'maxHitPoints'
+  | 'timetable'
+;
 
 export class SpiritContent extends Component<
   SpiritContentProps, 
@@ -70,6 +86,7 @@ export class SpiritContent extends Component<
         fraction: spirit.fraction,
         story: spirit.story,
         maxHitPoints: spirit.maxHitPoints,
+        timetable: spirit.timetable,
       };
     } else {
       this.state = {
@@ -77,6 +94,7 @@ export class SpiritContent extends Component<
       };
     }
     this.handleInputChange = this.handleInputChange.bind(this);
+    this.addRoute = this.addRoute.bind(this);
   }
 
   // eslint-disable-next-line class-methods-use-this
@@ -111,6 +129,31 @@ export class SpiritContent extends Component<
     this.setState(prevState => ({...prevState, [name]: value}));
   }
 
+  addRoute (routeId: number): void {
+    this.setState((prevState) => {
+      if (!prevState.initialized) {
+        return;
+      }
+      const { timetable } = prevState;
+      const changedTimetable = [...timetable, {
+        routeId,
+        time: 0,
+        speedPercent: 100
+      }];
+      const { id, gameModel } = this.props;
+
+      gameModel.emit2<EPutSpiritRequested>({
+        type: 'putSpiritRequested',
+        id,
+        props: {
+          timetable: changedTimetable,
+        }
+      });
+
+      return {...prevState, timetable: changedTimetable};
+    });
+  }
+
   // eslint-disable-next-line max-lines-per-function
   render() {
     // id: number.isRequired,
@@ -129,14 +172,22 @@ export class SpiritContent extends Component<
       return null;
     }
     const {
-      name, fraction, story, maxHitPoints, initialized,
+      name, fraction, story, maxHitPoints, initialized, timetable
     } = state;
-    const { gameModel, id, t } = this.props;
+    const { gameModel, id, t, spiritRoutes } = this.props;
 
     if (!id) {
       return (
         <div className="SpiritContent tw-flex-grow">
           {t('youHaveNoSpirits')}
+        </div>
+      );
+    }
+
+    if (spiritRoutes === null) {
+      return (
+        <div className="SpiritContent tw-flex-grow">
+          Фракции еще не загружены
         </div>
       );
     }
@@ -179,6 +230,15 @@ export class SpiritContent extends Component<
               </div>
               <div className="tw-table-row">
                 <label htmlFor="fractionInput" className="tw-table-cell">Маршруты</label>
+                <div className="tw-table-cell">
+                  <RouteInput 
+                    spiritRoutes={spiritRoutes}
+                    addRoute={this.addRoute}
+                  />
+                  {
+                    timetable.map(timetableItem => (<div>{timetableItem.routeId}</div>))
+                  }
+                </div>
               </div>
               {/* <div className="tw-table-row">
                 <label htmlFor="maxHitPointsInput" className="tw-table-cell">{t('maxHitPoints')}</label>
