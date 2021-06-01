@@ -5,7 +5,8 @@ import Form from 'react-bootstrap/Form';
 import DocumentTitle from 'react-document-title';
 import { WithTranslation } from "react-i18next";
 import { GameModel, Spirit, GetSpirit, EPutSpiritRequested } from "sr2020-mm-event-engine";
-import { WithSpiritFractions } from '../../../dataHOCs';
+
+import { SpiritFractionInput } from "./SpiritFractionInput";
 
 // import { AbilitiesInput } from './AbilitiesInput';
 
@@ -32,7 +33,7 @@ import TimePicker, { TimePickerValue } from "react-time-picker";
 //   );
 // }
 
-interface SpiritContentProps extends WithTranslation, WithSpiritFractions {
+interface SpiritContentProps extends WithTranslation {
   id: number;
   gameModel: GameModel;
 }
@@ -93,7 +94,7 @@ export class SpiritContent extends Component<
     }
   }
 
-  handleInputChange(event: ChangeEvent<HTMLInputElement>) {
+  handleInputChange(event: ChangeEvent<HTMLInputElement>): void {
     const { target } = event;
     const name = target.name as spiritFields;
     const value = this.getTargetValue(name, target);
@@ -130,15 +131,7 @@ export class SpiritContent extends Component<
     const {
       name, fraction, story, maxHitPoints, initialized,
     } = state;
-    const { gameModel, id, t, spiritFractions } = this.props;
-    
-    if(spiritFractions === null) {
-      return (
-        <div className="SpiritContent tw-flex-grow">
-          {t('spiritFractionsNotLoaded')}
-        </div>
-      );
-    }
+    const { gameModel, id, t } = this.props;
 
     if (!id) {
       return (
@@ -175,25 +168,13 @@ export class SpiritContent extends Component<
               <div className="tw-table-row">
                 <label htmlFor="fractionInput" className="tw-table-cell">{t('fraction')}</label>
                 <div className="tw-table-cell">
-                  <Form.Control 
-                    as="select" 
-                    className="tw-w-2/4"
+                  <SpiritFractionInput 
+                    gameModel={gameModel}
                     id="fractionInput"
                     name="fraction"
                     value={fraction}
                     onChange={this.handleInputChange}
-                  >
-                    {
-                      spiritFractions.map((fraction) => (
-                        <option
-                          key={fraction.id}
-                          value={fraction.id}
-                        >
-                          {fraction.name}
-                        </option>
-                      ))
-                    }
-                  </Form.Control>
+                  />
                 </div>
               </div>
               <div className="tw-table-row">
