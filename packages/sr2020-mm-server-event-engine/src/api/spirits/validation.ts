@@ -5,6 +5,7 @@ import {
   Spirit,
   SpiritFraction,
   SpiritRoute,
+  TimetableItem,
 } from 'sr2020-mm-event-engine';
 
 const ajv = new Ajv({
@@ -13,24 +14,43 @@ const ajv = new Ajv({
   useDefaults: true
 });
 
+const timetableSchema: JSONSchemaType<TimetableItem> = {
+  type: "object",
+  properties: {
+    routeId: {type: 'integer'},
+    speedPercent: {type: 'integer', enum: [25, 50, 75, 100, 125, 150, 175, 200], default: 100},
+    time: {type: 'integer', minimum: 0, exclusiveMaximum: 1440}
+  },
+  required: ['routeId', 'speedPercent', 'time'],
+  additionalProperties: false,
+};
+
 const spiritSchema: JSONSchemaType<Spirit> = {
   type: "object",
   properties: {
     id: {type: "integer"},
     name: {type: "string", default: ""},
     // aura: {type: "string"},
-    // fraction: {type: "string", default: ""},
     fraction: {type: "integer", default: 1},
     story: {type: "string", default: ""},
     abilities: {type: "array", items: {type: "string"}, default: []},
     maxHitPoints: {type: "integer", minimum: 1, default: 10},
+    timetable: { type: "array", items: timetableSchema, default: []},
     // latLng: {
     //   type: "object",
     //   properties: {
     //   }
     // }
   },
-  required: ["name", "id", "fraction", "story", "abilities", "maxHitPoints"],
+  required: [
+    "name", 
+    "id", 
+    "fraction", 
+    "story", 
+    "abilities", 
+    "maxHitPoints",
+    "timetable"
+  ],
   additionalProperties: false,
 }
 
@@ -47,13 +67,21 @@ const newSpiritSchema: JSONSchemaType<Omit<Spirit, "id">> = {
     story: {type: "string", default: ""},
     abilities: {type: "array", items: {type: "string"}, default: []},
     maxHitPoints: {type: "integer", minimum: 1, default: 10},
+    timetable: { type: "array", items: timetableSchema, default: []},
     // latLng: {
     //   type: "object",
     //   properties: {
     //   }
     // }
   },
-  required: ["name", "fraction", "story", "abilities", "maxHitPoints"],
+  required: [
+    "name", 
+    "fraction", 
+    "story", 
+    "abilities", 
+    "maxHitPoints",
+    "timetable"
+  ],
   additionalProperties: false,
 }
 

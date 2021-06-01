@@ -1,4 +1,4 @@
-import React, { Component, ChangeEvent } from 'react';
+import React, { Component, ChangeEvent, useState } from 'react';
 import './SpiritContent.css';
 
 import Form from 'react-bootstrap/Form';
@@ -7,7 +7,30 @@ import { WithTranslation } from "react-i18next";
 import { GameModel, Spirit, GetSpirit, EPutSpiritRequested } from "sr2020-mm-event-engine";
 import { WithSpiritFractions } from '../../../dataHOCs';
 
-import { AbilitiesInput } from './AbilitiesInput';
+// import { AbilitiesInput } from './AbilitiesInput';
+
+import TimePicker, { TimePickerValue } from "react-time-picker";
+
+// function MyApp() {
+//   const [value, onChange] = useState('10:00');
+
+//   return (
+//     <div>
+//       <TimePicker
+//         onChange={(value: TimePickerValue) => {
+//           if (value instanceof Date) {
+//             onChange(value.toString());
+//             console.log('date value', value);
+//           } else {
+//             onChange(value);
+//             console.log('string value', value);
+//           }
+//         }}
+//         value={value}
+//       />
+//     </div>
+//   );
+// }
 
 interface SpiritContentProps extends WithTranslation, WithSpiritFractions {
   id: number;
@@ -25,32 +48,34 @@ type SpiritContentState = {
 
 type spiritFields = 'name' | 'fraction' | 'story' | 'maxHitPoints';
 
-export class SpiritContent extends Component<SpiritContentProps, SpiritContentState> {
+export class SpiritContent extends Component<
+  SpiritContentProps, 
+  SpiritContentState
+> {
 
   constructor(props: SpiritContentProps) {
     super(props);
-    this.state = {
-      initialized: false,
-    };
-    this.handleInputChange = this.handleInputChange.bind(this);
-  }
-
-  componentDidMount() {
-    const {
-      id, gameModel,
-    } = this.props;
-    this.setState(this._getNewState(id, gameModel));
-  }
-
-  componentDidUpdate(prevProps: SpiritContentProps) {
-    if (prevProps.id === this.props.id) {
-      return;
+    const { gameModel, id } = props;
+    
+    const spirit = gameModel.get2<GetSpirit>({
+      type: 'spirit',
+      id,
+    });
+    
+    if (spirit) {
+      this.state = {
+        initialized: true,
+        name: spirit.name,
+        fraction: spirit.fraction,
+        story: spirit.story,
+        maxHitPoints: spirit.maxHitPoints,
+      };
+    } else {
+      this.state = {
+        initialized: false,
+      };
     }
-    const {
-      id, gameModel,
-    } = this.props;
-    // eslint-disable-next-line react/no-did-update-set-state
-    this.setState(this._getNewState(id, gameModel));
+    this.handleInputChange = this.handleInputChange.bind(this);
   }
 
   // eslint-disable-next-line class-methods-use-this
@@ -65,21 +90,6 @@ export class SpiritContent extends Component<SpiritContentProps, SpiritContentSt
         return Number(target.value);
       }
       return target.value;
-    }
-  }
-
-  _getNewState = (id: number, gameModel: GameModel) => {
-    const spirit = gameModel.get2<GetSpirit>({
-      type: 'spirit',
-      id,
-    });
-
-    if (spirit === undefined) {
-      return {initialized: false};
-    }
-    return {
-      ...spirit,
-      initialized: true,
     }
   }
 
@@ -187,6 +197,9 @@ export class SpiritContent extends Component<SpiritContentProps, SpiritContentSt
                 </div>
               </div>
               <div className="tw-table-row">
+                <label htmlFor="fractionInput" className="tw-table-cell">Маршруты</label>
+              </div>
+              {/* <div className="tw-table-row">
                 <label htmlFor="maxHitPointsInput" className="tw-table-cell">{t('maxHitPoints')}</label>
                 <div className="tw-table-cell">
                   <Form.Control
@@ -200,8 +213,8 @@ export class SpiritContent extends Component<SpiritContentProps, SpiritContentSt
                     // list="fraction-datalist"
                   />
                 </div>
-              </div>
-              <div className="tw-table-row">
+              </div> */}
+              {/* <div className="tw-table-row">
                 <label htmlFor="storyInput" className="tw-table-cell">{t('story')}</label>
                 <div className="tw-table-cell">
                   <Form.Control
@@ -214,7 +227,7 @@ export class SpiritContent extends Component<SpiritContentProps, SpiritContentSt
                     onChange={this.handleInputChange}
                   />
                 </div>
-              </div>
+              </div> */}
               {/* <div className="tw-table-row">
                 <label htmlFor="newAbility" className="tw-table-cell">{t('abilities')}</label>
                 <div className="tw-table-cell">
@@ -225,7 +238,7 @@ export class SpiritContent extends Component<SpiritContentProps, SpiritContentSt
                 </div>
               </div> */}
             </div>
-
+            {/* <MyApp /> */}
 
             {/* <div className="table">
               <div className="table-column w-24" />

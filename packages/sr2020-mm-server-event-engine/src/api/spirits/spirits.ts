@@ -32,6 +32,9 @@ function rowToSpirit(row): Spirit | null {
     if (typeof (rawSpirit as any).fraction === 'string') {
       (rawSpirit as any).fraction = 1;
     }
+    if (typeof (rawSpirit as any).timetable === undefined) {
+      (rawSpirit as any).timetable = [];
+    }
     if (validateSpirit(rawSpirit)) {
       return rawSpirit;
     } else {

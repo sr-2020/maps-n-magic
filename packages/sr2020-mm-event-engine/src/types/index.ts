@@ -242,11 +242,18 @@ export interface SoundStageData {
   rotationVolume: number;
 }
 
+export interface TimetableItem {
+  routeId: number;
+  time: number; // minutes, from 0:00 to 23:59 (23*60 + 59 = 1439)
+  speedPercent: number; // 25%, 50%, 75%, ... 200%
+}
 export interface Spirit {
   id: number;
   name: string,
   // aura: string,
-  fraction: number,
+  fraction: number, // fraction id number
+  timetable: TimetableItem[];
+
   story: string,
   abilities: string[],
 

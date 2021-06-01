@@ -30,6 +30,7 @@ const spirit: Spirit = {
   // "fraction": "Медведь",
   "fraction": 1,
   "story": "История медведя",
+  timetable: [],
   "abilities": [
     "123",
     "345",
@@ -52,6 +53,7 @@ const defaultSpirit: Spirit = {
   fraction: 1,
   story: '',
   abilities: [],
+  timetable: [],
 
   // latLng: {
   //   lat: 0,

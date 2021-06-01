@@ -29,11 +29,7 @@ export function SpiritEditor(props: SpiritEditorProps) {
             <SpiritContent
               id={Number(id)}
               gameModel={gameModel}
-              // spiritTmp={spiritService.getSpirit(Number(id))}
-              // spiritTmp={spiritService.get({
-              //   type: 'spirit',
-              //   id: Number(id),
-              // })}
+              key={Number(id)}
             />
           );
         }}

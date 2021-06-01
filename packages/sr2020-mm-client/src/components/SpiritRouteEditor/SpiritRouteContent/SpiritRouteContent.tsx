@@ -32,7 +32,7 @@ export class SpiritRouteContent extends Component<
 
   constructor(props: SpiritRouteContentProps) {
     super(props);
-    const {gameModel, id} = props;
+    const { gameModel, id } = props;
     
     const spiritRoute = gameModel.get2<GetSpiritRoute>({
       type: 'spiritRoute',
