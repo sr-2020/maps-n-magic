@@ -1,7 +1,9 @@
 import React, { Component, ChangeEvent, useState } from 'react';
 import './SpiritContent.css';
+import * as R from 'ramda';
 
 import Form from 'react-bootstrap/Form';
+import Button from 'react-bootstrap/Button';
 import DocumentTitle from 'react-document-title';
 import { WithTranslation } from "react-i18next";
 import { 
@@ -10,37 +12,16 @@ import {
   GetSpirit, 
   EPutSpiritRequested,
   SpiritTimetable,
+  TimetableItem
 } from "sr2020-mm-event-engine";
 
 import { SpiritFractionInput } from "./SpiritFractionInput";
 import { RouteInput } from "./RouteInput";
+import { SpiritRouteTable } from "./SpiritRouteTable";
 
 import { WithSpiritRoutes } from '../../../dataHOCs';
 
 // import { AbilitiesInput } from './AbilitiesInput';
-
-import TimePicker, { TimePickerValue } from "react-time-picker";
-
-// function MyApp() {
-//   const [value, onChange] = useState('10:00');
-
-//   return (
-//     <div>
-//       <TimePicker
-//         onChange={(value: TimePickerValue) => {
-//           if (value instanceof Date) {
-//             onChange(value.toString());
-//             console.log('date value', value);
-//           } else {
-//             onChange(value);
-//             console.log('string value', value);
-//           }
-//         }}
-//         value={value}
-//       />
-//     </div>
-//   );
-// }
 
 interface SpiritContentProps extends WithTranslation, WithSpiritRoutes {
   id: number;
@@ -64,6 +45,8 @@ type spiritFields =
   | 'maxHitPoints'
   | 'timetable'
 ;
+
+const sortByTime = R.sortBy(R.prop('time'));
 
 export class SpiritContent extends Component<
   SpiritContentProps, 
@@ -95,6 +78,9 @@ export class SpiritContent extends Component<
     }
     this.handleInputChange = this.handleInputChange.bind(this);
     this.addRoute = this.addRoute.bind(this);
+    this.updateRoute = this.updateRoute.bind(this);
+    this.removeRoute = this.removeRoute.bind(this);
+    this.sortRoutes = this.sortRoutes.bind(this);
   }
 
   // eslint-disable-next-line class-methods-use-this
@@ -135,22 +121,72 @@ export class SpiritContent extends Component<
         return;
       }
       const { timetable } = prevState;
-      const changedTimetable = [...timetable, {
+      // const changedTimetable = sortByTime([...timetable, {
+      const changedTimetable = ([...timetable, {
         routeId,
         time: 0,
         speedPercent: 100
-      }];
-      const { id, gameModel } = this.props;
-
-      gameModel.emit2<EPutSpiritRequested>({
-        type: 'putSpiritRequested',
-        id,
-        props: {
-          timetable: changedTimetable,
-        }
-      });
+      }]);
+      
+      this.updateSpirit({ timetable: changedTimetable });
 
       return {...prevState, timetable: changedTimetable};
+    });
+  }
+
+  updateRoute (routeIndex: number, timetableItem: TimetableItem): void {
+    this.setState((prevState) => {
+      if (!prevState.initialized) {
+        return;
+      }
+      const { timetable } = prevState;
+      const changedTimetable1 = [...timetable];
+      changedTimetable1[routeIndex] = timetableItem;
+
+      // const changedTimetable = sortByTime(changedTimetable1);
+      const changedTimetable = (changedTimetable1);
+      
+      this.updateSpirit({ timetable: changedTimetable });
+
+      return {...prevState, timetable: changedTimetable};
+    });
+  }
+
+  removeRoute (routeIndex: number): void {
+    this.setState((prevState) => {
+      if (!prevState.initialized) {
+        return;
+      }
+      const { timetable } = prevState;
+      const changedTimetable = R.remove(routeIndex, 1, timetable);
+      
+      this.updateSpirit({ timetable: changedTimetable });
+
+      return {...prevState, timetable: changedTimetable};
+    });
+  }
+
+  sortRoutes (): void {
+    this.setState((prevState) => {
+      if (!prevState.initialized) {
+        return;
+      }
+      const { timetable } = prevState;
+      const changedTimetable = sortByTime(timetable);
+      
+      this.updateSpirit({ timetable: changedTimetable });
+
+      return {...prevState, timetable: changedTimetable};
+    });
+  }
+
+  updateSpirit(props: EPutSpiritRequested["props"]): void {
+    const { id, gameModel } = this.props;
+
+    gameModel.emit2<EPutSpiritRequested>({
+      type: 'putSpiritRequested',
+      id,
+      props
     });
   }
 
@@ -187,7 +223,7 @@ export class SpiritContent extends Component<
     if (spiritRoutes === null) {
       return (
         <div className="SpiritContent tw-flex-grow">
-          Фракции еще не загружены
+          Маршруты еще не загружены
         </div>
       );
     }
@@ -235,9 +271,17 @@ export class SpiritContent extends Component<
                     spiritRoutes={spiritRoutes}
                     addRoute={this.addRoute}
                   />
-                  {
-                    timetable.map(timetableItem => (<div>{timetableItem.routeId}</div>))
-                  }
+
+                  <SpiritRouteTable 
+                    timetable={timetable}
+                    spiritRoutes={spiritRoutes}
+                    updateRoute={this.updateRoute}
+                    removeRoute={this.removeRoute}
+                  />
+
+                  <Button variant="outline-secondary" onClick={this.sortRoutes}>
+                    Отсортировать по времени
+                  </Button>
                 </div>
               </div>
               {/* <div className="tw-table-row">
