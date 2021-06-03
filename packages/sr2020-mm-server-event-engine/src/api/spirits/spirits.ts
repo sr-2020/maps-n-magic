@@ -1,5 +1,6 @@
 import { 
   Spirit,
+  SpiritStatus
 } from 'sr2020-mm-event-engine';
 import * as R from 'ramda';
 
@@ -34,6 +35,9 @@ function rowToSpirit(row): Spirit | null {
     }
     if (typeof (rawSpirit as any).timetable === undefined) {
       (rawSpirit as any).timetable = [];
+    }
+    if ((rawSpirit as any).state === undefined) {
+      (rawSpirit as any).state = { status: SpiritStatus.NotInGame };
     }
     if (validateSpirit(rawSpirit)) {
       return rawSpirit;

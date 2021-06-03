@@ -4,6 +4,7 @@ import * as ManaOcean from "./manaOcean";
 export * from "./enums";
 export * from "./manaOcean";
 export * from "./features";
+export * from "./spirits";
 
 import { LifeStylesValues } from "./enums";
 
@@ -242,40 +243,3 @@ export interface SoundStageData {
   rotationVolume: number;
 }
 
-export const speedPercentValues = [25, 50, 75, 100, 125, 150, 175, 200];
-
-export interface TimetableItem {
-  routeId: number;
-  time: number; // minutes, from 0:00 to 23:59 (23*60 + 59 = 1439)
-  speedPercent: number; // 25%, 50%, 75%, ... 200%
-}
-
-export type SpiritTimetable = TimetableItem[];
-
-export interface Spirit {
-  id: number;
-  name: string,
-  // aura: string,
-  fraction: number, // fraction id number
-  timetable: SpiritTimetable;
-
-  story: string,
-  abilities: string[],
-
-  // latLng: L.LatLngLiteral,
-  // plane: string,
-  // hitPoints: number,
-  maxHitPoints: number,
-}
-
-export interface SpiritFraction {
-  id: number;
-  name: string;
-}
-
-export interface SpiritRoute {
-  id: number;
-  name: string;
-  waypoints: number[];
-  waitTimeMinutes: number;
-}

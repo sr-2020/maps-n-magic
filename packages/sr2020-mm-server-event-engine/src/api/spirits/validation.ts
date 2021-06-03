@@ -3,6 +3,9 @@ import Ajv, { JSONSchemaType } from "ajv";
 
 import { 
   Spirit,
+  SpiritState,
+  NotInGameState,
+  RestInAstralState,
   SpiritFraction,
   SpiritRoute,
   TimetableItem,
@@ -25,6 +28,37 @@ const timetableSchema: JSONSchemaType<TimetableItem> = {
   additionalProperties: false,
 };
 
+const notInGameStateSchema: JSONSchemaType<NotInGameState> = {
+  type: 'object',
+  required: ['status'],
+  additionalProperties: false,
+  properties: {
+    status: {
+      type: 'string',
+      const: 'NotInGame',
+    }
+  }
+};
+
+const restInAstralStateSchema: JSONSchemaType<RestInAstralState> = {
+  type: 'object',
+  required: ['status'],
+  additionalProperties: false,
+  properties: {
+    status: {
+      type: 'string',
+      const: 'RestInAstral',
+    }
+  }
+};
+
+const spiritStateSchema: JSONSchemaType<SpiritState> = {
+  oneOf: [
+    notInGameStateSchema, 
+    restInAstralStateSchema
+  ]
+};
+
 const spiritSchema: JSONSchemaType<Spirit> = {
   type: "object",
   properties: {
@@ -36,11 +70,7 @@ const spiritSchema: JSONSchemaType<Spirit> = {
     abilities: {type: "array", items: {type: "string"}, default: []},
     maxHitPoints: {type: "integer", minimum: 1, default: 10},
     timetable: { type: "array", items: timetableSchema, default: []},
-    // latLng: {
-    //   type: "object",
-    //   properties: {
-    //   }
-    // }
+    state: spiritStateSchema
   },
   required: [
     "name", 
@@ -49,7 +79,8 @@ const spiritSchema: JSONSchemaType<Spirit> = {
     "story", 
     "abilities", 
     "maxHitPoints",
-    "timetable"
+    "timetable",
+    "state"
   ],
   additionalProperties: false,
 }
@@ -62,17 +93,12 @@ const newSpiritSchema: JSONSchemaType<Omit<Spirit, "id">> = {
     // id: {type: "integer"},
     name: {type: "string", default: ""},
     // aura: {type: "string"},
-    // fraction: {type: "string", default: ""},
     fraction: {type: "integer", default: 1},
     story: {type: "string", default: ""},
     abilities: {type: "array", items: {type: "string"}, default: []},
     maxHitPoints: {type: "integer", minimum: 1, default: 10},
     timetable: { type: "array", items: timetableSchema, default: []},
-    // latLng: {
-    //   type: "object",
-    //   properties: {
-    //   }
-    // }
+    state: spiritStateSchema
   },
   required: [
     "name", 
@@ -80,7 +106,8 @@ const newSpiritSchema: JSONSchemaType<Omit<Spirit, "id">> = {
     "story", 
     "abilities", 
     "maxHitPoints",
-    "timetable"
+    "timetable",
+    "state"
   ],
   additionalProperties: false,
 }

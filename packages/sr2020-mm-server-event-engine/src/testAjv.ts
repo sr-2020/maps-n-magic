@@ -2,7 +2,7 @@
 // import Ajv, { JSONSchemaType } from "ajv";
 import { validateSpirit } from "./api/spirits/validation";
 import { 
-  Spirit
+  Spirit, SpiritStatus
 } from 'sr2020-mm-event-engine';
 
 // const spirit = {
@@ -36,6 +36,7 @@ const spirit: Spirit = {
     "345",
     "Фаербол"
   ],
+  state: { status: SpiritStatus.NotInGame },
   // "latLng": {
   //   "lat": 0,
   //   "lng": 0
@@ -54,6 +55,7 @@ const defaultSpirit: Spirit = {
   story: '',
   abilities: [],
   timetable: [],
+  state: { status: SpiritStatus.NotInGame },
 
   // latLng: {
   //   lat: 0,
