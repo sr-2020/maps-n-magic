@@ -66,7 +66,7 @@ export function SpiritRouteTableRow(props: SpiritRouteTableRowProps) {
           value={timeNumberToStr(timetableItem.time)}
         />
       </div>
-      <div className="tw-table-cell tw-px-2 tw-text-left">{route?.name || 'Н/Д'}</div>
+      <div className="tw-table-cell tw-px-2 tw-text-left">{route?.name || t('notAvailable')}</div>
       <div className="tw-table-cell tw-px-2 tw-text-right">
         <Form.Control 
           as="select" 
@@ -89,11 +89,11 @@ export function SpiritRouteTableRow(props: SpiritRouteTableRowProps) {
         { 
           route !== undefined
           ? (route.waypoints.length * route.waitTimeMinutes / (timetableItem.speedPercent / 100)).toFixed(1)
-          : 'Н/Д'
+          : t('notAvailable')
         }
       </div>
       <div>
-        <Button variant="outline-secondary" title="Удалить" onClick={onRemoveClick}>
+        <Button variant="outline-secondary" title={t('delete')} onClick={onRemoveClick}>
           <FontAwesomeIcon icon={faTimes} />
         </Button>
       </div>

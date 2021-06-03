@@ -12,12 +12,14 @@ import {
   GetSpirit, 
   EPutSpiritRequested,
   SpiritTimetable,
-  TimetableItem
+  TimetableItem,
+  SpiritStatus
 } from "sr2020-mm-event-engine";
 
 import { SpiritFractionInput } from "./SpiritFractionInput";
 import { RouteInput } from "./RouteInput";
 import { SpiritRouteTable } from "./SpiritRouteTable";
+import { SpiritStatusControl } from "./SpiritStatusControl";
 
 import { WithSpiritRoutes } from '../../../dataHOCs';
 
@@ -31,11 +33,12 @@ type SpiritContentState = {
   initialized: false;
 } | {
   initialized: true;
-  name: string;
-  fraction: number;
-  story: string;
-  maxHitPoints: number;
-  timetable: SpiritTimetable;
+  name: Spirit["name"];
+  fraction: Spirit["fraction"];
+  story: Spirit["story"];
+  maxHitPoints: Spirit["maxHitPoints"];
+  timetable: Spirit["timetable"];
+  state: Spirit["state"];
 };
 
 type spiritFields = 
@@ -44,6 +47,7 @@ type spiritFields =
   | 'story' 
   | 'maxHitPoints'
   | 'timetable'
+  | 'state'
 ;
 
 const sortByTime = R.sortBy(R.prop('time'));
@@ -70,6 +74,7 @@ export class SpiritContent extends Component<
         story: spirit.story,
         maxHitPoints: spirit.maxHitPoints,
         timetable: spirit.timetable,
+        state: spirit.state,
       };
     } else {
       this.state = {
@@ -81,6 +86,7 @@ export class SpiritContent extends Component<
     this.updateRoute = this.updateRoute.bind(this);
     this.removeRoute = this.removeRoute.bind(this);
     this.sortRoutes = this.sortRoutes.bind(this);
+    this.changeSpiritStatus = this.changeSpiritStatus.bind(this);
   }
 
   // eslint-disable-next-line class-methods-use-this
@@ -180,6 +186,19 @@ export class SpiritContent extends Component<
     });
   }
 
+  changeSpiritStatus (status: keyof typeof SpiritStatus): void {
+    this.setState((prevState) => {
+      if (!prevState.initialized) {
+        return;
+      }
+
+      const state: Spirit["state"] = { status };
+      
+      this.updateSpirit({ state });
+      return { ...prevState, state };
+    });
+  }
+
   updateSpirit(props: EPutSpiritRequested["props"]): void {
     const { id, gameModel } = this.props;
 
@@ -203,13 +222,13 @@ export class SpiritContent extends Component<
     // plane: planePropTypes.isRequired,
     // hitPoints: number.isRequired,
 
-    const state = this.state;
-    if (!state.initialized) {
+    const componentState = this.state;
+    if (!componentState.initialized) {
       return null;
     }
     const {
-      name, fraction, story, maxHitPoints, initialized, timetable
-    } = state;
+      name, fraction, story, maxHitPoints, initialized, timetable, state
+    } = componentState;
     const { gameModel, id, t, spiritRoutes } = this.props;
 
     if (!id) {
@@ -222,14 +241,19 @@ export class SpiritContent extends Component<
 
     if (spiritRoutes === null) {
       return (
-        <div className="SpiritContent tw-flex-grow">
-          Маршруты еще не загружены
-        </div>
+        null
+        // <div className="SpiritContent tw-flex-grow">
+        //   {t('routesNotLoaded'}
+        // </div>
       );
     }
 
     return (
-      <DocumentTitle title={name}>
+      <DocumentTitle title={t('spiritPageTitle', {
+        name,
+        id,
+        status: t(state.status)
+      })}>
 
         <div className="SpiritContent tw-flex-grow tw-px-16 tw-py-8 tw-overflow-auto">
           <div>
@@ -253,6 +277,13 @@ export class SpiritContent extends Component<
                 </div>
               </div> */}
               <div className="tw-table-row">
+                <label htmlFor="fractionInput" className="tw-table-cell">{t('status')}</label>
+                <SpiritStatusControl
+                  state={state}
+                  changeSpiritStatus={this.changeSpiritStatus}
+                />
+              </div>
+              <div className="tw-table-row">
                 <label htmlFor="fractionInput" className="tw-table-cell">{t('fraction')}</label>
                 <div className="tw-table-cell">
                   <SpiritFractionInput 
@@ -265,7 +296,7 @@ export class SpiritContent extends Component<
                 </div>
               </div>
               <div className="tw-table-row">
-                <label htmlFor="fractionInput" className="tw-table-cell">Маршруты</label>
+                <label htmlFor="fractionInput" className="tw-table-cell">{t('routes')}</label>
                 <div className="tw-table-cell">
                   <RouteInput 
                     spiritRoutes={spiritRoutes}
@@ -280,7 +311,7 @@ export class SpiritContent extends Component<
                   />
 
                   <Button variant="outline-secondary" onClick={this.sortRoutes}>
-                    Отсортировать по времени
+                    {t('sortRoutesByTime')}
                   </Button>
                 </div>
               </div>

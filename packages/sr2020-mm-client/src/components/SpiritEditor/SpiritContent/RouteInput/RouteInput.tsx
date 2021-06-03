@@ -21,7 +21,7 @@ export function RouteInput(props: RouteInputProps) {
 
   if (spiritRoutes === null) {
     return (
-      <div>Маршруты духов не загружены</div>
+      <div>{t('spiritRoutesNotLoaded')}</div>
     );
   }
 
@@ -47,7 +47,7 @@ export function RouteInput(props: RouteInputProps) {
       <InputGroup className="tw-mb-3">
         <FormControl required id="newRoute" list="routes-datalist" />
         <InputGroup.Append>
-          <Button type="submit" variant="outline-secondary">Добавить маршрут</Button>
+          <Button type="submit" variant="outline-secondary">{t('addRoute')}</Button>
         </InputGroup.Append>
       </InputGroup>
       <datalist id="routes-datalist">

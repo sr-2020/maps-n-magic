@@ -58,7 +58,7 @@ export class SpiritList extends Component<SpiritListProps> {
   }
 
   spiritsToListItems(): EntitiyListItem[] {
-    const { spirits, spiritFractions } = this.props;
+    const { spirits, spiritFractions, t } = this.props;
     if (spirits === null || spiritFractions === null) {
       return [];
     }
@@ -66,7 +66,8 @@ export class SpiritList extends Component<SpiritListProps> {
     const items: EntitiyListItem[] = spirits.map(spirit => ({
       id: spirit.id,
       title: spirit.name,
-      subtitle: fractionIndex[spirit.fraction]?.name || ''
+      subtitle: (fractionIndex[spirit.fraction]?.name || '') + '. ' +
+        t(spirit.state.status)
     }));
     return items;
   }

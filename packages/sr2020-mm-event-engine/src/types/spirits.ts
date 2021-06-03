@@ -11,7 +11,7 @@ export type SpiritTimetable = TimetableItem[];
 export const SpiritStatus = {
   NotInGame: 'NotInGame',
   RestInAstral: 'RestInAstral',
-  OnRoute: 'OnRoute',
+  // OnRoute: 'OnRoute',
 } as const;
 
 interface AbstractState {
@@ -26,9 +26,9 @@ export interface RestInAstralState {
   status: typeof SpiritStatus.RestInAstral;
 }
 
-interface OnRouteState {
-  status: typeof SpiritStatus.OnRoute;
-}
+// interface OnRouteState {
+//   status: typeof SpiritStatus.OnRoute;
+// }
 
 export type SpiritState = 
   | NotInGameState 

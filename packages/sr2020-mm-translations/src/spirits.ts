@@ -9,6 +9,11 @@ export const spiritDictionary = {
   abilities: 'Способности',
   addAbility: 'Добавить способность',
   maxHitPoints: 'Максимум HP',
+  moveSpiritToGame: 'Выпустить духа в игру',
+  takeSpiritFromGame: 'Вывести духа из игры',
+  NotInGame: 'Не в игре',
+  RestInAstral: 'Ожидает в астрале',
+  OnRoute: 'На маршруте',
 
   // spirit route list
   newSpirit: 'Новый дух',
@@ -17,7 +22,7 @@ export const spiritDictionary = {
   findSpirit: 'Найти духов',
   createSpirits: 'Создайте духов',
   
-  // spirit route list
+  // spirit route content
   newSpiritRoute: 'Новый маршрут',
   enterSpiritRouteName: 'Введите имя маршрута',
   createSpiritRoute: 'Создать маршрут духа',
@@ -26,5 +31,15 @@ export const spiritDictionary = {
   waitTimeMinutes: 'Время нахождения в локации, мин',
   addWaypoint: 'Добавить остановку',
   waypoints: 'Остановки',
-  notAvailable: 'Н/Д',
+  timeColumnHeader: 'Время',
+  routeColumnHeader: 'Маршрут',
+  speedColumnHeader: 'Скорость, %',
+  timeOnRouteColumnHeader: 'Время в пути, мин',
+  addRoute: 'Добавить маршрут',
+  spiritRoutesNotLoaded: 'Маршруты духов не загружены',
+  sortRoutesByTime: 'Отсортировать по времени',
+  routes: 'Маршруты',
+  status: 'Статус',
+  spiritPageTitle: 'Дух {{name}} - id {{id}} - {{status}}',
+  routesNotLoaded: 'Маршруты еще не загружены'
 };

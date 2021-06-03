@@ -28,10 +28,10 @@ export function SpiritRouteTable(props: SpiritRouteTableProps) {
     <div className="SpiritRouteTable tw-table">
       <div className="tw-table-header-group">
         <div className="tw-table-row">
-          <div className="tw-table-cell tw-px-2 tw-text-right">Время</div>
-          <div className="tw-table-cell tw-px-2 tw-text-left">Маршрут</div>
-          <div className="tw-table-cell tw-px-2 tw-text-right">Скорость, %</div>
-          <div className="tw-table-cell tw-px-2 tw-text-right">Время в пути, мин</div>
+          <div className="tw-table-cell tw-px-2 tw-text-right">{t('timeColumnHeader')}</div>
+          <div className="tw-table-cell tw-px-2 tw-text-left">{t('routeColumnHeader')}</div>
+          <div className="tw-table-cell tw-px-2 tw-text-right">{t('speedColumnHeader')}</div>
+          <div className="tw-table-cell tw-px-2 tw-text-right">{t('timeOnRouteColumnHeader')}</div>
         </div>
       </div>
       <div className="tw-table-row-group">

@@ -32,6 +32,7 @@ export const translations = {
       clone: 'Клонировать',
       delete: 'Удалить',
       clearSearchInput: 'Очистить поиск',
+      notAvailable: 'Н/Д',
 
       // beacon popup
       selectBeaconId: 'Выберите Id маяка',
