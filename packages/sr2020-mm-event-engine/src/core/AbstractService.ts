@@ -8,19 +8,27 @@ import {
   GMRequest, 
   GMLogger,
   GMEvent,
-  DefaultGMEvent
+  DefaultGMEvent,
+  Req,
+  Res,
+  RequestHandler,
+  ServiceContract,
+  ServiceContractTypes,
+  DefaultServiceContract
 } from "./types";
 import { stringToType, typeToGetter } from "./utils";
 
 export class AbstractService<
-  EmitEvent extends GMEvent = DefaultGMEvent,
-  ListenEvent extends GMEvent = DefaultGMEvent,
+  F extends ServiceContract = DefaultServiceContract,
+  // EmitEvent extends GMEvent = DefaultGMEvent,
+  // ListenEvent extends GMEvent = DefaultGMEvent,
 > {
   // logger: GMLogger;
 
   // gameModel: GameModel;
 
-  metadata: Metadata = {
+  // metadata: Metadata = {
+  metadata: ServiceContractTypes<F> = {
     actions: [],
     requests: [],
     emitEvents: [],
@@ -87,7 +95,8 @@ export class AbstractService<
     return this.gameModel.emit(event, ...args);
   }
 
-  emit2(event: EmitEvent): boolean {
+  // emit2(event: EmitEvent): boolean {
+  emit2(event: F["EmitEvent"]): boolean {
     if (this.gameModel === null) {
       throw new Error(`Service ${this.constructor.name} is not initialized`);
     }
@@ -109,7 +118,8 @@ export class AbstractService<
     return this.gameModel.on(event, listener);
   }
 
-  on2<T extends ListenEvent>(event: T["type"], listener: (arg: T) => void): GameModel {
+  // on2<T extends ListenEvent>(event: T["type"], listener: (arg: T) => void): GameModel {
+  on2<T extends F["ListenEvent"]>(event: T["type"], listener: (arg: T) => void): GameModel {
     return this.on(event, listener);
   }
   // on2<EData extends {type: string}>(event: EData["type"], listener: (arg: EData) => void): GameModel {
@@ -127,7 +137,8 @@ export class AbstractService<
     return this.gameModel.off(event, listener);
   }
 
-  off2<T extends ListenEvent>(event: T["type"], listener: (arg: T) => void): GameModel {
+  // off2<T extends ListenEvent>(event: T["type"], listener: (arg: T) => void): GameModel {
+  off2<T extends F["ListenEvent"]>(event: T["type"], listener: (arg: T) => void): GameModel {
     return this.off(event, listener);
   }
   // off2<EData extends {type: string}>(event: EData["type"], listener: (arg: EData) => void): GameModel {
@@ -158,6 +169,18 @@ export class AbstractService<
     return this.gameModel.get(rawRequest) as K;
   }
 
+  getFromModel2<T extends RequestHandler>(rawRequest: Req<T>): Res<T> {
+    if (this.gameModel === null) {
+      throw new Error(`Service ${this.constructor.name} is not initialized`);
+    }
+    const { needRequests } = this.metadata;
+    if (needRequests && !needRequests.includes(rawRequest.type)) {
+      throw new Error(`Request ${rawRequest.type} is not expected from ${this.constructor.name}`);
+    }
+
+    return this.gameModel.get(rawRequest);
+  }
+
   executeOnModel<T extends GMAction, K>(rawAction: T | string): K {
     if (this.gameModel === null) {
       throw new Error(`Service ${this.constructor.name} is not initialized`);
@@ -172,7 +195,8 @@ export class AbstractService<
     return this.gameModel.execute(rawAction) as K;
   }
 
-  setMetadata(metadata: Metadata): void {
+  // setMetadata(metadata: Metadata): void {
+  setMetadata(metadata: ServiceContractTypes<F>): void {
     this.metadata = { ...this.metadata, ...metadata };
   }
 }

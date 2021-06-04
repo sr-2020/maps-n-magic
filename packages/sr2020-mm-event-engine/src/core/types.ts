@@ -44,6 +44,33 @@ export interface Metadata {
   listenEvents: string[];
 };
 
+export interface ServiceContract {
+  Request: RequestHandler;
+  Action: GMAction;
+  EmitEvent: GMEvent;
+  ListenEvent: GMEvent;
+  NeedAction: GMAction;
+  NeedRequest: RequestHandler;
+}
+export interface DefaultServiceContract {
+  Request: never;
+  Action: never;
+  EmitEvent: never;
+  ListenEvent: never;
+  NeedAction: never;
+  NeedRequest: never;
+}
+
+export type ServiceContractTypes<T extends ServiceContract> = {
+  requests: Req<T["Request"]>["type"][],
+  actions: T["Action"]["type"][],
+  emitEvents: T["EmitEvent"]["type"][],
+  listenEvents: T["ListenEvent"]["type"][],
+  needActions: T["NeedAction"]["type"][],
+  needRequests: Req<T["NeedRequest"]>["type"][],
+}
+
+
 export interface EventProcessorMetadata {
   emitEvents: string[];
   listenEvents: string[];

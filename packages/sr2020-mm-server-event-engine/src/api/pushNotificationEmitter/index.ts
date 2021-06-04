@@ -3,9 +3,9 @@ import {
   GameModel, 
   GMLogger,
   AbstractEventProcessor,
+  EPushNotification
 } from 'sr2020-mm-event-engine';
 import { sendNotification } from './sendNotification';
-import { PushNotificationArgs, EPushNotification } from "../../index";
 
 // const metadata = {
 //   actions: [],

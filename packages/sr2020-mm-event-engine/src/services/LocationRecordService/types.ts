@@ -2,6 +2,8 @@ import {
   Metadata, 
   Typed,
   TypeOnly,
+  ServiceContract,
+  ServiceContractTypes
 } from '../../core';
 
 import { 
@@ -9,45 +11,7 @@ import {
   TriangulationData
 } from "../../types";
 
-export const lrsMetadata: Metadata = {
-  requests: [
-    'locationRecord',
-    'locationRecords',
-    'triangulationData',
-    'neighborOrRandomLocation',
-    'neighborList',
-  ],
-  actions: [
-    // single location actions
-    'putLocationRecord',
-    'putLocationRecordConfirmed',
-    'postLocationRecord',
-    'postLocationRecordConfirmed',
-    'deleteLocationRecord',
-    'deleteLocationRecordConfirmed',
-    // multi location actions
-    'setLocationRecords',
-    'putLocationRecords',
-    'putLocationRecordsConfirmed',
-  ],
-  emitEvents: [
-    // single location events
-    'postLocationRecordRequested',
-    'postLocationRecord',
-    'deleteLocationRecordRequested',
-    'deleteLocationRecord',
-    'putLocationRecordRequested',
-    'putLocationRecord',
-    // multi location events
-    'putLocationRecordsRequested',
-    'putLocationRecords',
-    'locationRecordsChanged',
-    'locationRecordsChanged2',
-  ],
-  listenEvents: [],
-  needActions: [],
-  needRequests: []
-};
+
 
 // requests
 
@@ -118,6 +82,68 @@ export type LocationRecordEvents =
   ELocationRecordsChanged2
 ;
 
+export interface LocationRecordServiceContract extends ServiceContract {
+  Request: 
+    | GetLocationRecord
+    | GetLocationRecords 
+    | GetTriangulationData 
+    | GetNeighborOrRandomLocation 
+    | GetNeighborList;
+  Action: 
+    | PutLocationRecord
+    | PutLocationRecordConfirmed
+    | PostLocationRecord
+    | PostLocationRecordConfirmed
+    | DeleteLocationRecord
+    | DeleteLocationRecordConfirmed
+    | SetLocationRecords
+    | PutLocationRecords
+    | PutLocationRecordsConfirmed;
+  EmitEvent: LocationRecordEvents;
+  ListenEvent: never;
+  NeedAction: never;
+  NeedRequest: never;
+}
+
+export const lrsMetadata: ServiceContractTypes<LocationRecordServiceContract> = {
+  requests: [
+    'locationRecord',
+    'locationRecords',
+    'triangulationData',
+    'neighborOrRandomLocation',
+    'neighborList',
+  ],
+  actions: [
+    // single location actions
+    'putLocationRecord',
+    'putLocationRecordConfirmed',
+    'postLocationRecord',
+    'postLocationRecordConfirmed',
+    'deleteLocationRecord',
+    'deleteLocationRecordConfirmed',
+    // multi location actions
+    'setLocationRecords',
+    'putLocationRecords',
+    'putLocationRecordsConfirmed',
+  ],
+  emitEvents: [
+    // single location events
+    'postLocationRecordRequested',
+    'postLocationRecord',
+    'deleteLocationRecordRequested',
+    'deleteLocationRecord',
+    'putLocationRecordRequested',
+    'putLocationRecord',
+    // multi location events
+    'putLocationRecordsRequested',
+    'putLocationRecords',
+    'locationRecordsChanged',
+    'locationRecordsChanged2',
+  ],
+  listenEvents: [],
+  needActions: [],
+  needRequests: []
+};
 
 // function assertIsRegExp(arg: unknown): asserts arg is RegExp {
 //   if (! (arg instanceof RegExp)) {

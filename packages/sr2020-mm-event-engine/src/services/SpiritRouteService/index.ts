@@ -22,11 +22,12 @@ import {
   SpiritRouteEmitEvents,
   SpiritRouteListenEvents,
   SpiritRouteList,
-  ECloneSpiritRouteRequested
+  ECloneSpiritRouteRequested,
+  SpiritRouteServiceContract
 } from "./types";
 
 
-export class SpiritRouteService extends AbstractService<SpiritRouteEmitEvents, SpiritRouteListenEvents> {
+export class SpiritRouteService extends AbstractService<SpiritRouteServiceContract> {
   spiritRoutes: SpiritRoute[];
 
   constructor(gameModel: GameModel, logger: GMLogger) {

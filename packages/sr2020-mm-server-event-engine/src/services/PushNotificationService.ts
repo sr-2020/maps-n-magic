@@ -5,21 +5,26 @@ import {
   Metadata,
   GMLogger,
   GameModel,
-  Typed
+  Typed,
+  EPushNotification,
+  PushNotification,
+  ServiceContract,
+  ServiceContractTypes
 } from 'sr2020-mm-event-engine';
 
-export interface PushNotificationArgs {
-  characterId: number;
-  title: string;
-  message: string;
-}
-
-export type PushNotification = Typed<'pushNotification', PushNotificationArgs>;
-export type EPushNotification = Typed<'pushNotification', PushNotificationArgs>;
 
 export type PushNotificationEvents = EPushNotification;
 
-const metadata: Metadata = {
+export interface PushNotificationServiceContract extends ServiceContract {
+  Request: never;
+  Action: PushNotification;
+  EmitEvent: EPushNotification;
+  ListenEvent: never;
+  NeedAction: never;
+  NeedRequest: never;
+}
+
+const metadata: ServiceContractTypes<PushNotificationServiceContract> = {
   actions: [
     'pushNotification',
   ],
@@ -32,7 +37,7 @@ const metadata: Metadata = {
   needRequests: []
 };
 
-export class PushNotificationService extends AbstractService<PushNotificationEvents> {
+export class PushNotificationService extends AbstractService<PushNotificationServiceContract> {
   constructor(gameModel: GameModel, logger: GMLogger) {
     super(gameModel, logger);
     this.setMetadata(metadata);

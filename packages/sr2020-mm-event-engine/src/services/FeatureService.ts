@@ -8,23 +8,12 @@ import {
   Req,
   Res,
   TypeOnly,
-  Typed
+  Typed,
+  ServiceContract,
+  ServiceContractTypes
 } from '../core';
 
 import { Feature } from "../types";
-
-export const featureMetadata: Metadata = {
-  requests: ['features'],
-  actions: [],
-  emitEvents: [
-    'featuresChanged',
-  ],
-  listenEvents: [
-    'setFeatures',
-  ],
-  needActions: [],
-  needRequests: [],
-};
 
 // requests
 
@@ -42,7 +31,29 @@ export type EFeaturesChanged = Typed<'featuresChanged', FeatureList>;
 
 export type ESetFeatures = Typed<'setFeatures', FeatureList>;
 
-export class FeatureService extends AbstractService<EFeaturesChanged, ESetFeatures> {
+export interface FeatureServiceContract extends ServiceContract {
+  Action: never;
+  Request: GetFeatures;
+  EmitEvent: EFeaturesChanged;
+  NeedAction: never;
+  NeedRequest: never;
+  ListenEvent: ESetFeatures;
+}
+
+export const featureMetadata: ServiceContractTypes<FeatureServiceContract> = {
+  requests: ['features'],
+  actions: [],
+  emitEvents: [
+    'featuresChanged',
+  ],
+  listenEvents: [
+    'setFeatures',
+  ],
+  needActions: [],
+  needRequests: [],
+};
+
+export class FeatureService extends AbstractService<FeatureServiceContract> {
   features: Feature[];
 
   constructor(gameModel: GameModel, logger: GMLogger) {

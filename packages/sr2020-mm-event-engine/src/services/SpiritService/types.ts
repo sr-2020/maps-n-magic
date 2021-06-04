@@ -2,32 +2,15 @@ import {
   Metadata, 
   Typed,
   TypeOnly,
+  ServiceContract,
+  ServiceContractTypes
 } from '../../core';
 
 import { 
   Spirit
 } from "../../types";
 
-export const spiritMetadata: Metadata = {
-  requests: ['spirits', 'spirit'],
-  actions: [],
-  emitEvents: [
-    'postSpirit',
-    'postSpiritRequested',
-    'putSpirit',
-    'deleteSpirit',
-    'spiritsChanged',
-  ],
-  listenEvents: [
-    'postSpiritConfirmed',
-    'putSpiritConfirmed',
-    'deleteSpiritConfirmed',
-    'setSpirits',
-    'cloneSpiritRequested'
-  ],
-  needActions: [],
-  needRequests: [],
-};
+
 
 // requests
 
@@ -87,3 +70,33 @@ export type SpiritListenEvents =
   ESetSpirits |
   ECloneSpiritRequested
 ;
+
+export interface SpiritServiceContract extends ServiceContract {
+  Request: GetSpirits | GetSpirit;
+  Action: never;
+  EmitEvent: SpiritEmitEvents;
+  ListenEvent: SpiritListenEvents;
+  NeedAction: never;
+  NeedRequest: never;
+}
+
+export const spiritMetadata: ServiceContractTypes<SpiritServiceContract> = {
+  requests: ['spirits', 'spirit'],
+  actions: [],
+  emitEvents: [
+    'postSpirit',
+    'postSpiritRequested',
+    'putSpirit',
+    'deleteSpirit',
+    'spiritsChanged',
+  ],
+  listenEvents: [
+    'postSpiritConfirmed',
+    'putSpiritConfirmed',
+    'deleteSpiritConfirmed',
+    'setSpirits',
+    'cloneSpiritRequested'
+  ],
+  needActions: [],
+  needRequests: [],
+};

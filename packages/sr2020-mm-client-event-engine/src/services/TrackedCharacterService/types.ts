@@ -5,33 +5,11 @@ import {
   GameModel, 
   GMLogger,
   TypeOnly,
-  Typed
+  Typed,
+  ServiceContract,
+  ServiceContractTypes,
+  ELocationRecordsChanged2
 } from 'sr2020-mm-event-engine';
-
-export const trackedCharacterMetadata: Metadata = {
-  requests: [
-    'trackedCharacterId',
-    'trackedCharacterLocationId',
-  ],
-  actions: [
-    'setTrackedCharacterId',
-    // fictive event, actually it is emitted by CharacterLocationService
-    'trackedCharacterLocationChanged',
-  ],
-  emitEvents: [
-    'trackedCharacterIdChanged',
-    'emitTrackedCharacterLocationChanged',
-    // fictive event, actually it is emitted by CharacterLocationService
-    'trackedCharacterLocationChanged',
-    'setBackgroundSound',
-  ],
-  listenEvents: [
-    'locationRecordsChanged2',
-  ],
-  needRequests: [],
-  needActions: []
-};
-
 
 // requests
 
@@ -65,3 +43,39 @@ export type TrackedCharacterEvents =
   ETrackedCharacterIdChanged |
   ETrackedCharacterLocationChanged |
   EEmitTrackedCharacterLocationChanged;
+
+
+export interface TrackedCharacterServiceContract extends ServiceContract {
+  Request: GetTrackedCharacterId | GetTrackedCharacterLocationId;
+  Action: 
+    | SetTrackedCharacterId
+    | TrackedCharacterLocationChanged;
+  EmitEvent: TrackedCharacterEvents;
+  ListenEvent: ELocationRecordsChanged2;
+  NeedAction: never;
+  NeedRequest: never;
+}
+
+export const trackedCharacterMetadata: ServiceContractTypes<TrackedCharacterServiceContract> = {
+  requests: [
+    'trackedCharacterId',
+    'trackedCharacterLocationId',
+  ],
+  actions: [
+    'setTrackedCharacterId',
+    // fictive event, actually it is emitted by CharacterLocationService
+    'trackedCharacterLocationChanged',
+  ],
+  emitEvents: [
+    'trackedCharacterIdChanged',
+    'emitTrackedCharacterLocationChanged',
+    // fictive event, actually it is emitted by CharacterLocationService
+    'trackedCharacterLocationChanged',
+    // 'setBackgroundSound',
+  ],
+  listenEvents: [
+    'locationRecordsChanged2',
+  ],
+  needRequests: [],
+  needActions: []
+};

@@ -17,10 +17,11 @@ import {
   GetTrackedCharacterLocationId,
   TrackedCharacterLocationChanged,
   SetTrackedCharacterId,
-  TrackedCharacterEvents
+  TrackedCharacterEvents,
+  TrackedCharacterServiceContract
 } from "./types";
 
-export class TrackedCharacterService extends AbstractService<TrackedCharacterEvents> {
+export class TrackedCharacterService extends AbstractService<TrackedCharacterServiceContract> {
   characterId: number | null;
   locationId: number | null;
 

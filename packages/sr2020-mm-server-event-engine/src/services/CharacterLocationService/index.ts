@@ -16,11 +16,11 @@ import {
   ESetAllCharacterLocations,
   ESetCharacterLocation,
   EEmitCharacterLocationChanged,
+  CharacterLocationServiceContract
 } from 'sr2020-mm-event-engine';
 
 export class CharacterLocationService extends AbstractService<
-  CharacterLocationEmitEvents,
-  CharacterLocationListenEvents
+  CharacterLocationServiceContract
 > {
   // Map(
   //   locationId,

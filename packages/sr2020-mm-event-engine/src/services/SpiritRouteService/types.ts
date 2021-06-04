@@ -2,32 +2,13 @@ import {
   Metadata, 
   Typed,
   TypeOnly,
+  ServiceContract,
+  ServiceContractTypes
 } from '../../core';
 
 import { 
   SpiritRoute
 } from "../../types";
-
-export const spiritRouteMetadata: Metadata = {
-  requests: ['spiritRoutes', 'spiritRoute'],
-  actions: [],
-  emitEvents: [
-    'postSpiritRoute',
-    'postSpiritRouteRequested',
-    'putSpiritRoute',
-    'deleteSpiritRoute',
-    'spiritRoutesChanged',
-  ],
-  listenEvents: [
-    'postSpiritRouteConfirmed',
-    'putSpiritRouteConfirmed',
-    'deleteSpiritRouteConfirmed',
-    'setSpiritRoutes',
-    'cloneSpiritRouteRequested'
-  ],
-  needActions: [],
-  needRequests: [],
-};
 
 // requests
 
@@ -87,3 +68,33 @@ export type SpiritRouteListenEvents =
   ESetSpiritRoutes |
   ECloneSpiritRouteRequested
 ;
+
+export interface SpiritRouteServiceContract extends ServiceContract {
+  Request: GetSpiritRoutes | GetSpiritRoute;
+  Action: never;
+  EmitEvent: SpiritRouteEmitEvents;
+  ListenEvent: SpiritRouteListenEvents;
+  NeedAction: never;
+  NeedRequest: never;
+}
+
+export const spiritRouteMetadata: ServiceContractTypes<SpiritRouteServiceContract> = {
+  requests: ['spiritRoutes', 'spiritRoute'],
+  actions: [],
+  emitEvents: [
+    'postSpiritRoute',
+    'postSpiritRouteRequested',
+    'putSpiritRoute',
+    'deleteSpiritRoute',
+    'spiritRoutesChanged',
+  ],
+  listenEvents: [
+    'postSpiritRouteConfirmed',
+    'putSpiritRouteConfirmed',
+    'deleteSpiritRouteConfirmed',
+    'setSpiritRoutes',
+    'cloneSpiritRouteRequested'
+  ],
+  needActions: [],
+  needRequests: [],
+};

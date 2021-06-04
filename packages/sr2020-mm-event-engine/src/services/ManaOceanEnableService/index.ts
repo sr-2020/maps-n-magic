@@ -8,10 +8,38 @@ import {
   Typed,
   TypeOnly,
   Req,
-  Res
+  Res,
+  ServiceContract,
+  ServiceContractTypes
 } from '../../core';
 
-const moeMetadata: Metadata = {
+
+export interface SetEnableManaOceanArgs {
+  enableManaOcean: boolean
+}
+
+export type SetEnableManaOcean = Typed<'setEnableManaOcean', SetEnableManaOceanArgs>;
+// export type EnableManaOceanConfirmed = Typed<'enableManaOceanConfirmed', SetEnableManaOceanArgs>;
+export type EEnableManaOceanConfirmed = Typed<'enableManaOceanConfirmed', SetEnableManaOceanArgs>;
+// export type EnableManaOceanChanged = Typed<'enableManaOceanChanged', SetEnableManaOceanArgs>;
+
+export type GetEnableManaOcean = (arg: TypeOnly<'enableManaOcean'>) => boolean;
+
+export type EEnableManaOceanRequested = Typed<'enableManaOceanRequested', SetEnableManaOceanArgs>;
+export type EEnableManaOceanChanged = Typed<'enableManaOceanChanged', SetEnableManaOceanArgs>;
+
+export interface ManaOceanEnableServiceContract extends ServiceContract {
+  Request: GetEnableManaOcean;
+  Action: SetEnableManaOcean;
+  EmitEvent: 
+    | EEnableManaOceanRequested 
+    | EEnableManaOceanChanged;
+  ListenEvent: EEnableManaOceanConfirmed;
+  NeedAction: never;
+  NeedRequest: never;
+}
+
+const moeMetadata: ServiceContractTypes<ManaOceanEnableServiceContract> = {
   actions: [
     'setEnableManaOcean',
     // 'enableManaOceanChanged',
@@ -30,26 +58,7 @@ const moeMetadata: Metadata = {
   ],
 };
 
-export interface SetEnableManaOceanArgs {
-  enableManaOcean: boolean
-}
-
-export type SetEnableManaOcean = Typed<'setEnableManaOcean', SetEnableManaOceanArgs>;
-// export type EnableManaOceanConfirmed = Typed<'enableManaOceanConfirmed', SetEnableManaOceanArgs>;
-export type EEnableManaOceanConfirmed = Typed<'enableManaOceanConfirmed', SetEnableManaOceanArgs>;
-// export type EnableManaOceanChanged = Typed<'enableManaOceanChanged', SetEnableManaOceanArgs>;
-
-export type GetEnableManaOcean = (arg: TypeOnly<'enableManaOcean'>) => boolean;
-
-export type EEnableManaOceanRequested = Typed<'enableManaOceanRequested', SetEnableManaOceanArgs>;
-export type EEnableManaOceanChanged = Typed<'enableManaOceanChanged', SetEnableManaOceanArgs>;
-
-export type EnableManaOceanEmitEvents = EEnableManaOceanRequested |
-  EEnableManaOceanChanged;
-export type EnableManaOceanListenEvents = EEnableManaOceanConfirmed;
-
-
-export class ManaOceanEnableService extends AbstractService<EnableManaOceanEmitEvents, EnableManaOceanListenEvents> {
+export class ManaOceanEnableService extends AbstractService<ManaOceanEnableServiceContract> {
   enableManaOcean: boolean;
 
   constructor(gameModel: GameModel, logger: GMLogger) {

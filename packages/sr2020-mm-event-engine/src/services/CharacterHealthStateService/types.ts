@@ -1,8 +1,9 @@
-import { any } from 'ramda';
 import { 
   Metadata, 
   Typed,
-  TypeOnly
+  TypeOnly,
+  ServiceContract,
+  ServiceContractTypes,
 } from '../../core';
 
 import { 
@@ -10,24 +11,7 @@ import {
   RawCharacterHealthState,
 } from "../../types";
 
-export const chssMetadata: Metadata = {
-  actions: [
-  ],
-  requests: [
-    'characterHealthState', 'characterHealthStates',
-  ],
-  emitEvents: [
-    'characterHealthStateChanged',
-    'characterHealthStatesLoaded',
-  ],
-  listenEvents: [
-    'putCharHealthConfirmed',
-    'putCharLocationConfirmed',
-    'setCharacterHealthStates',
-  ],
-  needRequests: ['locationRecord'],
-  needActions: [],
-};
+import { GetLocationRecord } from "../../index";
 
 // requests
 
@@ -78,3 +62,31 @@ export type CharacterHealthStateListenEvents =
   EPutCharHealthConfirmed |
   EPutCharLocationConfirmed |
   ESetCharacterHealthStates;
+
+export interface CharacterHealthStateServiceContract extends ServiceContract {
+  Request: GetCharacterHealthState | GetCharacterHealthStates;
+  Action: never;
+  EmitEvent: CharacterHealthStateEmitEvents;
+  ListenEvent: CharacterHealthStateListenEvents;
+  NeedAction: never;
+  NeedRequest: GetLocationRecord;
+}
+
+export const chssMetadata: ServiceContractTypes<CharacterHealthStateServiceContract> = {
+  actions: [
+  ],
+  requests: [
+    'characterHealthState', 'characterHealthStates',
+  ],
+  emitEvents: [
+    'characterHealthStateChanged',
+    'characterHealthStatesLoaded',
+  ],
+  listenEvents: [
+    'putCharHealthConfirmed',
+    'putCharLocationConfirmed',
+    'setCharacterHealthStates',
+  ],
+  needRequests: ['locationRecord'],
+  needActions: [],
+};

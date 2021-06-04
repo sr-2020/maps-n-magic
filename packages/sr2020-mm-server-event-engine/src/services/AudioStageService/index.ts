@@ -7,7 +7,13 @@ import {
   CharacterLocationData,
   GameModel,
   GMLogger,
-  Typed
+  Typed,
+  ServiceContract,
+  ServiceContractTypes,
+  ECharacterLocationChanged,
+  EPutLocationRecords,
+  GetLocationRecord,
+  GetCharactersFromLocation
 } from 'sr2020-mm-event-engine';
 
 interface SoundStageUpdate {
@@ -21,7 +27,16 @@ export type ESoundStageChanged = Typed<'soundStageChanged', {
 
 export type AudioStageEvents = ESoundStageChanged;
 
-const metadata: Metadata = {
+export interface AudioStageServiceContract extends ServiceContract {
+  Request: never;
+  Action: never;
+  EmitEvent: AudioStageEvents;
+  ListenEvent: ECharacterLocationChanged | EPutLocationRecords;
+  NeedAction: never;
+  NeedRequest: GetLocationRecord | GetCharactersFromLocation;
+}
+
+const metadata: ServiceContractTypes<AudioStageServiceContract> = {
   actions: [
     // 'postNotification',
   ],
@@ -39,7 +54,7 @@ const metadata: Metadata = {
   ],
   needActions: []
 };
-export class AudioStageService extends AbstractService<AudioStageEvents> {
+export class AudioStageService extends AbstractService<AudioStageServiceContract> {
   locationIndex: Map<number, {
     manaLevel: number | null;
   }>;

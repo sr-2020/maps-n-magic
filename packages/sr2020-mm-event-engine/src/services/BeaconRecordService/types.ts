@@ -2,37 +2,13 @@ import {
   Metadata, 
   Typed,
   TypeOnly,
+  ServiceContract,
+  ServiceContractTypes
 } from '../../core';
 
 import { 
   BeaconRecord
 } from "../../types";
-
-export const brsMetadata: Metadata = {
-  requests: ['beaconRecords'],
-  actions: [
-    'putBeaconRecord',
-    'putBeaconRecordConfirmed',
-    'postBeaconRecord',
-    'postBeaconRecordConfirmed',
-    'deleteBeaconRecord',
-    'deleteBeaconRecordConfirmed',
-    'setBeaconRecords',
-  ],
-  emitEvents: [
-    'putBeaconRecordRequested',
-    'putBeaconRecord',
-    'postBeaconRecordRequested',
-    'postBeaconRecord',
-    'deleteBeaconRecordRequested',
-    'deleteBeaconRecord',
-    'beaconRecordsChanged',
-    'beaconRecordsChanged2',
-  ],
-  listenEvents: [],
-  needActions: [],
-  needRequests: [],
-};
 
 // requests
 
@@ -89,3 +65,45 @@ export type BeaconRecordEvents =
   EBeaconRecordsChanged |
   EBeaconRecordsChanged2
 ;
+
+export interface BeaconRecordServiceContract extends ServiceContract {
+  Request: GetBeaconRecords;
+  Action: 
+    | PutBeaconRecord
+    | PutBeaconRecordConfirmed
+    | PostBeaconRecord
+    | PostBeaconRecordConfirmed
+    | DeleteBeaconRecord
+    | DeleteBeaconRecordConfirmed
+    | SetBeaconRecords;
+  EmitEvent: BeaconRecordEvents;
+  ListenEvent: never;
+  NeedAction: never;
+  NeedRequest: never;
+}
+
+export const brsMetadata: ServiceContractTypes<BeaconRecordServiceContract> = {
+  requests: ['beaconRecords'],
+  actions: [
+    'putBeaconRecord',
+    'putBeaconRecordConfirmed',
+    'postBeaconRecord',
+    'postBeaconRecordConfirmed',
+    'deleteBeaconRecord',
+    'deleteBeaconRecordConfirmed',
+    'setBeaconRecords',
+  ],
+  emitEvents: [
+    'putBeaconRecordRequested',
+    'putBeaconRecord',
+    'postBeaconRecordRequested',
+    'postBeaconRecord',
+    'deleteBeaconRecordRequested',
+    'deleteBeaconRecord',
+    'beaconRecordsChanged',
+    'beaconRecordsChanged2',
+  ],
+  listenEvents: [],
+  needActions: [],
+  needRequests: [],
+};

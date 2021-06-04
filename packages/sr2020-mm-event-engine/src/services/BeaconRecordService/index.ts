@@ -21,12 +21,13 @@ import {
   DeleteBeaconRecord,
   DeleteBeaconRecordConfirmed,
   SetBeaconRecords,
-  BeaconRecordEvents
+  BeaconRecordEvents,
+  BeaconRecordServiceContract
 } from "./types";
 
 type BeaconRecordsObj = { beaconRecords: BeaconRecord[] };
 
-export class BeaconRecordService extends AbstractService<BeaconRecordEvents> {
+export class BeaconRecordService extends AbstractService<BeaconRecordServiceContract> {
   beaconRecords: BeaconRecord[];
 
   constructor(gameModel: GameModel, logger: GMLogger) {

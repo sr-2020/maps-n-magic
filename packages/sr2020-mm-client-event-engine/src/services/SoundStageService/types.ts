@@ -6,31 +6,9 @@ import {
   SoundStageData,
   TypeOnly,
   Typed,
+  ServiceContract,
+  ServiceContractTypes
 } from 'sr2020-mm-event-engine';
-
-export const soundStageMetadata: Metadata = {
-  requests: ['soundStage'],
-  actions: [
-    'setBackgroundSound',
-    'rotationSoundsChange',
-    'clearSoundStage',
-    'setRotationTimeout',
-    'setRotationSoundTimeout',
-    'setRotationVolume',
-    'setBackgroundVolume',
-  ],
-  emitEvents: [
-    'backgroundSoundUpdate',
-    'rotationSoundsUpdate',
-    'rotationTimeoutUpdate',
-    'rotationSoundTimeoutUpdate',
-    'backgroundVolumeUpdate',
-    'rotationVolumeUpdate',
-  ],
-  needActions: [],
-  needRequests: [],
-  listenEvents: []
-};
 
 // requests
 
@@ -53,7 +31,8 @@ export type SetBackgroundVolume = Typed<'setBackgroundVolume', {
 export type SetRotationVolume = Typed<'setRotationVolume', {
   rotationVolume: number;
 }>;
-export type ClearSoundStage = TypeOnly<'clearSoundStage'>;
+// export type ClearSoundStage = TypeOnly<'clearSoundStage'>;
+export type ClearSoundStage = Typed<'clearSoundStage'>;
 export type RotationSoundsChange = Typed<'rotationSoundsChange', {
   added: string[];
   removed: string[];
@@ -87,3 +66,44 @@ export type SoundStageEvents =
   EBackgroundVolumeUpdate |
   ERotationVolumeUpdate |
   ERotationSoundsUpdate;
+
+export interface SoundStageServiceContract extends ServiceContract {
+  Request: GetSoundStage;
+  Action: 
+    | SetBackgroundSound
+    | RotationSoundsChange
+    | ClearSoundStage
+    | SetRotationTimeout
+    | SetRotationTimeout
+    | SetRotationSoundTimeout
+    | SetRotationVolume
+    | SetBackgroundVolume;
+  EmitEvent: SoundStageEvents;
+  ListenEvent: never;
+  NeedAction: never;
+  NeedRequest: never;
+}
+
+export const soundStageMetadata: ServiceContractTypes<SoundStageServiceContract> = {
+  requests: ['soundStage'],
+  actions: [
+    'setBackgroundSound',
+    'rotationSoundsChange',
+    'clearSoundStage',
+    'setRotationTimeout',
+    'setRotationSoundTimeout',
+    'setRotationVolume',
+    'setBackgroundVolume',
+  ],
+  emitEvents: [
+    'backgroundSoundUpdate',
+    'rotationSoundsUpdate',
+    'rotationTimeoutUpdate',
+    'rotationSoundTimeoutUpdate',
+    'backgroundVolumeUpdate',
+    'rotationVolumeUpdate',
+  ],
+  needActions: [],
+  needRequests: [],
+  listenEvents: []
+};

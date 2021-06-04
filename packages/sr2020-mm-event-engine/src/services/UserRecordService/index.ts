@@ -17,6 +17,7 @@ import {
   GetUserRecords,
   SetUserRecords,
   UserRecordEvents,
+  UserRecordServiceContract
 } from "./types";
 
 const arr: string[] = `37232
@@ -71,7 +72,7 @@ const userDict: Record<string, HardcodedUser> = R.indexBy(R.prop('userId'), user
 
 // console.log(characterDict);
 
-export class UserRecordService extends AbstractService<UserRecordEvents> {
+export class UserRecordService extends AbstractService<UserRecordServiceContract> {
   userRecords: UserRecord[];
 
   constructor(gameModel: GameModel, logger: GMLogger) {

@@ -29,14 +29,14 @@ import {
   EPutCharLocationConfirmed,
   EPutCharHealthConfirmed,
   ESetCharacterHealthStates,
-  CharacterHealthStateListenEvents
+  CharacterHealthStateListenEvents,
+  CharacterHealthStateServiceContract
 } from "./types";
 
 export * from './types';
 
 export class CharacterHealthStateService extends AbstractService<
-  CharacterHealthStateEmitEvents, 
-  CharacterHealthStateListenEvents
+  CharacterHealthStateServiceContract
 > {
   characterHealthStates: CharacterHealthStates;
 

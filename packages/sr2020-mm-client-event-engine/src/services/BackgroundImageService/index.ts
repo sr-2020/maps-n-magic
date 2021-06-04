@@ -18,10 +18,11 @@ import {
   PostBackgroundImage,
   PutBackgroundImage,
   DeleteBackgroundImage,
-  BackgroundImageEvents
+  BackgroundImageEvents,
+  BackgroundImageServiceContract
 } from "./types";
 
-export class BackgroundImageService extends AbstractService<BackgroundImageEvents> {
+export class BackgroundImageService extends AbstractService<BackgroundImageServiceContract> {
   backgroundImages: BackgroundImage[];
   maxBackgroundImageId: number;
 

@@ -7,18 +7,25 @@ import {
   GameModel,
   RawCharacterHealthState,
   Typed,
-  ECharacterHealthStateChanged
+  ECharacterHealthStateChanged,
+  EMassacreTriggered,
+  ServiceContract,
+  ServiceContractTypes
 } from 'sr2020-mm-event-engine';
-
-export type EMassacreTriggered = Typed<'massacreTriggered', {
-  locationId,
-  timestamp,
-}>;
 
 export type MassacreEmitEvents = EMassacreTriggered;
 export type MassacreListenEvents = ECharacterHealthStateChanged;
 
-const metadata: Metadata = {
+export interface MassacreServiceContract extends ServiceContract {
+  Request: never;
+  Action: never;
+  EmitEvent: MassacreEmitEvents;
+  ListenEvent: MassacreListenEvents;
+  NeedAction: never;
+  NeedRequest: never;
+}
+
+const metadata: ServiceContractTypes<MassacreServiceContract> = {
   actions: [
     // 'onCharHealthUpdateReceived'
   ],
@@ -28,7 +35,7 @@ const metadata: Metadata = {
   needRequests: [],
   needActions: []
 };
-export class MassacreService extends AbstractService<MassacreEmitEvents, MassacreListenEvents> {
+export class MassacreService extends AbstractService<MassacreServiceContract> {
   // key - locationId, 
   // value - array of timestamps when character falled in state 'wounded'
   characterHealthStats: Record<number, number[]>;

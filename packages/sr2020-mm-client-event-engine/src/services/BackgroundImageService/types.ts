@@ -5,26 +5,10 @@ import {
   GMLogger,
   Typed,
   TypeOnly,
-  BackgroundImage
+  BackgroundImage,
+  ServiceContract,
+  ServiceContractTypes
 } from 'sr2020-mm-event-engine';
-
-export const backgroundImageMetadata: Metadata = {
-  requests: ['backgroundImages'],
-  actions: [
-    'postBackgroundImage',
-    'putBackgroundImage',
-    'deleteBackgroundImage',
-  ],
-  emitEvents: [
-    'postBackgroundImage',
-    'putBackgroundImage',
-    'deleteBackgroundImage',
-    'backgroundImagesChanged',
-  ],
-  listenEvents: [],
-  needRequests: [],
-  needActions: []
-};
 
 // requests
 
@@ -67,3 +51,33 @@ export type BackgroundImageEvents =
   EPutBackgroundImage |
   EDeleteBackgroundImage |
   EBackgroundImagesChange;
+
+export interface BackgroundImageServiceContract extends ServiceContract {
+  Request: GetBackgroundImages;
+  Action: 
+    | PostBackgroundImage
+    | PutBackgroundImage
+    | DeleteBackgroundImage;
+  EmitEvent: BackgroundImageEvents;
+  ListenEvent: never;
+  NeedAction: never;
+  NeedRequest: never;
+}
+
+export const backgroundImageMetadata: ServiceContractTypes<BackgroundImageServiceContract> = {
+  requests: ['backgroundImages'],
+  actions: [
+    'postBackgroundImage',
+    'putBackgroundImage',
+    'deleteBackgroundImage',
+  ],
+  emitEvents: [
+    'postBackgroundImage',
+    'putBackgroundImage',
+    'deleteBackgroundImage',
+    'backgroundImagesChanged',
+  ],
+  listenEvents: [],
+  needRequests: [],
+  needActions: []
+};

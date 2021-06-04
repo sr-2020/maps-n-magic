@@ -19,10 +19,11 @@ import {
   SetRotationVolume,
   ClearSoundStage,
   RotationSoundsChange,
-  SoundStageEvents
+  SoundStageEvents,
+  SoundStageServiceContract
 } from "./types";
 
-export class SoundStageService extends AbstractService<SoundStageEvents> {
+export class SoundStageService extends AbstractService<SoundStageServiceContract> {
   backgroundSound: string | null;
   rotationSounds: string[];
   rotationTimeout: number;

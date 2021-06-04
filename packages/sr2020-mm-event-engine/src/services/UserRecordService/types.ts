@@ -2,24 +2,13 @@ import {
   Metadata, 
   TypeOnly,
   Typed,
+  ServiceContract,
+  ServiceContractTypes
 } from '../../core';
 
 import { 
   UserRecord
 } from "../../types";
-
-export const urMetadata: Metadata = {
-  actions: [
-    'setUserRecords',
-  ],
-  requests: ['userRecord', 'userRecords'],
-  emitEvents: [
-    'userRecordsChanged',
-  ],
-  listenEvents: [],
-  needActions: [],
-  needRequests: [],
-};
 
 // requests
 
@@ -47,3 +36,25 @@ export type EUserRecordsChanged = Typed<'userRecordsChanged', {
 export type EReloadUserRecords = Typed<'reloadUserRecords'>;
 
 export type UserRecordEvents = EUserRecordsChanged;
+
+export interface UserRecordServiceContract extends ServiceContract {
+  Request: GetUserRecords | GetUserRecord;
+  Action: SetUserRecords;
+  EmitEvent: UserRecordEvents;
+  ListenEvent: never;
+  NeedAction: never;
+  NeedRequest: never;
+}
+
+export const urMetadata: ServiceContractTypes<UserRecordServiceContract> = {
+  actions: [
+    'setUserRecords',
+  ],
+  requests: ['userRecord', 'userRecords'],
+  emitEvents: [
+    'userRecordsChanged',
+  ],
+  listenEvents: [],
+  needActions: [],
+  needRequests: [],
+};

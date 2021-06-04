@@ -2,26 +2,13 @@ import {
   Metadata, 
   Typed,
   TypeOnly,
+  ServiceContract,
+  ServiceContractTypes
 } from '../../core';
 
 import { 
   SpiritFraction
 } from "../../types";
-
-export const spiritFractionMetadata: Metadata = {
-  requests: ['spiritFractions', 'spiritFraction'],
-  actions: [],
-  emitEvents: [
-    'putSpiritFraction',
-    'spiritFractionsChanged',
-  ],
-  listenEvents: [
-    'putSpiritFractionConfirmed',
-    'setSpiritFractions',
-  ],
-  needActions: [],
-  needRequests: [],
-};
 
 // requests
 
@@ -60,3 +47,27 @@ export type SpiritFractionListenEvents =
   | EPutSpiritFractionConfirmed
   | ESetSpiritFractions
 ;
+
+export interface SpiritFractionServiceContract extends ServiceContract {
+  Request: GetSpiritFractions | GetSpiritFraction;
+  Action: never;
+  EmitEvent: SpiritFractionEmitEvents;
+  ListenEvent: SpiritFractionListenEvents;
+  NeedAction: never;
+  NeedRequest: never;
+}
+
+export const spiritFractionMetadata: ServiceContractTypes<SpiritFractionServiceContract> = {
+  requests: ['spiritFractions', 'spiritFraction'],
+  actions: [],
+  emitEvents: [
+    'putSpiritFraction',
+    'spiritFractionsChanged',
+  ],
+  listenEvents: [
+    'putSpiritFractionConfirmed',
+    'setSpiritFractions',
+  ],
+  needActions: [],
+  needRequests: [],
+};

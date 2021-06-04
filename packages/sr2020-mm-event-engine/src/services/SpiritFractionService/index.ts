@@ -20,10 +20,11 @@ import {
   SpiritFractionEmitEvents,
   SpiritFractionListenEvents,
   SpiritFractionList,
+  SpiritFractionServiceContract
 } from "./types";
 
 
-export class SpiritFractionService extends AbstractService<SpiritFractionEmitEvents, SpiritFractionListenEvents> {
+export class SpiritFractionService extends AbstractService<SpiritFractionServiceContract> {
   spiritFractions: SpiritFraction[];
 
   constructor(gameModel: GameModel, logger: GMLogger) {

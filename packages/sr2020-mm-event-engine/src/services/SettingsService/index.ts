@@ -21,10 +21,11 @@ import {
   PostSettingsConfirmed,
   SetSettings,
   SetSettingsCatalog,
-  SettingsEvents
+  SettingsEvents,
+  SettingsServiceContract
 } from "./types";
 
-export class SettingsService extends AbstractService<SettingsEvents> {
+export class SettingsService extends AbstractService<SettingsServiceContract> {
   settingsCatalog: SettingsCatalog;
 
   constructor(gameModel: GameModel, logger: GMLogger) {

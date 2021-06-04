@@ -22,11 +22,12 @@ import {
   SpiritEmitEvents,
   SpiritListenEvents,
   SpiritList,
-  ECloneSpiritRequested
+  ECloneSpiritRequested,
+  SpiritServiceContract
 } from "./types";
 
 
-export class SpiritService extends AbstractService<SpiritEmitEvents, SpiritListenEvents> {
+export class SpiritService extends AbstractService<SpiritServiceContract> {
   spirits: Spirit[];
 
   constructor(gameModel: GameModel, logger: GMLogger) {

@@ -31,7 +31,8 @@ import {
   PostLocationRecordConfirmed,
   DeleteLocationRecord,
   DeleteLocationRecordConfirmed,
-  LocationRecordEvents
+  LocationRecordEvents,
+  LocationRecordServiceContract
 } from "./types";
 
 // duplicated in LocationHolder
@@ -46,7 +47,7 @@ const extractPolygonData = (list: LocationRecord[]): Pick<LocationRecord, 'id'|'
 
 type LocationRecordsObj = {locationRecords: LocationRecord[]};
 
-export class LocationRecordService extends AbstractService<LocationRecordEvents> {
+export class LocationRecordService extends AbstractService<LocationRecordServiceContract> {
   locationRecords: LocationRecord[];
 
   neighborsIndex: TriangulationData | null;

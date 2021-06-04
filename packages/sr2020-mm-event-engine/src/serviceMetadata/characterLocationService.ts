@@ -2,30 +2,10 @@ import {
   Metadata, 
   Typed,
   TypeOnly,
-  CharacterLocationData
+  CharacterLocationData,
+  ServiceContract,
+  ServiceContractTypes
 } from '../index';
-
-export const clMetadata: Metadata = {
-  requests: [
-    'charactersFromLocation',
-  ],
-  actions: [
-    // 'setAllCharacterLocations',
-    // 'setCharacterLocation',
-    // 'emitCharacterLocationChanged',
-  ],
-  emitEvents: [
-    'characterLocationChanged',
-  ],
-  listenEvents: [
-    'setAllCharacterLocations',
-    'setCharacterLocation',
-    'emitCharacterLocationChanged',
-  ],
-  needRequests: [
-  ],
-  needActions: []
-};
 
 // requests
 
@@ -75,3 +55,36 @@ export type CharacterLocationListenEvents =
   ESetAllCharacterLocations |
   ESetCharacterLocation |
   EEmitCharacterLocationChanged;
+
+
+export interface CharacterLocationServiceContract extends ServiceContract {
+  Request: GetCharactersFromLocation;
+  Action: never;
+  EmitEvent: CharacterLocationEmitEvents;
+  ListenEvent: CharacterLocationListenEvents;
+  NeedAction: never;
+  NeedRequest: never;
+}
+
+export const clMetadata: ServiceContractTypes<CharacterLocationServiceContract> = {
+  requests: [
+    'charactersFromLocation',
+  ],
+  actions: [
+    // 'setAllCharacterLocations',
+    // 'setCharacterLocation',
+    // 'emitCharacterLocationChanged',
+  ],
+  emitEvents: [
+    'characterLocationChanged',
+  ],
+  listenEvents: [
+    'setAllCharacterLocations',
+    'setCharacterLocation',
+    'emitCharacterLocationChanged',
+  ],
+  needRequests: [
+  ],
+  needActions: []
+};
+  

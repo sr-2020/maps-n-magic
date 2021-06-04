@@ -2,6 +2,8 @@ import {
   Metadata, 
   TypeOnly,
   Typed,
+  ServiceContract,
+  ServiceContractTypes
 } from '../../core';
 
 import { 
@@ -12,28 +14,6 @@ import {
   ManaOceanSettingsData,
   ManaOceanEffectSettingsData,
 } from "../../types";
-
-export const ssMetadata: Metadata = {
-  actions: [
-    'postSettings',
-    'postSettingsConfirmed',
-    'setSettings',
-    // 'setSettingsCatalog',
-  ],
-  requests: [
-    'settingsCatalog',
-    'settings',
-  ],
-  emitEvents: [
-    'postSettings',
-    'postSettingsRequested',
-    'settingsChanged',
-    'setSettingsCatalog',
-  ],
-  listenEvents: [],
-  needActions: [],
-  needRequests: [],
-};
 
 // requests
 
@@ -74,3 +54,34 @@ export type ESetSettingsCatalog = Typed<'setSettingsCatalog', {
 export type SettingsEvents = EPostSettingsRequested |
   EPostSettings |
   ESettingsChanged;
+
+export interface SettingsServiceContract extends ServiceContract {
+  Request: GetSettings | GetSettingsCatalog;
+  Action: PostSettings | PostSettingsConfirmed | SetSettings;
+  EmitEvent: SettingsEvents;
+  ListenEvent: never;
+  NeedAction: never;
+  NeedRequest: never;
+}
+
+export const ssMetadata: ServiceContractTypes<SettingsServiceContract> = {
+  actions: [
+    'postSettings',
+    'postSettingsConfirmed',
+    'setSettings',
+    // 'setSettingsCatalog',
+  ],
+  requests: [
+    'settingsCatalog',
+    'settings',
+  ],
+  emitEvents: [
+    'postSettings',
+    'postSettingsRequested',
+    'settingsChanged',
+    // 'setSettingsCatalog',
+  ],
+  listenEvents: [],
+  needActions: [],
+  needRequests: [],
+};

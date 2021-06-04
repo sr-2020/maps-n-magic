@@ -30,10 +30,15 @@ import {
   EAddManaEffect,
   ERemoveManaEffect,
   EWipeManaOceanEffects,
-  DefaultGMEvent
+  DefaultGMEvent,
+  GetNeighborList,
+  ServiceContract,
+  EMassacreTriggered,
+  ManaOceanServiceContract,
+  ManaOceanListenEvent
 } from 'sr2020-mm-event-engine';
 
-import { EMassacreTriggered } from "../../index";
+// import { EMassacreTriggered } from "../../index";
 
 import { EffectCollector } from "./EffectCollector";
 
@@ -52,19 +57,7 @@ type OptionsIndex = Record<number, {
   effectList: ManaOceanEffect[]
 }>
 
-type ManaOceanListenEvent = 
-  EMassacreTriggered |
-  ESpellCast |
-  EAddManaEffect |
-  ERemoveManaEffect |
-  EWipeManaOceanEffects;
-    // this.on2<EMassacreTriggered>('massacreTriggered', this.onMassacreTriggered);
-    // this.on2<ESpellCast>('spellCast', this.spellCast);
-    // this.on2<EAddManaEffect>('addManaEffect', this.addManaEffect);
-    // this.on2<ERemoveManaEffect>('removeManaEffect', this.removeManaEffect);
-    // this.on2<EWipeManaOceanEffects>('wipeManaOceanEffects', this.wipeManaOceanEffects);
-
-export class ManaOceanService extends AbstractService<DefaultGMEvent, ManaOceanListenEvent> {
+export class ManaOceanService extends AbstractService<ManaOceanServiceContract> {
   prevTideHeight: number | null;
 
   tideLevelTimerId: NodeJS.Timeout | null;
@@ -698,10 +691,15 @@ export class ManaOceanService extends AbstractService<DefaultGMEvent, ManaOceanL
           return;
         }
       }
-      const neighborList = this.getFromModel<any, LocationRecord[]>({
+      // const neighborList = this.getFromModel<any, LocationRecord[]>({
+      const neighborList = this.getFromModel2<GetNeighborList>({
         type: 'neighborList',
         locationId: effect.locationId,
       });
+      // const neighborList = this.getFromModel<any, LocationRecord[]>({
+      //   type: 'neighborList',
+      //   locationId: effect.locationId,
+      // });
       // this.logger.info('onApplyRitualLocation: neighborList', neighborList);
       if (neighborList == null) {
         // this.logger.info('onApplyRitualLocation: no neighbors');
