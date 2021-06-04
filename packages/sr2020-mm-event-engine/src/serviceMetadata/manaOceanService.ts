@@ -15,17 +15,9 @@ import {
   GetLocationRecords,
   GetEnableManaOcean,
   GetNeighborOrRandomLocation,
-  GetNeighborList
+  GetNeighborList,
+  LocationRecord
 } from '../index';
-
-export interface LocationUpdate {
-  id: number;
-  body: {
-    options: LocationRecordOptions
-  }
-}
-
-
 
 // requests
 

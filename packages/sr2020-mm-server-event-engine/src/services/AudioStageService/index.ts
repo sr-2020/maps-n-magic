@@ -81,13 +81,13 @@ export class AudioStageService extends AbstractService<AudioStageServiceContract
 
   init() {
     super.init();
-    this.on('characterLocationChanged', this.onCharacterLocationChanged);
-    this.on('putLocationRecords', this.onPutLocationRecords);
+    this.on2('characterLocationChanged', this.onCharacterLocationChanged);
+    this.on2('putLocationRecords', this.onPutLocationRecords);
   }
 
   dispose() {
-    this.off('characterLocationChanged', this.onCharacterLocationChanged);
-    this.off('putLocationRecords', this.onPutLocationRecords);
+    this.off2('characterLocationChanged', this.onCharacterLocationChanged);
+    this.off2('putLocationRecords', this.onPutLocationRecords);
   }
 
   // If character exists in locationIndex - emit cur stage status as update event.
@@ -97,9 +97,7 @@ export class AudioStageService extends AbstractService<AudioStageServiceContract
 
   // }
 
-  onPutLocationRecords(data: {
-    locationRecords: LocationRecord[]
-  }) {
+  onPutLocationRecords(data: EPutLocationRecords) {
   // data:  {
   //     "locationRecords": [
   //       {
@@ -131,7 +129,7 @@ export class AudioStageService extends AbstractService<AudioStageServiceContract
       if (data2) {
         data2.manaLevel = manaLevel;
       }
-      const characterSet = this.getFromModel<any, Set<number>>({
+      const characterSet = this.getFromModel2<GetCharactersFromLocation>({
         type: 'charactersFromLocation',
         locationId,
       });
@@ -148,7 +146,7 @@ export class AudioStageService extends AbstractService<AudioStageServiceContract
     // this.logger.info('soundStageUpdates', soundStageUpdates);
   }
 
-  onCharacterLocationChanged(data: CharacterLocationData): void {
+  onCharacterLocationChanged(data: ECharacterLocationChanged): void {
     // data: {
     //   "type": "putCharLocationConfirmed",
     //   "characterId": 51935,
@@ -173,7 +171,7 @@ export class AudioStageService extends AbstractService<AudioStageServiceContract
       }
     }
 
-    if (!this.locationIndex.has(locationId)) {
+    if (locationId !== null && !this.locationIndex.has(locationId)) {
       this.locationIndex.set(locationId, {
         manaLevel,
         // characterSet: new Set(),
@@ -181,23 +179,27 @@ export class AudioStageService extends AbstractService<AudioStageServiceContract
     }
     // const { characterSet } = this.locationIndex.get(locationId);
     // characterSet.add(characterId);
-    const list = [{
-      characterId,
-      backgroundSound: manaLevel,
-    }];
+    // const list: ESoundStageChanged["list"] = ;
     // this.logger.info('soundStageChanged', list);
-    this.emit('soundStageChanged', {
-      type: 'soundStageChanged',
-      list,
-    });
+    if (manaLevel !== null) {
+      this.emit2({
+        type: 'soundStageChanged',
+        list: [{
+          characterId,
+          backgroundSound: manaLevel,
+        }],
+      });
+    } else {
+      this.logger.warn(`character ${characterId} location is null so mana level is not sounded`);
+    }
     // todo - emit event that user has new background sound
 
     // this.logger.info('onCharacterLocationChanged', data);
     // this.logger.info(this.locationIndex);
   }
 
-  getLocation(locationId: number): LocationRecord {
-    return this.getFromModel<any, LocationRecord>({
+  getLocation(locationId: number): LocationRecord | null {
+    return this.getFromModel2<GetLocationRecord>({
       type: 'locationRecord',
       id: locationId,
     });

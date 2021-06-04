@@ -8,7 +8,8 @@ import {
 
 import { 
   LocationRecord,
-  TriangulationData
+  TriangulationData,
+  LocationUpdate
 } from "../../types";
 
 
@@ -50,9 +51,12 @@ export type DeleteLocationRecordConfirmed = Typed<'deleteLocationRecordConfirmed
 export type LocationRecordList = {
   locationRecords: LocationRecord[]
 };
+export type UpdateLocationRecordList = {
+  updates: LocationUpdate[]
+};
 
 export type SetLocationRecords = Typed<'setLocationRecords', LocationRecordList>;
-export type PutLocationRecords = Typed<'putLocationRecords', LocationRecordList>;
+export type PutLocationRecords = Typed<'putLocationRecords', UpdateLocationRecordList>;
 export type PutLocationRecordsConfirmed = Typed<'putLocationRecordsConfirmed', LocationRecordList>;
 
 // events
@@ -64,7 +68,7 @@ export type EPostLocationRecord = Typed<'postLocationRecord', SingleLocationReco
 export type EDeleteLocationRecordRequested = Typed<'deleteLocationRecordRequested', SingleLocationRecord>;
 export type EDeleteLocationRecord = Typed<'deleteLocationRecord', SingleLocationRecord>;
 
-export type EPutLocationRecordsRequested = Typed<'putLocationRecordsRequested', LocationRecordList>;
+export type EPutLocationRecordsRequested = Typed<'putLocationRecordsRequested', UpdateLocationRecordList>;
 export type EPutLocationRecords = Typed<'putLocationRecords', LocationRecordList>;
 export type ELocationRecordsChanged = Typed<'locationRecordsChanged', LocationRecordList>;
 export type ELocationRecordsChanged2 = Typed<'locationRecordsChanged2', LocationRecordList>;

@@ -103,6 +103,14 @@ export type LocPolygonData = Pick<LocationRecord, "id" | "polygon"> & {
   centroid?: SRLatLng
 };
 
+export interface LocationUpdate {
+  id: number;
+  body: Partial<Omit<LocationRecord, 'id'>>
+  // body: {
+  //   options: LocationRecordOptions
+  // }
+}
+
 // EdgeId format `${locId1}_${locId2}` 
 // where locIds are numbers.
 export type EdgeId = string;

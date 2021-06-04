@@ -35,11 +35,11 @@ export class TrackedCharacterService extends AbstractService<TrackedCharacterSer
 
   init() {
     super.init();
-    this.on('locationRecordsChanged2', this.onLocationRecordsChanged2);
+    this.on2('locationRecordsChanged2', this.onLocationRecordsChanged2);
   }
 
   dispose() {
-    this.off('locationRecordsChanged2', this.onLocationRecordsChanged2);
+    this.off2('locationRecordsChanged2', this.onLocationRecordsChanged2);
   }
 
   // it is strange that it unconditionally updates background sound

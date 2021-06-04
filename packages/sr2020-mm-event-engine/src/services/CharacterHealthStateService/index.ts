@@ -9,6 +9,8 @@ import {
   Res,
 } from '../../core';
 
+import { GetLocationRecord } from "../../index";
+
 import { 
   CharacterHealthStates, 
   RawCharacterHealthState,
@@ -101,8 +103,8 @@ export class CharacterHealthStateService extends AbstractService<
   //   this.emit2({...action, type: 'putCharLocationRequested'});
   // }
 
-  getLocation(locationId: number): LocationRecord {
-    return this.getFromModel<any, LocationRecord>({
+  getLocation(locationId: number): LocationRecord | null {
+    return this.getFromModel2<GetLocationRecord>({
       type: 'locationRecord',
       id: locationId,
     });
