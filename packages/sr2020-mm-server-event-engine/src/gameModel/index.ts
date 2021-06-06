@@ -80,7 +80,7 @@ import { CharacterLocationListener } from '../api/position/CharacterLocationList
 import { SpellCastsListener } from '../api/spellCasts/SpellCastsListener';
 import { PushNotificationEmitter } from '../api/pushNotificationEmitter';
 import { SpiritProvider, SpiritFractionProvider, SpiritRouteProvider } from '../api/spirits';
-import { FeatureProvider } from '../api/features';
+// import { FeatureProvider } from '../api/features';
 
 type EventBindingList = 
   StrictEventBinding<EPutCharHealthRequested, EPutCharHealthConfirmed> |
