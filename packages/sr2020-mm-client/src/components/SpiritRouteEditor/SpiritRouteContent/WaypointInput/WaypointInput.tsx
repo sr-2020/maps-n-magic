@@ -129,7 +129,7 @@ export class WaypointInput extends Component<WaypointInputProps> {
                 style={getListStyle(snapshot.isDraggingOver)}
               >
                 {waypoints.map((waypointId, index) => (
-                  <Draggable key={waypointId} draggableId={String(waypointId)} index={index}>
+                  <Draggable key={`${waypointId}-${index}`} draggableId={`${waypointId}-${index}`} index={index}>
                     {(providedDraggable:DraggableProvided, snapshotDraggable:DraggableStateSnapshot) => (
                         <div>
                           <div
@@ -148,7 +148,7 @@ export class WaypointInput extends Component<WaypointInputProps> {
                             )}
                           >
                             <FontAwesomeIcon className="tw-mx-2 tw-text-gray-700" icon={faGripVertical} />
-                            <ButtonGroup key={waypointId} className="tw-mr-2 tw-mb-2 tw-flex-grow-0">
+                            <ButtonGroup className="tw-mr-2 tw-mb-2 tw-flex-grow-0">
                               <Button variant="secondary" className="tw-text-left">
                                 {`${geoLocationsIndex[waypointId]?.label || t('notAvailable')} (${waypointId})`}
                               </Button>
