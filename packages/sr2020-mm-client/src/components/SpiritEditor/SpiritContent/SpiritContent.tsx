@@ -56,6 +56,7 @@ export class SpiritContent extends Component<
   SpiritContentProps, 
   SpiritContentState
 > {
+  updateSpiritTimeoutId: NodeJS.Timeout | undefined;
 
   constructor(props: SpiritContentProps) {
     super(props);
@@ -87,6 +88,7 @@ export class SpiritContent extends Component<
     this.removeRoute = this.removeRoute.bind(this);
     this.sortRoutes = this.sortRoutes.bind(this);
     this.changeSpiritStatus = this.changeSpiritStatus.bind(this);
+    this.updateSpirit = this.updateSpirit.bind(this);
   }
 
   // eslint-disable-next-line class-methods-use-this
@@ -108,17 +110,7 @@ export class SpiritContent extends Component<
     const { target } = event;
     const name = target.name as spiritFields;
     const value = this.getTargetValue(name, target);
-    const { id, gameModel } = this.props;
-
-    gameModel.emit2<EPutSpiritRequested>({
-      type: 'putSpiritRequested',
-      id,
-      props: {
-        [name]: value,
-      }
-    });
-
-    this.setState(prevState => ({...prevState, [name]: value}));
+    this.setState(prevState => ({...prevState, [name]: value}), this.updateSpirit);
   }
 
   addRoute (routeId: number): void {
@@ -133,11 +125,8 @@ export class SpiritContent extends Component<
         time: 0,
         speedPercent: 100
       }]);
-      
-      this.updateSpirit({ timetable: changedTimetable });
-
       return {...prevState, timetable: changedTimetable};
-    });
+    }, this.updateSpirit);
   }
 
   updateRoute (routeIndex: number, timetableItem: TimetableItem): void {
@@ -148,14 +137,10 @@ export class SpiritContent extends Component<
       const { timetable } = prevState;
       const changedTimetable1 = [...timetable];
       changedTimetable1[routeIndex] = timetableItem;
-
       // const changedTimetable = sortByTime(changedTimetable1);
       const changedTimetable = (changedTimetable1);
-      
-      this.updateSpirit({ timetable: changedTimetable });
-
       return {...prevState, timetable: changedTimetable};
-    });
+    }, this.updateSpirit);
   }
 
   removeRoute (routeIndex: number): void {
@@ -165,11 +150,8 @@ export class SpiritContent extends Component<
       }
       const { timetable } = prevState;
       const changedTimetable = R.remove(routeIndex, 1, timetable);
-      
-      this.updateSpirit({ timetable: changedTimetable });
-
       return {...prevState, timetable: changedTimetable};
-    });
+    }, this.updateSpirit);
   }
 
   sortRoutes (): void {
@@ -179,11 +161,8 @@ export class SpiritContent extends Component<
       }
       const { timetable } = prevState;
       const changedTimetable = sortByTime(timetable);
-      
-      this.updateSpirit({ timetable: changedTimetable });
-
       return {...prevState, timetable: changedTimetable};
-    });
+    }, this.updateSpirit);
   }
 
   changeSpiritStatus (status: keyof typeof SpiritStatus): void {
@@ -194,19 +173,35 @@ export class SpiritContent extends Component<
 
       const state: Spirit["state"] = { status };
       
-      this.updateSpirit({ state });
       return { ...prevState, state };
-    });
+    }, this.updateSpirit);
   }
 
-  updateSpirit(props: EPutSpiritRequested["props"]): void {
+  updateSpirit(): void {
     const { id, gameModel } = this.props;
+    const { state } = this;
+    
+    if (!state.initialized) {
+      return;
+    }
+    if (this.updateSpiritTimeoutId !== undefined) {
+      clearTimeout(this.updateSpiritTimeoutId);
+    }
 
-    gameModel.emit2<EPutSpiritRequested>({
-      type: 'putSpiritRequested',
-      id,
-      props
-    });
+    this.updateSpiritTimeoutId = setTimeout(() => {
+      gameModel.emit2<EPutSpiritRequested>({
+        type: 'putSpiritRequested',
+        id,
+        props: {
+          name: state.name,
+          fraction: state.fraction,
+          story: state.story,
+          maxHitPoints: state.maxHitPoints,
+          timetable: state.timetable,
+          state: state.state,
+        }
+      });
+    }, 500);
   }
 
   // eslint-disable-next-line max-lines-per-function

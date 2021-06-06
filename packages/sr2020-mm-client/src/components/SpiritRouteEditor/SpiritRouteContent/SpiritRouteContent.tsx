@@ -29,6 +29,7 @@ export class SpiritRouteContent extends Component<
   SpiritRouteContentProps, 
   SpiritRouteContentState
 > {
+  updateSpiritRouteTimeoutId: NodeJS.Timeout | undefined;
 
   constructor(props: SpiritRouteContentProps) {
     super(props);
@@ -56,6 +57,7 @@ export class SpiritRouteContent extends Component<
     this.addWaypoint = this.addWaypoint.bind(this);
     this.removeWaypoint = this.removeWaypoint.bind(this);
     this.reorderWaypoints = this.reorderWaypoints.bind(this);
+    this.updateSpiritRoute = this.updateSpiritRoute.bind(this);
   }
 
   addWaypoint(waypointId: number): void {
@@ -65,18 +67,8 @@ export class SpiritRouteContent extends Component<
       }
       const { waypoints } = prevState;
       const newWaypoints = [...waypoints, waypointId];
-      const { id, gameModel } = this.props;
-
-      gameModel.emit2<EPutSpiritRouteRequested>({
-        type: 'putSpiritRouteRequested',
-        id,
-        props: {
-          waypoints: newWaypoints,
-        }
-      });
-
       return {...prevState, waypoints: newWaypoints};
-    });
+    }, this.updateSpiritRoute);
   }
 
   removeWaypoint(waypointIndex: number): void {
@@ -86,18 +78,8 @@ export class SpiritRouteContent extends Component<
       }
       const { waypoints } = prevState;
       const newWaypoints = R.remove(waypointIndex, 1, waypoints);
-      const { id, gameModel } = this.props;
-
-      gameModel.emit2<EPutSpiritRouteRequested>({
-        type: 'putSpiritRouteRequested',
-        id,
-        props: {
-          waypoints: newWaypoints,
-        }
-      });
-
       return {...prevState, waypoints: newWaypoints};
-    });
+    }, this.updateSpiritRoute);
   }
 
   reorderWaypoints(startIndex: number, endIndex: number): void {
@@ -110,36 +92,15 @@ export class SpiritRouteContent extends Component<
       const newWaypoints = [...waypoints];
       const [removed] = newWaypoints.splice(startIndex, 1);
       newWaypoints.splice(endIndex, 0, removed);
-
-      const { id, gameModel } = this.props;
-
-      gameModel.emit2<EPutSpiritRouteRequested>({
-        type: 'putSpiritRouteRequested',
-        id,
-        props: {
-          waypoints: newWaypoints,
-        }
-      });
-
       return {...prevState, waypoints: newWaypoints};
-    });
+    }, this.updateSpiritRoute);
   }
 
   handleInputChange(event: ChangeEvent<HTMLInputElement>) {
     const { target } = event;
     const name = target.name as spiritRouteFields;
     const value = this.getTargetValue(name, target);
-    const { id, gameModel } = this.props;
-
-    gameModel.emit2<EPutSpiritRouteRequested>({
-      type: 'putSpiritRouteRequested',
-      id,
-      props: {
-        [name]: value,
-      }
-    });
-
-    this.setState(prevState => ({...prevState, [name]: value}));
+    this.setState(prevState => ({...prevState, [name]: value}), this.updateSpiritRoute);
   }
 
   getTargetValue(name: spiritRouteFields, target: HTMLInputElement) {
@@ -154,6 +115,30 @@ export class SpiritRouteContent extends Component<
       // }
       return target.value;
     }
+  }
+
+  updateSpiritRoute(): void {
+    const { id, gameModel } = this.props;
+    const { state } = this;
+    
+    if (!state.initialized) {
+      return;
+    }
+    if (this.updateSpiritRouteTimeoutId !== undefined) {
+      clearTimeout(this.updateSpiritRouteTimeoutId);
+    }
+
+    this.updateSpiritRouteTimeoutId = setTimeout(() => {
+      gameModel.emit2<EPutSpiritRouteRequested>({
+        type: 'putSpiritRouteRequested',
+        id,
+        props: {
+          name: state.name,
+          waitTimeMinutes: state.waitTimeMinutes,
+          waypoints: state.waypoints,
+        }
+      });
+    }, 500);
   }
 
   render() {
