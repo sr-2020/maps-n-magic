@@ -15,7 +15,8 @@ import {
   SRPolygon, 
   EdgeId,
   RawCharacterHealthState,
-  BodyConditions
+  BodyConditions,
+  SpiritRoute
 } from "../types";
 
 export function isGeoLocation(location: LocationRecord): boolean {
@@ -255,4 +256,15 @@ export async function fetchWithTimeout(resource: RequestInfo, options: RequestIn
   clearTimeout(id);
 
   return response;
+}
+
+export function getTimeOnRoute(route: SpiritRoute, speedPercent: number): {
+  timeOnWaypoint: number;
+  timeOnRoute: number;
+} {
+  const timeOnWaypoint = route.waitTimeMinutes / (speedPercent / 100);
+  return {
+    timeOnWaypoint,
+    timeOnRoute: route.waypoints.length * timeOnWaypoint
+  };
 }

@@ -84,25 +84,3 @@ export const deleteSpiritRoute = async function(id: number): Promise<SpiritRoute
   const { rows } = await pool.query('DELETE FROM "spiritRoute" WHERE id = $1 RETURNING id, data', [id]);
   return rows.length > 0 ? rowToSpiritRoute(rows[0]) : null;
 }
-
-
-
-// // export const multiPuttable = <T>(state: {url: string}) => ({
-// //   async putMultiple({ updates }: {updates: T}) {
-// //     const response = await fetch(`${state.url}`, {
-// //       method: 'PUT',
-// //       headers: {
-// //         'Content-Type': 'application/json;charset=utf-8',
-// //         'X-User-Id': '1',
-// //       },
-// //       body: JSON.stringify(updates),
-// //     });
-
-// //     if (!response.ok) {
-// //       const text = await response.text();
-// //       throw new Error(`Network response was not ok ${text}`);
-// //     }
-
-// //     return response.json();
-// //   },
-// // });

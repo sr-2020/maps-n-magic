@@ -57,6 +57,9 @@ function rowToSpirit(row): Spirit | null {
 }
 
 export const postSpirit = async function(entity: Partial<Omit<Spirit, "id">>): Promise<Spirit> {
+  if(entity.state === undefined) {
+    entity.state = { status: 'NotInGame' };
+  }
   if (validateNewSpirit(entity)) {
     const { rows } = await pool.query('INSERT INTO spirit(data) VALUES($1) RETURNING id', [entity]);
     return {

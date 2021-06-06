@@ -14,6 +14,8 @@ export const SpiritStatus = {
   // OnRoute: 'OnRoute',
 } as const;
 
+export type SpiritStatusList = keyof typeof SpiritStatus;
+
 interface AbstractState {
   status: keyof typeof SpiritStatus;
 }

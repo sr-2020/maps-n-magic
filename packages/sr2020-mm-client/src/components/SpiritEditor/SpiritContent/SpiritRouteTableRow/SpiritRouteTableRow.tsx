@@ -7,7 +7,8 @@ import {
   SpiritTimetable,
   SpiritRoute,
   TimetableItem,
-  speedPercentValues
+  speedPercentValues,
+  getTimeOnRoute
 } from "sr2020-mm-event-engine";
 import { WithTranslation } from "react-i18next";
 
@@ -88,7 +89,7 @@ export function SpiritRouteTableRow(props: SpiritRouteTableRowProps) {
       <div className="tw-table-cell tw-px-2 tw-text-right">
         { 
           route !== undefined
-          ? (route.waypoints.length * route.waitTimeMinutes / (timetableItem.speedPercent / 100)).toFixed(1)
+          ? getTimeOnRoute(route, timetableItem.speedPercent).timeOnRoute.toFixed(1)
           : t('notAvailable')
         }
       </div>
