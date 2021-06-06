@@ -129,7 +129,7 @@ export class AudioStageService extends AbstractService<AudioStageServiceContract
       if (data2) {
         data2.manaLevel = manaLevel;
       }
-      const characterSet = this.getFromModel2<GetCharactersFromLocation>({
+      const characterSet = this.getFromModel2({
         type: 'charactersFromLocation',
         locationId,
       });
@@ -199,7 +199,7 @@ export class AudioStageService extends AbstractService<AudioStageServiceContract
   }
 
   getLocation(locationId: number): LocationRecord | null {
-    return this.getFromModel2<GetLocationRecord>({
+    return this.getFromModel2({
       type: 'locationRecord',
       id: locationId,
     });

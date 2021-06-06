@@ -78,7 +78,7 @@ export class SpiritMovementService extends AbstractService<SpiritMovementService
 
   onSpiritUpdate() {
     // Test spirit update task
-    // const spirits = this.getFromModel2<GetSpirits>('spirits');
+    // const spirits = this.getFromModel2('spirits');
     // this.emit2({
     //   type: 'putSpiritsRequested',
     //   updates: spirits.map(spirit => ({
@@ -91,8 +91,8 @@ export class SpiritMovementService extends AbstractService<SpiritMovementService
 
 
     // this.logger.info('onSpiritUpdate');
-    // const spirits = this.getFromModel2<GetSpirits>('spirits');
-    // const spiritRoutes = this.getFromModel2<GetSpiritRoutes>('spiritRoutes');
+    // const spirits = this.getFromModel2('spirits');
+    // const spiritRoutes = this.getFromModel2('spiritRoutes');
     // const spiritIndex = groupByStatus(spirits);
     // const routeIndex: Record<number, SpiritRoute | undefined> = R.indexBy(R.prop('id'), spiritRoutes);
     // const { moscowTimeInMinutes } = getMoscowTime();

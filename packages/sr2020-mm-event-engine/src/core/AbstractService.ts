@@ -179,11 +179,20 @@ export class AbstractService<
     return this.gameModel.get(rawRequest) as K;
   }
 
-  getFromModel2<T extends F["NeedRequest"]>(rawRequest: Req<T>): Res<T> {
+  // getFromFacade<P extends Parameters<G>[0]>(opts: P): ReturnType<Extract<G, (arg: P) => any>> {
+  //   return null!;
+  // }
+
+  // Old code
+  // getFromModel2<T extends F["NeedRequest"]>(rawRequest: Req<T>): Res<T> {
+
+  // applied solution from my stackoverflow question
+  // https://stackoverflow.com/questions/67855373/how-to-apply-discriminating-union-technique-to-function-signatures/67855435?noredirect=1
+  getFromModel2<T extends Req<F["NeedRequest"]>>(rawRequest: T): Res<Extract<F["NeedRequest"], (arg: T) => any>> {
     if (this.gameModel === null) {
       throw new Error(`Service ${this.constructor.name} is not initialized`);
     }
-    const request: Req<T> = stringToType<Req<T>>(rawRequest);
+    const request: T = stringToType<T>(rawRequest);
     const { needRequests } = this.metadata;
     if (needRequests && !needRequests.includes(request.type)) {
       throw new Error(`Request ${request.type} is not expected from ${this.constructor.name}`);

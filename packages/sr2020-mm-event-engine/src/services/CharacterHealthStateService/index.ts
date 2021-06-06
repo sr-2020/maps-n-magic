@@ -104,7 +104,7 @@ export class CharacterHealthStateService extends AbstractService<
   // }
 
   getLocation(locationId: number): LocationRecord | null {
-    return this.getFromModel2<GetLocationRecord>({
+    return this.getFromModel2({
       type: 'locationRecord',
       id: locationId,
     });

@@ -348,7 +348,7 @@ export class ManaOceanService extends AbstractService<ManaOceanServiceContract> 
   }
 
   getLocation(locationId: number): LocationRecord | null {
-    return this.getFromModel2<GetLocationRecord>({
+    return this.getFromModel2({
       type: 'locationRecord',
       id: locationId,
     });
@@ -457,7 +457,7 @@ export class ManaOceanService extends AbstractService<ManaOceanServiceContract> 
   wipeManaOceanEffects(action: EWipeManaOceanEffects): void {
     // this.logger.info('wipeManaOceanEffects');
     const manaOceanSettings: ManaOceanSettingsData = this.getSettings<ManaOceanSettingsData>('manaOcean');
-    const locationRecords = this.getFromModel2<GetLocationRecords>('locationRecords');
+    const locationRecords = this.getFromModel2('locationRecords');
     const { neutralManaLevel } = manaOceanSettings;
     const geoLocations = locationRecords.filter(isGeoLocation);
     const curTimestamp = moment.utc().valueOf();
@@ -497,7 +497,7 @@ export class ManaOceanService extends AbstractService<ManaOceanServiceContract> 
 
   // eslint-disable-next-line max-lines-per-function
   onTideLevelUpdate2(): void {
-    const enableManaOcean = this.getFromModel2<GetEnableManaOcean>('enableManaOcean');
+    const enableManaOcean = this.getFromModel2('enableManaOcean');
     const manaOceanSettings = this.getSettings<ManaOceanSettingsData>('manaOcean');
     // this.logger.info('manaOceanSettings', manaOceanSettings);
 
@@ -505,7 +505,7 @@ export class ManaOceanService extends AbstractService<ManaOceanServiceContract> 
       return;
     }
     const curTimestamp = moment.utc().valueOf();
-    const locationRecords = this.getFromModel2<GetLocationRecords>('locationRecords');
+    const locationRecords = this.getFromModel2('locationRecords');
     const { neutralManaLevel, minManaLevel, maxManaLevel } = manaOceanSettings;
 
     const geoLocations: LocationRecord[] = locationRecords.filter(isGeoLocation);
@@ -650,7 +650,7 @@ export class ManaOceanService extends AbstractService<ManaOceanServiceContract> 
       // this.logger.info('onApplyManaSpell: no applicable items');
       return;
     }
-    const neighborList = this.getFromModel2<GetNeighborList>({
+    const neighborList = this.getFromModel2({
       type: 'neighborList',
       locationId: effect.locationId,
     });
@@ -706,7 +706,7 @@ export class ManaOceanService extends AbstractService<ManaOceanServiceContract> 
         }
       }
       // const neighborList = this.getFromModel<any, LocationRecord[]>({
-      const neighborList = this.getFromModel2<GetNeighborList>({
+      const neighborList = this.getFromModel2({
         type: 'neighborList',
         locationId: effect.locationId,
       });
