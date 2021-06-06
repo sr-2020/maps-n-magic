@@ -71,7 +71,11 @@ export class WebSocketWrapper {
 
   forwardAction(action: unknown) {
     // console.log('forwardAction', action.type);
-    this.ws.send(JSON.stringify(action));
+    try {
+      this.ws.send(JSON.stringify(action));
+    } catch(err) {
+      this.logger.error('Error on sending message in websocket:', err);
+    }
   }
 
   subscribe(action: 'on' | 'off') {

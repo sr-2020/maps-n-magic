@@ -23,7 +23,8 @@ import {
   SpiritListenEvents,
   SpiritList,
   ECloneSpiritRequested,
-  SpiritServiceContract
+  SpiritServiceContract,
+  EPutSpiritsConfirmed
 } from "./types";
 
 
@@ -37,6 +38,7 @@ export class SpiritService extends AbstractService<SpiritServiceContract> {
     this.setSpirits = this.setSpirits.bind(this);
     this.postSpiritConfirmed = this.postSpiritConfirmed.bind(this);
     this.putSpiritConfirmed = this.putSpiritConfirmed.bind(this);
+    this.putSpiritsConfirmed = this.putSpiritsConfirmed.bind(this);
     this.deleteSpiritConfirmed = this.deleteSpiritConfirmed.bind(this);
     this.cloneSpiritRequested = this.cloneSpiritRequested.bind(this);
   }
@@ -46,6 +48,7 @@ export class SpiritService extends AbstractService<SpiritServiceContract> {
     this.on2('setSpirits', this.setSpirits);
     this.on2('postSpiritConfirmed', this.postSpiritConfirmed);
     this.on2('putSpiritConfirmed', this.putSpiritConfirmed);
+    this.on2('putSpiritsConfirmed', this.putSpiritsConfirmed);
     this.on2('deleteSpiritConfirmed', this.deleteSpiritConfirmed);
     this.on2('cloneSpiritRequested', this.cloneSpiritRequested);
   }
@@ -54,6 +57,7 @@ export class SpiritService extends AbstractService<SpiritServiceContract> {
     this.off2('setSpirits', this.setSpirits);
     this.off2('postSpiritConfirmed', this.postSpiritConfirmed);
     this.off2('putSpiritConfirmed', this.putSpiritConfirmed);
+    this.off2('putSpiritsConfirmed', this.putSpiritsConfirmed);
     this.off2('deleteSpiritConfirmed', this.deleteSpiritConfirmed);
     this.off2('cloneSpiritRequested', this.cloneSpiritRequested);
   }
@@ -96,6 +100,18 @@ export class SpiritService extends AbstractService<SpiritServiceContract> {
       type: 'putSpirit',
       spirit 
     });
+    this.emit2({
+      type: 'spiritsChanged',
+      spirits: this.spirits,
+    });
+  }
+
+  putSpiritsConfirmed({ spirits }: EPutSpiritsConfirmed): void {
+    const spiritIndex = R.indexBy(R.prop('id'), this.spirits);
+    spirits.forEach(spirit => {
+      spiritIndex[spirit.id] = spirit;
+    });
+    this.spirits = Object.values(spiritIndex);
     this.emit2({
       type: 'spiritsChanged',
       spirits: this.spirits,

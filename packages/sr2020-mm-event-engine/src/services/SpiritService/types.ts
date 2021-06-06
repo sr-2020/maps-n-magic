@@ -40,6 +40,9 @@ export type SpiritList = {
 export type EPostSpiritRequested = Typed<'postSpiritRequested', PostSpiritArgs>;
 export type EPostSpirit = Typed<'postSpirit', SingleSpirit>;
 export type EPutSpiritRequested = Typed<'putSpiritRequested', PutSpiritArgs>;
+export type EPutSpiritsRequested = Typed<'putSpiritsRequested', {
+  updates: PutSpiritArgs[]
+}>;
 export type EPutSpirit = Typed<'putSpirit', SingleSpirit>;
 export type EDeleteSpiritRequested = Typed<'deleteSpiritRequested', DeleteSpiritArgs>;
 export type EDeleteSpirit = Typed<'deleteSpirit', SingleSpirit>;
@@ -57,6 +60,9 @@ export type SpiritEmitEvents =
 
 export type EPostSpiritConfirmed = Typed<'postSpiritConfirmed', SingleSpirit>;
 export type EPutSpiritConfirmed = Typed<'putSpiritConfirmed', SingleSpirit>;
+export type EPutSpiritsConfirmed = Typed<'putSpiritsConfirmed', {
+  spirits: Spirit[]
+}>;
 export type EDeleteSpiritConfirmed = Typed<'deleteSpiritConfirmed', SingleSpirit>;
 export type ESetSpirits = Typed<'setSpirits', SpiritList>;
 export type ECloneSpiritRequested = Typed<'cloneSpiritRequested', {
@@ -64,11 +70,12 @@ export type ECloneSpiritRequested = Typed<'cloneSpiritRequested', {
 }>;
 
 export type SpiritListenEvents = 
-  EPostSpiritConfirmed |
-  EPutSpiritConfirmed |
-  EDeleteSpiritConfirmed |
-  ESetSpirits |
-  ECloneSpiritRequested
+  | EPostSpiritConfirmed
+  | EPutSpiritConfirmed
+  | EDeleteSpiritConfirmed
+  | ESetSpirits
+  | ECloneSpiritRequested
+  | EPutSpiritsConfirmed
 ;
 
 export interface SpiritServiceContract extends ServiceContract {
@@ -95,7 +102,8 @@ export const spiritMetadata: ServiceContractTypes<SpiritServiceContract> = {
     'putSpiritConfirmed',
     'deleteSpiritConfirmed',
     'setSpirits',
-    'cloneSpiritRequested'
+    'cloneSpiritRequested',
+    'putSpiritsConfirmed'
   ],
   needActions: [],
   needRequests: [],

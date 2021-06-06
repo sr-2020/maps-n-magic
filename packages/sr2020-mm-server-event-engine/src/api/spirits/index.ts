@@ -9,6 +9,7 @@ import {
   getSpirits,
   postSpirit,
   putSpirit,
+  putMultipleSpirits,
   deleteSpirit,
 } from './spirits';
 
@@ -29,7 +30,7 @@ import {
   Postable2,
   Puttable2,
   Deletable2,
-  // MultiPuttable
+  MultiPuttable2
 } from "../types";
 
 import { 
@@ -46,11 +47,13 @@ export class SpiritProvider implements
   Gettable2<Spirit>, 
   Postable2<Spirit>, 
   Puttable2<Spirit>, 
+  MultiPuttable2<Spirit>,
   Deletable2<Spirit>
 {
   get = getSpirits;
   post = postSpirit;
   put = putSpirit;
+  putMultiple = putMultipleSpirits;
   delete = deleteSpirit;
   validateNewEntity = validateNewSpirit;
   fillNewEntity = fillNewSpirit;

@@ -27,6 +27,8 @@ export class ReadDataManager2<
 
   ccEntityName: string;
 
+  ccPlural: string;
+
   constructor(
     gameModel: GameModel, 
     protected dataProvider: T, 
@@ -39,6 +41,7 @@ export class ReadDataManager2<
     this.entityName = entityName;
     this.plural = `${entityName}s`;
     this.ccEntityName = capitalizeFirstLetter(entityName);
+    this.ccPlural = capitalizeFirstLetter(this.plural);
     this.setMetadata({
       emitEvents: [`set${this.ccEntityName}s`, 'postNotification']
     });

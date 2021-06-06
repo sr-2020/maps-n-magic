@@ -87,6 +87,7 @@ export function makeGameModel(): {
         // so just stub them
         "postSpiritConfirmed",
         "putSpiritConfirmed",
+        "putSpiritsConfirmed",
         "deleteSpiritConfirmed",
         // SpiritService - will be produced by client, not by game model
         "postSpiritRequested",

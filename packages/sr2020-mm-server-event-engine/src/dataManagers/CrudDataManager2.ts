@@ -10,7 +10,7 @@ import {
   ManageableResourceProvider
 } from '../api/position';
 
-import { Manageable2 } from "../api/types";
+import { Manageable2, ManageablePlus2 } from "../api/types";
 
 type EntityProps<Entity> = Partial<Omit<Entity, "id">>;
 
@@ -124,5 +124,72 @@ export class CrudDataManager2<
     this.dataProvider.delete(id).then(() => {
       this.logger.debug(`Delete confirmed, entity: ${this.entityName}, id ${id}`);
     }).catch(this.getErrorHandler(`Error on ${this.entityName} delete`));
+  }
+}
+
+export class CrudDataManagerPlus2<
+  Entity extends Identifiable, 
+  T extends ManageablePlus2<Entity>
+> extends CrudDataManager2<Entity, T> {
+
+  constructor(
+    gameModel: GameModel, 
+    dataProvider: T, 
+    entityName: string, 
+    readStrategy: ReadStrategy,
+    logger: GMLogger, 
+  ) {
+    super(gameModel, dataProvider, entityName, readStrategy, logger);
+    this.onPutEntitiesRequested = this.onPutEntitiesRequested.bind(this);
+    const metadata = this.getMetadata();
+    this.setMetadata({
+      emitEvents: [
+        ...metadata.emitEvents,
+        `put${this.ccPlural}Confirmed`,
+      ],
+      listenEvents: [
+        ...metadata.listenEvents,
+        `put${this.ccPlural}Requested`,
+      ],
+    });
+  }
+
+  // eslint-disable-next-line react/sort-comp
+  subscribe(action: 'on'|'off', gameModel: GameModel): void {
+    super.subscribe(action, gameModel);
+    gameModel[action](`put${this.ccPlural}Requested`, this.onPutEntitiesRequested);
+  }
+  
+  onPutEntitiesRequested({ updates }: { updates: PutEntityArg<Entity>[]; }): void {
+    // @ts-ignore
+    const entityIndex = R.indexBy<Entity, Identifiable["id"]>(R.prop('id'), this.entities);
+    // this.logger.info('entityIndex', entityIndex);
+    const updatedEntities = updates.reduce((acc: Entity[], update) => {
+      if (entityIndex[update.id] === undefined){
+        this.logger.warn(`Put entity not exists: id ${update.id}`);
+        return acc;
+      }
+      const entity = {...entityIndex[update.id], ...update.props};
+      if (!this.dataProvider.validateEntity(entity)) {
+        throw new Error("Put entity is not valid " + 
+          JSON.stringify(entity) + ", " + 
+          JSON.stringify(this.dataProvider.validateEntity.errors)
+        );
+      }
+      entityIndex[update.id] = entity;
+      acc.push(entity);
+      return acc;
+    }, []);
+
+    // this.logger.info('after entityIndex', Object.values(entityIndex));
+    this.entities = Object.values(entityIndex);
+    this.gameModel.emit2({
+      type: `put${this.ccPlural}Confirmed`,
+      [`${this.entityName}s`]: updatedEntities,
+    });
+
+    this.dataProvider.putMultiple(updatedEntities).then((entities: Entity[]) => {
+      this.logger.debug(`Multi put confirmed, entity: ${this.entityName}, ids ${R.pluck('id', entities)}`);
+    }).catch(this.getErrorHandler(`Error on ${this.entityName} multi put`));
   }
 }

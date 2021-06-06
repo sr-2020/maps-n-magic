@@ -24,34 +24,31 @@ export interface Deletable<T> {
 
 // new interfaces for PG communication
 
+export interface validateEntityFunction<T> {
+  (entity: any): entity is T;
+  errors?: null | unknown[];
+}
+
 export interface Gettable2<T extends Identifiable> {
   get(): Promise<unknown[]>;
   validateEntity: validateEntityFunction<T>;
 }
 
-export interface validateNewEntityFunction<T extends Identifiable> {
-  (entity: any): entity is Omit<T, "id">;
-  errors?: null | unknown[];
-}
-
 export interface Postable2<T extends Identifiable> {
   post(entity: Omit<T, "id">): Promise<T>;
-  validateNewEntity: validateNewEntityFunction<T>;
+  validateNewEntity: validateEntityFunction<Omit<T, "id">>;
   fillNewEntity(entity: Partial<Omit<T, "id">>): Omit<T, "id">;
 }
 
-export interface validateEntityFunction<T extends Identifiable> {
-  (entity: any): entity is T;
-  errors?: null | unknown[];
-}
 export interface Puttable2<T extends Identifiable> {
   put(entity: T): Promise<T>;
   validateEntity: validateEntityFunction<T>;
 }
 
-// export interface MultiPuttable2<T extends Identifiable> {
-//   putMultiple({updates}: {updates: T[]}): Promise<T[]>;
-// }
+export interface MultiPuttable2<T extends Identifiable> {
+  putMultiple(entities: T[]): Promise<T[]>;
+  validateEntity: validateEntityFunction<T>;
+}
 
 export interface Deletable2<T extends Identifiable> {
   delete(id: number): Promise<unknown | null>;
@@ -63,4 +60,12 @@ export interface Manageable2<T extends Identifiable> extends
   Postable2<T>, 
   Puttable2<T>, 
   Deletable2<T> 
+{}
+
+export interface ManageablePlus2<T extends Identifiable> extends 
+  Gettable2<T>, 
+  Postable2<T>, 
+  Puttable2<T>,
+  MultiPuttable2<T>,
+  Deletable2<T>
 {}

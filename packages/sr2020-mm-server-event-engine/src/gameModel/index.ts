@@ -50,7 +50,7 @@ import { CrudDataManager } from '../dataManagers/CrudDataManager';
 import { LocationDataManager } from '../dataManagers/LocationDataManager';
 import { ReadDataManager } from '../dataManagers/ReadDataManager';
 import { ReadDataManager2 } from '../dataManagers/ReadDataManager2';
-import { CrudDataManager2 } from '../dataManagers/CrudDataManager2';
+import { CrudDataManager2, CrudDataManagerPlus2 } from '../dataManagers/CrudDataManager2';
 import { SettingsDataManager } from '../dataManagers/SettingsDataManagers';
 import { PollingReadStrategy } from '../dataManagers/PollingReadStrategy';
 // import { DataBinding } from '../dataManagers/DataBinding';
@@ -143,7 +143,7 @@ export function makeGameModel(): {
   gameServer.addDataBinding(locationRecordDataBinding);
 
   
-  const spiritDataBinding = new CrudDataManager2<Spirit, SpiritProvider>(
+  const spiritDataBinding = new CrudDataManagerPlus2<Spirit, SpiritProvider>(
     gameModel,
     new SpiritProvider(),
     'spirit',

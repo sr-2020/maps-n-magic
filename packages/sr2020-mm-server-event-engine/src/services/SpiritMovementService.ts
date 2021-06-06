@@ -16,7 +16,8 @@ import {
   getTimeOnRoute,
   SpiritRoute,
   SpiritTimetable,
-  TimetableItem
+  TimetableItem,
+  EPutSpiritsRequested
 } from 'sr2020-mm-event-engine';
 
 const SPIRIT_UPDATE_INTERVAL: number = 5000; // millis
@@ -25,7 +26,7 @@ const groupByStatus = R.groupBy<Spirit, SpiritStatusList>(R.path(['state','statu
 export interface SpiritMovementServiceContract extends ServiceContract {
   Request: never;
   Action: never;
-  EmitEvent: never;
+  EmitEvent: EPutSpiritsRequested;
   ListenEvent: never;
   NeedAction: never;
   NeedRequest: 
@@ -43,6 +44,7 @@ const metadata: ServiceContractTypes<SpiritMovementServiceContract> = {
   ],
   requests: [],
   emitEvents: [
+    'putSpiritsRequested',
     // 'pushNotification',
   ],
   listenEvents: [],
@@ -75,6 +77,19 @@ export class SpiritMovementService extends AbstractService<SpiritMovementService
   }
 
   onSpiritUpdate() {
+    // Test spirit update task
+    // const spirits = this.getFromModel2<GetSpirits>('spirits');
+    // this.emit2({
+    //   type: 'putSpiritsRequested',
+    //   updates: spirits.map(spirit => ({
+    //     id: spirit.id,
+    //     props: {
+    //       fraction: spirit.fraction === 4 ? 1 : spirit.fraction + 1
+    //     }
+    //   }))
+    // });
+
+
     // this.logger.info('onSpiritUpdate');
     // const spirits = this.getFromModel2<GetSpirits>('spirits');
     // const spiritRoutes = this.getFromModel2<GetSpiritRoutes>('spiritRoutes');
