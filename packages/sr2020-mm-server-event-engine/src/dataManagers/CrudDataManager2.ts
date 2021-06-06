@@ -12,11 +12,15 @@ import {
 
 import { Manageable2 } from "../api/types";
 
+type EntityProps<Entity> = Partial<Omit<Entity, "id">>;
+
+type PutEntityArg<Entity> = {id: number, props: EntityProps<Entity>};
+
 export class CrudDataManager2<
   Entity extends Identifiable, 
   T extends Manageable2<Entity>
 > extends ReadDataManager2<Entity, T> {
-  putEntityTimeoutIndex: {[key: number]: NodeJS.Timeout};
+  // putEntityTimeoutIndex: {[key: number]: NodeJS.Timeout};
 
   constructor(
     gameModel: GameModel, 
@@ -29,7 +33,7 @@ export class CrudDataManager2<
     this.onPostEntityRequested = this.onPostEntityRequested.bind(this);
     this.onPutEntityRequested = this.onPutEntityRequested.bind(this);
     this.onDeleteEntityRequested = this.onDeleteEntityRequested.bind(this);
-    this.putEntityTimeoutIndex = {};
+    // this.putEntityTimeoutIndex = {};
     const metadata = this.getMetadata();
     this.setMetadata({
       emitEvents: [
@@ -64,7 +68,7 @@ export class CrudDataManager2<
     gameModel[action](`delete${this.ccEntityName}Requested`, this.onDeleteEntityRequested);
   }
 
-  onPostEntityRequested({props}: {props: Partial<Omit<Entity, "id">>}): void {
+  onPostEntityRequested({props}: {props: EntityProps<Entity>}): void {
     this.logger.debug(`Post requested, entity: ${this.entityName}`);
     this.dataProvider.post(props).then((entity) => {
       this.logger.debug(`Post confirmed, entity: ${this.entityName}, id ${entity.id}`);
@@ -76,7 +80,11 @@ export class CrudDataManager2<
     }).catch(this.getErrorHandler(`Error on ${this.entityName} post`));
   }
 
-  onPutEntityRequested({ id, props }: {id: number, props: Partial<Omit<Entity, "id">>}): void {
+
+  // put entity should not be deferred
+  // It is better to defer gameModel events emitting (mostly UI code).
+  onPutEntityRequested({ id, props }: PutEntityArg<Entity>): void {
+    this.logger.info('onPutEntityRequested', this.entityName, id);
     const index = this.entities.findIndex((br) => br.id === id);
     if (index === -1) {
       this.logger.warn(`Put entity not exists: id ${id}`);
@@ -84,30 +92,30 @@ export class CrudDataManager2<
     }
     const entity = {...this.entities[index], ...props};
     this.logger.debug(`Put requested, entity: ${this.entityName}, id ${id}`);
-    clearTimeout(this.putEntityTimeoutIndex[id]);
-    this.putEntityTimeoutIndex[id] = setTimeout(() => {
-      this.dataProvider.put(entity).then((entity: Entity) => {
-        this.logger.debug(`Put confirmed, entity: ${this.entityName}, id ${id}`);
-        const index = this.entities.findIndex((br) => br.id === id);
-        this.entities[index] = entity;
-        this.gameModel.emit2({
-          type: `put${this.ccEntityName}Confirmed`,
-          [this.entityName]: entity,
-        });
-      }).catch(this.getErrorHandler(`Error on ${this.entityName} put`));
-    }, 500);
+    // clearTimeout(this.putEntityTimeoutIndex[id]);
+    // this.putEntityTimeoutIndex[id] = setTimeout(() => {
+      // const index = this.entities.findIndex((br) => br.id === id);
+    this.entities[index] = entity;
+    this.gameModel.emit2({
+      type: `put${this.ccEntityName}Confirmed`,
+      [this.entityName]: entity,
+    });
+    this.dataProvider.put(entity).then((entity: Entity) => {
+      this.logger.debug(`Put confirmed, entity: ${this.entityName}, id ${id}`);
+    }).catch(this.getErrorHandler(`Error on ${this.entityName} put`));
+    // }, 500);
   }
 
   onDeleteEntityRequested({ id }: { id: number }): void {
     this.logger.debug(`Delete requested, entity: ${this.entityName}, id ${id}`);
+    const entity = this.entities.find((br) => br.id === id);
+    this.entities = this.entities.filter((br) => br.id !== id);
+    this.gameModel.emit2({
+      type: `delete${this.ccEntityName}Confirmed`,
+      [this.entityName]: entity,
+    });
     this.dataProvider.delete(id).then(() => {
       this.logger.debug(`Delete confirmed, entity: ${this.entityName}, id ${id}`);
-      const entity = this.entities.find((br) => br.id === id);
-      this.entities = this.entities.filter((br) => br.id !== id);
-      this.gameModel.emit2({
-        type: `delete${this.ccEntityName}Confirmed`,
-        [this.entityName]: entity,
-      });
     }).catch(this.getErrorHandler(`Error on ${this.entityName} delete`));
   }
 }
