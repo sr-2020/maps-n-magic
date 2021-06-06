@@ -14,14 +14,14 @@ import {
 const ajv = new Ajv({
   allErrors: true,
   removeAdditional: true,
-  useDefaults: true
+  // useDefaults: true
 });
 
 const timetableSchema: JSONSchemaType<TimetableItem> = {
   type: "object",
   properties: {
     routeId: {type: 'integer'},
-    speedPercent: {type: 'integer', enum: [25, 50, 75, 100, 125, 150, 175, 200], default: 100},
+    speedPercent: {type: 'integer', enum: [25, 50, 75, 100, 125, 150, 175, 200]},
     time: {type: 'integer', minimum: 0, exclusiveMaximum: 1440}
   },
   required: ['routeId', 'speedPercent', 'time'],
@@ -63,13 +63,13 @@ const spiritSchema: JSONSchemaType<Spirit> = {
   type: "object",
   properties: {
     id: {type: "integer"},
-    name: {type: "string", default: ""},
+    name: {type: "string"},
     // aura: {type: "string"},
-    fraction: {type: "integer", default: 1},
-    story: {type: "string", default: ""},
-    abilities: {type: "array", items: {type: "string"}, default: []},
-    maxHitPoints: {type: "integer", minimum: 1, default: 10},
-    timetable: { type: "array", items: timetableSchema, default: []},
+    fraction: {type: "integer"},
+    story: {type: "string"},
+    abilities: {type: "array", items: {type: "string"}},
+    maxHitPoints: {type: "integer", minimum: 1},
+    timetable: { type: "array", items: timetableSchema},
     state: spiritStateSchema
   },
   required: [
@@ -91,13 +91,13 @@ const newSpiritSchema: JSONSchemaType<Omit<Spirit, "id">> = {
   type: "object",
   properties: {
     // id: {type: "integer"},
-    name: {type: "string", default: ""},
+    name: {type: "string"},
     // aura: {type: "string"},
-    fraction: {type: "integer", default: 1},
-    story: {type: "string", default: ""},
-    abilities: {type: "array", items: {type: "string"}, default: []},
-    maxHitPoints: {type: "integer", minimum: 1, default: 10},
-    timetable: { type: "array", items: timetableSchema, default: []},
+    fraction: {type: "integer"},
+    story: {type: "string"},
+    abilities: {type: "array", items: {type: "string"}},
+    maxHitPoints: {type: "integer", minimum: 1},
+    timetable: { type: "array", items: timetableSchema},
     state: spiritStateSchema
   },
   required: [
@@ -114,6 +114,24 @@ const newSpiritSchema: JSONSchemaType<Omit<Spirit, "id">> = {
 
 export const validateNewSpirit = ajv.compile(newSpiritSchema);
 
+const defaultSpirit: Omit<Spirit, "id"> = {
+  name: '',
+  fraction: 1, // без фракции
+  story: '',
+  abilities: [],
+  maxHitPoints: 10,
+  timetable: [],
+  state: {
+    status: 'NotInGame'
+  }
+};
+
+export function fillNewSpirit(spirit: Partial<Omit<Spirit, "id">>): Omit<Spirit, "id"> {
+  return {
+    ...defaultSpirit,
+    ...spirit
+  };
+}
 
 export interface GenericRow {
   id: number;
@@ -133,11 +151,18 @@ const genericRowSchema: JSONSchemaType<GenericRow> = {
 
 export const validateGenericRow = ajv.compile(genericRowSchema);
 
+const genericRowsSchema: JSONSchemaType<GenericRow[]> = {
+  type: 'array',
+  items: genericRowSchema
+};
+
+export const validateGenericRows = ajv.compile(genericRowsSchema);
+
 const spiritFractionSchema: JSONSchemaType<SpiritFraction> = {
   type: "object",
   properties: {
     id: {type: "integer"},
-    name: {type: "string", default: ""},
+    name: {type: "string"},
   },
   required: ["name", "id"],
   additionalProperties: false,
@@ -149,9 +174,9 @@ const spiritRouteSchema: JSONSchemaType<SpiritRoute> = {
   type: "object",
   properties: {
     id: {type: "integer"},
-    name: {type: "string", default: ""},
-    waypoints: {type: "array", items: {type: "number"}, default: []},
-    waitTimeMinutes: {type: "integer", default: 5, minimum: 1},
+    name: {type: "string"},
+    waypoints: {type: "array", items: {type: "number"}},
+    waitTimeMinutes: {type: "integer", minimum: 1},
   },
   required: ["name", "id", "waypoints", "waitTimeMinutes"],
   additionalProperties: false,
@@ -162,12 +187,25 @@ export const validateSpiritRoute = ajv.compile(spiritRouteSchema);
 const newSpiritRouteSchema: JSONSchemaType<Omit<SpiritRoute, "id">> = {
   type: "object",
   properties: {
-    name: {type: "string", default: ""},
-    waypoints: {type: "array", items: {type: "number"}, default: []},
-    waitTimeMinutes: {type: "integer", default: 5, minimum: 1},
+    name: {type: "string"},
+    waypoints: {type: "array", items: {type: "number"}},
+    waitTimeMinutes: {type: "integer", minimum: 1},
   },
   required: ["name", "waypoints", "waitTimeMinutes"],
   additionalProperties: false,
 }
 
 export const validateNewSpiritRoute = ajv.compile(newSpiritRouteSchema);
+
+const defaultSpiritRoute: Omit<SpiritRoute, "id"> = {
+  name: '',
+  waypoints: [],
+  waitTimeMinutes: 5,
+};
+
+export function fillNewSpiritRoute(spiritRoute: Partial<Omit<SpiritRoute, "id">>): Omit<SpiritRoute, "id"> {
+  return {
+    ...defaultSpiritRoute,
+    ...spiritRoute
+  };
+}

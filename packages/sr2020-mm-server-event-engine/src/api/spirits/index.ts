@@ -32,6 +32,16 @@ import {
   // MultiPuttable
 } from "../types";
 
+import { 
+  validateNewSpirit,
+  fillNewSpirit,
+  validateSpirit,
+  validateNewSpiritRoute,
+  fillNewSpiritRoute,
+  validateSpiritRoute,
+  validateSpiritFraction
+} from "./validation";
+
 export class SpiritProvider implements 
   Gettable2<Spirit>, 
   Postable2<Spirit>, 
@@ -42,6 +52,9 @@ export class SpiritProvider implements
   post = postSpirit;
   put = putSpirit;
   delete = deleteSpirit;
+  validateNewEntity = validateNewSpirit;
+  fillNewEntity = fillNewSpirit;
+  validateEntity = validateSpirit;
 }
 export class SpiritFractionProvider implements 
   Gettable2<SpiritFraction>, 
@@ -51,11 +64,18 @@ export class SpiritFractionProvider implements
 {
   get = getSpiritFractions;
   put = putSpiritFraction;
+  validateEntity = validateSpiritFraction;
   post(entity: Partial<Omit<SpiritFraction, 'id'>>): Promise<SpiritFraction> {
     throw new Error('Method post SpiritFraction not implemented.');
   }
   delete(id: number): Promise<SpiritFraction | null> {
     throw new Error('Method delete SpiritFraction not implemented.');
+  }
+  validateNewEntity(entity: any): entity is Omit<SpiritFraction, 'id'> {
+    throw new Error('Method not implemented.');
+  }
+  fillNewEntity(entity: Partial<Omit<SpiritFraction, 'id'>>): Omit<SpiritFraction, 'id'> {
+    throw new Error('Method not implemented.');
   }
 }
 
@@ -69,4 +89,7 @@ export class SpiritRouteProvider implements
   post = postSpiritRoute;
   put = putSpiritRoute;
   delete = deleteSpiritRoute;
+  validateNewEntity = validateNewSpiritRoute;
+  fillNewEntity = fillNewSpiritRoute;
+  validateEntity = validateSpiritRoute;
 }

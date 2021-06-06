@@ -57,7 +57,17 @@ export class ReadDataManager2<
     this.logger.info(`Call to load ${this.entityName}`);
     // console.log(`load ${this.entityName}`);
     try {
-      const entities = await this.dataProvider.get();
+      const rawEntities = await this.dataProvider.get();
+      const entities = rawEntities.filter((rawEntity): rawEntity is Entity => {
+        if(!this.dataProvider.validateEntity(rawEntity)) {
+          this.logger.error("Skip entity because it is not valid.", 
+            rawEntity,
+            this.dataProvider.validateEntity.errors
+          );
+          return false;
+        }
+        return true;
+      });
       if (R.equals(this.entities, entities)) {
         // console.log('no changes', this.ccEntityName);
         return;

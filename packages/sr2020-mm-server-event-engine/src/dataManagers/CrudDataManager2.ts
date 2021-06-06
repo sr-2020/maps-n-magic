@@ -20,8 +20,6 @@ export class CrudDataManager2<
   Entity extends Identifiable, 
   T extends Manageable2<Entity>
 > extends ReadDataManager2<Entity, T> {
-  // putEntityTimeoutIndex: {[key: number]: NodeJS.Timeout};
-
   constructor(
     gameModel: GameModel, 
     dataProvider: T, 
@@ -33,7 +31,6 @@ export class CrudDataManager2<
     this.onPostEntityRequested = this.onPostEntityRequested.bind(this);
     this.onPutEntityRequested = this.onPutEntityRequested.bind(this);
     this.onDeleteEntityRequested = this.onDeleteEntityRequested.bind(this);
-    // this.putEntityTimeoutIndex = {};
     const metadata = this.getMetadata();
     this.setMetadata({
       emitEvents: [
@@ -69,8 +66,15 @@ export class CrudDataManager2<
   }
 
   onPostEntityRequested({props}: {props: EntityProps<Entity>}): void {
+    const noIdEntity = this.dataProvider.fillNewEntity(props);
+    if (!this.dataProvider.validateNewEntity(noIdEntity)) {
+      throw new Error("Post entity is not valid " + 
+        JSON.stringify(noIdEntity) + ", " + 
+        JSON.stringify(this.dataProvider.validateNewEntity.errors)
+      );
+    }
     this.logger.debug(`Post requested, entity: ${this.entityName}`);
-    this.dataProvider.post(props).then((entity) => {
+    this.dataProvider.post(noIdEntity).then((entity) => {
       this.logger.debug(`Post confirmed, entity: ${this.entityName}, id ${entity.id}`);
       this.entities.push(entity);
       this.gameModel.emit2({
@@ -91,10 +95,14 @@ export class CrudDataManager2<
       return;
     }
     const entity = {...this.entities[index], ...props};
+    if (!this.dataProvider.validateEntity(entity)) {
+      throw new Error("Put entity is not valid " + 
+        JSON.stringify(entity) + ", " + 
+        JSON.stringify(this.dataProvider.validateEntity.errors)
+      );
+    }
+
     this.logger.debug(`Put requested, entity: ${this.entityName}, id ${id}`);
-    // clearTimeout(this.putEntityTimeoutIndex[id]);
-    // this.putEntityTimeoutIndex[id] = setTimeout(() => {
-      // const index = this.entities.findIndex((br) => br.id === id);
     this.entities[index] = entity;
     this.gameModel.emit2({
       type: `put${this.ccEntityName}Confirmed`,
@@ -103,7 +111,6 @@ export class CrudDataManager2<
     this.dataProvider.put(entity).then((entity: Entity) => {
       this.logger.debug(`Put confirmed, entity: ${this.entityName}, id ${id}`);
     }).catch(this.getErrorHandler(`Error on ${this.entityName} put`));
-    // }, 500);
   }
 
   onDeleteEntityRequested({ id }: { id: number }): void {
