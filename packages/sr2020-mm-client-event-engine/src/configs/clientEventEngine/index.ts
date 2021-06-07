@@ -7,6 +7,7 @@ import {
   UserRecordService,
   SettingsService,
   ManaOceanEnableService,
+  SpiritMovementEnableService,
   SpiritService,
   SpiritFractionService,
   SpiritRouteService,
@@ -58,6 +59,7 @@ const services = [
   UserRecordService,
   SettingsService,
   ManaOceanEnableService,
+  SpiritMovementEnableService,
   // ManaOceanStubService,
   TrackedCharacterService,
 ];
@@ -82,6 +84,7 @@ export function makeGameModel(): {
         "putCharHealthConfirmed",
         "putCharLocationConfirmed",
         "enableManaOceanConfirmed",
+        "enableSpiritMovementConfirmed",
         // SpiritService - these events are required by SpiritService
         // but they are not in s2c (server-to-client) forward list
         // so just stub them

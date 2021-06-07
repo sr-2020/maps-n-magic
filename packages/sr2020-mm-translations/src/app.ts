@@ -38,6 +38,7 @@ export const appDictionary = {
   wipeManaOceanEffects: 'Очистить эффекты в океане маны',
   simulateMovement: 'Симулировать ходьбу',
   calcManaOcean: 'Считать океан маны',
+  calcSpiritMovement: 'Считать движение духов',
   jumpToUserCoords: 'Перенос карты к пользователю',
   actionMenu: 'Меню действий',
   prevPrototypes: 'Др. страницы',

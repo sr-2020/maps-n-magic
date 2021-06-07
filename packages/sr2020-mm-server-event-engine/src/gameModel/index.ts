@@ -7,6 +7,7 @@ import {
   UserRecordService,
   SettingsService,
   ManaOceanEnableService,
+  SpiritMovementEnableService,
   SpiritService,
   SpiritFractionService,
   SpiritRouteService,
@@ -33,6 +34,8 @@ import {
   Spirit,
   SpiritFraction,
   SpiritRoute,
+  EEnableSpiritMovementRequested,
+  EEnableSpiritMovementConfirmed,
 } from 'sr2020-mm-event-engine';
 
 import { ManaOceanService } from '../services/ManaOceanService';
@@ -83,9 +86,10 @@ import { SpiritProvider, SpiritFractionProvider, SpiritRouteProvider } from '../
 // import { FeatureProvider } from '../api/features';
 
 type EventBindingList = 
-  StrictEventBinding<EPutCharHealthRequested, EPutCharHealthConfirmed> |
-  StrictEventBinding<EPutCharLocationRequested, EPutCharLocationConfirmed> |
-  StrictEventBinding<EEnableManaOceanRequested, EEnableManaOceanConfirmed>
+  | StrictEventBinding<EPutCharHealthRequested, EPutCharHealthConfirmed>
+  | StrictEventBinding<EPutCharLocationRequested, EPutCharLocationConfirmed>
+  | StrictEventBinding<EEnableManaOceanRequested, EEnableManaOceanConfirmed>
+  | StrictEventBinding<EEnableSpiritMovementRequested, EEnableSpiritMovementConfirmed>
 ;
 
 const services = [
@@ -97,6 +101,7 @@ const services = [
   SettingsService,
   ManaOceanService,
   ManaOceanEnableService,
+  SpiritMovementEnableService,
   MassacreService,
   PushNotificationService,
   AudioStageService,
@@ -229,6 +234,7 @@ export function makeGameModel(): {
       {from: 'putCharHealthRequested', to: 'putCharHealthConfirmed'},
       {from: 'putCharLocationRequested', to: 'putCharLocationConfirmed'},
       {from: 'enableManaOceanRequested', to: 'enableManaOceanConfirmed'},
+      {from: 'enableSpiritMovementRequested', to: 'enableSpiritMovementConfirmed'},
     ],
     rootLogger
   ));

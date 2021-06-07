@@ -17,7 +17,8 @@ import {
   SpiritRoute,
   SpiritTimetable,
   TimetableItem,
-  EPutSpiritsRequested
+  EPutSpiritsRequested,
+  GetEnableSpiritMovement
 } from 'sr2020-mm-event-engine';
 
 const SPIRIT_UPDATE_INTERVAL: number = 5000; // millis
@@ -31,7 +32,8 @@ export interface SpiritMovementServiceContract extends ServiceContract {
   NeedAction: never;
   NeedRequest: 
     | GetSpirits
-    | GetSpiritRoutes;
+    | GetSpiritRoutes
+    | GetEnableSpiritMovement;
 }
 
 function isInSemiInterval(from: number, time: number, to: number): boolean {
@@ -49,7 +51,7 @@ const metadata: ServiceContractTypes<SpiritMovementServiceContract> = {
   ],
   listenEvents: [],
   needActions: [],
-  needRequests: ['spirits', 'spiritRoutes']
+  needRequests: ['spirits', 'spiritRoutes', 'enableSpiritMovement']
 };
 
 export class SpiritMovementService extends AbstractService<SpiritMovementServiceContract> {
@@ -77,6 +79,9 @@ export class SpiritMovementService extends AbstractService<SpiritMovementService
   }
 
   onSpiritUpdate() {
+    const enableSpiritMovement = this.getFromModel2('enableSpiritMovement');
+    this.logger.info('enableSpiritMovement', enableSpiritMovement)
+
     // Test spirit update task
     // const spirits = this.getFromModel2('spirits');
     // this.emit2({

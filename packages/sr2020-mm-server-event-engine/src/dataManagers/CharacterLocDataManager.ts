@@ -120,7 +120,8 @@ export class CharacterLocDataManager extends AbstractEventProcessor {
 
     if (!response.ok) {
       const text = await response.text();
-      throw new Error(`Network response was not ok ${text}`);
+      // throw new Error(`Network response was not ok ${text}`);
+      throw new Error(`getCharacterLocations network response was not ok ${response.ok} ${response.statusText}`);
     }
 
     return response.json();

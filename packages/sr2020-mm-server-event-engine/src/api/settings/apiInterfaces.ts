@@ -10,7 +10,8 @@ export const getSettings = (state: {url: string}) => ({
       }
       const text = await response.text();
       // console.log(response);
-      throw new Error(`Network response was not ok ${text}`);
+      // throw new Error(`Network response was not ok ${text}`);
+      throw new Error(`get settings network response was not ok ${response.ok} ${response.statusText}`);
     }
 
     // return {};
@@ -33,7 +34,8 @@ export const postSettings = (state: {url: string}) => ({
 
     if (!response.ok) {
       const text = await response.text();
-      throw new Error(`Network response was not ok ${text}`);
+      // throw new Error(`Network response was not ok ${text}`);
+      throw new Error(`post settings network response was not ok ${response.ok} ${response.statusText}`);
     }
 
     // console.log('before parse post settings json');

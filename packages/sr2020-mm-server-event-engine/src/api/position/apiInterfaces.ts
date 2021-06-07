@@ -6,7 +6,8 @@ export const gettable = (state: {url: string}) => ({
     const response = await fetch(`${state.url}?limit=200`);
     if (!response.ok) {
       const text = await response.text();
-      throw new Error(`Network response was not ok ${text}`);
+      // throw new Error(`Network response was not ok ${text}`);
+      throw new Error(`gettable network response was not ok ${response.ok} ${response.statusText}`);
     }
 
     return response.json();
@@ -29,7 +30,8 @@ export const postable = <T>(state: {url: string, defaultObject: T}) => ({
 
     if (!response.ok) {
       const text = await response.text();
-      throw new Error(`Network response was not ok ${text}`);
+      // throw new Error(`Network response was not ok ${text}`);
+      throw new Error(`postable network response was not ok ${response.ok} ${response.statusText}`);
     }
 
     return response.json();
@@ -51,7 +53,8 @@ export const puttable = <T>(state: {url: string}) => ({
 
     if (!response.ok) {
       const text = await response.text();
-      throw new Error(`Network response was not ok ${text}`);
+      // throw new Error(`Network response was not ok ${text}`);
+      throw new Error(`puttable network response was not ok ${response.ok} ${response.statusText}`);
     }
 
     return response.json();
@@ -71,7 +74,8 @@ export const multiPuttable = <T>(state: {url: string}) => ({
 
     if (!response.ok) {
       const text = await response.text();
-      throw new Error(`Network response was not ok ${text}`);
+      // throw new Error(`Network response was not ok ${text}`);
+      throw new Error(`multiPuttable network response was not ok ${response.ok} ${response.statusText}`);
     }
 
     return response.json();
@@ -90,7 +94,8 @@ export const deletable = (state: {url: string}) => ({
 
     if (!response.ok) {
       const text = await response.text();
-      throw new Error(`Network response was not ok ${text}`);
+      // throw new Error(`Network response was not ok ${text}`);
+      throw new Error(`deletable network response was not ok ${response.ok} ${response.statusText}`);
     }
 
     return response;

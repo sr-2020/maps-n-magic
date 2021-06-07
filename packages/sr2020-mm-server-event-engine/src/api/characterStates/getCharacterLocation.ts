@@ -21,7 +21,8 @@ export async function getCharacterLocation(characterId: number, simulateLocation
   if (!response.ok) {
     try {
       const text = await response.text();
-      throw new Error(`Network response was not ok ${text}`);
+      // throw new Error(`Network response was not ok ${text}`);
+      throw new Error(`getCharacterLocation network response was not ok ${response.ok} ${response.statusText}`);
     } catch (err) {
       console.error(err);
     }
@@ -50,23 +51,23 @@ export async function getCharacterLocation(characterId: number, simulateLocation
     locationLabel: result.location.label,
   };
 }
-async function getLocations() {
-  const response = await fetch(`${locationsUrl}`, {
-  // const response = await fetch(`${url}`, {
-    method: 'GET',
-    headers: {
-      'Content-Type': 'application/json;charset=utf-8',
-      'X-User-Id': "1",
-    },
-  });
+// async function getLocations() {
+//   const response = await fetch(`${locationsUrl}`, {
+//   // const response = await fetch(`${url}`, {
+//     method: 'GET',
+//     headers: {
+//       'Content-Type': 'application/json;charset=utf-8',
+//       'X-User-Id': "1",
+//     },
+//   });
 
-  if (!response.ok) {
-    const text = await response.text();
-    throw new Error(`Network response was not ok ${text}`);
-  }
+//   if (!response.ok) {
+//     const text = await response.text();
+//     throw new Error(`Network response was not ok ${text}`);
+//   }
 
-  return response.json();
-}
+//   return response.json();
+// }
 
 // getCharacterLocation(10198, true).then(console.log).catch(console.log);
 // getCharacterLocation(10198).then((data) => console.log(R.pluck('id', data))).catch(console.log);

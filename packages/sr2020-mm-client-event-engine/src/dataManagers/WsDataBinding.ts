@@ -7,6 +7,7 @@ import {
   ECharacterHealthStateChanged,
   ECharacterHealthStatesLoaded,
   EEnableManaOceanChanged,
+  EEnableSpiritMovementChanged,
   EUserRecordsChanged,
   ESetSettingsCatalog,
   ECharacterLocationChanged,
@@ -20,8 +21,8 @@ import {
   // SetCharacterHealthStates,
   EPutCharHealthConfirmed,
   ESetCharacterHealthStates,
-  // EnableManaOceanConfirmed,
   EEnableManaOceanConfirmed,
+  EEnableSpiritMovementConfirmed,
   SetUserRecords,
   // executed actions from client 2 server
   // locations
@@ -58,6 +59,7 @@ import {
   EPostSettingsRequested,
   EPutCharHealthRequested,
   EEnableManaOceanRequested,
+  EEnableSpiritMovementRequested,
   EWipeManaOceanEffects,
   ERemoveManaEffect,
   EAddManaEffect,
@@ -79,6 +81,7 @@ import {
   GetCharacterHealthStates,
   GetEnableManaOcean,
   GetUserRecords,
+  GetEnableSpiritMovement,
 
 } from "sr2020-mm-event-engine";
 
@@ -106,6 +109,7 @@ type ForwardServer2ClientEvent =
   | EUserRecordsChanged
   | ECharacterLocationChanged
   | ESetSettingsCatalog
+  | EEnableSpiritMovementChanged
 ;
 
 // In reality this is event list, not actions.
@@ -126,6 +130,7 @@ const forwardServer2ClientActions: ForwardServer2ClientEvent["type"][] = [
   'userRecordsChanged',
   'spiritFractionsChanged',
   'spiritRoutesChanged',
+  'enableSpiritMovementChanged'
   // 'characterHealthStateChanged',
 ];
 
@@ -137,11 +142,13 @@ type WsEmitEvent =
   | EPutCharHealthConfirmed
   | ESetCharacterHealthStates
   | EEnableManaOceanConfirmed
+  | EEnableSpiritMovementConfirmed
 ;
 
 const wsEmitEvents: WsEmitEvent["type"][] = [
   'postNotification',
   "enableManaOceanConfirmed",
+  "enableSpiritMovementConfirmed",
   "putCharHealthConfirmed",
   "setCharacterHealthStates",
   "setSpirits",
@@ -173,6 +180,7 @@ type ForwardClient2ServerEventTypes = (
   // misc
   | EPutCharHealthRequested
   | EEnableManaOceanRequested
+  | EEnableSpiritMovementRequested
   | EWipeManaOceanEffects
   | ERemoveManaEffect
   | EAddManaEffect
@@ -206,6 +214,7 @@ const forwardClient2ServerEvents: ForwardClient2ServerEventTypes[] = [
   'postSettingsRequested',
   'putCharHealthRequested',
   'enableManaOceanRequested',
+  'enableSpiritMovementRequested',
   'wipeManaOceanEffects',
   'removeManaEffect',
   'addManaEffect',
@@ -235,6 +244,7 @@ type PayloadToEventBindings =
   | PayloadToEventBinding<GetSpirits, ESpiritsChanged>
   | PayloadToEventBinding<GetSpiritFractions, ESpiritFractionsChanged>
   | PayloadToEventBinding<GetSpiritRoutes, ESpiritRoutesChanged>
+  | PayloadToEventBinding<GetEnableSpiritMovement, EEnableSpiritMovementChanged>
 ;
 
 interface InitClientConfigMessage {
@@ -289,6 +299,9 @@ export class WsDataBinding extends AbstractEventProcessor {
       }, {
         type: 'enableManaOceanChanged',
         payload: 'enableManaOcean',
+      }, {
+        type: 'enableSpiritMovementChanged',
+        payload: 'enableSpiritMovement',
       }, {
         type: 'userRecordsChanged',
         payload: 'userRecords',
@@ -440,6 +453,15 @@ export class WsDataBinding extends AbstractEventProcessor {
       this.gameModel.emit2<WsEmitEvent>({
         ...data,
         type: 'enableManaOceanConfirmed',
+      });
+      return;
+    }
+
+    if (data.type === 'enableSpiritMovementChanged') {
+      // this.gameModel.execute2<EnableManaOceanConfirmed>({
+      this.gameModel.emit2<WsEmitEvent>({
+        ...data,
+        type: 'enableSpiritMovementConfirmed',
       });
       return;
     }

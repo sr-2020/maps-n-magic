@@ -15,7 +15,8 @@ export async function getCharacterLifeStyle(characterId: number): Promise<{
   if (!response.ok) {
     try {
       const text = await response.text();
-      throw new Error(`Network response was not ok ${text}`);
+      // throw new Error(`getCharacterLifeStyle network response was not ok ${text}`);
+      throw new Error(`getCharacterLifeStyle network response was not ok ${response.ok} ${response.statusText}`);
     } catch (err) {
       console.error(err);
     }

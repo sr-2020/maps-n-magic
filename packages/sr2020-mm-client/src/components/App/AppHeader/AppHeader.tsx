@@ -20,6 +20,7 @@ import { UploadDatabaseButton } from '../UploadDatabaseButton';
 import { JumpToUserCoordsSwitch } from '../JumpToUserCoordsSwitch';
 import { MovementSimulatorSwitch } from '../MovementSimulatorSwitch';
 import { ManaOceanSwitch } from '../ManaOceanSwitch';
+import { SpiritMovementSwitch } from '../SpiritMovementSwitch';
 import { ModelRunSelector } from '../ModelRunSelector';
 import { WipeManaOceanEffectsButton } from '../WipeManaOceanEffectsButton';
 
@@ -189,6 +190,9 @@ export class AppHeader extends Component<AppHeaderProps, AppHeaderState> {
                 simulateGeoDataStream={simulateGeoDataStream}
               /> */}
               <ManaOceanSwitch
+                gameModel={gameModel}
+              />
+              <SpiritMovementSwitch
                 gameModel={gameModel}
               />
               <WipeManaOceanEffectsButton

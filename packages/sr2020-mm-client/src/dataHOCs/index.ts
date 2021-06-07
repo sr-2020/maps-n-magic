@@ -12,6 +12,7 @@ import {
   ELocationRecordsChanged2,
   EUserRecordsChanged,
   EEnableManaOceanChanged,
+  EEnableSpiritMovementChanged,
   Req,
   Res,
   ESpiritsChanged,
@@ -73,6 +74,9 @@ export interface WithSpiritRoutes {
 }
 export interface WithCharacterId {
   characterId: number | null;
+}
+export interface WithEnableSpiritMovement {
+  enableSpiritMovement: boolean;
 }
 
 function sortBy(prop: string) {
@@ -159,6 +163,12 @@ export const withSpiritRoutes = basicDataHOC<null, ESpiritRoutesChanged>(
 export const withEnableManaOcean = basicDataHOC<true, EEnableManaOceanChanged>(
   'enableManaOceanChanged',
   'enableManaOcean',
+  true,
+);
+
+export const withEnableSpiritMovement = basicDataHOC<true, EEnableSpiritMovementChanged>(
+  'enableSpiritMovementChanged',
+  'enableSpiritMovement',
   true,
 );
 

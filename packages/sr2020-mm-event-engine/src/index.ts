@@ -20,6 +20,7 @@ export * from './services/SpiritFractionService/types';
 export * from './services/SpiritRouteService/index'; 
 export * from './services/SpiritRouteService/types';
 export * from './services/FeatureService';
+export * from './services/SpiritMovementEnableService'; 
 
 export * from './utils';
 export * from './utils/moonActivityUtils';

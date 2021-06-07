@@ -17,7 +17,8 @@ export async function sendNotification(id: number, title: string, body: string):
 
   if (!response.ok) {
     const text = await response.text();
-    throw new Error(`Network response was not ok ${text}`);
+    // throw new Error(`Network response was not ok ${text}`);
+    throw new Error(`send push notification network response was not ok ${response.ok} ${response.statusText}`);
   }
 
   // console.log('notification sended');
