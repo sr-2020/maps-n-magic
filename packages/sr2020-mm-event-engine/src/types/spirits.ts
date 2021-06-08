@@ -11,7 +11,7 @@ export type SpiritTimetable = TimetableItem[];
 export const SpiritStatus = {
   NotInGame: 'NotInGame',
   RestInAstral: 'RestInAstral',
-  // OnRoute: 'OnRoute',
+  OnRoute: 'OnRoute',
 } as const;
 
 export type SpiritStatusList = keyof typeof SpiritStatus;
@@ -28,14 +28,18 @@ export interface RestInAstralState {
   status: typeof SpiritStatus.RestInAstral;
 }
 
-// interface OnRouteState {
-//   status: typeof SpiritStatus.OnRoute;
-// }
+export interface OnRouteState {
+  status: typeof SpiritStatus.OnRoute;
+  route: SpiritRoute;
+  timetableItem: TimetableItem;
+  waypointIndex: number;
+  // hasOverflow: boolean;
+}
 
 export type SpiritState = 
   | NotInGameState 
   | RestInAstralState 
-  // | OnRouteState
+  | OnRouteState
 ;
 
 export interface Spirit {

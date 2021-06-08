@@ -13,7 +13,8 @@ import {
   EPutSpiritRequested,
   SpiritTimetable,
   TimetableItem,
-  SpiritStatus
+  SpiritStatus,
+  SpiritStatusList
 } from "sr2020-mm-event-engine";
 
 import { SpiritFractionInput } from "./SpiritFractionInput";
@@ -165,7 +166,7 @@ export class SpiritContent extends Component<
     }, this.updateSpirit);
   }
 
-  changeSpiritStatus (status: keyof typeof SpiritStatus): void {
+  changeSpiritStatus (status: "NotInGame" | "RestInAstral"): void {
     this.setState((prevState) => {
       if (!prevState.initialized) {
         return;
