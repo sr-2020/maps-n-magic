@@ -1,10 +1,5 @@
 // character_location_change
-
-// Imports the Google Cloud client library
-// const { PubSub } = require('@google-cloud/pubsub');
 import { PubSub, Message } from '@google-cloud/pubsub';
-// import moment from 'moment-timezone';
-// import { randomInteger } from '../../utils';
 import { charLocChangeSubscriptionName } from "../constants";
 
 
@@ -44,6 +39,11 @@ export function listenCharacterLocations(
 
   // Listen for new messages until timeout is hit
   subscription.on('message', messageHandler);
+
+  subscription.on('error', error => {
+    console.error('listenCharacterLocations received error:', error);
+    process.exit(1);
+  });
 
   // if (simulateMessages) {
   //   let flag = true;

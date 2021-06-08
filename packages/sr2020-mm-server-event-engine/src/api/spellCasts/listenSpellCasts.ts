@@ -1,8 +1,5 @@
-// Imports the Google Cloud client library
-// const { PubSub } = require('@google-cloud/pubsub');
 import { PubSub, Message } from '@google-cloud/pubsub';
 import { SpellCast } from "sr2020-mm-event-engine";
-// import moment from 'moment-timezone';
 import { manaOceanSpellCastSubscriptionName } from "../constants";
 
 const timeout = 60;
@@ -34,6 +31,11 @@ export function listenSpellCasts(
 
   // Listen for new messages until timeout is hit
   subscription.on('message', messageHandler);
+
+  subscription.on('error', error => {
+    console.error('listenSpellCasts received error:', error);
+    process.exit(1);
+  });
 
   // if (simulateMessages) {
   //   const flag = true;

@@ -1,8 +1,4 @@
-// Imports the Google Cloud client library
-// const { PubSub } = require('@google-cloud/pubsub');
 import { PubSub, Message } from '@google-cloud/pubsub';
-// import moment from 'moment-timezone';
-// import { randomInteger } from '../../utils';
 import { rescueServiceSubscriptionName } from "../constants";
 
 const timeout = 60;
@@ -47,6 +43,11 @@ export function listenHealthChanges(callback: (msg: HealthChangeMessage) => void
 
   // Listen for new messages until timeout is hit
   subscription.on('message', messageHandler);
+
+  subscription.on('error', error => {
+    console.error('listenHealthChanges received error:', error);
+    process.exit(1);
+  });
 
   // if (simulateMessages) {
   //   let flag = true;
