@@ -39,16 +39,24 @@ function getUpdatedOnRouteState(
     return undefined;
   }
   const { timetableItem, route, waypointIndex } = state;
-  const { timeOnWaypoint } = getTimeOnRoute(route, timetableItem.speedPercent);
+  const { timeOnRoute, timeOnWaypoint } = getTimeOnRoute(route, timetableItem.speedPercent);
   const res = getWaypointIndex(moscowTimeInMinutes, timetableItem.time, timeOnWaypoint);
   if (res !== undefined) {
-    const { waypointIndex: newWaypointIndex } = res;
-    if (waypointIndex === newWaypointIndex) {
+    // logger.info('getWaypointIndex', { 
+    //   ...res, 
+    //   timeOnRoute, 
+    //   timeOnWaypoint, 
+    //   moscowTimeInMinutes, 
+    //   timetableItemTime: 
+    //   timetableItem.time 
+    // });
+    const { waypointIndex: newWaypointIndex, curRouteTime } = res;
+    if (curRouteTime > timeOnRoute) {
+      // Consider spirit as RestInAstral state - check if it has some route right now
+    } else if (waypointIndex === newWaypointIndex) { // spirit still on the route
       // no changes, spirit still in the same location
       return undefined;
-    }
-    // spirit still on the route
-    if (route.waypoints.length > waypointIndex) {
+    } else {
       const newState: OnRouteState = {
         ...state,
         waypointIndex: newWaypointIndex
@@ -60,7 +68,8 @@ function getUpdatedOnRouteState(
   // Consider spirit as RestInAstral state - check if it has some route right now
   // TODO - check if spirit has other route
   const onRouteState = getOnRouteState(spirit, context);
-  if (onRouteState === undefined) {
+  // logger.info('onRouteState', onRouteState); 
+  if (onRouteState !== undefined) {
     return onRouteState;
   }
   return {
@@ -94,7 +103,7 @@ function getOnRouteState(
   const { timeOnRoute, timeOnWaypoint } = getTimeOnRoute(route, timetableItem.speedPercent);
   const res = getWaypointIndex(moscowTimeInMinutes, timetableItem.time, timeOnWaypoint);
   if (res === undefined) {
-    logger.warn(`getWaypointIndex returns undefined when spirit is definitely on the route`, {
+    logger.warn(`getWaypointIndex returns undefined when spirit is definitely not on the route`, {
       spirit,
       searchRes,
       timeOnRoute, 

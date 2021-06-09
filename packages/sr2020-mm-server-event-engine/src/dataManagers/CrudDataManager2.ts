@@ -161,6 +161,7 @@ export class CrudDataManagerPlus2<
   }
   
   onPutEntitiesRequested({ updates }: { updates: PutEntityArg<Entity>[]; }): void {
+    // this.logger.info('onPutEntitiesRequested');
     // @ts-ignore
     const entityIndex = R.indexBy<Entity, Identifiable["id"]>(R.prop('id'), this.entities);
     // this.logger.info('entityIndex', entityIndex);

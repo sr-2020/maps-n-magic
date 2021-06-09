@@ -34,14 +34,18 @@ import {
 } from "../types";
 
 import { 
-  validateNewSpirit,
-  fillNewSpirit,
-  validateSpirit,
-  validateNewSpiritRoute,
-  fillNewSpiritRoute,
-  validateSpiritRoute,
-  validateSpiritFraction
-} from "./validation";
+  validateNewSpirit, 
+  fillNewSpirit, 
+  validateSpirit 
+} from "./spiritValidation";
+
+import { 
+  fillNewSpiritRoute, 
+  validateNewSpiritRoute, 
+  validateSpiritRoute 
+} from "./spiritRouteValidation";
+
+import { validateSpiritFraction } from "./spiritFractionValidation";
 
 export class SpiritProvider implements 
   Gettable2<Spirit>, 

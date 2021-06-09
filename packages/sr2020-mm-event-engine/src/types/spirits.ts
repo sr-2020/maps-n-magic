@@ -33,7 +33,6 @@ export interface OnRouteState {
   route: SpiritRoute;
   timetableItem: TimetableItem;
   waypointIndex: number;
-  // hasOverflow: boolean;
 }
 
 export type SpiritState = 

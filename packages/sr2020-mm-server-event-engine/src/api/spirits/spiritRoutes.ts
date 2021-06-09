@@ -9,7 +9,7 @@ import { pool } from "../pgPool";
 import { 
   validateGenericRow, 
   validateGenericRows
-} from "./validation";
+} from "./genericRowValidation";
 
 export const getSpiritRoutes = async function(): Promise<unknown[]> {
   const { rows } = await pool.query('SELECT * FROM "spiritRoute"');

@@ -9,7 +9,7 @@ import { pool } from "../pgPool";
 
 import {
   validateGenericRows,
-} from "./validation";
+} from "./genericRowValidation";
 
 // very similar to getSpirits
 export const getSpiritFractions = async function(): Promise<unknown[]> {

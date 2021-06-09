@@ -115,7 +115,16 @@ export class SpiritMovementService extends AbstractService<SpiritMovementService
       return acc;
     }, []);
 
-    this.logger.info('updates', updates);
+    // this.logger.info('updates', updates);
+    this.logger.info('updates', updates.length);
+
+    if (updates.length > 0) {
+      this.emit2({
+        type: 'putSpiritsRequested',
+        updates
+      });
+    }
+
   }
 
   // pushNotification(data: PushNotification) {

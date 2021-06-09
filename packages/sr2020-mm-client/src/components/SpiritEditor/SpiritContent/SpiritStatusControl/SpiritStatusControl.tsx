@@ -29,6 +29,11 @@ export function SpiritStatusControl(props: SpiritStatusControlProps) {
           {t('takeSpiritFromGame')}
         </Button>
       }
+      {state.status === SpiritStatus.OnRoute && 
+        <Button variant="outline-secondary" onClick={() => changeSpiritStatus("RestInAstral")}>
+          Снять с маршрута
+        </Button>
+      }
     </div>
   );
 }
