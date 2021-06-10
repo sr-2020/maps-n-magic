@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { WithLocationRecords } from '../../dataHOCs';
+import { WithLocationRecords, WithGeoLocationRecords } from '../../dataHOCs';
 import { WithTranslation } from "react-i18next";
 import { L, CommonLayerProps } from "sr2020-mm-client-core";
 import * as R from 'ramda';
@@ -15,7 +15,7 @@ import {
   ArrDiffUpdate,
   GameModel,
   ManaOceanEffect,
-  RitualLocationEffect
+  RitualLocationEffect,
 } from 'sr2020-mm-event-engine';
 
 import { LocationPopup } from './LocationPopup';
@@ -45,17 +45,6 @@ const manaFillColors: Record<number, string> = { // based on h202
 
 const defaultColor = 'black';
 
-const isNotEmptyPolygon = R.pipe(
-  R.prop('polygon'),
-  R.equals({}),
-  R.not,
-);
-
-const filterLocationRecords = R.pipe(
-  R.filter(isGeoLocation),
-  R.filter(isNotEmptyPolygon),
-);
-
 function hasLocationDifference(item: LocationRecord, prevItem: LocationRecord) {
   // polygon, label, options.manaLevel
   return !R.equals(item.polygon, prevItem.polygon)
@@ -68,7 +57,7 @@ function isPermanentEffect(effect: ManaOceanEffect): effect is RitualLocationEff
   return (effect as RitualLocationEffect).permanent === true;
 }
 
-interface ManaOceanLayerProps extends WithLocationRecords, WithTranslation, CommonLayerProps {
+interface ManaOceanLayerProps extends WithGeoLocationRecords, WithTranslation, CommonLayerProps {
   enableByDefault: boolean;
   gameModel: GameModel;
 }
@@ -104,43 +93,33 @@ export class ManaOceanLayer extends Component<
 
   componentDidMount() {
     const {
-      enableByDefault, layerCommunicator, locationRecords,
+      enableByDefault, layerCommunicator, geoLocationRecords,
     } = this.props;
-    // this.subscribe('on', gameModel);
-    // this.manaOceanLayer = new InnerManaOceanLayer();
     layerCommunicator.emit('setLayersMeta', {
       layersMeta: this.getLayersMeta(),
       enableByDefault,
     });
     this.updateLocations({
-      added: filterLocationRecords(locationRecords),
+      added: geoLocationRecords,
     });
     this.locationPopupDom = document.createElement('div');
     this.locationPopup = L.popup();
     console.log('InnerManaOceanLayer2 mounted');
   }
 
-  componentDidUpdate(prevProps: WithLocationRecords) {
+  componentDidUpdate(prevProps: ManaOceanLayerProps) {
     const {
-      locationRecords,
+      geoLocationRecords,
     } = this.props;
-    if (prevProps.locationRecords !== locationRecords) {
+    if (prevProps.geoLocationRecords !== geoLocationRecords) {
       const diff = getArrDiff<LocationRecord>(
-        filterLocationRecords(locationRecords),
-        filterLocationRecords(prevProps.locationRecords),
+        geoLocationRecords,
+        prevProps.geoLocationRecords,
         R.prop('id'),
         hasLocationDifference,
       );
       this.updateLocations(diff);
-    //   this.subscribe('off', prevProps.gameModel);
-    //   this.subscribe('on', gameModel);
-    //   this.clear();
-    //   this.populate();
     }
-    // if (prevProps.translator !== translator) {
-    //   // this.clear();
-    //   // this.populate();
-    // }
     console.log('InnerManaOceanLayer2 did update');
   }
 
@@ -298,12 +277,12 @@ export class ManaOceanLayer extends Component<
       curLocation,
     } = this.state;
     const {
-      gameModel, locationRecords,
+      gameModel, geoLocationRecords,
     } = this.props;
     if (!curLocation) {
       return null;
     }
-    const record = locationRecords.find((record2) => record2.id === curLocation.id);
+    const record = geoLocationRecords.find((record2) => record2.id === curLocation.id);
     if (!record) {
       return null;
     }

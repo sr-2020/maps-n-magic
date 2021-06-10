@@ -17,6 +17,9 @@ const navLinks: NavLinkData[] = [{
 }, {
   to: '/spiritRouteEditor',
   tKey: 'spiritRouteEditor',
+}, {
+  to: '/spiritsOnMap',
+  tKey: 'spiritsOnMap',
 }];
 
 export function SpiritNav() {

@@ -3,7 +3,7 @@ import { L } from "sr2020-mm-client-core";
 import * as R from 'ramda';
 
 
-import { getArrDiff, LocationRecord } from 'sr2020-mm-event-engine';
+import { getArrDiff, LocationRecord, isNotEmptyPolygon } from 'sr2020-mm-event-engine';
 
 import { 
   layerIdToLayerName, 
@@ -15,12 +15,6 @@ import {
 import { LocationGroupLayer, LocationGroupLayerProps } from './LocationGroupLayer';
 
 import { WithLocationRecords } from '../../dataHOCs';
-
-const isNotEmptyPolygon = R.pipe(
-  R.prop('polygon'),
-  R.equals({}),
-  R.not,
-);
 
 const defaultGroups = Object.keys(locationTypesEnum).reduce((acc, layerId: locationTypesEnum) => {
   acc[layerId] = [];

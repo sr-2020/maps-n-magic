@@ -17,6 +17,7 @@ import { BeaconEditorMap } from '../../maps/BeaconEditorMap';
 import { RescueServiceMap } from '../../maps/RescueServiceMap';
 import { ManaOceanMap } from '../../maps/ManaOceanMap';
 import { AudioEngineDemo } from '../../maps/AudioEngineDemo';
+import { SpiritMap } from '../../maps/SpiritMap';
 import { CharacterWatcher } from '../CharacterWatcher';
 
 import { MapsNav } from '../MapsNav';
@@ -72,6 +73,11 @@ export function MapRoutes(props: MapRoutesProps) {
     </Route>,
     <Route path="/manaOcean" key="manaOcean">
       <ManaOceanMap
+        gameModel={gameModel}
+      />
+    </Route>,
+    <Route path="/spiritsOnMap" key="spiritsOnMap">
+      <SpiritMap
         gameModel={gameModel}
       />
     </Route>,

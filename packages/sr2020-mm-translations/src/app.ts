@@ -9,6 +9,7 @@ export const appDictionary = {
   map2: 'Редактор карты',
   spiritEditor: 'Редактор духов',
   spiritRouteEditor: 'Редактор маршрутов духов',
+  spiritsOnMap: 'Духи на карте',
   soundMapping: 'Сопоставление звука',
   trackAnalysisNav: 'Анализ мастерки',
   beaconRecordEditor: 'Словарь маяков',
@@ -29,6 +30,7 @@ export const appDictionary = {
   characterPositions: 'Переместить персонажа в локацию',
   manaOcean: 'Океан маны',
   manaOceanLayer: 'Океан маны',
+  spiritLayer: 'Духи',
   rescueServiceLayer: 'МЧС',
   characterLocationLayer: 'Маркер персонажа',
 

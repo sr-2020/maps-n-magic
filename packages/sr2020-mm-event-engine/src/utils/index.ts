@@ -23,6 +23,12 @@ export function isGeoLocation(location: LocationRecord): boolean {
   return location.layer_id === 1 && !R.isEmpty(location.polygon);
 }
 
+export const isNotEmptyPolygon: (location: LocationRecord) => boolean = R.pipe(
+  R.prop('polygon'),
+  R.equals({}),
+  R.not,
+);
+
 const notEquals = R.pipe(R.equals, R.not);
 
 export interface ArrDiffUpdate<T> {
