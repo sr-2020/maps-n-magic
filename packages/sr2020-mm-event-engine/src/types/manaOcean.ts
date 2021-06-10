@@ -1,6 +1,14 @@
+import Ajv, { JSONSchemaType } from "ajv";
+
 import { 
   SettingsData
 } from "./index";
+
+const ajv = new Ajv({
+  allErrors: true,
+  // removeAdditional: true,
+  // useDefaults: true
+});
 
 // Mana ocean settings
 
@@ -78,3 +86,103 @@ export type ManaOceanEffect =
   PowerSpellEffect | 
   SpellEffect | 
   MassacreEffect;
+
+
+// const abstractManaOceanEffectSchema: JSONSchemaType<AbstractManaOceanEffect> = {
+//   type: "object",
+//   properties: {
+//     id: {type: "string"},
+//     start: {type: "integer"},
+//     manaLevelChange: {type: "integer"},
+//     locationId: {type: "integer"},
+//   },
+//   required: ["id", "start", "manaLevelChange", "locationId"],
+//   // additionalProperties: false,
+// }
+
+const ritualLocationEffectSchema: JSONSchemaType<RitualLocationEffect> = {
+  type: "object",
+  properties: {
+    id: {type: "string"},
+    start: {type: "integer"},
+    manaLevelChange: {type: "integer"},
+    locationId: {type: "integer"},
+    //
+    type: {type: "string", const: "ritualLocation"},
+    permanent: {type: "boolean"},
+    neighborId: {type: "integer", nullable: true},
+  },
+  // required: ["type", "permanent", ...abstractManaOceanEffectSchema.required],
+  required: [
+    "id", "start", "manaLevelChange", "locationId", 
+    "type", "permanent"
+  ],
+  // additionalProperties: false,
+}
+
+const powerSpellEffectSchema: JSONSchemaType<PowerSpellEffect> = {
+  type: "object",
+  properties: {
+    id: {type: "string"},
+    start: {type: "integer"},
+    manaLevelChange: {type: "integer"},
+    locationId: {type: "integer"},
+    //
+    type: {type: "string", const: "powerSpell"},
+    end: {type: "integer"},
+  },
+  required: [
+    "id", "start", "manaLevelChange", "locationId", 
+    "type", "end"
+  ],
+  // additionalProperties: false,
+}
+
+const spellEffectSchema: JSONSchemaType<SpellEffect> = {
+  type: "object",
+  properties: {
+    id: {type: "string"},
+    start: {type: "integer"},
+    manaLevelChange: {type: "integer"},
+    locationId: {type: "integer"},
+    //
+    type: {type: "string", enum: ["inputStream", "outputStream"]},
+    end: {type: "integer"},
+    range: {type: "array", items: {type: "integer"}},
+    prevNeighborIds: {type: "array", items: {type: "integer"}, nullable: true},
+  },
+  required: [
+    "id", "start", "manaLevelChange", "locationId", 
+    "type", "end", "range"
+  ],
+  // additionalProperties: false,
+}
+
+const massacreEffectSchema: JSONSchemaType<MassacreEffect> = {
+  type: "object",
+  properties: {
+    id: {type: "string"},
+    start: {type: "integer"},
+    manaLevelChange: {type: "integer"},
+    locationId: {type: "integer"},
+    //
+    type: {type: "string", const: "massacre"},
+    end: {type: "integer"},
+    // range: {type: "array", items: {type: "integer"}},
+    // prevNeighborIds: {type: "array", items: {type: "integer"}, nullable: true},
+  },
+  required: [
+    "id", "start", "manaLevelChange", "locationId", 
+    "type", "end"
+  ],
+  // additionalProperties: false,
+}
+
+export const manaOceanEffectSchema: JSONSchemaType<ManaOceanEffect> = {
+  oneOf: [
+    ritualLocationEffectSchema,
+    powerSpellEffectSchema,
+    spellEffectSchema,
+    massacreEffectSchema
+  ]
+};

@@ -24,6 +24,10 @@ export interface Deletable<T> {
 
 // new interfaces for PG communication
 
+export interface typelessValidateEntityFunction {
+  (entity: any): any;
+  errors?: null | unknown[];
+}
 export interface validateEntityFunction<T> {
   (entity: any): entity is T;
   errors?: null | unknown[];

@@ -1,6 +1,8 @@
 import fetch from 'isomorphic-fetch';
 
-export const gettable = (state: {url: string}) => ({
+import { typelessValidateEntityFunction } from "../types";
+
+export const gettable = (state: {url: string, validateEntity: typelessValidateEntityFunction}) => ({
   async get() {
     // console.log('gettable url', `${state.url}?limit=200`);
     const response = await fetch(`${state.url}?limit=200`);
@@ -10,7 +12,15 @@ export const gettable = (state: {url: string}) => ({
       throw new Error(`gettable network response was not ok ${response.ok} ${response.statusText}`);
     }
 
-    return response.json();
+    const data: any[] = await response.json();
+
+    data.forEach(el => {
+      if (!state.validateEntity(el)) {
+        console.log('Validation not passed.', JSON.stringify(el), JSON.stringify(state.validateEntity.errors))
+      }
+    });
+
+    return data;
   },
 });
 

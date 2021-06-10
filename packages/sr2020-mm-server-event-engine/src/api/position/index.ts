@@ -5,6 +5,9 @@ import {
   BeaconRecord,
   LocationRecord,
   UserRecord,
+  validateUserRecord,
+  validateBeaconRecord,
+  validateLocationRecord
 } from 'sr2020-mm-event-engine';
 
 import {
@@ -20,7 +23,8 @@ import {
   Postable,
   Puttable,
   Deletable,
-  MultiPuttable
+  MultiPuttable,
+  validateEntityFunction,
 } from "../types";
 
 import {
@@ -33,7 +37,7 @@ import {
 } from '../constants';
 
 export class ManageableResourceProvider<T> implements Gettable<T>, Postable<T>, Puttable<T>, Deletable<T> {
-  constructor(public url: string, public defaultObject: Omit<T, 'id'>) {
+  constructor(public url: string, public defaultObject: Omit<T, 'id'>, public validateEntity: validateEntityFunction<T>) {
     return Object.assign(
       this,
       gettable(this),
@@ -53,7 +57,7 @@ export class ManageableResourceProvider<T> implements Gettable<T>, Postable<T>, 
 }
 
 export class ManageablePlusResourceProvider<T> implements Gettable<T>, Postable<T>, Puttable<T>, Deletable<T>, MultiPuttable<T>  {
-  constructor(public url: string, public defaultObject: Omit<T, 'id'>) {
+  constructor(public url: string, public defaultObject: Omit<T, 'id'>, public validateEntity: validateEntityFunction<T>) {
     return Object.assign(
       this,
       gettable(this),
@@ -75,7 +79,7 @@ export class ManageablePlusResourceProvider<T> implements Gettable<T>, Postable<
 }
 
 export class GettableResourceProvider<T> implements Gettable<T> {
-  constructor(public url: string) {
+  constructor(public url: string, public validateEntity: validateEntityFunction<T>) {
     return Object.assign(
       this,
       gettable(this),
@@ -87,19 +91,23 @@ export class GettableResourceProvider<T> implements Gettable<T> {
 
 export class RemoteBeaconRecordProvider extends ManageableResourceProvider<BeaconRecord> {
   constructor() {
-    super(beaconsUrl, defaultBeaconRecord);
+    super(beaconsUrl, defaultBeaconRecord, validateBeaconRecord);
+    // super(beaconsUrl, defaultBeaconRecord, (t: any): t is BeaconRecord => true);
   }
+
 }
 
 export class RemoteLocationRecordProvider extends ManageablePlusResourceProvider<LocationRecord> {
   constructor() {
-    super(locationsUrl, defaultLocationRecord);
+    // super(locationsUrl, defaultLocationRecord, validateLocationRecord);
+    super(locationsUrl, defaultLocationRecord, (t: any): t is LocationRecord => true);
   }
 }
 
 export class RemoteUsersRecordProvider extends GettableResourceProvider<UserRecord> {
   constructor() {
-    super(usersUrl);
+    // super(usersUrl, validateUserRecord);
+    super(usersUrl, (t: any): t is UserRecord => true);
   }
 }
 
