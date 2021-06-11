@@ -7,7 +7,8 @@ import {
 } from '../../core';
 
 import { 
-  UserRecord
+  UserRecord,
+  RawUserRecord
 } from "../../types";
 
 // requests
@@ -20,7 +21,7 @@ export type GetUserRecord = (arg: Typed<'userRecord', {
 // actions
 
 export type SetUserRecords = Typed<'setUserRecords', {
-  userRecords: UserRecord[];
+  userRecords: RawUserRecord[];
 }>;
 
 // events

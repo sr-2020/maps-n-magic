@@ -19,6 +19,7 @@ import {
   BeaconRecord,
   LocationRecord,
   UserRecord,
+  RawUserRecord,
   ManaOceanSettingsData,
   ManaOceanEffectSettingsData,
   StubEventProcessor,
@@ -179,7 +180,7 @@ export function makeGameModel(): {
   spiritRouteDataBinding.init();
   gameServer.addDataBinding(spiritRouteDataBinding);
 
-  const userRecordDataBinding = new ReadDataManager<UserRecord, UserRecordProvider>(
+  const userRecordDataBinding = new ReadDataManager<RawUserRecord, UserRecordProvider>(
     gameModel,
     new UserRecordProvider(),
     'userRecord',

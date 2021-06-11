@@ -163,7 +163,7 @@ export class AudioStageService extends AbstractService<AudioStageServiceContract
     if (locationId !== null) {
       const locationRecord = this.getLocation(locationId);
       if (!locationRecord) {
-        this.logger.error('onCharacterLocationChanged, character location not found', characterId, locationId);
+        // this.logger.error('onCharacterLocationChanged, character location not found', characterId, locationId);
         // TODO - emit event that user has no background sound
         // return;
       } else {
@@ -189,8 +189,8 @@ export class AudioStageService extends AbstractService<AudioStageServiceContract
           backgroundSound: manaLevel,
         }],
       });
-    } else {
-      this.logger.warn(`character ${characterId} location is null so mana level is not sounded`);
+    // } else {
+    //   this.logger.warn(`character ${characterId} location is null so mana level is not sounded`);
     }
     // todo - emit event that user has new background sound
 

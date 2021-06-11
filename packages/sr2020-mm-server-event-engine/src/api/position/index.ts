@@ -5,7 +5,8 @@ import {
   BeaconRecord,
   LocationRecord,
   UserRecord,
-  validateUserRecord,
+  RawUserRecord,
+  validateRawUserRecord,
   validateBeaconRecord,
   validateLocationRecord
 } from 'sr2020-mm-event-engine';
@@ -104,10 +105,9 @@ export class RemoteLocationRecordProvider extends ManageablePlusResourceProvider
   }
 }
 
-export class RemoteUsersRecordProvider extends GettableResourceProvider<UserRecord> {
+export class RemoteUsersRecordProvider extends GettableResourceProvider<RawUserRecord> {
   constructor() {
-    // super(usersUrl, validateUserRecord);
-    super(usersUrl, (t: any): t is UserRecord => true);
+    super(usersUrl, validateRawUserRecord);
   }
 }
 

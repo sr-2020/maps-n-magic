@@ -71,7 +71,7 @@ export type SettingsValues =
 
 export interface CharacterLocationData {
   characterId: number;
-  locationId: number;
+  locationId: number | null;
   prevLocationId: number | null;
 };
 

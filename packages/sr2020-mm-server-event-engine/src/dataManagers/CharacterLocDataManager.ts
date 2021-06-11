@@ -7,6 +7,7 @@ import {
   GameModel, 
   CharacterLocationData,
   UserRecord,
+  RawUserRecord,
   EPostNotification,
   ESetAllCharacterLocations, 
   ESetCharacterLocation,
@@ -108,7 +109,7 @@ export class CharacterLocDataManager extends AbstractEventProcessor {
   }
 
   // eslint-disable-next-line class-methods-use-this
-  async getCharacterLocations(): Promise<UserRecord[]> {
+  async getCharacterLocations(): Promise<RawUserRecord[]> {
     const response = await fetch(usersUrl, {
       method: 'GET',
       headers: {

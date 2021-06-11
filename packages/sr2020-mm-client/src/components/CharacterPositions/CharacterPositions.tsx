@@ -178,9 +178,9 @@ export class CharacterPositions extends Component<CharacterPositionsProps, Chara
     });
   }
 
-  getLocationText(locationId: number): string {
+  getLocationText(locationId: number | null): string {
     const { locationIndex } = this.state;
-    if (locationIndex !== null && locationIndex[locationId]) {
+    if (locationIndex !== null && locationId !== null && locationIndex[locationId]) {
       return `${locationIndex[locationId].label}(${locationId})`;
     }
     return 'N/A';

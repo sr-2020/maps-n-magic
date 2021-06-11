@@ -9,7 +9,7 @@ import {
   Res
 } from '../../core';
 
-import { UserRecord } from "../../types";
+import { UserRecord, RawUserRecord } from "../../types";
 
 import { 
   urMetadata,
@@ -81,22 +81,18 @@ export class UserRecordService extends AbstractService<UserRecordServiceContract
     this.userRecords = [];
   }
 
-  setData({ userRecords }: { userRecords: UserRecord[] } = { userRecords: [] }): void {
+  setData({ userRecords }: { userRecords: RawUserRecord[] } = { userRecords: [] }): void {
     // this.logger.info('userRecords', userRecords);
-    this.userRecords = userRecords || [];
-    this.userRecords.forEach((user) => {
-      user.name = '';
-      if (userDict[user.id] !== undefined) {
-        user.name = userDict[user.id].name;
-      }
+    const nextUserRecords = userRecords || [];
+
+    this.userRecords = nextUserRecords.map(rawUserRecord => {
+      const name = userDict[rawUserRecord.id]?.name || '';
+      return {
+        ...rawUserRecord,
+        name
+      };
     });
   }
-
-  // getData(): { userRecords: UserRecord[] } {
-  //   return {
-  //     userRecords: this.getUserRecords(),
-  //   };
-  // }
 
   getUserRecords(arg: Req<GetUserRecords>): Res<GetUserRecords> {
     return [...this.userRecords];
@@ -111,7 +107,7 @@ export class UserRecordService extends AbstractService<UserRecordServiceContract
     this.setData({ userRecords });
     this.emit2({
       type: 'userRecordsChanged',
-      userRecords,
+      userRecords: this.userRecords,
     });
   }
 }
