@@ -8,7 +8,13 @@ import {
   RawUserRecord,
   validateRawUserRecord,
   validateBeaconRecord,
-  validateLocationRecord
+  validateBeaconRecordPost,
+  validateBeaconRecordPut,
+  validateLocationRecord,
+  validateLocationRecordPost,
+  validateLocationRecordPut,
+  validateLocationRecordPut2,
+  Identifiable
 } from 'sr2020-mm-event-engine';
 
 import {
@@ -37,8 +43,19 @@ import {
   defaultLocationRecord,
 } from '../constants';
 
-export class ManageableResourceProvider<T> implements Gettable<T>, Postable<T>, Puttable<T>, Deletable<T> {
-  constructor(public url: string, public defaultObject: Omit<T, 'id'>, public validateEntity: validateEntityFunction<T>) {
+export class ManageableResourceProvider<T extends Identifiable> implements 
+  Gettable<T>, 
+  Postable<T>, 
+  Puttable<T>, 
+  Deletable<T> 
+{
+  constructor(
+    public url: string, 
+    public defaultObject: Omit<T, 'id'>, 
+    public validateGetEntity: validateEntityFunction<T>,
+    public validatePostEntity: validateEntityFunction<Omit<T, "id">>,
+    public validatePutEntity: validateEntityFunction<Partial<Omit<T, "id">>>,
+  ) {
     return Object.assign(
       this,
       gettable(this),
@@ -57,8 +74,21 @@ export class ManageableResourceProvider<T> implements Gettable<T>, Postable<T>, 
   get(): Promise<T[]> { throw new Error('Method not implemented.'); }
 }
 
-export class ManageablePlusResourceProvider<T> implements Gettable<T>, Postable<T>, Puttable<T>, Deletable<T>, MultiPuttable<T>  {
-  constructor(public url: string, public defaultObject: Omit<T, 'id'>, public validateEntity: validateEntityFunction<T>) {
+export class ManageablePlusResourceProvider<T extends Identifiable> implements 
+  Gettable<T>, 
+  Postable<T>, 
+  Puttable<T>, 
+  Deletable<T>, 
+  MultiPuttable<T>
+{
+  constructor(
+    public url: string, 
+    public defaultObject: Omit<T, 'id'>, 
+    public validateGetEntity: validateEntityFunction<T>,
+    public validatePostEntity: validateEntityFunction<Omit<T, "id">>,
+    public validatePutEntity: validateEntityFunction<Partial<Omit<T, "id">>>,
+    public validatePutEntity2: validateEntityFunction<Partial<Omit<T, "id">>>,
+  ) {
     return Object.assign(
       this,
       gettable(this),
@@ -80,7 +110,7 @@ export class ManageablePlusResourceProvider<T> implements Gettable<T>, Postable<
 }
 
 export class GettableResourceProvider<T> implements Gettable<T> {
-  constructor(public url: string, public validateEntity: validateEntityFunction<T>) {
+  constructor(public url: string, public validateGetEntity: validateEntityFunction<T>) {
     return Object.assign(
       this,
       gettable(this),
@@ -92,8 +122,14 @@ export class GettableResourceProvider<T> implements Gettable<T> {
 
 export class RemoteBeaconRecordProvider extends ManageableResourceProvider<BeaconRecord> {
   constructor() {
-    super(beaconsUrl, defaultBeaconRecord, validateBeaconRecord);
-    // super(beaconsUrl, defaultBeaconRecord, (t: any): t is BeaconRecord => true);
+    super(
+      beaconsUrl, 
+      defaultBeaconRecord, 
+      validateBeaconRecord,
+      validateBeaconRecordPost,
+      validateBeaconRecordPut,
+      // (t: any): t is BeaconRecord => true
+    );
   }
 
 }
@@ -101,7 +137,16 @@ export class RemoteBeaconRecordProvider extends ManageableResourceProvider<Beaco
 export class RemoteLocationRecordProvider extends ManageablePlusResourceProvider<LocationRecord> {
   constructor() {
     // super(locationsUrl, defaultLocationRecord, validateLocationRecord);
-    super(locationsUrl, defaultLocationRecord, (t: any): t is LocationRecord => true);
+    super(
+      locationsUrl, 
+      defaultLocationRecord, 
+      // validateLocationRecord,
+      (t: any): t is LocationRecord => true,
+      validateLocationRecordPost,
+      validateLocationRecordPut,
+      (t: any): t is LocationRecord => true,
+      // validateLocationRecordPut2
+    );
   }
 }
 

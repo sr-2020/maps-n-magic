@@ -35,6 +35,18 @@ const SRPolygonSchema: JSONSchemaType<SRPolygon> = {
   // additionalProperties: false,
 }
 
+export type SRPolygonOnObject = SRLatLng[][];
+
+const SRPolygonOnObjectSchema: JSONSchemaType<SRPolygonOnObject> = {
+  type: "array",
+  items: {
+    type: "array", items: SRLatLngSchema
+  },
+  // minItems: 1,
+  // maxItems: 1
+  // additionalProperties: false,
+}
+
 export interface LocationRecord {
   // beacons: [{id: 4, ssid: "EA:93:BA:E7:99:82", bssid: "EA:93:BA:E7:99:82", location_id: 3215,…},…]
   // 0: {id: 4, ssid: "EA:93:BA:E7:99:82", bssid: "EA:93:BA:E7:99:82", location_id: 3215,…}
@@ -78,11 +90,11 @@ export interface LocationUpdate {
 const locationRecordOptionsSchema: JSONSchemaType<LocationRecordOptions> = {
   type: "object",
   properties: {
-    color: {type: "string"},
-    weight: {type: "integer"},
-    fillOpacity: {type: "number"},
-    manaLevel: {type: "integer"},
-    effectList: {type: 'array', items: ManaOcean.manaOceanEffectSchema },
+    color: {type: "string", default: '#3388ff'},
+    weight: {type: "integer", default: 3},
+    fillOpacity: {type: "number", default: 0.2},
+    manaLevel: {type: "integer", default: 0},
+    effectList: {type: 'array', items: ManaOcean.manaOceanEffectSchema, default: [] },
   },
   required: ["color", "weight", "fillOpacity", "manaLevel", "effectList"],
   // additionalProperties: false,
@@ -101,4 +113,62 @@ const locationRecordSchema: JSONSchemaType<LocationRecord> = {
   // additionalProperties: false,
 }
 
-export const validateLocationRecord = ajv.compile(locationRecordSchema);
+const ajv2 = new Ajv({
+  allErrors: true,
+  // removeAdditional: true,
+  useDefaults: true
+});
+
+export const validateLocationRecord = ajv2.compile(locationRecordSchema);
+
+export type LocationRecordForPost = Omit<LocationRecord, "id"> & {
+  polygon: SRPolygonOnObject
+};
+
+const locationRecordPostSchema: JSONSchemaType<LocationRecordForPost> = {
+  type: "object",
+  properties: {
+    // id: {type: "integer"},
+    label: {type: "string"},
+    layer_id: {type: "integer"},
+    options: locationRecordOptionsSchema,
+    polygon: SRPolygonOnObjectSchema,
+  },
+  required: ["label", "layer_id", "options", "polygon"],
+  // additionalProperties: false,
+}
+
+export const validateLocationRecordPost = ajv.compile(locationRecordPostSchema);
+
+// const locationRecordPutSchema: JSONSchemaType<Partial<Omit<LocationRecord, "id">>> = {
+const locationRecordPutSchema: JSONSchemaType<Partial<Omit<LocationRecordForPost, "id">>> = {
+  type: "object",
+  properties: {
+    // id: {type: "integer"},
+    label: {type: "string", nullable: true},
+    layer_id: {type: "integer", nullable: true},
+    options: {...locationRecordOptionsSchema, nullable: true},
+    polygon: {...SRPolygonOnObjectSchema, nullable: true},
+    // polygon: {...SRPolygonSchema, nullable: true},
+  },
+  // required: ["label", "layer_id", "options", "polygon"],
+  // additionalProperties: false,
+}
+
+export const validateLocationRecordPut = ajv.compile(locationRecordPutSchema);
+
+const locationRecordPutSchema2: JSONSchemaType<Partial<Omit<LocationRecord, "id">>> = {
+  type: "object",
+  properties: {
+    // id: {type: "integer"},
+    label: {type: "string", nullable: true},
+    layer_id: {type: "integer", nullable: true},
+    options: {...locationRecordOptionsSchema, nullable: true},
+    // polygon: {...SRPolygonOnObjectSchema, nullable: true},
+    polygon: {...SRPolygonSchema, nullable: true},
+  },
+  // required: ["label", "layer_id", "options", "polygon"],
+  // additionalProperties: false,
+}
+
+export const validateLocationRecordPut2 = ajv.compile(locationRecordPutSchema2);

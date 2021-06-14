@@ -2,7 +2,10 @@ import fetch from 'isomorphic-fetch';
 
 import { typelessValidateEntityFunction } from "../types";
 
-export const gettable = (state: {url: string, validateEntity: typelessValidateEntityFunction}) => ({
+export const gettable = (state: {
+  url: string, 
+  validateGetEntity: typelessValidateEntityFunction
+}) => ({
   async get() {
     // console.log('gettable url', `${state.url}?limit=200`);
     const response = await fetch(`${state.url}?limit=200`);
@@ -15,8 +18,8 @@ export const gettable = (state: {url: string, validateEntity: typelessValidateEn
     const data: any[] = await response.json();
 
     data.forEach(el => {
-      if (!state.validateEntity(el)) {
-        console.log('Validation not passed.', JSON.stringify(el), JSON.stringify(state.validateEntity.errors))
+      if (!state.validateGetEntity(el)) {
+        console.log('GET Validation not passed.', JSON.stringify(el), JSON.stringify(state.validateGetEntity.errors));
       }
     });
 
@@ -24,18 +27,32 @@ export const gettable = (state: {url: string, validateEntity: typelessValidateEn
   },
 });
 
-export const postable = <T>(state: {url: string, defaultObject: T}) => ({
+export const postable = <T>(state: {
+  url: string, 
+  defaultObject: T,
+  validatePostEntity: typelessValidateEntityFunction
+}) => ({
   async post({ props }: {props: T}) {
+
+    const object: T = {
+      ...state.defaultObject,
+      ...props,
+    };
+
+    if (!state.validatePostEntity(object)) {
+      console.log('POST Validation not passed.', JSON.stringify(object), JSON.stringify(state.validatePostEntity.errors));
+      return;
+    } else {
+      console.log('POST validation OK');
+    }
+
     const response = await fetch(state.url, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json;charset=utf-8',
         'X-User-Id': '1',
       },
-      body: JSON.stringify({
-        ...state.defaultObject,
-        ...props,
-      }),
+      body: JSON.stringify(object),
     });
 
     if (!response.ok) {
@@ -44,12 +61,26 @@ export const postable = <T>(state: {url: string, defaultObject: T}) => ({
       throw new Error(`postable network response was not ok ${response.ok} ${response.statusText}`);
     }
 
-    return response.json();
+    const responseObject = await response.json();
+
+    // console.log(responseObject);
+
+    return responseObject;
   },
 });
 
-export const puttable = <T>(state: {url: string}) => ({
+export const puttable = <T>(state: {
+  url: string,
+  validatePutEntity: typelessValidateEntityFunction
+}) => ({
   async put({ id, props }: {id: number, props: T}) {
+    if (!state.validatePutEntity(props)) {
+      console.log('PUT Validation not passed.', JSON.stringify(props), JSON.stringify(state.validatePutEntity.errors));
+      return;
+    } else {
+      console.log('PUT validation OK');
+    }
+
     const response = await fetch(`${state.url}/${id}`, {
       method: 'PUT',
       headers: {
@@ -71,8 +102,25 @@ export const puttable = <T>(state: {url: string}) => ({
   },
 });
 
-export const multiPuttable = <T>(state: {url: string}) => ({
-  async putMultiple({ updates }: {updates: T}) {
+export const multiPuttable = <T>(state: {
+  url: string,
+  validatePutEntity2: typelessValidateEntityFunction
+}) => ({
+  async putMultiple({ updates }: {
+    updates: {
+      id: number,
+      body: Partial<T>
+    }[]
+  }) {
+    updates.forEach(({ body }) => {
+      if (!state.validatePutEntity2(body)) {
+        console.log('Multi PUT Validation not passed.', JSON.stringify(body), JSON.stringify(state.validatePutEntity2.errors));
+        return;
+      // } else {
+      //   console.log('Multi PUT validation OK');
+      }
+    });
+
     const response = await fetch(`${state.url}`, {
       method: 'PUT',
       headers: {
