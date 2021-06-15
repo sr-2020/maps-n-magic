@@ -25,6 +25,49 @@ export interface ManaOceanSettingsData extends SettingsData {
   // moscowTime: number;
 };
 
+// export const defaultManaOceanSettings: ManaOceanSettingsData = {
+//   minManaLevel: 1,
+//   neutralManaLevel: 4,
+//   maxManaLevel: 7,
+//   visibleMoonPeriod: 180, // minutes
+//   visibleMoonNewMoonTime: 0,
+//   visibleMoonManaTideHeight: 1,
+//   invisibleMoonPeriod: 270,
+//   invisibleMoonNewMoonTime: 120,
+//   invisibleMoonManaTideHeight: 1,
+//   // moscowTime: 0,
+// };
+
+const manaOceanSettingsDataSchema: JSONSchemaType<ManaOceanSettingsData> = {
+  type: "object",
+  properties: {
+    minManaLevel: {type: "integer"},
+    neutralManaLevel: {type: "integer"},
+    maxManaLevel: {type: "integer"},
+    visibleMoonPeriod: {type: "integer"},
+    visibleMoonNewMoonTime: {type: "integer"},
+    visibleMoonManaTideHeight: {type: "integer"},
+    invisibleMoonPeriod: {type: "integer"},
+    invisibleMoonNewMoonTime: {type: "integer"},
+    invisibleMoonManaTideHeight: {type: "integer"},
+  },
+  required: [
+    "minManaLevel", 
+    "neutralManaLevel", 
+    "maxManaLevel", 
+    "visibleMoonPeriod", 
+    "visibleMoonNewMoonTime", 
+    "visibleMoonManaTideHeight", 
+    "invisibleMoonPeriod",
+    "invisibleMoonNewMoonTime",
+    "invisibleMoonManaTideHeight",
+  ],
+  // additionalProperties: false,
+};
+
+export const validateManaOceanSettingsData = ajv.compile(manaOceanSettingsDataSchema);
+
+
 export interface ManaOceanEffectSettingsData extends SettingsData {
   massacreDelay: number;
   massacreDuration: number;
@@ -37,6 +80,58 @@ export interface ManaOceanEffectSettingsData extends SettingsData {
   spellProbabilityPerPower: number;
   spellDurationPerPower: number;
 }
+
+// export const manaOceanEffectSettings: ManaOceanEffectSettingsData = {
+//   massacreDelay: 60000 * 15,
+//   massacreDuration: 60000 * 30,
+//   // massacreDelay: 15000,
+//   // massacreDuration: 15000,
+//   // massacreDuration: 105000,
+//   powerSpellBoundary: 7,
+//   powerSpellDelay: 60000 * 15,
+//   powerSpellDuration: 60000 * 15,
+//   // powerSpellDelay: 15000,
+//   // powerSpellDuration: 15000,
+//   // powerSpellDuration: 105000,
+//   ritualMembersBoundary: 2,
+//   ritualDelay: 60000 * 15,
+//   // ritualDelay: 15000,
+//   spellDurationItem: 60000,
+//   // spellDurationItem: 6000,
+//   spellProbabilityPerPower: 20,
+//   spellDurationPerPower: 3,
+// };
+
+const manaOceanEffectSettingsDataSchema: JSONSchemaType<ManaOceanEffectSettingsData> = {
+  type: "object",
+  properties: {
+    massacreDelay: {type: "integer"},
+    massacreDuration: {type: "integer"},
+    powerSpellBoundary: {type: "integer"},
+    powerSpellDelay: {type: "integer"},
+    powerSpellDuration: {type: "integer"},
+    ritualMembersBoundary: {type: "integer"},
+    ritualDelay: {type: "integer"},
+    spellDurationItem: {type: "integer"},
+    spellProbabilityPerPower: {type: "integer"},
+    spellDurationPerPower: {type: "integer"},
+  },
+  required: [
+    "massacreDelay", 
+    "massacreDuration", 
+    "powerSpellBoundary", 
+    "powerSpellDelay", 
+    "powerSpellDuration", 
+    "ritualMembersBoundary", 
+    "ritualDelay",
+    "spellDurationItem",
+    "spellProbabilityPerPower",
+    "spellDurationPerPower",
+  ],
+  // additionalProperties: false,
+};
+
+export const validateManaOceanEffectSettingsData = ajv.compile(manaOceanEffectSettingsDataSchema);
 
 export interface MoonProps {
   period: number;

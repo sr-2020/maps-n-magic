@@ -41,9 +41,9 @@ export const postable = <T>(state: {
 
     if (!state.validatePostEntity(object)) {
       console.log('POST Validation not passed.', JSON.stringify(object), JSON.stringify(state.validatePostEntity.errors));
-      return;
-    } else {
-      console.log('POST validation OK');
+    //   return;
+    // } else {
+    //   console.log('POST validation OK');
     }
 
     const response = await fetch(state.url, {
@@ -76,9 +76,9 @@ export const puttable = <T>(state: {
   async put({ id, props }: {id: number, props: T}) {
     if (!state.validatePutEntity(props)) {
       console.log('PUT Validation not passed.', JSON.stringify(props), JSON.stringify(state.validatePutEntity.errors));
-      return;
-    } else {
-      console.log('PUT validation OK');
+    //   return;
+    // } else {
+    //   console.log('PUT validation OK');
     }
 
     const response = await fetch(`${state.url}/${id}`, {
@@ -115,7 +115,7 @@ export const multiPuttable = <T>(state: {
     updates.forEach(({ body }) => {
       if (!state.validatePutEntity2(body)) {
         console.log('Multi PUT Validation not passed.', JSON.stringify(body), JSON.stringify(state.validatePutEntity2.errors));
-        return;
+        // return;
       // } else {
       //   console.log('Multi PUT validation OK');
       }

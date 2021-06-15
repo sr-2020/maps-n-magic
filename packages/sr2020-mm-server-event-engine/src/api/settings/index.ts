@@ -15,11 +15,15 @@ import {
 
 import { 
   ManaOceanEffectSettingsData,
-  ManaOceanSettingsData
+  ManaOceanSettingsData,
+  validateManaOceanSettingsData,
+  validateManaOceanEffectSettingsData
 } from 'sr2020-mm-event-engine';
 
+import { validateEntityFunction } from '../types';
+
 export class SettingsResourceProvider<T> implements PostSettings<T>, GetSettings<T> {
-  constructor(public url: string) {
+  constructor(public url: string, public validateSettings: validateEntityFunction<T>) {
     return Object.assign(
       this,
       postSettings(this),
@@ -33,12 +37,12 @@ export class SettingsResourceProvider<T> implements PostSettings<T>, GetSettings
 
 export class ManaOceanSettingsProvider extends SettingsResourceProvider<ManaOceanSettingsData> {
   constructor() {
-    super(manaOceanConfigUrl);
+    super(manaOceanConfigUrl, validateManaOceanSettingsData);
   }
 }
 
 export class ManaOceanEffectSettingsProvider extends SettingsResourceProvider<ManaOceanEffectSettingsData> {
   constructor() {
-    super(manaOceanEffectConfigUrl);
+    super(manaOceanEffectConfigUrl, validateManaOceanEffectSettingsData);
   }
 }

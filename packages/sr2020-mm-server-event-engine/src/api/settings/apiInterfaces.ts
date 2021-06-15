@@ -1,6 +1,10 @@
 import fetch from 'isomorphic-fetch';
+import { typelessValidateEntityFunction } from '../types';
 
-export const getSettings = (state: {url: string}) => ({
+export const getSettings = (state: {
+  url: string, 
+  validateSettings: typelessValidateEntityFunction
+}) => ({
   async get() {
     // console.log('getSettings url', state.url);
     const response = await fetch(state.url);
@@ -17,12 +21,28 @@ export const getSettings = (state: {url: string}) => ({
     // return {};
     // const text = await response.text();
 
-    return response.json();
+    const res = await response.json();
+
+    if (!state.validateSettings(res)) {
+      console.log('Get settings validation not passed.', JSON.stringify(res), JSON.stringify(state.validateSettings.errors));
+    // } else {
+    //   console.log('Get settings validation passed');
+    }
+
+    return res;
   },
 });
 
-export const postSettings = (state: {url: string}) => ({
+export const postSettings = (state: {
+  url: string, 
+  validateSettings: typelessValidateEntityFunction
+}) => ({
   async post(settings: unknown) {
+    if (!state.validateSettings(settings)) {
+      console.log('Post settings validation not passed.', JSON.stringify(settings), JSON.stringify(state.validateSettings.errors));
+    // } else {
+    //   console.log('Post settings validation passed');
+    }
     const response = await fetch(state.url, {
       method: 'POST',
       // headers: {
