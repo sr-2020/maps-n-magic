@@ -1,5 +1,7 @@
 import { PubSub, Message } from '@google-cloud/pubsub';
+import Ajv, { JSONSchemaType } from "ajv";
 import { rescueServiceSubscriptionName } from "../constants";
+import { BodyConditionValues } from "sr2020-mm-event-engine";
 
 const timeout = 60;
 
@@ -8,10 +10,35 @@ const pubSubClient = new PubSub();
 
 export type HealthChangeMessage = {
   characterId: number,
-  stateFrom: string, 
-  stateTo: string, 
+  stateFrom: BodyConditionValues, 
+  stateTo: BodyConditionValues, 
   timestamp: number,
 }
+
+const ajv = new Ajv({
+  allErrors: true,
+  // removeAdditional: true,
+  // useDefaults: true
+});
+
+const healthChangeMessageSchema: JSONSchemaType<HealthChangeMessage> = {
+  type: "object",
+  properties: {
+    characterId: {type: "integer"},
+    stateFrom: {type: "string", enum: [
+      "healthy", "wounded", "clinically_dead", "biologically_dead"
+    ]},
+    stateTo: {type: "string", enum: [
+      "healthy", "wounded", "clinically_dead", "biologically_dead"
+    ]},
+    timestamp: {type: "integer"}
+  },
+  required: ["characterId", "stateFrom", "stateTo", "timestamp"],
+  // additionalProperties: false,
+};
+
+export const validateHealthChangeMessage = ajv.compile(healthChangeMessageSchema);
+
 
 export function listenHealthChanges(callback: (msg: HealthChangeMessage) => void, simulateMessages = false) {
   // References an existing subscription
@@ -27,6 +54,12 @@ export function listenHealthChanges(callback: (msg: HealthChangeMessage) => void
     // console.log(`\tAttributes: ${message.attributes}`);
     messageCount += 1;
     // console.log(`listenHealthChanges data: ${JSON.stringify(parsedData, null, '  ')}`);
+
+    if (!validateHealthChangeMessage(parsedData)) {
+      console.error(`Received invalid listenHealthChanges. ${JSON.stringify(parsedData)} ${JSON.stringify(validateHealthChangeMessage.errors)}`);
+    } else {
+      console.log('listenHealthChanges validation OK');
+    }
 
     // listenHealthChanges data: {
     //   "characterId": 51935,

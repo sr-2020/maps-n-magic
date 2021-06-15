@@ -1,6 +1,8 @@
 // eslint-disable-next-line max-classes-per-file
 import * as R from 'ramda';
 import { PubSub, Subscription, Message } from '@google-cloud/pubsub';
+import Ajv, { JSONSchemaType } from "ajv";
+
 import fetch from 'isomorphic-fetch';
 import { 
   GMLogger, 
@@ -16,7 +18,40 @@ import {
 
 import { usersUrl, charLocChange2SubscriptionName } from '../api/constants';
 
-// import {  } from "../index";
+
+const ajv = new Ajv({
+  allErrors: true,
+  // removeAdditional: true,
+  // useDefaults: true
+});
+
+// {
+//   "id": 51935,
+//   "locationId": 3212,
+//   "prevLocationId": 3217,
+//   "timestamp": 1606094156924
+// }
+
+interface CharLocChangeMessage {
+  id: number;
+  locationId: number | null;
+  prevLocationId: number | null;
+  timestamp: number;
+}
+
+const charLocChangeMessageSchema: JSONSchemaType<CharLocChangeMessage> = {
+  type: "object",
+  properties: {
+    id: {type: "integer"},
+    locationId: {type: "integer", nullable: true},
+    prevLocationId: {type: "integer", nullable: true},
+    timestamp: {type: "integer"}
+  },
+  required: ["id", "locationId", "prevLocationId", "timestamp"],
+  // additionalProperties: false,
+};
+
+export const validateCharLocChangeMessage = ajv.compile(charLocChangeMessageSchema);
 
 const metadata = {
   actions: [],
@@ -76,6 +111,12 @@ export class CharacterLocDataManager extends AbstractEventProcessor {
     const parsedData = JSON.parse(message.data.toString());
     this.messageCount += 1;
     message.ack();
+
+    if (!validateCharLocChangeMessage(parsedData)) {
+      this.logger.error(`Received invalid CharLocChangeMessage. ${JSON.stringify(parsedData)} ${JSON.stringify(validateCharLocChangeMessage.errors)}`);
+    // } else {
+    //   this.logger.info('CharLocChangeMessage validation OK');
+    }
 
     // {
     //   "id": 51935,
