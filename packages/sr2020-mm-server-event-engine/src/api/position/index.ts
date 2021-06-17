@@ -152,7 +152,8 @@ export class RemoteLocationRecordProvider extends ManageablePlusResourceProvider
 
 export class RemoteUsersRecordProvider extends GettableResourceProvider<RawUserRecord> {
   constructor() {
-    super(usersUrl, validateRawUserRecord);
+    // super(usersUrl, validateRawUserRecord);
+    super(usersUrl, (t: any): t is RawUserRecord => true);
   }
 }
 

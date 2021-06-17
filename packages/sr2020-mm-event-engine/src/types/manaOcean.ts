@@ -253,6 +253,12 @@ const spellEffectSchema: JSONSchemaType<SpellEffect> = {
   // additionalProperties: false,
 }
 
+// "type": "massacre",
+// "id": "58ly2smt7",
+// "start": 1604432340150,
+// "end": 1604434140150,
+// "manaLevelChange": 1
+
 const massacreEffectSchema: JSONSchemaType<MassacreEffect> = {
   type: "object",
   properties: {

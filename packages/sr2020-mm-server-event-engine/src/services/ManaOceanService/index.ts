@@ -424,7 +424,7 @@ export class ManaOceanService extends AbstractService<ManaOceanServiceContract> 
       props: {
         options: {
           ...locationRecord.options,
-          effectList: [...options.effectList, effect],
+          effectList: [...options.effectList || [], effect],
         },
       },
     });
@@ -439,7 +439,7 @@ export class ManaOceanService extends AbstractService<ManaOceanServiceContract> 
     }
 
     const { options } = locationRecord;
-    const newEffectList: ManaOceanEffect[] = options.effectList.filter((el) => el.id !== effectId);
+    const newEffectList: ManaOceanEffect[] = options.effectList?.filter((el) => el.id !== effectId) || [];
     this.executeOnModel2({
       type: 'putLocationRecord',
       id: locationRecord.id,
@@ -539,8 +539,8 @@ export class ManaOceanService extends AbstractService<ManaOceanServiceContract> 
 
     const prevOptIndex = geoLocations.reduce((acc, location) => {
       acc[location.id] = {
-        manaLevel: location.options.manaLevel,
-        effectList: location.options.effectList,
+        manaLevel: location.options.manaLevel || neutralManaLevel,
+        effectList: location.options.effectList || [],
       };
       return acc;
     }, {} as OptionsIndex);

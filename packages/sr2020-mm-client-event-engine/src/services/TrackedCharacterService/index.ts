@@ -103,7 +103,7 @@ export class TrackedCharacterService extends AbstractService<TrackedCharacterSer
 
   private updateBackgroundSound(locationId: number | null) {
     const locationRecord = locationId !== null ? this.getLocation(locationId) : null;
-    if (locationRecord) {
+    if (locationRecord && locationRecord.options.manaLevel) {
       const { manaLevel } = locationRecord.options;
       const soundName = this.getFromModel({
         type: 'soundForKey',

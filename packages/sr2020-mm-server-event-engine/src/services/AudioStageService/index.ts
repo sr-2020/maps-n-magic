@@ -18,7 +18,7 @@ import {
 
 interface SoundStageUpdate {
   characterId: number;
-  backgroundSound: number;
+  backgroundSound: number | undefined;
 }
 
 export type ESoundStageChanged = Typed<'soundStageChanged', {
@@ -126,7 +126,7 @@ export class AudioStageService extends AbstractService<AudioStageServiceContract
     });
     const soundStageUpdates = R.flatten(changedManaLevelLocs.map(({ locationId, manaLevel }) => {
       const data2 = this.locationIndex.get(locationId);
-      if (data2) {
+      if (data2 && manaLevel !== undefined) {
         data2.manaLevel = manaLevel;
       }
       const characterSet = this.getFromModel2({
@@ -167,7 +167,9 @@ export class AudioStageService extends AbstractService<AudioStageServiceContract
         // TODO - emit event that user has no background sound
         // return;
       } else {
-        manaLevel = locationRecord.options.manaLevel;
+        if(locationRecord.options.manaLevel !== undefined) {
+          manaLevel = locationRecord.options.manaLevel;
+        }
       }
     }
 

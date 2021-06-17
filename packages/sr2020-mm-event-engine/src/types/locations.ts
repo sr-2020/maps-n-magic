@@ -71,11 +71,11 @@ export interface LocationRecord {
 }
 
 export interface LocationRecordOptions {
-  color: string;
-  weight: number;
-  fillOpacity: number;
-  manaLevel: number;
-  effectList: ManaOcean.ManaOceanEffect[];
+  color?: string;
+  weight?: number;
+  fillOpacity?: number;
+  manaLevel?: number;
+  effectList?: ManaOcean.ManaOceanEffect[];
 };
 
 export type LocPolygonData = Pick<LocationRecord, "id" | "polygon"> & {
@@ -90,17 +90,17 @@ export interface LocationUpdate {
 const locationRecordOptionsSchema: JSONSchemaType<LocationRecordOptions> = {
   type: "object",
   properties: {
-    color: {type: "string", default: '#3388ff'},
-    weight: {type: "integer", default: 3},
-    fillOpacity: {type: "number", default: 0.2},
-    manaLevel: {type: "integer", default: 0},
-    effectList: {type: 'array', items: ManaOcean.manaOceanEffectSchema, default: [] },
+    color: {type: "string", default: '#3388ff', nullable: true},
+    weight: {type: "integer", default: 3, nullable: true},
+    fillOpacity: {type: "number", default: 0.2, nullable: true},
+    manaLevel: {type: "integer", default: 0, nullable: true},
+    effectList: {type: 'array', items: ManaOcean.manaOceanEffectSchema, default: [], nullable: true },
   },
-  required: ["color", "weight", "fillOpacity", "manaLevel", "effectList"],
+  // required: ["manaLevel", "effectList"],
   // additionalProperties: false,
 }
 
-const locationRecordSchema: JSONSchemaType<LocationRecord> = {
+export const locationRecordSchema: JSONSchemaType<LocationRecord> = {
   type: "object",
   properties: {
     id: {type: "integer"},

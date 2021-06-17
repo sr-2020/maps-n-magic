@@ -101,7 +101,7 @@ export class LocationPopup extends Component<
       // });
     }
 
-    const sortedEffectList = R.sortBy(R.prop('start'), effectList);
+    const sortedEffectList = R.sortBy(R.prop('start'), effectList || []);
 
     return (
       <div className="LocationPopup">

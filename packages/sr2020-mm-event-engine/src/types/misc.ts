@@ -1,4 +1,8 @@
 import Ajv, { JSONSchemaType } from "ajv";
+import { 
+  LocationRecord, 
+  locationRecordSchema
+} from "./locations";
 
 const ajv = new Ajv({
   allErrors: true,
@@ -11,6 +15,7 @@ export interface RawUserRecord {
   // id: 10207
   id: number;
   // location: null
+  location: LocationRecord | null;
   // location_id: null
   location_id: number | null;
   // location_updated_at: "2020-05-03 07:58:52"
@@ -37,6 +42,7 @@ const rawUserRecordSchema: JSONSchemaType<RawUserRecord> = {
   properties: {
     id: {type: "integer"},
     location_id: {type: "integer", nullable: true},
+    location: {...locationRecordSchema, nullable: true}
     // name: {type: "string"},
   },
   required: ["id", "location_id"],

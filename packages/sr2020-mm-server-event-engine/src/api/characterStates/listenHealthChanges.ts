@@ -60,6 +60,7 @@ export function listenHealthChanges(callback: (msg: HealthChangeMessage) => void
     } else {
       console.log('listenHealthChanges validation OK');
     }
+    // console.log(`listenHealthChanges validation OK ${JSON.stringify(parsedData)}`);
 
     // listenHealthChanges data: {
     //   "characterId": 51935,
