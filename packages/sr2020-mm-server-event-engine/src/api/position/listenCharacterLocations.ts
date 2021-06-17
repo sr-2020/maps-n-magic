@@ -1,5 +1,6 @@
 // character_location_change
 import { PubSub, Message } from '@google-cloud/pubsub';
+import Ajv, { JSONSchemaType } from "ajv";
 import { charLocChangeSubscriptionName } from "../constants";
 
 
@@ -13,6 +14,26 @@ type CharLocationMessage = {
   locationId: number,
   prevLocationId: number
 }
+
+const ajv = new Ajv({
+  allErrors: true,
+  // removeAdditional: true,
+  // useDefaults: true
+});
+
+const charLocationMessageSchema: JSONSchemaType<CharLocationMessage> = {
+  type: "object",
+  properties: {
+    id: {type: "integer"},
+    locationId: {type: "integer"},
+    prevLocationId: {type: "integer"},
+  },
+  required: ["id", "locationId", "prevLocationId"],
+  // additionalProperties: false,
+};
+
+export const validateCharLocationMessage = ajv.compile(charLocationMessageSchema);
+
 
 export function listenCharacterLocations(
   callback: (data: CharLocationMessage) => void, 
@@ -34,6 +55,13 @@ export function listenCharacterLocations(
 
     // "Ack" (acknowledge receipt of) the message
     message.ack();
+
+    if (!validateCharLocationMessage(parsedData)) {
+      console.error(`Received invalid listenCharacterLocations. ${JSON.stringify(parsedData)} ${JSON.stringify(validateCharLocationMessage.errors)}`);
+    } else {
+      console.log('listenCharacterLocations validation OK');
+    }
+
     callback(parsedData);
   };
 
