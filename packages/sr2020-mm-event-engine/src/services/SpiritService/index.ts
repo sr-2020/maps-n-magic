@@ -149,12 +149,13 @@ export class SpiritService extends AbstractService<SpiritServiceContract> {
     if (spirit === undefined) {
       return;
     }
+    const props = {
+      ...R.omit(['id'], spirit),
+      name: this._makeSpiritName(spirit.name),
+    };
     this.emit2({
       type: 'postSpiritRequested',
-      props: {
-        ...spirit,
-        name: this._makeSpiritName(spirit.name)
-      }
+      props
     });
   }
 
