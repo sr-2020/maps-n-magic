@@ -16,7 +16,7 @@ import {
   AbstractEventProcessor
 } from "sr2020-mm-event-engine";
 
-import { usersUrl, charLocChange2SubscriptionName } from '../api/constants';
+import { urls, charLocChange2SubscriptionName } from '../api/constants';
 
 
 const ajv = new Ajv({
@@ -151,7 +151,7 @@ export class CharacterLocDataManager extends AbstractEventProcessor {
 
   // eslint-disable-next-line class-methods-use-this
   async getCharacterLocations(): Promise<RawUserRecord[]> {
-    const response = await fetch(usersUrl, {
+    const response = await fetch(urls().usersUrl, {
       method: 'GET',
       headers: {
         'Content-Type': 'application/json;charset=utf-8',

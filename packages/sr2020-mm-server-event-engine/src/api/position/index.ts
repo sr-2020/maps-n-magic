@@ -35,10 +35,7 @@ import {
 } from "../types";
 
 import {
-  locationsUrl,
-  beaconsUrl,
-  usersUrl,
-  positionUrl,
+  urls,
   defaultBeaconRecord,
   defaultLocationRecord,
 } from '../constants';
@@ -123,7 +120,7 @@ export class GettableResourceProvider<T> implements Gettable<T> {
 export class RemoteBeaconRecordProvider extends ManageableResourceProvider<BeaconRecord> {
   constructor() {
     super(
-      beaconsUrl, 
+      urls().beaconsUrl, 
       defaultBeaconRecord, 
       validateBeaconRecord,
       validateBeaconRecordPost,
@@ -138,7 +135,7 @@ export class RemoteLocationRecordProvider extends ManageablePlusResourceProvider
   constructor() {
     // super(locationsUrl, defaultLocationRecord, validateLocationRecord);
     super(
-      locationsUrl, 
+      urls().locationsUrl, 
       defaultLocationRecord, 
       // validateLocationRecord,
       (t: any): t is LocationRecord => true,
@@ -153,7 +150,7 @@ export class RemoteLocationRecordProvider extends ManageablePlusResourceProvider
 export class RemoteUsersRecordProvider extends GettableResourceProvider<RawUserRecord> {
   constructor() {
     // super(usersUrl, validateRawUserRecord);
-    super(usersUrl, (t: any): t is RawUserRecord => true);
+    super(urls().usersUrl, (t: any): t is RawUserRecord => true);
   }
 }
 
@@ -168,7 +165,7 @@ export class RemoteUsersRecordProvider extends GettableResourceProvider<RawUserR
 // }
 
 export async function innerPostUserPosition(characterId: number, beacon: BeaconRecord) {
-  return fetchWithTimeout(positionUrl, {
+  return fetchWithTimeout(urls().positionUrl, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json;charset=utf-8',

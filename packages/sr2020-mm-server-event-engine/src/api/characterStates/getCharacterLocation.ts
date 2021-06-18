@@ -2,7 +2,7 @@ import * as R from 'ramda';
 import fetch from 'isomorphic-fetch';
 import { RawUserRecord, validateRawUserRecord } from "sr2020-mm-event-engine";
 
-import { usersUrl, locationsUrl } from '../constants';
+import { urls } from '../constants';
 
 // const locations = null;
 
@@ -47,7 +47,7 @@ export async function getCharacterLocation(characterId: number, simulateLocation
   locationId: number | null,
   locationLabel: string
 }> {
-  const response = await fetch(`${usersUrl}/${characterId}`, {
+  const response = await fetch(`${urls().usersUrl}/${characterId}`, {
   // const response = await fetch(`${url}`, {
     method: 'GET',
     headers: {

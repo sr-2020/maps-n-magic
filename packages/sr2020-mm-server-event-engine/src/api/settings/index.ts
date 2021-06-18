@@ -9,8 +9,7 @@ import {
 } from "./types";
 
 import {
-  manaOceanConfigUrl,
-  manaOceanEffectConfigUrl,
+  urls
 } from '../constants';
 
 import { 
@@ -37,12 +36,12 @@ export class SettingsResourceProvider<T> implements PostSettings<T>, GetSettings
 
 export class ManaOceanSettingsProvider extends SettingsResourceProvider<ManaOceanSettingsData> {
   constructor() {
-    super(manaOceanConfigUrl, validateManaOceanSettingsData);
+    super(urls().manaOceanConfigUrl, validateManaOceanSettingsData);
   }
 }
 
 export class ManaOceanEffectSettingsProvider extends SettingsResourceProvider<ManaOceanEffectSettingsData> {
   constructor() {
-    super(manaOceanEffectConfigUrl, validateManaOceanEffectSettingsData);
+    super(urls().manaOceanEffectConfigUrl, validateManaOceanEffectSettingsData);
   }
 }
