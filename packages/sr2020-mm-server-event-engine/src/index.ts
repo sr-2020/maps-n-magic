@@ -6,7 +6,9 @@ export { innerPostUserPosition } from './api/position';
 
 const logger: GMLogger = winstonLogger;
 
-export { logger as winstonLogger };
+export { 
+  logger as winstonLogger,
+};
 
 export * from './services/CharacterLocationService';
 export * from './services/PushNotificationService';

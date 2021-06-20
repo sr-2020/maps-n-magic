@@ -8,7 +8,8 @@ import shortid from 'shortid';
 import cors from 'cors';
 import * as core from 'express-serve-static-core';
 
-import { makeGameModel, winstonLogger } from 'sr2020-mm-server-event-engine';
+import { winstonLogger } from 'sr2020-mm-server-event-engine';
+import { makeGameModel } from "./gameModel";
 // import { WebSocketInitClientConfig } from 'sr2020-mm-event-engine';
 
 import { indexRouter } from './routes/index';
@@ -61,7 +62,7 @@ winstonLogger.info('process.env.NODE_ENV', process.env.NODE_ENV);
 
 // console.log('process.env.NODE_ENV', process.env.NODE_ENV);
 
-// const { gameModel, gameServer } = makeGameModel();
+const { gameModel, gameServer } = makeGameModel();
 
 export const app: core.Express = Express();
 const wsApp = ExpressWs(app);
