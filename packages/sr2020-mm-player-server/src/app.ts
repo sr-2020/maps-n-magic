@@ -7,6 +7,7 @@ import morganLogger from 'morgan';
 import shortid from 'shortid';
 import cors from 'cors';
 import * as core from 'express-serve-static-core';
+import EventSource from "eventsource";
 
 import { winstonLogger } from 'sr2020-mm-server-event-engine';
 import { makeGameModel } from "./gameModel";
@@ -138,3 +139,8 @@ app.use((err, req, res, next) => {
 // export const app = app;
 
 // module.exports = app;
+
+var es = new EventSource('http://localhost:3001/playerDataSse')
+es.addEventListener('test', function (e) {
+  console.log(e.data)
+})

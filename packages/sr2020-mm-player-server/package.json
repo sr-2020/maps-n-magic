@@ -13,6 +13,7 @@
   "dependencies": {
     "@types/cookie-parser": "^1.4.2",
     "@types/cors": "^2.8.10",
+    "@types/eventsource": "^1.1.5",
     "@types/express-serve-static-core": "^4.17.19",
     "@types/express-ws": "^3.0.0",
     "@types/isomorphic-fetch": "0.0.35",
@@ -26,6 +27,7 @@
     "dotenv": "^8.2.0",
     "dropbox": "^4.0.30",
     "esm": "^3.2.25",
+    "eventsource": "^1.1.0",
     "express": "~4.17.1",
     "express-ws": "^4.0.0",
     "http-errors": "~1.8.0",

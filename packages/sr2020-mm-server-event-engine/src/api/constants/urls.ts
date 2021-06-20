@@ -15,7 +15,7 @@ interface Urls {
 let urlInstance: Urls | null = null;
 
 export function urls(): Urls {
-  if (urls === null) {
+  if (urlInstance === null) {
     const POSITION_URL = process.env.POSITION_URL;
     const GATEWAY_URL = process.env.GATEWAY_URL;
     const BILLING_URL = process.env.BILLING_URL;
