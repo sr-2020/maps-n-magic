@@ -22,7 +22,7 @@ import { parseUserData } from './routes/parseUserData';
 import { usersRouter } from './routes/users';
 import { postUserPosition } from './routes/postUserPosition';
 import { WebSocketWrapper } from './webSocketWrapper';
-import { ELocationRecordsChanged2, ESetSpirits, ESpiritsChanged, SetLocationRecords } from 'sr2020-mm-event-engine';
+import { ELocationRecordsChanged2, ESetSpirits, ESpiritsChanged, EUserRecordsChanged, SetLocationRecords, SetUserRecords } from 'sr2020-mm-event-engine';
 import { MM_MASTER_SERVER_URL } from "./constants";
 import { SsePlayerDataSender } from './ssePlayerDataSender';
 // const express = require('express');
@@ -157,6 +157,9 @@ const isSpiritsChanged = (obj: any): obj is ESpiritsChanged => {
 const isLocationRecordsChanged = (obj: any): obj is ELocationRecordsChanged2 => {
   return obj.type === 'locationRecordsChanged2';
 }
+const isUserRecordsChanged = (obj: any): obj is EUserRecordsChanged => {
+  return obj.type === 'userRecordsChanged';
+}
 
 const es = new EventSource(MM_MASTER_SERVER_URL + '/playerDataSse');
 es.addEventListener('message', function (e) {
@@ -175,10 +178,18 @@ es.addEventListener('message', function (e) {
         ...parsedData,
         type: 'setLocationRecords',
       });
+    } else if(isUserRecordsChanged(parsedData)) {
+      winstonLogger.info(parsedData.type);
+      gameModel.execute2<SetUserRecords>({
+        ...parsedData,
+        type: 'setUserRecords',
+      });
     } else {
       winstonLogger.warn(`Unexpected sse message data ${JSON.stringify(e)}`);
     }
   } catch (err) {
-    winstonLogger.error(`Error on processing sse message: ${JSON.stringify(err)}, mesaage ${JSON.stringify(e)}`)
+    // console.error(err);
+    winstonLogger.error('error', err);
+    winstonLogger.error(`Error on processing sse message: ${JSON.stringify(err)}, message ${JSON.stringify(e)}`)
   }
 })

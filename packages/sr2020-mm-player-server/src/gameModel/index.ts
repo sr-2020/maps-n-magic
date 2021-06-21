@@ -3,7 +3,8 @@ import {
   GameModel, 
   LocationRecordService,
   SpiritService,
-  StubEventProcessor
+  StubEventProcessor,
+  UserRecordService
 } from "sr2020-mm-event-engine";
 
 import { 
@@ -13,6 +14,7 @@ import {
 const services = [
   LocationRecordService,
   SpiritService,
+  UserRecordService,
 ];
 
 export function makeGameModel(): {
