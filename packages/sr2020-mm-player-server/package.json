@@ -4,8 +4,8 @@
   "private": true,
   "scripts": {
     "start": "node -r esm -r dotenv/config --inspect ./dist/bin/www",
-    "start:server": "node -r esm -r dotenv/config ./dist/bin/www",
-    "watch:server": "nodemon --inspect -r esm -r dotenv/config ./dist/bin/www",
+    "start:player-server": "node -r esm -r dotenv/config ./dist/bin/www",
+    "watch:player-server": "nodemon --inspect -r esm -r dotenv/config ./dist/bin/www",
     "ts:build": "tsc --build",
     "ts:clean": "tsc --build --clean",
     "ts:watch": "tsc  --build --watch --preserveWatchOutput"
