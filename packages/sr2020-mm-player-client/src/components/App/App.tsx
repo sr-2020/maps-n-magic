@@ -21,6 +21,11 @@ interface AppProps extends WithLoginState {
   loginManager: LoginManager;
 }
 
+const es = new EventSource('http://localhost:3002/singlePlayerDataSse');
+es.addEventListener('message', function (e) {
+  console.log(e);
+});
+
 export function App(props: AppProps) {
   const { loginState, loginManager } = props;
 

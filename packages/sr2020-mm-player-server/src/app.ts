@@ -24,6 +24,7 @@ import { postUserPosition } from './routes/postUserPosition';
 import { WebSocketWrapper } from './webSocketWrapper';
 import { ELocationRecordsChanged2, ESetSpirits, ESpiritsChanged, SetLocationRecords } from 'sr2020-mm-event-engine';
 import { MM_MASTER_SERVER_URL } from "./constants";
+import { SsePlayerDataSender } from './ssePlayerDataSender';
 // const express = require('express');
 // const expressWs = require('express-ws');
 // const path = require('path');
@@ -95,7 +96,16 @@ app.use(cookieParser());
 app.get('/ping', pingRouter);
 // app.use('/api/*', loginRouter);
 app.use(loginRouter);
+
+app.get('/singlePlayerDataSse', (req, res, next) => {
+  winstonLogger.info('Processing playerDataSse connection');
+  new SsePlayerDataSender(req, res, next, winstonLogger, gameModel);
+});
+
 app.use(parseUserData);
+
+
+
 // app.use('/api/login', loginRouter);
 // app.post('/postUserPosition/:characterId', postUserPosition);
 // app.all('/characterStates', characterStatesRouter);
