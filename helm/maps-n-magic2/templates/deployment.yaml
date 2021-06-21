@@ -81,3 +81,8 @@ spec:
                 configMapKeyRef:
                   name: {{ .Release.Name }}-configmap
                   key: MODEL_ENGINE_URL
+            - name: JWT_SECRET
+              valueFrom:
+                secretKeyRef:
+                  name: web2
+                  key: jwtSecret
