@@ -81,6 +81,7 @@ export class SpiritService extends AbstractService<SpiritServiceContract> {
   }
 
   setSpirits({ spirits }: ESetSpirits ): void {
+    // this.logger.info('setSpirits');
     this.setData({ spirits });
     // const hasChanges =
     // if (!hasChanges) {

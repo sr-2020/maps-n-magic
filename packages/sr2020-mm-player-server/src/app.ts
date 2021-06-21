@@ -22,7 +22,8 @@ import { parseUserData } from './routes/parseUserData';
 import { usersRouter } from './routes/users';
 import { postUserPosition } from './routes/postUserPosition';
 import { WebSocketWrapper } from './webSocketWrapper';
-
+import { ELocationRecordsChanged2, ESetSpirits, ESpiritsChanged, SetLocationRecords } from 'sr2020-mm-event-engine';
+import { MM_MASTER_SERVER_URL } from "./constants";
 // const express = require('express');
 // const expressWs = require('express-ws');
 // const path = require('path');
@@ -140,7 +141,34 @@ app.use((err, req, res, next) => {
 
 // module.exports = app;
 
-var es = new EventSource('http://localhost:3001/playerDataSse')
-es.addEventListener('test', function (e) {
-  console.log(e.data)
+const isSpiritsChanged = (obj: any): obj is ESpiritsChanged => {
+  return obj.type === 'spiritsChanged';
+}
+const isLocationRecordsChanged = (obj: any): obj is ELocationRecordsChanged2 => {
+  return obj.type === 'locationRecordsChanged2';
+}
+
+const es = new EventSource(MM_MASTER_SERVER_URL + '/playerDataSse');
+es.addEventListener('message', function (e) {
+  try {
+    const { data }: { data: string } = e;
+    const parsedData: unknown = JSON.parse(data);
+    if (isSpiritsChanged(parsedData)) {
+      winstonLogger.info(parsedData.type);
+      gameModel.emit2<ESetSpirits>({
+        ...parsedData,
+        type: 'setSpirits',
+      });
+    } else if(isLocationRecordsChanged(parsedData)) {
+      winstonLogger.info(parsedData.type);
+      gameModel.execute2<SetLocationRecords>({
+        ...parsedData,
+        type: 'setLocationRecords',
+      });
+    } else {
+      winstonLogger.warn(`Unexpected sse message data ${JSON.stringify(e)}`);
+    }
+  } catch (err) {
+    winstonLogger.error(`Error on processing sse message: ${JSON.stringify(err)}, mesaage ${JSON.stringify(e)}`)
+  }
 })

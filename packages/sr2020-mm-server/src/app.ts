@@ -18,8 +18,7 @@ import { pingRouter } from './routes/ping';
 import { usersRouter } from './routes/users';
 import { postUserPosition } from './routes/postUserPosition';
 import { WebSocketWrapper } from './webSocketWrapper';
-
-import SSE from "./express-sse-ts";
+import { SseDataSender } from "./sseDataSender";
 
 // const express = require('express');
 // const expressWs = require('express-ws');
@@ -65,7 +64,6 @@ const { gameModel, gameServer } = makeGameModel();
 
 export const app: core.Express = Express();
 const wsApp = ExpressWs(app);
-const sse = new SSE();
 
 // https://medium.com/@alexishevia/using-cors-in-express-cac7e29b005b
 app.use(cors());
@@ -93,19 +91,11 @@ app.get('/file/:name', fileRouter);
 app.get('/ping', pingRouter);
 app.post('/postUserPosition/:characterId', postUserPosition);
 
-app.get('/playerDataSse', sse.init);
+app.get('/playerDataSse', (req, res, next) => {
+  winstonLogger.info('Processing playerDataSse connection');
+  new SseDataSender(req, res, next, winstonLogger, gameModel);
+});
 
-let counter = 0;
-setInterval(() => {
-  counter++;
-  winstonLogger.info(`SSE Message #${counter}`)
-  // Sends message to all connected clients!
-  // sse.send(`Message #${counter}`);
-  sse.send(`Message #${counter}`, 'test');
-
-  // All options for sending a message:
-  // sse.send('data: string', 'eventName?: string', 'id?: string | number | undefined')
-}, 1000);
 // app.all('/characterStates', characterStatesRouter);
 
 wsApp.app.ws('/ws', (ws, req, next) => {

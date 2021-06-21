@@ -93,6 +93,7 @@ export class LocationRecordService extends AbstractService<LocationRecordService
   }
 
   setLocationRecords({ locationRecords }: SetLocationRecords): void {
+    // this.logger.info('setLocationRecords');
     this.setData({ locationRecords });
     this.emit2({
       locationRecords,
