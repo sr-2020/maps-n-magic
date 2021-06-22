@@ -1,6 +1,6 @@
 import { Router } from 'express';
 import * as jwt from "jsonwebtoken";
-import { getUserTokenData } from '../api';
+import { getUserTokenData, getCharacterModelData } from '../api';
 import { JWT_SECRET } from '../constants';
 
 import { 
@@ -50,6 +50,10 @@ router.post('/api/login', async (req, res) => {
         res.status(500).send(`parsedToken verification failed ${JSON.stringify(parsedToken)} ${JSON.stringify(validateTokenData.errors)}`);
         return;
       }
+
+      // const data = await getCharacterModelData(authRequest.username);
+      // console.log(data);
+
       res.cookie('mm_token', api_key, { httpOnly: true });
       const { body } = req;
       console.log(body);
