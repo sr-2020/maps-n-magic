@@ -4,16 +4,21 @@ import './index.css';
 // import './i18n';
 // import { App } from './components/App';
 import { App } from './components/App';
+import { AuthWrapper } from "./components/AuthWrapper";
 import { LoginManager } from './utils';
+import { ErrorBoundry } from "./components/ErrorBoundry";
 
 const loginManager = new LoginManager();
 // import reportWebVitals from './reportWebVitals';
 
 ReactDOM.render(
-  // <React.StrictMode>
-    <App loginManager={loginManager} />
-  // </React.StrictMode>
-  ,
+  <React.StrictMode>
+    <ErrorBoundry>
+      <AuthWrapper loginManager={loginManager}>
+        <App loginManager={loginManager} />
+      </AuthWrapper>
+    </ErrorBoundry>
+  </React.StrictMode>,
   document.getElementById('root')
 );
 
