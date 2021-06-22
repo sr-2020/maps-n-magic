@@ -11,10 +11,13 @@ import {
   winstonLogger as rootLogger 
 } from "sr2020-mm-server-event-engine";
 
+import { LocationDataService } from "./LocationDataService";
+
 const services = [
   LocationRecordService,
   SpiritService,
   UserRecordService,
+  LocationDataService,
 ];
 
 export function makeGameModel(): {
