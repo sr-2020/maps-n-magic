@@ -14,7 +14,13 @@ import {
   ELocationRecordsChanged2,
   ESpiritsChanged,
   isGeoLocation,
-  SpiritStatus
+  SpiritStatus,
+  LocationView,
+  SpiritView,
+  AggregatedLocationView,
+  Req,
+  Res,
+  GetAggLocationView
 } from 'sr2020-mm-event-engine';
 
 // export type LocationDataEmitEvents = ELocationDataTriggered;
@@ -23,7 +29,7 @@ export type LocationDataListenEvents =
   | ESpiritsChanged;
 
 export interface LocationDataServiceContract extends ServiceContract {
-  Request: never;
+  Request: GetAggLocationView;
   Action: never;
   // EmitEvent: LocationDataEmitEvents;
   EmitEvent: never;
@@ -36,7 +42,7 @@ const metadata: ServiceContractTypes<LocationDataServiceContract> = {
   actions: [
     // 'onCharHealthUpdateReceived'
   ],
-  requests: [],
+  requests: ['aggLocationView'],
   emitEvents: [
     // 'massacreTriggered'
   ],
@@ -47,27 +53,11 @@ const metadata: ServiceContractTypes<LocationDataServiceContract> = {
 
 const NEUTRAL_MANA_LEVEL = 4;
 
-interface LocationView {
-  id: number;
-  label: string;
-  manaLevel: number;
-}
-
-interface SpiritView {
-  id: number;
-  name: string;
-  fraction: number;
-  locationId: number;
-}
-
-interface AggregatedLocationView extends LocationView {
-  spiritViews: SpiritView[];
-}
-
 export class LocationDataService extends AbstractService<LocationDataServiceContract> {
   locationViews: LocationView[] = [];
   spiritViews: SpiritView[] = [];
   aggregatedLocationViews: AggregatedLocationView[] = [];
+  aggregatedLocationViewIndex: Record<number, AggregatedLocationView> = {};
 
   constructor(gameModel: GameModel, logger: GMLogger) {
     super(gameModel, logger);
@@ -124,6 +114,10 @@ export class LocationDataService extends AbstractService<LocationDataServiceCont
     this.updateAggregatedLocationViews();
   }
 
+  getAggLocationView ({ id }: Req<GetAggLocationView>): Res<GetAggLocationView> {
+    return this.aggregatedLocationViewIndex[id];
+  }
+
   updateAggregatedLocationViews() {
     const spiritViewIndex = this.spiritViews.reduce((acc: Record<number, SpiritView[]>, spiritView) => {
       const { locationId } = spiritView;
@@ -141,7 +135,14 @@ export class LocationDataService extends AbstractService<LocationDataServiceCont
       }
     });
 
-    this.logger.info('aggregatedLocationViews', aggregatedLocationViews);
+    // this.logger.info('aggregatedLocationViews', aggregatedLocationViews);
     this.aggregatedLocationViews = aggregatedLocationViews;
+
+    this.aggregatedLocationViewIndex = this.aggregatedLocationViews.reduce(
+      (acc: Record<number, AggregatedLocationView>, loc) => {
+        acc[loc.id] = loc;
+        return acc;
+      }, {}
+    );
   }
 }

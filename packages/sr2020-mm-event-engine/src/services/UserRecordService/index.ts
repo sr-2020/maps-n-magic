@@ -99,6 +99,8 @@ export class UserRecordService extends AbstractService<UserRecordServiceContract
   }
 
   getUserRecord({ id }: Req<GetUserRecord>): Res<GetUserRecord> {
+    // this.logger.info(this.userRecords);
+    // this.logger.info(this.userRecords.map(R.prop('id')));
     const record: UserRecord | undefined = this.userRecords.find((br) => br.id === id);
     return R.clone(record);
   }

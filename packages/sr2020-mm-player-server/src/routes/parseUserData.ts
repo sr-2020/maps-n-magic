@@ -29,11 +29,4 @@ router.use((req1, res, next) => {
   }
 });
 
-router.use('/api/secureEndpoint', (req, res, next) => {
-  res.json({
-    message: 'Secure endpoint answer',
-    date: new Date(),
-  });
-});
-
 export const parseUserData = router;

@@ -47,7 +47,7 @@ const tokenRequestBodySchema: JSONSchemaType<TokenRequestBody> = {
 
 export const validateTokenRequestBody = ajv.compile(tokenRequestBodySchema);
 
-interface TokenData {
+export interface TokenData {
   sub: string;
   auth: string;
   modelId: number;

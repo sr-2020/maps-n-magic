@@ -9,6 +9,7 @@ export * from "./spirits";
 export * from "./misc";
 export * from "./beacons";
 export * from "./locations";
+export * from "./characterServer";
 
 import { LifeStylesValues } from "./enums";
 

@@ -2,13 +2,14 @@ import fetch from 'isomorphic-fetch';
 
 import { typelessValidateEntityFunction } from "../types";
 
+const LIMIT = 500;
+
 export const gettable = (state: {
   url: string, 
   validateGetEntity: typelessValidateEntityFunction
 }) => ({
   async get() {
-    // console.log('gettable url', `${state.url}?limit=200`);
-    const response = await fetch(`${state.url}?limit=200`);
+    const response = await fetch(`${state.url}?limit=` + LIMIT);
     if (!response.ok) {
       const text = await response.text();
       // throw new Error(`Network response was not ok ${text}`);
@@ -16,6 +17,10 @@ export const gettable = (state: {
     }
 
     const data: any[] = await response.json();
+
+    if (data.length === LIMIT) {
+      console.warn(`GET limit ${LIMIT} reached by url ${state.url}`);
+    }
 
     data.forEach(el => {
       if (!state.validateGetEntity(el)) {

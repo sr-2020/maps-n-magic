@@ -25,6 +25,9 @@ import { WebSocketWrapper } from './webSocketWrapper';
 import { ELocationRecordsChanged2, ESetSpirits, ESpiritsChanged, EUserRecordsChanged, SetLocationRecords, SetUserRecords } from 'sr2020-mm-event-engine';
 import { MM_MASTER_SERVER_URL } from "./constants";
 import { SsePlayerDataSender } from './ssePlayerDataSender';
+import { logoutRouter } from "./routes/logout";
+import { AuthorizedRequest } from './types';
+
 // const express = require('express');
 // const expressWs = require('express-ws');
 // const path = require('path');
@@ -71,7 +74,34 @@ export const app: core.Express = Express();
 const wsApp = ExpressWs(app);
 
 // https://medium.com/@alexishevia/using-cors-in-express-cac7e29b005b
-app.use(cors());
+
+const allowedOrigins = [
+  // webpack local server
+  'http://localhost:3000', 
+  'http://localhost:3002',
+  'http://localhost:3002/',
+];
+
+app.use(cors({
+  credentials: true,
+  origin: function(origin, callback){
+    // allow requests with no origin 
+    // (like mobile apps or curl requests)
+    if(!origin) return callback(null, true);
+    if(allowedOrigins.indexOf(origin) === -1){
+      var msg = 'The CORS policy for this site does not ' +
+                'allow access from the specified Origin. ' +
+                `allowed ${JSON.stringify(allowedOrigins)}, origin ${origin}`;
+      return callback(new Error(msg), false);
+    }
+    return callback(null, true);
+  }
+}));
+
+// app.use(cors());
+// app.use(cors({
+//   credentials: true
+// }));
 
 // app.use(cors({
 //   origin: 'http://yourapp.com'
@@ -97,13 +127,15 @@ app.get('/ping', pingRouter);
 // app.use('/api/*', loginRouter);
 app.use(loginRouter);
 
-app.get('/singlePlayerDataSse', (req, res, next) => {
-  winstonLogger.info('Processing playerDataSse connection');
-  new SsePlayerDataSender(req, res, next, winstonLogger, gameModel);
-});
-
 app.use(parseUserData);
 
+app.use(logoutRouter);
+
+app.get('/singlePlayerDataSse', (req, res, next) => {
+  winstonLogger.info('Processing playerDataSse connection');
+  const { userData } = req as AuthorizedRequest;
+  new SsePlayerDataSender(req, res, next, winstonLogger, gameModel, userData);
+});
 
 
 // app.use('/api/login', loginRouter);
@@ -136,10 +168,12 @@ app.use((req, res, next) => {
 
 // error handler
 // @ts-ignore
-app.use((err, req, res, next) => {
+app.use((err, req: Request, res, next) => {
   // set locals, only providing error in development
   res.locals.message = err.message;
+  // @ts-ignore
   res.locals.error = req.app.get('env') === 'development' ? err : {};
+  winstonLogger.info('error on request', req.headers, err.toString());
 
   // render the error page
   res.status(err.status || 500);

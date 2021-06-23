@@ -13,21 +13,16 @@ import { ErrorBoundry } from "../ErrorBoundry";
 
 import { LoginManager } from "../../utils";
 import { LoginState } from "../../types";
-import { WithLoginState } from '../../hocs';
+import { WithLoginState, WithAggregatedLocationData } from '../../hocs';
 import { LoginPage } from '../LoginPage';
 import { logoutUser, callSecureApi } from "../../api";
 
-interface AppProps extends WithLoginState {
+interface AppProps extends WithLoginState, WithAggregatedLocationData {
   loginManager: LoginManager;
 }
 
-const es = new EventSource('http://localhost:3002/singlePlayerDataSse');
-es.addEventListener('message', function (e) {
-  console.log(e);
-});
-
 export function App(props: AppProps) {
-  const { loginState, loginManager } = props;
+  const { loginState, loginManager, locationData } = props;
 
   const onLogout = async () => {
     // event.preventDefault();
@@ -52,6 +47,12 @@ export function App(props: AppProps) {
           >
             Выйти
           </Button>
+          {
+            locationData === null && <span>Локация неизвестна</span>
+          }
+          {
+            locationData !== null && <span>{JSON.stringify(locationData)}</span>
+          }
           {/* <BrowserRouter>
             <Switch>
               <Route path="/dashboard">

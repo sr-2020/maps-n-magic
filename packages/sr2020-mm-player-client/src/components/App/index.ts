@@ -1,7 +1,7 @@
 import { pipe } from 'ramda';
-import { withLoginState } from '../../hocs';
+import { withLoginState, withAggregatedLocationData } from '../../hocs';
 import { App } from './App';
 
-const tmp = pipe(withLoginState)(App);
+const tmp = pipe(withLoginState, withAggregatedLocationData)(App);
 
 export { tmp as App };
