@@ -60,9 +60,14 @@ interface SpiritView {
   locationId: number;
 }
 
+interface AggregatedLocationView extends LocationView {
+  spiritViews: SpiritView[];
+}
+
 export class LocationDataService extends AbstractService<LocationDataServiceContract> {
   locationViews: LocationView[] = [];
   spiritViews: SpiritView[] = [];
+  aggregatedLocationViews: AggregatedLocationView[] = [];
 
   constructor(gameModel: GameModel, logger: GMLogger) {
     super(gameModel, logger);
@@ -92,6 +97,7 @@ export class LocationDataService extends AbstractService<LocationDataServiceCont
     }));
     // this.logger.info('onLocationRecordsChanged', locationViews);
     this.locationViews = locationViews;
+    this.updateAggregatedLocationViews();
   }
 
   onSpiritsChanged(data: ESpiritsChanged): void {
@@ -115,5 +121,27 @@ export class LocationDataService extends AbstractService<LocationDataServiceCont
     
     // this.logger.info('onSpiritsChanged', spiritViews);
     this.spiritViews = spiritViews;
+    this.updateAggregatedLocationViews();
+  }
+
+  updateAggregatedLocationViews() {
+    const spiritViewIndex = this.spiritViews.reduce((acc: Record<number, SpiritView[]>, spiritView) => {
+      const { locationId } = spiritView;
+      if (acc[locationId] === undefined) {
+        acc[locationId] = [];
+      }
+      acc[locationId].push(spiritView);
+      return acc;
+    }, {});
+
+    const aggregatedLocationViews: AggregatedLocationView[] = this.locationViews.map(locationView => {
+      return {
+        ...locationView,
+        spiritViews: spiritViewIndex[locationView.id] || []
+      }
+    });
+
+    this.logger.info('aggregatedLocationViews', aggregatedLocationViews);
+    this.aggregatedLocationViews = aggregatedLocationViews;
   }
 }
