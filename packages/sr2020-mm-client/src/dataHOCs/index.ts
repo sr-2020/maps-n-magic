@@ -75,7 +75,7 @@ export interface WithSpiritRoutes {
   spiritRoutes: SpiritRoute[] | null;
 }
 export interface WithCharacterId {
-  characterId: number | null;
+  trackedCharacterId: number | null;
 }
 export interface WithEnableSpiritMovement {
   enableSpiritMovement: boolean;
@@ -174,9 +174,9 @@ export const withEnableSpiritMovement = basicDataHOC<true, EEnableSpiritMovement
   true,
 );
 
-export const withCharacterId = basicDataHOC<null, ETrackedCharacterIdChanged>(
+export const withTrackedCharacterId = basicDataHOC<null, ETrackedCharacterIdChanged>(
   'trackedCharacterIdChanged',
-  'characterId',
+  'trackedCharacterId',
   null,
 );
 

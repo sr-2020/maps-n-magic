@@ -475,8 +475,10 @@ export class WsDataBinding extends AbstractEventProcessor {
     }
 
     if (data.type === 'characterLocationChanged') {
+      const { characterId, locationId } = data;
       this.gameModel.execute2<TrackedCharacterLocationChanged>({
-        ...data,
+        trackedCharacterId: characterId,
+        locationId,
         type: "trackedCharacterLocationChanged"
       });
       return;

@@ -8,7 +8,9 @@ import {
   Typed,
   ServiceContract,
   ServiceContractTypes,
-  ELocationRecordsChanged2
+  ELocationRecordsChanged2,
+  GetLocationRecord,
+  GetUserRecord
 } from 'sr2020-mm-event-engine';
 
 // requests
@@ -19,24 +21,24 @@ export type GetTrackedCharacterLocationId = (arg: TypeOnly<'trackedCharacterLoca
 // actions
 
 export type SetTrackedCharacterId = Typed<'setTrackedCharacterId', {
-  characterId: number | null;
+  trackedCharacterId: number | null;
 }>;
 export type TrackedCharacterLocationChanged = Typed<'trackedCharacterLocationChanged', {
-  characterId: number | null;
+  trackedCharacterId: number | null;
   locationId: number | null;
 }>;
 
 // events
 
 export type ETrackedCharacterIdChanged = Typed<'trackedCharacterIdChanged', {
-  characterId: number | null;
+  trackedCharacterId: number | null;
 }>;
 export type ETrackedCharacterLocationChanged = Typed<'trackedCharacterLocationChanged', {
-  characterId: number | null;
-  characterLocationId: number | null;
+  trackedCharacterId: number | null;
+  trackedCharacterLocationId: number | null;
 }>;
 export type EEmitTrackedCharacterLocationChanged = Typed<'emitTrackedCharacterLocationChanged', {
-  characterId: number;
+  trackedCharacterId: number;
 }>;
 
 export type TrackedCharacterEvents = 
@@ -53,7 +55,10 @@ export interface TrackedCharacterServiceContract extends ServiceContract {
   EmitEvent: TrackedCharacterEvents;
   ListenEvent: ELocationRecordsChanged2;
   NeedAction: never;
-  NeedRequest: never;
+  NeedRequest: 
+    | GetLocationRecord
+    | GetUserRecord
+  ;
 }
 
 export const trackedCharacterMetadata: ServiceContractTypes<TrackedCharacterServiceContract> = {
@@ -76,6 +81,6 @@ export const trackedCharacterMetadata: ServiceContractTypes<TrackedCharacterServ
   listenEvents: [
     'locationRecordsChanged2',
   ],
-  needRequests: [],
+  needRequests: ['locationRecord', 'userRecord'],
   needActions: []
 };

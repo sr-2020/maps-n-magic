@@ -1,7 +1,7 @@
 import * as R from 'ramda';
 import React, { FormEvent, MouseEvent } from 'react';
 import './CharacterWatcher.css';
-import { WithCharacterId } from '../../dataHOCs';
+import { WithCharacterId, WithCharacterPosition, WithUserRecords } from '../../dataHOCs';
 import Form from 'react-bootstrap/Form';
 import Button from 'react-bootstrap/Button';
 
@@ -11,18 +11,15 @@ import { SetTrackedCharacterId } from "sr2020-mm-client-event-engine";
 
 const WATCH_CHARACTER_HISTORY_KEY = 'watchCharacterHistory';
 
-interface CharacterWatcherProps extends WithCharacterId {
-  // characterId: number;
-  userRecords: UserRecord[];
+interface CharacterWatcherProps extends WithCharacterId, WithCharacterPosition, WithUserRecords {
   gameModel: GameModel;
-  children: any;
-  characterLocationId: number;
+  children: React.ReactNode;
 }
 
 // eslint-disable-next-line max-lines-per-function
 export function CharacterWatcher(props: CharacterWatcherProps) {
   const {
-    characterId, userRecords, gameModel, children, characterLocationId,
+    trackedCharacterId, userRecords, gameModel, children, trackedCharacterLocationId,
   } = props;
 
   const userIds = R.pluck('id', userRecords);
@@ -37,7 +34,7 @@ export function CharacterWatcher(props: CharacterWatcherProps) {
   function onWatchCancel() {
     gameModel.execute2<SetTrackedCharacterId>({
       type: 'setTrackedCharacterId',
-      characterId: null,
+      trackedCharacterId: null,
     });
   }
 
@@ -46,7 +43,7 @@ export function CharacterWatcher(props: CharacterWatcherProps) {
     const { characterId } = e.currentTarget.dataset;
     gameModel.execute2<SetTrackedCharacterId>({
       type: 'setTrackedCharacterId',
-      characterId: Number(characterId),
+      trackedCharacterId: Number(characterId),
     });
   }
 
@@ -62,7 +59,7 @@ export function CharacterWatcher(props: CharacterWatcherProps) {
 
     gameModel.execute2<SetTrackedCharacterId>({
       type: 'setTrackedCharacterId',
-      characterId: characterId2,
+      trackedCharacterId: characterId2,
     });
     if (!watchCharacterHistory.includes(characterId2)) {
       watchCharacterHistory.push(characterId2);
@@ -79,7 +76,7 @@ export function CharacterWatcher(props: CharacterWatcherProps) {
     <>
 
       {
-        !characterId
+        !trackedCharacterId
         && (
           <>
             <Form
@@ -130,14 +127,14 @@ export function CharacterWatcher(props: CharacterWatcherProps) {
       }
 
       {
-        characterId
+        trackedCharacterId
       && (
         <>
           {children}
           <div className="tw-fixed tw-bottom-0 tw-left-0" style={{ zIndex: 10000 }}>
-            {`Персонаж ${characterId}`}
+            {`Персонаж ${trackedCharacterId}`}
             <br />
-            {`Локация ${characterLocationId || 'N/A'}`}
+            {`Локация ${trackedCharacterLocationId || 'N/A'}`}
             <br />
             <Button variant="primary" onClick={onWatchCancel}>
               Остановить отслеживание

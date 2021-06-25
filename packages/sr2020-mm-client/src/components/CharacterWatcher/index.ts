@@ -1,8 +1,8 @@
 import { pipe } from 'ramda';
-import { withCharacterId, withUserRecords } from '../../dataHOCs';
+import { withTrackedCharacterId, withUserRecords } from '../../dataHOCs';
 import { withCharacterPosition } from '../../dataHOCs';
 import { CharacterWatcher } from './CharacterWatcher';
 
-const tmp = pipe(withCharacterId, withUserRecords, withCharacterPosition)(CharacterWatcher);
+const tmp = pipe(withTrackedCharacterId, withUserRecords, withCharacterPosition)(CharacterWatcher);
 
 export { tmp as CharacterWatcher };

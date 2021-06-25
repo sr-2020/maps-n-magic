@@ -79,10 +79,10 @@ export class CharacterLocationLayer extends Component<
 
   render(): null {
     const {
-      locationRecords, characterLocationId,
+      locationRecords, trackedCharacterLocationId,
     } = this.props;
-    if (characterLocationId && locationRecords) {
-      const location = locationRecords.find((loc) => loc.id === characterLocationId);
+    if (trackedCharacterLocationId && locationRecords) {
+      const location = locationRecords.find((loc) => loc.id === trackedCharacterLocationId);
       // @ts-ignore
       if (location?.polygon && !R.equals(location.polygon, {})) {
         if (this.marker) {

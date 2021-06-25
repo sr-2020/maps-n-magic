@@ -3,11 +3,11 @@ import { GameModel } from "sr2020-mm-event-engine";
 import { ETrackedCharacterLocationChanged } from "sr2020-mm-client-event-engine";
 
 const changeEventName = 'trackedCharacterLocationChanged';
-const dataName = 'characterLocationId';
-const initState: ETrackedCharacterLocationChanged["characterLocationId"] = null;
+const dataName = 'trackedCharacterLocationId';
+const initState: ETrackedCharacterLocationChanged["trackedCharacterLocationId"] = null;
 
 export interface WithCharacterPosition {
-  characterLocationId: number;
+  trackedCharacterLocationId: number | null;
 }
 
 // export const withCharacterPosition = (Wrapped: any) => (props: object & {gameModel: GameModel}) => {
