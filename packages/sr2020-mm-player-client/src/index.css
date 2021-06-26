@@ -5,6 +5,19 @@ body {
     sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  background-color: rgba(156, 163, 175, 1);
+}
+
+@media (min-width: 361px) {
+  #root {
+    max-width: 360px;
+    margin: 0 auto;
+  }
+}
+
+#root {
+  min-height: 100vh;
+  background-color: white;
 }
 
 code {

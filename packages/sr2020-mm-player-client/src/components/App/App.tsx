@@ -1,6 +1,6 @@
 import React, { Component, useState, useEffect, PropsWithChildren } from 'react';
 import logo from './logo.svg';
-import 'bootstrap/dist/css/bootstrap.min.css';
+
 import './App.css';
 
 import DocumentTitle from 'react-document-title';
