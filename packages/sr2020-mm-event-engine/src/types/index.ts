@@ -10,6 +10,8 @@ export * from "./misc";
 export * from "./beacons";
 export * from "./locations";
 export * from "./characterServer";
+export * from "./qr";
+export * from "./qrType";
 
 import { LifeStylesValues } from "./enums";
 
@@ -166,3 +168,12 @@ export interface SoundStageData {
   rotationVolume: number;
 }
 
+export interface ErrorResponse {
+  errorTitle: string;
+  errorSubtitle: string;
+  // error: string;
+}
+
+export function isErrorResponse(data: any): data is ErrorResponse {
+  return typeof data.errorTitle === 'string';
+}

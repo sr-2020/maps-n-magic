@@ -25,6 +25,7 @@ import { WebSocketWrapper } from './webSocketWrapper';
 import { ELocationRecordsChanged2, ESetSpirits, ESpiritsChanged, EUserRecordsChanged, SetLocationRecords, SetUserRecords } from 'sr2020-mm-event-engine';
 import { MM_MASTER_SERVER_URL } from "./constants";
 import { SsePlayerDataSender } from './ssePlayerDataSender';
+import { spiritRouter } from "./routes/spirits";
 import { logoutRouter } from "./routes/logout";
 import { AuthorizedRequest } from './types';
 
@@ -128,6 +129,8 @@ app.get('/ping', pingRouter);
 app.use(loginRouter);
 
 app.use(parseUserData);
+
+app.use(spiritRouter);
 
 app.use(logoutRouter);
 

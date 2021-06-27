@@ -28,6 +28,7 @@ import { LoginPage } from '../LoginPage';
 import { logoutUser, callSecureApi } from "../../api";
 import { SpiritList } from "../SpiritList";
 import { QrTest } from "../QrTest";
+import { SpiritPage } from "../SpiritPage";
 
 interface AppProps extends WithLoginState, WithAggregatedLocationData {
   loginManager: LoginManager;
@@ -153,14 +154,14 @@ export function App(props: AppProps) {
               />
             </Route>
             <Route path="/scanSpirit">
-              scan spirit
+              <SpiritPage />
             </Route>
             <Route path="/qrTest">
               <QrTest />
             </Route>
             <Route path="/">
               {/* <Redirect to="/spirits" /> */}
-              <Redirect to="/qrTest" />
+              <Redirect to="/scanSpirit" />
             </Route>
           </Switch>
         </div>

@@ -1,3 +1,5 @@
+import { ErrorResponse, SpiritJarQr } from "sr2020-mm-event-engine";
+
 export const isLoggedIn = async () => fetch('/api/isLoggedIn');
 
 export async function loginUser(credentials: {
@@ -34,4 +36,11 @@ export async function logoutUser() {
 export async function callSecureApi() {
   const res = await fetch('/api/secureEndpoint', {method: 'POST'});
   return res;
+}
+
+export async function getSpiritDataByQr(spiritJarQrString: string): Promise<ErrorResponse | SpiritJarQr> {
+  const res = await fetch('/api/getSpiritDataByQr?' + new URLSearchParams({
+    spiritJarQrString
+  }));
+  return await res.json();
 }

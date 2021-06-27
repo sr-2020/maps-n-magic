@@ -27,7 +27,7 @@ export function QrTest(props: QrTestProps) {
       <QRScanner
           // callback={showPreview}
           // className={className}
-          className="custom-qr-scanner"
+          // className="custom-qr-scanner"
           timeout={10 * 60000} // 10 minutes
           // cursorClassName={cursorClassName}
           // cursorResolution={cursorResolution || 400}
