@@ -16,14 +16,17 @@ import NavDropdown from "react-bootstrap/NavDropdown";
 import Dropdown from "react-bootstrap/Dropdown";
 import Form from "react-bootstrap/Form";
 
+import { LinkContainer } from 'react-router-bootstrap'
+
 import { ErrorBoundry } from "../ErrorBoundry";
-// import { BrowserRouter, Route, Switch } from 'react-router-dom';
+import { BrowserRouter, Route, Switch, Redirect, NavLink } from 'react-router-dom';
 
 import { LoginManager } from "../../utils";
 import { LoginState } from "../../types";
 import { WithLoginState, WithAggregatedLocationData } from '../../hocs';
 import { LoginPage } from '../LoginPage';
 import { logoutUser, callSecureApi } from "../../api";
+import { SpiritList } from "../SpiritList";
 
 interface AppProps extends WithLoginState, WithAggregatedLocationData {
   loginManager: LoginManager;
@@ -31,6 +34,8 @@ interface AppProps extends WithLoginState, WithAggregatedLocationData {
 
 export function App(props: AppProps) {
   const { loginState, loginManager, locationData } = props;
+  const manageTitle = useState<string>('SR 2020 магия');
+  const [title, setTitle] = manageTitle;
 
   const onLogout = async () => {
     // event.preventDefault();
@@ -39,25 +44,31 @@ export function App(props: AppProps) {
   }
   
   return (
-    <DocumentTitle title="Приложение">
-      {/* <MapDefaultsProvider value={mapDefaults}> */}
+    <DocumentTitle title={title}>
+      <BrowserRouter>
         <div className="App">
           <Navbar collapseOnSelect expand={false} variant="dark" className="tw-bg-green-800">
             <Navbar.Toggle aria-controls="responsive-navbar-nav" />
             <Navbar.Brand className="tw-inline-flex tw-flex-col">
-              <span>Страница</span>
+              <span>{title}</span>
               <span className="tw-text-sm">
               {
                 locationData === null ? "Локация неизвестна" : (locationData.label)
               }
               </span>
             </Navbar.Brand>
-            {/* <div>123</div> */}
             <Navbar.Collapse id="responsive-navbar-nav">
               <Nav className="mr-auto">
-                <Nav.Link href="#features">Духи</Nav.Link>
-                <Nav.Link href="#pricing">Надеть духа</Nav.Link>
-                <Nav.Link href="#pricing">Осмотреть духа</Nav.Link>
+                <LinkContainer to="/spirits">
+                  <Nav.Link>Духи</Nav.Link>
+                </LinkContainer>
+                <LinkContainer to="/scanSpirit">
+                  <Nav.Link>Осмотреть/Надеть духа</Nav.Link>
+                </LinkContainer>
+                {/* <NavLink to="/spirits" className="nav-link">Духи</NavLink>
+                <NavLink to="/scanSpirit" className="nav-link">Осмотреть/Надеть духа</NavLink>
+                <Nav.Link href="#features">Духи</Nav.Link> */}
+                {/* <Nav.Link href="#pricing"> духа</Nav.Link> */}
                 {/* <NavDropdown title="Dropdown" id="collasible-nav-dropdown">
                   <NavDropdown.Item href="#action/3.1">Action</NavDropdown.Item>
                   <NavDropdown.Item href="#action/3.2">Another action</NavDropdown.Item>
@@ -121,33 +132,25 @@ export function App(props: AppProps) {
               </Dropdown.Menu>
             </Dropdown>
           </Navbar>
-          <h1>Application</h1>
-          {/* <BrowserRouter>
-            <Switch>
-              <Route path="/dashboard">
-                <Dashboard />
-              </Route>
-              <Route path="/preferences">
-                <Preferences />
-              </Route>
-            </Switch>
-          </BrowserRouter> */}
-          {/* <header className="App-header">
-            <img src={logo} className="App-logo" alt="logo" />
-            <p>
-              Edit <code>src/App.tsx</code> and save to reload.
-            </p>
-            <a
-              className="App-link"
-              href="https://reactjs.org"
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              Learn React
-            </a>
-          </header> */}
+        {/* <h1>Application</h1>
+        {JSON.stringify(locationData)} */}
+        
+          <Switch>
+            <Route path="/spirits">
+              <SpiritList 
+                setTitle={setTitle}
+                locationData={locationData}
+              />
+            </Route>
+            <Route path="/scanSpirit">
+              scan spirit
+            </Route>
+            <Route path="/">
+              <Redirect to="/spirits" />
+            </Route>
+          </Switch>
         </div>
-      {/* </MapDefaultsProvider> */}
+      </BrowserRouter>
     </DocumentTitle>
   );
 }
