@@ -27,6 +27,7 @@ import { WithLoginState, WithAggregatedLocationData } from '../../hocs';
 import { LoginPage } from '../LoginPage';
 import { logoutUser, callSecureApi } from "../../api";
 import { SpiritList } from "../SpiritList";
+import { QrTest } from "../QrTest";
 
 interface AppProps extends WithLoginState, WithAggregatedLocationData {
   loginManager: LoginManager;
@@ -47,7 +48,13 @@ export function App(props: AppProps) {
     <DocumentTitle title={title}>
       <BrowserRouter>
         <div className="App">
-          <Navbar collapseOnSelect expand={false} variant="dark" className="tw-bg-green-800">
+          <Navbar 
+            collapseOnSelect 
+            expand={false} 
+            variant="dark" 
+            className="tw-bg-green-800"
+            sticky="top"
+          >
             <Navbar.Toggle aria-controls="responsive-navbar-nav" />
             <Navbar.Brand className="tw-inline-flex tw-flex-col">
               <span>{title}</span>
@@ -64,6 +71,9 @@ export function App(props: AppProps) {
                 </LinkContainer>
                 <LinkContainer to="/scanSpirit">
                   <Nav.Link>Осмотреть/Надеть духа</Nav.Link>
+                </LinkContainer>
+                <LinkContainer to="/qrTest">
+                  <Nav.Link>QR тест</Nav.Link>
                 </LinkContainer>
                 {/* <NavLink to="/spirits" className="nav-link">Духи</NavLink>
                 <NavLink to="/scanSpirit" className="nav-link">Осмотреть/Надеть духа</NavLink>
@@ -145,8 +155,12 @@ export function App(props: AppProps) {
             <Route path="/scanSpirit">
               scan spirit
             </Route>
+            <Route path="/qrTest">
+              <QrTest />
+            </Route>
             <Route path="/">
-              <Redirect to="/spirits" />
+              {/* <Redirect to="/spirits" /> */}
+              <Redirect to="/qrTest" />
             </Route>
           </Switch>
         </div>
