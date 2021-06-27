@@ -1,3 +1,7 @@
+.sr2020-right-dropdown.dropdown-toggle::after {
+  display: none;
+}
+
 /* .App {
   text-align: center;
 }
@@ -36,3 +40,5 @@
     transform: rotate(360deg);
   }
 } */
+
+
