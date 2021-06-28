@@ -70,10 +70,11 @@ export const validateCommonQr = ajv.compile(commonQrSchema);
 export interface SpiritJarQr {
   workModel: {
     type: 'spirit_jar',
+    modelId: string;
     data: {
       spiritId: number | string
     } | {
-      reason_for_emptiness: string
+      emptiness_reason: string
     }
   }
 };
@@ -88,6 +89,7 @@ const spiritJarQrSchema: JSONSchemaType<SpiritJarQr> = {
           type: 'string',
           enum: ['spirit_jar']
         },
+        modelId: { type: 'string' },
         data: {
           oneOf: [{
               type: 'object',
@@ -99,14 +101,14 @@ const spiritJarQrSchema: JSONSchemaType<SpiritJarQr> = {
             }, {
               type: 'object',
               properties: {
-                'reason_for_emptiness': { type: 'string' }
+                'emptiness_reason': { type: 'string' }
               },
-              required: ["reason_for_emptiness"],
+              required: ["emptiness_reason"],
             },
           ]
         }
       },
-      required: ["type"],
+      required: ["type", 'modelId'],
     },
   },
   required: ["workModel"],

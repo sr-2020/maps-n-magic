@@ -32,8 +32,48 @@ export async function getQrModelData(qrId: number): Promise<unknown> {
     return characterModelData;
   }
   if (res2.status === 404) {
-    throw new Error(`QR with id ${qrId} not found`);
+    throw new Error(`QR ${qrId} не найден`);
   }
   const text = await res2.text();
-  throw new Error(`Error on getting QR model data. qrId ${qrId}, status ${res2.status}, error text ${text}`);
+  throw new Error(`Ошибка при получении данных из QR. QR id ${qrId}, статус ${res2.status}, текст ошибки ${text}`);
+}
+
+export async function freeSpirit(qrId: number, reason: string): Promise<unknown> {
+  const res2 = await fetch(MODELS_MANAGER_URL + '/qr/model/' + qrId, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json;charset=utf-8',
+    },
+    body: JSON.stringify({
+      "eventType": "freeSpirit", 
+      "data": {
+        reason
+      }
+    }),
+  });
+  if (res2.status === 201) {
+    return await res2.json();
+  }
+  const text = await res2.text();
+  throw new Error(`Ошибка при освобождении духа из QR ${qrId}, статус ${res2.status}, текст ошибки ${text}`);
+}
+
+export async function catchSpirit(qrId: number, spiritId: number): Promise<unknown> {
+  const res2 = await fetch(MODELS_MANAGER_URL + '/qr/model/' + qrId, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json;charset=utf-8',
+    },
+    body: JSON.stringify({
+      "eventType": "putSpiritInJar", 
+      "data": {
+        "spiritId": spiritId
+      }
+    }),
+  });
+  if (res2.status === 201) {
+    return await res2.json();
+  }
+  const text = await res2.text();
+  throw new Error(`Ошибка при ловле духа в QR ${qrId}, статус ${res2.status}, текст ошибки ${text}`);
 }

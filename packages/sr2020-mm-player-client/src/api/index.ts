@@ -44,3 +44,31 @@ export async function getSpiritDataByQr(spiritJarQrString: string): Promise<Erro
   }));
   return await res.json();
 }
+
+export async function freeSpirit(qrId: number, reason: string): Promise<ErrorResponse | SpiritJarQr> {
+  const res = await fetch('/api/freeSpirit', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json;charset=utf-8',
+    },
+    body: JSON.stringify({
+      qrId,
+      reason
+    }),
+  });
+  return await res.json();
+}
+
+export async function catchSpirit(qrId: number, spiritId: number): Promise<ErrorResponse | SpiritJarQr> {
+  const res = await fetch('/api/catchSpirit', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json;charset=utf-8',
+    },
+    body: JSON.stringify({
+      qrId,
+      spiritId
+    }),
+  });
+  return await res.json();
+}
