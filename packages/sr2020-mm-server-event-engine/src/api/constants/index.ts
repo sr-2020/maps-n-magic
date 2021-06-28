@@ -1,3 +1,4 @@
 export * from './pubSubSubscriptions';
-export * from './urls';
+export * from './mainServerConstants';
+export * from './playerServerConstants';
 export * from './entityDefaults';

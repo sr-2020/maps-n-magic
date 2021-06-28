@@ -9,7 +9,11 @@ import cors from 'cors';
 import * as core from 'express-serve-static-core';
 import EventSource from "eventsource";
 
-import { AuthorizedRequest, winstonLogger } from 'sr2020-mm-server-event-engine';
+import { 
+  AuthorizedRequest, 
+  winstonLogger,
+  playerServerConstants
+} from 'sr2020-mm-server-event-engine';
 import { makeGameModel } from "./gameModel";
 // import { WebSocketInitClientConfig } from 'sr2020-mm-event-engine';
 
@@ -30,7 +34,6 @@ import {
   SetLocationRecords, 
   SetUserRecords 
 } from 'sr2020-mm-event-engine';
-import { MM_MASTER_SERVER_URL } from "./constants";
 import { SsePlayerDataSender } from './ssePlayerDataSender';
 import { spiritRouter } from "./routes/spirits";
 import { logoutRouter } from "./routes/logout";
@@ -204,7 +207,7 @@ const isUserRecordsChanged = (obj: any): obj is EUserRecordsChanged => {
   return obj.type === 'userRecordsChanged';
 }
 
-const es = new EventSource(MM_MASTER_SERVER_URL + '/playerDataSse');
+const es = new EventSource(playerServerConstants().playerDataSseUrl);
 es.addEventListener('message', function (e) {
   try {
     const { data }: { data: string } = e;

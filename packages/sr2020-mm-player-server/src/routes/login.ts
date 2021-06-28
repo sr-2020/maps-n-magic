@@ -1,8 +1,12 @@
 import { Router } from 'express';
 import * as jwt from "jsonwebtoken";
-import { validateAuthRequest, validateTokenData, validateTokenRequestBody } from 'sr2020-mm-server-event-engine';
-import { getUserTokenData, getCharacterModelData } from '../api';
-import { JWT_SECRET } from '../constants';
+import { 
+  validateAuthRequest, 
+  validateTokenData, 
+  validateTokenRequestBody,
+  playerServerConstants,
+  getUserTokenData
+} from 'sr2020-mm-server-event-engine';
 
 const router = Router();
 
@@ -39,7 +43,7 @@ router.post('/api/login', async (req, res) => {
     // console.log('test call', res2.status, data);
   
     try {
-      const parsedToken = jwt.verify(api_key, JWT_SECRET);
+      const parsedToken = jwt.verify(api_key, playerServerConstants().JWT_SECRET);
       console.log('parsedToken', parsedToken);
       if (!validateTokenData(parsedToken)) {
         res.status(500).send(`parsedToken verification failed ${JSON.stringify(parsedToken)} ${JSON.stringify(validateTokenData.errors)}`);

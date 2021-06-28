@@ -1,9 +1,9 @@
 import fetch from 'isomorphic-fetch';
 
-import { urls } from '../constants';
+import { mainServerConstants } from '../constants';
 
 export async function sendNotification(id: number, title: string, body: string): Promise<void> {
-  const response = await fetch(`${urls().pushServiceUrl}/${id}`, {
+  const response = await fetch(`${mainServerConstants().pushServiceUrl}/${id}`, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json;charset=utf-8',

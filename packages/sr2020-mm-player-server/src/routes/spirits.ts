@@ -1,9 +1,15 @@
-import { validateCatchSpiritRequestBody, validateFreeSpiritRequestBody, winstonLogger } from 'sr2020-mm-server-event-engine';
+import { 
+  catchSpirit, 
+  freeSpirit, 
+  getQrModelData, 
+  validateCatchSpiritRequestBody, 
+  validateFreeSpiritRequestBody, 
+  winstonLogger 
+} from 'sr2020-mm-server-event-engine';
 import { validateCommonQr, validateSpiritJarQr, ErrorResponse } from "sr2020-mm-event-engine";
 import { Router } from 'express';
 
 import { decode } from "../utils";
-import { getQrModelData, freeSpirit, catchSpirit } from "../api";
 
 const router = Router();
 

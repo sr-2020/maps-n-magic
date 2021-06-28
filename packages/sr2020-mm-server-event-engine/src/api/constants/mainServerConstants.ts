@@ -1,6 +1,6 @@
 import assert from "assert";
 
-interface Urls {
+interface MainServerConstants {
   beaconsUrl: string;
   locationsUrl: string;
   usersUrl: string;
@@ -12,10 +12,10 @@ interface Urls {
   featuresUrl: string;
 };
 
-let urlInstance: Urls | null = null;
+let constantsInstance: MainServerConstants | null = null;
 
-export function urls(): Urls {
-  if (urlInstance === null) {
+export function mainServerConstants(): MainServerConstants {
+  if (constantsInstance === null) {
     const POSITION_URL = process.env.POSITION_URL;
     const GATEWAY_URL = process.env.GATEWAY_URL;
     const BILLING_URL = process.env.BILLING_URL;
@@ -28,7 +28,7 @@ export function urls(): Urls {
     assert(PUSH_URL != null, "PUSH_URL is not specified");
     assert(MODEL_ENGINE_URL != null, "MODEL_ENGINE_URL is not specified");
     
-    console.log("base urls", { 
+    console.log("MainServerConstants", { 
       POSITION_URL, 
       GATEWAY_URL, 
       BILLING_URL, 
@@ -36,20 +36,20 @@ export function urls(): Urls {
       MODEL_ENGINE_URL
     });
     
-    urlInstance = {
-      beaconsUrl: POSITION_URL + '/api/v1/beacons',
+    constantsInstance = {
+      beaconsUrl:   POSITION_URL + '/api/v1/beacons',
       locationsUrl: POSITION_URL + '/api/v1/locations',
-      usersUrl: POSITION_URL + '/api/v1/users',
-      positionUrl: POSITION_URL + '/api/v1/positions',
-      manaOceanConfigUrl: GATEWAY_URL + '/api/v1/config/manaOceanConfig',
+      usersUrl:     POSITION_URL + '/api/v1/users',
+      positionUrl:  POSITION_URL + '/api/v1/positions',
+      manaOceanConfigUrl:       GATEWAY_URL + '/api/v1/config/manaOceanConfig',
       manaOceanEffectConfigUrl: GATEWAY_URL + '/api/v1/config/manaOceanEffectConfig',
       billingInsurance: BILLING_URL + '/insurance/getinsurance',
       pushServiceUrl: PUSH_URL + '/send_notification',
       featuresUrl: MODEL_ENGINE_URL + '/features',
     }
   }
-  assert(urlInstance !== null);
-  return urlInstance;
+  assert(constantsInstance !== null);
+  return constantsInstance;
 }
 
 

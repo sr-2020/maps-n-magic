@@ -14,6 +14,7 @@ export * from './services/CharacterLocationService';
 export * from './services/PushNotificationService';
 export * from './services/MassacreService';
 export * from './types';
+export * from './api';
 
 // export * from './testPg';
 

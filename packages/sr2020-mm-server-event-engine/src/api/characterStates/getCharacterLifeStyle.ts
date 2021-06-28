@@ -5,7 +5,7 @@ import {
   LifeStylesValues, LifeStyles
 } from 'sr2020-mm-event-engine';
 
-import { urls } from '../constants';
+import { mainServerConstants } from '../constants';
 
 // {
 //   "data": {
@@ -74,7 +74,7 @@ export async function getCharacterLifeStyle(characterId: number): Promise<{
   lifeStyle: LifeStylesValues,
   personName: string,
 }> {
-  const response = await fetch(`${urls().billingInsurance}?characterid=${characterId}`);
+  const response = await fetch(`${mainServerConstants().billingInsurance}?characterid=${characterId}`);
 
   if (!response.ok) {
     try {
