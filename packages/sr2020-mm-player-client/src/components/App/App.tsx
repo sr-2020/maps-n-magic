@@ -29,6 +29,7 @@ import { logoutUser, callSecureApi } from "../../api";
 import { SpiritList } from "../SpiritList";
 import { QrTest } from "../QrTest";
 import { SpiritPage } from "../SpiritPage";
+import { SuitSpiritPage } from "../SuitSpiritPage";
 
 interface AppProps extends WithLoginState, WithAggregatedLocationData {
   loginManager: LoginManager;
@@ -71,7 +72,10 @@ export function App(props: AppProps) {
                   <Nav.Link>Духи</Nav.Link>
                 </LinkContainer>
                 <LinkContainer to="/scanSpirit">
-                  <Nav.Link>Осмотреть/Надеть духа</Nav.Link>
+                  <Nav.Link>Осмотреть духа</Nav.Link>
+                </LinkContainer>
+                <LinkContainer to="/suitSpirit">
+                  <Nav.Link>Надеть духа</Nav.Link>
                 </LinkContainer>
                 <LinkContainer to="/qrTest">
                   <Nav.Link>QR тест</Nav.Link>
@@ -156,12 +160,15 @@ export function App(props: AppProps) {
             <Route path="/scanSpirit">
               <SpiritPage />
             </Route>
+            <Route path="/suitSpirit">
+              <SuitSpiritPage />
+            </Route>
             <Route path="/qrTest">
               <QrTest />
             </Route>
             <Route path="/">
               {/* <Redirect to="/spirits" /> */}
-              <Redirect to="/scanSpirit" />
+              <Redirect to="/suitSpirit" />
             </Route>
           </Switch>
         </div>
