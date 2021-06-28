@@ -1,6 +1,5 @@
 import Ajv, { JSONSchemaType } from "ajv";
-import { Request } from 'express';
-export * from './spirits';
+import type { Request } from 'express';
 
 export type AuthorizedRequest = Request & {
   userData: TokenData;

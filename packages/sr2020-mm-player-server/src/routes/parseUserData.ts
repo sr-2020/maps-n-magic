@@ -1,7 +1,7 @@
 import { Router } from 'express';
 import { JWT_SECRET } from '../constants';
 import * as jwt from "jsonwebtoken";
-import { validateTokenData, AuthorizedRequest } from '../types';
+import { AuthorizedRequest, validateTokenData } from 'sr2020-mm-server-event-engine';
 
 const router = Router();
 

@@ -9,7 +9,7 @@ import cors from 'cors';
 import * as core from 'express-serve-static-core';
 import EventSource from "eventsource";
 
-import { winstonLogger } from 'sr2020-mm-server-event-engine';
+import { AuthorizedRequest, winstonLogger } from 'sr2020-mm-server-event-engine';
 import { makeGameModel } from "./gameModel";
 // import { WebSocketInitClientConfig } from 'sr2020-mm-event-engine';
 
@@ -22,12 +22,18 @@ import { parseUserData } from './routes/parseUserData';
 import { usersRouter } from './routes/users';
 import { postUserPosition } from './routes/postUserPosition';
 import { WebSocketWrapper } from './webSocketWrapper';
-import { ELocationRecordsChanged2, ESetSpirits, ESpiritsChanged, EUserRecordsChanged, SetLocationRecords, SetUserRecords } from 'sr2020-mm-event-engine';
+import { 
+  ELocationRecordsChanged2, 
+  ESetSpirits, 
+  ESpiritsChanged, 
+  EUserRecordsChanged, 
+  SetLocationRecords, 
+  SetUserRecords 
+} from 'sr2020-mm-event-engine';
 import { MM_MASTER_SERVER_URL } from "./constants";
 import { SsePlayerDataSender } from './ssePlayerDataSender';
 import { spiritRouter } from "./routes/spirits";
 import { logoutRouter } from "./routes/logout";
-import { AuthorizedRequest } from './types';
 
 // const express = require('express');
 // const expressWs = require('express-ws');
