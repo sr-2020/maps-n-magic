@@ -1,8 +1,8 @@
 import fetch from 'isomorphic-fetch';
-import { playerServerConstants } from './constants';
+import { genericServerConstants } from './constants';
 
 export async function getUserTokenData(login: string, password: string) {
-  return await fetch(playerServerConstants().loginUrl, {
+  return await fetch(genericServerConstants().loginUrl, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json;charset=utf-8'

@@ -1,8 +1,8 @@
 import fetch from 'isomorphic-fetch';
-import { playerServerConstants } from './constants';
+import { genericServerConstants } from './constants';
 
 export async function getQrModelData(qrId: number): Promise<unknown> {
-  const res2 = await fetch(`${playerServerConstants().qrModelUrl}/${qrId}`);
+  const res2 = await fetch(`${genericServerConstants().qrModelUrl}/${qrId}`);
   if (res2.status === 200) {
     const characterModelData = await res2.json();
     return characterModelData;
@@ -22,7 +22,7 @@ export async function freeSpirit(spiritStorageId: number, reason: string): Promi
   // }, 360, spiritStorageId);
   // return;
 
-  const res2 = await fetch(`${playerServerConstants().qrModelUrl}/${spiritStorageId}`, {
+  const res2 = await fetch(`${genericServerConstants().qrModelUrl}/${spiritStorageId}`, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json;charset=utf-8',
@@ -45,7 +45,7 @@ export async function catchSpirit(spiritStorageId: number, spiritId: number): Pr
   // await dispirit(51935, 360, spiritStorageId);
   // return;
 
-  const res2 = await fetch(`${playerServerConstants().qrModelUrl}/${spiritStorageId}`, {
+  const res2 = await fetch(`${genericServerConstants().qrModelUrl}/${spiritStorageId}`, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json;charset=utf-8',
