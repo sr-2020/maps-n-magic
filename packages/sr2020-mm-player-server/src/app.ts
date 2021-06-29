@@ -139,13 +139,13 @@ app.get('/ping', pingRouter);
 // app.use('/api/*', loginRouter);
 app.use(loginRouter);
 
-app.use(parseUserData);
+app.use('/api', parseUserData);
 
 app.use(spiritRouter);
 
 app.use(logoutRouter);
 
-app.get('/singlePlayerDataSse', (req, res, next) => {
+app.get('/api/singlePlayerDataSse', (req, res, next) => {
   winstonLogger.info('Processing playerDataSse connection');
   const { userData } = req as AuthorizedRequest;
   new SsePlayerDataSender(req, res, next, winstonLogger, gameModel, userData);
