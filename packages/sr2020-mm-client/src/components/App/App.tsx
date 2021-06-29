@@ -65,6 +65,8 @@ import { RescueServiceMessageSender } from '../RescueServiceMessageSender';
 
 import { MapRoutes } from '../MapRoutes';
 
+import { LoginManager } from "../../utils";
+
 
 const STORAGE_KEY = 'AR_POC';
 
@@ -84,6 +86,7 @@ const initialDatabase = {};
 // }
 
 interface AppProps extends WithTranslation {
+  loginManager: LoginManager;
 };
 interface AppState {
   simulateGeoDataStream: boolean;
@@ -307,101 +310,97 @@ export class App extends Component<AppProps, AppState> {
     }
 
     const {
-      t,
+      t, loginManager
     } = this.props;
     
     return (
-      <React.StrictMode>
-        <ErrorBoundry>
-          <DocumentTitle title={t('appTitle')}>
-            <MapDefaultsProvider value={mapDefaults}>
-              <TranslatorProvider value={translator}>
-                <Router>
-                  <div className="App tw-flex tw-flex-col tw-h-screen">
-                    <AppHeader
-                      gameModel={gameModel}
-                      waitingForGeolocation={waitingForGeolocation}
-                      simulateGeoDataStream={simulateGeoDataStream}
-                      // onUploadFileSelected={this.onUploadFileSelected}
-                      // downloadDatabaseAsFile={this.downloadDatabaseAsFile}
-                      jumpToUserCoords={this.jumpToUserCoords}
-                      switchMovementMode={this.switchMovementMode}
-                    />
+      <DocumentTitle title={t('appTitle')}>
+        <MapDefaultsProvider value={mapDefaults}>
+          <TranslatorProvider value={translator}>
+            <Router>
+              <div className="App tw-flex tw-flex-col tw-h-screen">
+                <AppHeader
+                  gameModel={gameModel}
+                  loginManager={loginManager}
+                  waitingForGeolocation={waitingForGeolocation}
+                  simulateGeoDataStream={simulateGeoDataStream}
+                  // onUploadFileSelected={this.onUploadFileSelected}
+                  // downloadDatabaseAsFile={this.downloadDatabaseAsFile}
+                  jumpToUserCoords={this.jumpToUserCoords}
+                  switchMovementMode={this.switchMovementMode}
+                />
 
-                    <main className="tw-flex-auto tw-h-full">
-                      <Switch>
-                        <Route path="/spiritNav">
-                          <SpiritNav />
-                        </Route>,
-                        <Route path="/spiritEditor">
-                          <SpiritEditor gameModel={gameModel} />
-                        </Route>
-                        <Route path="/spiritRouteEditor">
-                          <SpiritRouteEditor gameModel={gameModel} />
-                        </Route>
-                        {/* <Route path="/soundManager2">
-                          <SoundManager
-                            gameModel={gameModel}
-                            soundStage={this.soundStage}
-                          />
-                        </Route> */}
-                        {/* <Route path="/soundMapping">
-                          <SoundMapper gameModel={gameModel} />
-                        </Route> */}
-                        <Route path="/beaconRecordEditor">
-                          <BeaconRecordEditor gameModel={gameModel} />
-                        </Route>
-                        <Route path="/rescueServiceMessageSender">
-                          <RescueServiceMessageSender gameModel={gameModel} />
-                        </Route>
-                        <Route path="/characterPositions">
-                          <CharacterPositions gameModel={gameModel} />
-                        </Route>
-                        <Route path="/manaOceanSettings">
-                          <ManaOceanSettings gameModel={gameModel} />
-                        </Route>
-                        <Route path="/manaOceanEffectSettings">
-                          <ManaOceanEffectSettings gameModel={gameModel} />
-                        </Route>
-
-                        {/* MapRoutes is NOT a component. This is a function which returns array.
-                        It is necessary to extract routes from switch to separate component.
-                        This is problem of router implementation */}
-                        {MapRoutes({
-                          gameModel,
-                        })}
-                        <Route path="/">
-                          <Redirect to="/mapsNav" />
-                        </Route>
-                      </Switch>
-                      {/* { refactor as GeoDataStreamSimulator } */}
-                      {/* <GeoDataStreamSimulator
-                        simulateGeoDataStream={simulateGeoDataStream}
+                <main className="tw-flex-auto tw-h-full">
+                  <Switch>
+                    <Route path="/spiritNav">
+                      <SpiritNav />
+                    </Route>,
+                    <Route path="/spiritEditor">
+                      <SpiritEditor gameModel={gameModel} />
+                    </Route>
+                    <Route path="/spiritRouteEditor">
+                      <SpiritRouteEditor gameModel={gameModel} />
+                    </Route>
+                    {/* <Route path="/soundManager2">
+                      <SoundManager
                         gameModel={gameModel}
-                      /> */}
-                      {/* { refactor as SoundManager and SoundProvider } */}
-                      <SoundWatcher
-                        gameModel={gameModel}
-                        context={this.audioContextWrapper}
+                        soundStage={this.soundStage}
                       />
-                      <NotificationWatcher gameModel={gameModel} />
-                      {/* { refactor as CharacterHealthStateSimulator } */}
-                      {/* <CharacterHealthStateSimulator gameModel={gameModel} /> */}
-                      {/* { refactor as CharacterHealthStateManager and CharacterHealthStateProvider } */}
+                    </Route> */}
+                    {/* <Route path="/soundMapping">
+                      <SoundMapper gameModel={gameModel} />
+                    </Route> */}
+                    <Route path="/beaconRecordEditor">
+                      <BeaconRecordEditor gameModel={gameModel} />
+                    </Route>
+                    <Route path="/rescueServiceMessageSender">
+                      <RescueServiceMessageSender gameModel={gameModel} />
+                    </Route>
+                    <Route path="/characterPositions">
+                      <CharacterPositions gameModel={gameModel} />
+                    </Route>
+                    <Route path="/manaOceanSettings">
+                      <ManaOceanSettings gameModel={gameModel} />
+                    </Route>
+                    <Route path="/manaOceanEffectSettings">
+                      <ManaOceanEffectSettings gameModel={gameModel} />
+                    </Route>
 
-                      {/* TODO CharacterHealthListener should be in event engine
-                        This is a fictive component for polling character health status
-                      */}
-                      {/* <CharacterHealthListener gameModel={gameModel} /> */}
-                    </main>
-                  </div>
-                </Router>
-              </TranslatorProvider>
-            </MapDefaultsProvider>
-          </DocumentTitle>
-        </ErrorBoundry>
-      </React.StrictMode>
+                    {/* MapRoutes is NOT a component. This is a function which returns array.
+                    It is necessary to extract routes from switch to separate component.
+                    This is problem of router implementation */}
+                    {MapRoutes({
+                      gameModel,
+                    })}
+                    <Route path="/">
+                      <Redirect to="/mapsNav" />
+                    </Route>
+                  </Switch>
+                  {/* { refactor as GeoDataStreamSimulator } */}
+                  {/* <GeoDataStreamSimulator
+                    simulateGeoDataStream={simulateGeoDataStream}
+                    gameModel={gameModel}
+                  /> */}
+                  {/* { refactor as SoundManager and SoundProvider } */}
+                  <SoundWatcher
+                    gameModel={gameModel}
+                    context={this.audioContextWrapper}
+                  />
+                  <NotificationWatcher gameModel={gameModel} />
+                  {/* { refactor as CharacterHealthStateSimulator } */}
+                  {/* <CharacterHealthStateSimulator gameModel={gameModel} /> */}
+                  {/* { refactor as CharacterHealthStateManager and CharacterHealthStateProvider } */}
 
+                  {/* TODO CharacterHealthListener should be in event engine
+                    This is a fictive component for polling character health status
+                  */}
+                  {/* <CharacterHealthListener gameModel={gameModel} /> */}
+                </main>
+              </div>
+            </Router>
+          </TranslatorProvider>
+        </MapDefaultsProvider>
+      </DocumentTitle>
     );
   }
 }

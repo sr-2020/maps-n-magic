@@ -84,8 +84,9 @@ export class TrackedCharacterService extends AbstractService<TrackedCharacterSer
       //   type: 'emitTrackedCharacterLocationChanged',
       //   trackedCharacterId: this.trackedCharacterId,
       // });
+      // this.updateBackgroundSound(this.locationId);
     } else {
-      // this.executeOnModel({
+      // this.executeOnModel2({
       //   type: 'setBackgroundSound',
       //   name: null,
       // });
@@ -113,17 +114,36 @@ export class TrackedCharacterService extends AbstractService<TrackedCharacterSer
     const locationRecord = locationId !== null ? this.getLocation(locationId) : null;
     if (locationRecord && locationRecord.options.manaLevel) {
       const { manaLevel } = locationRecord.options;
-      // const soundName = this.getFromModel({
-      //   type: 'soundForKey',
-      //   keyType: 'manaLevels',
-      //   // eslint-disable-next-line no-nested-ternary
-      //   key: manaLevel < 3 ? 'low'
-      //     : (manaLevel < 5 ? 'normal' : 'high'),
-      // });
-      // this.executeOnModel({
+
+      // const defaultSoundMapping = {
+      //   // manaLevels: {
+      //     high: 'mana_strong_07064025.mp3',
+      //     normal: 'mana_normal_07059107.mp3',
+      //     low: 'mana_weak_07072013.mp3',
+      //   // },
+      //   // spiritFractions: {
+      //   //   Дрозд: 'spirit2_drozd.mp3',
+      //   //   Медведь: 'spirit3_medved.mp3',
+      //   //   Неясыть: 'spirit1_neiasit.mp3',
+      //   // },
+      // };
+      // const key = manaLevel < 3 ? 'low'
+      //   : (manaLevel < 5 ? 'normal' : 'high');
+      // // const soundName = this.getFromModel({
+      // //   type: 'soundForKey',
+      // //   keyType: 'manaLevels',
+      // //   // eslint-disable-next-line no-nested-ternary
+      //   // key: manaLevel < 3 ? 'low'
+      //   //   : (manaLevel < 5 ? 'normal' : 'high'),
+      // // });
+      // this.executeOnModel2({
       //   type: 'setBackgroundSound',
-      //   name: soundName,
+      //   name: defaultSoundMapping[key],
       // });
+      // // this.executeOnModel({
+      // //   type: 'setBackgroundSound',
+      // //   name: soundName,
+      // // });
     } else {
       // this.executeOnModel({
       //   type: 'setBackgroundSound',

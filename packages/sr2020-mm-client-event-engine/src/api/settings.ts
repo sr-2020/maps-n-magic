@@ -6,7 +6,8 @@ export const AUDIO_RETRANSLATOR = {
   SOUND_ROUTE: '/file',
 };
 
-export const SERVER_URL = 'http://localhost:3001';
+// export const SERVER_URL = 'http://localhost:3001';
+export const SERVER_URL = '';
 
 export const POST_USER_POSITION = '/postUserPosition';
 

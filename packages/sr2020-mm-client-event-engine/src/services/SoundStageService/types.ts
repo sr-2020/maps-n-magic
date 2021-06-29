@@ -17,7 +17,7 @@ export type GetSoundStage = (arg: TypeOnly<'soundStage'>) => SoundStageData;
 // actions
 
 export type SetBackgroundSound = Typed<'setBackgroundSound', {
-  name: string;
+  name: string | null;
 }>;
 export type SetRotationTimeout = Typed<'setRotationTimeout', {
   rotationTimeout: number;

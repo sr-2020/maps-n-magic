@@ -8,4 +8,5 @@ export * from './services/SoundStageService/types';
 
 export * from './api/position';
 export * from './api/sounds';
+export * from './api/settings';
 export * from './configs/clientEventEngine';

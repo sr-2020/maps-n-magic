@@ -19,7 +19,9 @@ import { usersRouter } from './routes/users';
 import { postUserPosition } from './routes/postUserPosition';
 import { WebSocketWrapper } from './webSocketWrapper';
 import { SseDataSender } from "./sseDataSender";
-// import { loginRouter } from './routes/login'; 
+import { loginRouter } from './routes/login';
+import { logoutRouter } from './routes/logout';
+import { parseUserData } from './routes/parseUserData';
 
 // const express = require('express');
 // const expressWs = require('express-ws');
@@ -88,7 +90,11 @@ app.use(cookieParser());
 // app.use('/users', usersRouter);
 app.get('/ping', pingRouter);
 
-// app.use(loginRouter);
+app.use(loginRouter);
+
+app.use(parseUserData);
+
+app.use(logoutRouter);
 
 app.get('/fileList', fileListRouter);
 app.get('/file/:name', fileRouter);
