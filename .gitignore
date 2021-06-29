@@ -50,6 +50,8 @@ packages/sr2020-mm-player-server/static/
 packages/sr2020-mm-player-server/dist/
 packages/sr2020-mm-player-server/src/static
 
+packages/sr2020-mm-player-client/build
+
 packages/sr2020-mm-data/src/analysis/data/restOfAll/
 packages/sr2020-mm-data/src/analysis/data/kml/otherKml
 
