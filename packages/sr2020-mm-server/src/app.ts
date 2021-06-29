@@ -7,8 +7,9 @@ import morganLogger from 'morgan';
 import shortid from 'shortid';
 import cors from 'cors';
 import * as core from 'express-serve-static-core';
+import * as jwt from "jsonwebtoken";
 
-import { makeGameModel, winstonLogger } from 'sr2020-mm-server-event-engine';
+import { AuthorizedRequest, genericServerConstants, makeGameModel, winstonLogger } from 'sr2020-mm-server-event-engine';
 import { WebSocketInitClientConfig } from 'sr2020-mm-event-engine';
 
 import { indexRouter } from './routes/index';
@@ -92,6 +93,35 @@ app.get('/ping', pingRouter);
 
 app.use(loginRouter);
 
+app.get('/playerDataSse', (req1, res, next) => {
+  const req = req1 as AuthorizedRequest;
+
+  const { mm_token } = req.cookies;
+  if (mm_token === undefined) {
+    winstonLogger.info('playerDataSse connection FAILED: Request has no user token');
+    res.status(401).send('Request has no user token');
+    return;
+  }
+
+  try {
+    const parsedToken = jwt.verify(mm_token, genericServerConstants().JWT_SECRET);
+    winstonLogger.info('parsedToken', parsedToken);
+
+    if (parsedToken !== genericServerConstants().playerServerTokenPayload) {
+      winstonLogger.info('playerDataSse connection FAILED: token parsing');
+      res.status(401).send('Error on token parsing');
+      return;
+    }
+  } catch (err) {
+    winstonLogger.info('playerDataSse connection FAILED: Error on token parsing');
+    res.status(401).send('Error on token parsing');
+    return;
+  }
+
+  winstonLogger.info('playerDataSse connection OK');
+  new SseDataSender(req, res, next, winstonLogger, gameModel);
+});
+
 app.use(parseUserData);
 
 app.use(logoutRouter);
@@ -100,10 +130,7 @@ app.get('/fileList', fileListRouter);
 app.get('/file/:name', fileRouter);
 app.post('/postUserPosition/:characterId', postUserPosition);
 
-app.get('/playerDataSse', (req, res, next) => {
-  winstonLogger.info('Processing playerDataSse connection');
-  new SseDataSender(req, res, next, winstonLogger, gameModel);
-});
+
 
 // app.all('/characterStates', characterStatesRouter);
 

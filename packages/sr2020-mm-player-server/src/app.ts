@@ -8,11 +8,13 @@ import shortid from 'shortid';
 import cors from 'cors';
 import * as core from 'express-serve-static-core';
 import EventSource from "eventsource";
+import * as jwt from "jsonwebtoken";
 
 import { 
   AuthorizedRequest, 
   winstonLogger,
-  playerServerConstants
+  playerServerConstants,
+  genericServerConstants
 } from 'sr2020-mm-server-event-engine';
 import { makeGameModel } from "./gameModel";
 // import { WebSocketInitClientConfig } from 'sr2020-mm-event-engine';
@@ -207,7 +209,17 @@ const isUserRecordsChanged = (obj: any): obj is EUserRecordsChanged => {
   return obj.type === 'userRecordsChanged';
 }
 
-const es = new EventSource(playerServerConstants().playerDataSseUrl);
+const playerServerToken = jwt.sign(
+  genericServerConstants().playerServerTokenPayload, 
+  genericServerConstants().JWT_SECRET
+);
+
+const es = new EventSource(playerServerConstants().playerDataSseUrl, {
+  headers: {
+    'Cookie': 'mm_token=' + playerServerToken
+  }
+});
+
 es.addEventListener('message', function (e) {
   try {
     const { data }: { data: string } = e;

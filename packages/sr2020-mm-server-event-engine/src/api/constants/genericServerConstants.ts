@@ -7,6 +7,7 @@ interface GenericServerConstants {
   qrModelUrl: string;
   manaOceanConfigUrl: string;
   manaOceanEffectConfigUrl: string;
+  playerServerTokenPayload: string;
 };
 
 let constantsInstance: GenericServerConstants | null = null;
@@ -34,6 +35,7 @@ export function genericServerConstants(): GenericServerConstants {
       manaOceanEffectConfigUrl: GATEWAY_URL + '/api/v1/config/manaOceanEffectConfig',
       characterModelUrl: MODELS_MANAGER_URL + '/character/model',
       qrModelUrl: MODELS_MANAGER_URL + '/qr/model',
+      playerServerTokenPayload: 'player-server'
     }
   }
   assert(constantsInstance !== null);
