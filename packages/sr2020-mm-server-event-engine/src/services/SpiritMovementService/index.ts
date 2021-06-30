@@ -73,7 +73,7 @@ export class SpiritMovementService extends AbstractService<SpiritMovementService
 
   onSpiritUpdate() {
     const enableSpiritMovement = this.getFromModel2('enableSpiritMovement');
-    this.logger.info('enableSpiritMovement', enableSpiritMovement);
+    // this.logger.info('onSpiritUpdate enableSpiritMovement', enableSpiritMovement);
     if (!enableSpiritMovement) {
       return;
     }
@@ -91,7 +91,7 @@ export class SpiritMovementService extends AbstractService<SpiritMovementService
     // });
 
 
-    this.logger.info('onSpiritUpdate');
+    // this.logger.info('onSpiritUpdate');
     const spirits = this.getFromModel2('spirits');
     const spiritRoutes = this.getFromModel2('spiritRoutes');
     
@@ -116,9 +116,9 @@ export class SpiritMovementService extends AbstractService<SpiritMovementService
     }, []);
 
     // this.logger.info('updates', updates);
-    this.logger.info('updates', updates.length);
-
+    
     if (updates.length > 0) {
+      this.logger.info('spirit updates', updates.length);
       this.emit2({
         type: 'putSpiritsRequested',
         updates

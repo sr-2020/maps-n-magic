@@ -602,9 +602,10 @@ export class ManaOceanService extends AbstractService<ManaOceanServiceContract> 
 
     // this.logger.info('updates.length', updates.length);
     if (updates.length === 0) {
-      this.logger.info('no updates for mana ocean');
+      // this.logger.info('no updates for mana ocean');
       return;
     }
+    this.logger.info('mana ocean updates', updates.length);
 
     // this.logger.info('updates', updates);
 
