@@ -8,8 +8,15 @@ import shortid from 'shortid';
 import cors from 'cors';
 import * as core from 'express-serve-static-core';
 import * as jwt from "jsonwebtoken";
+import { existsSync } from 'fs';
 
-import { AuthorizedRequest, genericServerConstants, makeGameModel, winstonLogger } from 'sr2020-mm-server-event-engine';
+import { 
+  AuthorizedRequest, 
+  genericServerConstants, 
+  makeGameModel, 
+  winstonLogger,
+  createLogger
+} from 'sr2020-mm-server-event-engine';
 import { WebSocketInitClientConfig } from 'sr2020-mm-event-engine';
 
 import { indexRouter } from './routes/index';
@@ -24,45 +31,9 @@ import { loginRouter } from './routes/login';
 import { logoutRouter } from './routes/logout';
 import { parseUserData } from './routes/parseUserData';
 
-// const express = require('express');
-// const expressWs = require('express-ws');
-// const path = require('path');
-// const cookieParser = require('cookie-parser');
-// const morganLogger = require('morgan');
-// const shortid = require('shortid');
+const logger = createLogger('mainServerApp');
 
-// const cors = require('cors');
-
-// const indexRouter = require('./routes/index.ts');
-// const fileListRouter = require('./routes/fileList.ts');
-// // const characterStatesRouter = require('./routes/characterStates');
-// const fileRouter = require('./routes/file.ts');
-// const pingRouter = require('./routes/ping.ts');
-// const usersRouter = require('./routes/users.ts');
-// const postUserPosition = require('./routes/postUserPosition.ts');
-// const { WebSocketWrapper } = require('./webSocketWrapper.ts');
-
-// const express = require('express');
-// const expressWs = require('express-ws');
-// const path = require('path');
-// const cookieParser = require('cookie-parser');
-// const morganLogger = require('morgan');
-// const shortid = require('shortid');
-
-// const cors = require('cors');
-
-// const indexRouter = require('./routes/index.ts');
-// const fileListRouter = require('./routes/fileList.ts');
-// // const characterStatesRouter = require('./routes/characterStates');
-// const fileRouter = require('./routes/file.ts');
-// const pingRouter = require('./routes/ping.ts');
-// const usersRouter = require('./routes/users.ts');
-// const postUserPosition = require('./routes/postUserPosition.ts');
-// const { WebSocketWrapper } = require('./webSocketWrapper.ts');
-
-winstonLogger.info('process.env.NODE_ENV', process.env.NODE_ENV);
-
-// console.log('process.env.NODE_ENV', process.env.NODE_ENV);
+logger.info('process.env.NODE_ENV', process.env.NODE_ENV);
 
 const { gameModel, gameServer } = makeGameModel();
 
@@ -98,45 +69,47 @@ app.get('/playerDataSse', (req1, res, next) => {
 
   const { mm_token } = req.cookies;
   if (mm_token === undefined) {
-    winstonLogger.info('playerDataSse connection FAILED: Request has no user token');
+    logger.info('playerDataSse connection FAILED: Request has no user token');
     res.status(401).send('Request has no user token');
     return;
   }
 
   try {
     const parsedToken = jwt.verify(mm_token, genericServerConstants().JWT_SECRET);
-    winstonLogger.info('parsedToken', parsedToken);
+    logger.info('parsedToken', parsedToken);
 
     if (parsedToken !== genericServerConstants().playerServerTokenPayload) {
-      winstonLogger.info('playerDataSse connection FAILED: token parsing');
+      logger.info('playerDataSse connection FAILED: token parsing');
       res.status(401).send('Error on token parsing');
       return;
     }
   } catch (err) {
-    winstonLogger.info('playerDataSse connection FAILED: Error on token parsing');
+    logger.info('playerDataSse connection FAILED: Error on token parsing');
     res.status(401).send('Error on token parsing');
     return;
   }
 
-  winstonLogger.info('playerDataSse connection OK');
-  new SseDataSender(req, res, next, winstonLogger, gameModel);
+  logger.info('playerDataSse connection OK');
+  new SseDataSender(req, res, next, logger, gameModel);
 });
 
-app.use(parseUserData);
+app.use('/api', parseUserData);
 
 app.use(logoutRouter);
 
-app.get('/fileList', fileListRouter);
-app.get('/file/:name', fileRouter);
-app.post('/postUserPosition/:characterId', postUserPosition);
-
-
+app.get('/api/fileList', fileListRouter);
+app.get('/api/file/:name', fileRouter);
+app.post('/api/postUserPosition/:characterId', postUserPosition);
 
 // app.all('/characterStates', characterStatesRouter);
 
 wsApp.app.ws('/ws', (ws, req, next) => {
+  logger.error('old ws path /ws is not working anymore');
+});
+
+wsApp.app.ws('/api/ws', (ws, req, next) => {
   ws.on('message', (msgStr) => {
-    // console.log('msg:', msgStr);
+    // logger.info('msg:', msgStr);
     const msg = JSON.parse(msgStr.toString()) as {message?: string};
     if (msg.message && msg.message === 'initClientConfig') {
       const ip = req.connection.remoteAddress;
@@ -155,7 +128,8 @@ app.use(Express.static(path.join(__dirname, './static')));
 // catch 404 and forward to error handler
 app.use((req, res, next) => {
   // next(createError(404));
-  res.sendFile(path.join(__dirname, './static', '/index.html'));
+  const indexHtml = path.join(__dirname, './static', '/index.html');
+  res.sendFile(indexHtml);
 });
 
 // error handler

@@ -1,4 +1,7 @@
 import assert from "assert";
+import { createLogger } from "../../logger";
+
+const logger = createLogger('playerServerConstants');
 
 interface PlayerServerConstants {
   playerDataSseUrl: string;
@@ -12,7 +15,7 @@ export function playerServerConstants(): PlayerServerConstants {
 
     assert(MM_MASTER_SERVER_URL != null, "MM_MASTER_SERVER_URL is not specified");
     
-    console.log("PlayerServerConstants", { 
+    logger.info("PlayerServerConstants", { 
       MM_MASTER_SERVER_URL, 
     });
     

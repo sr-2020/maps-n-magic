@@ -58,7 +58,6 @@ export class ReadDataManager2<
 
   async load() {
     this.logger.info(`Call to load ${this.entityName}`);
-    // console.log(`load ${this.entityName}`);
     try {
       const rawEntities = await this.dataProvider.get();
       const entities = rawEntities.filter((rawEntity): rawEntity is Entity => {
@@ -72,11 +71,11 @@ export class ReadDataManager2<
         return true;
       });
       if (R.equals(this.entities, entities)) {
-        // console.log('no changes', this.ccEntityName);
+        // this.logger.info('no changes', this.ccEntityName);
         return;
       }
       this.entities = entities;
-      // console.log(entities);
+      // this.logger.info(entities);
       this.gameModel.emit2({
         type: `set${this.ccEntityName}s`,
         [this.plural]: R.clone(this.entities),
@@ -88,7 +87,7 @@ export class ReadDataManager2<
 
   getErrorHandler(title: string) {
     return (err: Error) => {
-      console.error(err);
+      this.logger.error(err);
       this.gameModel.emit2<EPostNotification>({
         type: 'postNotification',
         title,

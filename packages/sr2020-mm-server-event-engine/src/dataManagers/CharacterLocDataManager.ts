@@ -93,8 +93,8 @@ export class CharacterLocDataManager extends AbstractEventProcessor {
       this.subscription = this.pubSubClient.subscription(charLocChange2SubscriptionName);
       this.subscription.on('message', this.messageHandler);
       this.subscription.on('error', error => {
-        console.error('listenHealthChanges received error:', error);
-        process.exit(1);
+        this.logger.error('listenHealthChanges received error:', error);
+        // process.exit(1);
       });
     } catch (err) {
       this.getErrorHandler('Unexpected error')(err);

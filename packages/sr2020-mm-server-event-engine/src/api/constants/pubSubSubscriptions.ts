@@ -1,3 +1,7 @@
+import { createLogger } from "../../logger";
+
+const logger = createLogger('pubSubSubscriptions');
+
 let rescueServiceSubscriptionName: string;
 let charLocChangeSubscriptionName: string;
 let manaOceanSpellCastSubscriptionName: string;
@@ -15,7 +19,7 @@ if (process.env.NODE_ENV === 'production') {
   charLocChange2SubscriptionName = 'mm2-char-loc-change-dev-2';
 }
 
-console.log('pubSub subscriptions', {
+logger.info('pubSub subscriptions', {
   rescueServiceSubscriptionName,
   charLocChangeSubscriptionName,
   manaOceanSpellCastSubscriptionName,

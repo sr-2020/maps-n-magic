@@ -1,9 +1,14 @@
 import { Router } from 'express';
+import { 
+  createLogger 
+} from 'sr2020-mm-server-event-engine';
+
+const logger = createLogger('logout');
 
 const router = Router();
 
 router.post('/api/logout', (req, res) => {
-  console.log('/api/logout');
+  logger.info('/api/logout');
   // req.logOut();
   res.status(200).clearCookie('mm_token', {
     // path: '/',

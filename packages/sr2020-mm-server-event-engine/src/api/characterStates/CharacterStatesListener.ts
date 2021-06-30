@@ -37,8 +37,7 @@ export class CharacterStatesListener extends AbstractEventProcessor {
   }
 
   async onMessageRecieved(data: HealthChangeMessage) {
-    // console.log('onMessageRecieved');
-    // const { characterId } = console.log(data);
+    // this.logger.info('onMessageRecieved');
     const {
       characterId, stateFrom, stateTo, timestamp,
     } = data;
@@ -46,7 +45,7 @@ export class CharacterStatesListener extends AbstractEventProcessor {
       getCharacterLocation(characterId, true),
       getCharacterLifeStyle(characterId),
     ]);
-    // console.log('lifeStyle', lifeStyle, 'personName', personName);
+    // this.logger.info('lifeStyle', lifeStyle, 'personName', personName);
     this.updateState(characterId, {
       locationId,
       locationLabel,
@@ -58,7 +57,7 @@ export class CharacterStatesListener extends AbstractEventProcessor {
   }
 
   updateState(characterId: number, characterHealthState: RawCharacterHealthState) {
-    // console.log('received timestamp', timestamp, ', cur moment().utc()', moment.utc().valueOf());
+    // this.logger.info('received timestamp', timestamp, ', cur moment().utc()', moment.utc().valueOf());
     // this.gameModel.execute2<PutCharHealth>({
     //   type: 'putCharHealth',
     this.gameModel.emit2<EPutCharHealthRequested>({

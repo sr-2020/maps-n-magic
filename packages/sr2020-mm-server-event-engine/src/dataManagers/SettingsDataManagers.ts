@@ -49,7 +49,7 @@ export class SettingsDataManager<U extends SettingsData, T extends SettingsResou
     // }
   ) {
     super(gameModel, logger);
-    // console.log('SettingsDataManager rest', args);
+    // this.logger.info('SettingsDataManager rest', args);
     // this.entities = [];
     if (R.isNil(defaultSettings)) {
       throw new Error(`Default settings not specified, settingsName ${settingsName}`);
@@ -114,10 +114,10 @@ export class SettingsDataManager<U extends SettingsData, T extends SettingsResou
 
     // .then((settings) => {
     // if (R.equals(this.settings, settings)) {
-    //   // console.log('no changes', this.ccEntityName);
+    //   // this.logger.info('no changes', this.ccEntityName);
     //   return;
     // }
-    // console.log('settings', JSON.stringify(settings));
+    // this.logger.info('settings', JSON.stringify(settings));
     // this.gameModel.logger.info('settings', this.ccSettingsName, JSON.stringify(settings));
     // this.gameModel.logger.info('settings', this.ccSettingsName);
     // this.gameModel.logger.info('settings', settings);
@@ -141,7 +141,7 @@ export class SettingsDataManager<U extends SettingsData, T extends SettingsResou
 
   getErrorHandler(title: string) {
     return (err: Error) => {
-      console.error(err);
+      this.logger.error(err);
       this.gameModel.emit2<EPostNotification>({
         type: 'postNotification',
         title,
@@ -162,7 +162,7 @@ export class SettingsDataManager<U extends SettingsData, T extends SettingsResou
     // this.dataProvider.post(null).then((settings2) => {
       // this.entities.push(entity);
       this.settings = settings2;
-      // console.log('onPostSettingsRequested', name, settings, settings2);
+      // this.logger.info('onPostSettingsRequested', name, settings, settings2);
       this.gameModel.execute2<PostSettingsConfirmed>({
         // type: `post${this.ccSettingsName}Confirmed`,
         // [this.settingsName]: settings2,

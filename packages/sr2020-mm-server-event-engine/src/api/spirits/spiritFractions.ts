@@ -10,11 +10,14 @@ import { pool } from "../pgPool";
 import {
   validateGenericRows,
 } from "./genericRowValidation";
+import { createLogger } from '../../logger';
+
+const logger = createLogger('spiritFractionsApi');
 
 // very similar to getSpirits
 export const getSpiritFractions = async function(): Promise<unknown[]> {
   const { rows } = await pool.query('SELECT * FROM "spiritFraction"');
-  console.log('raw spiritFractions', rows);
+  // logger.info('raw spiritFractions', rows);
   if(!validateGenericRows(rows)) {
     throw new Error(`Generic row check got validation error. ${JSON.stringify(validateGenericRows.errors)}`);
   }
@@ -25,7 +28,7 @@ export const getSpiritFractions = async function(): Promise<unknown[]> {
 }
 
 export const putSpiritFraction = async function(entity: SpiritFraction): Promise<SpiritFraction> {
-  console.log("put", entity.id);
+  logger.info("put", entity.id);
   await pool.query('UPDATE "spiritFraction" SET data = $1 WHERE id = $2', 
     [R.omit(['id'], entity), entity.id]
   );

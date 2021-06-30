@@ -39,13 +39,13 @@ export class SpellCastsListener extends AbstractEventProcessor {
   }
 
   async onMessageRecieved(data: SpellCast): Promise<void> {
-    // console.log(data);
+    // this.logger.info(data);
     this.gameModel.emit2<ESpellCast>({
       type: 'spellCast',
       data,
     });
-    // // console.log('onMessageRecieved');
-    // // const { characterId } = console.log(data);
+    // // this.logger.info('onMessageRecieved');
+    // // const { characterId } = this.logger.info(data);
     // const {
     //   characterId, stateFrom, stateTo, timestamp,
     // } = data;
@@ -53,7 +53,7 @@ export class SpellCastsListener extends AbstractEventProcessor {
     //   getCharacterLocation(characterId, true),
     //   getCharacterLifeStyle(characterId),
     // ]);
-    // // console.log('lifeStyle', lifeStyle, 'personName', personName);
+    // // this.logger.info('lifeStyle', lifeStyle, 'personName', personName);
     // this.updateState(characterId, {
     //   locationId,
     //   locationLabel,
@@ -65,7 +65,7 @@ export class SpellCastsListener extends AbstractEventProcessor {
   }
 
   // updateState(characterId, characterHealthState) {
-  //   // console.log('received timestamp', timestamp, ', cur moment().utc()', moment.utc().valueOf());
+  //   // this.logger.info('received timestamp', timestamp, ', cur moment().utc()', moment.utc().valueOf());
   //   // this.gameModel.execute({
   //   //   type: 'putCharHealth',
   //   //   characterId,

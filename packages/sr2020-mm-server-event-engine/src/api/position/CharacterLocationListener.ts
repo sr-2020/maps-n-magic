@@ -39,8 +39,7 @@ export class CharacterLocationListener extends AbstractEventProcessor {
     locationId: number,
     prevLocationId: number
   }) {
-    // console.log('onMessageRecieved');
-    // const { characterId } = console.log(data);
+    // this.logger.info('onMessageRecieved');
     const {
       id, locationId, prevLocationId,
     } = data;
@@ -48,12 +47,12 @@ export class CharacterLocationListener extends AbstractEventProcessor {
     //   getCharacterLocation(characterId, true),
     //   getCharacterLifeStyle(characterId),
     // ]);
-    // console.log('lifeStyle', lifeStyle, 'personName', personName);
+    // this.logger.info('lifeStyle', lifeStyle, 'personName', personName);
     this.updateState(id, locationId, prevLocationId);
   }
 
   updateState(characterId: number, locationId: number, prevLocationId: number) {
-    // console.log('received timestamp', timestamp, ', cur moment().utc()', moment.utc().valueOf());
+    // this.logger.info('received timestamp', timestamp, ', cur moment().utc()', moment.utc().valueOf());
     // this.gameModel.execute2<PutCharLocation>({
     //   type: 'putCharLocation',
     this.gameModel.emit2<EPutCharLocationRequested>({

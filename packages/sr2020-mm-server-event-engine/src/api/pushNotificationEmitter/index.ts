@@ -5,7 +5,7 @@ import {
   AbstractEventProcessor,
   EPushNotification
 } from 'sr2020-mm-event-engine';
-import { sendNotification } from './sendNotification';
+import { sendPush } from './sendPush';
 
 // const metadata = {
 //   actions: [],
@@ -44,6 +44,6 @@ export class PushNotificationEmitter extends AbstractEventProcessor {
   onPushNotification(data: EPushNotification): void {
     this.logger.info('pushNotification', data);
     const { characterId, title, message } = data;
-    sendNotification(characterId, title, message);
+    sendPush(characterId, title, message);
   }
 }

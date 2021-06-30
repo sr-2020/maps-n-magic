@@ -3,6 +3,9 @@ import fetch from 'isomorphic-fetch';
 import { RawUserRecord, validateRawUserRecord } from "sr2020-mm-event-engine";
 
 import { mainServerConstants } from '../constants';
+import { createLogger } from '../../logger';
+
+const logger = createLogger('getCharacterLocation');
 
 // const locations = null;
 
@@ -62,8 +65,8 @@ export async function getCharacterLocation(characterId: number, simulateLocation
       // throw new Error(`Network response was not ok ${text}`);
       throw new Error(`getCharacterLocation network response was not ok ${characterId} ${response.ok} ${response.statusText}`);
     } catch (err) {
-      // console.error(err);
-      console.error(err.message || err);
+      // logger.error(err);
+      logger.error(err.message || err);
     }
     return {
       locationId: null,
@@ -74,12 +77,12 @@ export async function getCharacterLocation(characterId: number, simulateLocation
   const result: RawUserRecord = await response.json();
 
   if (!validateRawUserRecord(result)) {
-    console.error(`Received invalid getCharacterLocation. ${JSON.stringify(result)} ${JSON.stringify(validateRawUserRecord.errors)}`);
+    logger.error(`Received invalid getCharacterLocation. ${JSON.stringify(result)} ${JSON.stringify(validateRawUserRecord.errors)}`);
   } else {
-    console.log('getCharacterLocation validation OK');
+    logger.info('getCharacterLocation validation OK');
   }
 
-  // console.log('getCharacterLocation ' + JSON.stringify(result));
+  // logger.info('getCharacterLocation ' + JSON.stringify(result));
   if (R.isNil(result.location_id)) {
     return {
       locationId: null,
@@ -88,7 +91,7 @@ export async function getCharacterLocation(characterId: number, simulateLocation
     // if (!locations) {
     //   const rawLocations = await getLocations();
     //   locations = rawLocations.filter(isGeoLocation);
-    //   // console.log(rawLocations.length, locations.length);
+    //   // logger.info(rawLocations.length, locations.length);
     // }
     // return locations[randomInteger(0, locations.length - 1)].id;
   }
@@ -115,8 +118,5 @@ export async function getCharacterLocation(characterId: number, simulateLocation
 
 //   return response.json();
 // }
-
-// getCharacterLocation(10198, true).then(console.log).catch(console.log);
-// getCharacterLocation(10198).then((data) => console.log(R.pluck('id', data))).catch(console.log);
 
 // exports.getCharacterLocation = getCharacterLocation;

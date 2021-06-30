@@ -64,8 +64,6 @@ import { CharacterLocDataManager } from '../dataManagers/CharacterLocDataManager
 
 import { defaultManaOceanSettings, manaOceanEffectSettings } from '../api/constants';
 
-import { winstonLogger as rootLogger } from "./winstonLogger";
-
 import {
   RemoteLocationRecordProvider as LocationRecordProvider,
   RemoteBeaconRecordProvider as BeaconRecordProvider,
@@ -84,6 +82,7 @@ import { CharacterLocationListener } from '../api/position/CharacterLocationList
 import { SpellCastsListener } from '../api/spellCasts/SpellCastsListener';
 import { PushNotificationEmitter } from '../api/pushNotificationEmitter';
 import { SpiritProvider, SpiritFractionProvider, SpiritRouteProvider } from '../api/spirits';
+import { createLogger } from '../logger';
 // import { FeatureProvider } from '../api/features';
 
 type EventBindingList = 
@@ -121,13 +120,13 @@ export function makeGameModel(): {
 } {
   // const gameServer = new EventEngine(services, console);
   // @ts-ignore
-  const gameServer = new EventEngine(services, rootLogger);
+  const gameServer = new EventEngine(services, createLogger('eventEngine'));
   // const gameServer = new EventEngine([], rootLogger);
   // gameServer.setData(database);
   const gameModel = gameServer.getGameModelImpl();
   // fillGameModelWithBots(gameModel);
 
-  const beaconRecordLogger = rootLogger.customChild(rootLogger, { service: 'BeaconRecordDB' });
+  const beaconRecordLogger = createLogger('beaconRecordDataBinding');
   const beaconRecordDataBinding = new CrudDataManager<BeaconRecord, BeaconRecordProvider>(
     gameModel,
     new BeaconRecordProvider(),
@@ -138,93 +137,99 @@ export function makeGameModel(): {
   beaconRecordDataBinding.init();
   gameServer.addDataBinding(beaconRecordDataBinding);
 
+  const locationRecordLogger = createLogger('locationRecordDataBinding');
   const locationRecordDataBinding = new LocationDataManager<LocationRecord, LocationRecordProvider>(
     gameModel,
     new LocationRecordProvider(),
     'locationRecord',
-    new PollingReadStrategy(gameModel, 15000, rootLogger),
-    rootLogger
+    new PollingReadStrategy(gameModel, 15000, locationRecordLogger),
+    locationRecordLogger
   );
   locationRecordDataBinding.init();
   gameServer.addDataBinding(locationRecordDataBinding);
 
-  
+  const spiritLogger = createLogger('spiritDataBinding');
   const spiritDataBinding = new CrudDataManagerPlus2<Spirit, SpiritProvider>(
     gameModel,
     new SpiritProvider(),
     'spirit',
-    new PollingReadStrategy(gameModel, 15000, rootLogger),
-    rootLogger
+    new PollingReadStrategy(gameModel, 15000, spiritLogger),
+    spiritLogger
   );
   spiritDataBinding.init();
   gameServer.addDataBinding(spiritDataBinding);
 
-
+  const spiritFractionLogger = createLogger('spiritFractionDataBinding');
   const spiritFractionDataBinding = new CrudDataManager2<SpiritFraction, SpiritFractionProvider>(
     gameModel,
     new SpiritFractionProvider(),
     'spiritFraction',
-    new PollingReadStrategy(gameModel, 15000, rootLogger),
-    rootLogger
+    new PollingReadStrategy(gameModel, 15000, spiritFractionLogger),
+    spiritFractionLogger
   );
   spiritFractionDataBinding.init();
   gameServer.addDataBinding(spiritFractionDataBinding);
 
+  const spiritRouteLogger = createLogger('spiritRouteDataBinding');
   const spiritRouteDataBinding = new CrudDataManager2<SpiritRoute, SpiritRouteProvider>(
     gameModel,
     new SpiritRouteProvider(),
     'spiritRoute',
-    new PollingReadStrategy(gameModel, 15000, rootLogger),
-    rootLogger
+    new PollingReadStrategy(gameModel, 15000, spiritRouteLogger),
+    spiritRouteLogger
   );
   spiritRouteDataBinding.init();
   gameServer.addDataBinding(spiritRouteDataBinding);
 
+  const userRecordLogger = createLogger('userRecordDataBinding');
   const userRecordDataBinding = new ReadDataManager<RawUserRecord, UserRecordProvider>(
     gameModel,
     new UserRecordProvider(),
     'userRecord',
-    new PollingReadStrategy(gameModel, 15000, rootLogger, 'reloadUserRecords'),
-    rootLogger
+    new PollingReadStrategy(gameModel, 15000, userRecordLogger, 'reloadUserRecords'),
+    userRecordLogger
   );
   userRecordDataBinding.init();
   gameServer.addDataBinding(userRecordDataBinding);
 
+  // const featureLogger = createLogger('featureDataBinding');
   // const featureDataBinding = new ReadDataManager2<Feature, FeatureProvider>(
   //   gameModel,
   //   new FeatureProvider(),
   //   'feature',
-  //   new PollingReadStrategy(gameModel, 60 * 60 * 1000, rootLogger), // 1 hour
-  //   rootLogger
+  //   new PollingReadStrategy(gameModel, 60 * 60 * 1000, featureLogger), // 1 hour
+  //   featureLogger
   // );
   // featureDataBinding.init();
   // gameServer.addDataBinding(featureDataBinding);
 
+  const manaOceanSettingsLogger = createLogger('manaOceanSettingsDB');
   const manaOceanSettingsDB = new SettingsDataManager<ManaOceanSettingsData, ManaOceanSettingsProvider>(
     gameModel,
     new ManaOceanSettingsProvider(),
     'manaOcean',
-    new PollingReadStrategy(gameModel, 15000, rootLogger),
+    new PollingReadStrategy(gameModel, 15000, manaOceanSettingsLogger),
     defaultManaOceanSettings,
-    rootLogger,
+    manaOceanSettingsLogger,
   );
   manaOceanSettingsDB.init();
   gameServer.addDataBinding(manaOceanSettingsDB);
 
+  const manaOceanEffectsSettingsLogger = createLogger('manaOceanEffectsSettingsDB');
   const manaOceanEffectsSettingsDB = new SettingsDataManager<ManaOceanEffectSettingsData, ManaOceanEffectSettingsProvider>(
     gameModel,
     new ManaOceanEffectSettingsProvider(),
     'manaOceanEffects',
-    new PollingReadStrategy(gameModel, 15000, rootLogger),
+    new PollingReadStrategy(gameModel, 15000, manaOceanEffectsSettingsLogger),
     manaOceanEffectSettings,
-    rootLogger,
+    manaOceanEffectsSettingsLogger,
   );
   manaOceanEffectsSettingsDB.init();
   gameServer.addDataBinding(manaOceanEffectsSettingsDB);
 
   const charLocDM = new CharacterLocDataManager(
     gameModel,
-    rootLogger,
+    createLogger('CharacterLocDataManager'),
   );
   charLocDM.init();
   gameServer.addDataBinding(charLocDM);
@@ -237,17 +242,17 @@ export function makeGameModel(): {
       {from: 'enableManaOceanRequested', to: 'enableManaOceanConfirmed'},
       {from: 'enableSpiritMovementRequested', to: 'enableSpiritMovementConfirmed'},
     ],
-    rootLogger
+    createLogger('RedirectDataBinding2')
   ));
-  gameServer.addDataBinding(new CharacterStatesListener(gameModel, rootLogger));
-  gameServer.addDataBinding(new CharacterLocationListener(gameModel, rootLogger));
-  gameServer.addDataBinding(new SpellCastsListener(gameModel, rootLogger));
-  const pushNotificationEmitter = new PushNotificationEmitter(gameModel, rootLogger);
+  gameServer.addDataBinding(new CharacterStatesListener(gameModel, createLogger('CharacterStatesListener')));
+  gameServer.addDataBinding(new CharacterLocationListener(gameModel, createLogger('CharacterLocationListener')));
+  gameServer.addDataBinding(new SpellCastsListener(gameModel, createLogger('SpellCastsListener')));
+  const pushNotificationEmitter = new PushNotificationEmitter(gameModel, createLogger('PushNotificationEmitter'));
   pushNotificationEmitter.init();
   gameServer.addDataBinding(pushNotificationEmitter);
   gameServer.addDataBinding(new StubEventProcessor(
     gameModel, 
-    rootLogger, {
+    createLogger('StubEventProcessor'), {
       emitEvents: [
         // event from client to set character location
         "emitCharacterLocationChanged",

@@ -2,6 +2,9 @@ import { PubSub, Message } from '@google-cloud/pubsub';
 import Ajv, { JSONSchemaType } from "ajv";
 import { rescueServiceSubscriptionName } from "../constants";
 import { BodyConditionValues } from "sr2020-mm-event-engine";
+import { createLogger } from '../../logger';
+
+const logger = createLogger('listenHealthChanges');
 
 const timeout = 60;
 
@@ -47,20 +50,20 @@ export function listenHealthChanges(callback: (msg: HealthChangeMessage) => void
   // Create an event handler to handle messages
   let messageCount = 0;
   const messageHandler = (message: Message) => {
-    // console.log(`Received message ${message.id}:`);
-    // console.log(`\tData: ${message.data}`);
+    // logger.info(`Received message ${message.id}:`);
+    // logger.info(`\tData: ${message.data}`);
     const parsedData: HealthChangeMessage = JSON.parse(message.data.toString());
-    // console.log(`Data: ${JSON.stringify(parsedData, null, '  ')}`);
-    // console.log(`\tAttributes: ${message.attributes}`);
+    // logger.info(`Data: ${JSON.stringify(parsedData, null, '  ')}`);
+    // logger.info(`\tAttributes: ${message.attributes}`);
     messageCount += 1;
-    // console.log(`listenHealthChanges data: ${JSON.stringify(parsedData, null, '  ')}`);
+    // logger.info(`listenHealthChanges data: ${JSON.stringify(parsedData, null, '  ')}`);
 
     if (!validateHealthChangeMessage(parsedData)) {
-      console.error(`Received invalid listenHealthChanges. ${JSON.stringify(parsedData)} ${JSON.stringify(validateHealthChangeMessage.errors)}`);
+      logger.error(`Received invalid listenHealthChanges. ${JSON.stringify(parsedData)} ${JSON.stringify(validateHealthChangeMessage.errors)}`);
     } else {
-      console.log('listenHealthChanges validation OK');
+      logger.info('listenHealthChanges validation OK');
     }
-    // console.log(`listenHealthChanges validation OK ${JSON.stringify(parsedData)}`);
+    // logger.info(`listenHealthChanges validation OK ${JSON.stringify(parsedData)}`);
 
     // listenHealthChanges data: {
     //   "characterId": 51935,
@@ -79,8 +82,8 @@ export function listenHealthChanges(callback: (msg: HealthChangeMessage) => void
   subscription.on('message', messageHandler);
 
   subscription.on('error', error => {
-    console.error('listenHealthChanges received error:', error);
-    process.exit(1);
+    logger.error('listenHealthChanges received error:', error);
+    // process.exit(1);
   });
 
   // if (simulateMessages) {
@@ -123,10 +126,10 @@ export function listenHealthChanges(callback: (msg: HealthChangeMessage) => void
 
   // setTimeout(() => {
   //   subscription.removeListener('message', messageHandler);
-  //   console.log(`${messageCount} message(s) received.`);
+  //   logger.info(`${messageCount} message(s) received.`);
   // }, timeout * 1000);
 }
 
 // exports.listenHealthChanges = listenHealthChanges;
-// console.log('process.env.NODE_ENV', process.env.NODE_ENV);
+// logger.info('process.env.NODE_ENV', process.env.NODE_ENV);
 // throw new Error('boom');

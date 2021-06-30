@@ -1,19 +1,22 @@
 import fetch from 'isomorphic-fetch';
+import { createLogger } from '../../logger';
 import { typelessValidateEntityFunction } from '../types';
+
+const logger = createLogger('settingsApiInterfaces');
 
 export const getSettings = (state: {
   url: string, 
   validateSettings: typelessValidateEntityFunction
 }) => ({
   async get() {
-    // console.log('getSettings url', state.url);
+    // logger.info('getSettings url', state.url);
     const response = await fetch(state.url);
     if (!response.ok) {
       if (response.status === 404) {
         return null;
       }
       const text = await response.text();
-      // console.log(response);
+      // logger.info(response);
       // throw new Error(`Network response was not ok ${text}`);
       throw new Error(`get settings network response was not ok ${response.ok} ${response.statusText}`);
     }
@@ -24,9 +27,9 @@ export const getSettings = (state: {
     const res = await response.json();
 
     if (!state.validateSettings(res)) {
-      console.log('Get settings validation not passed.', JSON.stringify(res), JSON.stringify(state.validateSettings.errors));
+      logger.info('Get settings validation not passed.', JSON.stringify(res), JSON.stringify(state.validateSettings.errors));
     // } else {
-    //   console.log('Get settings validation passed');
+    //   logger.info('Get settings validation passed');
     }
 
     return res;
@@ -39,9 +42,9 @@ export const postSettings = (state: {
 }) => ({
   async post(settings: unknown) {
     if (!state.validateSettings(settings)) {
-      console.log('Post settings validation not passed.', JSON.stringify(settings), JSON.stringify(state.validateSettings.errors));
+      logger.info('Post settings validation not passed.', JSON.stringify(settings), JSON.stringify(state.validateSettings.errors));
     // } else {
-    //   console.log('Post settings validation passed');
+    //   logger.info('Post settings validation passed');
     }
     const response = await fetch(state.url, {
       method: 'POST',
@@ -58,7 +61,7 @@ export const postSettings = (state: {
       throw new Error(`post settings network response was not ok ${response.ok} ${response.statusText}`);
     }
 
-    // console.log('before parse post settings json');
+    // logger.info('before parse post settings json');
 
     // return response.json();
     // something strange. response.json() returns error

@@ -1,6 +1,9 @@
 import fetch from 'isomorphic-fetch';
+import { createLogger } from '../../logger';
 
 import { typelessValidateEntityFunction } from "../types";
+
+const logger = createLogger('positionApiInterfaces');
 
 const LIMIT = 500;
 
@@ -19,12 +22,12 @@ export const gettable = (state: {
     const data: any[] = await response.json();
 
     if (data.length === LIMIT) {
-      console.warn(`GET limit ${LIMIT} reached by url ${state.url}`);
+      logger.warn(`GET limit ${LIMIT} reached by url ${state.url}`);
     }
 
     data.forEach(el => {
       if (!state.validateGetEntity(el)) {
-        console.log('GET Validation not passed.', JSON.stringify(el), JSON.stringify(state.validateGetEntity.errors));
+        logger.info('GET Validation not passed.', JSON.stringify(el), JSON.stringify(state.validateGetEntity.errors));
       }
     });
 
@@ -45,10 +48,10 @@ export const postable = <T>(state: {
     };
 
     if (!state.validatePostEntity(object)) {
-      console.log('POST Validation not passed.', JSON.stringify(object), JSON.stringify(state.validatePostEntity.errors));
+      logger.info('POST Validation not passed.', JSON.stringify(object), JSON.stringify(state.validatePostEntity.errors));
     //   return;
     // } else {
-    //   console.log('POST validation OK');
+    //   logger.info('POST validation OK');
     }
 
     const response = await fetch(state.url, {
@@ -68,7 +71,7 @@ export const postable = <T>(state: {
 
     const responseObject = await response.json();
 
-    // console.log(responseObject);
+    // logger.info(responseObject);
 
     return responseObject;
   },
@@ -80,10 +83,10 @@ export const puttable = <T>(state: {
 }) => ({
   async put({ id, props }: {id: number, props: T}) {
     if (!state.validatePutEntity(props)) {
-      console.log('PUT Validation not passed.', JSON.stringify(props), JSON.stringify(state.validatePutEntity.errors));
+      logger.info('PUT Validation not passed.', JSON.stringify(props), JSON.stringify(state.validatePutEntity.errors));
     //   return;
     // } else {
-    //   console.log('PUT validation OK');
+    //   logger.info('PUT validation OK');
     }
 
     const response = await fetch(`${state.url}/${id}`, {
@@ -119,10 +122,10 @@ export const multiPuttable = <T>(state: {
   }) {
     updates.forEach(({ body }) => {
       if (!state.validatePutEntity2(body)) {
-        console.log('Multi PUT Validation not passed.', JSON.stringify(body), JSON.stringify(state.validatePutEntity2.errors));
+        logger.info('Multi PUT Validation not passed.', JSON.stringify(body), JSON.stringify(state.validatePutEntity2.errors));
         // return;
       // } else {
-      //   console.log('Multi PUT validation OK');
+      //   logger.info('Multi PUT validation OK');
       }
     });
 

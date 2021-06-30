@@ -8,10 +8,13 @@ import {
   validateGenericRow, 
   validateGenericRows, 
 } from "./genericRowValidation";
+import { createLogger } from '../../logger';
+
+const logger = createLogger('spiritsApi');
 
 export const getSpirits = async function(): Promise<unknown[]> {
   const { rows } = await pool.query('SELECT * FROM spirit');
-  // console.log('raw spirits', JSON.stringify(rows));
+  // logger.info('raw spirits', JSON.stringify(rows));
   if(!validateGenericRows(rows)) {
     throw new Error(`Generic row check got validation error. ${JSON.stringify(validateGenericRows.errors)}`);
   }
@@ -30,7 +33,7 @@ export const postSpirit = async function(entity: Omit<Spirit, "id">): Promise<Sp
 }
 
 export const putSpirit = async function(entity: Spirit): Promise<Spirit> {
-  console.log("put", entity.id);
+  logger.info("put", entity.id);
   // await pool.query('UPDATE spirit SET data = $1 WHERE id = $2', [R.omit(['id'], entity), entity.id]);
   const { queryText, values } = generatePutQuery([entity]);
   await pool.query(queryText, values);
@@ -68,8 +71,8 @@ function generatePutQuery(spirits: Spirit[]): {
     ) AS putSpirit(id, data)
     WHERE spirit.id = putSpirit.id;`.split('\n').join(' ');
 
-  // console.log(values);
-  // console.log(queryText);
+  // logger.info(values);
+  // logger.info(queryText);
 
   return {
     queryText,
@@ -78,14 +81,14 @@ function generatePutQuery(spirits: Spirit[]): {
 }
 
 export const putMultipleSpirits = async function(entities: Spirit[]): Promise<Spirit[]> {
-  console.log("put multiple", R.pluck('id', entities));
+  logger.info("put multiple", R.pluck('id', entities));
   const { queryText, values } = generatePutQuery(entities);
   await pool.query(queryText, values);
   return entities;
 }
 
 export const deleteSpirit = async function(id: number): Promise<unknown | null> {
-  console.log("delete", id);
+  logger.info("delete", id);
   const { rows } = await pool.query('DELETE FROM spirit WHERE id = $1 RETURNING id, data', [id]);
   const row: unknown | null = rows[0] ? rows[0] : null;
   if(row === null) {

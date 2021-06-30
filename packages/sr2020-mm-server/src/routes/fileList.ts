@@ -19,13 +19,6 @@ const router = Router();
 // const { ACCESS_TOKEN } = require('../settings');
 
 const dbx = new Dropbox({ accessToken: ACCESS_TOKEN, fetch });
-// dbx.filesListFolder({path: '/SR_sounds'})
-//   .then(function(response) {
-//     console.log(response);
-//   })
-//   .catch(function(error) {
-//     console.log(error);
-//   });
 
 /* GET users listing. */
 router.get('/fileList', (req, res) => {
@@ -51,7 +44,5 @@ router.get('/fileList', (req, res) => {
 //   console.log(req.query.name);
 //   res.send(req.query.name);
 // });
-
-// module.exports = router;
 
 export const fileListRouter = router;

@@ -96,7 +96,7 @@ export class RedirectDataBinding2<
     this.eventHandlers = this.redirectIndex.map(({from, to}) => ({
       from,
       handler: <Pair extends TEventBindingList>(action: Pair["from"]) => {
-        // console.log('redirect action', eventName);
+        // this.logger.info('redirect action', eventName);
         this.gameModel.emit2<Pair["to"]>({
           ...action,
           type: to,
@@ -114,7 +114,7 @@ export class RedirectDataBinding2<
     this.logger.info('redirectIndex froms', this.redirectIndex.map(R.prop('from')));
     // this.logger.info('redirectIndex keys', R.keys(this.redirectIndex));
     this.eventHandlers.forEach(el => gameModel[action](el.from, el.handler));
-    // console.log('redirectIndex keys', R.keys(this.redirectIndex));
+    // this.logger.info('redirectIndex keys', R.keys(this.redirectIndex));
     // R.keys(this.redirectIndex).forEach((eventName) => gameModel[action]<ListenEvent>(eventName, this.emit(eventName)));
   }
 }

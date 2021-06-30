@@ -10,10 +10,13 @@ import {
   validateGenericRow, 
   validateGenericRows
 } from "./genericRowValidation";
+import { createLogger } from '../../logger';
+
+const logger = createLogger('spiritRoutesApi');
 
 export const getSpiritRoutes = async function(): Promise<unknown[]> {
   const { rows } = await pool.query('SELECT * FROM "spiritRoute"');
-  // console.log('raw spirits', rows);
+  // logger.info('raw spirits', rows);
   if(!validateGenericRows(rows)) {
     throw new Error(`Generic row check got validation error. ${JSON.stringify(validateGenericRows.errors)}`);
   }
@@ -32,13 +35,13 @@ export const postSpiritRoute = async function(entity: Omit<SpiritRoute, "id">): 
 }
 
 export const putSpiritRoute = async function(entity: SpiritRoute): Promise<SpiritRoute> {
-  console.log("put", entity.id);
+  logger.info("put", entity.id);
   await pool.query('UPDATE "spiritRoute" SET data = $1 WHERE id = $2', [R.omit(['id'], entity), entity.id]);
   return entity;
 }
 
 export const deleteSpiritRoute = async function(id: number): Promise<unknown | null> {
-  console.log("delete", id);
+  logger.info("delete", id);
   const { rows } = await pool.query('DELETE FROM "spiritRoute" WHERE id = $1 RETURNING id, data', [id]);
   const row: unknown | null = rows[0] ? rows[0] : null;
   if(row === null) {

@@ -1,5 +1,10 @@
 import { Router } from 'express';
 import { innerPostUserPosition } from 'sr2020-mm-server-event-engine';
+import { 
+  createLogger 
+} from 'sr2020-mm-server-event-engine';
+
+const logger = createLogger('postUserPosition');
 
 const router = Router();
 
@@ -10,7 +15,7 @@ router.post('/postUserPosition/:characterId', (req, res, next) => {
   innerPostUserPosition(Number(req.params.characterId), beacon).then(() => {
     res.sendStatus(200);
   }).catch((err) => {
-    console.error(err);
+    logger.error(err);
     next(err);
   });
 });

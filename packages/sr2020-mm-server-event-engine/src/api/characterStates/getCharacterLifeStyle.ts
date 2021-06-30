@@ -6,6 +6,9 @@ import {
 } from 'sr2020-mm-event-engine';
 
 import { mainServerConstants } from '../constants';
+import { createLogger } from '../../logger';
+
+const logger = createLogger('getCharacterLifeStyle');
 
 // {
 //   "data": {
@@ -82,7 +85,7 @@ export async function getCharacterLifeStyle(characterId: number): Promise<{
       // throw new Error(`getCharacterLifeStyle network response was not ok ${text}`);
       throw new Error(`getCharacterLifeStyle network response was not ok ${response.ok} ${response.statusText}`);
     } catch (err) {
-      console.error(err);
+      logger.error(err);
     }
     return {
       lifeStyle: LifeStyles.Unknown,
@@ -93,11 +96,11 @@ export async function getCharacterLifeStyle(characterId: number): Promise<{
   const result = await response.json();
 
   if (!validateCharacterLifeStyleMessage(result)) {
-    console.error(`Received invalid getCharacterLifeStyle. ${JSON.stringify(result)} ${JSON.stringify(validateCharacterLifeStyleMessage.errors)}`);
+    logger.error(`Received invalid getCharacterLifeStyle. ${JSON.stringify(result)} ${JSON.stringify(validateCharacterLifeStyleMessage.errors)}`);
   } else {
-    console.log('getCharacterLifeStyle validation OK');
+    logger.info('getCharacterLifeStyle validation OK');
   }
-  // console.log('getCharacterLifeStyle ' + JSON.stringify(result));
+  // logger.info('getCharacterLifeStyle ' + JSON.stringify(result));
 
   if (result.status) {
     return {

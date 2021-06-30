@@ -1,4 +1,7 @@
 import assert from "assert";
+import { createLogger } from "../../logger";
+
+const logger = createLogger('mainServerConstants');
 
 interface MainServerConstants {
   beaconsUrl: string;
@@ -24,7 +27,7 @@ export function mainServerConstants(): MainServerConstants {
     assert(PUSH_URL != null, "PUSH_URL is not specified");
     assert(MODEL_ENGINE_URL != null, "MODEL_ENGINE_URL is not specified");
     
-    console.log("MainServerConstants", { 
+    logger.info("MainServerConstants", { 
       POSITION_URL, 
       BILLING_URL, 
       PUSH_URL,

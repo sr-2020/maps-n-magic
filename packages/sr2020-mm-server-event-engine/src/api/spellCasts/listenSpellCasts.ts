@@ -2,6 +2,9 @@ import { PubSub, Message } from '@google-cloud/pubsub';
 import { SpellCast } from "sr2020-mm-event-engine";
 import Ajv, { JSONSchemaType } from "ajv";
 import { manaOceanSpellCastSubscriptionName } from "../constants";
+import { createLogger } from '../../logger';
+
+const logger = createLogger('listenSpellCasts');
 
 const timeout = 60;
 
@@ -95,20 +98,20 @@ export function listenSpellCasts(
   // Create an event handler to handle messages
   let messageCount = 0;
   const messageHandler = (message: Message) => {
-    // console.log(`Received message ${message.id}:`);
-    // console.log(`\tData: ${message.data}`);
+    // logger.info(`Received message ${message.id}:`);
+    // logger.info(`\tData: ${message.data}`);
     const parsedData: SpellCast = JSON.parse(message.data.toString());
-    // console.log(`listenSpellCasts data: ${JSON.stringify(parsedData, null, '  ')}`);
-    // console.log(`\tAttributes: ${message.attributes}`);
+    // logger.info(`listenSpellCasts data: ${JSON.stringify(parsedData, null, '  ')}`);
+    // logger.info(`\tAttributes: ${message.attributes}`);
     messageCount += 1;
 
     // "Ack" (acknowledge receipt of) the message
     message.ack();
 
     if (!validateSpellCast(parsedData)) {
-      console.error(`Received invalid listenSpellCasts. ${JSON.stringify(parsedData)} ${JSON.stringify(validateSpellCast.errors)}`);
+      logger.error(`Received invalid listenSpellCasts. ${JSON.stringify(parsedData)} ${JSON.stringify(validateSpellCast.errors)}`);
     } else {
-      console.log('listenSpellCasts validation OK');
+      logger.info('listenSpellCasts validation OK');
     }
 
     callback(parsedData);
@@ -118,8 +121,8 @@ export function listenSpellCasts(
   subscription.on('message', messageHandler);
 
   subscription.on('error', error => {
-    console.error('listenSpellCasts received error:', error);
-    process.exit(1);
+    logger.error('listenSpellCasts received error:', error);
+    // process.exit(1);
   });
 
   // if (simulateMessages) {
@@ -187,10 +190,10 @@ export function listenSpellCasts(
 
   // setTimeout(() => {
   //   subscription.removeListener('message', messageHandler);
-  //   console.log(`${messageCount} message(s) received.`);
+  //   logger.info(`${messageCount} message(s) received.`);
   // }, timeout * 1000);
 }
 
 // exports.listenHealthChanges = listenHealthChanges;
-// console.log('process.env.NODE_ENV', process.env.NODE_ENV);
+// logger.info('process.env.NODE_ENV', process.env.NODE_ENV);
 // throw new Error('boom');

@@ -6,15 +6,17 @@ import {
   validateTokenRequestBody,
   genericServerConstants,
   getUserTokenData,
-  winstonLogger
+  createLogger
 } from 'sr2020-mm-server-event-engine';
+
+const logger = createLogger('login');
 
 const router = Router();
 
 router.get('/api/isLoggedIn', (req, res, next) => {
-  // console.log('req.cookies', req.cookies);
+  // logger.info('req.cookies', req.cookies);
   const { mm_token } = req.cookies;
-  winstonLogger.info('isLoggedIn', mm_token);
+  logger.info('isLoggedIn', mm_token);
   if (mm_token === undefined) {
     res.status(401).end();
   } else {
@@ -23,7 +25,7 @@ router.get('/api/isLoggedIn', (req, res, next) => {
 });
 
 router.post('/api/login', async (req, res) => {
-  winstonLogger.info('/api/login', req.body);
+  logger.info('/api/login', req.body);
 
   const authRequest = req.body;
   if (!validateAuthRequest(authRequest)) {
@@ -41,11 +43,11 @@ router.post('/api/login', async (req, res) => {
 
     const { api_key } = data;
 
-    // console.log('test call', res2.status, data);
+    // logger.info('test call', res2.status, data);
   
     try {
       const parsedToken = jwt.verify(api_key, genericServerConstants().JWT_SECRET);
-      winstonLogger.info('parsedToken', parsedToken);
+      logger.info('parsedToken', parsedToken);
       if (!validateTokenData(parsedToken)) {
         res.status(500).send(`parsedToken verification failed ${JSON.stringify(parsedToken)} ${JSON.stringify(validateTokenData.errors)}`);
         return;
@@ -58,11 +60,11 @@ router.post('/api/login', async (req, res) => {
       }
 
       // const data = await getCharacterModelData(authRequest.username);
-      // console.log(data);
+      // logger.info(data);
 
       res.cookie('mm_token', api_key, { httpOnly: true });
       const { body } = req;
-      winstonLogger.info('body', body);
+      logger.info('body', body);
       res.json(parsedToken);
     } catch (err) {
       res.status(500).send(`User token verification failed ${JSON.stringify(err)}`);

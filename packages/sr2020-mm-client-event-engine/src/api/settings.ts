@@ -17,10 +17,10 @@ export function joinUrl(...args: string[]): string {
 
 let WS_URL: string;
 if (process.env.NODE_ENV === 'production') {
-  WS_URL = 'wss://maps-n-magic2.evarun.ru/ws';
+  WS_URL = 'wss://maps-n-magic2.evarun.ru/api/ws';
   // WS_URL = 'wss://localhost/ws';
 } else {
-  WS_URL = 'ws://localhost:3001/ws';
+  WS_URL = 'ws://localhost:3001/api/ws';
 }
 
 export { WS_URL };

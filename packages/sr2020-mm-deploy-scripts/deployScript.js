@@ -19,12 +19,12 @@ async function runDeploy() {
     await fs.copy(pathToMainClientBuild, pathToMainStatic);
 
     // player client deploy
-    const exists = await fs.pathExists(pathToPlayerStatic);
-    if (exists) {
-      console.log('Removing previous main deploy');
+    const exists2 = await fs.pathExists(pathToPlayerStatic);
+    if (exists2) {
+      console.log('Removing previous player deploy');
       await fs.remove(pathToPlayerStatic);
     }
-    console.log('Copy main client to static dir');
+    console.log('Copy player client to static dir');
     await fs.copy(pathToPlayerClientBuild, pathToPlayerStatic);
     // console.log('Copy track analysis to static dir');
     // await fs.copy(pathToTrackAnalysis, pathToStaticTA);

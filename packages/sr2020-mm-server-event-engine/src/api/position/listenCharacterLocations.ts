@@ -1,8 +1,10 @@
 // character_location_change
 import { PubSub, Message } from '@google-cloud/pubsub';
 import Ajv, { JSONSchemaType } from "ajv";
+import { createLogger } from '../../logger';
 import { charLocChangeSubscriptionName } from "../constants";
 
+const logger = createLogger('listenCharacterLocationsApi');
 
 const timeout = 60;
 
@@ -45,21 +47,21 @@ export function listenCharacterLocations(
   // Create an event handler to handle messages
   let messageCount = 0;
   const messageHandler = (message: Message) => {
-    // console.log(`Received message ${message.id}:`);
-    // console.log(`\tData: ${message.data}`);
+    // logger.info(`Received message ${message.id}:`);
+    // logger.info(`\tData: ${message.data}`);
     const parsedData: CharLocationMessage = JSON.parse(message.data.toString());
-    // console.log(`Data: ${JSON.stringify(parsedData, null, '  ')}`);
-    // console.log(`\tAttributes: ${message.attributes}`);
+    // logger.info(`Data: ${JSON.stringify(parsedData, null, '  ')}`);
+    // logger.info(`\tAttributes: ${message.attributes}`);
     messageCount += 1;
-    // console.log(`listenCharacterLocations data: ${JSON.stringify(parsedData, null, '  ')}`);
+    // logger.info(`listenCharacterLocations data: ${JSON.stringify(parsedData, null, '  ')}`);
 
     // "Ack" (acknowledge receipt of) the message
     message.ack();
 
     if (!validateCharLocationMessage(parsedData)) {
-      console.error(`Received invalid listenCharacterLocations. ${JSON.stringify(parsedData)} ${JSON.stringify(validateCharLocationMessage.errors)}`);
+      logger.error(`Received invalid listenCharacterLocations. ${JSON.stringify(parsedData)} ${JSON.stringify(validateCharLocationMessage.errors)}`);
     } else {
-      console.log('listenCharacterLocations validation OK');
+      logger.info('listenCharacterLocations validation OK');
     }
 
     callback(parsedData);
@@ -69,8 +71,8 @@ export function listenCharacterLocations(
   subscription.on('message', messageHandler);
 
   subscription.on('error', error => {
-    console.error('listenCharacterLocations received error:', error);
-    process.exit(1);
+    logger.error('listenCharacterLocations received error:', error);
+    // process.exit(1);
   });
 
   // if (simulateMessages) {
@@ -100,10 +102,10 @@ export function listenCharacterLocations(
 
   // setTimeout(() => {
   //   subscription.removeListener('message', messageHandler);
-  //   console.log(`${messageCount} message(s) received.`);
+  //   logger.info(`${messageCount} message(s) received.`);
   // }, timeout * 1000);
 }
 
 // exports.listenHealthChanges = listenHealthChanges;
-// console.log('process.env.NODE_ENV', process.env.NODE_ENV);
+// logger.info('process.env.NODE_ENV', process.env.NODE_ENV);
 // throw new Error('boom');

@@ -1,6 +1,11 @@
 import { Router } from 'express';
 import * as jwt from "jsonwebtoken";
 import { AuthorizedRequest, validateTokenData, genericServerConstants } from 'sr2020-mm-server-event-engine';
+import { 
+  createLogger 
+} from 'sr2020-mm-server-event-engine';
+
+const logger = createLogger('parseUserData');
 
 const router = Router();
 
@@ -15,7 +20,7 @@ router.use((req1, res, next) => {
 
   try {
     const parsedToken = jwt.verify(mm_token, genericServerConstants().JWT_SECRET);
-    console.log('parsedToken', parsedToken);
+    logger.info('parsedToken', parsedToken);
     if (!validateTokenData(parsedToken)) {
       res.status(500).send(`parsedToken verification failed ${JSON.stringify(parsedToken)} ${JSON.stringify(validateTokenData.errors)}`);
       return;

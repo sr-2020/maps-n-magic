@@ -52,14 +52,13 @@ export class ReadDataManager<Entity, T extends Gettable<Entity>> extends Abstrac
 
   load() {
     this.logger.info(`Call to load ${this.entityName}`);
-    // console.log(`load ${this.entityName}`);
     this.dataProvider.get().then((entities) => {
       if (R.equals(this.entities, entities)) {
-        // console.log('no changes', this.ccEntityName);
+        // this.logger.info('no changes', this.ccEntityName);
         return;
       }
       this.entities = entities;
-      // console.log(entities);
+      // this.logger.info(entities);
       this.gameModel.execute({
         type: `set${this.ccEntityName}s`,
         [this.plural]: R.clone(this.entities),
@@ -69,7 +68,7 @@ export class ReadDataManager<Entity, T extends Gettable<Entity>> extends Abstrac
 
   getErrorHandler(title: string) {
     return (err: Error) => {
-      console.error(err);
+      this.logger.error(err);
       this.gameModel.emit2<EPostNotification>({
         type: 'postNotification',
         title,

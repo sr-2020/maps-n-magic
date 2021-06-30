@@ -1,9 +1,12 @@
 import { Pool } from "pg";
+import { createLogger } from "../logger";
+
+const logger = createLogger('pgPool');
 
 export const pool = new Pool();
 
 export async function shutdownPgPool() {
-  console.log("Shutting down PG pool");
+  logger.info("Shutting down PG pool");
   await pool.end();
 }
 

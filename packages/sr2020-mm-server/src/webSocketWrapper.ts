@@ -16,7 +16,7 @@ export class WebSocketWrapper {
     this.subscribeWsConnection('on');
     this.subscribe('on');
     this.innerInit();
-    // console.log('forward actions', initConfig.forwardActions);
+    // this.logger.info('forward actions', initConfig.forwardActions);
   }
 
   innerInit() {
@@ -70,7 +70,7 @@ export class WebSocketWrapper {
   }
 
   forwardAction(action: unknown) {
-    // console.log('forwardAction', action.type);
+    // this.logger.info('forwardAction', action.type);
     try {
       this.ws.send(JSON.stringify(action));
     } catch(err) {

@@ -1,4 +1,7 @@
 import assert from "assert";
+import { createLogger } from "../../logger";
+
+const logger = createLogger('genericServerConstants');
 
 interface GenericServerConstants {
   JWT_SECRET: string;
@@ -22,7 +25,7 @@ export function genericServerConstants(): GenericServerConstants {
     assert(GATEWAY_URL != null, "GATEWAY_URL is not specified");
     assert(JWT_SECRET != null, "JWT_SECRET is not specified");
     
-    console.log("GenericServerConstants", { 
+    logger.info("GenericServerConstants", { 
       MODELS_MANAGER_URL, 
       GATEWAY_URL, 
       JWT_SECRET: '<not empty>'
