@@ -1,32 +1,41 @@
 import assert from "assert";
 import { createLogger } from "../../logger";
+import { getEnvVariables, getPrintObject, mergeEnvVariables } from "./envUtils";
+import { GenericServerConstants, getGenericEnvVariables, getGenericServerConstants } from "./genericServerConstants";
 
 const logger = createLogger('playerServerConstants');
 
-interface PlayerServerConstants {
+interface PlayerServerConstants extends GenericServerConstants {
   playerDataSseUrl: string;
 };
 
 let constantsInstance: PlayerServerConstants | null = null;
 
+enum PlayerServerConstant {
+  'MM_MASTER_SERVER_URL' = 'MM_MASTER_SERVER_URL',
+}
+
 export function playerServerConstants(): PlayerServerConstants {
   if (constantsInstance === null) {
-    const MM_MASTER_SERVER_URL = process.env.MM_MASTER_SERVER_URL;
 
-    assert(MM_MASTER_SERVER_URL != null, "MM_MASTER_SERVER_URL is not specified");
-    
-    logger.info("PlayerServerConstants", { 
-      MM_MASTER_SERVER_URL, 
-    });
+    const playerEnvVariables = mergeEnvVariables(
+      getGenericEnvVariables(),
+      getEnvVariables(Object.values(PlayerServerConstant), [])
+    );
+    const { values } = playerEnvVariables;
+    if (playerEnvVariables.missedValues.length > 0) {
+      throw new Error(`Missed env params ${JSON.stringify(playerEnvVariables.missedValues)}`);
+    }
+
+    const printObject = getPrintObject(playerEnvVariables);
+
+    logger.info("PlayerServerConstants", printObject);
     
     constantsInstance = {
-      playerDataSseUrl: MM_MASTER_SERVER_URL + '/playerDataSse',
+      ...getGenericServerConstants(playerEnvVariables),
+      playerDataSseUrl: values[PlayerServerConstant.MM_MASTER_SERVER_URL] + '/playerDataSse',
     };
   }
   assert(constantsInstance !== null);
   return constantsInstance;
 }
-
-// // /api/v1/users/{id}
-// const url = 'https://position.evarun.ru/api/v1/users';
-// const locationUrl = 'https://position.evarun.ru/api/v1/locations';

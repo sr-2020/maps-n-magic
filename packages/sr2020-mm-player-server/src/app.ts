@@ -13,8 +13,7 @@ import * as jwt from "jsonwebtoken";
 import { 
   AuthorizedRequest, 
   winstonLogger,
-  playerServerConstants,
-  genericServerConstants
+  playerServerConstants
 } from 'sr2020-mm-server-event-engine';
 import { makeGameModel } from "./gameModel";
 // import { WebSocketInitClientConfig } from 'sr2020-mm-event-engine';
@@ -210,8 +209,8 @@ const isUserRecordsChanged = (obj: any): obj is EUserRecordsChanged => {
 }
 
 const playerServerToken = jwt.sign(
-  genericServerConstants().playerServerTokenPayload, 
-  genericServerConstants().JWT_SECRET
+  playerServerConstants().playerServerTokenPayload, 
+  playerServerConstants().JWT_SECRET
 );
 
 const es = new EventSource(playerServerConstants().playerDataSseUrl, {

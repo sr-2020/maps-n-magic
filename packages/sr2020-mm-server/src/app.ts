@@ -12,7 +12,7 @@ import { existsSync } from 'fs';
 
 import { 
   AuthorizedRequest, 
-  genericServerConstants, 
+  playerServerConstants, 
   makeGameModel, 
   winstonLogger,
   createLogger
@@ -75,10 +75,10 @@ app.get('/playerDataSse', (req1, res, next) => {
   }
 
   try {
-    const parsedToken = jwt.verify(mm_token, genericServerConstants().JWT_SECRET);
+    const parsedToken = jwt.verify(mm_token, playerServerConstants().JWT_SECRET);
     logger.info('parsedToken', parsedToken);
 
-    if (parsedToken !== genericServerConstants().playerServerTokenPayload) {
+    if (parsedToken !== playerServerConstants().playerServerTokenPayload) {
       logger.info('playerDataSse connection FAILED: token parsing');
       res.status(401).send('Error on token parsing');
       return;

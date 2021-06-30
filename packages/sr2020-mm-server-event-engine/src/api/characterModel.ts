@@ -1,8 +1,8 @@
 import fetch from 'isomorphic-fetch';
-import { genericServerConstants } from './constants';
+import { mainServerConstants } from './constants';
 
 export async function getCharacterModelData(characterId: string): Promise<unknown> {
-  const res2 = await fetch(`${genericServerConstants().characterModelUrl}/${characterId}`);
+  const res2 = await fetch(`${mainServerConstants().characterModelUrl}/${characterId}`);
   if (res2.status === 200) {
     const characterModelData = await res2.json();
     return characterModelData;
@@ -34,7 +34,7 @@ export async function suitSpirit(
   bodyStorageId: number, 
   spiritStorageId: number
 ): Promise<unknown> {
-  const res2 = await fetch(`${genericServerConstants().characterModelUrl}/${characterId}`, {
+  const res2 = await fetch(`${mainServerConstants().characterModelUrl}/${characterId}`, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json;charset=utf-8',
@@ -68,7 +68,7 @@ export async function dispirit(
   bodyStorageId: number, 
   spiritStorageId: number
 ): Promise<unknown> {
-  const res2 = await fetch(`${genericServerConstants().characterModelUrl}/${characterId}`, {
+  const res2 = await fetch(`${mainServerConstants().characterModelUrl}/${characterId}`, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json;charset=utf-8',
@@ -97,7 +97,7 @@ export async function dispirit(
 export async function emergencySpiritExit(
   characterId: number
 ): Promise<unknown> {
-  const res2 = await fetch(`${genericServerConstants().characterModelUrl}/${characterId}`, {
+  const res2 = await fetch(`${mainServerConstants().characterModelUrl}/${characterId}`, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json;charset=utf-8',
