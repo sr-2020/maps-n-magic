@@ -13,7 +13,8 @@ import * as jwt from "jsonwebtoken";
 import { 
   AuthorizedRequest, 
   winstonLogger,
-  playerServerConstants
+  playerServerConstants,
+  createLogger
 } from 'sr2020-mm-server-event-engine';
 import { makeGameModel } from "./gameModel";
 // import { WebSocketInitClientConfig } from 'sr2020-mm-event-engine';
@@ -39,23 +40,7 @@ import { SsePlayerDataSender } from './ssePlayerDataSender';
 import { spiritRouter } from "./routes/spirits";
 import { logoutRouter } from "./routes/logout";
 
-// const express = require('express');
-// const expressWs = require('express-ws');
-// const path = require('path');
-// const cookieParser = require('cookie-parser');
-// const morganLogger = require('morgan');
-// const shortid = require('shortid');
-
-// const cors = require('cors');
-
-// const indexRouter = require('./routes/index.ts');
-// const fileListRouter = require('./routes/fileList.ts');
-// // const characterStatesRouter = require('./routes/characterStates');
-// const fileRouter = require('./routes/file.ts');
-// const pingRouter = require('./routes/ping.ts');
-// const usersRouter = require('./routes/users.ts');
-// const postUserPosition = require('./routes/postUserPosition.ts');
-// const { WebSocketWrapper } = require('./webSocketWrapper.ts');
+const logger = createLogger('playerServerApp');
 
 // const express = require('express');
 // const expressWs = require('express-ws');
@@ -75,7 +60,25 @@ import { logoutRouter } from "./routes/logout";
 // const postUserPosition = require('./routes/postUserPosition.ts');
 // const { WebSocketWrapper } = require('./webSocketWrapper.ts');
 
-winstonLogger.info('process.env.NODE_ENV', process.env.NODE_ENV);
+// const express = require('express');
+// const expressWs = require('express-ws');
+// const path = require('path');
+// const cookieParser = require('cookie-parser');
+// const morganLogger = require('morgan');
+// const shortid = require('shortid');
+
+// const cors = require('cors');
+
+// const indexRouter = require('./routes/index.ts');
+// const fileListRouter = require('./routes/fileList.ts');
+// // const characterStatesRouter = require('./routes/characterStates');
+// const fileRouter = require('./routes/file.ts');
+// const pingRouter = require('./routes/ping.ts');
+// const usersRouter = require('./routes/users.ts');
+// const postUserPosition = require('./routes/postUserPosition.ts');
+// const { WebSocketWrapper } = require('./webSocketWrapper.ts');
+
+logger.info('process.env.NODE_ENV', process.env.NODE_ENV);
 
 // console.log('process.env.NODE_ENV', process.env.NODE_ENV);
 
@@ -145,9 +148,15 @@ app.use(spiritRouter);
 app.use(logoutRouter);
 
 app.get('/api/singlePlayerDataSse', (req, res, next) => {
-  winstonLogger.info('Processing playerDataSse connection');
+  logger.info('Processing playerDataSse connection');
   const { userData } = req as AuthorizedRequest;
-  new SsePlayerDataSender(req, res, next, winstonLogger, gameModel, userData);
+  const ip = req.connection.remoteAddress;
+  const id = shortid.generate();
+  const childLogger = winstonLogger.customChild ? 
+    winstonLogger.customChild(winstonLogger, { service: `player_session_${id}` }) :
+    winstonLogger;
+  childLogger.info(ip);
+  new SsePlayerDataSender(req, res, next, childLogger, gameModel, userData);
 });
 
 
@@ -186,7 +195,7 @@ app.use((err, req: Request, res, next) => {
   res.locals.message = err.message;
   // @ts-ignore
   res.locals.error = req.app.get('env') === 'development' ? err : {};
-  winstonLogger.info('error on request', req.headers, err.toString());
+  logger.info('error on request', req.headers, err.toString());
 
   // render the error page
   res.status(err.status || 500);
@@ -219,34 +228,47 @@ const es = new EventSource(playerServerConstants().playerDataSseUrl, {
   }
 });
 
+// logger.info('main server es.readyState', es.readyState);
+
+es.onopen = function(event) {
+  logger.info("EventSource onopen", event);
+};
+// es.onmessage = function(event) {
+//   logger.info("EventSource onmessage", event);
+// };
+es.onerror = function(event) {
+  logger.info("EventSource onerror", event);
+};
+
+
 es.addEventListener('message', function (e) {
   try {
     const { data }: { data: string } = e;
     const parsedData: unknown = JSON.parse(data);
     if (isSpiritsChanged(parsedData)) {
-      winstonLogger.info(parsedData.type);
+      logger.info(parsedData.type);
       gameModel.emit2<ESetSpirits>({
         ...parsedData,
         type: 'setSpirits',
       });
     } else if(isLocationRecordsChanged(parsedData)) {
-      winstonLogger.info(parsedData.type);
+      logger.info(parsedData.type);
       gameModel.execute2<SetLocationRecords>({
         ...parsedData,
         type: 'setLocationRecords',
       });
     } else if(isUserRecordsChanged(parsedData)) {
-      winstonLogger.info(parsedData.type);
+      logger.info(parsedData.type);
       gameModel.execute2<SetUserRecords>({
         ...parsedData,
         type: 'setUserRecords',
       });
     } else {
-      winstonLogger.warn(`Unexpected sse message data ${JSON.stringify(e)}`);
+      logger.warn(`Unexpected sse message data ${JSON.stringify(e)}`);
     }
   } catch (err) {
     // console.error(err);
-    winstonLogger.error('error', err);
-    winstonLogger.error(`Error on processing sse message: ${JSON.stringify(err)}, message ${JSON.stringify(e)}`)
+    logger.error('error', err);
+    logger.error(`Error on processing sse message: ${JSON.stringify(err)}, message ${JSON.stringify(e)}`)
   }
 })

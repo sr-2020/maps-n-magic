@@ -28,6 +28,7 @@ enum MainServerConstant {
   'PGDATABASE' = 'PGDATABASE',
   'PGPASSWORD' = 'PGPASSWORD',
   'PGPORT' = 'PGPORT',
+  'EMERCOM_PASSWORD' = 'EMERCOM_PASSWORD',
 }
 
 export function mainServerConstants(): MainServerConstants {
@@ -37,7 +38,8 @@ export function mainServerConstants(): MainServerConstants {
       getGenericEnvVariables(),
       getEnvVariables(Object.values(MainServerConstant), [
         'DROPBOX_TOKEN',
-        'PGPASSWORD'
+        'PGPASSWORD',
+        'EMERCOM_PASSWORD'
       ])
     );
     const { values } = mainEnvVariables;

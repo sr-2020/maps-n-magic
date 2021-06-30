@@ -22,7 +22,7 @@ router.get('/api/isLoggedIn', (req, res, next) => {
 });
 
 router.post('/api/login', async (req, res) => {
-  console.log('/api/login', req.body);
+  // console.log('/api/login', req.body);
 
   const authRequest = req.body;
   if (!validateAuthRequest(authRequest)) {

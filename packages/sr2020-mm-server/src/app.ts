@@ -12,7 +12,7 @@ import { existsSync } from 'fs';
 
 import { 
   AuthorizedRequest, 
-  playerServerConstants, 
+  mainServerConstants, 
   makeGameModel, 
   winstonLogger,
   createLogger
@@ -75,16 +75,16 @@ app.get('/playerDataSse', (req1, res, next) => {
   }
 
   try {
-    const parsedToken = jwt.verify(mm_token, playerServerConstants().JWT_SECRET);
+    const parsedToken = jwt.verify(mm_token, mainServerConstants().JWT_SECRET);
     logger.info('parsedToken', parsedToken);
 
-    if (parsedToken !== playerServerConstants().playerServerTokenPayload) {
+    if (parsedToken !== mainServerConstants().playerServerTokenPayload) {
       logger.info('playerDataSse connection FAILED: token parsing');
       res.status(401).send('Error on token parsing');
       return;
     }
   } catch (err) {
-    logger.info('playerDataSse connection FAILED: Error on token parsing');
+    logger.error('playerDataSse connection FAILED: Error on token parsing', err);
     res.status(401).send('Error on token parsing');
     return;
   }
@@ -95,7 +95,7 @@ app.get('/playerDataSse', (req1, res, next) => {
 
 app.use('/api', parseUserData);
 
-app.use(logoutRouter);
+app.use('/api', logoutRouter);
 
 app.get('/api/fileList', fileListRouter);
 app.get('/api/file/:name', fileRouter);

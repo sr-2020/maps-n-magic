@@ -34,3 +34,17 @@ export function getGenericServerConstants(envVariables: EnvVariables): GenericSe
   }
 }
 
+export function genericServerConstants2(): GenericServerConstants {
+  const envVariables = getGenericEnvVariables();
+  const { values } = envVariables;
+  return {
+    JWT_SECRET: values[GenericServerConstant.JWT_SECRET],
+    loginUrl:                 values[GenericServerConstant.GATEWAY_URL] + '/api/v1/auth/login',
+    manaOceanConfigUrl:       values[GenericServerConstant.GATEWAY_URL] + '/api/v1/config/manaOceanConfig',
+    manaOceanEffectConfigUrl: values[GenericServerConstant.GATEWAY_URL] + '/api/v1/config/manaOceanEffectConfig',
+    characterModelUrl:  values[GenericServerConstant.MODELS_MANAGER_URL] + '/character/model',
+    qrModelUrl:         values[GenericServerConstant.MODELS_MANAGER_URL] + '/qr/model',
+    playerServerTokenPayload: 'player-server'
+  }
+}
+

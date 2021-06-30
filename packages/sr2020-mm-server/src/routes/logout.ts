@@ -7,7 +7,7 @@ const logger = createLogger('logout');
 
 const router = Router();
 
-router.post('/api/logout', (req, res) => {
+router.post('/logout', (req, res) => {
   logger.info('/api/logout');
   // req.logOut();
   res.status(200).clearCookie('mm_token', {
@@ -23,7 +23,7 @@ router.post('/api/logout', (req, res) => {
   // });
 });
 
-router.use('/api/secureEndpoint', (req, res, next) => {
+router.use('/secureEndpoint', (req, res, next) => {
   res.json({
     message: 'Secure endpoint answer',
     date: new Date(),

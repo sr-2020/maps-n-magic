@@ -4,7 +4,7 @@ import {
   validateAuthRequest, 
   validateTokenData, 
   validateTokenRequestBody,
-  playerServerConstants,
+  mainServerConstants,
   getUserTokenData,
   createLogger
 } from 'sr2020-mm-server-event-engine';
@@ -46,7 +46,7 @@ router.post('/api/login', async (req, res) => {
     // logger.info('test call', res2.status, data);
   
     try {
-      const parsedToken = jwt.verify(api_key, playerServerConstants().JWT_SECRET);
+      const parsedToken = jwt.verify(api_key, mainServerConstants().JWT_SECRET);
       logger.info('parsedToken', parsedToken);
       if (!validateTokenData(parsedToken)) {
         res.status(500).send(`parsedToken verification failed ${JSON.stringify(parsedToken)} ${JSON.stringify(validateTokenData.errors)}`);
@@ -67,6 +67,7 @@ router.post('/api/login', async (req, res) => {
       logger.info('body', body);
       res.json(parsedToken);
     } catch (err) {
+      logger.info('User token verification failed', err);
       res.status(500).send(`User token verification failed ${JSON.stringify(err)}`);
       return;
     }
