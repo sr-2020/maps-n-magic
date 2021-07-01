@@ -13,6 +13,7 @@ interface MainServerConstants extends GenericServerConstants {
   billingInsurance: string;
   pushServiceUrl: string;
   featuresUrl: string;
+  EMERCOM_PASSWORD: string;
 };
 
 let constantsInstance: MainServerConstants | null = null;
@@ -60,6 +61,7 @@ export function mainServerConstants(): MainServerConstants {
       billingInsurance: values[MainServerConstant.BILLING_URL]  + '/insurance/getinsurance',
       pushServiceUrl: values[MainServerConstant.PUSH_URL] + '/send_notification',
       featuresUrl: values[MainServerConstant.MODEL_ENGINE_URL] + '/features',
+      EMERCOM_PASSWORD: values[MainServerConstant.EMERCOM_PASSWORD],
     }
   }
 

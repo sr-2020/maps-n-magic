@@ -109,7 +109,7 @@ export function AppHeader(props: AppHeaderProps) {
   const onLogout = async () => {
     // event.preventDefault();
     await logoutUser();
-    loginManager.updateLoginState();
+    loginManager.updateLoginState(true);
   }
   
   return (

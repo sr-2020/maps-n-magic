@@ -65,7 +65,7 @@ const tokenDataSchema: JSONSchemaType<TokenData> = {
     exp: {type: "integer"},
   },
   required: ["sub", "auth", "modelId", "characterId", "exp"],
-  additionalProperties: false,
+  // additionalProperties: false,
 };
 
 export const validateTokenData = ajv.compile(tokenDataSchema);

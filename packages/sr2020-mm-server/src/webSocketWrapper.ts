@@ -9,6 +9,7 @@ export class WebSocketWrapper {
     private initConfig: WebSocketInitClientConfig, 
     private logger: GMLogger
   ) {
+    // this.logger.info('constructor');
     this.onMessage = this.onMessage.bind(this);
     this.onClose = this.onClose.bind(this);
     this.onError = this.onError.bind(this);
@@ -20,6 +21,7 @@ export class WebSocketWrapper {
   }
 
   innerInit() {
+    // this.logger.info('innerInit');
     const { data } = this.initConfig;
     data.forEach((item) => {
       if (!this.gameModel.hasRequest(item.payload)) {
@@ -41,6 +43,7 @@ export class WebSocketWrapper {
   }
 
   onMessage(msgStr: WebSocket.Data) {
+    // this.logger.info('onMessage');
     try {
       const msg = JSON.parse(msgStr.toString());
       if (R.is(String, msg)) {
@@ -62,10 +65,12 @@ export class WebSocketWrapper {
   }
 
   onClose() {
+    // this.logger.info('onClose');
     this.dispose();
   }
 
   onError() {
+    // this.logger.info('onError');
     this.dispose();
   }
 
@@ -79,17 +84,20 @@ export class WebSocketWrapper {
   }
 
   subscribe(action: 'on' | 'off') {
+    // this.logger.info(`subscribe ${action}`);
     const { forwardActions } = this.initConfig;
     forwardActions.forEach((actionType) => this.gameModel[action](actionType, this.forwardAction));
   }
 
   subscribeWsConnection(action: 'on' | 'off') {
+    // this.logger.info(`subscribeWsConnection ${action}`);
     this.ws[action]('message', this.onMessage);
     this.ws[action]('close', this.onClose);
     this.ws[action]('error', this.onError);
   }
 
   dispose() {
+    // this.logger.info('dispose');
     this.subscribeWsConnection('off');
     this.subscribe('off');
   }

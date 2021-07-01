@@ -1,11 +1,12 @@
 import { Router } from 'express';
 import * as jwt from "jsonwebtoken";
+import { isErrorResponse, ErrorResponse } from 'sr2020-mm-event-engine';
 import { AuthorizedRequest, validateTokenData, mainServerConstants } from 'sr2020-mm-server-event-engine';
 import { 
   createLogger 
 } from 'sr2020-mm-server-event-engine';
 
-const logger = createLogger('parseUserData');
+const logger = createLogger('parseUserData.ts');
 
 const router = Router();
 
@@ -14,7 +15,11 @@ router.use((req1, res, next) => {
 
   const { mm_token } = req.cookies;
   if (mm_token === undefined) {
-    res.status(401).send('Request has no user token');
+    const errorResponse: ErrorResponse = {
+      errorTitle: 'Request has no user token',
+      errorSubtitle: ''
+    };
+    res.status(401).json(errorResponse);
     return;
   }
 
@@ -22,16 +27,31 @@ router.use((req1, res, next) => {
     const parsedToken = jwt.verify(mm_token, mainServerConstants().JWT_SECRET);
     logger.info('parsedToken', parsedToken);
     if (!validateTokenData(parsedToken)) {
-      res.status(500).send(`parsedToken verification failed ${JSON.stringify(parsedToken)} ${JSON.stringify(validateTokenData.errors)}`);
+      const errorResponse: ErrorResponse = {
+        errorTitle: 'Данные авторизации некорректны',
+        errorSubtitle: `Данные ${JSON.stringify(parsedToken)}, ошибки ${JSON.stringify(validateTokenData.errors)}`
+      };
+      res.status(500).json(errorResponse);
+      // res.status(500).send(`parseUserData: parsedToken verification failed ${JSON.stringify(parsedToken)} ${JSON.stringify(validateTokenData.errors)}`);
       return;
     }
     req.userData = parsedToken;
     next();
   } catch (err) {
     logger.info('User token verification failed', err);
-    res.status(500).send(`User token verification failed ${JSON.stringify(err)}`);
+    const errorResponse: ErrorResponse = {
+      errorTitle: 'Пользователь не авторизован',
+      errorSubtitle: `Ошибка ${JSON.stringify(err)}`
+    };
+    res.status(500).json(errorResponse);
+    // res.status(500).send(`parseUserData: User token verification failed ${JSON.stringify(err)}`);
     return;
   }
+});
+
+router.get('/api/isLoggedIn', (req, res, next) => {
+  // if we are here then parsing user data was successful
+  res.status(200).end();
 });
 
 export const parseUserData = router;

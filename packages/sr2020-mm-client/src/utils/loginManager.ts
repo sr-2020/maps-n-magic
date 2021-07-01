@@ -1,6 +1,7 @@
 import { LoginState } from "../types";
 import { EventEmitter } from "events";
 import { isLoggedIn } from "../api";
+import { validateErrorResponse } from "sr2020-mm-event-engine";
 
 export class LoginManager extends EventEmitter {
   loginState: LoginState = { status:'unknown' };
@@ -24,26 +25,46 @@ export class LoginManager extends EventEmitter {
     this.updateTimerId = setTimeout(() => this.updateLoginState(), 500);
   }
 
-  async updateLoginState() {
+  async updateLoginState(firstLoad: boolean = false) {
     try {
       const res = await isLoggedIn();
       // fetch('/api/isLoggedIn');
-      if (res.status === 401) {
+      if (res.status === 401 && firstLoad) {
         this.loginState = {
           status: 'userUnlogged'
         };
-      } else if (res.status === 200) {
+      } else 
+      if (res.status === 200) {
         this.loginState = {
           status: 'userLogged'
         };
       } else {
-        this.loginState = {
-          status: 'error'
-        };
+        const errorResponse: unknown = await res.json();
+        if (validateErrorResponse(errorResponse)) {
+          console.log('isErrorResponse is ok');
+          this.loginState = {
+            status: 'error',
+            errorResponse
+          };
+        } else {
+          console.error(validateErrorResponse.errors);
+          this.loginState = {
+            status: 'error',
+            errorResponse: {
+              errorTitle: 'Неизвестная ошибка',
+              errorSubtitle: JSON.stringify(validateErrorResponse.errors)
+            }
+          };
+        }
       }
     } catch (err) {
+      console.error(err);
       this.loginState = {
-        status: 'error'
+        status: 'error',
+        errorResponse: {
+          errorTitle: 'Неизвестная ошибка',
+          errorSubtitle: JSON.stringify(err)
+        }
       };
     }
     this.emit('loginStateChanged', this.loginState);

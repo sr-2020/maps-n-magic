@@ -1,43 +1,68 @@
 import { Router } from 'express';
 import * as jwt from "jsonwebtoken";
+import { ErrorResponse } from 'sr2020-mm-event-engine';
 import { 
   validateAuthRequest, 
   validateTokenData, 
   validateTokenRequestBody,
   mainServerConstants,
   getUserTokenData,
-  createLogger
+  createLogger,
+  TokenData,
 } from 'sr2020-mm-server-event-engine';
 
-const logger = createLogger('login');
+const logger = createLogger('login.ts');
 
 const router = Router();
 
-router.get('/api/isLoggedIn', (req, res, next) => {
-  // logger.info('req.cookies', req.cookies);
-  const { mm_token } = req.cookies;
-  logger.info('isLoggedIn', mm_token);
-  if (mm_token === undefined) {
-    res.status(401).end();
-  } else {
-    res.status(200).end();
-  }
-});
-
 router.post('/api/login', async (req, res) => {
-  logger.info('/api/login', req.body);
+  // logger.info('/api/login', req.body);
 
   const authRequest = req.body;
   if (!validateAuthRequest(authRequest)) {
-    res.status(400).send(`auth request verification failed ${JSON.stringify(authRequest)} ${JSON.stringify(validateAuthRequest.errors)}`);
+    const errorResponse: ErrorResponse = {
+      errorTitle: 'Формат данных запроса некорректен',
+      errorSubtitle: `Данные ${JSON.stringify(authRequest)}, ошибки ${JSON.stringify(validateAuthRequest.errors)}`
+    };
+    res.status(400).json(errorResponse);
     return;
+  }
+
+  if (authRequest.username === 'emercom') {
+    if (authRequest.password === mainServerConstants().EMERCOM_PASSWORD) {
+      const parsedToken: TokenData = {
+        "sub": "EMERCOM",
+        "auth": "ROLE_EMERCOM",
+        "modelId": -1,
+        "characterId": -1,
+        "exp": 1668296003
+      };
+
+      const api_key = jwt.sign(parsedToken, mainServerConstants().JWT_SECRET);
+      res.cookie('mm_token', api_key, { httpOnly: true });
+      res.json(parsedToken);
+      return;
+    } else {
+      const errorResponse: ErrorResponse = {
+        errorTitle: 'Неправильный пароль',
+        errorSubtitle: ''
+      };
+      res.status(401).json(errorResponse);
+      return;
+    }
   }
 
   const res2 = await getUserTokenData(authRequest.username, authRequest.password);
   if (res2.status === 200) {
     const data = await res2.json();
     if (!validateTokenRequestBody(data)) {
-      res.status(500).send(`User token data not valid ${JSON.stringify(validateTokenRequestBody.errors)}`);
+      const errorResponse: ErrorResponse = {
+        errorTitle: 'Данные токена некорректны',
+        errorSubtitle: `Данные ${JSON.stringify(data)}, ошибка ${JSON.stringify(validateTokenRequestBody.errors)}`
+      };
+      res.status(500).json(errorResponse);
+      
+      // res.status(500).send(`User token data not valid ${JSON.stringify(validateTokenRequestBody.errors)}`);
       return;
     }
 
@@ -49,13 +74,23 @@ router.post('/api/login', async (req, res) => {
       const parsedToken = jwt.verify(api_key, mainServerConstants().JWT_SECRET);
       logger.info('parsedToken', parsedToken);
       if (!validateTokenData(parsedToken)) {
-        res.status(500).send(`parsedToken verification failed ${JSON.stringify(parsedToken)} ${JSON.stringify(validateTokenData.errors)}`);
+        const errorResponse: ErrorResponse = {
+          errorTitle: 'Данные авторизации некорректны',
+          errorSubtitle: `Данные ${JSON.stringify(parsedToken)}, ошибка ${JSON.stringify(validateTokenData.errors)}`
+        };
+        res.status(500).json(errorResponse);
+        // res.status(500).send(`parsedToken verification failed ${JSON.stringify(parsedToken)} ${JSON.stringify(validateTokenData.errors)}`);
         return;
       }
 
       const { auth } = parsedToken;
       if (!auth.includes('ROLE_MASTER')) {
-        res.status(400).send(`У вас нет роли MASTER`);
+        const errorResponse: ErrorResponse = {
+          errorTitle: 'У вас нет роли MASTER',
+          errorSubtitle: ``
+        };
+        res.status(400).json(errorResponse);
+        // res.status(400).send(`У вас нет роли MASTER`);
         return;
       }
 
@@ -68,12 +103,21 @@ router.post('/api/login', async (req, res) => {
       res.json(parsedToken);
     } catch (err) {
       logger.info('User token verification failed', err);
-      res.status(500).send(`User token verification failed ${JSON.stringify(err)}`);
+      const errorResponse: ErrorResponse = {
+        errorTitle: 'Ошибка про проверке токена',
+        errorSubtitle: JSON.stringify(err)
+      };
+      res.status(500).json(errorResponse);
+      // res.status(500).send(`User token verification failed ${JSON.stringify(err)}`);
       return;
     }
   } else {
     const text = await res2.text();
-    res.status(res2.status).send(`User unathorized: ${text}`);
+    const errorResponse: ErrorResponse = {
+      errorTitle: 'Пользователь не авторизован',
+      errorSubtitle: text
+    };
+    res.status(res2.status).json(errorResponse);
   }
 });
 
