@@ -2,8 +2,11 @@ import { EventEmitter } from 'events';
 import { GameModel } from "sr2020-mm-event-engine";
 import { WS_URL } from './settings';
 
+const retryTimeoutMillis = 10000;
+
 export class WSConnector extends EventEmitter {
   socket: WebSocket | null;
+  retryTimeoutId: NodeJS.Timeout | null = null;
 
   constructor(private gameModel: GameModel) {
     super();
@@ -17,6 +20,10 @@ export class WSConnector extends EventEmitter {
   }
 
   initConnection() {
+    if (this.retryTimeoutId !== null) {
+      clearTimeout(this.retryTimeoutId);
+      this.retryTimeoutId = null;
+    }
     this.destroySocket();
     const socket = new WebSocket(WS_URL);
     socket.onopen = this.onOpen;
@@ -61,7 +68,11 @@ export class WSConnector extends EventEmitter {
       console.log('[close] Connection interrupted, event.code', event.code);
     }
     // this.isAlive = false;
-    this.initConnection();
+    if (this.retryTimeoutId === null) {
+      this.retryTimeoutId = setTimeout(() => {
+        this.initConnection();
+      }, retryTimeoutMillis);
+    }
   }
 
   onError(error: Event): void {
@@ -69,7 +80,11 @@ export class WSConnector extends EventEmitter {
     // console.log(`[error] ${error?.message}`);
     console.log(`[error] ${error}`);
     // this.isAlive = false;
-    this.initConnection();
+    if (this.retryTimeoutId === null) {
+      this.retryTimeoutId = setTimeout(() => {
+        this.initConnection();
+      }, retryTimeoutMillis);
+    }
   }
 
   send(object: unknown): number {
