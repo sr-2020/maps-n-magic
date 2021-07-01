@@ -66,10 +66,10 @@ export class SoundWatcher extends Component<SoundWatcherProps, SoundWatcherState
   }
 
   componentDidMount(): void {
-    this._getSoundList();
-    this.pollInterval = setInterval(() => {
-      this._getSoundList();
-    }, POLL_INTERVAL);
+    // this._getSoundList();
+    // this.pollInterval = setInterval(() => {
+    //   this._getSoundList();
+    // }, POLL_INTERVAL);
 
     const { signal } = this.abortController;
     signal.addEventListener('abort', () => {
