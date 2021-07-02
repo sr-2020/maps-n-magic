@@ -137,8 +137,9 @@ app.use(Express.static(path.join(__dirname, './static')));
 // catch 404 and forward to error handler
 app.use((req, res, next) => {
   // next(createError(404));
-  const indexHtml = path.join(__dirname, './static', '/index.html');
-  res.sendFile(indexHtml);
+  res.status(404).send('Requested resource not found');
+  // const indexHtml = path.join(__dirname, './static', '/index.html');
+  // res.sendFile(indexHtml);
 });
 
 // error handler
