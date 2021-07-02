@@ -11,7 +11,7 @@ if (process.env.NODE_ENV === 'production') {
   SOUND_URL = 'https://storage.googleapis.com/sr2020-maps-n-magic';
   // WS_URL = 'ws://localhost:3001/api/ws';
 } else {
-  SOUND_URL = '';
+  SOUND_URL = '/sounds';
 }
 
 export { SOUND_URL };

@@ -4,11 +4,11 @@ import { SOUND_URL } from '../settings';
 //   SOUND_URL, SOUND_LIST_ROUTE, SOUND_ROUTE,
 // } = AUDIO_RETRANSLATOR;
 
-function getUrl(...args: string[]): string {
+// function getUrl(...args: string[]): string {
   
-  // return SOUND_URL + args.join('');
-  return '/sounds' + args.join('');
-}
+//   // return SOUND_URL + args.join('');
+//   return '/sounds' + args.join('');
+// }
 
 export const SOUND_LIST = [
   'manaLevel_1.mp3',
@@ -25,7 +25,7 @@ export const SOUND_LIST = [
 
 export async function getSound(name: string, abortController: AbortController): Promise<ArrayBuffer> {
   // return fetch(getUrl(SOUND_ROUTE, '/', name), {
-  const url = getUrl(SOUND_URL, '/', name);
+  const url = SOUND_URL + '/' + name;
   console.log(url);
   return fetch(url, {
     signal: abortController.signal,
