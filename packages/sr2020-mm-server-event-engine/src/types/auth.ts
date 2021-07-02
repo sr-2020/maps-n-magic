@@ -1,5 +1,6 @@
 import Ajv, { JSONSchemaType } from "ajv";
 import type { Request } from 'express';
+import { TokenData } from "sr2020-mm-event-engine";
 
 export type AuthorizedRequest = Request & {
   userData: TokenData;
@@ -47,25 +48,3 @@ const tokenRequestBodySchema: JSONSchemaType<TokenRequestBody> = {
 
 export const validateTokenRequestBody = ajv.compile(tokenRequestBodySchema);
 
-export interface TokenData {
-  sub: string;
-  auth: string;
-  modelId: number;
-  characterId: number;
-  exp: number;
-}
-
-const tokenDataSchema: JSONSchemaType<TokenData> = {
-  type: "object",
-  properties: {
-    sub: {type: "string"},
-    auth: {type: "string"},
-    modelId: {type: "integer"},
-    characterId: {type: "integer"},
-    exp: {type: "integer"},
-  },
-  required: ["sub", "auth", "modelId", "characterId", "exp"],
-  // additionalProperties: false,
-};
-
-export const validateTokenData = ajv.compile(tokenDataSchema);

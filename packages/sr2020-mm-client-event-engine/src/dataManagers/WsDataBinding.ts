@@ -82,7 +82,7 @@ import {
   GetEnableManaOcean,
   GetUserRecords,
   GetEnableSpiritMovement,
-
+  WebSocketInitClientConfig,
 } from "sr2020-mm-event-engine";
 
 import { TrackedCharacterLocationChanged } from "../index";
@@ -247,17 +247,12 @@ type PayloadToEventBindings =
   | PayloadToEventBinding<GetEnableSpiritMovement, EEnableSpiritMovementChanged>
 ;
 
-interface InitClientConfigMessage {
-  message: 'initClientConfig';
-  data: PayloadToEventBindings[];
-  forwardActions: string[];
-}
-
 export class WsDataBinding extends AbstractEventProcessor {
   constructor(
     protected gameModel: GameModel, 
     private wsConnection: WSConnector,
-    protected logger: GMLogger
+    protected logger: GMLogger,
+    private ignoreClientMessages: boolean
   ) {
     super(gameModel, logger);
     // this.entityName = entityName;
@@ -276,7 +271,7 @@ export class WsDataBinding extends AbstractEventProcessor {
   }
 
   initClientConfig() {
-    const initMessage: InitClientConfigMessage = {
+    const initMessage: WebSocketInitClientConfig = {
       message: 'initClientConfig',
       // TODO consider replacing getter-event pairs by
       // trigger-event pairs for consistency
@@ -316,6 +311,7 @@ export class WsDataBinding extends AbstractEventProcessor {
         payload: 'spiritRoutes',
       }],
       forwardActions: forwardServer2ClientActions,
+      ignoreClientMessages: this.ignoreClientMessages
     }
     const hasError = this.wsConnection.send(initMessage);
     // if (hasError) {
@@ -505,6 +501,9 @@ export class WsDataBinding extends AbstractEventProcessor {
   }
 
   private sendToServer(action: unknown) {
+    if (this.ignoreClientMessages) {
+      return;
+    }
     this.wsConnection.send(action);
   }
 }

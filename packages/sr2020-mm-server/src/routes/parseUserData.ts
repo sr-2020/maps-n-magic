@@ -1,7 +1,7 @@
 import { Router } from 'express';
 import * as jwt from "jsonwebtoken";
-import { isErrorResponse, ErrorResponse } from 'sr2020-mm-event-engine';
-import { AuthorizedRequest, validateTokenData, mainServerConstants } from 'sr2020-mm-server-event-engine';
+import { isErrorResponse, ErrorResponse, validateTokenData } from 'sr2020-mm-event-engine';
+import { AuthorizedRequest, mainServerConstants } from 'sr2020-mm-server-event-engine';
 import { 
   createLogger 
 } from 'sr2020-mm-server-event-engine';
@@ -49,9 +49,11 @@ router.use((req1, res, next) => {
   }
 });
 
-router.get('/api/isLoggedIn', (req, res, next) => {
+router.get('/isLoggedIn', (req1, res, next) => {
+  const req = req1 as AuthorizedRequest;
+  logger.info('/api/isLoggedIn');
   // if we are here then parsing user data was successful
-  res.status(200).end();
+  res.status(200).json(req.userData);
 });
 
 export const parseUserData = router;

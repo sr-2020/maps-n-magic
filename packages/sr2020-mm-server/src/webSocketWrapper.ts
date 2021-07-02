@@ -44,6 +44,9 @@ export class WebSocketWrapper {
 
   onMessage(msgStr: WebSocket.Data) {
     // this.logger.info('onMessage');
+    if (this.initConfig.ignoreClientMessages) {
+      return;
+    }
     try {
       const msg = JSON.parse(msgStr.toString());
       if (R.is(String, msg)) {

@@ -1,3 +1,11 @@
+import Ajv, { JSONSchemaType } from "ajv";
+
+const ajv = new Ajv({
+  allErrors: true,
+  // removeAdditional: true,
+  // useDefaults: true
+});
+
 export interface GMTyped {
   type: string;
   [key: string]: any;
@@ -119,4 +127,30 @@ export interface WebSocketInitClientConfig {
     payload: string;
   }[];
   forwardActions: string[];
+  ignoreClientMessages: boolean;
 }
+
+
+const webSocketInitClientConfigSchema: JSONSchemaType<WebSocketInitClientConfig> = {
+  type: "object",
+  properties: {
+    message: {type: "string", const: 'initClientConfig'},
+    data: {
+      type: "array", items: {
+        type: 'object',
+        properties: {
+          'type': { type: 'string'},
+          'payload': { type: 'string'},
+        },
+        required: ['payload','type'],
+        additionalProperties: false
+      }
+    },
+    forwardActions: {type: "array", items: {type: 'string'}},
+    ignoreClientMessages: {type: "boolean"},
+  },
+  required: ["message", "data", "forwardActions", "ignoreClientMessages"],
+  additionalProperties: false,
+};
+
+export const validateWebSocketInitClientConfig = ajv.compile(webSocketInitClientConfigSchema);

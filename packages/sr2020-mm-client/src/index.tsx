@@ -4,25 +4,29 @@ import './index.css';
 import './i18n';
 import { App } from './components/App';
 import { AuthWrapper } from './components/AuthWrapper';
+import { Emercom } from './components/Emercom';
 import { 
   ErrorBoundry,
 } from 'sr2020-mm-client-core';
 import { LoginManager } from './utils';
 
-// import {
-//   makeGameModel,
-// } from 'sr2020-mm-client-event-engine';
-// const t = makeGameModel();
-
 const loginManager = new LoginManager();
 // import reportWebVitals from './reportWebVitals';
 
+
+function StateRouter(props: {loginManager: LoginManager}) {
+  const { loginManager: { loginState } } = props;
+  if (loginState.status === 'userLogged' && loginState.tokenData.auth.includes('ROLE_EMERCOM')) {
+    return <Emercom loginManager={loginManager} />;
+  }
+  return <App loginManager={loginManager} />;
+}
 
 ReactDOM.render(
   <React.StrictMode>
     <ErrorBoundry>
       <AuthWrapper loginManager={loginManager}>
-        <App loginManager={loginManager} />
+        <StateRouter loginManager={loginManager} />
       </AuthWrapper>
     </ErrorBoundry>
   </React.StrictMode>,

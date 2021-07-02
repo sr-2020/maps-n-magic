@@ -1,8 +1,17 @@
 import SSE from "./express-sse-ts";
 import { Request, Response, NextFunction } from "express";
-import { ELocationRecordsChanged2, ESpiritsChanged, GameModel, GetAggLocationView, GetLocationRecords, GetSpirits, GetUserRecord, GMLogger } from "sr2020-mm-event-engine";
+import { 
+  ELocationRecordsChanged2, 
+  ESpiritsChanged, 
+  GameModel, 
+  GetAggLocationView, 
+  GetLocationRecords, 
+  GetSpirits, 
+  GetUserRecord, 
+  GMLogger,
+  TokenData
+} from "sr2020-mm-event-engine";
 import shortid from 'shortid';
-import { TokenData } from "sr2020-mm-server-event-engine";
 
 export class SsePlayerDataSender {
   sse: SSE;

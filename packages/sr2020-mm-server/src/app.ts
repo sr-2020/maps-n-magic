@@ -17,7 +17,7 @@ import {
   winstonLogger,
   createLogger
 } from 'sr2020-mm-server-event-engine';
-import { WebSocketInitClientConfig } from 'sr2020-mm-event-engine';
+import { ErrorResponse, validateWebSocketInitClientConfig, WebSocketInitClientConfig } from 'sr2020-mm-event-engine';
 
 import { indexRouter } from './routes/index';
 import { fileListRouter } from './routes/fileList';
@@ -110,15 +110,24 @@ wsApp.app.ws('/ws', (ws, req, next) => {
 wsApp.app.ws('/api/ws', (ws, req, next) => {
   ws.on('message', (msgStr) => {
     // logger.info('msg:', msgStr);
-    const msg = JSON.parse(msgStr.toString()) as {message?: string};
-    if (msg.message && msg.message === 'initClientConfig') {
-      const ip = req.connection.remoteAddress;
-      const id = shortid.generate();
-      const childLogger = winstonLogger.customChild ? 
-        winstonLogger.customChild(winstonLogger, { service: `ws_session_${id}` }) :
-        winstonLogger;
-      childLogger.info(ip, 'initClientConfig', msgStr);
-      new WebSocketWrapper(ws, gameModel, msg as WebSocketInitClientConfig, childLogger);
+    try {
+      const msg: unknown = JSON.parse(msgStr.toString());
+      if((msg as any).message !== 'initClientConfig') {
+        return;
+      }
+      if (validateWebSocketInitClientConfig(msg)) {
+        const ip = req.connection.remoteAddress;
+        const id = shortid.generate();
+        const childLogger = winstonLogger.customChild ? 
+          winstonLogger.customChild(winstonLogger, { service: `ws_session_${id}` }) :
+          winstonLogger;
+        childLogger.info(ip, 'initClientConfig', msgStr);
+        new WebSocketWrapper(ws, gameModel, msg as WebSocketInitClientConfig, childLogger);
+      } else {
+        logger.error(`Error on validation websocket init msg. Msg ${JSON.stringify(msg)}, errors ${JSON.stringify(validateWebSocketInitClientConfig.errors)} `);
+      }
+    } catch(err) {
+      logger.error('Error on establishing websocket connection', err);
     }
   });
 });

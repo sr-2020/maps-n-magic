@@ -1,7 +1,7 @@
 import { LoginState } from "../types";
 import { EventEmitter } from "events";
 import { isLoggedIn } from "../api";
-import { validateErrorResponse } from "sr2020-mm-event-engine";
+import { TokenData, validateErrorResponse } from "sr2020-mm-event-engine";
 
 export class LoginManager extends EventEmitter {
   loginState: LoginState = { status:'unknown' };
@@ -35,8 +35,10 @@ export class LoginManager extends EventEmitter {
         };
       } else 
       if (res.status === 200) {
+        const tokenData: TokenData = await res.json();
         this.loginState = {
-          status: 'userLogged'
+          status: 'userLogged',
+          tokenData
         };
       } else {
         const errorResponse: unknown = await res.json();

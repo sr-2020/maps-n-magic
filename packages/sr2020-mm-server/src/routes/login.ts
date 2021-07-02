@@ -1,14 +1,16 @@
 import { Router } from 'express';
 import * as jwt from "jsonwebtoken";
-import { ErrorResponse } from 'sr2020-mm-event-engine';
+import { 
+  ErrorResponse,
+  validateTokenData,
+  TokenData
+} from 'sr2020-mm-event-engine';
 import { 
   validateAuthRequest, 
-  validateTokenData, 
   validateTokenRequestBody,
   mainServerConstants,
   getUserTokenData,
   createLogger,
-  TokenData,
 } from 'sr2020-mm-server-event-engine';
 
 const logger = createLogger('login.ts');

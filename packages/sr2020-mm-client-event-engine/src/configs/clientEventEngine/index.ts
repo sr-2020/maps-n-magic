@@ -64,7 +64,7 @@ const services = [
   TrackedCharacterService,
 ];
 
-export function makeGameModel(): {
+export function makeGameModel(ignoreClientMessages: boolean = false): {
   gameModel: GameModel, gameServer: EventEngine
 } {
   // @ts-ignore
@@ -74,7 +74,7 @@ export function makeGameModel(): {
   // fillGameModelWithBots(gameModel);
 
   const wsConnection = new WSConnector(gameModel);
-  gameServer.addDataBinding(new WsDataBinding(gameModel, wsConnection, console));
+  gameServer.addDataBinding(new WsDataBinding(gameModel, wsConnection, console, ignoreClientMessages));
 
   gameServer.addDataBinding(new StubEventProcessor(
     gameModel, 
