@@ -161,13 +161,19 @@ export interface BackgroundImage {
   name: string;
 }
 
-export interface SoundStageData {
-  backgroundSound: string | null;
-  rotationSounds: string[];
+export interface SoundSettings {
   rotationTimeout: number;
   rotationSoundTimeout: number;
   backgroundVolume: number;
   rotationVolume: number;
+}
+
+export interface SoundStageState {
+  backgroundSound: string | null;
+  rotationSounds: string[];
+}
+
+export interface SoundStageData extends SoundSettings, SoundStageState {
 }
 
 const ajv = new Ajv({

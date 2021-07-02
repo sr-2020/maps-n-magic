@@ -23,6 +23,7 @@ import {
 // import { SpiritService } from '../../services/SpiritService';
 // import { SoundService2 } from '../../services/SoundService2';
 import { SoundStageService } from '../../services/SoundStageService';
+import { SoundSettingsService } from '../../services/SoundSettingsService';
 // import { BeaconService } from '../../services/BeaconService';
 // import { LocationService } from '../../services/LocationService';
 // import { SoundMappingService } from '../../services/SoundMappingService';
@@ -46,6 +47,7 @@ const services = [
   SpiritRouteService,
   // SoundService2,
   SoundStageService,
+  SoundSettingsService,
   // BeaconService,
   // LocationService,
   LocationRecordService,

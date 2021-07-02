@@ -1,6 +1,6 @@
 export const AUDIO_RETRANSLATOR = {
   // SOUND_URL: 'http://localhost:3001',
-  SOUND_URL: 'https://maps-n-magic2.evarun.ru',
+  SOUND_URL: 'https://storage.googleapis.com/sr2020-maps-n-magic',
   // SOUND_URL: '',
   SOUND_LIST_ROUTE: '/fileList',
   SOUND_ROUTE: '/file',

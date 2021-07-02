@@ -10,7 +10,7 @@ import {
   TimeoutType,
 } from 'sr2020-mm-event-engine';
 import { 
-  GetSoundStage,
+  GetSoundStageState,
 } from 'sr2020-mm-client-event-engine';
 import { AudioContextWrapper } from '../../utils/AudioContextWrapper';
 
@@ -93,13 +93,13 @@ export class SoundStage extends EventEmitter {
       }
       this.gameModel = gameModel;
       // this.initialize();
-      const soundStage = this.gameModel.get2<GetSoundStage>('soundStage');
-      this.onBackgroundSoundUpdate(soundStage);
-      this.onRotationSoundsUpdate(soundStage);
-      this.onRotationTimeoutUpdate(soundStage);
-      this.onRotationSoundTimeoutUpdate(soundStage);
-      this.onBackgroundVolumeUpdate(soundStage);
-      this.onRotationVolumeUpdate(soundStage);
+      const soundStage = this.gameModel.get2<GetSoundStageState>({type:'soundStageState'});
+      // this.onBackgroundSoundUpdate(soundStage);
+      // this.onRotationSoundsUpdate(soundStage);
+      // this.onRotationTimeoutUpdate(soundStage);
+      // this.onRotationSoundTimeoutUpdate(soundStage);
+      // this.onBackgroundVolumeUpdate(soundStage);
+      // this.onRotationVolumeUpdate(soundStage);
       // this.backgroundSound = soundStage.backgroundSound;
       // this.rotationSounds = [...soundStage.rotationSounds];
       this.subscribe('on', this.gameModel);

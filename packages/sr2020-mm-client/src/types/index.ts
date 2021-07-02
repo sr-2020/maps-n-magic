@@ -8,13 +8,26 @@ export * from './ManaOceanLocation';
 export * from './BasicLocation';
 export * from './loginState';
 
-export interface Sound {
+interface CommonSoundInfo {
   name: string;
-  hash: string;
-  size: number;
-  status: string;
-  buffer?: AudioBuffer;
 }
+
+interface UnloadedSound extends CommonSoundInfo {
+  status: 'unloaded';
+}
+interface LoadingSound extends CommonSoundInfo {
+  status: 'loading';
+}
+interface LoadedSound extends CommonSoundInfo {
+  status: 'loaded';
+  buffer: AudioBuffer;
+}
+
+export type Sound = 
+  | UnloadedSound
+  | LoadedSound
+  | LoadingSound
+;
 
 export interface SoundCtl {
   source: AudioBufferSourceNode & { 

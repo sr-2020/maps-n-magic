@@ -65,7 +65,8 @@ import { RescueServiceMessageSender } from '../RescueServiceMessageSender';
 
 import { MapRoutes } from '../MapRoutes';
 
-import { LoginManager } from "../../utils";
+import { LoginManager, SoundStorage } from "../../utils";
+import { SoundStageEcho } from '../SoundManager/SoundStageEcho';
 
 
 const STORAGE_KEY = 'AR_POC';
@@ -99,6 +100,8 @@ interface AppState {
 
 export class App extends Component<AppProps, AppState> {
   audioContextWrapper = new AudioContextWrapper();
+
+  soundStorage = new SoundStorage(this.audioContextWrapper);
 
   soundStage = new SoundStage(this.audioContextWrapper);
 
@@ -382,10 +385,10 @@ export class App extends Component<AppProps, AppState> {
                     gameModel={gameModel}
                   /> */}
                   {/* { refactor as SoundManager and SoundProvider } */}
-                  <SoundWatcher
+                  {/* <SoundWatcher
                     gameModel={gameModel}
                     context={this.audioContextWrapper}
-                  />
+                  /> */}
                   <NotificationWatcher gameModel={gameModel} />
                   {/* { refactor as CharacterHealthStateSimulator } */}
                   {/* <CharacterHealthStateSimulator gameModel={gameModel} /> */}
@@ -395,6 +398,7 @@ export class App extends Component<AppProps, AppState> {
                     This is a fictive component for polling character health status
                   */}
                   {/* <CharacterHealthListener gameModel={gameModel} /> */}
+                  {/* <SoundStageEcho gameModel={gameModel} /> */}
                 </main>
               </div>
             </Router>

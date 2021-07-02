@@ -19,10 +19,14 @@ import {
   ESpiritFractionsChanged,
   ESpiritRoutesChanged,
   SpiritRoute,
+  SoundStageState,
+  SoundSettings,
 } from 'sr2020-mm-event-engine';
 
 import { 
   EBackgroundImagesChange,
+  ESoundSettingsChanged,
+  ESoundStageStateChanged,
   ETrackedCharacterIdChanged,
   GetBackgroundImages,
 } from "sr2020-mm-client-event-engine";
@@ -80,6 +84,12 @@ export interface WithCharacterId {
 }
 export interface WithEnableSpiritMovement {
   enableSpiritMovement: boolean;
+}
+export interface WithSoundStageState {
+  soundStageState: SoundStageState | null;
+}
+export interface WithSoundSettings {
+  soundSettings: SoundSettings | null;
 }
 
 function sortBy(prop: string) {
@@ -178,6 +188,18 @@ export const withEnableSpiritMovement = basicDataHOC<true, EEnableSpiritMovement
 export const withTrackedCharacterId = basicDataHOC<null, ETrackedCharacterIdChanged>(
   'trackedCharacterIdChanged',
   'trackedCharacterId',
+  null,
+);
+
+export const withSoundStageState = basicDataHOC<null, ESoundStageStateChanged>(
+  'soundStageStateChanged',
+  'soundStageState',
+  null,
+);
+
+export const withSoundSettings = basicDataHOC<null, ESoundSettingsChanged>(
+  'soundSettingsChanged',
+  'soundSettings',
   null,
 );
 

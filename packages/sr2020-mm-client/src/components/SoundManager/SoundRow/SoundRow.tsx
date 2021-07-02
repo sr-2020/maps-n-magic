@@ -92,8 +92,8 @@ export class SoundRow extends Component<SoundRowProps> {
               <span className="tw-ml-2 tw-pt-1 tw-font-medium tw-text-sm">{sound.name}</span>
             </div>
             <div>
-              <span className="tw-ml-2 tw-pt-1 tw-text-sm tw-text-gray-600">{formatBytes(sound.size)}</span>
-              <span className="tw-ml-2 tw-pt-1 tw-text-sm tw-text-gray-600">{sound.buffer && formatDuration(sound.buffer.duration)}</span>
+              {/* <span className="tw-ml-2 tw-pt-1 tw-text-sm tw-text-gray-600">{formatBytes(sound.size)}</span> */}
+              <span className="tw-ml-2 tw-pt-1 tw-text-sm tw-text-gray-600">{sound.status === 'loaded' && formatDuration(sound.buffer.duration)}</span>
               <span className="tw-ml-2 tw-pt-1 tw-text-sm tw-text-gray-600">{sound.status}</span>
             </div>
           </div>
