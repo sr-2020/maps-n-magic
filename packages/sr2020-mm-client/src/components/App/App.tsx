@@ -39,7 +39,7 @@ import { SpiritRouteEditor } from '../SpiritRouteEditor';
 
 // import { AppPropTypes } from '../../types';
 
-import { SoundManager } from '../SoundManager';
+// import { SoundManager } from '../SoundManager';
 
 // import { mapDefaults } from '../../configs/map';
 import { mapDefaults } from '../../configs';
@@ -58,7 +58,7 @@ import { AppHeader } from './AppHeader';
 
 import { SoundWatcher } from '../SoundWatcher';
 
-import { SoundStage } from './SoundStage';
+// import { SoundStage } from './SoundStage';
 
 import { BeaconRecordEditor } from '../BeaconRecordEditor';
 import { RescueServiceMessageSender } from '../RescueServiceMessageSender';
@@ -105,7 +105,7 @@ export class App extends Component<AppProps, AppState> {
 
   soundStorage = new SoundStorage(this.audioContextWrapper);
 
-  soundStage = new SoundStage(this.audioContextWrapper);
+  // soundStage = new SoundStage(this.audioContextWrapper);
 
   saveDataInLsId: NodeJS.Timeout;
 
@@ -140,7 +140,7 @@ export class App extends Component<AppProps, AppState> {
 
   componentDidMount() {
     const { gameModel, gameServer } = makeGameModel();
-    this.soundStage.subscribeOnModel(gameModel);
+    // this.soundStage.subscribeOnModel(gameModel);
     this.setState({
       translator: new Translator(mapDefaults.defaultCenter, null),
       gameServer,
@@ -156,7 +156,7 @@ export class App extends Component<AppProps, AppState> {
   componentWillUnmount() {
     clearInterval(this.saveDataInLsId);
     // navigator.geolocation.clearWatch(this.watchGeolocationId);
-    this.soundStage.dispose();
+    // this.soundStage.dispose();
     // window.removeEventListener('beforeunload', this.onSaveDataInLs);
   }
 
@@ -406,9 +406,9 @@ export class App extends Component<AppProps, AppState> {
                     audioContextWrapper={this.audioContextWrapper}
                     soundStorage={this.soundStorage}
                   />
-                  {/* <SoundResumer 
+                  <SoundResumer 
                     audioContext={this.audioContextWrapper.context}
-                  /> */}
+                  />
                 </main>
               </div>
             </Router>

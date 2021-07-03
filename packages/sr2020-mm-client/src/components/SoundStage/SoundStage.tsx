@@ -19,8 +19,6 @@ interface SoundStageProps {
   soundSettings: SoundSettings;
 }
 
-
-
 export class SoundStage extends React.Component<SoundStageProps> {
   soundStageState: SoundStageState = {
     backgroundSound: null,
@@ -41,7 +39,12 @@ export class SoundStage extends React.Component<SoundStageProps> {
     const { soundStageState, soundStorage, soundSettings } = this.props;
     this.soundStageState = R.clone(soundStageState);
     // this.soundStageState.backgroundSound = 'spirit_sarma_4.mp3';
-    this.soundStageState.backgroundSound = 'manaLevel_3.mp3';
+    this.soundStageState.backgroundSound = {
+      name: 'manaLevel_3.mp3',
+      volumePercent: 50
+      // volumePercent: 5
+    };
+
     this.soundStageState.rotationSounds = [
       'spirit_barguzin_2.mp3',
       'spirit_kultuk_3.mp3',

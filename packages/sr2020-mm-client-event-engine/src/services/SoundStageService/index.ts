@@ -5,7 +5,8 @@ import {
   GameModel, 
   GMLogger,
   Req,
-  Res
+  Res,
+  TrackData
 } from 'sr2020-mm-event-engine';
 
 import { 
@@ -18,7 +19,7 @@ import {
 } from "./types";
 
 export class SoundStageService extends AbstractService<SoundStageServiceContract> {
-  backgroundSound: string | null;
+  backgroundSound: TrackData | null;
   rotationSounds: string[];
 
   constructor(gameModel: GameModel, logger: GMLogger) {
@@ -38,8 +39,8 @@ export class SoundStageService extends AbstractService<SoundStageServiceContract
     });
   }
 
-  setBackgroundSound({ name }: SetBackgroundSound) {
-    this.backgroundSound = name;
+  setBackgroundSound({ trackData }: SetBackgroundSound) {
+    this.backgroundSound = trackData;
     this.emitSoundStageChanged();
   }
 

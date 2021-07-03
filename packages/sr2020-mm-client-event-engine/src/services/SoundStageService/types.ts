@@ -7,7 +7,8 @@ import {
   TypeOnly,
   Typed,
   ServiceContract,
-  ServiceContractTypes
+  ServiceContractTypes,
+  TrackData
 } from 'sr2020-mm-event-engine';
 
 // requests
@@ -17,7 +18,7 @@ export type GetSoundStageState = (arg: Typed<'soundStageState'>) => SoundStageSt
 // actions
 
 export type SetBackgroundSound = Typed<'setBackgroundSound', {
-  name: string | null;
+  trackData: TrackData | null;
 }>;
 export type ClearSoundStage = Typed<'clearSoundStage'>;
 export type RotationSoundsChange = Typed<'rotationSoundsChange', {

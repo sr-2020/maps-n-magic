@@ -168,8 +168,13 @@ export interface SoundSettings {
   rotationVolume: number;
 }
 
+export interface TrackData {
+  name: string;
+  volumePercent: number; // 0-100
+}
+
 export interface SoundStageState {
-  backgroundSound: string | null;
+  backgroundSound: TrackData | null;
   rotationSounds: string[];
 }
 

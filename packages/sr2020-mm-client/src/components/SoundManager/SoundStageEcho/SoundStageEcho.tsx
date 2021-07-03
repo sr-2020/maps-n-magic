@@ -15,7 +15,10 @@ export function SoundStageEcho(props: SoundStageEchoProps) {
     const intervalId = setInterval(() => {
       gameModel.execute2<SetBackgroundSound>({
         type: 'setBackgroundSound',
-        name: 'manaLevel_' + (Math.floor(Date.now() / 1000)%7 + 1)
+        trackData: {
+          name: 'manaLevel_' + (Math.floor(Date.now() / 1000)%7 + 1),
+          volumePercent: 50
+        }
       });
     })
     return () => {
