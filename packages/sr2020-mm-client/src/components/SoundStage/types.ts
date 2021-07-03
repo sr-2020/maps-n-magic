@@ -1,12 +1,12 @@
+import { TrackData } from "sr2020-mm-event-engine";
 import { SoundCtl } from "../../types";
 
 export type SoundChannel = {
   [name: string]: SoundCtl
 };
 
-export interface SoundItem {
+export interface SoundItem extends TrackData {
   type: 'sound';
-  name: string;
 }
 
 export interface SilenceItem {

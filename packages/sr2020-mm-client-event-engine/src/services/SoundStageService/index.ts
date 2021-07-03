@@ -20,7 +20,7 @@ import {
 
 export class SoundStageService extends AbstractService<SoundStageServiceContract> {
   backgroundSound: TrackData | null;
-  rotationSounds: string[];
+  rotationSounds: TrackData[];
 
   constructor(gameModel: GameModel, logger: GMLogger) {
     super(gameModel, logger);

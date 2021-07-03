@@ -175,7 +175,7 @@ export interface TrackData {
 
 export interface SoundStageState {
   backgroundSound: TrackData | null;
-  rotationSounds: string[];
+  rotationSounds: TrackData[];
 }
 
 export interface SoundStageData extends SoundSettings, SoundStageState {

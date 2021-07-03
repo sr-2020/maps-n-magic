@@ -34,7 +34,7 @@ export class BackgroundChannel {
         console.warn(`Sound not found: ${backgroundSound}`);
         this.bgSilenceTimeoutId = setTimeout(() => this.run(), BG_SILENCE_DURATION_MILLIS);
       } else {
-        console.log(`start bg sound ${sound.name}`);
+        console.log(`start bg sound ${JSON.stringify(backgroundSound)}`);
         const ctl = audioContextWrapper.createSource(sound.buffer);
         this.soundCtl = ctl;
         ctl.source.addEventListener('ended', this.run);

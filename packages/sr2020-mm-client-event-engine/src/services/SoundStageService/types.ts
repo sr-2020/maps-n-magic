@@ -22,8 +22,8 @@ export type SetBackgroundSound = Typed<'setBackgroundSound', {
 }>;
 export type ClearSoundStage = Typed<'clearSoundStage'>;
 export type RotationSoundsChange = Typed<'rotationSoundsChange', {
-  added: string[];
-  removed: string[];
+  added: TrackData[];
+  removed: TrackData[];
 }>;
 
 // events

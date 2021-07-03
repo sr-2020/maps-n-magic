@@ -42,14 +42,14 @@ export class RotationChannel {
     const soundSequence = R.intersperse(null, shuffle(rotationSounds));
     console.log(this.uid, 'soundSequence', soundSequence);
 
-    this.playlist = soundSequence.map(el => {
+    this.playlist = soundSequence.map((el): PlaylistItem => {
       if (el === null) {
         return {
           type: 'silence',
           durationMillis: soundSettings.rotationTimeout
         }
       } else {
-        return { type: 'sound', name: el };
+        return { type: 'sound', ...el };
       }
     });
     this.playlist.push({
@@ -77,15 +77,15 @@ export class RotationChannel {
     const { soundStorage, audioContextWrapper } = this.context.props;
     const sound = soundStorage.getSound(playlistItem.name);
     if ( sound === undefined ) {
-      console.warn(`${this.uid}: index ${this.index},  rotation sound not found: ${playlistItem.name}, use default silence ${ROTATION_SILENCE_DURATION_MILLIS}`);
+      console.warn(`${this.uid}: index ${this.index}, rotation sound not found: ${playlistItem.name}, use default silence ${ROTATION_SILENCE_DURATION_MILLIS}`);
       this.rotationSilenceTimeoutId = setTimeout(() => this.playSound(), ROTATION_SILENCE_DURATION_MILLIS);
     } else {
-      console.log(`${this.uid}: index ${this.index},  start rotation sound ${sound.name}`);
+      console.log(`${this.uid}: index ${this.index}, start rotation sound ${JSON.stringify(playlistItem)}`);
       const ctl = audioContextWrapper.createSource(sound.buffer);
       this.soundCtl = ctl;
       ctl.source.addEventListener('ended', this.playSound);
       ctl.source.customData = { soundName: sound.name };
-      ctl.gainNode.gain.value = 0.5; // 50 / 100
+      ctl.gainNode.gain.value = playlistItem.volumePercent / 100;
       ctlStart(ctl);
     }
     this.index++;
