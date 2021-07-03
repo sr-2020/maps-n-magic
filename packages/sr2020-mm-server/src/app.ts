@@ -99,7 +99,7 @@ app.use('/api', logoutRouter);
 
 app.get('/api/fileList', fileListRouter);
 app.get('/api/file/:name', fileRouter);
-app.post('/api/postUserPosition/:characterId', postUserPosition);
+app.use('/api', postUserPosition);
 
 // app.all('/characterStates', characterStatesRouter);
 

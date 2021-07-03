@@ -21,7 +21,7 @@ export { SOUND_URL };
 // export const SERVER_URL = 'http://localhost:3001';
 export const SERVER_URL = '';
 
-export const POST_USER_POSITION = '/postUserPosition';
+export const POST_USER_POSITION = '/api/postUserPosition';
 
 export function joinUrl(...args: string[]): string {
   return args.join('');
