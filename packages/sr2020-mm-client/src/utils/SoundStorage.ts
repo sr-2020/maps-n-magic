@@ -1,5 +1,5 @@
 import { getSound, SOUND_LIST } from "sr2020-mm-client-event-engine";
-import { Sound } from "../types";
+import { LoadedSound, Sound } from "../types";
 import { AudioContextWrapper } from "./AudioContextWrapper";
 
 export class SoundStorage {
@@ -25,8 +25,16 @@ export class SoundStorage {
     }
   }
 
-  getSound(name: string): Sound | undefined {
+  getRawSound(name: string): Sound | undefined {
     return this.soundIndex[name];
+  }
+
+  getSound(name: string): LoadedSound | undefined {
+    const sound = this.soundIndex[name];
+    if (sound !== undefined && sound.status === 'loaded') {
+      return sound;
+    }
+    return undefined;
   }
 
   dispose(): void {

@@ -38,6 +38,9 @@ export const basicDataHOC = function<
 ) {
   return (Wrapped: any) => (props: any) => {
     const { gameModel } = props;
+    if (R.isNil(gameModel)) {
+      throw new Error(`gameModel is nil for ${dataName} extraction`);
+    }
     const [data, setData] = useState<InitState | T[DataName]>(initState);
 
     function update(event: T) {

@@ -67,6 +67,8 @@ import { MapRoutes } from '../MapRoutes';
 
 import { LoginManager, SoundStorage } from "../../utils";
 import { SoundStageEcho } from '../SoundManager/SoundStageEcho';
+import { SoundStageGuard } from '../SoundStageGuard';
+import { SoundResumer } from '../SoundResumer';
 
 
 const STORAGE_KEY = 'AR_POC';
@@ -315,7 +317,7 @@ export class App extends Component<AppProps, AppState> {
     const {
       t, loginManager
     } = this.props;
-    
+
     return (
       <DocumentTitle title={t('appTitle')}>
         <MapDefaultsProvider value={mapDefaults}>
@@ -399,6 +401,14 @@ export class App extends Component<AppProps, AppState> {
                   */}
                   {/* <CharacterHealthListener gameModel={gameModel} /> */}
                   {/* <SoundStageEcho gameModel={gameModel} /> */}
+                  <SoundStageGuard 
+                    gameModel={gameModel}
+                    audioContextWrapper={this.audioContextWrapper}
+                    soundStorage={this.soundStorage}
+                  />
+                  {/* <SoundResumer 
+                    audioContext={this.audioContextWrapper.context}
+                  /> */}
                 </main>
               </div>
             </Router>

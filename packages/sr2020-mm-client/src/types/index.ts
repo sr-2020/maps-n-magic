@@ -12,13 +12,13 @@ interface CommonSoundInfo {
   name: string;
 }
 
-interface UnloadedSound extends CommonSoundInfo {
+export interface UnloadedSound extends CommonSoundInfo {
   status: 'unloaded';
 }
-interface LoadingSound extends CommonSoundInfo {
+export interface LoadingSound extends CommonSoundInfo {
   status: 'loading';
 }
-interface LoadedSound extends CommonSoundInfo {
+export interface LoadedSound extends CommonSoundInfo {
   status: 'loaded';
   buffer: AudioBuffer;
 }

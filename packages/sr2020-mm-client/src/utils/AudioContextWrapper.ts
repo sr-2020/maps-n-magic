@@ -41,8 +41,9 @@ export class AudioContextWrapper {
 export function createContext() {
   try {
     // Fix up for prefixing
-    // window.AudioContext = window.AudioContext || window.webkitAudioContext;
-    window.AudioContext = window.AudioContext;
+    // @ts-ignore
+    window.AudioContext = window.AudioContext || window.webkitAudioContext;
+    // window.AudioContext = window.AudioContext;
     return new AudioContext();
   } catch (e) {
     throw new Error('Web Audio API is not supported in this browser');
