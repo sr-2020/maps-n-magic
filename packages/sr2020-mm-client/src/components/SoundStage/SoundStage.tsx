@@ -25,7 +25,8 @@ interface ComponentSoundStageState {
   rotationSoundInfo: string;
 }
 
-(window as any).DEBUG_SOUND_STAGE = false;
+// (window as any).DEBUG_SOUND_STAGE = false;
+(window as any).DEBUG_SOUND_STAGE = true;
 
 export class SoundStage extends React.Component<SoundStageProps, ComponentSoundStageState> {
   soundStageState: SoundStageState = {

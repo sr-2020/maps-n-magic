@@ -10,9 +10,10 @@ import {
   ServiceContractTypes,
   ELocationRecordsChanged2,
   GetLocationRecord,
-  GetUserRecord
+  GetUserRecord,
+  ESpiritsChanged
 } from 'sr2020-mm-event-engine';
-import { SetBackgroundSound } from '../SoundStageService/types';
+import { SetBackgroundSound, SetRotationSounds } from '../SoundStageService/types';
 
 // requests
 
@@ -54,9 +55,14 @@ export interface TrackedCharacterServiceContract extends ServiceContract {
     | SetTrackedCharacterId
     | TrackedCharacterLocationChanged;
   EmitEvent: TrackedCharacterEvents;
-  ListenEvent: ELocationRecordsChanged2;
+  ListenEvent: 
+    | ELocationRecordsChanged2
+    | ESpiritsChanged  
+  ;
   NeedAction: 
-    | SetBackgroundSound;
+    | SetBackgroundSound
+    | SetRotationSounds  
+  ;
   NeedRequest: 
     | GetLocationRecord
     | GetUserRecord
@@ -82,7 +88,8 @@ export const trackedCharacterMetadata: ServiceContractTypes<TrackedCharacterServ
   ],
   listenEvents: [
     'locationRecordsChanged2',
+    'spiritsChanged'
   ],
   needRequests: ['locationRecord', 'userRecord'],
-  needActions: ['setBackgroundSound']
+  needActions: ['setBackgroundSound', 'setRotationSounds']
 };

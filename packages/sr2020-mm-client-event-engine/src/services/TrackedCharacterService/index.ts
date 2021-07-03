@@ -9,8 +9,14 @@ import {
   Req,
   Res,
   ELocationRecordsChanged2,
+  ESpiritsChanged,
+  Spirit,
+  Rotation,
+  TrackData,
+  GetSpirits
 } from 'sr2020-mm-event-engine';
-import { SetBackgroundSound } from '../SoundStageService/types';
+import { FRACTION_SOUNDS, MANA_LEVEL_SOUNDS } from '../..';
+import { SetBackgroundSound, SetRotationSounds } from '../SoundStageService/types';
 
 import { 
   trackedCharacterMetadata,
@@ -32,24 +38,64 @@ export class TrackedCharacterService extends AbstractService<TrackedCharacterSer
     this.trackedCharacterId = null;
     this.locationId = null;
     this.onLocationRecordsChanged2 = this.onLocationRecordsChanged2.bind(this);
+    this.onSpiritsChanged = this.onSpiritsChanged.bind(this);
   }
 
   init() {
     super.init();
     this.on2('locationRecordsChanged2', this.onLocationRecordsChanged2);
+    this.on2('spiritsChanged', this.onSpiritsChanged);
   }
 
   dispose() {
     this.off2('locationRecordsChanged2', this.onLocationRecordsChanged2);
+    this.off2('spiritsChanged', this.onSpiritsChanged);
   }
 
   // it is strange that it unconditionally updates background sound
   // Seems we should check type of change.
   onLocationRecordsChanged2(data: ELocationRecordsChanged2) {
     // this.logger.info('onLocationRecordsChanged2', data);
-    if (this.locationId) {
-      this.updateBackgroundSound(this.locationId);
+    if (this.locationId === null) { return; }
+    this.updateBackgroundSound(this.locationId);
+  }
+
+  onSpiritsChanged(data: ESpiritsChanged) {
+    if (this.locationId === null) { return; }
+    this.updateRotationSounds(this.locationId, this.gameModel.get2<GetSpirits>({type:'spirits'}));
+  }
+  
+  updateRotationSounds(locationId: number | null, spirits: Spirit[]) {
+    if (locationId === null) {
+      // no location - no spirit sounds
+      this.clearRotationSounds();
+      return;
     }
+
+    const locSpirits = spirits.reduce((acc: Spirit[], spirit) => {
+      const { state } = spirit; 
+      if (state.status === 'OnRoute') {
+        const spiritLocationId = state.route.waypoints[state.waypointIndex];
+        if (locationId === spiritLocationId) {
+          acc.push(spirit);
+        }
+      }
+      return acc;
+    }, []);
+  
+    const tracks: TrackData[] = locSpirits.map(spirit => ({
+      key: spirit.id,
+      name: FRACTION_SOUNDS[spirit.fraction],
+      volumePercent: 50
+    }));
+  
+    this.executeOnModel2<SetRotationSounds>({
+      type: 'setRotationSounds',
+      rotation: {
+        key: locationId,
+        tracks
+      }
+    });
   }
 
   getTrackedCharacterId(arg: Req<GetTrackedCharacterId>): Res<GetTrackedCharacterId> {
@@ -86,11 +132,10 @@ export class TrackedCharacterService extends AbstractService<TrackedCharacterSer
       //   trackedCharacterId: this.trackedCharacterId,
       // });
       this.updateBackgroundSound(this.locationId);
+      this.updateRotationSounds(this.locationId, this.gameModel.get2<GetSpirits>({type:'spirits'}));
     } else {
-      this.executeOnModel2<SetBackgroundSound>({
-        type: 'setBackgroundSound',
-        trackData: null,
-      });
+      this.clearBgSound();
+      this.clearRotationSounds();
     }
   }
 
@@ -108,61 +153,46 @@ export class TrackedCharacterService extends AbstractService<TrackedCharacterSer
         trackedCharacterLocationId: locationId,
       });
       this.updateBackgroundSound(locationId);
+      this.updateRotationSounds(locationId, this.gameModel.get2<GetSpirits>({type:'spirits'}));
     }
   }
 
   private updateBackgroundSound(locationId: number | null) {
     const locationRecord = locationId !== null ? this.getLocation(locationId) : null;
-    if (locationRecord && locationRecord.options.manaLevel) {
-      const { manaLevel } = locationRecord.options;
-
-      // const defaultSoundMapping = {
-      //   // manaLevels: {
-      //     high: 'mana_strong_07064025.mp3',
-      //     normal: 'mana_normal_07059107.mp3',
-      //     low: 'mana_weak_07072013.mp3',
-      //   // },
-      //   // spiritFractions: {
-      //   //   Дрозд: 'spirit2_drozd.mp3',
-      //   //   Медведь: 'spirit3_medved.mp3',
-      //   //   Неясыть: 'spirit1_neiasit.mp3',
-      //   // },
-      // };
-      // const key = manaLevel < 3 ? 'low'
-      //   : (manaLevel < 5 ? 'normal' : 'high');
-      // // const soundName = this.getFromModel({
-      // //   type: 'soundForKey',
-      // //   keyType: 'manaLevels',
-      // //   // eslint-disable-next-line no-nested-ternary
-      //   // key: manaLevel < 3 ? 'low'
-      //   //   : (manaLevel < 5 ? 'normal' : 'high'),
-      // // });
-      // this.executeOnModel2({
-      //   type: 'setBackgroundSound',
-      //   name: defaultSoundMapping[key],
-      // });
-      if (manaLevel < 1 || manaLevel > 7) {
-        console.error(`manaLevel out of bounds. manaLevel ${manaLevel}, locationId ${locationId}`);
-        this.executeOnModel2<SetBackgroundSound>({
-          type: 'setBackgroundSound',
-          trackData: null
-        });
-      } else {
-        this.executeOnModel2<SetBackgroundSound>({
-          type: 'setBackgroundSound',
-          trackData: {
-            key: `manaLevel_${manaLevel}.mp3`,
-            name: `manaLevel_${manaLevel}.mp3`,
-            volumePercent: 50
-          }
-        });
-      }
+    if (locationRecord === null || locationRecord.options.manaLevel === undefined) {
+      // no location - no background sound
+      this.clearBgSound();
+      return;
+    }
+    const { manaLevel } = locationRecord.options;
+    const soundName = MANA_LEVEL_SOUNDS[manaLevel];
+    if (soundName === undefined) {
+      console.error(`manaLevel out of bounds. manaLevel ${manaLevel}, locationId ${locationId}`);
+      this.clearBgSound();
     } else {
       this.executeOnModel2<SetBackgroundSound>({
         type: 'setBackgroundSound',
-        trackData: null
+        trackData: {
+          key: soundName,
+          name: soundName,
+          volumePercent: 50
+        }
       });
     }
+  }
+
+  clearBgSound() {
+    this.executeOnModel2<SetBackgroundSound>({
+      type: 'setBackgroundSound',
+      trackData: null,
+    });
+  }
+
+  clearRotationSounds() {
+    this.executeOnModel2<SetRotationSounds>({
+      type: 'setRotationSounds',
+      rotation: null
+    });
   }
 
   private getLocation(locationId: number): LocationRecord | null {
