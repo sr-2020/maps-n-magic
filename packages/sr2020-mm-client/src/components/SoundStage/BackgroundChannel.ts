@@ -28,11 +28,19 @@ export class BackgroundChannel {
     const { soundSettings, soundStorage, audioContextWrapper } = this.context.props;
     if (backgroundSound === null) {
       this.bgSilenceTimeoutId = setTimeout(() => this.run(), BG_SILENCE_DURATION_MILLIS);
+      this.context.setCurBgSoundData(JSON.stringify({
+        type: 'silence', 
+        durationMillis: BG_SILENCE_DURATION_MILLIS
+      }, null, '  '));
     } else {
       const sound = soundStorage.getSound(backgroundSound.name);
       if ( sound === undefined ) {
-        console.warn(`Sound not found: ${backgroundSound}`);
+        console.warn(`BackgroundChannel sound not found: ${backgroundSound.name}`);
         this.bgSilenceTimeoutId = setTimeout(() => this.run(), BG_SILENCE_DURATION_MILLIS);
+        this.context.setCurBgSoundData(JSON.stringify({
+          type: 'silence', 
+          durationMillis: BG_SILENCE_DURATION_MILLIS
+        }, null, '  '));
       } else {
         console.log(`start bg sound ${JSON.stringify(backgroundSound)}`);
         const ctl = audioContextWrapper.createSource(sound.buffer);
@@ -41,6 +49,12 @@ export class BackgroundChannel {
         ctl.source.customData = { soundName: sound.name };
         ctl.gainNode.gain.value = backgroundSound.volumePercent / 100; // 50 / 100
         ctlStart(ctl);
+        this.context.setCurBgSoundData(JSON.stringify({
+          type: 'sound', 
+          name: sound.name,
+          volumePercent: backgroundSound.volumePercent,
+          durationMillis: Math.round(sound.buffer.duration * 1000)
+        }, null, '  '));
       }
     }
   }

@@ -11,6 +11,7 @@ import { PlaylistItem, SoundChannel } from './types';
 import { ctlStart, ctlStop } from './utils';
 import { RotationChannel } from './RotationChannel';
 import { BackgroundChannel } from './BackgroundChannel';
+import { SoundResumer } from '../SoundResumer';
 
 interface SoundStageProps {
   audioContextWrapper: AudioContextWrapper;
@@ -19,7 +20,12 @@ interface SoundStageProps {
   soundSettings: SoundSettings;
 }
 
-export class SoundStage extends React.Component<SoundStageProps> {
+interface ComponentSoundStageState {
+  bgSoundInfo: string;
+  rotationSoundInfo: string;
+}
+
+export class SoundStage extends React.Component<SoundStageProps, ComponentSoundStageState> {
   soundStageState: SoundStageState = {
     backgroundSound: null,
     rotationSounds: null
@@ -31,30 +37,35 @@ export class SoundStage extends React.Component<SoundStageProps> {
 
   constructor(props: SoundStageProps) {
     super(props);
+    this.state = {
+      bgSoundInfo: '',
+      rotationSoundInfo: ''
+    };
     this.rotationChannel = new RotationChannel(this);
     this.backgroundChannel = new BackgroundChannel(this);
   }
+
 
   componentDidMount() {
     const { soundStageState, soundStorage, soundSettings } = this.props;
     this.soundStageState = R.clone(soundStageState);
     // this.soundStageState.backgroundSound = 'spirit_sarma_4.mp3';
-    this.soundStageState.backgroundSound = {
-      name: 'manaLevel_3.mp3',
-      volumePercent: 50
-      // volumePercent: 5
-    };
+    // this.soundStageState.backgroundSound = {
+    //   name: 'manaLevel_3.mp3',
+    //   volumePercent: 50
+    //   // volumePercent: 5
+    // };
 
-    this.soundStageState.rotationSounds = {
-      key: 1,
-      tracks: [
-        { name: 'spirit_barguzin_2.mp3', volumePercent: 10 },
-        { name: 'spirit_barguzin_2.mp3', volumePercent: 50 },
-        { name: 'spirit_barguzin_2.mp3', volumePercent: 90 },
-        // { name: 'spirit_kultuk_3.mp3', volumePercent: 50 },
-        // { name: 'spirit_sarma_4.mp3', volumePercent: 50 },
-      ]
-    };
+    // this.soundStageState.rotationSounds = {
+    //   key: 1,
+    //   tracks: [
+    //     { name: 'spirit_barguzin_2.mp3', volumePercent: 10 },
+    //     { name: 'spirit_barguzin_2.mp3', volumePercent: 50 },
+    //     { name: 'spirit_barguzin_2.mp3', volumePercent: 90 },
+    //     // { name: 'spirit_kultuk_3.mp3', volumePercent: 50 },
+    //     // { name: 'spirit_sarma_4.mp3', volumePercent: 50 },
+    //   ]
+    // };
 
     this.rotationChannel.run();
     this.backgroundChannel.run();
@@ -68,12 +79,48 @@ export class SoundStage extends React.Component<SoundStageProps> {
     // this.soundStageState.backgroundSound = 'manaLevel_4.mp3';
   }
 
+  componentDidUpdate(prevProps: SoundStageProps) {
+    const { soundStageState } = this.props;
+    if (!R.equals(soundStageState, prevProps.soundStageState)) {
+      this.soundStageState = R.clone(soundStageState);
+      // TODO force rotation update on rotation key change
+    }
+  }
+
   componentWillUnmount() {
     this.rotationChannel.dispose();
     this.backgroundChannel.dispose();
   }
+
+  setCurBgSoundData(data: string) {
+    this.setState({bgSoundInfo: data});
+  }
+
+  setCurRotationSoundData(data: string) {
+    this.setState({rotationSoundInfo: data});
+  }
   
   render () {
+    const { bgSoundInfo, rotationSoundInfo } = this.state;
+    const { audioContextWrapper } = this.props;
+
+    return (
+      <div className="SoundStage tw-absolute tw-bottom-0 tw-right-0 tw-bg-white tw-opacity-70">
+        <SoundResumer 
+          audioContext={audioContextWrapper.context}
+        />
+        <div>
+          <div>curBgSound</div>
+          <pre>{bgSoundInfo}</pre>
+        </div>
+        <div>
+          <div>curRotationSound</div>
+          <pre>{rotationSoundInfo}</pre>
+        </div>
+      </div>
+    );
+    // if
+
     return null;
     // const { soundSettings, soundStageState, audioContextWrapper, soundStorage } = this.props;
   
