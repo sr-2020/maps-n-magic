@@ -4,7 +4,7 @@ import Ajv, { JSONSchemaType } from "ajv";
 import { manaOceanSpellCastSubscriptionName } from "../constants";
 import { createLogger } from '../../logger';
 
-const logger = createLogger('listenSpellCasts');
+const logger = createLogger('listenSpellCasts.ts');
 
 const timeout = 60;
 

@@ -5,7 +5,7 @@ import { RawUserRecord, validateRawUserRecord } from "sr2020-mm-event-engine";
 import { mainServerConstants } from '../constants';
 import { createLogger } from '../../logger';
 
-const logger = createLogger('getCharacterLocation');
+const logger = createLogger('getCharacterLocation.ts');
 
 // const locations = null;
 

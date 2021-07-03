@@ -3,7 +3,7 @@ import {
   createLogger 
 } from 'sr2020-mm-server-event-engine';
 
-const logger = createLogger('logout');
+const logger = createLogger('logout.ts');
 
 const router = Router();
 

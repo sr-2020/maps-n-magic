@@ -5,7 +5,7 @@ import { shutdownPgPool } from "./api/pgPool";
 
 // https://thomashunter.name/posts/2021-03-08-the-death-of-a-nodejs-process
 
-const logger = createLogger('pgPool');
+const logger = createLogger('processTerminationHandler.ts');
 
 process.on('uncaughtException', async (error) => {
   // logger.send("An uncaught exception has occured", error, () => {

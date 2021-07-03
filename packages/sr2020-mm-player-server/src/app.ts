@@ -17,17 +17,11 @@ import {
   createLogger
 } from 'sr2020-mm-server-event-engine';
 import { makeGameModel } from "./gameModel";
-// import { WebSocketInitClientConfig } from 'sr2020-mm-event-engine';
 
-import { indexRouter } from './routes/index';
-import { fileListRouter } from './routes/fileList';
-import { fileRouter } from './routes/file';
 import { pingRouter } from './routes/ping'; 
 import { loginRouter } from './routes/login'; 
 import { parseUserData } from './routes/parseUserData'; 
-import { usersRouter } from './routes/users';
 import { postUserPosition } from './routes/postUserPosition';
-import { WebSocketWrapper } from './webSocketWrapper';
 import { 
   ELocationRecordsChanged2, 
   ESetSpirits, 
@@ -40,47 +34,9 @@ import { SsePlayerDataSender } from './ssePlayerDataSender';
 import { spiritRouter } from "./routes/spirits";
 import { logoutRouter } from "./routes/logout";
 
-const logger = createLogger('playerServerApp');
-
-// const express = require('express');
-// const expressWs = require('express-ws');
-// const path = require('path');
-// const cookieParser = require('cookie-parser');
-// const morganLogger = require('morgan');
-// const shortid = require('shortid');
-
-// const cors = require('cors');
-
-// const indexRouter = require('./routes/index.ts');
-// const fileListRouter = require('./routes/fileList.ts');
-// // const characterStatesRouter = require('./routes/characterStates');
-// const fileRouter = require('./routes/file.ts');
-// const pingRouter = require('./routes/ping.ts');
-// const usersRouter = require('./routes/users.ts');
-// const postUserPosition = require('./routes/postUserPosition.ts');
-// const { WebSocketWrapper } = require('./webSocketWrapper.ts');
-
-// const express = require('express');
-// const expressWs = require('express-ws');
-// const path = require('path');
-// const cookieParser = require('cookie-parser');
-// const morganLogger = require('morgan');
-// const shortid = require('shortid');
-
-// const cors = require('cors');
-
-// const indexRouter = require('./routes/index.ts');
-// const fileListRouter = require('./routes/fileList.ts');
-// // const characterStatesRouter = require('./routes/characterStates');
-// const fileRouter = require('./routes/file.ts');
-// const pingRouter = require('./routes/ping.ts');
-// const usersRouter = require('./routes/users.ts');
-// const postUserPosition = require('./routes/postUserPosition.ts');
-// const { WebSocketWrapper } = require('./webSocketWrapper.ts');
+const logger = createLogger('playerServer/app.ts');
 
 logger.info('process.env.NODE_ENV', process.env.NODE_ENV);
-
-// console.log('process.env.NODE_ENV', process.env.NODE_ENV);
 
 const { gameModel, gameServer } = makeGameModel();
 
@@ -132,20 +88,14 @@ app.use(Express.urlencoded({ extended: false }));
 app.use(cookieParser());
 // app.use(express.static(path.join(__dirname, 'public')));
 
-// app.use('/', indexRouter);
-// app.use('/users', usersRouter);
-
-// app.get('/fileList', fileListRouter);
-// app.get('/file/:name', fileRouter);
 app.get('/ping', pingRouter);
-// app.use('/api/*', loginRouter);
 app.use(loginRouter);
 
 app.use('/api', parseUserData);
 
 app.use(spiritRouter);
 
-app.use(logoutRouter);
+app.use('/api', logoutRouter);
 
 app.get('/api/singlePlayerDataSse', (req, res, next) => {
   logger.info('Processing playerDataSse connection');
@@ -159,33 +109,13 @@ app.get('/api/singlePlayerDataSse', (req, res, next) => {
   new SsePlayerDataSender(req, res, next, childLogger, gameModel, userData);
 });
 
-
-// app.use('/api/login', loginRouter);
-// app.post('/postUserPosition/:characterId', postUserPosition);
-// app.all('/characterStates', characterStatesRouter);
-
-// wsApp.app.ws('/ws', (ws, req, next) => {
-//   ws.on('message', (msgStr) => {
-//     // console.log('msg:', msgStr);
-//     const msg = JSON.parse(msgStr.toString()) as {message?: string};
-//     if (msg.message && msg.message === 'initClientConfig') {
-//       const ip = req.connection.remoteAddress;
-//       const id = shortid.generate();
-//       const childLogger = winstonLogger.customChild ? 
-//         winstonLogger.customChild(winstonLogger, { service: `ws_session_${id}` }) :
-//         winstonLogger;
-//       childLogger.info(ip, 'initClientConfig', msgStr);
-//       new WebSocketWrapper(ws, gameModel, msg as WebSocketInitClientConfig, childLogger);
-//     }
-//   });
-// });
-
 app.use(Express.static(path.join(__dirname, './static')));
 
 // catch 404 and forward to error handler
 app.use((req, res, next) => {
   // next(createError(404));
-  res.sendFile(path.join(__dirname, './static', '/index.html'));
+  res.status(404).send('Requested resource not found');
+  // res.sendFile(path.join(__dirname, './static', '/index.html'));
 });
 
 // error handler
@@ -240,7 +170,6 @@ es.onerror = function(event) {
   logger.info("EventSource onerror", event);
 };
 
-
 es.addEventListener('message', function (e) {
   try {
     const { data }: { data: string } = e;
@@ -267,7 +196,6 @@ es.addEventListener('message', function (e) {
       logger.warn(`Unexpected sse message data ${JSON.stringify(e)}`);
     }
   } catch (err) {
-    // console.error(err);
     logger.error('error', err);
     logger.error(`Error on processing sse message: ${JSON.stringify(err)}, message ${JSON.stringify(e)}`)
   }

@@ -8,7 +8,6 @@ import shortid from 'shortid';
 import cors from 'cors';
 import * as core from 'express-serve-static-core';
 import * as jwt from "jsonwebtoken";
-import { existsSync } from 'fs';
 
 import { 
   AuthorizedRequest, 
@@ -19,11 +18,11 @@ import {
 } from 'sr2020-mm-server-event-engine';
 import { ErrorResponse, validateWebSocketInitClientConfig, WebSocketInitClientConfig } from 'sr2020-mm-event-engine';
 
-import { indexRouter } from './routes/index';
-import { fileListRouter } from './routes/fileList';
-import { fileRouter } from './routes/file';
+// import { indexRouter } from './routes/index';
+// import { fileListRouter } from './routes/fileList';
+// import { fileRouter } from './routes/file';
 import { pingRouter } from './routes/ping';
-import { usersRouter } from './routes/users';
+// import { usersRouter } from './routes/users';
 import { postUserPosition } from './routes/postUserPosition';
 import { WebSocketWrapper } from './webSocketWrapper';
 import { SseDataSender } from "./sseDataSender";
@@ -31,7 +30,7 @@ import { loginRouter } from './routes/login';
 import { logoutRouter } from './routes/logout';
 import { parseUserData } from './routes/parseUserData';
 
-const logger = createLogger('mainServerApp');
+const logger = createLogger('mainServer/app.ts');
 
 logger.info('process.env.NODE_ENV', process.env.NODE_ENV);
 
@@ -97,11 +96,7 @@ app.use('/api', parseUserData);
 
 app.use('/api', logoutRouter);
 
-app.get('/api/fileList', fileListRouter);
-app.get('/api/file/:name', fileRouter);
 app.use('/api', postUserPosition);
-
-// app.all('/characterStates', characterStatesRouter);
 
 wsApp.app.ws('/ws', (ws, req, next) => {
   logger.error('old ws path /ws is not working anymore');
@@ -148,6 +143,7 @@ app.use((err, req, res, next) => {
   // set locals, only providing error in development
   res.locals.message = err.message;
   res.locals.error = req.app.get('env') === 'development' ? err : {};
+  logger.info('error on request', req.headers, err.toString());
 
   // render the error page
   res.status(err.status || 500);

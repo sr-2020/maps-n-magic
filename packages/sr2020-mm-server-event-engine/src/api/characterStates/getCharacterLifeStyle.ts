@@ -8,7 +8,7 @@ import {
 import { mainServerConstants } from '../constants';
 import { createLogger } from '../../logger';
 
-const logger = createLogger('getCharacterLifeStyle');
+const logger = createLogger('getCharacterLifeStyle.ts');
 
 // {
 //   "data": {

@@ -4,7 +4,7 @@ import Ajv, { JSONSchemaType } from "ajv";
 import { createLogger } from '../../logger';
 import { charLocChangeSubscriptionName } from "../constants";
 
-const logger = createLogger('listenCharacterLocationsApi');
+const logger = createLogger('listenCharacterLocations.ts');
 
 const timeout = 60;
 

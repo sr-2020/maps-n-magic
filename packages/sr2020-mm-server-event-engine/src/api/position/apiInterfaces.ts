@@ -3,7 +3,7 @@ import { createLogger } from '../../logger';
 
 import { typelessValidateEntityFunction } from "../types";
 
-const logger = createLogger('positionApiInterfaces');
+const logger = createLogger('positionApiInterfaces.ts');
 
 const LIMIT = 500;
 

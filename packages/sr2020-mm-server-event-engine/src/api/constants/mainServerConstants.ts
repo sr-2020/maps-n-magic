@@ -3,7 +3,7 @@ import { createLogger } from "../../logger";
 import { getEnvVariables, getPrintObject, mergeEnvVariables } from "./envUtils";
 import { GenericServerConstants, getGenericEnvVariables, getGenericServerConstants } from "./genericServerConstants";
 
-const logger = createLogger('mainServerConstants');
+const logger = createLogger('mainServerConstants.ts');
 
 interface MainServerConstants extends GenericServerConstants {
   beaconsUrl: string;

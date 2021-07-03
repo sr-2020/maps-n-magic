@@ -12,7 +12,7 @@ import {
 } from "./genericRowValidation";
 import { createLogger } from '../../logger';
 
-const logger = createLogger('spiritRoutesApi');
+const logger = createLogger('spiritRoutes.ts');
 
 export const getSpiritRoutes = async function(): Promise<unknown[]> {
   const { rows } = await pool.query('SELECT * FROM "spiritRoute"');

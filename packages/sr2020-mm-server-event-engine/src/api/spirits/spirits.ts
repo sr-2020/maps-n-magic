@@ -10,7 +10,7 @@ import {
 } from "./genericRowValidation";
 import { createLogger } from '../../logger';
 
-const logger = createLogger('spiritsApi');
+const logger = createLogger('spirits.ts');
 
 export const getSpirits = async function(): Promise<unknown[]> {
   const { rows } = await pool.query('SELECT * FROM spirit');

@@ -4,7 +4,7 @@ import { rescueServiceSubscriptionName } from "../constants";
 import { BodyConditionValues } from "sr2020-mm-event-engine";
 import { createLogger } from '../../logger';
 
-const logger = createLogger('listenHealthChanges');
+const logger = createLogger('listenHealthChanges.ts');
 
 const timeout = 60;
 

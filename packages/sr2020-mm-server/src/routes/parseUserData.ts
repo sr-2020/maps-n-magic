@@ -16,7 +16,7 @@ router.use((req1, res, next) => {
   const { mm_token } = req.cookies;
   if (mm_token === undefined) {
     const errorResponse: ErrorResponse = {
-      errorTitle: 'Request has no user token',
+      errorTitle: 'В запросе нет пользовательского токена',
       errorSubtitle: ''
     };
     res.status(401).json(errorResponse);

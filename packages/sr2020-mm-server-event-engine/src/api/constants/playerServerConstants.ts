@@ -3,7 +3,7 @@ import { createLogger } from "../../logger";
 import { getEnvVariables, getPrintObject, mergeEnvVariables } from "./envUtils";
 import { GenericServerConstants, getGenericEnvVariables, getGenericServerConstants } from "./genericServerConstants";
 
-const logger = createLogger('playerServerConstants');
+const logger = createLogger('playerServerConstants.ts');
 
 interface PlayerServerConstants extends GenericServerConstants {
   playerDataSseUrl: string;

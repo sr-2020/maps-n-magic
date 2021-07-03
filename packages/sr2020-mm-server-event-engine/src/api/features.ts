@@ -13,7 +13,7 @@
 // } from "./types";
 // import { featuresUrl } from "./constants";
 
-// const logger = createLogger('features');
+// const logger = createLogger('features.ts');
 
 // export class FeatureProvider implements Gettable2<Feature>
 // {

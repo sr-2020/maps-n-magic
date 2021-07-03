@@ -12,7 +12,7 @@ import {
 } from "./genericRowValidation";
 import { createLogger } from '../../logger';
 
-const logger = createLogger('spiritFractionsApi');
+const logger = createLogger('spiritFractions.ts');
 
 // very similar to getSpirits
 export const getSpiritFractions = async function(): Promise<unknown[]> {

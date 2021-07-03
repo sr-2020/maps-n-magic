@@ -1,32 +1,28 @@
 import { Router } from 'express';
 import * as jwt from "jsonwebtoken";
-import { validateTokenData } from 'sr2020-mm-event-engine';
+import { ErrorResponse, validateTokenData } from 'sr2020-mm-event-engine';
 import { 
   validateAuthRequest, 
   validateTokenRequestBody,
   playerServerConstants,
-  getUserTokenData
+  getUserTokenData,
+  createLogger
 } from 'sr2020-mm-server-event-engine';
+
+const logger = createLogger('login.ts');
 
 const router = Router();
 
-router.get('/api/isLoggedIn', (req, res, next) => {
-  // console.log('req.cookies', req.cookies);
-  const { mm_token } = req.cookies;
-  console.log('isLoggedIn', mm_token);
-  if (mm_token === undefined) {
-    res.status(401).end();
-  } else {
-    res.status(200).end();
-  }
-});
-
 router.post('/api/login', async (req, res) => {
-  // console.log('/api/login', req.body);
+  // logger.info('/api/login', req.body);
 
   const authRequest = req.body;
   if (!validateAuthRequest(authRequest)) {
-    res.status(400).send(`auth request verification failed ${JSON.stringify(authRequest)} ${JSON.stringify(validateAuthRequest.errors)}`);
+    const errorResponse: ErrorResponse = {
+      errorTitle: 'Формат данных запроса некорректен',
+      errorSubtitle: `Данные ${JSON.stringify(authRequest)}, ошибки ${JSON.stringify(validateAuthRequest.errors)}`
+    };
+    res.status(400).json(errorResponse);
     return;
   }
 
@@ -34,36 +30,53 @@ router.post('/api/login', async (req, res) => {
   if (res2.status === 200) {
     const data = await res2.json();
     if (!validateTokenRequestBody(data)) {
-      res.status(500).send(`User token data not valid ${JSON.stringify(validateTokenRequestBody.errors)}`);
+      const errorResponse: ErrorResponse = {
+        errorTitle: 'Данные токена некорректны',
+        errorSubtitle: `Данные ${JSON.stringify(data)}, ошибка ${JSON.stringify(validateTokenRequestBody.errors)}`
+      };
+      res.status(500).json(errorResponse);
       return;
     }
 
     const { api_key } = data;
 
-    // console.log('test call', res2.status, data);
-  
     try {
       const parsedToken = jwt.verify(api_key, playerServerConstants().JWT_SECRET);
-      console.log('parsedToken', parsedToken);
+      logger.info('parsedToken', parsedToken);
       if (!validateTokenData(parsedToken)) {
-        res.status(500).send(`parsedToken verification failed ${JSON.stringify(parsedToken)} ${JSON.stringify(validateTokenData.errors)}`);
+        const errorResponse: ErrorResponse = {
+          errorTitle: 'Данные авторизации некорректны',
+          errorSubtitle: `Данные ${JSON.stringify(parsedToken)}, ошибка ${JSON.stringify(validateTokenData.errors)}`
+        };
+        res.status(500).json(errorResponse);
         return;
       }
 
       // const data = await getCharacterModelData(authRequest.username);
-      // console.log(data);
+      // logger.info(data);
+
+      // TODO - login only mages
 
       res.cookie('mm_token', api_key, { httpOnly: true });
       const { body } = req;
-      console.log(body);
+      logger.info('body', body);
       res.json(parsedToken);
     } catch (err) {
-      res.status(500).send(`User token verification failed ${JSON.stringify(err)}`);
+      logger.info('User token verification failed', err);
+      const errorResponse: ErrorResponse = {
+        errorTitle: 'Ошибка про проверке токена',
+        errorSubtitle: JSON.stringify(err)
+      };
+      res.status(500).json(errorResponse);
       return;
     }
   } else {
     const text = await res2.text();
-    res.status(res2.status).send(`User unathorized: ${text}`);
+    const errorResponse: ErrorResponse = {
+      errorTitle: 'Пользователь не авторизован',
+      errorSubtitle: text
+    };
+    res.status(res2.status).json(errorResponse);
   }
 });
 

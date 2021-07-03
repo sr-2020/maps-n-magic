@@ -8,7 +8,7 @@ const router = Router();
 
 router.get('/ping', (req, res, next) => {
   res.send({
-    greeting: 'Maps-n-magic... online',
+    greeting: 'Maps-n-magic main server... online',
     date: new Date(),
   });
 });

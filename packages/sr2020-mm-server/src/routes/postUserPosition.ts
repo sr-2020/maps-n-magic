@@ -4,7 +4,7 @@ import {
   createLogger 
 } from 'sr2020-mm-server-event-engine';
 
-const logger = createLogger('postUserPosition');
+const logger = createLogger('postUserPosition.ts');
 
 const router = Router();
 

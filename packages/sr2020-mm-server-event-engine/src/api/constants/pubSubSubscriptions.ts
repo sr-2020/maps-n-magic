@@ -1,6 +1,6 @@
 import { createLogger } from "../../logger";
 
-const logger = createLogger('pubSubSubscriptions');
+const logger = createLogger('pubSubSubscriptions.ts');
 
 let rescueServiceSubscriptionName: string;
 let charLocChangeSubscriptionName: string;

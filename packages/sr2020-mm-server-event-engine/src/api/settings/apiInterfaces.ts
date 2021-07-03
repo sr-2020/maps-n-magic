@@ -2,7 +2,7 @@ import fetch from 'isomorphic-fetch';
 import { createLogger } from '../../logger';
 import { typelessValidateEntityFunction } from '../types';
 
-const logger = createLogger('settingsApiInterfaces');
+const logger = createLogger('settings/apiInterfaces.ts');
 
 export const getSettings = (state: {
   url: string, 
