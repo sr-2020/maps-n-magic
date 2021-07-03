@@ -8,7 +8,8 @@ import {
   Typed,
   ServiceContract,
   ServiceContractTypes,
-  TrackData
+  TrackData,
+  Rotation
 } from 'sr2020-mm-event-engine';
 
 // requests
@@ -20,11 +21,10 @@ export type GetSoundStageState = (arg: Typed<'soundStageState'>) => SoundStageSt
 export type SetBackgroundSound = Typed<'setBackgroundSound', {
   trackData: TrackData | null;
 }>;
-export type ClearSoundStage = Typed<'clearSoundStage'>;
-export type RotationSoundsChange = Typed<'rotationSoundsChange', {
-  added: TrackData[];
-  removed: TrackData[];
+export type SetRotationSounds = Typed<'setRotationSounds', {
+  rotation: Rotation | null;
 }>;
+export type ClearSoundStage = Typed<'clearSoundStage'>;
 
 // events
 
@@ -40,8 +40,8 @@ export interface SoundStageServiceContract extends ServiceContract {
   Request: GetSoundStageState;
   Action: 
     | SetBackgroundSound
-    | RotationSoundsChange
     | ClearSoundStage
+    | SetRotationSounds;
   EmitEvent: SoundStageEvents;
   ListenEvent: never;
   NeedAction: never;
@@ -52,8 +52,8 @@ export const soundStageMetadata: ServiceContractTypes<SoundStageServiceContract>
   requests: ['soundStageState'],
   actions: [
     'setBackgroundSound',
-    'rotationSoundsChange',
     'clearSoundStage',
+    'setRotationSounds'
   ],
   emitEvents: [
     'soundStageStateChanged'

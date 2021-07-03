@@ -14,8 +14,8 @@ import {
   soundStageMetadata,
   GetSoundStageState,
   SetBackgroundSound,
+  SetRotationSounds,
   ClearSoundStage,
-  RotationSoundsChange,
   SoundStageServiceContract
 } from "./types";
 
@@ -41,7 +41,12 @@ export class SoundStageService extends AbstractService<SoundStageServiceContract
   }
 
   setBackgroundSound({ trackData }: SetBackgroundSound) {
-    this.backgroundSound = trackData;
+    this.backgroundSound = R.clone(trackData);
+    this.emitSoundStageChanged();
+  }
+
+  setRotationSounds({ rotation }: SetRotationSounds) {
+    this.rotationSounds = R.clone(rotation);
     this.emitSoundStageChanged();
   }
 
@@ -61,15 +66,6 @@ export class SoundStageService extends AbstractService<SoundStageServiceContract
     if (hasChanges) {
       this.emitSoundStageChanged();
     }
-  }
-
-  rotationSoundsChange({ added = [], removed = [] }: RotationSoundsChange) {
-    throw new Error('rotationSoundsChange handler not implemented');
-    // const sounds = R.difference(this.rotationSounds, removed).concat(added);
-    // if (R.symmetricDifference(this.rotationSounds, sounds).length !== 0) {
-    //   this.rotationSounds = sounds;
-    //   this.emitSoundStageChanged();
-    // }
   }
 
   getSoundStageState(arg: Req<GetSoundStageState>): Res<GetSoundStageState> {

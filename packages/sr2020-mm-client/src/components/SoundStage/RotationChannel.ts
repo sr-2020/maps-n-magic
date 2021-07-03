@@ -70,20 +70,26 @@ export class RotationChannel {
     const playlistItem = this.playlist[this.index];
     if (playlistItem.type === 'silence') {
       console.log(`${this.uid}: index ${this.index}, start rotation silence,  duration ${playlistItem.durationMillis}`);
-      this.index++;
+      this.soundCtl = null;
       this.rotationSilenceTimeoutId = setTimeout(() => this.playSound(), playlistItem.durationMillis);
       this.context.setCurRotationSoundData(JSON.stringify({
+        index: this.index,
+        playlistLength: this.playlist.length,
         type: 'silence', 
         durationMillis: playlistItem.durationMillis
       }, null, '  '));
+      this.index++;
       return;
     }
     const { soundStorage, audioContextWrapper } = this.context.props;
     const sound = soundStorage.getSound(playlistItem.name);
     if ( sound === undefined ) {
       console.warn(`${this.uid}: index ${this.index}, rotation sound not found: ${playlistItem.name}, use default silence ${ROTATION_SILENCE_DURATION_MILLIS}`);
+      this.soundCtl = null;
       this.rotationSilenceTimeoutId = setTimeout(() => this.playSound(), ROTATION_SILENCE_DURATION_MILLIS);
       this.context.setCurRotationSoundData(JSON.stringify({
+        index: this.index,
+        playlistLength: this.playlist.length,
         type: 'silence', 
         durationMillis: ROTATION_SILENCE_DURATION_MILLIS
       }, null, '  '));
@@ -94,8 +100,11 @@ export class RotationChannel {
       ctl.source.addEventListener('ended', this.playSound);
       ctl.source.customData = { soundName: sound.name };
       ctl.gainNode.gain.value = playlistItem.volumePercent / 100;
+      // ctl.gainNode.gain.value = 0;
       ctlStart(ctl);
       this.context.setCurRotationSoundData(JSON.stringify({
+        index: this.index,
+        playlistLength: this.playlist.length,
         type: 'sound', 
         name: sound.name,
         volumePercent: playlistItem.volumePercent,
@@ -103,6 +112,14 @@ export class RotationChannel {
       }, null, '  '));
     }
     this.index++;
+  }
+
+  smoothEndRotation() {
+    if (this.soundCtl === null ) { // silence case - run next rotation right after silence
+      this.index = this.playlist.length;
+    } else { // sound case - play final rotation silence and start new rotation
+      this.index = this.playlist.length - 1;
+    }
   }
 
   dispose() {

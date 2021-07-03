@@ -169,6 +169,7 @@ export interface SoundSettings {
 }
 
 export interface TrackData {
+  key: string | number;
   name: string;
   volumePercent: number; // 0-100
 }

@@ -400,7 +400,7 @@ export class App extends Component<AppProps, AppState> {
                     This is a fictive component for polling character health status
                   */}
                   {/* <CharacterHealthListener gameModel={gameModel} /> */}
-                  <SoundStageEcho gameModel={gameModel} />
+                  {/* <SoundStageEcho gameModel={gameModel} /> */}
                   <SoundStageGuard 
                     gameModel={gameModel}
                     audioContextWrapper={this.audioContextWrapper}

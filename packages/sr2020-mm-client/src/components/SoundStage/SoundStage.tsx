@@ -25,6 +25,8 @@ interface ComponentSoundStageState {
   rotationSoundInfo: string;
 }
 
+(window as any).DEBUG_SOUND_STAGE = false;
+
 export class SoundStage extends React.Component<SoundStageProps, ComponentSoundStageState> {
   soundStageState: SoundStageState = {
     backgroundSound: null,
@@ -51,6 +53,7 @@ export class SoundStage extends React.Component<SoundStageProps, ComponentSoundS
     this.soundStageState = R.clone(soundStageState);
     // this.soundStageState.backgroundSound = 'spirit_sarma_4.mp3';
     // this.soundStageState.backgroundSound = {
+    //   key: 'manaLevel_3.mp3',
     //   name: 'manaLevel_3.mp3',
     //   volumePercent: 50
     //   // volumePercent: 5
@@ -59,13 +62,14 @@ export class SoundStage extends React.Component<SoundStageProps, ComponentSoundS
     // this.soundStageState.rotationSounds = {
     //   key: 1,
     //   tracks: [
-    //     { name: 'spirit_barguzin_2.mp3', volumePercent: 10 },
-    //     { name: 'spirit_barguzin_2.mp3', volumePercent: 50 },
-    //     { name: 'spirit_barguzin_2.mp3', volumePercent: 90 },
+    //     { key: 'spirit1', name: 'spirit_barguzin_2.mp3', volumePercent: 10 },
+    //     { key: 'spirit2', name: 'spirit_barguzin_2.mp3', volumePercent: 50 },
+    //     { key: 'spirit3', name: 'spirit_barguzin_2.mp3', volumePercent: 90 },
     //     // { name: 'spirit_kultuk_3.mp3', volumePercent: 50 },
     //     // { name: 'spirit_sarma_4.mp3', volumePercent: 50 },
     //   ]
     // };
+
 
     this.rotationChannel.run();
     this.backgroundChannel.run();
@@ -83,7 +87,9 @@ export class SoundStage extends React.Component<SoundStageProps, ComponentSoundS
     const { soundStageState } = this.props;
     if (!R.equals(soundStageState, prevProps.soundStageState)) {
       this.soundStageState = R.clone(soundStageState);
-      // TODO force rotation update on rotation key change
+      if (soundStageState.rotationSounds?.key !== prevProps.soundStageState.rotationSounds?.key) {
+        this.rotationChannel.smoothEndRotation();
+      }
     }
   }
 
@@ -109,14 +115,20 @@ export class SoundStage extends React.Component<SoundStageProps, ComponentSoundS
         <SoundResumer 
           audioContext={audioContextWrapper.context}
         />
-        <div>
-          <div>curBgSound</div>
-          <pre>{bgSoundInfo}</pre>
-        </div>
-        <div>
-          <div>curRotationSound</div>
-          <pre>{rotationSoundInfo}</pre>
-        </div>
+        {
+          (window as any).DEBUG_SOUND_STAGE && (
+            <>
+              <div>
+                <div>curBgSound</div>
+                <pre>{bgSoundInfo}</pre>
+              </div>
+              <div>
+                <div>curRotationSound</div>
+                <pre>{rotationSoundInfo}</pre>
+              </div>
+            </>
+          )
+        }
       </div>
     );
     // if
