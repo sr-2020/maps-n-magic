@@ -10,6 +10,7 @@ import {
   Res,
   ELocationRecordsChanged2,
 } from 'sr2020-mm-event-engine';
+import { SetBackgroundSound } from '../SoundStageService/types';
 
 import { 
   trackedCharacterMetadata,
@@ -84,12 +85,12 @@ export class TrackedCharacterService extends AbstractService<TrackedCharacterSer
       //   type: 'emitTrackedCharacterLocationChanged',
       //   trackedCharacterId: this.trackedCharacterId,
       // });
-      // this.updateBackgroundSound(this.locationId);
+      this.updateBackgroundSound(this.locationId);
     } else {
-      // this.executeOnModel2({
-      //   type: 'setBackgroundSound',
-      //   name: null,
-      // });
+      this.executeOnModel2<SetBackgroundSound>({
+        type: 'setBackgroundSound',
+        trackData: null,
+      });
     }
   }
 
@@ -140,15 +141,27 @@ export class TrackedCharacterService extends AbstractService<TrackedCharacterSer
       //   type: 'setBackgroundSound',
       //   name: defaultSoundMapping[key],
       // });
-      // // this.executeOnModel({
-      // //   type: 'setBackgroundSound',
-      // //   name: soundName,
-      // // });
+      if (manaLevel < 1 || manaLevel > 7) {
+        console.error(`manaLevel out of bounds. manaLevel ${manaLevel}, locationId ${locationId}`);
+        this.executeOnModel2<SetBackgroundSound>({
+          type: 'setBackgroundSound',
+          trackData: null
+        });
+      } else {
+        this.executeOnModel2<SetBackgroundSound>({
+          type: 'setBackgroundSound',
+          trackData: {
+            key: `manaLevel_${manaLevel}.mp3`,
+            name: `manaLevel_${manaLevel}.mp3`,
+            volumePercent: 50
+          }
+        });
+      }
     } else {
-      // this.executeOnModel({
-      //   type: 'setBackgroundSound',
-      //   name: null,
-      // });
+      this.executeOnModel2<SetBackgroundSound>({
+        type: 'setBackgroundSound',
+        trackData: null
+      });
     }
   }
 
