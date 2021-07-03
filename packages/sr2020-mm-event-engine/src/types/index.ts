@@ -173,9 +173,14 @@ export interface TrackData {
   volumePercent: number; // 0-100
 }
 
+export interface Rotation {
+  key: string | number;
+  tracks: TrackData[],
+}
+
 export interface SoundStageState {
   backgroundSound: TrackData | null;
-  rotationSounds: TrackData[];
+  rotationSounds: Rotation | null;
 }
 
 export interface SoundStageData extends SoundSettings, SoundStageState {

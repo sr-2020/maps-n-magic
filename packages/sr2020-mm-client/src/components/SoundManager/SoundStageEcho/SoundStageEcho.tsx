@@ -47,7 +47,11 @@ export function SoundStageEcho(props: SoundStageEchoProps) {
         <div>rotation sounds</div>
         <ul>
           {
-            rotationSounds.map((sound) => <li key={sound.name}>{sound.name}</li>)
+            rotationSounds !== null && 
+            <>
+              <div>{rotationSounds.key}</div>
+              <div>{rotationSounds.tracks.map((sound) => <li key={sound.name}>{sound.name}</li>)}</div>
+            </>
           }
         </ul>
       </div>

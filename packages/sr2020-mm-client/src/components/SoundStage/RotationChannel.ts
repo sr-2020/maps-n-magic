@@ -35,11 +35,11 @@ export class RotationChannel {
     console.log(`${this.uid} RotationChannel.run`);
     const { rotationSounds } = this.context.soundStageState;
     const { soundSettings } = this.context.props;
-    if (rotationSounds.length === 0) {
+    if (rotationSounds === null || rotationSounds.tracks.length === 0) {
       this.rotationSilenceTimeoutId = setTimeout(() => this.run(), ROTATION_SILENCE_DURATION_MILLIS);
       return;
     }
-    const soundSequence = R.intersperse(null, shuffle(rotationSounds));
+    const soundSequence = R.intersperse(null, shuffle(rotationSounds.tracks));
     console.log(this.uid, 'soundSequence', soundSequence);
 
     this.playlist = soundSequence.map((el): PlaylistItem => {

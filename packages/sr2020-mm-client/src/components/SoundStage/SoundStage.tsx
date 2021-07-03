@@ -22,7 +22,7 @@ interface SoundStageProps {
 export class SoundStage extends React.Component<SoundStageProps> {
   soundStageState: SoundStageState = {
     backgroundSound: null,
-    rotationSounds: []
+    rotationSounds: null
   };
 
   backgroundChannel: BackgroundChannel;
@@ -45,13 +45,17 @@ export class SoundStage extends React.Component<SoundStageProps> {
       // volumePercent: 5
     };
 
-    this.soundStageState.rotationSounds = [
-      { name: 'spirit_barguzin_2.mp3', volumePercent: 10 },
-      { name: 'spirit_barguzin_2.mp3', volumePercent: 50 },
-      { name: 'spirit_barguzin_2.mp3', volumePercent: 90 },
-      // { name: 'spirit_kultuk_3.mp3', volumePercent: 50 },
-      // { name: 'spirit_sarma_4.mp3', volumePercent: 50 },
-    ];
+    this.soundStageState.rotationSounds = {
+      key: 1,
+      tracks: [
+        { name: 'spirit_barguzin_2.mp3', volumePercent: 10 },
+        { name: 'spirit_barguzin_2.mp3', volumePercent: 50 },
+        { name: 'spirit_barguzin_2.mp3', volumePercent: 90 },
+        // { name: 'spirit_kultuk_3.mp3', volumePercent: 50 },
+        // { name: 'spirit_sarma_4.mp3', volumePercent: 50 },
+      ]
+    };
+
     this.rotationChannel.run();
     this.backgroundChannel.run();
     // setInterval(() => {

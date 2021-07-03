@@ -6,6 +6,7 @@ import {
   GMLogger,
   Req,
   Res,
+  Rotation,
   TrackData
 } from 'sr2020-mm-event-engine';
 
@@ -20,13 +21,13 @@ import {
 
 export class SoundStageService extends AbstractService<SoundStageServiceContract> {
   backgroundSound: TrackData | null;
-  rotationSounds: TrackData[];
+  rotationSounds: Rotation | null;
 
   constructor(gameModel: GameModel, logger: GMLogger) {
     super(gameModel, logger);
     this.setMetadata(soundStageMetadata);
     this.backgroundSound = null;
-    this.rotationSounds = [];
+    this.rotationSounds = null;
   }
 
   emitSoundStageChanged() {
@@ -34,7 +35,7 @@ export class SoundStageService extends AbstractService<SoundStageServiceContract
       type: 'soundStageStateChanged',
       soundStageState: {
         backgroundSound: this.backgroundSound,
-        rotationSounds: [...this.rotationSounds],
+        rotationSounds: R.clone(this.rotationSounds),
       }
     });
   }
@@ -51,9 +52,10 @@ export class SoundStageService extends AbstractService<SoundStageServiceContract
       this.backgroundSound = null;
       hasChanges = true;
     }
-    const hasRotationSounds = this.rotationSounds.length !== 0;
+    const { rotationSounds } = this;
+    const hasRotationSounds = rotationSounds !== null && rotationSounds.tracks.length !== 0;
     if (hasRotationSounds) {
-      this.rotationSounds = [];
+      this.rotationSounds = null;
       hasChanges = true;
     }
     if (hasChanges) {
@@ -62,17 +64,18 @@ export class SoundStageService extends AbstractService<SoundStageServiceContract
   }
 
   rotationSoundsChange({ added = [], removed = [] }: RotationSoundsChange) {
-    const sounds = R.difference(this.rotationSounds, removed).concat(added);
-    if (R.symmetricDifference(this.rotationSounds, sounds).length !== 0) {
-      this.rotationSounds = sounds;
-      this.emitSoundStageChanged();
-    }
+    throw new Error('rotationSoundsChange handler not implemented');
+    // const sounds = R.difference(this.rotationSounds, removed).concat(added);
+    // if (R.symmetricDifference(this.rotationSounds, sounds).length !== 0) {
+    //   this.rotationSounds = sounds;
+    //   this.emitSoundStageChanged();
+    // }
   }
 
   getSoundStageState(arg: Req<GetSoundStageState>): Res<GetSoundStageState> {
     return {
       backgroundSound: this.backgroundSound,
-      rotationSounds: [...this.rotationSounds],
+      rotationSounds: R.clone(this.rotationSounds),
     };
   }
 }
