@@ -5,16 +5,18 @@
 replicaCount: 1
 
 app:
+  env: developer
   skipPreflightCheck: true
   dbHost: postgres13
   dbPort: 5432
   dbName: mm
   services:
     gateway: https://gateway.evarun.ru
-    position: https://position.evarun.ru
-    billing: https://billing.evarun.ru
-    push: https://push.evarun.ru
-    modelEngine: https://model-engine.evarun.ru
+    position: http://position
+    billing: http://billing
+    push: http://push
+    modelEngine: http://model-engine
+    modelsManager: http://models-manager
 
 image:
   repository: sr2020/maps-n-magic2
