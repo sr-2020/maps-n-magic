@@ -13,11 +13,7 @@ import {
 } from 'react-router-dom';
 
 import { 
-  ErrorBoundry,
   NotificationWatcher,
-  json2File, 
-  makeFileName, 
-  readJsonFile,
   MapDefaultsProvider,
   TranslatorProvider,
   Translator
@@ -40,10 +36,7 @@ import { SpiritRouteEditor } from '../SpiritRouteEditor';
 
 // import { SoundManager } from '../SoundManager';
 
-// import { mapDefaults } from '../../configs/map';
 import { mapDefaults } from '../../configs';
-// import * as mapDefaults from '../../configs/map';
-// import { defaultCenter } from '../../configs/map';
 
 // import { GeoDataStreamSimulator } from '../GeoDataStreamSimulator';
 import { CharacterPositions } from '../CharacterPositions';
@@ -108,16 +101,6 @@ export class App extends Component<AppProps, AppState> {
       gameModel: null,
       initialized: false,
     };
-    // onUploadFileSelected
-    // downloadDatabaseAsFile
-    // onSaveDataInLs
-    // const funcs = `
-    // switchMovementMode
-    // jumpToUserCoords
-    // onGetPosition
-    // `.split('\n').map(R.trim).filter(R.pipe(R.isEmpty, R.not));
-    
-    // funcs.forEach((funcName) => (this[funcName] = this[funcName].bind(this)));
     this.switchMovementMode = this.switchMovementMode.bind(this);
     this.jumpToUserCoords = this.jumpToUserCoords.bind(this);
     this.onGetPosition = this.onGetPosition.bind(this);
@@ -125,23 +108,19 @@ export class App extends Component<AppProps, AppState> {
 
   componentDidMount() {
     const { gameModel, gameServer } = makeGameModel();
-    // this.soundStage.subscribeOnModel(gameModel);
     this.setState({
       translator: new Translator(mapDefaults.defaultCenter, null),
       gameServer,
       gameModel,
       initialized: true,
     });
-    // this.saveDataInLsId = setInterval(this.onSaveDataInLs, 10000);
     this.watchGeolocationId = navigator.geolocation.watchPosition(this.onGetPosition);
     // setInterval(this.onGetPosition, 1000);
-    // window.addEventListener('beforeunload', this.onSaveDataInLs);
   }
 
   componentWillUnmount() {
     clearInterval(this.saveDataInLsId);
     // navigator.geolocation.clearWatch(this.watchGeolocationId);
-    // this.soundStage.dispose();
     // window.removeEventListener('beforeunload', this.onSaveDataInLs);
   }
 
