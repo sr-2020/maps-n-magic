@@ -1,7 +1,6 @@
+import { SoundCtl } from "../types";
+
 // Web Audio API was done in prefixed webkitAudioContext and standard
-
-import { SoundCtl } from "../../types";
-
 // leave for compatibility
 export function ctlStart(ctl: SoundCtl): void {
   if (!ctl.source.start) {

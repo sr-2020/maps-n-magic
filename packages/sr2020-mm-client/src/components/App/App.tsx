@@ -29,11 +29,12 @@ import {
 } from "sr2020-mm-event-engine";
 
 import {
+  AudioContextWrapper,
   makeGameModel,
+  SoundStorage,
 } from 'sr2020-mm-client-event-engine';
 import { WithTranslation } from 'react-i18next';
 
-import { AudioContextWrapper } from '../../utils/AudioContextWrapper';
 import { SpiritEditor } from '../SpiritEditor';
 import { SpiritRouteEditor } from '../SpiritRouteEditor';
 
@@ -65,7 +66,7 @@ import { RescueServiceMessageSender } from '../RescueServiceMessageSender';
 
 import { MapRoutes } from '../MapRoutes';
 
-import { LoginManager, SoundStorage } from "../../utils";
+import { LoginManager } from "../../utils";
 import { SoundStageEcho } from '../SoundManager/SoundStageEcho';
 import { SoundStageGuard } from '../SoundStageGuard';
 import { SoundResumer } from '../SoundResumer';

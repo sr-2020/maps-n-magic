@@ -9,10 +9,9 @@ import classNames from 'classnames';
 import { WithTranslation } from "react-i18next";
 
 import { formatBytes, formatDuration } from '../../../utils/miscUtils';
+import { Sound } from 'sr2020-mm-client-event-engine';
 
 // import { SoundRowPropTypes } from '../../types';
-
-import { Sound } from "../../../types";
 
 interface SoundRowProps extends WithTranslation{
   sound: Sound,
@@ -72,7 +71,7 @@ export class SoundRow extends Component<SoundRowProps> {
         <button
           type="button"
           className={
-            classNames('tw-rounded tw-my-1 tw-h-12 tw-flex music-control-button hover:tw-bg-gray-200 tw-w-full tw-flex tw-items-center', {
+            classNames('tw-rounded tw-my-1 tw-h-12 music-control-button hover:tw-bg-gray-200 tw-w-full tw-flex tw-items-center', {
               selected: isSelected,
             })
           }
@@ -102,7 +101,7 @@ export class SoundRow extends Component<SoundRowProps> {
         <button
           type="button"
           className={
-            classNames('tw-rounded tw-my-1 tw-h-12 tw-flex music-control-button hover:tw-bg-gray-200 tw-w-full tw-flex tw-items-center', {
+            classNames('tw-rounded tw-my-1 tw-h-12 music-control-button hover:tw-bg-gray-200 tw-w-full tw-flex tw-items-center', {
               selected: isSelected,
             })
           }
@@ -131,7 +130,7 @@ export class SoundRow extends Component<SoundRowProps> {
         <button
           type="button"
           className={
-            classNames('tw-rounded tw-my-1 tw-h-12 tw-flex music-control-button hover:tw-bg-gray-200 tw-w-full tw-flex tw-items-center', {
+            classNames('tw-rounded tw-my-1 tw-h-12 music-control-button hover:tw-bg-gray-200 tw-w-full tw-flex tw-items-center', {
               selected: isSelected,
             })
           }

@@ -2,10 +2,8 @@ import React from 'react';
 import './SoundStageGuard.css';
 import { WithSoundSettings, WithSoundStageState } from '../../dataHOCs';
 
-import { AudioContextWrapper } from '../../utils/AudioContextWrapper';
-import { SoundStorage } from '../../utils';
 import { SoundStage } from '../SoundStage/SoundStage';
-import { GameModel } from 'sr2020-mm-event-engine';
+import { AudioContextWrapper, SoundStorage } from 'sr2020-mm-client-event-engine';
 
 interface SoundStageGuardProps extends WithSoundSettings, WithSoundStageState {
   audioContextWrapper: AudioContextWrapper;

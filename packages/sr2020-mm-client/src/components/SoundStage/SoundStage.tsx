@@ -2,16 +2,12 @@ import React from 'react';
 import './SoundStage.css';
 import * as R from 'ramda';
 
-import { AudioContextWrapper } from '../../utils/AudioContextWrapper';
-import { SoundStorage } from '../../utils';
-import { shuffle, SoundSettings, SoundStageState } from 'sr2020-mm-event-engine';
+import { SoundSettings, SoundStageState } from 'sr2020-mm-event-engine';
 
-import { Sound, SoundCtl } from "../../types";
-import { PlaylistItem, SoundChannel } from './types';
-import { ctlStart, ctlStop } from './utils';
 import { RotationChannel } from './RotationChannel';
 import { BackgroundChannel } from './BackgroundChannel';
 import { SoundResumer } from '../SoundResumer';
+import { AudioContextWrapper, SoundStorage } from 'sr2020-mm-client-event-engine';
 
 interface SoundStageProps {
   audioContextWrapper: AudioContextWrapper;

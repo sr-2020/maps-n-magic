@@ -4,14 +4,14 @@ import './SoundWatcher.css';
 
 // TODO this call should be moved in event engine service
 import { 
+  AudioContextWrapper,
   getSound, 
+  Sound, 
   SOUND_LIST
   // getSoundList 
 } from 'sr2020-mm-client-event-engine';
 import { GameModel } from 'sr2020-mm-event-engine';
-import { AudioContextWrapper } from '../../utils/AudioContextWrapper';
 
-import { Sound } from "../../types";
 import { assert } from 'console';
 
 const POLL_INTERVAL = 15000; // ms

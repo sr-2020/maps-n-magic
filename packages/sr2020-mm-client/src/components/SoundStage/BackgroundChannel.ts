@@ -1,6 +1,5 @@
-import { SoundCtl } from "../../types";
+import { ctlStart, ctlStop, SoundCtl } from "sr2020-mm-client-event-engine";
 import { SoundStage } from "./SoundStage";
-import { ctlStart, ctlStop } from "./utils";
 
 let counter = 1;
 

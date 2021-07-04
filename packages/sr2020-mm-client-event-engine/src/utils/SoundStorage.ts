@@ -1,4 +1,4 @@
-import { getSound, SOUND_LIST } from "sr2020-mm-client-event-engine";
+import { getSound, SOUND_LIST } from "../input";
 import { LoadedSound, Sound } from "../types";
 import { AudioContextWrapper } from "./AudioContextWrapper";
 

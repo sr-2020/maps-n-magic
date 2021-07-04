@@ -1,5 +1,5 @@
+import { SoundCtl } from "sr2020-mm-client-event-engine";
 import { TrackData } from "sr2020-mm-event-engine";
-import { SoundCtl } from "../../types";
 
 export type SoundChannel = {
   [name: string]: SoundCtl

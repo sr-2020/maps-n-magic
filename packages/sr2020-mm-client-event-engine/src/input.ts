@@ -10,5 +10,3 @@ export {
   SOUND_LIST
   // getSoundList 
 } from './api/sounds';
-
-export * from './types';

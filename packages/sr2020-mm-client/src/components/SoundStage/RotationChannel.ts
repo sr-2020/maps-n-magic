@@ -1,10 +1,9 @@
 import * as R from 'ramda';
+import { ctlStart, ctlStop, SoundCtl } from 'sr2020-mm-client-event-engine';
 
 import { shuffle } from "sr2020-mm-event-engine";
-import { SoundCtl } from "../../types";
 import { SoundStage } from "./SoundStage";
 import { PlaylistItem } from "./types";
-import { ctlStart, ctlStop } from "./utils";
 
 const ROTATION_SILENCE_DURATION_MILLIS = 5000;
 
