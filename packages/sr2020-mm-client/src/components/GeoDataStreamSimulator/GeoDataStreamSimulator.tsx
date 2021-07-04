@@ -4,10 +4,7 @@ export {};
 
 // import { animate, Timing } from 'sr2020-mm-client-core';
 
-// // import { GeoDataStreamSimulatorPropTypes } from '../../types';
-
 // export class GeoDataStreamSimulator extends Component {
-//   // static propTypes = GeoDataStreamSimulatorPropTypes;
 
 //   constructor(props) {
 //     super(props);

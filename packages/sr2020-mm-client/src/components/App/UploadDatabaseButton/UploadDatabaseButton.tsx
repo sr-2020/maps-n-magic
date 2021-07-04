@@ -3,8 +3,6 @@ import './UploadDatabaseButton.css';
 
 import Dropdown from 'react-bootstrap/Dropdown';
 
-// import { UploadDatabaseButtonPropTypes } from '../../types';
-
 // @ts-ignore
 function uploadDatabaseFile(evt) {
   const input = evt.target.querySelector('input');
@@ -37,5 +35,3 @@ export function UploadDatabaseButton(props) {
     </Dropdown.Item>
   );
 }
-
-// UploadDatabaseButton.propTypes = UploadDatabaseButtonPropTypes;

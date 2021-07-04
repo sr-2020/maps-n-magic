@@ -25,7 +25,6 @@ import { WithTranslation } from "react-i18next";
 
 import { CharacterDataList } from '../CharacterDataList';
 
-// import { CharacterPositionsPropTypes } from '../../types';
 type BeaconIndex = {[location_id: string]: BeaconRecord};
 type LocationIndex = {[location_id: string]: LocationRecord};
 
@@ -48,7 +47,6 @@ interface CharacterPositionsState {
 // Current approach is using HOCs.
 // Switch this component to HOCs if it is necessary.
 export class CharacterPositions extends Component<CharacterPositionsProps, CharacterPositionsState> {
-  // static propTypes = CharacterPositionsPropTypes;
 
   constructor(props: CharacterPositionsProps) {
     super(props);

@@ -18,7 +18,6 @@ interface CreateBeaconPopupProp extends WithTranslation {
 }
 
 export class CreateBeaconPopup extends Component<CreateBeaconPopupProp> {
-  // static propTypes = CreateBeaconPopupPropTypes;
 
   constructor(props: CreateBeaconPopupProp) {
     super(props);

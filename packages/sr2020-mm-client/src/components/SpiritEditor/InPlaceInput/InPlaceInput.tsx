@@ -5,8 +5,6 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faEdit } from '@fortawesome/free-solid-svg-icons';
 import { WithTranslation } from "react-i18next";
 
-// import { InPlaceInputPropTypes } from '../../types';
-
 interface InPlaceInputProps extends WithTranslation {
   value: any;
 }
@@ -15,7 +13,6 @@ interface InPlaceInputState {
 }
 
 export class InPlaceInput extends Component<InPlaceInputProps, InPlaceInputState> {
-  // static propTypes = InPlaceInputPropTypes;
 
   constructor(props: InPlaceInputProps) {
     super(props);

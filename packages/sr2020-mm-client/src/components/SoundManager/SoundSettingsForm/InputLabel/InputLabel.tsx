@@ -3,8 +3,6 @@ import './InputLabel.css';
 import { useTranslation } from "react-i18next";
 import { SRTKey } from "sr2020-mm-client-core";
 
-// import { InputLabelPropTypes } from '../../types';
-
 interface InputLabelProps {
   htmlFor: string;
   translationKey: SRTKey;
@@ -23,5 +21,3 @@ export function InputLabel(props: InputLabelProps) {
     </label>
   );
 }
-
-// InputLabel.propTypes = InputLabelPropTypes;

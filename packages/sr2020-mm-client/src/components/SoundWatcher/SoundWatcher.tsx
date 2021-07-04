@@ -51,10 +51,7 @@ interface SoundWatcherState {
   // beaconIndex: BeaconIndex;
 };
 
-// import { SoundWatcherPropTypes } from '../../types';
-
 export class SoundWatcher extends Component<SoundWatcherProps, SoundWatcherState> {
-  // static propTypes = SoundWatcherPropTypes;
   sounds: Sound[];
 
   abortController: AbortController;

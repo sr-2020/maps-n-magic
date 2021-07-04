@@ -1,8 +1,6 @@
 import React, { Component } from 'react';
 import './ErrorBoundry.css';
 
-// import { ErrorBoundryPropTypes } from '../../types';
-
 interface ErrorBoundryProps {
   children: React.ReactNode;
 }
@@ -11,7 +9,6 @@ interface ErrorBoundryState {
 }
 
 export class ErrorBoundry extends Component<ErrorBoundryProps, ErrorBoundryState> {
-  // static propTypes = ErrorBoundryPropTypes;
 
   constructor(props: ErrorBoundryProps) {
     super(props);

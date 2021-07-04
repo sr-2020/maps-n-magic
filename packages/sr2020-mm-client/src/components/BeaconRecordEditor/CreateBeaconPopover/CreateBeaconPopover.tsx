@@ -40,8 +40,6 @@ function formatMacValue(str: string): string {
 //   [7, 10],
 // ];
 
-// import { CreateBeaconPopoverPropTypes } from '../../types';
-
 interface CreateBeaconPopoverProps extends WithTranslation {
   createBeacon: (macAddress: string) => void
 }
@@ -50,7 +48,6 @@ interface CreateBeaconPopoverState {
 }
 
 export class CreateBeaconPopover extends Component<CreateBeaconPopoverProps, CreateBeaconPopoverState> {
-  // static propTypes = CreateBeaconPopoverPropTypes;
 
   newBeaconMacInput: HTMLInputElement;
 

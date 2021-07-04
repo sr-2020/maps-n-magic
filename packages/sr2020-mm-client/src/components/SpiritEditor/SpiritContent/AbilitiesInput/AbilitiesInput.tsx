@@ -15,8 +15,6 @@ export {};
 // import { faTimes } from '@fortawesome/free-solid-svg-icons';
 // import * as R from 'ramda';
 
-// // import { AbilitiesInputPropTypes } from '../../../../types';
-
 // const sort = R.sortBy(R.toLower);
 
 // interface AbilitiesInputProps extends WithTranslation {
@@ -32,7 +30,6 @@ export {};
 // }
 
 // export class AbilitiesInput extends Component<AbilitiesInputProps, AbilitiesInputState> {
-//   // static propTypes = AbilitiesInputPropTypes;
 
 //   constructor(props: AbilitiesInputProps) {
 //     super(props);

@@ -38,8 +38,6 @@ import { WithTranslation } from 'react-i18next';
 import { SpiritEditor } from '../SpiritEditor';
 import { SpiritRouteEditor } from '../SpiritRouteEditor';
 
-// import { AppPropTypes } from '../../types';
-
 // import { SoundManager } from '../SoundManager';
 
 // import { mapDefaults } from '../../configs/map';
@@ -59,8 +57,6 @@ import { AppHeader } from './AppHeader';
 
 import { SoundWatcher } from '../SoundWatcher';
 
-// import { SoundStage } from './SoundStage';
-
 import { BeaconRecordEditor } from '../BeaconRecordEditor';
 import { RescueServiceMessageSender } from '../RescueServiceMessageSender';
 
@@ -71,9 +67,6 @@ import { SoundStageEcho } from '../SoundManager/SoundStageEcho';
 import { SoundStageGuard } from '../SoundStageGuard';
 import { SoundResumer } from '../SoundResumer';
 
-
-const STORAGE_KEY = 'AR_POC';
-
 const TEST_POSITION = {
   coords: {
     // latitude: 52.2982526,
@@ -83,15 +76,10 @@ const TEST_POSITION = {
   },
 };
 
-const initialDatabaseStr = localStorage.getItem(STORAGE_KEY);
-const initialDatabase = {};
-// if (initialDatabaseStr) {
-//   initialDatabase = JSON.parse(initialDatabaseStr);
-// }
-
 interface AppProps extends WithTranslation {
   loginManager: LoginManager;
 };
+
 interface AppState {
   simulateGeoDataStream: boolean;
   translator: Translator;
@@ -106,13 +94,9 @@ export class App extends Component<AppProps, AppState> {
 
   soundStorage = new SoundStorage(this.audioContextWrapper);
 
-  // soundStage = new SoundStage(this.audioContextWrapper);
-
   saveDataInLsId: NodeJS.Timeout;
 
   watchGeolocationId: number;
-
-  // static propTypes = AppPropTypes;
 
   constructor(props: AppProps) {
     super(props);

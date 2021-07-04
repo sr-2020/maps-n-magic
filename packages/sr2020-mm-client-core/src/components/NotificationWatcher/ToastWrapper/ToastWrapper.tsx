@@ -7,8 +7,6 @@ import { NotificationData } from "sr2020-mm-event-engine";
 
 import Toast from 'react-bootstrap/Toast';
 
-// import { ToastWrapperPropTypes } from '../../types';
-
 function kindToColor(kind: NotificationData["kind"]) {
   switch (kind) {
   case 'error': return 'tw-border-red-500';
@@ -54,5 +52,3 @@ export function ToastWrapper(props: ToastWrapperProps) {
     </Toast>
   );
 }
-
-// ToastWrapper.propTypes = ToastWrapperPropTypes;

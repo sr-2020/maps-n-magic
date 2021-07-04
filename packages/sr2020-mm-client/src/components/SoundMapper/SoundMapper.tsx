@@ -6,14 +6,11 @@ export {};
 
 // import { GameModel } from "sr2020-mm-event-engine";
 
-// // import { SoundMapperPropTypes } from '../../types';
-
 // interface SoundMapperProps {
 //   gameModel: GameModel;
 // };
 
 // export class SoundMapper extends Component<SoundMapperProps> {
-//   // static propTypes = SoundMapperPropTypes;
 
 //   constructor(props) {
 //     super(props);

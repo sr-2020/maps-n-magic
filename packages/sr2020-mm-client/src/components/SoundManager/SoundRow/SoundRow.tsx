@@ -11,8 +11,6 @@ import { WithTranslation } from "react-i18next";
 import { formatBytes, formatDuration } from '../../../utils/miscUtils';
 import { Sound } from 'sr2020-mm-client-event-engine';
 
-// import { SoundRowPropTypes } from '../../types';
-
 interface SoundRowProps extends WithTranslation{
   sound: Sound,
   isSelected: boolean;
@@ -24,7 +22,6 @@ interface SoundRowProps extends WithTranslation{
 };
 
 export class SoundRow extends Component<SoundRowProps> {
-  // static propTypes = SoundRowPropTypes;
 
   constructor(props: SoundRowProps) {
     super(props);

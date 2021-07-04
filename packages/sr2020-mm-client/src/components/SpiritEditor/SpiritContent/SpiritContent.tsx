@@ -207,17 +207,6 @@ export class SpiritContent extends Component<
 
   // eslint-disable-next-line max-lines-per-function
   render() {
-    // id: number.isRequired,
-    // name: string.isRequired,
-    // aura: string.isRequired,
-    // fraction: string.isRequired,
-    // story: string.isRequired,
-    // abilities: arrayOf(string).isRequired,
-
-    // latLng: latLngPropTypes.isRequired,
-    // plane: planePropTypes.isRequired,
-    // hitPoints: number.isRequired,
-
     const componentState = this.state;
     if (!componentState.initialized) {
       return null;

@@ -3,8 +3,6 @@ import React, { Component, ChangeEvent } from 'react';
 import './ManaOceanSettings.css';
 import * as R from 'ramda';
 
-// import { ManaOceanSettingsPropTypes } from '../../types';
-
 import Button from 'react-bootstrap/Button';
 import Form from 'react-bootstrap/Form';
 import Table from 'react-bootstrap/Table';

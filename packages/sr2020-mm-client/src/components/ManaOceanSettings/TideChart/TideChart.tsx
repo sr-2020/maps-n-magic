@@ -89,8 +89,6 @@ function CustomizedAxisTick(props: CustomizedAxisTickProps) {
   );
 }
 
-// import { TideChartPropTypes } from '../../types';
-
 export interface Series {
   chartName: string;
   seriesName: string;

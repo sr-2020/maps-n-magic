@@ -6,7 +6,6 @@ import { faSearch, faTimes } from '@fortawesome/free-solid-svg-icons';
 import { WithTranslation } from "react-i18next";
 
 import classNames from 'classnames';
-// import { SearchPropTypes } from '../../../../types';
 
 interface SearchProps extends WithTranslation {
   className: string;
@@ -22,7 +21,6 @@ interface SearchState {
 // const { t, className, placeholder = 'Search' } = this.props;
 
 export class Search extends Component<SearchProps, SearchState> {
-  // static propTypes = SearchPropTypes;
 
   constructor(props: SearchProps) {
     super(props);

@@ -5,8 +5,6 @@ import { SRTKey } from "sr2020-mm-client-core";
 
 import classNames from 'classnames';
 
-// import { TimeoutInputPropTypes } from '../../types';
-
 interface TimeoutInputProps {
   inputId: string;
   value: number;
@@ -54,5 +52,3 @@ export function TimeoutInput(props: TimeoutInputProps) {
     </div>
   );
 }
-
-// TimeoutInput.propTypes = TimeoutInputPropTypes;

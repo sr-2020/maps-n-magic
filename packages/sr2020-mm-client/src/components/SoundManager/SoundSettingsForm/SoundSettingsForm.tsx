@@ -9,8 +9,6 @@ import { WithTranslation } from "react-i18next";
 import { TimeoutInput } from './TimeoutInput';
 import { InputLabel } from './InputLabel';
 
-// import { SoundSettingsFormPropTypes } from '../../../types';
-
 type strToNumber = (val: string) => number;
 
 const e2Timeout: strToNumber = R.pipe(parseInt, R.multiply(1000));

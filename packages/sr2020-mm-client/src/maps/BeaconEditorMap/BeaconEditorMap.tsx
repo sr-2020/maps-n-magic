@@ -50,5 +50,3 @@ export function BeaconEditorMap(props: BeaconEditorMapProps) {
     </Map>
   );
 }
-
-// BeaconEditorMap.propTypes = BeaconEditorMapPropTypes;

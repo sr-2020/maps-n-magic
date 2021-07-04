@@ -29,7 +29,6 @@ interface LocationPopup3Props extends WithTranslation {
 export class LocationPopup3 extends Component<
   LocationPopup3Props
 > {
-  // static propTypes = LocationPopup3PropTypes;
 
   constructor(props: LocationPopup3Props) {
     super(props);

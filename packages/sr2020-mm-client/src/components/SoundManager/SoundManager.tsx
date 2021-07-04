@@ -32,7 +32,6 @@ export {};
 // };
 
 // export class SoundManager extends Component<SoundManagerProps, SoundManagerState> {
-//   // static propTypes = SoundManagerPropTypes;
 
 //   constructor(props: SoundManagerProps) {
 //     super(props);

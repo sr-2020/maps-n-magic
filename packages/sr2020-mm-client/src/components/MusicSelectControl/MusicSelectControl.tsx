@@ -12,7 +12,6 @@ export {};
 // } from '@fortawesome/free-solid-svg-icons';
 // import Button from 'react-bootstrap/Button';
 // import classNames from 'classnames';
-// // import { MusicSelectControlPropTypes } from '../../types';
 
 // import { GameModel } from "sr2020-mm-event-engine";
 
@@ -37,7 +36,6 @@ export {};
 // }
 
 // export class MusicSelectControl extends Component<MusicSelectControlProps, MusicSelectControlState> {
-//   // static propTypes = MusicSelectControlPropTypes;
 
 //   constructor(props) {
 //     super(props);

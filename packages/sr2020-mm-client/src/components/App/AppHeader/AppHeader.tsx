@@ -28,8 +28,6 @@ import { WipeManaOceanEffectsButton } from '../WipeManaOceanEffectsButton';
 import { LoginManager } from "../../../utils";
 import { logoutUser } from '../../../api';
 
-// import { AppHeaderPropTypes } from '../../types';
-
 // const oldNavLinks = [{
 //   to: '/mapEditor',
 //   tKey: 'mapEditor',
