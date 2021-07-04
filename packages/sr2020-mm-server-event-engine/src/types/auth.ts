@@ -1,9 +1,13 @@
 import Ajv, { JSONSchemaType } from "ajv";
 import type { Request } from 'express';
-import { TokenData } from "sr2020-mm-event-engine";
+import { TokenData, WeakTokenData } from "sr2020-mm-event-engine";
 
 export type AuthorizedRequest = Request & {
   userData: TokenData;
+}
+
+export type WeakAuthorizedRequest = Request & {
+  userData: WeakTokenData;
 }
 
 const ajv = new Ajv({
@@ -33,16 +37,16 @@ export const validateAuthRequest = ajv.compile(authRequestSchema);
 
 interface TokenRequestBody {
   api_key: string;
-  id: number;
+  id?: number;
 }
 
 const tokenRequestBodySchema: JSONSchemaType<TokenRequestBody> = {
   type: "object",
   properties: {
-    id: {type: "integer"},
+    id: {type: "integer", nullable: true},
     api_key: {type: "string"},
   },
-  required: ["id", "api_key"],
+  required: ["api_key"],
   additionalProperties: false,
 };
 

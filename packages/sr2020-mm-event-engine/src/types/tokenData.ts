@@ -28,3 +28,23 @@ const tokenDataSchema: JSONSchemaType<TokenData> = {
 };
 
 export const validateTokenData = ajv.compile(tokenDataSchema);
+
+// token for master accounts
+export interface WeakTokenData {
+  sub: string;
+  auth: string;
+  exp: number;
+}
+
+const weakTokenDataSchema: JSONSchemaType<WeakTokenData> = {
+  type: "object",
+  properties: {
+    sub: {type: "string"},
+    auth: {type: "string"},
+    exp: {type: "integer"},
+  },
+  required: ["sub", "auth", "exp"],
+  // additionalProperties: false,
+};
+
+export const validateWeakTokenData = ajv.compile(weakTokenDataSchema);

@@ -11,7 +11,7 @@ import EventSource from "eventsource";
 import * as jwt from "jsonwebtoken";
 
 import { 
-  AuthorizedRequest, 
+  AuthorizedRequest,
   winstonLogger,
   playerServerConstants,
   createLogger

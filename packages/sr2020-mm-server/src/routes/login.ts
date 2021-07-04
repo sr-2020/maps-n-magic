@@ -3,7 +3,9 @@ import * as jwt from "jsonwebtoken";
 import { 
   ErrorResponse,
   validateTokenData,
-  TokenData
+  TokenData,
+  WeakTokenData,
+  validateWeakTokenData
 } from 'sr2020-mm-event-engine';
 import { 
   validateAuthRequest, 
@@ -32,11 +34,11 @@ router.post('/api/login', async (req, res) => {
 
   if (authRequest.username === 'emercom') {
     if (authRequest.password === mainServerConstants().EMERCOM_PASSWORD) {
-      const parsedToken: TokenData = {
+      const parsedToken: WeakTokenData = {
         "sub": "EMERCOM",
         "auth": "ROLE_EMERCOM",
-        "modelId": -1,
-        "characterId": -1,
+        // "modelId": -1,
+        // "characterId": -1,
         "exp": 1668296003
       };
 
@@ -75,10 +77,10 @@ router.post('/api/login', async (req, res) => {
     try {
       const parsedToken = jwt.verify(api_key, mainServerConstants().JWT_SECRET);
       logger.info('parsedToken', parsedToken);
-      if (!validateTokenData(parsedToken)) {
+      if (!validateWeakTokenData(parsedToken)) {
         const errorResponse: ErrorResponse = {
           errorTitle: 'Данные авторизации некорректны',
-          errorSubtitle: `Данные ${JSON.stringify(parsedToken)}, ошибка ${JSON.stringify(validateTokenData.errors)}`
+          errorSubtitle: `Данные ${JSON.stringify(parsedToken)}, ошибка ${JSON.stringify(validateWeakTokenData.errors)}`
         };
         res.status(500).json(errorResponse);
         // res.status(500).send(`parsedToken verification failed ${JSON.stringify(parsedToken)} ${JSON.stringify(validateTokenData.errors)}`);

@@ -1,7 +1,7 @@
 import { Router } from 'express';
 import * as jwt from "jsonwebtoken";
-import { isErrorResponse, ErrorResponse, validateTokenData } from 'sr2020-mm-event-engine';
-import { AuthorizedRequest, mainServerConstants } from 'sr2020-mm-server-event-engine';
+import { isErrorResponse, ErrorResponse, validateTokenData, validateWeakTokenData } from 'sr2020-mm-event-engine';
+import { AuthorizedRequest, mainServerConstants, WeakAuthorizedRequest } from 'sr2020-mm-server-event-engine';
 import { 
   createLogger 
 } from 'sr2020-mm-server-event-engine';
@@ -11,7 +11,7 @@ const logger = createLogger('parseUserData.ts');
 const router = Router();
 
 router.use((req1, res, next) => {
-  const req = req1 as AuthorizedRequest;
+  const req = req1 as WeakAuthorizedRequest;
 
   const { mm_token } = req.cookies;
   if (mm_token === undefined) {
@@ -26,10 +26,10 @@ router.use((req1, res, next) => {
   try {
     const parsedToken = jwt.verify(mm_token, mainServerConstants().JWT_SECRET);
     logger.info('parsedToken', parsedToken);
-    if (!validateTokenData(parsedToken)) {
+    if (!validateWeakTokenData(parsedToken)) {
       const errorResponse: ErrorResponse = {
         errorTitle: 'Данные авторизации некорректны',
-        errorSubtitle: `Данные ${JSON.stringify(parsedToken)}, ошибки ${JSON.stringify(validateTokenData.errors)}`
+        errorSubtitle: `Данные ${JSON.stringify(parsedToken)}, ошибки ${JSON.stringify(validateWeakTokenData.errors)}`
       };
       res.status(500).json(errorResponse);
       // res.status(500).send(`parseUserData: parsedToken verification failed ${JSON.stringify(parsedToken)} ${JSON.stringify(validateTokenData.errors)}`);
@@ -50,7 +50,7 @@ router.use((req1, res, next) => {
 });
 
 router.get('/isLoggedIn', (req1, res, next) => {
-  const req = req1 as AuthorizedRequest;
+  const req = req1 as WeakAuthorizedRequest;
   logger.info('/api/isLoggedIn');
   // if we are here then parsing user data was successful
   res.status(200).json(req.userData);
