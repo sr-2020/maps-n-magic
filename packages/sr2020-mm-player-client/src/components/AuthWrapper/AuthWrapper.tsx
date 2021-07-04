@@ -14,21 +14,8 @@ type AuthWrapperProps = PropsWithChildren<WithLoginState & {
 export function AuthWrapper(props: AuthWrapperProps) {
   const { loginState, loginManager, children } = props;
 
-  if (loginState.status === 'error') {
-    return (
-      <>
-        <div>Ошибка при подключении к серверу</div>
-        <Button 
-          onClick={loginManager.slowUpdateLoginState}
-        >
-          Повторить попытку
-        </Button>
-      </>
-    );
-  }
-  
   if (loginState.status === 'unknown') {
-    loginManager.updateLoginState();
+    loginManager.updateLoginState(true);
     return (
       <Spinner animation="border" role="status">
         <span className="sr-only">Загрузка...</span>
@@ -44,8 +31,8 @@ export function AuthWrapper(props: AuthWrapperProps) {
     );
   }
   
-  if (loginState.status === 'userUnlogged') {
-    return <LoginPage updateLoginState={loginManager.updateLoginState} />
+  if (loginState.status === 'error' || loginState.status === 'userUnlogged') {
+    return <LoginPage loginManager={loginManager} />
   }
 
   return children;

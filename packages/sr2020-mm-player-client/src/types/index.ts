@@ -1,3 +1,5 @@
+import { ErrorResponse, TokenData } from "sr2020-mm-event-engine";
+
 export interface UnknownState {
   status: 'unknown';
 }
@@ -8,10 +10,12 @@ export interface LoadingState {
 
 export interface ErrorState {
   status: 'error';
+  errorResponse: ErrorResponse;
 }
 
 export interface UserLoggedState {
   status: 'userLogged';
+  tokenData: TokenData;
 }
 
 export interface UserUnloggedState {

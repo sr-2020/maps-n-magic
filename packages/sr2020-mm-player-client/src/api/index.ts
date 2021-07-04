@@ -1,11 +1,11 @@
-import { ErrorResponse, SpiritJarQr } from "sr2020-mm-event-engine";
+import { ErrorResponse, SpiritJarQr, validateErrorResponse } from "sr2020-mm-event-engine";
 
 export const isLoggedIn = async () => fetch('/api/isLoggedIn');
 
 export async function loginUser(credentials: {
   username: string;
   password: string;
-}): Promise<{ status: number; text: string; }> {
+}): Promise<{ status: number; text: string; } | ErrorResponse> {
   const res = await fetch('/api/login', {
     method: 'POST',
     headers: {
@@ -14,11 +14,15 @@ export async function loginUser(credentials: {
     body: JSON.stringify(credentials)
   });
   if (res.status !== 200) {
-    const text = await res.text();
-    return {
-      status: res.status,
-      text
-    };
+    const errorResponse: unknown = await res.json();
+    if (validateErrorResponse(errorResponse)) {
+      return errorResponse;
+    } else {
+      return {
+        errorTitle: 'Неизвестная ошибка',
+        errorSubtitle: JSON.stringify(validateErrorResponse.errors)
+      };
+    }
   }
   return {
     status: res.status,

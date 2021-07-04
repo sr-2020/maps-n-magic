@@ -13,7 +13,6 @@ type AuthWrapperProps = PropsWithChildren<WithLoginState & {
 
 export function AuthWrapper(props: AuthWrapperProps) {
   const { loginState, loginManager, children } = props;
-
  
   if (loginState.status === 'unknown') {
     loginManager.updateLoginState(true);

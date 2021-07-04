@@ -43,7 +43,7 @@ export function App(props: AppProps) {
   const onLogout = async () => {
     // event.preventDefault();
     await logoutUser();
-    loginManager.updateLoginState();
+    loginManager.updateLoginState(true);
   }
   
   return (
@@ -119,7 +119,7 @@ export function App(props: AppProps) {
                 <Dropdown.Item
                   as="button"
                   type="button"
-                  onClick={loginManager.updateLoginState}
+                  onClick={() => loginManager.updateLoginState()}
                   title="Обновить данные персонажа"
                   className="tw-py-3 tw-text-lg"
                 >

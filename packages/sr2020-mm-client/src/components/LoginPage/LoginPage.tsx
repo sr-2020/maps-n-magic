@@ -68,12 +68,12 @@ export function LoginPage(props: LoginPageProps) {
       </div>
       {
         errorMsg !== null && (
-          <ErrorAlert errorResponse={errorMsg} />
+          <ErrorAlert className="tw-m-4" errorResponse={errorMsg} />
         )
       }
       {
         loginState.status === 'error' && (
-          <ErrorAlert errorResponse={loginState.errorResponse} />
+          <ErrorAlert className="tw-m-4" errorResponse={loginState.errorResponse} />
         )
       }
 
