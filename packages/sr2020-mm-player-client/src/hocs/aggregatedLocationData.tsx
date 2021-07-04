@@ -9,8 +9,12 @@ export interface WithAggregatedLocationData {
 
 let es: EventSource | undefined = undefined;
 
+const url = process.env.NODE_ENV === 'production' 
+  ? '/api/singlePlayerDataSse' 
+  : 'http://localhost:3002/api/singlePlayerDataSse';
+
 function createEventSource(setData: React.Dispatch<React.SetStateAction<AggregatedLocationView | null>>) {
-  es = new EventSource('http://localhost:3002/api/singlePlayerDataSse', {
+  es = new EventSource(url, {
   // es = new EventSource('/api/singlePlayerDataSse', {
     withCredentials: true
   });
