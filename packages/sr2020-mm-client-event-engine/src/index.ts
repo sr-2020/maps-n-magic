@@ -14,4 +14,4 @@ export * from './api/sounds';
 export * from './api/settings';
 export * from './configs/clientEventEngine';
 export * from './types';
-export * from './utils';
+export * from './sounds';

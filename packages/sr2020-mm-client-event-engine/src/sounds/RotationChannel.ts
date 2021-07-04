@@ -1,14 +1,24 @@
 import * as R from 'ramda';
-import { ctlStart, ctlStop, SoundCtl } from 'sr2020-mm-client-event-engine';
 
-import { shuffle } from "sr2020-mm-event-engine";
-import { SoundStage } from "./SoundStage";
-import { PlaylistItem } from "./types";
+import { shuffle, SoundSettings, SoundStageState } from "sr2020-mm-event-engine";
+import { PlaylistItem, SoundCtl } from '../types';
+import { AudioContextWrapper } from './AudioContextWrapper';
+import { ctlStart, ctlStop } from './ctlUtils';
+import { SoundStorage } from './SoundStorage';
 
 const ROTATION_SILENCE_DURATION_MILLIS = 5000;
 
-
 let counter = 1;
+
+interface RotationChannelContext {
+  soundStageState: SoundStageState;
+  props: {
+    soundSettings: SoundSettings;
+    soundStorage: SoundStorage;
+    audioContextWrapper: AudioContextWrapper;
+  },
+  setCurRotationSoundData: (data: string) => void;
+}
 
 export class RotationChannel {
   soundCtl: SoundCtl | null = null;
@@ -23,7 +33,7 @@ export class RotationChannel {
 
   disposed: boolean = false;
 
-  constructor(private context: SoundStage) {
+  constructor(private context: RotationChannelContext) {
     this.uid = counter;
     counter++;
     this.playSound = this.playSound.bind(this);

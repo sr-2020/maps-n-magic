@@ -4,12 +4,12 @@ import * as R from 'ramda';
 
 import { SoundSettings, SoundStageState } from 'sr2020-mm-event-engine';
 
-import { SoundResumer } from '../SoundResumer';
+// import { SoundResumer } from '../SoundResumer';
 import { 
   AudioContextWrapper, 
-  SoundStorage, 
   BackgroundChannel, 
-  RotationChannel 
+  RotationChannel, 
+  SoundStorage 
 } from 'sr2020-mm-client-event-engine';
 
 interface SoundStageProps {
@@ -51,36 +51,8 @@ export class SoundStage extends React.Component<SoundStageProps, ComponentSoundS
   componentDidMount() {
     const { soundStageState, soundStorage, soundSettings } = this.props;
     this.soundStageState = R.clone(soundStageState);
-    // this.soundStageState.backgroundSound = 'spirit_sarma_4.mp3';
-    // this.soundStageState.backgroundSound = {
-    //   key: 'manaLevel_3.mp3',
-    //   name: 'manaLevel_3.mp3',
-    //   volumePercent: 50
-    //   // volumePercent: 5
-    // };
-
-    // this.soundStageState.rotationSounds = {
-    //   key: 1,
-    //   tracks: [
-    //     { key: 'spirit1', name: 'spirit_barguzin_2.mp3', volumePercent: 10 },
-    //     { key: 'spirit2', name: 'spirit_barguzin_2.mp3', volumePercent: 50 },
-    //     { key: 'spirit3', name: 'spirit_barguzin_2.mp3', volumePercent: 90 },
-    //     // { name: 'spirit_kultuk_3.mp3', volumePercent: 50 },
-    //     // { name: 'spirit_sarma_4.mp3', volumePercent: 50 },
-    //   ]
-    // };
-
-
     this.rotationChannel.run();
     this.backgroundChannel.run();
-    // setInterval(() => {
-    //   if (this.soundStageState.backgroundSound) {
-    //     this.soundStageState.backgroundSound = null;
-    //   } else {
-    //     this.soundStageState.backgroundSound = 'spirit_sarma_4.mp3';
-    //   }
-    // }, 1200);
-    // this.soundStageState.backgroundSound = 'manaLevel_4.mp3';
   }
 
   componentDidUpdate(prevProps: SoundStageProps) {
@@ -112,9 +84,9 @@ export class SoundStage extends React.Component<SoundStageProps, ComponentSoundS
 
     return (
       <div className="SoundStage tw-absolute tw-bottom-0 tw-right-0 tw-bg-white tw-opacity-70">
-        <SoundResumer 
+        {/* <SoundResumer 
           audioContext={audioContextWrapper.context}
-        />
+        /> */}
         {
           (window as any).DEBUG_SOUND_STAGE && (
             <>
@@ -131,16 +103,6 @@ export class SoundStage extends React.Component<SoundStageProps, ComponentSoundS
         }
       </div>
     );
-    // if
-
-    return null;
-    // const { soundSettings, soundStageState, audioContextWrapper, soundStorage } = this.props;
-  
-    // return (
-    //   <div className="SoundStage">
-    //     SoundStage content
-    //   </div>
-    // );
   }
 }
 

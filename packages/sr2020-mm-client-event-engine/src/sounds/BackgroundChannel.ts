@@ -1,9 +1,22 @@
-import { ctlStart, ctlStop, SoundCtl } from "sr2020-mm-client-event-engine";
-import { SoundStage } from "./SoundStage";
+import { SoundSettings, SoundStageState } from "sr2020-mm-event-engine";
+import { SoundCtl } from "../types";
+import { AudioContextWrapper } from "./AudioContextWrapper";
+import { ctlStart, ctlStop } from "./ctlUtils";
+import { SoundStorage } from "./SoundStorage";
 
 let counter = 1;
 
 const BG_SILENCE_DURATION_MILLIS = 5000;
+
+interface BackgroundChannelContext {
+  soundStageState: SoundStageState;
+  props: {
+    soundSettings: SoundSettings;
+    soundStorage: SoundStorage;
+    audioContextWrapper: AudioContextWrapper;
+  },
+  setCurBgSoundData: (data: string) => void;
+}
 
 export class BackgroundChannel {
   soundCtl: SoundCtl | null = null;
@@ -14,7 +27,7 @@ export class BackgroundChannel {
 
   disposed: boolean = false;
 
-  constructor(private context: SoundStage) {
+  constructor(private context: BackgroundChannelContext) {
     this.uid = counter;
     counter++;
     this.run = this.run.bind(this);

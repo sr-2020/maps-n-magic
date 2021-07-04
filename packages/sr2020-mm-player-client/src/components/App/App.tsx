@@ -17,10 +17,24 @@ import { SpiritPage } from "../SpiritPage";
 import { SuitSpiritPage } from "../SuitSpiritPage";
 import { AudioContextWrapper, SoundStorage } from 'sr2020-mm-client-event-engine';
 import { AppHeader } from '../AppHeader';
+import { SoundStage } from '../SoundStage';
+import { SoundSettings, SoundStageState } from 'sr2020-mm-event-engine';
 
 interface AppProps extends WithLoginState, WithAggregatedLocationData {
   loginManager: LoginManager;
 }
+
+const SOUND_SETTINGS: SoundSettings = {
+  rotationTimeout: 2000,
+  rotationSoundTimeout: 5000,
+  backgroundVolume: 50,
+  rotationVolume: 50,
+};
+
+const soundStageState: SoundStageState = {
+  backgroundSound: null,
+  rotationSounds: null,
+};
 
 export function App(props: AppProps) {
   const { loginState, loginManager, locationData } = props;
@@ -62,6 +76,13 @@ export function App(props: AppProps) {
               <Redirect to="/suitSpirit" />
             </Route>
           </Switch>
+
+          <SoundStage 
+            soundSettings={SOUND_SETTINGS}
+            soundStageState={soundStageState} 
+            audioContextWrapper={audioContextWrapper} 
+            soundStorage={soundStorage}
+          />
         </div>
       </BrowserRouter>
     </DocumentTitle>
