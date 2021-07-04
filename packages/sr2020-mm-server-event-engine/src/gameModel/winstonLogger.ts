@@ -105,7 +105,9 @@ const baseWinstonLogger = winston.createLogger({
 // If we're not in production then log to the `console` with the format:
 // `${info.level}: ${info.message} JSON.stringify({ ...rest }) `
 //
-if (process.env.NODE_ENV !== 'production') {
+
+// print always to console
+// if (process.env.NODE_ENV !== 'production') {
   baseWinstonLogger.add(new winston.transports.Console({
     // format: winston.format.simple(),
     // format: winston.format.simple(),
@@ -113,7 +115,7 @@ if (process.env.NODE_ENV !== 'production') {
     handleExceptions: true,
     // handleRejections: true,
   }));
-}
+// }
 
 baseWinstonLogger.stream = {
   // @ts-ignore
