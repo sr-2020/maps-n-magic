@@ -34,3 +34,5 @@ jobs:
           helm version
           helm upgrade maps-n-magic2 helm/maps-n-magic2/ --wait \
             --set image.tag=$GITHUB_SHA
+          helm upgrade magic helm/magic/ --wait \
+            --set image.tag=$GITHUB_SHA

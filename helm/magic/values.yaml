@@ -5,10 +5,14 @@
 replicaCount: 1
 
 app:
-  skipPreflightCheck: true
+  env: production
+  services:
+    gateway: https://gateway.evarun.ru
+    modelsManager: http://models-manager
+    mmMasterServer: http://maps-n-magic2
 
 image:
-  repository: sr2020/maps-n-magic
+  repository: sr2020/maps-n-magic2
   tag: latest
   pullPolicy: Always
 

@@ -1,0 +1,9 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ .Release.Name }}-configmap
+data:
+  NODE_ENV: {{ .Values.app.env | quote }}
+  GATEWAY_URL: {{ .Values.app.services.gateway | quote }}
+  MODELS_MANAGER_URL: {{ .Values.app.services.modelsManager | quote }}
+  MM_MASTER_SERVER_URL: {{ .Values.app.services.mmMasterServer | quote }}
