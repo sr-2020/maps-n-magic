@@ -61,6 +61,7 @@ export class SsePlayerDataSender {
   }
 
   sendCurrentData(): void {
+    // this.logger.info('SsePlayerDataSender sendCurrentData');
     const userRecord = this.gameModel.get2<GetUserRecord>({
       'type': 'userRecord',
       'id': this.userData.modelId
@@ -87,6 +88,7 @@ export class SsePlayerDataSender {
   }
 
   send(object: unknown): void {
+    // this.logger.info('SsePlayerDataSender send');
     this.sse.send(JSON.stringify(object), 'message');
   }
 

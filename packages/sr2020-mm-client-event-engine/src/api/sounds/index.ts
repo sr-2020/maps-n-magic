@@ -10,7 +10,7 @@ import { SOUND_URL } from '../settings';
 //   return '/sounds' + args.join('');
 // }
 
-export const MANA_LEVEL_SOUNDS = {
+export const MANA_LEVEL_SOUNDS: Record<number, string> = {
   1: 'manaLevel_1.mp3',
   2: 'manaLevel_2.mp3',
   3: 'manaLevel_3.mp3',
@@ -20,7 +20,7 @@ export const MANA_LEVEL_SOUNDS = {
   7: 'manaLevel_7.mp3',
 };
 
-export const FRACTION_SOUNDS = {
+export const FRACTION_SOUNDS: Record<number, string> = {
   2: 'spirit_barguzin_2.mp3',
   3: 'spirit_kultuk_3.mp3',
   4: 'spirit_sarma_4.mp3',

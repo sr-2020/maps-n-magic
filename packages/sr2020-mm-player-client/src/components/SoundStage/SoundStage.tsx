@@ -4,7 +4,6 @@ import * as R from 'ramda';
 
 import { SoundSettings, SoundStageState } from 'sr2020-mm-event-engine';
 
-// import { SoundResumer } from '../SoundResumer';
 import { 
   AudioContextWrapper, 
   BackgroundChannel, 
@@ -24,8 +23,8 @@ interface ComponentSoundStageState {
   rotationSoundInfo: string;
 }
 
-// (window as any).DEBUG_SOUND_STAGE = false;
-(window as any).DEBUG_SOUND_STAGE = true;
+(window as any).DEBUG_SOUND_STAGE = false;
+// (window as any).DEBUG_SOUND_STAGE = true;
 
 export class SoundStage extends React.Component<SoundStageProps, ComponentSoundStageState> {
   soundStageState: SoundStageState = {
@@ -84,9 +83,6 @@ export class SoundStage extends React.Component<SoundStageProps, ComponentSoundS
 
     return (
       <div className="SoundStage tw-absolute tw-bottom-0 tw-right-0 tw-bg-white tw-opacity-70">
-        {/* <SoundResumer 
-          audioContext={audioContextWrapper.context}
-        /> */}
         {
           (window as any).DEBUG_SOUND_STAGE && (
             <>

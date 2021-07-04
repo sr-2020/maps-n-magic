@@ -10,8 +10,8 @@ export interface WithAggregatedLocationData {
 let es: EventSource | undefined = undefined;
 
 function createEventSource(setData: React.Dispatch<React.SetStateAction<AggregatedLocationView | null>>) {
-  // es = new EventSource('http://localhost:3002/singlePlayerDataSse', {
-  es = new EventSource('/api/singlePlayerDataSse', {
+  es = new EventSource('http://localhost:3002/api/singlePlayerDataSse', {
+  // es = new EventSource('/api/singlePlayerDataSse', {
     withCredentials: true
   });
   es.addEventListener('message', function (e) {

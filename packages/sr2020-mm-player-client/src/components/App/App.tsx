@@ -7,7 +7,7 @@ import DocumentTitle from 'react-document-title';
 import { ErrorBoundry } from "../ErrorBoundry";
 import { BrowserRouter, Route, Switch, Redirect, NavLink } from 'react-router-dom';
 
-import { LoginManager } from "../../utils";
+import { locationData2SoundStageState, LoginManager } from "../../utils";
 import { LoginState } from "../../types";
 import { WithLoginState, WithAggregatedLocationData } from '../../hocs';
 import { LoginPage } from '../LoginPage';
@@ -22,6 +22,8 @@ import { SoundSettings, SoundStageState } from 'sr2020-mm-event-engine';
 
 interface AppProps extends WithLoginState, WithAggregatedLocationData {
   loginManager: LoginManager;
+  audioContextWrapper: AudioContextWrapper;
+  soundStorage: SoundStorage;
 }
 
 const SOUND_SETTINGS: SoundSettings = {
@@ -31,17 +33,19 @@ const SOUND_SETTINGS: SoundSettings = {
   rotationVolume: 50,
 };
 
-const soundStageState: SoundStageState = {
-  backgroundSound: null,
-  rotationSounds: null,
-};
 
 export function App(props: AppProps) {
-  const { loginState, loginManager, locationData } = props;
+  const { 
+    loginState, 
+    loginManager, 
+    locationData,
+    audioContextWrapper,
+    soundStorage
+  } = props;
   const manageTitle = useState<string>('SR 2020 магия');
   const [title, setTitle] = manageTitle;
-  const [audioContextWrapper] = useState<AudioContextWrapper>(new AudioContextWrapper());
-  const [soundStorage] = useState<SoundStorage>(new SoundStorage(audioContextWrapper));
+
+  const soundStageState = locationData2SoundStageState(locationData);
 
   return (
     <DocumentTitle title={title}>

@@ -9,15 +9,47 @@ import { App } from './components/App';
 import { AuthWrapper } from "./components/AuthWrapper";
 import { LoginManager } from './utils';
 import { ErrorBoundry } from "./components/ErrorBoundry";
+import { AudioContextWrapper, SoundStorage } from 'sr2020-mm-client-event-engine';
+
+import Button from 'react-bootstrap/Button';
 
 const loginManager = new LoginManager();
 // import reportWebVitals from './reportWebVitals';
+
+class AudioContainer extends React.Component {
+  audioContextWrapper = new AudioContextWrapper();
+
+  soundStorage = new SoundStorage(this.audioContextWrapper);
+
+  render () {
+    const onClick = () => {
+      this.audioContextWrapper.context.resume();
+      this.setState({});
+    }
+
+    if (this.audioContextWrapper.context.state === 'suspended') {
+      return (
+        <div className="tw-flex tw-flex-col tw-h-screen tw-justify-center">
+          <Button className="tw-py-24 tw-mx-4" onClick={onClick}>Нажмите для включения звука</Button>
+        </div>
+      ); 
+    }
+
+    return (
+      <App 
+        loginManager={loginManager} 
+        audioContextWrapper={this.audioContextWrapper}
+        soundStorage={this.soundStorage}
+      />
+    );
+  }
+}
 
 ReactDOM.render(
   <React.StrictMode>
     <ErrorBoundry>
       <AuthWrapper loginManager={loginManager}>
-        <App loginManager={loginManager} />
+        <AudioContainer />
       </AuthWrapper>
     </ErrorBoundry>
   </React.StrictMode>,

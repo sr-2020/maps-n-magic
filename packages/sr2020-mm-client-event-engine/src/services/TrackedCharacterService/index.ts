@@ -83,7 +83,14 @@ export class TrackedCharacterService extends AbstractService<TrackedCharacterSer
       return acc;
     }, []);
   
-    const tracks: TrackData[] = locSpirits.map(spirit => ({
+    const tracks: TrackData[] = locSpirits.filter(spirit => {
+      const fractionSoundName = FRACTION_SOUNDS[spirit.fraction];
+      if (fractionSoundName === undefined) {
+        console.error(`spirit ${spirit.id} ${spirit.name} has unknown fraction ${spirit.fraction}`);
+        return false;
+      }
+      return true;
+    }).map(spirit => ({
       key: spirit.id,
       name: FRACTION_SOUNDS[spirit.fraction],
       volumePercent: 50
