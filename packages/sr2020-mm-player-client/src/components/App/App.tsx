@@ -5,7 +5,7 @@ import './App.css';
 import DocumentTitle from 'react-document-title';
 
 import { ErrorBoundry } from "../ErrorBoundry";
-import { BrowserRouter, Route, Switch, Redirect, NavLink } from 'react-router-dom';
+import { HashRouter as Router, Route, Switch, Redirect, NavLink } from 'react-router-dom';
 
 import { locationData2SoundStageState, LoginManager } from "../../utils";
 import { LoginState } from "../../types";
@@ -49,7 +49,7 @@ export function App(props: AppProps) {
 
   return (
     <DocumentTitle title={title}>
-      <BrowserRouter>
+      <Router>
         <div className="App">
           <AppHeader
             title={title}
@@ -88,7 +88,7 @@ export function App(props: AppProps) {
             soundStorage={soundStorage}
           />
         </div>
-      </BrowserRouter>
+      </Router>
     </DocumentTitle>
   );
 }
