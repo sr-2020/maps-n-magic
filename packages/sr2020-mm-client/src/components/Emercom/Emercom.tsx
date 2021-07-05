@@ -21,12 +21,14 @@ interface EmercomState {
 };
 
 export class Emercom extends React.Component<EmercomProps, EmercomState> {
-  
+  audioContext = new AudioContext();
+
   constructor(props: EmercomProps) {
     super(props);
     this.state = {
       gameModel: null
     };
+    this.onClick = this.onClick.bind(this);
   }
 
   componentDidMount() {
@@ -35,8 +37,21 @@ export class Emercom extends React.Component<EmercomProps, EmercomState> {
       gameModel
     });
   }
+
+  onClick() {
+    this.audioContext.resume();
+    this.setState({});
+  }
   
   render() {
+    if (this.audioContext.state === 'suspended') {
+      return (
+        <div className="tw-flex tw-flex-col tw-h-screen tw-justify-center">
+          <Button className="tw-py-24 tw-mx-4" onClick={this.onClick}>Нажмите дважды для включения звука</Button>
+        </div>
+      ); 
+    }
+
     const { loginManager } = this.props;
     const { gameModel } = this.state;
 
@@ -67,7 +82,7 @@ export class Emercom extends React.Component<EmercomProps, EmercomState> {
               onClick={onLogout}
               title="Выйти"
               className="tw-py-3 tw-text-lg tw-fixed tw-top-0" 
-              style={{'right': '5rem'}}
+              style={{'right': '5rem', 'zIndex': 1000}}
             >
               Выйти
             </Button>

@@ -30,7 +30,7 @@ class AudioContainer extends React.Component {
     if (this.audioContextWrapper.context.state === 'suspended') {
       return (
         <div className="tw-flex tw-flex-col tw-h-screen tw-justify-center">
-          <Button className="tw-py-24 tw-mx-4" onClick={onClick}>Нажмите для включения звука</Button>
+          <Button className="tw-py-24 tw-mx-4" onClick={onClick}>Нажмите дважды для включения звука</Button>
         </div>
       ); 
     }
