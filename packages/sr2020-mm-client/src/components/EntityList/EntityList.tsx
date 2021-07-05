@@ -129,7 +129,7 @@ render() {
         noEntitiesAdvice={noEntitiesAdvice}
         makeLink={makeLink}
       />
-      <div className=" tw-flex-grow tw-overflow-auto">
+      <div className=" tw-flex-grow tw-overflow-auto" style={{flexBasis: 0}}>
         <InnerEntityList
           highlightStr={searchStr.toLowerCase()}
           items={this.filterListItems(items)}
