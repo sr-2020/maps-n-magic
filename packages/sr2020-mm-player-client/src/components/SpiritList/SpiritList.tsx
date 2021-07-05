@@ -2,10 +2,10 @@ import React, { useEffect } from 'react';
 import './SpiritList.css';
 import * as R from 'ramda';
 import Button from "react-bootstrap/Button";
+import Accordion from "react-bootstrap/Accordion";
+import Card from "react-bootstrap/Card";
 
 import { WithAggregatedLocationData } from '../../hocs';
-
-// import { WithTranslation } from "react-i18next";
 
 interface SpiritListProps extends WithAggregatedLocationData {
   setTitle: (title: string) => void;
@@ -44,7 +44,7 @@ export function SpiritList(props: SpiritListProps) {
       {/* <div>
         {JSON.stringify(locationData)}
       </div> */}
-      {
+      {/* {
         sortedSpiritViews.map(spiritView => 
           <Button 
             variant="outline-primary" 
@@ -53,8 +53,35 @@ export function SpiritList(props: SpiritListProps) {
             {spiritView.name}
           </Button>
         )
-      }
-      {/* SpiritList content */}
+      } */}
+
+      <Accordion 
+        // defaultActiveKey="0"
+      >
+        {
+          sortedSpiritViews.map((spiritView, index) => 
+            <Card>
+              <Accordion.Toggle as={Card.Header} eventKey={String(index)}>
+                <div>{spiritView.name}</div>
+                <div className="text-muted tw-text-sm">{spiritView.fractionName}</div>
+              </Accordion.Toggle>
+              <Accordion.Collapse eventKey={String(index)}>
+                <Card.Body>
+                  <div className="tw-mb-4">
+                    {'Фракция ' + spiritView.fractionName}
+                  </div>
+                  <Button 
+                    variant="outline-primary" 
+                    className="tw-w-full tw-text-left tw-py-4 tw-mb-2"
+                  >
+                    Поймать
+                  </Button>
+                </Card.Body>
+              </Accordion.Collapse>
+            </Card>
+          )
+        }
+      </Accordion>
     </div>
   );
 }

@@ -24,7 +24,9 @@ import { parseUserData } from './routes/parseUserData';
 import { postUserPosition } from './routes/postUserPosition';
 import { 
   ELocationRecordsChanged2, 
+  ESetSpiritFractions, 
   ESetSpirits, 
+  ESpiritFractionsChanged, 
   ESpiritsChanged, 
   EUserRecordsChanged, 
   SetLocationRecords, 
@@ -141,6 +143,9 @@ app.use((err, req: Request, res, next) => {
 const isSpiritsChanged = (obj: any): obj is ESpiritsChanged => {
   return obj.type === 'spiritsChanged';
 }
+const isSpiritFractionsChanged = (obj: any): obj is ESpiritFractionsChanged => {
+  return obj.type === 'spiritFractionsChanged';
+}
 const isLocationRecordsChanged = (obj: any): obj is ELocationRecordsChanged2 => {
   return obj.type === 'locationRecordsChanged2';
 }
@@ -180,6 +185,12 @@ es.addEventListener('message', function (e) {
       gameModel.emit2<ESetSpirits>({
         ...parsedData,
         type: 'setSpirits',
+      });
+    } else if (isSpiritFractionsChanged(parsedData)) {
+      logger.info(parsedData.type);
+      gameModel.emit2<ESetSpiritFractions>({
+        ...parsedData,
+        type: 'setSpiritFractions',
       });
     } else if(isLocationRecordsChanged(parsedData)) {
       logger.info(parsedData.type);

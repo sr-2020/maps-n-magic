@@ -1,6 +1,6 @@
 import SSE from "./express-sse-ts";
 import { Request, Response, NextFunction } from "express";
-import { ELocationRecordsChanged2, ESpiritsChanged, EUserRecordsChanged, GameModel, GetLocationRecords, GetSpirits, GetUserRecords, GMLogger } from "sr2020-mm-event-engine";
+import { ELocationRecordsChanged2, ESpiritFractionsChanged, ESpiritsChanged, EUserRecordsChanged, GameModel, GetLocationRecords, GetSpiritFractions, GetSpirits, GetUserRecords, GMLogger } from "sr2020-mm-event-engine";
 
 export class SseDataSender {
   sse: SSE;
@@ -20,6 +20,7 @@ export class SseDataSender {
     });
 
     this.initSpiritDataSending(gameModel);
+    this.initSpiritFractionDataSending(gameModel);
     this.initLocationDataSending(gameModel);
     this.initUserDataSending(gameModel);
   }
@@ -54,6 +55,16 @@ export class SseDataSender {
     gameModel.on2<ESpiritsChanged>('spiritsChanged', this.send);
   }
 
+  private initSpiritFractionDataSending(gameModel: GameModel) {
+    const spiritFractions = gameModel.get2<GetSpiritFractions>('spiritFractions');
+    const spiritsChanged: ESpiritFractionsChanged = {
+      'type': 'spiritFractionsChanged',
+      spiritFractions
+    };
+    this.send(spiritsChanged);
+    gameModel.on2<ESpiritFractionsChanged>('spiritFractionsChanged', this.send);
+  }
+
   send(object: unknown): void {
     this.sse.send(JSON.stringify(object), 'message');
   }
@@ -61,6 +72,7 @@ export class SseDataSender {
   dispose() {
     this.logger.info('SseDataSender dispose');
     this.gameModel.off('spiritsChanged', this.send);
+    this.gameModel.off('spiritFractionsChanged', this.send);
     this.gameModel.off('locationRecordsChanged2', this.send);
     this.gameModel.off('userRecordsChanged', this.send);
   }

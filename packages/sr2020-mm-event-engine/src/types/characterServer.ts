@@ -10,6 +10,7 @@ export interface SpiritView {
   id: number;
   name: string;
   fraction: number;
+  fractionName: string;
   locationId: number;
 }
 

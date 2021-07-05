@@ -25,7 +25,7 @@ router.use((req1, res, next) => {
 
   try {
     const parsedToken = jwt.verify(mm_token, mainServerConstants().JWT_SECRET);
-    logger.info('parsedToken', parsedToken);
+    // logger.info('parsedToken', parsedToken);
     if (!validateWeakTokenData(parsedToken)) {
       const errorResponse: ErrorResponse = {
         errorTitle: 'Данные авторизации некорректны',

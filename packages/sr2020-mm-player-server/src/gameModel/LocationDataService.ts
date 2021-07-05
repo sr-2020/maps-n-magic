@@ -20,22 +20,27 @@ import {
   AggregatedLocationView,
   Req,
   Res,
-  GetAggLocationView
+  GetAggLocationView,
+  GetSpiritFraction,
+  ESpiritFractionsChanged,
+  GetSpirits
 } from 'sr2020-mm-event-engine';
-
-// export type LocationDataEmitEvents = ELocationDataTriggered;
-export type LocationDataListenEvents = 
-  | ELocationRecordsChanged2
-  | ESpiritsChanged;
 
 export interface LocationDataServiceContract extends ServiceContract {
   Request: GetAggLocationView;
   Action: never;
   // EmitEvent: LocationDataEmitEvents;
   EmitEvent: never;
-  ListenEvent: LocationDataListenEvents;
+  ListenEvent: 
+    | ELocationRecordsChanged2
+    | ESpiritsChanged
+    | ESpiritFractionsChanged
+  ;
   NeedAction: never;
-  NeedRequest: never;
+  NeedRequest: 
+    | GetSpiritFraction
+    | GetSpirits
+  ;
 }
 
 const metadata: ServiceContractTypes<LocationDataServiceContract> = {
@@ -46,8 +51,8 @@ const metadata: ServiceContractTypes<LocationDataServiceContract> = {
   emitEvents: [
     // 'massacreTriggered'
   ],
-  listenEvents: ['locationRecordsChanged2', 'spiritsChanged'],
-  needRequests: [],
+  listenEvents: ['locationRecordsChanged2', 'spiritsChanged', 'spiritFractionsChanged'],
+  needRequests: ['spiritFraction', 'spirits'],
   needActions: []
 };
 
@@ -64,17 +69,20 @@ export class LocationDataService extends AbstractService<LocationDataServiceCont
     this.setMetadata(metadata);
     this.onLocationRecordsChanged = this.onLocationRecordsChanged.bind(this);
     this.onSpiritsChanged = this.onSpiritsChanged.bind(this);
+    this.onSpiritFractionsChanged = this.onSpiritFractionsChanged.bind(this);
   }
 
   init() {
     super.init();
     this.on2('locationRecordsChanged2', this.onLocationRecordsChanged);
     this.on2('spiritsChanged', this.onSpiritsChanged);
+    this.on2('spiritFractionsChanged', this.onSpiritFractionsChanged);
   }
   
   dispose() {
     this.off2('locationRecordsChanged2', this.onLocationRecordsChanged);
     this.off2('spiritsChanged', this.onSpiritsChanged);
+    this.off2('spiritFractionsChanged', this.onSpiritFractionsChanged);
   }
 
   onLocationRecordsChanged(data: ELocationRecordsChanged2): void {
@@ -90,6 +98,13 @@ export class LocationDataService extends AbstractService<LocationDataServiceCont
     this.updateAggregatedLocationViews();
   }
 
+  onSpiritFractionsChanged(): void {
+    this.onSpiritsChanged({
+      type: 'spiritsChanged',
+      spirits: this.getFromModel2({type: 'spirits'})
+    });
+  }
+
   onSpiritsChanged(data: ESpiritsChanged): void {
     const { spirits } = data;
 
@@ -100,10 +115,16 @@ export class LocationDataService extends AbstractService<LocationDataServiceCont
       }
       const { route, waypointIndex } = state;
       const locationId = route.waypoints[waypointIndex];
+      const fraction = this.getFromModel2({
+        type: 'spiritFraction', 
+        id: spirit.fraction
+      });
+      // this.logger.info('fraction', fraction);
       acc.push({
         id: spirit.id,
         name: spirit.name,
         fraction: spirit.fraction,
+        fractionName: fraction?.name || '',
         locationId
       });
       return acc;
