@@ -1,5 +1,5 @@
 /* eslint-disable react/sort-comp */
-import React, { Component, FormEvent } from 'react';
+import React, { ChangeEvent, Component, FormEvent, useState } from 'react';
 import './CharacterPositions.css';
 
 import * as R from 'ramda';
@@ -210,7 +210,11 @@ export class CharacterPositions extends Component<CharacterPositionsProps, Chara
             >
               <Form.Group controlId="characterId">
                 <Form.Label>{t('characterId')}</Form.Label>
-                <Form.Control list="characterIdList" />
+                <CharacterInput users={users}/>
+                {/* <Form.Control list="characterIdList" />
+                <Form.Text className="text-muted">
+                  We'll never share your email with anyone else.
+                </Form.Text> */}
               </Form.Group>
 
               <Form.Group controlId="locationId">
@@ -274,4 +278,30 @@ export class CharacterPositions extends Component<CharacterPositionsProps, Chara
       </div>
     );
   }
+}
+
+interface CharacterInputProps {
+  users: UserRecord[];
+}
+
+function CharacterInput(props: CharacterInputProps) {
+  const { users } = props;
+  const [charId, setCharId] = useState<number>(-1);
+
+  function onChange(event: ChangeEvent<HTMLInputElement>) {
+    const { target: { value } } = event;
+    const id = Number(value);
+    setCharId(Number.isNaN(id) ? -1 : id);
+  }
+
+  const user = users.find(user => user.id === charId);
+  
+  return (
+    <>
+      <Form.Control list="characterIdList" onChange={onChange}/>
+      <Form.Text className="text-muted">
+        {user?.location?.label ? `Персонаж в ${user?.location.label}` : 'Локация неизвестна'}
+      </Form.Text>
+    </>
+  );
 }
