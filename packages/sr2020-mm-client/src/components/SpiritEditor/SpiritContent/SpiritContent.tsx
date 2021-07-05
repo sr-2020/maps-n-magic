@@ -23,6 +23,7 @@ import { SpiritRouteTable } from "./SpiritRouteTable";
 import { SpiritStatusControl } from "./SpiritStatusControl";
 
 import { WithSpiritRoutes } from '../../../dataHOCs';
+import { SpiritNumberSelect } from './SpiritNumberSelect';
 
 // import { AbilitiesInput } from './AbilitiesInput';
 
@@ -37,7 +38,9 @@ type SpiritContentState = {
   name: Spirit["name"];
   fraction: Spirit["fraction"];
   story: Spirit["story"];
-  maxHitPoints: Spirit["maxHitPoints"];
+  level: Spirit["level"];
+  hitPoints: Spirit["hitPoints"];
+  // maxHitPoints: Spirit["maxHitPoints"];
   timetable: Spirit["timetable"];
   state: Spirit["state"];
 };
@@ -49,9 +52,14 @@ type spiritFields =
   | 'maxHitPoints'
   | 'timetable'
   | 'state'
+  | 'level'
+  | 'hitPoints'
 ;
 
 const sortByTime = R.sortBy(R.prop('time'));
+
+const LEVEL_LIST = [1, 2, 3];
+const HIT_POINTS_LIST = [1, 2, 3, 4, 5, 6];
 
 export class SpiritContent extends Component<
   SpiritContentProps, 
@@ -74,8 +82,10 @@ export class SpiritContent extends Component<
         name: spirit.name,
         fraction: spirit.fraction,
         story: spirit.story,
-        maxHitPoints: spirit.maxHitPoints,
+        // maxHitPoints: spirit.maxHitPoints,
         timetable: spirit.timetable,
+        level: spirit.level,
+        hitPoints: spirit.hitPoints,
         state: spirit.state,
       };
     } else {
@@ -100,7 +110,10 @@ export class SpiritContent extends Component<
     case 'number':
       return Number(target.value);
     default:
-      if(name === 'fraction') {
+      if ( name === 'fraction' 
+        || name === 'level' 
+        || name === 'hitPoints'
+      ) {
         return Number(target.value);
       }
       return target.value;
@@ -197,7 +210,9 @@ export class SpiritContent extends Component<
           name: state.name,
           fraction: state.fraction,
           story: state.story,
-          maxHitPoints: state.maxHitPoints,
+          level: state.level,
+          hitPoints: state.hitPoints,
+          // maxHitPoints: state.maxHitPoints,
           timetable: state.timetable,
           state: state.state,
         }
@@ -212,7 +227,14 @@ export class SpiritContent extends Component<
       return null;
     }
     const {
-      name, fraction, story, maxHitPoints, initialized, timetable, state
+      name, 
+      fraction, 
+      story, 
+      initialized, 
+      timetable, 
+      state, 
+      level, 
+      hitPoints
     } = componentState;
     const { gameModel, id, t, spiritRoutes } = this.props;
 
@@ -281,9 +303,34 @@ export class SpiritContent extends Component<
                 </div>
               </div>
               <div className="tw-table-row">
-                <label htmlFor="fractionInput" className="tw-table-cell">{t('routes')}</label>
+                <label htmlFor="levelInput" className="tw-table-cell">Уровень</label>
                 <div className="tw-table-cell">
-                  <RouteInput 
+                  <SpiritNumberSelect 
+                    id="levelInput"
+                    name="level"
+                    value={level}
+                    domain={LEVEL_LIST}
+                    onChange={this.handleInputChange}
+                  />
+                </div>
+              </div>
+              <div className="tw-table-row">
+                <label htmlFor="hitPointsInput" className="tw-table-cell">Хиты</label>
+                <div className="tw-table-cell">
+                  <SpiritNumberSelect 
+                    id="hitPointsInput"
+                    name="hitPoints"
+                    value={hitPoints}
+                    domain={HIT_POINTS_LIST}
+                    onChange={this.handleInputChange}
+                  />
+                </div>
+              </div>
+              <div className="tw-table-row">
+                <label htmlFor="newRoute" className="tw-table-cell">{t('routes')}</label>
+                <div className="tw-table-cell">
+                  <RouteInput
+                    id="newRoute" 
                     spiritRoutes={spiritRoutes}
                     addRoute={this.addRoute}
                   />
@@ -339,24 +386,6 @@ export class SpiritContent extends Component<
                 </div>
               </div> */}
             </div>
-            {/* <MyApp /> */}
-
-            {/* <div className="table">
-              <div className="table-column w-24" />
-              <h3 className="table-caption">Current spirit status</h3>
-              <div className="table-row h-8">
-                <div className="table-cell">Position</div>
-                <div className="table-cell">{`To be done ${JSON.stringify(latLng)}`}</div>
-              </div>
-              <div className="table-row h-8">
-                <div className="table-cell">Plane</div>
-                <div className="table-cell">{`To be done ${plane}`}</div>
-              </div>
-              <div className="table-row h-8">
-                <div className="table-cell">Hit Points</div>
-                <div className="table-cell">{`To be done ${hitPoints}`}</div>
-              </div>
-            </div> */}
           </div>
         </div>
       </DocumentTitle>

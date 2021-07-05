@@ -43,19 +43,20 @@ export type SpiritState =
 
 export interface Spirit {
   id: number;
-  name: string,
+  name: string;
   // aura: string,
-  fraction: number, // fraction id number
+  fraction: number; // fraction id number
   timetable: SpiritTimetable;
   state: SpiritState;
 
-  story: string,
-  abilities: string[],
+  story: string;
+  abilities: string[];
 
   // latLng: L.LatLngLiteral,
   // plane: string,
-  // hitPoints: number,
-  maxHitPoints: number,
+  hitPoints: number;
+  level: number;
+  // maxHitPoints: number,
 }
 
 export interface SpiritFraction {

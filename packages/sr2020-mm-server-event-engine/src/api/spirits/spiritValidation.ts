@@ -18,7 +18,9 @@ const defaultSpirit: Omit<Spirit, "id"> = {
   fraction: 1, // без фракции
   story: '',
   abilities: [],
-  maxHitPoints: 10,
+  // maxHitPoints: 10,
+  hitPoints: 1,
+  level: 1,
   timetable: [],
   state: {
     status: 'NotInGame'
@@ -32,9 +34,10 @@ const spiritSchema: JSONSchemaType<Spirit> = {
     name: {type: "string"},
     // aura: {type: "string"},
     fraction: {type: "integer"},
+    hitPoints: {type: "integer", minimum: 1, maximum: 6},
+    level: {type: "integer", minimum: 1, maximum: 3},
     story: {type: "string"},
     abilities: {type: "array", items: {type: "string"}},
-    maxHitPoints: {type: "integer", minimum: 1},
     timetable: { type: "array", items: timetableItemSchema},
     state: spiritStateSchema
   },
@@ -44,9 +47,10 @@ const spiritSchema: JSONSchemaType<Spirit> = {
     "fraction", 
     "story", 
     "abilities", 
-    "maxHitPoints",
     "timetable",
-    "state"
+    "state",
+    'hitPoints',
+    'level'
   ],
   additionalProperties: false,
 };
@@ -60,9 +64,11 @@ const newSpiritSchema: JSONSchemaType<Omit<Spirit, "id">> = {
     name: {type: "string"},
     // aura: {type: "string"},
     fraction: {type: "integer"},
+    hitPoints: {type: "integer", minimum: 1, maximum: 6},
+    level: {type: "integer", minimum: 1, maximum: 3},
     story: {type: "string"},
     abilities: {type: "array", items: {type: "string"}},
-    maxHitPoints: {type: "integer", minimum: 1},
+    // maxHitPoints: {type: "integer", minimum: 1},
     timetable: { type: "array", items: timetableItemSchema},
     state: spiritStateSchema
   },
@@ -71,9 +77,11 @@ const newSpiritSchema: JSONSchemaType<Omit<Spirit, "id">> = {
     "fraction", 
     "story", 
     "abilities", 
-    "maxHitPoints",
+    // "maxHitPoints",
     "timetable",
-    "state"
+    "state",
+    'hitPoints',
+    'level'
   ],
   additionalProperties: false,
 };

@@ -13,11 +13,12 @@ import { WithTranslation } from "react-i18next";
 import { WithSpiritRoutes } from '../../../../dataHOCs';
 
 interface RouteInputProps extends WithTranslation, WithSpiritRoutes {
+  id: string;
   addRoute: (routeId: number) => void;
 }
 
 export function RouteInput(props: RouteInputProps) {
-  const { t, spiritRoutes } = props;
+  const { t, spiritRoutes, id } = props;
 
   if (spiritRoutes === null) {
     return (
@@ -45,7 +46,7 @@ export function RouteInput(props: RouteInputProps) {
   return (
     <Form className="RouteInput" onSubmit={onSubmit}>
       <InputGroup className="tw-mb-3">
-        <FormControl required id="newRoute" list="routes-datalist" />
+        <FormControl required id={id} list="routes-datalist" />
         <InputGroup.Append>
           <Button type="submit" variant="outline-secondary">{t('addRoute')}</Button>
         </InputGroup.Append>

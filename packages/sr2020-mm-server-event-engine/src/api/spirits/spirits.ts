@@ -18,6 +18,21 @@ export const getSpirits = async function(): Promise<unknown[]> {
   if(!validateGenericRows(rows)) {
     throw new Error(`Generic row check got validation error. ${JSON.stringify(validateGenericRows.errors)}`);
   }
+  // migration for spirits:
+  //  remove maxHitPoints
+  //  add hitPoints, level
+  rows.forEach((row) => {
+    const data = row.data as any;
+    if (data.maxHitPoints !== undefined) {
+      delete data.maxHitPoints;
+    }
+    if (data.hitPoints === undefined) {
+      data.hitPoints = 1;
+    }
+    if (data.level === undefined) {
+      data.level = 1;
+    }
+  });
   return rows.map(row => ({
     ...row.data,
     id: row.id,
