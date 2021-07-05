@@ -17,16 +17,16 @@ import {
 
 export interface LocationGroupLayerProps extends CommonLayerProps, WithTranslation, WithLocationRecords {
   enableByDefault: boolean;
-  enableLayerIndex: Partial<Record<keyof typeof locationTypesEnum, boolean>>;
+  enableLayerIndex?: Partial<Record<keyof typeof locationTypesEnum, boolean>>;
   geoLayerName: locationTypesEnum;
   nameKey: SRTKey & string;
-  onLocationClick: L.LeafletEventHandlerFn;
-  onLocationEdit: L.LeafletEventHandlerFn;
+  onLocationClick?: L.LeafletEventHandlerFn;
+  onLocationEdit?: L.LeafletEventHandlerFn;
 }
 
 type TooltipTemplate = 'unknownLocationTypeTooltip' | 'geoLocationTooltip' | 'regionTooltip' | 'gameLocationTooltip';
 
-function getTooltipTemplate(layer_id: number): TooltipTemplate {
+export function getTooltipTemplate(layer_id: number): TooltipTemplate {
   let tooltipTemplate: TooltipTemplate = 'unknownLocationTypeTooltip';
   switch (layer_id) {
   case 1:
@@ -137,8 +137,12 @@ export class LocationGroupLayer extends Component<
     loc.on('mouseout', function (this: BasicLocation, e) {
       this.closeTooltip();
     });
-    loc.on('click', onLocationClick);
-    loc.on('pm:edit', onLocationEdit);
+    if (onLocationClick) {
+      loc.on('click', onLocationClick);
+    }
+    if (onLocationEdit) {
+      loc.on('pm:edit', onLocationEdit);
+    }
     // loc.on({
     //   click: onLocationClick,
     //   'pm:edit': onLocationEdit,

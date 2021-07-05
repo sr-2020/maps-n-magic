@@ -24,6 +24,7 @@ import { GameModel } from "sr2020-mm-event-engine";
 import { WithTranslation } from "react-i18next";
 
 import { CharacterDataList } from '../CharacterDataList';
+import { GeoLocationSelectMap } from '../../maps/GeoLocationSelectMap';
 
 type BeaconIndex = {[location_id: string]: BeaconRecord};
 type LocationIndex = {[location_id: string]: LocationRecord};
@@ -36,6 +37,7 @@ interface CharacterPositionsState {
   locationIndex: LocationIndex | null;
   sortedLocationList: LocationRecord[] | null;
   beaconIndex: BeaconIndex | null;
+  selectedLocation: number;
 };
 
 
@@ -55,11 +57,14 @@ export class CharacterPositions extends Component<CharacterPositionsProps, Chara
       locationIndex: null,
       sortedLocationList: null,
       beaconIndex: null,
+      selectedLocation: -1
     };
     this.onSubmit = this.onSubmit.bind(this);
     this.setLocationRecords = this.setLocationRecords.bind(this);
     this.setBeaconRecords = this.setBeaconRecords.bind(this);
     this.setUserRecords = this.setUserRecords.bind(this);
+    this.onLocationClick = this.onLocationClick.bind(this);
+    this.onSelectLocation = this.onSelectLocation.bind(this);
   }
 
   componentDidMount() {
@@ -184,12 +189,31 @@ export class CharacterPositions extends Component<CharacterPositionsProps, Chara
     return 'N/A';
   }
 
+  onLocationClick(e: L.LeafletMouseEvent) {
+    const {
+      id
+    } = e.target.options;
+    this.setState({
+      selectedLocation: id
+    });
+  }
+
+  onSelectLocation(event: ChangeEvent<HTMLSelectElement>): void {
+    const { value } = event.target;
+    const id = Number(value);
+    if (!Number.isNaN(id)) {
+      this.setState({
+        selectedLocation: id
+      });
+    }
+  }
+
   // eslint-disable-next-line max-lines-per-function
   render() {
     const {
-      users, locationIndex, sortedLocationList, beaconIndex,
+      users, locationIndex, sortedLocationList, beaconIndex, selectedLocation
     } = this.state;
-    const { t } = this.props;
+    const { t, gameModel } = this.props;
 
     if (!users || !locationIndex || !beaconIndex || !sortedLocationList) {
       return <div> Loading data... </div>;
@@ -219,7 +243,11 @@ export class CharacterPositions extends Component<CharacterPositionsProps, Chara
 
               <Form.Group controlId="locationId">
                 <Form.Label>{t('location')}</Form.Label>
-                <Form.Control as="select">
+                <Form.Control 
+                  as="select"
+                  value={selectedLocation}
+                  onChange={this.onSelectLocation}
+                >
                   {
                     hasBeacons.map((location) => (
                       <option
@@ -266,14 +294,24 @@ export class CharacterPositions extends Component<CharacterPositionsProps, Chara
             <CharacterDataList users={users} />
           </div>
 
-          <Alert className="tw-ml-8" variant="warning">
-            {t('locationHasNoBeaconsError')}
-            <ul className="tw-list-disc tw-pl-8">
-              {
-                hasNoBeacons.map((loc) => <li key={loc.id}>{loc.label}</li>)
-              }
-            </ul>
-          </Alert>
+          <div>
+            <Alert className="tw-ml-8" variant="warning">
+              {t('locationHasNoBeaconsError')}
+              <ul className="tw-list-disc tw-pl-8">
+                {
+                  hasNoBeacons.map((loc) => <li key={loc.id}>{loc.label}</li>)
+                }
+              </ul>
+            </Alert>
+            
+            <div style={{height: '30rem'}}>
+              <GeoLocationSelectMap 
+                gameModel={gameModel} 
+                onLocationClick={this.onLocationClick}
+              />
+            </div>
+          </div>
+
         </div>
       </div>
     );
