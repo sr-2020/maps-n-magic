@@ -67,19 +67,29 @@ export const validateCommonQr = ajv.compile(commonQrSchema);
 //   "pubSubNotifications": []
 // }
 
-export interface SpiritJarQr {
+export interface EmptySpiritJarQr {
   workModel: {
     type: 'spirit_jar',
     modelId: string;
     data: {
-      spiritId: number | string
-    } | {
       emptiness_reason: string
     }
   }
 };
 
-const spiritJarQrSchema: JSONSchemaType<SpiritJarQr> = {
+export interface FullSpiritJarQr {
+  workModel: {
+    type: 'spirit_jar',
+    modelId: string;
+    data: {
+      spiritId: number | string
+    }
+  }
+};
+
+export type SpiritJarQr = EmptySpiritJarQr | FullSpiritJarQr;
+
+const emptySpiritJarQrSchema: JSONSchemaType<EmptySpiritJarQr> = {
   type: "object",
   properties: {
     workModel: {
@@ -91,27 +101,54 @@ const spiritJarQrSchema: JSONSchemaType<SpiritJarQr> = {
         },
         modelId: { type: 'string' },
         data: {
-          oneOf: [{
-              type: 'object',
-              properties: {
-                spiritId: {type: ["string", "number"] }
-                // spiritId: { type: 'integer' }
-              },
-              required: ["spiritId"],
-            }, {
-              type: 'object',
-              properties: {
-                'emptiness_reason': { type: 'string' }
-              },
-              required: ["emptiness_reason"],
-            },
-          ]
+          type: 'object',
+          properties: {
+            'emptiness_reason': { type: 'string' }
+          },
+          required: ["emptiness_reason"],
         }
       },
       required: ["type", 'modelId'],
     },
   },
   required: ["workModel"],
+};
+
+export const validateEmptySpiritJarQr = ajv.compile(emptySpiritJarQrSchema);
+
+const fullSpiritJarQrSchema: JSONSchemaType<FullSpiritJarQr> = {
+  type: "object",
+  properties: {
+    workModel: {
+      type: "object",
+      properties: {
+        type: {
+          type: 'string',
+          enum: ['spirit_jar']
+        },
+        modelId: { type: 'string' },
+        data: {
+          type: 'object',
+          properties: {
+            spiritId: {type: ["string", "number"] }
+            // spiritId: { type: 'integer' }
+          },
+          required: ["spiritId"],
+        }
+      },
+      required: ["type", 'modelId'],
+    },
+  },
+  required: ["workModel"],
+};
+
+export const validateFullSpiritJarQr = ajv.compile(fullSpiritJarQrSchema);
+
+const spiritJarQrSchema: JSONSchemaType<SpiritJarQr> = {
+  oneOf: [
+    emptySpiritJarQrSchema,
+    fullSpiritJarQrSchema
+  ]
 };
 
 export const validateSpiritJarQr = ajv.compile(spiritJarQrSchema);

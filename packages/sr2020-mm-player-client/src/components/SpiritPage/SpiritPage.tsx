@@ -1,7 +1,13 @@
 import React, { useState, useEffect } from 'react';
 import './SpiritPage.css';
 
-import { ErrorResponse, isErrorResponse, SpiritJarQr } from "sr2020-mm-event-engine";
+import { 
+  ErrorResponse, 
+  isErrorResponse, 
+  SpiritJarQr,
+  validateEmptySpiritJarQr,
+  validateFullSpiritJarQr
+} from "sr2020-mm-event-engine";
 import Alert from "react-bootstrap/Alert";
 import Button from "react-bootstrap/Button";
 
@@ -96,12 +102,13 @@ export function SpiritPage(props: SpiritPageProps) {
 
   return (
     <div className="SpiritPage">
-      SpiritPage content
+      {/* SpiritPage content
       <br/>
       {spiritJarQrString}
       {
         JSON.stringify(spiritJarQr)
       }
+      <SpiritJarQrCard /> */}
       {
         errorResponse !== null && (
           <Alert className="tw-m-4" variant="warning">
@@ -111,16 +118,27 @@ export function SpiritPage(props: SpiritPageProps) {
         )
       }
       {
-        ('spiritId' in (spiritJarQr?.workModel.data || {})) && 
-        <Button variant="outline-secondary" onClick={onFreeSpiritClick}>
-          Освободить духа
-        </Button>
+        (spiritJarQr !== null && validateFullSpiritJarQr(spiritJarQr)) && 
+        <>
+          <div>
+            В тотеме заключен дух {spiritJarQr.workModel.data.spiritId}
+          </div>
+          <Button variant="outline-secondary" onClick={onFreeSpiritClick}>
+            Освободить духа
+          </Button>
+        </>
       }
       {
-        ('emptiness_reason' in (spiritJarQr?.workModel.data || {})) && 
-        <Button variant="primary" onClick={onCatchSpiritClick}>
-          Поймать духа
-        </Button>
+        (spiritJarQr !== null && validateEmptySpiritJarQr(spiritJarQr)) && 
+        <>
+          <div>
+            <div>Тотем пуст</div>
+            <div>{spiritJarQr.workModel.data.emptiness_reason}</div>
+          </div>
+          <Button variant="primary" onClick={onCatchSpiritClick}>
+            Поймать духа (тестовый вызов)
+          </Button>
+        </>
       }
     </div>
   );
