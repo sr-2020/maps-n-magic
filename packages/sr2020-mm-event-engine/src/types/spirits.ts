@@ -12,6 +12,7 @@ export const SpiritStatus = {
   NotInGame: 'NotInGame',
   RestInAstral: 'RestInAstral',
   OnRoute: 'OnRoute',
+  InJar: 'InJar',
 } as const;
 
 export type SpiritStatusList = keyof typeof SpiritStatus;
@@ -35,10 +36,16 @@ export interface OnRouteState {
   waypointIndex: number;
 }
 
+export interface InJarState {
+  status: typeof SpiritStatus.InJar;
+  qrId: number;
+}
+
 export type SpiritState = 
   | NotInGameState 
   | RestInAstralState 
   | OnRouteState
+  | InJarState
 ;
 
 export interface Spirit {

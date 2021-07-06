@@ -1,17 +1,19 @@
 import SSE from "./express-sse-ts";
 import { Request, Response, NextFunction } from "express";
 import { ELocationRecordsChanged2, ESpiritFractionsChanged, ESpiritsChanged, EUserRecordsChanged, GameModel, GetLocationRecords, GetSpiritFractions, GetSpirits, GetUserRecords, GMLogger } from "sr2020-mm-event-engine";
+import { InnerApiRequest } from "sr2020-mm-server-event-engine";
 
 export class SseDataSender {
   sse: SSE;
+  gameModel: GameModel;
 
   constructor(
-    req: Request, 
+    req: InnerApiRequest, 
     res: Response, 
     next: NextFunction,
     private logger: GMLogger,
-    private gameModel: GameModel,
   ) {
+    this.gameModel = req.gameModel;
     this.send = this.send.bind(this);
     this.sse = new SSE();
     this.sse.init(req, res, next);
@@ -19,10 +21,10 @@ export class SseDataSender {
       this.dispose();
     });
 
-    this.initSpiritDataSending(gameModel);
-    this.initSpiritFractionDataSending(gameModel);
-    this.initLocationDataSending(gameModel);
-    this.initUserDataSending(gameModel);
+    this.initSpiritDataSending(this.gameModel);
+    this.initSpiritFractionDataSending(this.gameModel);
+    this.initLocationDataSending(this.gameModel);
+    this.initUserDataSending(this.gameModel);
   }
 
   private initUserDataSending(gameModel: GameModel) {

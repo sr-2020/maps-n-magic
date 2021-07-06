@@ -4,6 +4,7 @@ import * as R from 'ramda';
 import Button from "react-bootstrap/Button";
 import Accordion from "react-bootstrap/Accordion";
 import Card from "react-bootstrap/Card";
+import { useHistory } from 'react-router-dom';
 
 import { WithAggregatedLocationData } from '../../hocs';
 
@@ -13,7 +14,7 @@ interface SpiritListProps extends WithAggregatedLocationData {
 
 export function SpiritList(props: SpiritListProps) {
   const { locationData, setTitle } = props;
-
+  const history = useHistory();
   
   useEffect(() => {
     setTitle(`Духи (${locationData?.spiritViews.length || 0})`)
@@ -73,6 +74,7 @@ export function SpiritList(props: SpiritListProps) {
                   <Button 
                     variant="outline-primary" 
                     className="tw-w-full tw-text-left tw-py-4 tw-mb-2"
+                    onClick={() => history.push(`/catchSpirit/${spiritView.id}`)}
                   >
                     Поймать
                   </Button>

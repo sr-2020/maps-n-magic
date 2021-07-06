@@ -14,7 +14,8 @@ import {
   mainServerConstants, 
   makeGameModel, 
   winstonLogger,
-  createLogger
+  createLogger,
+  InnerApiRequest
 } from 'sr2020-mm-server-event-engine';
 import { ErrorResponse, validateWebSocketInitClientConfig, WebSocketInitClientConfig } from 'sr2020-mm-event-engine';
 
@@ -29,6 +30,7 @@ import { SseDataSender } from "./sseDataSender";
 import { loginRouter } from './routes/login';
 import { logoutRouter } from './routes/logout';
 import { parseUserData } from './routes/parseUserData';
+import { spiritRouter } from './routes/spirits';
 
 const logger = createLogger('mainServer/app.ts');
 
@@ -63,12 +65,12 @@ app.get('/ping', pingRouter);
 
 app.use(loginRouter);
 
-app.get('/playerDataSse', (req1, res, next) => {
-  const req = req1 as AuthorizedRequest;
+app.use('/innerApi', (req1, res, next) => {
+  const req = req1 as InnerApiRequest;
 
   const { mm_token } = req.cookies;
   if (mm_token === undefined) {
-    logger.info('playerDataSse connection FAILED: Request has no user token');
+    logger.info('innerApi connection FAILED: Request has no user token');
     res.status(401).send('Request has no user token');
     return;
   }
@@ -78,18 +80,27 @@ app.get('/playerDataSse', (req1, res, next) => {
     logger.info('parsedToken', parsedToken);
 
     if (parsedToken !== mainServerConstants().playerServerTokenPayload) {
-      logger.info('playerDataSse connection FAILED: token parsing');
+      logger.info('innerApi connection FAILED: token parsing');
       res.status(401).send('Error on token parsing');
       return;
     }
   } catch (err) {
-    logger.error('playerDataSse connection FAILED: Error on token parsing', err);
+    logger.error('innerApi connection FAILED: Error on token parsing', err);
     res.status(401).send('Error on token parsing');
     return;
   }
 
+  req.gameModel = gameModel;
+
+  next();
+});
+
+app.use('/innerApi', spiritRouter);
+
+app.get('/innerApi/playerDataSse', (req1, res, next) => {
+  const req = req1 as InnerApiRequest;
   logger.info('playerDataSse connection OK');
-  new SseDataSender(req, res, next, logger, gameModel);
+  new SseDataSender(req, res, next, logger);
 });
 
 app.use('/api', parseUserData);

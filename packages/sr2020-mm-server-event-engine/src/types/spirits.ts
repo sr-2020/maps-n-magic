@@ -37,3 +37,19 @@ const catchSpiritRequestBodySchema: JSONSchemaType<CatchSpiritRequestBody> = {
 };
 
 export const validateCatchSpiritRequestBody = ajv.compile(catchSpiritRequestBodySchema);
+
+export interface CatchSpirit2RequestBody {
+  spiritJarQrString: string;
+  spiritId: number;
+}
+
+const catchSpirit2RequestBodySchema: JSONSchemaType<CatchSpirit2RequestBody> = {
+  type: "object",
+  properties: {
+    spiritJarQrString: { type: 'string' },
+    spiritId: { type: 'integer' },
+  },
+  required: ["spiritJarQrString", "spiritId"],
+};
+
+export const validateCatchSpirit2RequestBody = ajv.compile(catchSpirit2RequestBodySchema);

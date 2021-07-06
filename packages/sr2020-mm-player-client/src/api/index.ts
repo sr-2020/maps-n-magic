@@ -76,3 +76,17 @@ export async function catchSpirit(qrId: number, spiritId: number): Promise<Error
   });
   return await res.json();
 }
+
+export async function catchSpirit2(spiritJarQrString: string, spiritId: number): Promise<ErrorResponse | unknown> {
+  const res = await fetch('/api/catchSpirit2', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json;charset=utf-8',
+    },
+    body: JSON.stringify({
+      spiritJarQrString,
+      spiritId: spiritId
+    }),
+  });
+  return await res.json();
+}

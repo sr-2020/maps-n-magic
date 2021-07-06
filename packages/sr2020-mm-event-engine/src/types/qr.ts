@@ -152,3 +152,11 @@ const spiritJarQrSchema: JSONSchemaType<SpiritJarQr> = {
 };
 
 export const validateSpiritJarQr = ajv.compile(spiritJarQrSchema);
+
+export function isEmptySpiritJar(qr: SpiritJarQr): qr is EmptySpiritJarQr {
+  return 'emptiness_reason' in qr.workModel.data;
+}
+
+export function isFullSpiritJar(qr: SpiritJarQr): qr is FullSpiritJarQr {
+  return 'spiritId' in qr.workModel.data;
+}

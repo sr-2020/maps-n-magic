@@ -7,6 +7,7 @@ const logger = createLogger('playerServerConstants.ts');
 
 interface PlayerServerConstants extends GenericServerConstants {
   playerDataSseUrl: string;
+  catchSpiritUrl: string;
 };
 
 let constantsInstance: PlayerServerConstants | null = null;
@@ -33,7 +34,8 @@ export function playerServerConstants(): PlayerServerConstants {
     
     constantsInstance = {
       ...getGenericServerConstants(playerEnvVariables),
-      playerDataSseUrl: values[PlayerServerConstant.MM_MASTER_SERVER_URL] + '/playerDataSse',
+      playerDataSseUrl: values[PlayerServerConstant.MM_MASTER_SERVER_URL] + '/innerApi/playerDataSse',
+      catchSpiritUrl: values[PlayerServerConstant.MM_MASTER_SERVER_URL] + '/innerApi/catchSpirit',
     };
   }
   assert(constantsInstance !== null);

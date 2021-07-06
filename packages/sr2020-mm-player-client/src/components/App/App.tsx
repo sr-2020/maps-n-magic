@@ -19,6 +19,7 @@ import { AudioContextWrapper, SoundStorage } from 'sr2020-mm-client-event-engine
 import { AppHeader } from '../AppHeader';
 import { SoundStage } from '../SoundStage';
 import { SoundSettings, SoundStageState } from 'sr2020-mm-event-engine';
+import { CatchSpiritPage } from '../CatchSpiritPage';
 
 interface AppProps extends WithLoginState, WithAggregatedLocationData {
   loginManager: LoginManager;
@@ -75,6 +76,22 @@ export function App(props: AppProps) {
             <Route path="/qrTest">
               <QrTest />
             </Route>
+            {/* <Route path="/catchSpirit/:id">
+              <QrTest />
+            </Route> */}
+            <Route
+              path="/catchSpirit/:id"
+              render={({ match }) => {
+                const { id } = match.params;
+
+                return (
+                  <CatchSpiritPage
+                    id={Number(id)}
+                    key={Number(id)}
+                  />
+                );
+              }}
+            />
             <Route path="/">
               {/* <Redirect to="/spirits" /> */}
               <Redirect to="/suitSpirit" />

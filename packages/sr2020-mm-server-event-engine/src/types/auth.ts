@@ -1,10 +1,16 @@
 import Ajv, { JSONSchemaType } from "ajv";
 import type { Request } from 'express';
-import { TokenData, WeakTokenData } from "sr2020-mm-event-engine";
+import { GameModel, TokenData, WeakTokenData } from "sr2020-mm-event-engine";
 
 export type AuthorizedRequest = Request & {
   userData: TokenData;
 }
+
+export type CharacterRequest = AuthorizedRequest & {
+  gameModel: GameModel;
+}
+
+export type InnerApiRequest = CharacterRequest;
 
 export type WeakAuthorizedRequest = Request & {
   userData: WeakTokenData;

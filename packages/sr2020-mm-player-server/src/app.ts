@@ -7,14 +7,13 @@ import morganLogger from 'morgan';
 import shortid from 'shortid';
 import cors from 'cors';
 import * as core from 'express-serve-static-core';
-import EventSource from "eventsource";
-import * as jwt from "jsonwebtoken";
 
 import { 
   AuthorizedRequest,
   winstonLogger,
   playerServerConstants,
-  createLogger
+  createLogger,
+  CharacterRequest
 } from 'sr2020-mm-server-event-engine';
 import { makeGameModel } from "./gameModel";
 
@@ -22,19 +21,11 @@ import { pingRouter } from './routes/ping';
 import { loginRouter } from './routes/login'; 
 import { parseUserData } from './routes/parseUserData'; 
 import { postUserPosition } from './routes/postUserPosition';
-import { 
-  ELocationRecordsChanged2, 
-  ESetSpiritFractions, 
-  ESetSpirits, 
-  ESpiritFractionsChanged, 
-  ESpiritsChanged, 
-  EUserRecordsChanged, 
-  SetLocationRecords, 
-  SetUserRecords 
-} from 'sr2020-mm-event-engine';
+
 import { SsePlayerDataSender } from './ssePlayerDataSender';
 import { spiritRouter } from "./routes/spirits";
 import { logoutRouter } from "./routes/logout";
+import { connectToMainServerSse } from './routes/playerDataSse';
 
 const logger = createLogger('playerServer/app.ts');
 
@@ -96,7 +87,13 @@ app.use(loginRouter);
 
 app.use('/api', parseUserData);
 
-app.use(spiritRouter);
+app.use((req1, res, next) => {
+  const req = req1 as CharacterRequest;
+  req.gameModel = gameModel;
+  next();
+});
+
+app.use('/api', spiritRouter);
 
 app.use('/api', logoutRouter);
 
@@ -136,79 +133,4 @@ app.use((err, req: Request, res, next) => {
   res.json({ error: err });
 });
 
-// export const app = app;
-
-// module.exports = app;
-
-const isSpiritsChanged = (obj: any): obj is ESpiritsChanged => {
-  return obj.type === 'spiritsChanged';
-}
-const isSpiritFractionsChanged = (obj: any): obj is ESpiritFractionsChanged => {
-  return obj.type === 'spiritFractionsChanged';
-}
-const isLocationRecordsChanged = (obj: any): obj is ELocationRecordsChanged2 => {
-  return obj.type === 'locationRecordsChanged2';
-}
-const isUserRecordsChanged = (obj: any): obj is EUserRecordsChanged => {
-  return obj.type === 'userRecordsChanged';
-}
-
-const playerServerToken = jwt.sign(
-  playerServerConstants().playerServerTokenPayload, 
-  playerServerConstants().JWT_SECRET
-);
-
-const es = new EventSource(playerServerConstants().playerDataSseUrl, {
-  headers: {
-    'Cookie': 'mm_token=' + playerServerToken
-  }
-});
-
-// logger.info('main server es.readyState', es.readyState);
-
-es.onopen = function(event) {
-  logger.info("EventSource onopen", event);
-};
-// es.onmessage = function(event) {
-//   logger.info("EventSource onmessage", event);
-// };
-es.onerror = function(event) {
-  logger.info("EventSource onerror", event);
-};
-
-es.addEventListener('message', function (e) {
-  try {
-    const { data }: { data: string } = e;
-    const parsedData: unknown = JSON.parse(data);
-    if (isSpiritsChanged(parsedData)) {
-      logger.info(parsedData.type);
-      gameModel.emit2<ESetSpirits>({
-        ...parsedData,
-        type: 'setSpirits',
-      });
-    } else if (isSpiritFractionsChanged(parsedData)) {
-      logger.info(parsedData.type);
-      gameModel.emit2<ESetSpiritFractions>({
-        ...parsedData,
-        type: 'setSpiritFractions',
-      });
-    } else if(isLocationRecordsChanged(parsedData)) {
-      logger.info(parsedData.type);
-      gameModel.execute2<SetLocationRecords>({
-        ...parsedData,
-        type: 'setLocationRecords',
-      });
-    } else if(isUserRecordsChanged(parsedData)) {
-      logger.info(parsedData.type);
-      gameModel.execute2<SetUserRecords>({
-        ...parsedData,
-        type: 'setUserRecords',
-      });
-    } else {
-      logger.warn(`Unexpected sse message data ${JSON.stringify(e)}`);
-    }
-  } catch (err) {
-    logger.error('error', err);
-    logger.error(`Error on processing sse message: ${JSON.stringify(err)}, message ${JSON.stringify(e)}`)
-  }
-})
+connectToMainServerSse(gameModel);
