@@ -51,7 +51,7 @@ export class ReadDataManager<Entity, T extends Gettable<Entity>> extends Abstrac
   }
 
   load() {
-    this.logger.info(`Call to load ${this.entityName}`);
+    // this.logger.info(`Call to load ${this.entityName}`);
     this.dataProvider.get().then((entities) => {
       if (R.equals(this.entities, entities)) {
         // this.logger.info('no changes', this.ccEntityName);

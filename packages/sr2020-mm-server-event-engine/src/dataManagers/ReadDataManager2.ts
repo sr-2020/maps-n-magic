@@ -57,7 +57,7 @@ export class ReadDataManager2<
   }
 
   async load() {
-    this.logger.info(`Call to load ${this.entityName}`);
+    // this.logger.info(`Call to load ${this.entityName}`);
     try {
       const rawEntities = await this.dataProvider.get();
       const entities = rawEntities.filter((rawEntity): rawEntity is Entity => {
