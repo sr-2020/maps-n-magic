@@ -1,14 +1,16 @@
 import { Router } from 'express';
 import * as jwt from "jsonwebtoken";
 import { ErrorResponse, validateTokenData } from 'sr2020-mm-event-engine';
-import { AuthorizedRequest, createLogger, playerServerConstants } from 'sr2020-mm-server-event-engine';
+import { PlayerAuthorizedRequest, createLogger, playerServerConstants } from 'sr2020-mm-server-event-engine';
 
 const logger = createLogger('parseUserData.ts');
 
 const router = Router();
 
-router.use((req1, res, next) => {
-  const req = req1 as AuthorizedRequest;
+router.use(async (req1, res, next) => {
+  const req = req1 as PlayerAuthorizedRequest;
+
+  const { characterWatcher } = req;
 
   const { mm_token } = req.cookies;
   if (mm_token === undefined) {
@@ -31,7 +33,10 @@ router.use((req1, res, next) => {
       res.status(500).json(errorResponse);
       return;
     }
+
+    const data = await characterWatcher.getCharacterModel(parsedToken.modelId);
     req.userData = parsedToken;
+    req.characterModelData = data;
     next();
   } catch (err) {
     logger.info('User token verification failed', err);
@@ -45,10 +50,13 @@ router.use((req1, res, next) => {
 });
 
 router.get('/isLoggedIn', (req1, res, next) => {
-  const req = req1 as AuthorizedRequest;
+  const req = req1 as PlayerAuthorizedRequest;
   logger.info('/api/isLoggedIn');
   // if we are here then parsing user data was successful
-  res.status(200).json(req.userData);
+  res.status(200).json({
+    userData: req.userData,
+    characterModelData: req.characterModelData
+  });
 });
 
 

@@ -7,5 +7,6 @@ export * from './services/MassacreService';
 export * from './types';
 export * from './api';
 export * from './logger';
+export * from './characterWatcher';
 
 import "./processTerminationHandler";

@@ -10,7 +10,6 @@ import * as core from 'express-serve-static-core';
 import * as jwt from "jsonwebtoken";
 
 import { 
-  AuthorizedRequest, 
   mainServerConstants, 
   makeGameModel, 
   winstonLogger,

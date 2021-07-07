@@ -1,12 +1,12 @@
 import { CatchSpiritInternalRequest, ErrorResponse, GetSpirit, invalidRequestBody } from "sr2020-mm-event-engine";
-import { CharacterRequest, createLogger, getQrModelData, playerServerConstants, validateCatchSpirit2RequestBody, validateQrModelData } from "sr2020-mm-server-event-engine";
+import { PlayerAuthorizedRequest, createLogger, getQrModelData, playerServerConstants, validateCatchSpirit2RequestBody, validateQrModelData } from "sr2020-mm-server-event-engine";
 import { decode, playerServerCookie } from "../../utils";
 
 const logger = createLogger('catchSpirit2.ts');
 
 export const catchSpirit2 = async (req1, res, next) => {
   // logger.info('/catchSpirit2');
-  const req = req1 as CharacterRequest;
+  const req = req1 as PlayerAuthorizedRequest;
   const { body } = req;
   if (!validateCatchSpirit2RequestBody(body)) {
     res.status(400).json(invalidRequestBody(body, validateCatchSpirit2RequestBody.errors));

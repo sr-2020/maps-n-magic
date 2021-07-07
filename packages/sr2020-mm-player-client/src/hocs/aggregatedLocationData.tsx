@@ -21,7 +21,11 @@ function createEventSource(setData: React.Dispatch<React.SetStateAction<Aggregat
   es.addEventListener('message', function (e) {
     try {
       const parsedData = JSON.parse(e.data);
-      setData(parsedData);
+      if (parsedData.spiritViews === undefined) {
+        console.log(parsedData);
+      } else {
+        setData(parsedData);
+      }
     } catch(err) {
       console.error(err);
     }

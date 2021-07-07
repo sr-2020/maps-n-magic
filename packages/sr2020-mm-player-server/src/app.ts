@@ -9,11 +9,11 @@ import cors from 'cors';
 import * as core from 'express-serve-static-core';
 
 import { 
-  AuthorizedRequest,
+  PlayerAuthorizedRequest,
   winstonLogger,
   playerServerConstants,
   createLogger,
-  CharacterRequest
+  CharacterWatcher,
 } from 'sr2020-mm-server-event-engine';
 import { makeGameModel } from "./gameModel";
 
@@ -32,6 +32,8 @@ const logger = createLogger('playerServer/app.ts');
 logger.info('process.env.NODE_ENV', process.env.NODE_ENV);
 
 const { gameModel, gameServer } = makeGameModel();
+const characterWatcher = new CharacterWatcher();
+characterWatcher.start();
 
 export const app: core.Express = Express();
 const wsApp = ExpressWs(app);
@@ -85,10 +87,17 @@ app.use(cookieParser());
 app.get('/ping', pingRouter);
 app.use(loginRouter);
 
+app.use((req1, res, next) => {
+  const req = req1 as PlayerAuthorizedRequest;
+  // we need characterWatcher in parseUserData
+  req.characterWatcher = characterWatcher;
+  next();
+});
+
 app.use('/api', parseUserData);
 
 app.use((req1, res, next) => {
-  const req = req1 as CharacterRequest;
+  const req = req1 as PlayerAuthorizedRequest;
   req.gameModel = gameModel;
   next();
 });
@@ -99,14 +108,14 @@ app.use('/api', logoutRouter);
 
 app.get('/api/singlePlayerDataSse', (req, res, next) => {
   logger.info('Processing playerDataSse connection');
-  const { userData } = req as AuthorizedRequest;
+  const { userData, characterWatcher } = req as PlayerAuthorizedRequest;
   const ip = req.connection.remoteAddress;
   const id = shortid.generate();
   const childLogger = winstonLogger.customChild ? 
     winstonLogger.customChild(winstonLogger, { service: `player_session_${id}` }) :
     winstonLogger;
   childLogger.info(ip);
-  new SsePlayerDataSender(req, res, next, childLogger, gameModel, userData);
+  new SsePlayerDataSender(req, res, next, childLogger, gameModel, userData, characterWatcher);
 });
 
 app.use(Express.static(path.join(__dirname, './static')));

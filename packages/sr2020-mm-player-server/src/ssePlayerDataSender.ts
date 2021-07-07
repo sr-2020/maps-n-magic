@@ -1,6 +1,7 @@
 import SSE from "./express-sse-ts";
 import { Request, Response, NextFunction } from "express";
 import { 
+  CharacterModelData,
   ELocationRecordsChanged2, 
   ESpiritsChanged, 
   GameModel, 
@@ -12,6 +13,7 @@ import {
   TokenData
 } from "sr2020-mm-event-engine";
 import shortid from 'shortid';
+import { CharacterWatcher } from "sr2020-mm-server-event-engine";
 
 export class SsePlayerDataSender {
   sse: SSE;
@@ -24,16 +26,19 @@ export class SsePlayerDataSender {
     next: NextFunction,
     private logger: GMLogger,
     private gameModel: GameModel,
-    private userData: TokenData
+    private userData: TokenData,
+    private characterWatcher: CharacterWatcher
   ) {
     this.logger.info('SsePlayerDataSender init');
     this.send = this.send.bind(this);
+    this.onCharacterModelUpdate = this.onCharacterModelUpdate.bind(this);
     this.sse = new SSE();
     this.sse.init(req, res, next);
     this.uid = shortid.generate();
     req.once('close', () => {
       this.dispose();
     });
+    characterWatcher.on2(this.uid, this.userData.modelId, this.onCharacterModelUpdate);
     // const spirits = gameModel.get2<GetSpirits>('spirits');
     // const spiritsChanged: ESpiritsChanged = {
     //   'type': 'spiritsChanged',
@@ -58,6 +63,11 @@ export class SsePlayerDataSender {
       // this.logger.info('Hi player! From ' + this.uid);
     }, 5000);
     // setTimeout(() => this.send('Hi player!'), 1000);
+  }
+
+  onCharacterModelUpdate(data: CharacterModelData) {
+    this.send(data);
+    // this.logger.info(`got character update. model id ${this.userData.modelId}`);
   }
 
   sendCurrentData(): void {
@@ -97,6 +107,7 @@ export class SsePlayerDataSender {
     if (this.regularUpdateIntervalId !== undefined) {
       clearInterval(this.regularUpdateIntervalId);
     }
+    this.characterWatcher.off2(this.uid, this.userData.modelId, this.onCharacterModelUpdate);
     // this.gameModel.off('spiritsChanged', this.send);
     // this.gameModel.off('locationRecordsChanged2', this.send);
   }
