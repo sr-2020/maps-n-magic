@@ -21,11 +21,11 @@ interface SpiritPageProps {
 
 export function SpiritPage(props: SpiritPageProps) {
   // const { t } = props;
-  // const [spiritJarQrString, setSpiritJarQrString] = useState<string | null>(null);
+  const [spiritJarQrString, setSpiritJarQrString] = useState<string | null>(null);
   // my QR from app
   // const [spiritJarQrString, setSpiritJarQrString] = useState<string | null>('6d15BQC35thg51935');
   // spirit jar
-  const [spiritJarQrString, setSpiritJarQrString] = useState<string | null>('7437AQCgkdhg359');
+  // const [spiritJarQrString, setSpiritJarQrString] = useState<string | null>('7437AQCgkdhg359');
   // invalid qr string
   // const [spiritJarQrString, setSpiritJarQrString] = useState<string | null>('7437AQCgk_dhg359');
   const [errorResponse, setErrorResponse] = useState<ErrorResponse | null>(null);

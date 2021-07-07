@@ -14,8 +14,8 @@ interface CatchSpiritPageProps {
 export function CatchSpiritPage(props: CatchSpiritPageProps) {
   const { id } = props;
 
-  const [spiritJarQrString, setSpiritJarQrString] = useState<string | null>('7437AQCgkdhg359');
-  // const [spiritJarQrString, setSpiritJarQrString] = useState<string | null>(null);
+  // const [spiritJarQrString, setSpiritJarQrString] = useState<string | null>('7437AQCgkdhg359');
+  const [spiritJarQrString, setSpiritJarQrString] = useState<string | null>(null);
   // invalid qr string
   // const [spiritJarQrString, setSpiritJarQrString] = useState<string | null>('7437AQCgk_dhg359');
   const [errorResponse, setErrorResponse] = useState<ErrorResponse | null>(null);
