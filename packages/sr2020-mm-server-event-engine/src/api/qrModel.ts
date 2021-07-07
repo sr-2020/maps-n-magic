@@ -14,7 +14,7 @@ export async function getQrModelData(qrId: number): Promise<unknown> {
   throw new Error(`Ошибка при получении данных из QR. QR id ${qrId}, статус ${res2.status}, текст ошибки ${text}`);
 }
 
-export async function freeSpirit(spiritStorageId: number, reason: string): Promise<unknown> {
+export async function freeSpiritFromStorage(spiritStorageId: number, reason: string): Promise<unknown> {
   // await suitSpirit(51935, {
   //   "name": "Petya",
   //   "hp": 5,
@@ -41,7 +41,7 @@ export async function freeSpirit(spiritStorageId: number, reason: string): Promi
   throw new Error(`Ошибка при освобождении духа из QR ${spiritStorageId}, статус ${res2.status}, текст ошибки ${text}`);
 }
 
-export async function catchSpirit(spiritStorageId: number, spiritId: number): Promise<unknown> {
+export async function putSpiritInStorage(spiritStorageId: number, spiritId: number): Promise<unknown> {
   // await dispirit(51935, 360, spiritStorageId);
   // return;
 

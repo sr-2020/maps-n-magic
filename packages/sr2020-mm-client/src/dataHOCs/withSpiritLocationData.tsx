@@ -3,7 +3,8 @@ import React, { useState, useEffect } from 'react';
 import * as R from 'ramda';
 import { 
   LocationRecord,
-  Spirit
+  Spirit,
+  getSpiritLocationId
 } from "sr2020-mm-event-engine";
 
 import { WithGeoLocationRecords, WithSpirits } from "./index";
@@ -34,9 +35,8 @@ function getCombinedData(
     return [];
   }
   const spiritsByLocIndex = spirits.reduce((acc: Record<number, string[]>, spirit) => {
-    const { state } = spirit; 
-    if (state.status === 'OnRoute') {
-      const locationId = state.route.waypoints[state.waypointIndex];
+    const locationId = getSpiritLocationId(spirit);
+    if (locationId !== undefined) {
       if (acc[locationId] === undefined) {
         acc[locationId] = [];
       }

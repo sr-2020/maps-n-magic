@@ -13,7 +13,8 @@ import {
   Spirit,
   Rotation,
   TrackData,
-  GetSpirits
+  GetSpirits,
+  getSpiritLocationId
 } from 'sr2020-mm-event-engine';
 import { FRACTION_SOUNDS, MANA_LEVEL_SOUNDS } from '../..';
 import { SetBackgroundSound, SetRotationSounds } from '../SoundStageService/types';
@@ -73,12 +74,9 @@ export class TrackedCharacterService extends AbstractService<TrackedCharacterSer
     }
 
     const locSpirits = spirits.reduce((acc: Spirit[], spirit) => {
-      const { state } = spirit; 
-      if (state.status === 'OnRoute') {
-        const spiritLocationId = state.route.waypoints[state.waypointIndex];
-        if (locationId === spiritLocationId) {
-          acc.push(spirit);
-        }
+      const spiritLocationId = getSpiritLocationId(spirit);
+      if (locationId === spiritLocationId) {
+        acc.push(spirit);
       }
       return acc;
     }, []);

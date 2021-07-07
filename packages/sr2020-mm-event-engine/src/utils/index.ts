@@ -16,7 +16,8 @@ import {
   EdgeId,
   RawCharacterHealthState,
   BodyConditions,
-  SpiritRoute
+  SpiritRoute,
+  Spirit
 } from "../types";
 
 export function isGeoLocation(location: LocationRecord): boolean {
@@ -273,4 +274,12 @@ export function getTimeOnRoute(route: SpiritRoute, speedPercent: number): {
     timeOnWaypoint,
     timeOnRoute: route.waypoints.length * timeOnWaypoint
   };
+}
+
+export function getSpiritLocationId(spirit: Spirit): number | undefined {
+  const { state } = spirit; 
+  if (state.status === 'OnRoute') {
+    return state.route.waypoints[state.waypointIndex];
+  }
+  return undefined;
 }

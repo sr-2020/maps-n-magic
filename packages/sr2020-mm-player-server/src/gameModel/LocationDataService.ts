@@ -23,7 +23,8 @@ import {
   GetAggLocationView,
   GetSpiritFraction,
   ESpiritFractionsChanged,
-  GetSpirits
+  GetSpirits,
+  getSpiritLocationId
 } from 'sr2020-mm-event-engine';
 
 export interface LocationDataServiceContract extends ServiceContract {
@@ -113,8 +114,7 @@ export class LocationDataService extends AbstractService<LocationDataServiceCont
       if (state.status !== SpiritStatus.OnRoute) {
         return acc;
       }
-      const { route, waypointIndex } = state;
-      const locationId = route.waypoints[waypointIndex];
+      const locationId = getSpiritLocationId(spirit) as number;
       const fraction = this.getFromModel2({
         type: 'spiritFraction', 
         id: spirit.fraction

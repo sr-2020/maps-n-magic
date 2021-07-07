@@ -1,4 +1,8 @@
 import Ajv, { JSONSchemaType } from "ajv";
+import { ErrorResponse, SpiritJarQr, validateCommonQr, validateSpiritJarQr } from "sr2020-mm-event-engine";
+import { createLogger } from "../logger";
+
+const logger = createLogger('server-ee/spirits.ts');
 
 const ajv = new Ajv({
   allErrors: true,
@@ -53,3 +57,39 @@ const catchSpirit2RequestBodySchema: JSONSchemaType<CatchSpirit2RequestBody> = {
 };
 
 export const validateCatchSpirit2RequestBody = ajv.compile(catchSpirit2RequestBodySchema);
+
+
+export function validateQrModelData(qrModelData: unknown): 
+  SpiritJarQr | ErrorResponse
+{
+  if (!validateCommonQr(qrModelData)) {
+    const message = `Данные QR не корректны. Данные модели ${JSON.stringify(qrModelData)}, ошибки валидации ${JSON.stringify(validateCommonQr.errors)}`;
+    logger.error(message, validateCommonQr.errors);
+    const errorResponse: ErrorResponse = {
+      errorTitle: 'Получен некорректный ответ от менеджера моделей',
+      errorSubtitle: message 
+    };
+    return errorResponse;
+  }
+
+  if (!validateSpiritJarQr(qrModelData)) {
+    let errorTitle = '';
+    let errorSubtitle = '';
+    if (qrModelData.workModel.type === 'spirit_jar') {
+      errorTitle = 'Духохранилище некорректно';
+      errorSubtitle = `Данные модели ${JSON.stringify(qrModelData)}, ошибки валидации ${JSON.stringify(validateSpiritJarQr.errors)}`;
+    } else {
+      errorTitle = 'QR не является духохранилищем';
+      errorSubtitle = `Тип QR: ${qrModelData.workModel.type}`;
+    }
+
+    // const message = `. qrModelData ${JSON.stringify(qrModelData)}, validation errors ${JSON.stringify(validateSpiritJarQr.errors)}`;
+    logger.error(errorSubtitle, validateSpiritJarQr.errors);
+    const errorResponse: ErrorResponse = {
+      errorTitle,
+      errorSubtitle
+    };
+    return errorResponse;
+  }
+  return qrModelData;
+}

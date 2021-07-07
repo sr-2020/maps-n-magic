@@ -215,3 +215,56 @@ export const validateErrorResponse = ajv.compile(errorResponseSchema);
 export function isErrorResponse(data: any): data is ErrorResponse {
   return typeof data.errorTitle === 'string';
 }
+
+export function invalidRequestBody(body: any, errors: any): ErrorResponse {
+  return {
+    errorTitle: 'Получены неправильные параметры запроса',
+    errorSubtitle: `Тело запроса: ${JSON.stringify(body)}, ошибки валидации ${JSON.stringify(errors)}`
+  };
+}
+
+export interface CatchSpiritInternalRequest {
+  qrId: number;
+  spiritId: number;
+  characterId: number;
+}
+
+const catchSpiritInternalRequestSchema: JSONSchemaType<CatchSpiritInternalRequest> = {
+  type: "object",
+  properties: {
+    qrId: {
+      type: "number",
+    },
+    spiritId: {
+      type: "number",
+    },
+    characterId: {
+      type: "number",
+    },
+  },
+  required: ["qrId", "spiritId", "characterId"],
+  additionalProperties: false
+};
+
+export const validateCatchSpiritInternalRequest = ajv.compile(catchSpiritInternalRequestSchema);
+
+export interface FreeSpiritInternalRequest {
+  qrId: number;
+  reason: string;
+}
+
+const freeSpiritInternalRequestSchema: JSONSchemaType<FreeSpiritInternalRequest> = {
+  type: "object",
+  properties: {
+    qrId: {
+      type: "number",
+    },
+    reason: {
+      type: "string",
+    },
+  },
+  required: ["qrId", "reason"],
+  additionalProperties: false
+};
+
+export const validateFreeSpiritInternalRequest = ajv.compile(freeSpiritInternalRequestSchema);
