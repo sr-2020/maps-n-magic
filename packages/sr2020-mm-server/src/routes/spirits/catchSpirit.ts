@@ -1,6 +1,6 @@
 import * as R from 'ramda';
 import { EPutSpiritRequested, ErrorResponse, GetSpirit, getSpiritLocationId, GetUserRecord, invalidRequestBody, isFullSpiritJar, validateCatchSpiritInternalRequest } from 'sr2020-mm-event-engine';
-import { createLogger, getQrModelData, InnerApiRequest, putSpiritInStorage, validateQrModelData } from 'sr2020-mm-server-event-engine';
+import { createLogger, getQrModelData, InnerApiRequest, putSpiritInStorage, validateSpiritJarQrModelData } from 'sr2020-mm-server-event-engine';
 
 const logger = createLogger('catchSpirit.ts');
 
@@ -40,7 +40,7 @@ export const mainCatchSpirit = async (req1, res, next) => {
     // 2. get qr model and check if it is SpiritJar
     const qrModelData1 = await getQrModelData(qrId);
 
-    const validationRes = validateQrModelData(qrModelData1);
+    const validationRes = validateSpiritJarQrModelData(qrModelData1);
 
     if ('errorTitle' in validationRes) {
       res.status(500).json(validationRes);

@@ -1,5 +1,5 @@
 import { EPutSpiritRequested, ErrorResponse, GetSpirit, invalidRequestBody, isEmptySpiritJar, validateFreeSpiritInternalRequest } from "sr2020-mm-event-engine";
-import { createLogger, freeSpiritFromStorage, getQrModelData, InnerApiRequest, validateQrModelData } from "sr2020-mm-server-event-engine";
+import { createLogger, freeSpiritFromStorage, getQrModelData, InnerApiRequest, validateSpiritJarQrModelData } from "sr2020-mm-server-event-engine";
 
 const logger = createLogger('freeSpirit.ts');
 
@@ -18,7 +18,7 @@ export const mainFreeSpirit = async (req1, res, next) => {
 
     const qrModelData1 = await getQrModelData(qrId);
 
-    const validationRes = validateQrModelData(qrModelData1);
+    const validationRes = validateSpiritJarQrModelData(qrModelData1);
 
     if ('errorTitle' in validationRes) {
       res.status(500).json(validationRes);
@@ -51,7 +51,7 @@ export const mainFreeSpirit = async (req1, res, next) => {
 
       const qrModelData = await freeSpiritFromStorage(Number(qrId), reason);
 
-      const errorResponse = validateQrModelData(qrModelData);
+      const errorResponse = validateSpiritJarQrModelData(qrModelData);
 
       if (errorResponse !== null) {
         res.status(500).json(errorResponse);
@@ -89,7 +89,7 @@ export const mainFreeSpirit = async (req1, res, next) => {
 
     const qrModelData2 = await freeSpiritFromStorage(Number(qrId), reason);
 
-    const errorResponse = validateQrModelData(qrModelData2);
+    const errorResponse = validateSpiritJarQrModelData(qrModelData2);
 
     if (errorResponse !== null) {
       res.status(500).json(errorResponse);
