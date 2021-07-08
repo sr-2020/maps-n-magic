@@ -75,17 +75,14 @@ export function App(props: AppProps) {
             <Route path="/suitSpirit">
               <SuitSpiritPage />
             </Route>
-            <Route path="/qrTest">
+            {/* <Route path="/qrTest">
               <QrTest />
-            </Route>
+            </Route> */}
             <Route path="/character">
               <CharacterPage 
                 characterData={characterData}
               />
             </Route>
-            {/* <Route path="/catchSpirit/:id">
-              <QrTest />
-            </Route> */}
             <Route
               path="/catchSpirit/:id"
               render={({ match }) => {
@@ -101,8 +98,8 @@ export function App(props: AppProps) {
             />
             <Route path="/">
               {/* <Redirect to="/spirits" /> */}
-              {/* <Redirect to="/suitSpirit" /> */}
-              <Redirect to="/character" />
+              <Redirect to="/suitSpirit" />
+              {/* <Redirect to="/character" /> */}
             </Route>
           </Switch>
 

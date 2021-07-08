@@ -61,9 +61,9 @@ export function AppHeader(props: AppHeaderProps) {
           <LinkContainer to="/suitSpirit">
             <Nav.Link>Надеть духа</Nav.Link>
           </LinkContainer>
-          <LinkContainer to="/qrTest">
+          {/* <LinkContainer to="/qrTest">
             <Nav.Link>QR тест</Nav.Link>
-          </LinkContainer>
+          </LinkContainer> */}
         </Nav>
       </Navbar.Collapse>
 

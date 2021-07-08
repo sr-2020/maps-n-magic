@@ -1,5 +1,5 @@
 import Ajv, { JSONSchemaType } from "ajv";
-import { ErrorResponse, SpiritJarQr, validateCommonQr, validateSpiritJarQr } from "sr2020-mm-event-engine";
+import { BodyStorageQr, ErrorResponse, SpiritJarQr, validateBodyStorageQr, validateCommonQr, validateSpiritJarQr } from "sr2020-mm-event-engine";
 import { createLogger } from "../logger";
 
 const logger = createLogger('server-ee/spirits.ts');
@@ -59,7 +59,7 @@ const catchSpirit2RequestBodySchema: JSONSchemaType<CatchSpirit2RequestBody> = {
 export const validateCatchSpirit2RequestBody = ajv.compile(catchSpirit2RequestBodySchema);
 
 
-export function validateQrModelData(qrModelData: unknown): 
+export function validateSpiritJarQrModelData(qrModelData: unknown): 
   SpiritJarQr | ErrorResponse
 {
   if (!validateCommonQr(qrModelData)) {
@@ -85,6 +85,40 @@ export function validateQrModelData(qrModelData: unknown):
 
     // const message = `. qrModelData ${JSON.stringify(qrModelData)}, validation errors ${JSON.stringify(validateSpiritJarQr.errors)}`;
     logger.error(errorSubtitle, validateSpiritJarQr.errors);
+    const errorResponse: ErrorResponse = {
+      errorTitle,
+      errorSubtitle
+    };
+    return errorResponse;
+  }
+  return qrModelData;
+}
+
+export function validateBodyStorageQrModelData(qrModelData: unknown): 
+  BodyStorageQr | ErrorResponse
+{
+  if (!validateCommonQr(qrModelData)) {
+    const message = `Данные QR не корректны. Данные модели ${JSON.stringify(qrModelData)}, ошибки валидации ${JSON.stringify(validateCommonQr.errors)}`;
+    logger.error(message, validateCommonQr.errors);
+    const errorResponse: ErrorResponse = {
+      errorTitle: 'Получен некорректный ответ от менеджера моделей',
+      errorSubtitle: message 
+    };
+    return errorResponse;
+  }
+
+  if (!validateBodyStorageQr(qrModelData)) {
+    let errorTitle = '';
+    let errorSubtitle = '';
+    if (qrModelData.workModel.type === 'body_storage') {
+      errorTitle = 'Телохраниилище некорректно';
+      errorSubtitle = `Данные модели ${JSON.stringify(qrModelData)}, ошибки валидации ${JSON.stringify(validateSpiritJarQr.errors)}`;
+    } else {
+      errorTitle = 'QR не является телохраниилищем';
+      errorSubtitle = `Тип QR: ${qrModelData.workModel.type}`;
+    }
+
+    logger.error(errorSubtitle, validateBodyStorageQr.errors);
     const errorResponse: ErrorResponse = {
       errorTitle,
       errorSubtitle

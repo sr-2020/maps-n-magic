@@ -1,5 +1,5 @@
 import { ErrorResponse, FreeSpiritInternalRequest, invalidRequestBody } from "sr2020-mm-event-engine";
-import { createLogger, freeSpiritFromStorage, playerServerConstants, validateFreeSpiritRequestBody, validateQrModelData } from "sr2020-mm-server-event-engine";
+import { createLogger, freeSpiritFromStorage, playerServerConstants, validateFreeSpiritRequestBody, validateSpiritJarQrModelData } from "sr2020-mm-server-event-engine";
 import { playerServerCookie } from "../../utils";
 
 const logger = createLogger('freeSpirit.ts');
@@ -11,6 +11,7 @@ export const freeSpirit = async (req, res, next) => {
     return;
   }
   const { qrId, reason } = body;
+
   try {
     const reqBody: FreeSpiritInternalRequest = {
       qrId,

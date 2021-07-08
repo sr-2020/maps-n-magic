@@ -54,6 +54,7 @@ export function SpiritPage(props: SpiritPageProps) {
     return (
       <QrScannerWrapper
         onSuccess={setSpiritJarQrString}
+        message="Отсканируйте тотем"
       />
     );
   }

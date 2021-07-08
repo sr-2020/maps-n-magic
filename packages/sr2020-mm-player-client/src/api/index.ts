@@ -1,4 +1,4 @@
-import { ErrorResponse, SpiritJarQr, validateErrorResponse } from "sr2020-mm-event-engine";
+import { ErrorResponse, SpiritJarQr, validateErrorResponse, SpiritDataForQrValidation } from "sr2020-mm-event-engine";
 
 export const isLoggedIn = async () => fetch('/api/isLoggedIn');
 
@@ -44,6 +44,20 @@ export async function callSecureApi() {
 
 export async function getSpiritDataByQr(spiritJarQrString: string): Promise<ErrorResponse | SpiritJarQr> {
   const res = await fetch('/api/getSpiritDataByQr?' + new URLSearchParams({
+    spiritJarQrString
+  }));
+  return await res.json();
+}
+
+export async function isBodyStorageValid(bodyStorageQrString: string): Promise<ErrorResponse | true> {
+  const res = await fetch('/api/isBodyStorageValid?' + new URLSearchParams({
+    bodyStorageQrString
+  }));
+  return await res.json();
+}
+
+export async function isSpiritJarValid(spiritJarQrString: string): Promise<ErrorResponse | SpiritDataForQrValidation> {
+  const res = await fetch('/api/isSpiritJarValid?' + new URLSearchParams({
     spiritJarQrString
   }));
   return await res.json();

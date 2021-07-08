@@ -1,5 +1,5 @@
 import { CatchSpiritInternalRequest, ErrorResponse, GetSpirit, invalidRequestBody } from "sr2020-mm-event-engine";
-import { PlayerAuthorizedRequest, createLogger, getQrModelData, playerServerConstants, validateCatchSpirit2RequestBody, validateQrModelData } from "sr2020-mm-server-event-engine";
+import { PlayerAuthorizedRequest, createLogger, getQrModelData, playerServerConstants, validateCatchSpirit2RequestBody, validateSpiritJarQrModelData } from "sr2020-mm-server-event-engine";
 import { decode, playerServerCookie } from "../../utils";
 
 const logger = createLogger('catchSpirit2.ts');
@@ -24,7 +24,7 @@ export const catchSpirit2 = async (req1, res, next) => {
 
     const qrModelData1 = await getQrModelData(qrId);
 
-    const validationRes = validateQrModelData(qrModelData1);
+    const validationRes = validateSpiritJarQrModelData(qrModelData1);
 
     if ('errorTitle' in validationRes) {
       res.status(500).json(validationRes);
