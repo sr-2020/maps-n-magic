@@ -2,7 +2,7 @@ import * as R from 'ramda';
 import { EventEmitter } from 'events';
 import { getCharacterModelData } from './api';
 import { createLogger } from './logger';
-import { CharacterModelData } from 'sr2020-mm-event-engine';
+import { CharacterModelData, validateCharacterModelData } from 'sr2020-mm-event-engine';
 
 // const CHARACTER_UPDATE_INTERVAL_MILLIS = 60000;
 const CHARACTER_UPDATE_INTERVAL_MILLIS = 10000;
@@ -87,6 +87,12 @@ export class CharacterWatcher extends EventEmitter {
   
   async innerGetCharacterModel(modelId: number, now: number): Promise<CharacterModelData> {
     const data = await getCharacterModelData(modelId);
+    if (!validateCharacterModelData(data)) {
+      logger.warn(`model ${modelId} is not valid. Model ${JSON.stringify(data)}, errors ${JSON.stringify(validateCharacterModelData.errors)}`);
+    } else {
+      // logger.info(`model ${modelId} is valid`);
+    }
+
     const prevItem: CharacterCacheItem | undefined = this.characterCache[modelId];
     this.characterCache[modelId] = {
       data,

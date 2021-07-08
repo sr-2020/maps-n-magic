@@ -40,6 +40,7 @@ export function App(props: AppProps) {
     loginState, 
     loginManager, 
     locationData,
+    characterData,
     audioContextWrapper,
     soundStorage
   } = props;
@@ -65,6 +66,7 @@ export function App(props: AppProps) {
               <SpiritList 
                 setTitle={setTitle}
                 locationData={locationData}
+                characterData={characterData}
               />
             </Route>
             <Route path="/scanSpirit">

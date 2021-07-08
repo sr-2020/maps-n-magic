@@ -27,7 +27,8 @@ export class SsePlayerDataSender {
     private logger: GMLogger,
     private gameModel: GameModel,
     private userData: TokenData,
-    private characterWatcher: CharacterWatcher
+    private characterWatcher: CharacterWatcher,
+    characterModelData: CharacterModelData
   ) {
     this.logger.info('SsePlayerDataSender init');
     this.send = this.send.bind(this);
@@ -55,6 +56,7 @@ export class SsePlayerDataSender {
     // gameModel.on2<ESpiritsChanged>('spiritsChanged', this.send);
     // gameModel.on2<ELocationRecordsChanged2>('locationRecordsChanged2', this.send);
     
+    this.send(characterModelData);
     this.sendCurrentData();
     // this.send('Hi player! From ' + this.uid);
     this.regularUpdateIntervalId = setInterval(() => {

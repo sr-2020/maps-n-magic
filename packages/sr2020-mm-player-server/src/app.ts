@@ -108,14 +108,23 @@ app.use('/api', logoutRouter);
 
 app.get('/api/singlePlayerDataSse', (req, res, next) => {
   logger.info('Processing playerDataSse connection');
-  const { userData, characterWatcher } = req as PlayerAuthorizedRequest;
+  const { userData, characterWatcher, characterModelData } = req as PlayerAuthorizedRequest;
   const ip = req.connection.remoteAddress;
   const id = shortid.generate();
   const childLogger = winstonLogger.customChild ? 
     winstonLogger.customChild(winstonLogger, { service: `player_session_${id}` }) :
     winstonLogger;
   childLogger.info(ip);
-  new SsePlayerDataSender(req, res, next, childLogger, gameModel, userData, characterWatcher);
+  new SsePlayerDataSender(
+    req, 
+    res, 
+    next, 
+    childLogger, 
+    gameModel, 
+    userData, 
+    characterWatcher,
+    characterModelData
+  );
 });
 
 app.use(Express.static(path.join(__dirname, './static')));
