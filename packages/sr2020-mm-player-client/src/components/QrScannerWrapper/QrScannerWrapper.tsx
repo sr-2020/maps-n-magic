@@ -3,21 +3,27 @@ import './QrScannerWrapper.css';
 
 import QRScanner, { QRCode } from 'qrx-scanner';
 import { ErrorBoundary } from "react-error-boundary";
+import Button from "react-bootstrap/Button";
 // import { WithTranslation } from "react-i18next";
 
 interface QrScannerWrapperProps {
   onSuccess: ((qrData: string) => void);
   onFailed?: ((error: Error) => void);
+  onCancel?: () => void;
   message?: string;
 }
 
-const videoConstraints = {
-  facingMode: 'user',
+const facingMode = process.env.NODE_ENV === 'production' 
+  ? 'environment' 
+  : 'user';
+
+const videoConstraints: MediaTrackConstraints  = {
+  facingMode,
   height: 1080,
 };
 
 export function QrScannerWrapper(props: QrScannerWrapperProps) {
-  const { onFailed, onSuccess, message } = props;
+  const { onFailed, onSuccess, message, onCancel } = props;
 
   const defaultOnFailed = (error: Error) => {throw error};
 
@@ -43,6 +49,16 @@ export function QrScannerWrapper(props: QrScannerWrapperProps) {
             }}
         />
       </ErrorBoundary>
+      {
+        onCancel && (
+          <Button 
+            className="tw-fixed tw-bottom-0 tw-w-40"
+            onClick={onCancel}
+          >
+            Отмена
+          </Button>
+        )
+      }
     </div>
   );
 }

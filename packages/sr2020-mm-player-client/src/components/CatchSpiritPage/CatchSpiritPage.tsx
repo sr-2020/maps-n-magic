@@ -1,4 +1,6 @@
 import React, { useEffect, useState } from 'react';
+import { useHistory } from 'react-router-dom';
+
 import { ErrorResponse, isErrorResponse } from 'sr2020-mm-event-engine';
 import { catchSpirit, catchSpirit2 } from '../../api';
 import { ErrorAlert } from '../ErrorAlert';
@@ -20,6 +22,7 @@ export function CatchSpiritPage(props: CatchSpiritPageProps) {
   // const [spiritJarQrString, setSpiritJarQrString] = useState<string | null>('7437AQCgk_dhg359');
   const [errorResponse, setErrorResponse] = useState<ErrorResponse | null>(null);
   const [catchResult, setCatchResult] = useState<unknown | null>(null);
+  const history = useHistory();
 
   useEffect(() => {
     if (spiritJarQrString === null) {
@@ -47,6 +50,7 @@ export function CatchSpiritPage(props: CatchSpiritPageProps) {
       <QrScannerWrapper
         onSuccess={setSpiritJarQrString}
         message="Отсканируйте пустой тотем"
+        onCancel={() => history.goBack()}
       />
     );
   }
