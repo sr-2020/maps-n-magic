@@ -34,14 +34,10 @@ export class LoginManager extends EventEmitter {
           status: 'userUnlogged'
         };
       } else if (res.status === 200) {
-        const data: {
-          userData: TokenData,
-          characterModelData: CharacterModelData
-        } = await res.json();
+        const data: TokenData = await res.json();
         this.loginState = {
           status: 'userLogged',
-          tokenData: data.userData,
-          characterModelData: data.characterModelData
+          tokenData: data
         };
       } else {
         const errorResponse: unknown = await res.json();

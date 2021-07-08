@@ -16,7 +16,6 @@ export interface ErrorState {
 export interface UserLoggedState {
   status: 'userLogged';
   tokenData: TokenData;
-  characterModelData: CharacterModelData;
 }
 
 export interface UserUnloggedState {

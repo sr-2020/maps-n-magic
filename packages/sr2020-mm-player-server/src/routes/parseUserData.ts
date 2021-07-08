@@ -53,10 +53,11 @@ router.get('/isLoggedIn', (req1, res, next) => {
   const req = req1 as PlayerAuthorizedRequest;
   logger.info('/api/isLoggedIn');
   // if we are here then parsing user data was successful
-  res.status(200).json({
-    userData: req.userData,
-    characterModelData: req.characterModelData
-  });
+  // res.status(200).json({
+  //   userData: req.userData,
+  //   characterModelData: req.characterModelData
+  // });
+  res.status(200).json(req.userData);
 });
 
 
