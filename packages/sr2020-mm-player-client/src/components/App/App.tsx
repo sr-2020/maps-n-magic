@@ -20,6 +20,7 @@ import { AppHeader } from '../AppHeader';
 import { SoundStage } from '../SoundStage';
 import { SoundSettings, SoundStageState } from 'sr2020-mm-event-engine';
 import { CatchSpiritPage } from '../CatchSpiritPage';
+import { CharacterPage } from '../CharacterPage';
 
 interface AppProps extends WithLoginState, WithAggregatedLocationData {
   loginManager: LoginManager;
@@ -66,7 +67,6 @@ export function App(props: AppProps) {
               <SpiritList 
                 setTitle={setTitle}
                 locationData={locationData}
-                characterData={characterData}
               />
             </Route>
             <Route path="/scanSpirit">
@@ -77,6 +77,11 @@ export function App(props: AppProps) {
             </Route>
             <Route path="/qrTest">
               <QrTest />
+            </Route>
+            <Route path="/character">
+              <CharacterPage 
+                characterData={characterData}
+              />
             </Route>
             {/* <Route path="/catchSpirit/:id">
               <QrTest />
@@ -96,7 +101,8 @@ export function App(props: AppProps) {
             />
             <Route path="/">
               {/* <Redirect to="/spirits" /> */}
-              <Redirect to="/suitSpirit" />
+              {/* <Redirect to="/suitSpirit" /> */}
+              <Redirect to="/character" />
             </Route>
           </Switch>
 

@@ -6,9 +6,9 @@ import Accordion from "react-bootstrap/Accordion";
 import Card from "react-bootstrap/Card";
 import { useHistory } from 'react-router-dom';
 
-import { WithAggregatedLocationData } from '../../hocs';
+import { WithLocationDataOnly } from '../../hocs';
 
-interface SpiritListProps extends WithAggregatedLocationData {
+interface SpiritListProps extends WithLocationDataOnly {
   setTitle: (title: string) => void;
 }
 

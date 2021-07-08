@@ -49,6 +49,9 @@ export function AppHeader(props: AppHeaderProps) {
       </Navbar.Brand>
       <Navbar.Collapse id="responsive-navbar-nav">
         <Nav className="mr-auto">
+          <LinkContainer to="/character">
+            <Nav.Link>Персонаж</Nav.Link>
+          </LinkContainer>
           <LinkContainer to="/spirits">
             <Nav.Link>Духи</Nav.Link>
           </LinkContainer>

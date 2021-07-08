@@ -3,9 +3,14 @@ import { LoginState } from "../types";
 import { LoginManager } from "../utils";
 import { AggregatedLocationView, CharacterModelData } from "sr2020-mm-event-engine";
 
-export interface WithAggregatedLocationData {
+export interface WithLocationDataOnly {
   locationData: AggregatedLocationView | null;
+}
+
+export interface WithCharacterDataOnly {
   characterData: CharacterModelData | null;
+}
+export interface WithAggregatedLocationData extends WithLocationDataOnly, WithCharacterDataOnly {
 }
 
 let es: EventSource | undefined = undefined;
