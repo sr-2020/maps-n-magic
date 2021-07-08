@@ -4,7 +4,7 @@ import './SuitSpiritPage.css';
 import Button from "react-bootstrap/Button";
 import { QrScannerWrapper } from '../QrScannerWrapper';
 import { isBodyStorageValid, isSpiritJarValid } from '../../api';
-import { isErrorResponse } from 'sr2020-mm-event-engine';
+import { isErrorResponse, SpiritDataForQrValidation } from 'sr2020-mm-event-engine';
 
 interface SuitSpiritPageProps {
 }
@@ -20,7 +20,7 @@ type BodyStorageStatus = {
 
 type SpiritJarStatus = {
   status: 'valid';
-  spirit: any;
+  spirit: SpiritDataForQrValidation;
 } | {
   status: 'invalid';
   message: string;
@@ -75,7 +75,7 @@ export function SuitSpiritPage(props: SuitSpiritPageProps) {
 
   const [spiritJarQrString, setSpiritJarQrString] = useState<string | null>(null);
   const [scanSpiritJar, setScanSpiritJar] = useState<boolean>(false);
-  const [spiritJarStatus, setSpiritJarStatus] = useState<BodyStorageStatus>({status: 'unknown'});
+  const [spiritJarStatus, setSpiritJarStatus] = useState<SpiritJarStatus>({status: 'unknown'});
 
   useEffect(() => {
     if (spiritJarQrString === null) {
@@ -88,7 +88,7 @@ export function SuitSpiritPage(props: SuitSpiritPageProps) {
           message: res.errorTitle
         });
       } else {
-        setSpiritJarStatus({ status: 'valid' });
+        setSpiritJarStatus({ status: 'valid', spirit: res });
       }
     }).catch(err => {
       console.error(err);
@@ -152,6 +152,13 @@ export function SuitSpiritPage(props: SuitSpiritPageProps) {
           spiritJarStatus.status === 'invalid' && 
           <div>
             {spiritJarStatus.message}
+          </div>
+        }
+        {
+          spiritJarStatus.status === 'valid' && <div>
+            <div>{spiritJarStatus.spirit.name}</div>
+            <div>{spiritJarStatus.spirit.hitPoints}</div>
+            <div>{spiritJarStatus.spirit.abilities}</div>
           </div>
         }
       </div>
