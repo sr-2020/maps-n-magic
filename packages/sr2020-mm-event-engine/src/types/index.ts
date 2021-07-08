@@ -195,9 +195,9 @@ const ajv = new Ajv({
 export interface ErrorResponse {
   errorTitle: string;
   errorSubtitle: string;
-  // error: string;
 }
 
+// error: string;
 const errorResponseSchema: JSONSchemaType<ErrorResponse> = {
   type: "object",
   properties: {

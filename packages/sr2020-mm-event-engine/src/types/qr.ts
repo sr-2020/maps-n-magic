@@ -72,7 +72,7 @@ export interface EmptySpiritJarQr {
     type: 'spirit_jar',
     modelId: string;
     data: {
-      emptiness_reason: string
+      emptiness_reason?: string
     }
   }
 };
@@ -103,9 +103,9 @@ const emptySpiritJarQrSchema: JSONSchemaType<EmptySpiritJarQr> = {
         data: {
           type: 'object',
           properties: {
-            'emptiness_reason': { type: 'string' }
+            'emptiness_reason': { type: 'string', nullable: true }
           },
-          required: ["emptiness_reason"],
+          // required: ["emptiness_reason"],
         }
       },
       required: ["type", 'modelId'],
@@ -145,7 +145,7 @@ const fullSpiritJarQrSchema: JSONSchemaType<FullSpiritJarQr> = {
 export const validateFullSpiritJarQr = ajv.compile(fullSpiritJarQrSchema);
 
 const spiritJarQrSchema: JSONSchemaType<SpiritJarQr> = {
-  oneOf: [
+  anyOf: [
     emptySpiritJarQrSchema,
     fullSpiritJarQrSchema
   ]
@@ -154,7 +154,7 @@ const spiritJarQrSchema: JSONSchemaType<SpiritJarQr> = {
 export const validateSpiritJarQr = ajv.compile(spiritJarQrSchema);
 
 export function isEmptySpiritJar(qr: SpiritJarQr): qr is EmptySpiritJarQr {
-  return 'emptiness_reason' in qr.workModel.data;
+  return !('spiritId' in qr.workModel.data);
 }
 
 export function isFullSpiritJar(qr: SpiritJarQr): qr is FullSpiritJarQr {
