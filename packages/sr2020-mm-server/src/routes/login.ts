@@ -29,6 +29,7 @@ router.post('/api/login', async (req, res) => {
       errorSubtitle: `Данные ${JSON.stringify(authRequest)}, ошибки ${JSON.stringify(validateAuthRequest.errors)}`
     };
     res.status(400).json(errorResponse);
+    logger.info(`FAIL login ${JSON.stringify(errorResponse)}`);
     return;
   }
 
@@ -45,6 +46,7 @@ router.post('/api/login', async (req, res) => {
       const api_key = jwt.sign(parsedToken, mainServerConstants().JWT_SECRET);
       res.cookie('mm_token', api_key, { httpOnly: true });
       res.json(parsedToken);
+      // logger.info(`SUCCESS login ${authRequest.username}`);
       return;
     } else {
       const errorResponse: ErrorResponse = {
@@ -52,6 +54,7 @@ router.post('/api/login', async (req, res) => {
         errorSubtitle: ''
       };
       res.status(401).json(errorResponse);
+      logger.info(`FAIL login ${authRequest.username} ${JSON.stringify(errorResponse)}`);
       return;
     }
   }
@@ -65,7 +68,7 @@ router.post('/api/login', async (req, res) => {
         errorSubtitle: `Данные ${JSON.stringify(data)}, ошибка ${JSON.stringify(validateTokenRequestBody.errors)}`
       };
       res.status(500).json(errorResponse);
-      
+      logger.info(`FAIL login ${authRequest.username} ${JSON.stringify(errorResponse)}`);
       // res.status(500).send(`User token data not valid ${JSON.stringify(validateTokenRequestBody.errors)}`);
       return;
     }
@@ -83,6 +86,7 @@ router.post('/api/login', async (req, res) => {
           errorSubtitle: `Данные ${JSON.stringify(parsedToken)}, ошибка ${JSON.stringify(validateWeakTokenData.errors)}`
         };
         res.status(500).json(errorResponse);
+        logger.info(`FAIL login ${authRequest.username} ${JSON.stringify(errorResponse)}`);
         // res.status(500).send(`parsedToken verification failed ${JSON.stringify(parsedToken)} ${JSON.stringify(validateTokenData.errors)}`);
         return;
       }
@@ -94,6 +98,7 @@ router.post('/api/login', async (req, res) => {
           errorSubtitle: ``
         };
         res.status(400).json(errorResponse);
+        logger.info(`FAIL login ${authRequest.username} ${JSON.stringify(errorResponse)}`);
         // res.status(400).send(`У вас нет роли MASTER`);
         return;
       }
@@ -102,8 +107,7 @@ router.post('/api/login', async (req, res) => {
       // logger.info(data);
 
       res.cookie('mm_token', api_key, { httpOnly: true });
-      const { body } = req;
-      logger.info('body', body);
+      // logger.info(`SUCCESS login ${authRequest.username}`);
       res.json(parsedToken);
     } catch (err) {
       logger.info('User token verification failed', err);
@@ -112,6 +116,7 @@ router.post('/api/login', async (req, res) => {
         errorSubtitle: JSON.stringify(err)
       };
       res.status(500).json(errorResponse);
+      logger.info(`FAIL login ${authRequest.username} ${JSON.stringify(errorResponse)}`);
       // res.status(500).send(`User token verification failed ${JSON.stringify(err)}`);
       return;
     }
@@ -122,6 +127,7 @@ router.post('/api/login', async (req, res) => {
       errorSubtitle: text
     };
     res.status(res2.status).json(errorResponse);
+    logger.info(`FAIL login ${authRequest.username} ${JSON.stringify(errorResponse)}`);
   }
 });
 

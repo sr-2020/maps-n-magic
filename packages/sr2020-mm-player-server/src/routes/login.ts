@@ -23,6 +23,7 @@ router.post('/api/login', async (req, res) => {
       errorSubtitle: `Данные ${JSON.stringify(authRequest)}, ошибки ${JSON.stringify(validateAuthRequest.errors)}`
     };
     res.status(400).json(errorResponse);
+    logger.info(`FAIL login ${JSON.stringify(errorResponse)}`);
     return;
   }
 
@@ -35,6 +36,7 @@ router.post('/api/login', async (req, res) => {
         errorSubtitle: `Данные ${JSON.stringify(data)}, ошибка ${JSON.stringify(validateTokenRequestBody.errors)}`
       };
       res.status(500).json(errorResponse);
+      logger.info(`FAIL login ${authRequest.username} ${JSON.stringify(errorResponse)}`);
       return;
     }
 
@@ -49,6 +51,7 @@ router.post('/api/login', async (req, res) => {
           errorSubtitle: `Данные ${JSON.stringify(parsedToken)}, ошибка ${JSON.stringify(validateTokenData.errors)}`
         };
         res.status(500).json(errorResponse);
+        logger.info(`FAIL login ${authRequest.username} ${JSON.stringify(errorResponse)}`);
         return;
       }
 
@@ -58,8 +61,6 @@ router.post('/api/login', async (req, res) => {
       // TODO - login only mages
 
       res.cookie('mm_token', api_key, { httpOnly: true });
-      const { body } = req;
-      logger.info('body', body);
       res.json(parsedToken);
     } catch (err) {
       logger.info('User token verification failed', err);
@@ -68,6 +69,7 @@ router.post('/api/login', async (req, res) => {
         errorSubtitle: JSON.stringify(err)
       };
       res.status(500).json(errorResponse);
+      logger.info(`FAIL login ${authRequest.username} ${JSON.stringify(errorResponse)}`);
       return;
     }
   } else {
@@ -77,6 +79,7 @@ router.post('/api/login', async (req, res) => {
       errorSubtitle: text
     };
     res.status(res2.status).json(errorResponse);
+    logger.info(`FAIL login ${authRequest.username} ${JSON.stringify(errorResponse)}`);
   }
 });
 
