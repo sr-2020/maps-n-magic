@@ -78,12 +78,18 @@ export function App(props: AppProps) {
             <Route path="/scanSpirit">
               <SpiritPage />
             </Route>
-            <Route path="/suitSpirit">
-              <SuitSpiritPage />
-            </Route>
-            <Route path="/dispirit">
-              <DispiritPage />
-            </Route>
+            {
+              !characterData.isInSpiritSuit && 
+              <Route path="/suitSpirit">
+                <SuitSpiritPage />
+              </Route>
+            }
+            {
+              characterData.isInSpiritSuit && 
+              <Route path="/dispirit">
+                <DispiritPage />
+              </Route>
+            }
             {/* <Route path="/qrTest">
               <QrTest />
             </Route> */}

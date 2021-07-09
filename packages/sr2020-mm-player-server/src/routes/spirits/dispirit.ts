@@ -1,4 +1,5 @@
 import { 
+  DispiritInternalRequest,
   ErrorResponse, 
   GetSpirit, 
   invalidRequestBody, 
@@ -19,9 +20,9 @@ import {
 import { decode, playerServerCookie } from "../../utils";
 import { qrIdIsNanError } from "./utils";
 
-const logger = createLogger('suitSpirit.ts');
+const logger = createLogger('dispirit.ts');
 
-export const suitSpirit = async (req1, res, next) => {
+export const dispirit = async (req1, res, next) => {
   const req = req1 as PlayerAuthorizedRequest;
   const { body } = req;
   if (!validateSuitSpiritRequestBody(body)) {
@@ -48,13 +49,13 @@ export const suitSpirit = async (req1, res, next) => {
       return;
     }
 
-    const reqBody: SuitSpiritInternalRequest = {
+    const reqBody: DispiritInternalRequest = {
       spiritJarId,
       bodyStorageId,
       characterId: req.userData.modelId
     };
 
-    const suitSpiritRes = await fetch(playerServerConstants().suitSpiritUrl, {
+    const dispiritRes = await fetch(playerServerConstants().dispiritUrl, {
       method: 'POST',
       headers: {
         'Cookie': playerServerCookie,
@@ -63,15 +64,15 @@ export const suitSpirit = async (req1, res, next) => {
       body: JSON.stringify(reqBody)
     });
 
-    const json = await suitSpiritRes.json();
+    const json = await dispiritRes.json();
 
-    logger.info('suitSpiritRes json', json);
+    logger.info('dispiritRes json', json);
 
-    if (suitSpiritRes.status === 200) {
+    if (dispiritRes.status === 200) {
       req.characterWatcher.forceUpdateCharacterModel(req.userData.modelId);
     }
 
-    res.status(suitSpiritRes.status).json(json);
+    res.status(dispiritRes.status).json(json);
 
   } catch (error) {
     const message = `${error} ${JSON.stringify(error)}`;

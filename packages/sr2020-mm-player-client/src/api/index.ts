@@ -49,16 +49,18 @@ export async function getSpiritDataByQr(spiritJarQrString: string): Promise<Erro
   return await res.json();
 }
 
-export async function isBodyStorageValid(bodyStorageQrString: string): Promise<ErrorResponse | true> {
+export async function isBodyStorageValid(bodyStorageQrString: string, shouldBeEmpty: boolean): Promise<ErrorResponse | true> {
   const res = await fetch('/api/isBodyStorageValid?' + new URLSearchParams({
-    bodyStorageQrString
+    bodyStorageQrString,
+    shouldBeEmpty: String(shouldBeEmpty)
   }));
   return await res.json();
 }
 
-export async function isSpiritJarValid(spiritJarQrString: string): Promise<ErrorResponse | SpiritDataForQrValidation> {
+export async function isSpiritJarValid(spiritJarQrString: string, shouldBeEmpty: boolean): Promise<ErrorResponse | SpiritDataForQrValidation> {
   const res = await fetch('/api/isSpiritJarValid?' + new URLSearchParams({
-    spiritJarQrString
+    spiritJarQrString,
+    shouldBeEmpty: String(shouldBeEmpty)
   }));
   return await res.json();
 }
@@ -68,6 +70,23 @@ export async function suitSpirit(
   spiritJarQrString: string
 ): Promise<ErrorResponse | true> {
   const res = await fetch('/api/suitSpirit', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json;charset=utf-8',
+    },
+    body: JSON.stringify({
+      bodyStorageQrString,
+      spiritJarQrString
+    }),
+  });
+  return await res.json();
+}
+
+export async function dispirit(
+  bodyStorageQrString: string, 
+  spiritJarQrString: string
+): Promise<ErrorResponse | true> {
+  const res = await fetch('/api/dispirit', {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json;charset=utf-8',

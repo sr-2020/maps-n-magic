@@ -56,6 +56,8 @@ export class CharacterWatcher extends EventEmitter {
     });
   }
 
+  
+
   on2(listenerId: string, modelId: number, listener: (...args: any[]) => void): this {
     logger.info(`on listenerId ${listenerId} modelId ${modelId}`);
     this.characterCache[modelId].sseListenerIds.add(listenerId);
@@ -68,6 +70,19 @@ export class CharacterWatcher extends EventEmitter {
     this.characterCache[modelId].sseListenerIds.delete(listenerId);
     super.off(String(modelId), listener);
     return this;
+  }
+
+  async forceUpdateCharacterModel(modelId: number): Promise<CharacterModelData> {
+    const now = Date.now();
+    const data = await this.innerGetCharacterModel(modelId, now);
+    const { sseListenerIds } = this.characterCache[modelId];
+    this.characterCache[modelId] = {
+      lastUpdateTimestamp: Date.now(),
+      data,
+      sseListenerIds
+    };
+    this.emit(String(modelId), data);
+    return data;
   }
 
   public async getCharacterModel(modelId: number): Promise<CharacterModelData> {

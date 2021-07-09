@@ -230,6 +230,8 @@ export interface SuitSpiritInternalRequest {
   bodyStorageId: number;
 }
 
+export type DispiritInternalRequest = SuitSpiritInternalRequest;
+
 const suitSpiritInternalRequestSchema: JSONSchemaType<SuitSpiritInternalRequest> = {
   type: "object",
   properties: {

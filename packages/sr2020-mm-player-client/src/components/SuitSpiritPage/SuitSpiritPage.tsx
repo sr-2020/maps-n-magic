@@ -46,7 +46,7 @@ export function SuitSpiritPage(props: SuitSpiritPageProps) {
     if (bodyStorageQrString === null) {
       return;
     }
-    isBodyStorageValid(bodyStorageQrString).then(res => {
+    isBodyStorageValid(bodyStorageQrString, true).then(res => {
       if (isErrorResponse(res)) {
         setBodyStorageStatus({
           status: 'invalid',
@@ -77,14 +77,11 @@ export function SuitSpiritPage(props: SuitSpiritPageProps) {
   const [scanSpiritJar, setScanSpiritJar] = useState<boolean>(false);
   const [spiritJarStatus, setSpiritJarStatus] = useState<SpiritJarStatus>({status: 'unknown'});
 
-  const [doSuitSpirit, setDoSuitSpirit] = useState<boolean>(false);
-  const [suitSpiritStatus, setSuitSpiritStatus] = useState<string>('');
-
   useEffect(() => {
     if (spiritJarQrString === null) {
       return;
     }
-    isSpiritJarValid(spiritJarQrString).then(res => {
+    isSpiritJarValid(spiritJarQrString, false).then(res => {
       if (isErrorResponse(res)) {
         setSpiritJarStatus({
           status: 'invalid',
@@ -101,6 +98,9 @@ export function SuitSpiritPage(props: SuitSpiritPageProps) {
       });
     });
   }, [spiritJarQrString]);
+
+  const [doSuitSpirit, setDoSuitSpirit] = useState<boolean>(false);
+  const [suitSpiritStatus, setSuitSpiritStatus] = useState<string>('');
 
   useEffect(() => {
     if (doSuitSpirit === false || bodyStorageQrString === null || spiritJarQrString === null) {

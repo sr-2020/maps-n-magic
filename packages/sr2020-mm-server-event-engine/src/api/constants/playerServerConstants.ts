@@ -9,6 +9,7 @@ interface PlayerServerConstants extends GenericServerConstants {
   playerDataSseUrl: string;
   catchSpiritUrl: string;
   suitSpiritUrl: string;
+  dispiritUrl: string;
   freeSpiritUrl: string;
 };
 
@@ -40,6 +41,7 @@ export function playerServerConstants(): PlayerServerConstants {
       catchSpiritUrl: values[PlayerServerConstant.MM_MASTER_SERVER_URL] + '/innerApi/catchSpirit',
       freeSpiritUrl: values[PlayerServerConstant.MM_MASTER_SERVER_URL] + '/innerApi/freeSpirit',
       suitSpiritUrl: values[PlayerServerConstant.MM_MASTER_SERVER_URL] + '/innerApi/suitSpirit',
+      dispiritUrl: values[PlayerServerConstant.MM_MASTER_SERVER_URL] + '/innerApi/dispirit',
     };
   }
   assert(constantsInstance !== null);
