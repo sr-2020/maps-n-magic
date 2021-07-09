@@ -102,7 +102,10 @@ export function SuitSpiritPage(props: SuitSpiritPageProps) {
   if (scanBodyStorage) {
     return (
       <QrScannerWrapper
-        onSuccess={setBodyStorageQrString}
+        onSuccess={(qrData: string) => {
+          setBodyStorageQrString(qrData);
+          setScanBodyStorage(false);
+        }}
         message="Отсканируйте телохранилище"
         onCancel={() => setScanBodyStorage(false)}
       />
@@ -112,7 +115,10 @@ export function SuitSpiritPage(props: SuitSpiritPageProps) {
   if (scanSpiritJar) {
     return (
       <QrScannerWrapper
-        onSuccess={setSpiritJarQrString}
+        onSuccess={(qrData: string) => {
+          setSpiritJarQrString(qrData);
+          setScanSpiritJar(false);
+        }}
         message="Отсканируйте тотем с духом"
         onCancel={() => setScanSpiritJar(false)}
       />
