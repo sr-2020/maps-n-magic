@@ -3,7 +3,9 @@ import './SpiritPage.css';
 
 import { 
   ErrorResponse, 
+  isEmptySpiritJar, 
   isErrorResponse, 
+  isFullSpiritJar, 
   SpiritJarQr,
   validateEmptySpiritJarQr,
   validateFullSpiritJarQr
@@ -80,26 +82,26 @@ export function SpiritPage(props: SpiritPageProps) {
     });
   }
 
-  function onCatchSpiritClick() {
-    if (spiritJarQr === null) {
-      return;
-    }
-    catchSpirit(Number(spiritJarQr.workModel.modelId), 3434).then(res => {
-      if (isErrorResponse(res)) {
-        setErrorResponse(res);
-      } else {
-        setSpiritJarQr(res);
-        // setSpiritJarQr(null);
-        // setSpiritJarQrString(null);
-      }
-    }).catch(err => {
-      console.error(err);
-      setErrorResponse({
-        errorTitle: 'Непредвиденная ошибка',
-        errorSubtitle: err
-      });
-    });
-  }
+  // function onCatchSpiritClick() {
+  //   if (spiritJarQr === null) {
+  //     return;
+  //   }
+  //   catchSpirit(Number(spiritJarQr.workModel.modelId), 3434).then(res => {
+  //     if (isErrorResponse(res)) {
+  //       setErrorResponse(res);
+  //     } else {
+  //       setSpiritJarQr(res);
+  //       // setSpiritJarQr(null);
+  //       // setSpiritJarQrString(null);
+  //     }
+  //   }).catch(err => {
+  //     console.error(err);
+  //     setErrorResponse({
+  //       errorTitle: 'Непредвиденная ошибка',
+  //       errorSubtitle: err
+  //     });
+  //   });
+  // }
 
   return (
     <div className="SpiritPage">
@@ -119,7 +121,7 @@ export function SpiritPage(props: SpiritPageProps) {
         )
       }
       {
-        (spiritJarQr !== null && validateFullSpiritJarQr(spiritJarQr)) && 
+        (spiritJarQr !== null && isFullSpiritJar(spiritJarQr)) && 
         <>
           <div>
             В тотеме заключен дух {spiritJarQr.workModel.data.spiritId}
@@ -130,16 +132,28 @@ export function SpiritPage(props: SpiritPageProps) {
         </>
       }
       {
-        (spiritJarQr !== null && validateEmptySpiritJarQr(spiritJarQr)) && 
+        (spiritJarQr !== null && isEmptySpiritJar(spiritJarQr)) && 
         <>
           <div>
             <div>Тотем пуст</div>
             <div>{spiritJarQr.workModel.data.emptiness_reason}</div>
           </div>
-          <Button variant="primary" onClick={onCatchSpiritClick}>
+          {/* <Button variant="primary" onClick={onCatchSpiritClick}>
             Поймать духа (тестовый вызов)
-          </Button>
+          </Button> */}
         </>
+      }
+      {
+        spiritJarQr !== null &&
+        <Button 
+          className="tw-fixed tw-bottom-0 tw-w-40"
+          onClick={() => {
+            setSpiritJarQr(null);
+            setSpiritJarQrString(null);
+          }}
+        >
+          Осмотреть другого духа
+        </Button>
       }
     </div>
   );
