@@ -78,7 +78,7 @@ export const mainSuitSpirit = async (req1, res, next) => {
     const res2 = await suitSpirit(characterId, {
       "name": spirit.name,
       "hp": spirit.hitPoints,
-      "abilityIds": ["fireball"],
+      "abilityIds": ["fireball-keeper", "aurma"],
     }, bodyStorageId, spiritJarId);
 
     req.gameModel.emit2<EPutSpiritRequested>({
