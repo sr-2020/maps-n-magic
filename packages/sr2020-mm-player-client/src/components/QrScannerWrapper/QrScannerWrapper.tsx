@@ -39,14 +39,15 @@ export function QrScannerWrapper(props: QrScannerWrapperProps) {
       }
       <ErrorBoundary fallback={<>Ошибка при сканировании QR</>}>
         <QRScanner
-            timeout={10 * 60000} // 10 minutes
-            onFailed={onFailed || defaultOnFailed}
-            onSuccess={({ data }) => onSuccess(data)}
-            videoSize="cover"
-            webcamProps={{ 
-              videoConstraints,
-              className: 'tw-max-w-none'
-            }}
+          timeout={10 * 60000} // 10 minutes
+          onFailed={onFailed || defaultOnFailed}
+          onSuccess={({ data }) => onSuccess(data)}
+          videoSize="cover"
+          webcamProps={{ 
+            videoConstraints,
+            className: 'tw-max-w-none'
+          }}
+          cursorClassName="qr-scanner_cursor-pos"
         />
       </ErrorBoundary>
       {

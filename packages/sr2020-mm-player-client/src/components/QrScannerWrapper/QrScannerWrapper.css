@@ -2,3 +2,7 @@
 .QrScannerWrapper {
   height: calc(100vh - 5rem);
 }
+
+.QrScannerWrapper .qr-scanner_cursor-pos {
+  margin-top: -8rem;
+}
