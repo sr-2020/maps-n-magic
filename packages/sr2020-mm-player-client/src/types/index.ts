@@ -1,4 +1,4 @@
-import { ErrorResponse, TokenData, CharacterModelData } from "sr2020-mm-event-engine";
+import { ErrorResponse, TokenData } from "sr2020-mm-event-engine";
 
 export interface UnknownState {
   status: 'unknown';

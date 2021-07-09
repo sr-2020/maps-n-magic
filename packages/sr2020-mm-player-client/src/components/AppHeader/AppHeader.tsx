@@ -14,16 +14,17 @@ import { LinkContainer } from 'react-router-bootstrap'
 
 import { logoutUser, callSecureApi } from "../../api";
 import { LoginManager } from '../../utils';
-import { AggregatedLocationView } from 'sr2020-mm-event-engine';
+import { AggregatedLocationView, CharacterModelData2 } from 'sr2020-mm-event-engine';
 
 interface AppHeaderProps {
   loginManager: LoginManager;
   title: string;
   locationData: AggregatedLocationView | null;
+  characterData: CharacterModelData2;
 }
 
 export function AppHeader(props: AppHeaderProps) {
-  const { loginManager, title, locationData } = props;
+  const { loginManager, title, locationData, characterData } = props;
 
   const onLogout = async () => {
     await logoutUser();
@@ -58,9 +59,18 @@ export function AppHeader(props: AppHeaderProps) {
           <LinkContainer to="/scanSpirit">
             <Nav.Link>Осмотреть тотем</Nav.Link>
           </LinkContainer>
-          <LinkContainer to="/suitSpirit">
-            <Nav.Link>Надеть духа</Nav.Link>
-          </LinkContainer>
+          {
+            characterData.isInSpiritSuit === false && 
+            <LinkContainer to="/suitSpirit">
+              <Nav.Link>Надеть духа</Nav.Link>
+            </LinkContainer>
+          }
+          {
+            characterData.isInSpiritSuit === true && 
+            <LinkContainer to="/dispirit">
+              <Nav.Link>Снять духа</Nav.Link>
+            </LinkContainer>
+          }
           {/* <LinkContainer to="/qrTest">
             <Nav.Link>QR тест</Nav.Link>
           </LinkContainer> */}

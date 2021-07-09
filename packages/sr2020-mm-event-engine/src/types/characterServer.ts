@@ -20,3 +20,6 @@ export interface AggregatedLocationView extends LocationView {
 
 export type GetAggLocationView = (arg: Typed<'aggLocationView', {id: number}>) => 
   AggregatedLocationView | undefined;
+
+export type GetIsInSpiritSuit = (arg: Typed<'isInSpiritSuit', {characterid: number}>) => 
+  boolean;

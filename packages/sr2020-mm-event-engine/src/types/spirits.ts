@@ -13,6 +13,7 @@ export const SpiritStatus = {
   RestInAstral: 'RestInAstral',
   OnRoute: 'OnRoute',
   InJar: 'InJar',
+  Suited: 'Suited',
 } as const;
 
 export type SpiritStatusList = keyof typeof SpiritStatus;
@@ -41,11 +42,19 @@ export interface InJarState {
   qrId: number;
 }
 
+export interface SuitedState {
+  status: typeof SpiritStatus.Suited;
+  characterId: number;
+  currentTime: number;
+  duration: number;
+}
+
 export type SpiritState = 
   | NotInGameState 
   | RestInAstralState 
   | OnRouteState
   | InJarState
+  | SuitedState
 ;
 
 export interface Spirit {

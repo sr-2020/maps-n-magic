@@ -15,6 +15,7 @@ export const spiritDictionary = {
   RestInAstral: 'Ожидает в астрале',
   OnRoute: 'На маршруте',
   InJar: 'В тотеме',
+  Suited: 'Надет',
 
   // spirit route list
   newSpirit: 'Новый дух',

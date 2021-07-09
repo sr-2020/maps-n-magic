@@ -21,6 +21,10 @@ export interface CharacterModelData {
   workModel: Sr2020Character;
 }
 
+export interface CharacterModelData2 extends CharacterModelData {
+  isInSpiritSuit: boolean;
+}
+
 const bodyTypeSchema: JSONSchemaType<BodyType> = {
   oneOf: [
     { type: 'string', const: 'physical' },

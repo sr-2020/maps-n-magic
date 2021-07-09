@@ -224,6 +224,25 @@ export function invalidRequestBody(body: any, errors: any): ErrorResponse {
   };
 }
 
+export interface SuitSpiritInternalRequest {
+  characterId: number;
+  spiritJarId: number;
+  bodyStorageId: number;
+}
+
+const suitSpiritInternalRequestSchema: JSONSchemaType<SuitSpiritInternalRequest> = {
+  type: "object",
+  properties: {
+    characterId: { type: 'number' },
+    spiritJarId: { type: 'number' },
+    bodyStorageId: { type: 'number' },
+  },
+  required: ["characterId", "spiritJarId", "bodyStorageId"],
+};
+
+export const validateSuitSpiritInternalRequest = ajv.compile(suitSpiritInternalRequestSchema);
+
+
 export interface CatchSpiritInternalRequest {
   qrId: number;
   spiritId: number;

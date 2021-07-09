@@ -2,7 +2,7 @@ import fetch from 'isomorphic-fetch';
 import { 
   getQrModelData, 
   createLogger,
-  validateSpiritJarQrModelData
+  validateSpiritJarQrModelData,
 } from 'sr2020-mm-server-event-engine';
 import { 
   ErrorResponse, 
@@ -15,6 +15,7 @@ import { freeSpirit } from './freeSpirit';
 import { getSpiritDataByQr } from "./getSpiritDataByQr";
 import { isBodyStorageValid } from './isBodyStorageValid';
 import { isSpiritJarValid } from './isSpiritJarValid';
+import { suitSpirit } from './suitSpirit';
 
 const logger = createLogger('player-server/spirits.ts');
 
@@ -24,6 +25,8 @@ const router = Router();
 router.post('/catchSpirit2', catchSpirit2);
 
 router.post('/freeSpirit', freeSpirit);
+
+router.post('/suitSpirit', suitSpirit);
 
 router.get('/getSpiritDataByQr', getSpiritDataByQr);
 

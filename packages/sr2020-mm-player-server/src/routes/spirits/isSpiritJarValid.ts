@@ -1,13 +1,9 @@
 import { ErrorResponse, GetSpirit, isEmptySpiritJar, isFullBodyStorage, SpiritDataForQrValidation } from "sr2020-mm-event-engine";
 import { createLogger, getQrModelData, PlayerAuthorizedRequest, validateBodyStorageQrModelData, validateSpiritJarQrModelData } from "sr2020-mm-server-event-engine";
 import { decode } from "../../utils";
+import { qrIdIsNanError } from "./utils";
 
 const logger = createLogger('isSpiritJarValid.ts');
-
-const qrIdIsNanError = (payload: string): ErrorResponse => ({
-  errorTitle: 'Получен некорректный ответ от менеджера моделей',
-  errorSubtitle: `QR id не число: ${payload}` 
-});
 
 export const isSpiritJarValid = async (req1, res, next) => {
   const req = req1 as PlayerAuthorizedRequest;

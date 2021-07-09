@@ -1,14 +1,14 @@
 import React, { useEffect, useState } from "react";
 import { LoginState } from "../types";
 import { LoginManager } from "../utils";
-import { AggregatedLocationView, CharacterModelData } from "sr2020-mm-event-engine";
+import { AggregatedLocationView, CharacterModelData2 } from "sr2020-mm-event-engine";
 
 export interface WithLocationDataOnly {
   locationData: AggregatedLocationView | null;
 }
 
 export interface WithCharacterDataOnly {
-  characterData: CharacterModelData | null;
+  characterData: CharacterModelData2 | null;
 }
 export interface WithAggregatedLocationData extends WithLocationDataOnly, WithCharacterDataOnly {
 }
@@ -21,7 +21,7 @@ const url = process.env.NODE_ENV === 'production'
 
 function createEventSource(
   setLocationData: React.Dispatch<React.SetStateAction<AggregatedLocationView | null>>,
-  setCharacterData: React.Dispatch<React.SetStateAction<CharacterModelData | null>>
+  setCharacterData: React.Dispatch<React.SetStateAction<CharacterModelData2 | null>>
 ) {
   es = new EventSource(url, {
   // es = new EventSource('/api/singlePlayerDataSse', {
@@ -55,7 +55,7 @@ export const withAggregatedLocationData = (Wrapped: any) => (props: any) => {
   } = props;
 
   const [locationData, setLocationData] = useState<AggregatedLocationView | null>(null);
-  const [characterData, setCharacterData] = useState<CharacterModelData | null>(null);
+  const [characterData, setCharacterData] = useState<CharacterModelData2 | null>(null);
 
   useEffect(() => {
     const loginState = loginManager.getLoginState();

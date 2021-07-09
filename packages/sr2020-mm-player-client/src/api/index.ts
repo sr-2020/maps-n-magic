@@ -63,6 +63,23 @@ export async function isSpiritJarValid(spiritJarQrString: string): Promise<Error
   return await res.json();
 }
 
+export async function suitSpirit(
+  bodyStorageQrString: string, 
+  spiritJarQrString: string
+): Promise<ErrorResponse | true> {
+  const res = await fetch('/api/suitSpirit', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json;charset=utf-8',
+    },
+    body: JSON.stringify({
+      bodyStorageQrString,
+      spiritJarQrString
+    }),
+  });
+  return await res.json();
+}
+
 export async function freeSpirit(qrId: number, reason: string): Promise<ErrorResponse | SpiritJarQr> {
   const res = await fetch('/api/freeSpirit', {
     method: 'POST',

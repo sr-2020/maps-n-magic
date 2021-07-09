@@ -6,6 +6,7 @@ import {
   NotInGameState,
   RestInAstralState,
   InJarState,
+  SuitedState,
   TimetableItem,
   OnRouteState
 } from 'sr2020-mm-event-engine';
@@ -75,11 +76,27 @@ const inJarStateSchema: JSONSchemaType<InJarState> = {
   }
 };
 
+const suitedStateSchema: JSONSchemaType<SuitedState> = {
+  type: 'object',
+  required: ['status', 'characterId', 'currentTime', 'duration'],
+  additionalProperties: false,
+  properties: {
+    status: {
+      type: 'string',
+      const: 'Suited',
+    },
+    characterId: { type: 'number' },
+    currentTime: { type: 'number' },
+    duration: { type: 'number' },
+  }
+};
+
 export const spiritStateSchema: JSONSchemaType<SpiritState> = {
   oneOf: [
     notInGameStateSchema, 
     restInAstralStateSchema,
     onRouteStateSchema,
-    inJarStateSchema
+    inJarStateSchema,
+    suitedStateSchema
   ]
 };

@@ -2,10 +2,12 @@ import SSE from "./express-sse-ts";
 import { Request, Response, NextFunction } from "express";
 import { 
   CharacterModelData,
+  CharacterModelData2,
   ELocationRecordsChanged2, 
   ESpiritsChanged, 
   GameModel, 
   GetAggLocationView, 
+  GetIsInSpiritSuit, 
   GetLocationRecords, 
   GetSpirits, 
   GetUserRecord, 
@@ -56,7 +58,7 @@ export class SsePlayerDataSender {
     // gameModel.on2<ESpiritsChanged>('spiritsChanged', this.send);
     // gameModel.on2<ELocationRecordsChanged2>('locationRecordsChanged2', this.send);
     
-    this.send(characterModelData);
+    this.onCharacterModelUpdate(characterModelData);
     this.sendCurrentData();
     // this.send('Hi player! From ' + this.uid);
     this.regularUpdateIntervalId = setInterval(() => {
@@ -68,7 +70,15 @@ export class SsePlayerDataSender {
   }
 
   onCharacterModelUpdate(data: CharacterModelData) {
-    this.send(data);
+    const isInSpiritSuit = this.gameModel.get2<GetIsInSpiritSuit>({
+      type: 'isInSpiritSuit',
+      characterid: this.userData.modelId
+    });
+    const data2: CharacterModelData2 = {
+      ...data,
+      isInSpiritSuit
+    };
+    this.send(data2);
     // this.logger.info(`got character update. model id ${this.userData.modelId}`);
   }
 

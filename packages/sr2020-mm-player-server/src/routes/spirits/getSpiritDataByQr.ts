@@ -1,13 +1,9 @@
 import { ErrorResponse } from "sr2020-mm-event-engine";
 import { createLogger, getQrModelData, validateSpiritJarQrModelData } from "sr2020-mm-server-event-engine";
 import { decode } from "../../utils";
+import { qrIdIsNanError } from "./utils";
 
 const logger = createLogger('getSpiritDataByQr.ts');
-
-const qrIdIsNanError = (payload: string): ErrorResponse => ({
-  errorTitle: 'Получен некорректный ответ от менеджера моделей',
-  errorSubtitle: `QR id не число: ${payload}` 
-});
 
 export const getSpiritDataByQr = async (req, res, next) => {
   const { spiritJarQrString } = req.query;

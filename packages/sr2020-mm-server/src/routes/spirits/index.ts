@@ -4,10 +4,12 @@ import { ErrorResponse, GetSpirit, getSpiritLocationId, GetUserRecord, invalidRe
 import { createLogger, getQrModelData, InnerApiRequest } from 'sr2020-mm-server-event-engine';
 import { mainCatchSpirit } from './catchSpirit';
 import { mainFreeSpirit } from './freeSpirit';
+import { mainSuitSpirit } from './suitSpirit';
 
 const router = Router();
 
 router.post('/catchSpirit', mainCatchSpirit);
 router.post('/freeSpirit', mainFreeSpirit);
+router.post('/suitSpirit', mainSuitSpirit);
 
 export const spiritRouter = router;

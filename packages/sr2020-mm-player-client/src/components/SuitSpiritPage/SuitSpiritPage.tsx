@@ -3,7 +3,7 @@ import './SuitSpiritPage.css';
 
 import Button from "react-bootstrap/Button";
 import { QrScannerWrapper } from '../QrScannerWrapper';
-import { isBodyStorageValid, isSpiritJarValid } from '../../api';
+import { isBodyStorageValid, isSpiritJarValid, suitSpirit } from '../../api';
 import { isErrorResponse, SpiritDataForQrValidation } from 'sr2020-mm-event-engine';
 
 interface SuitSpiritPageProps {
@@ -77,6 +77,9 @@ export function SuitSpiritPage(props: SuitSpiritPageProps) {
   const [scanSpiritJar, setScanSpiritJar] = useState<boolean>(false);
   const [spiritJarStatus, setSpiritJarStatus] = useState<SpiritJarStatus>({status: 'unknown'});
 
+  const [doSuitSpirit, setDoSuitSpirit] = useState<boolean>(false);
+  const [suitSpiritStatus, setSuitSpiritStatus] = useState<string>('');
+
   useEffect(() => {
     if (spiritJarQrString === null) {
       return;
@@ -98,6 +101,24 @@ export function SuitSpiritPage(props: SuitSpiritPageProps) {
       });
     });
   }, [spiritJarQrString]);
+
+  useEffect(() => {
+    if (doSuitSpirit === false || bodyStorageQrString === null || spiritJarQrString === null) {
+      return;
+    }
+    suitSpirit(bodyStorageQrString, spiritJarQrString).then(res => {
+      if (isErrorResponse(res)) {
+        setSuitSpiritStatus(res.errorTitle);
+      } else {
+        setSuitSpiritStatus("Дух надет");
+      }
+      setDoSuitSpirit(false);
+    }).catch(err => {
+      console.error(err);
+      setSuitSpiritStatus('Непредвиденная ошибка');
+      setDoSuitSpirit(false);
+    });
+  }, [doSuitSpirit]);
 
   if (scanBodyStorage) {
     return (
@@ -174,7 +195,11 @@ export function SuitSpiritPage(props: SuitSpiritPageProps) {
           Время ношения духа 30 минут
         </div>
       }
-      <Button disabled={!isValid}>Надеть</Button>
+      {
+        suitSpiritStatus !== '' && 
+        <div>{suitSpiritStatus}</div>
+      }
+      <Button disabled={!isValid} onClick={() => setDoSuitSpirit(true)}>Надеть</Button>
     </div>
   );
 }

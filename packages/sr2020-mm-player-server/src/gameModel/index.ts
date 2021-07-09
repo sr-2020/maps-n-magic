@@ -13,6 +13,7 @@ import {
 } from "sr2020-mm-server-event-engine";
 
 import { LocationDataService } from "./LocationDataService";
+import { SuitedSpiritsService } from "./SuitedSpiritsService";
 
 const services = [
   LocationRecordService,
@@ -20,6 +21,7 @@ const services = [
   SpiritFractionService,
   UserRecordService,
   LocationDataService,
+  SuitedSpiritsService,
 ];
 
 export function makeGameModel(): {

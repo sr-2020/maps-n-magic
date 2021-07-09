@@ -1,13 +1,9 @@
 import { ErrorResponse, isFullBodyStorage } from "sr2020-mm-event-engine";
 import { createLogger, getQrModelData, validateBodyStorageQrModelData, validateSpiritJarQrModelData } from "sr2020-mm-server-event-engine";
 import { decode } from "../../utils";
+import { qrIdIsNanError } from "./utils";
 
 const logger = createLogger('isBodyStorageValid.ts');
-
-const qrIdIsNanError = (payload: string): ErrorResponse => ({
-  errorTitle: 'Получен некорректный ответ от менеджера моделей',
-  errorSubtitle: `QR id не число: ${payload}` 
-});
 
 export const isBodyStorageValid = async (req, res, next) => {
   const { bodyStorageQrString } = req.query;

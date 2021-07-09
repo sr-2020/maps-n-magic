@@ -1,7 +1,7 @@
 import { LoginState } from "../types";
 import { EventEmitter } from "events";
 import { isLoggedIn } from "../api";
-import { TokenData, validateErrorResponse, CharacterModelData } from "sr2020-mm-event-engine";
+import { TokenData, validateErrorResponse } from "sr2020-mm-event-engine";
 
 export class LoginManager extends EventEmitter {
   loginState: LoginState = { status:'unknown' };

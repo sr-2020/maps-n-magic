@@ -21,6 +21,7 @@ import { SoundStage } from '../SoundStage';
 import { SoundSettings, SoundStageState } from 'sr2020-mm-event-engine';
 import { CatchSpiritPage } from '../CatchSpiritPage';
 import { CharacterPage } from '../CharacterPage';
+import { DispiritPage } from '../DispiritPage';
 
 interface AppProps extends WithLoginState, WithAggregatedLocationData {
   loginManager: LoginManager;
@@ -48,6 +49,10 @@ export function App(props: AppProps) {
   const manageTitle = useState<string>('SR 2020 магия');
   const [title, setTitle] = manageTitle;
 
+  if (characterData === null) {
+    return <div>Загружаются данные персонажа...</div>
+  }
+
   const soundStageState = locationData2SoundStageState(locationData);
 
   return (
@@ -58,6 +63,7 @@ export function App(props: AppProps) {
             title={title}
             loginManager={loginManager}
             locationData={locationData}
+            characterData={characterData}
           />
 
         {/* {JSON.stringify(locationData)} */}
@@ -74,6 +80,9 @@ export function App(props: AppProps) {
             </Route>
             <Route path="/suitSpirit">
               <SuitSpiritPage />
+            </Route>
+            <Route path="/dispirit">
+              <DispiritPage />
             </Route>
             {/* <Route path="/qrTest">
               <QrTest />
@@ -98,8 +107,8 @@ export function App(props: AppProps) {
             />
             <Route path="/">
               {/* <Redirect to="/spirits" /> */}
-              <Redirect to="/suitSpirit" />
-              {/* <Redirect to="/character" /> */}
+              {/* <Redirect to="/suitSpirit" /> */}
+              <Redirect to="/character" />
             </Route>
           </Switch>
 

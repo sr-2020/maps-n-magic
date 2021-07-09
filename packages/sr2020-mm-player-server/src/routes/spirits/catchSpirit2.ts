@@ -1,6 +1,7 @@
 import { CatchSpiritInternalRequest, ErrorResponse, GetSpirit, invalidRequestBody } from "sr2020-mm-event-engine";
 import { PlayerAuthorizedRequest, createLogger, getQrModelData, playerServerConstants, validateCatchSpirit2RequestBody, validateSpiritJarQrModelData } from "sr2020-mm-server-event-engine";
 import { decode, playerServerCookie } from "../../utils";
+import { qrIdIsNanError } from "./utils";
 
 const logger = createLogger('catchSpirit2.ts');
 
@@ -112,8 +113,4 @@ export const catchSpirit2 = async (req1, res, next) => {
     };
     res.status(500).json(errorResponse);
   }
-}
-
-function qrIdIsNanError(payload: string): any {
-  throw new Error("Function not implemented.");
 }
