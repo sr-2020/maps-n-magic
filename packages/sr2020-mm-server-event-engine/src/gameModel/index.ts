@@ -11,7 +11,7 @@ import {
   SpiritService,
   SpiritFractionService,
   SpiritRouteService,
-  // FeatureService, // features/abilities are not used now - temporary commented out
+  FeatureService,
   
   // 
   EventEngine,
@@ -83,7 +83,7 @@ import { SpellCastsListener } from '../api/spellCasts/SpellCastsListener';
 import { PushNotificationEmitter } from '../api/pushNotificationEmitter';
 import { SpiritProvider, SpiritFractionProvider, SpiritRouteProvider } from '../api/spirits';
 import { createLogger } from '../logger';
-// import { FeatureProvider } from '../api/features';
+import { FeatureProvider } from '../api/features';
 
 type EventBindingList = 
   | StrictEventBinding<EPutCharHealthRequested, EPutCharHealthConfirmed>
@@ -110,7 +110,7 @@ const services = [
   SpiritFractionService,
   SpiritRouteService,
   SpiritMovementService,
-  // FeatureService,
+  FeatureService,
   // RescueServicePushService,
 ];
 
@@ -192,16 +192,16 @@ export function makeGameModel(): {
   userRecordDataBinding.init();
   gameServer.addDataBinding(userRecordDataBinding);
 
-  // const featureLogger = createLogger('featureDataBinding');
-  // const featureDataBinding = new ReadDataManager2<Feature, FeatureProvider>(
-  //   gameModel,
-  //   new FeatureProvider(),
-  //   'feature',
-  //   new PollingReadStrategy(gameModel, 60 * 60 * 1000, featureLogger), // 1 hour
-  //   featureLogger
-  // );
-  // featureDataBinding.init();
-  // gameServer.addDataBinding(featureDataBinding);
+  const featureLogger = createLogger('featureDataBinding');
+  const featureDataBinding = new ReadDataManager2<Feature, FeatureProvider>(
+    gameModel,
+    new FeatureProvider(),
+    'feature',
+    new PollingReadStrategy(gameModel, 60 * 60 * 1000, featureLogger), // 1 hour
+    featureLogger
+  );
+  featureDataBinding.init();
+  gameServer.addDataBinding(featureDataBinding);
 
   const manaOceanSettingsLogger = createLogger('manaOceanSettingsDB');
   const manaOceanSettingsDB = new SettingsDataManager<ManaOceanSettingsData, ManaOceanSettingsProvider>(

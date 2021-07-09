@@ -13,6 +13,7 @@ import {
   SpiritRouteService,
   StubEventProcessor,
   GameModel,
+  FeatureService,
 } from 'sr2020-mm-event-engine';
 
 // import { Migrator } from './Migrator';
@@ -64,6 +65,7 @@ const services = [
   SpiritMovementEnableService,
   // ManaOceanStubService,
   TrackedCharacterService,
+  FeatureService
 ];
 
 export function makeGameModel(ignoreClientMessages: boolean = false): {

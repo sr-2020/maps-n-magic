@@ -163,7 +163,7 @@ export class AudioStageService extends AbstractService<AudioStageServiceContract
     if (locationId !== null) {
       const locationRecord = this.getLocation(locationId);
       if (!locationRecord) {
-        // this.logger.error('onCharacterLocationChanged, character location not found', characterId, locationId);
+        this.logger.error('onCharacterLocationChanged, character location not found', characterId, locationId);
         // TODO - emit event that user has no background sound
         // return;
       } else {

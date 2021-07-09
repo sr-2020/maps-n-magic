@@ -83,6 +83,9 @@ import {
   GetUserRecords,
   GetEnableSpiritMovement,
   WebSocketInitClientConfig,
+  GetFeatures,
+  EFeaturesChanged,
+  ESetFeatures,
 } from "sr2020-mm-event-engine";
 
 import { TrackedCharacterLocationChanged } from "../index";
@@ -110,6 +113,7 @@ type ForwardServer2ClientEvent =
   | ECharacterLocationChanged
   | ESetSettingsCatalog
   | EEnableSpiritMovementChanged
+  | EFeaturesChanged
 ;
 
 // In reality this is event list, not actions.
@@ -130,8 +134,9 @@ const forwardServer2ClientActions: ForwardServer2ClientEvent["type"][] = [
   'userRecordsChanged',
   'spiritFractionsChanged',
   'spiritRoutesChanged',
-  'enableSpiritMovementChanged'
+  'enableSpiritMovementChanged',
   // 'characterHealthStateChanged',
+  'featuresChanged',
 ];
 
 type WsEmitEvent = 
@@ -143,6 +148,7 @@ type WsEmitEvent =
   | ESetCharacterHealthStates
   | EEnableManaOceanConfirmed
   | EEnableSpiritMovementConfirmed
+  | ESetFeatures
 ;
 
 const wsEmitEvents: WsEmitEvent["type"][] = [
@@ -154,6 +160,7 @@ const wsEmitEvents: WsEmitEvent["type"][] = [
   "setSpirits",
   "setSpiritFractions",
   "setSpiritRoutes",
+  "setFeatures"
 ];
 
 type ForwardClient2ServerEventTypes = (
@@ -245,6 +252,7 @@ type PayloadToEventBindings =
   | PayloadToEventBinding<GetSpiritFractions, ESpiritFractionsChanged>
   | PayloadToEventBinding<GetSpiritRoutes, ESpiritRoutesChanged>
   | PayloadToEventBinding<GetEnableSpiritMovement, EEnableSpiritMovementChanged>
+  | PayloadToEventBinding<GetFeatures, EFeaturesChanged>
 ;
 
 export class WsDataBinding extends AbstractEventProcessor {
@@ -271,10 +279,46 @@ export class WsDataBinding extends AbstractEventProcessor {
   }
 
   initClientConfig() {
+    // const data: PayloadToEventBindings[] = [{
+    //   type: 'locationRecordsChanged2',
+    //   payload: 'locationRecords',
+    // }, {
+    //   type: 'beaconRecordsChanged2',
+    //   payload: 'beaconRecords',
+    // }, {
+    //   type: 'setSettingsCatalog',
+    //   // type: 'settingsChanged',
+    //   payload: 'settingsCatalog',
+    // // }, {
+    // //   type: 'manaOceanSettingsChanged',
+    // //   payload: 'manaOceanSettings',
+    // }, {
+    //   type: 'characterHealthStatesLoaded',
+    //   payload: 'characterHealthStates',
+    // }, {
+    //   type: 'enableManaOceanChanged',
+    //   payload: 'enableManaOcean',
+    // }, {
+    //   type: 'enableSpiritMovementChanged',
+    //   payload: 'enableSpiritMovement',
+    // }, {
+    //   type: 'userRecordsChanged',
+    //   payload: 'userRecords',
+    // }, {
+    //   type: 'spiritsChanged',
+    //   payload: 'spirits',
+    // }, {
+    //   type: 'spiritFractionsChanged',
+    //   payload: 'spiritFractions',
+    // }, {
+    //   type: 'spiritRoutesChanged',
+    //   payload: 'spiritRoutes',
+    // }];
     const initMessage: WebSocketInitClientConfig = {
       message: 'initClientConfig',
       // TODO consider replacing getter-event pairs by
       // trigger-event pairs for consistency
+      // data: data,
       data: [{
         type: 'locationRecordsChanged2',
         payload: 'locationRecords',
@@ -309,10 +353,14 @@ export class WsDataBinding extends AbstractEventProcessor {
       }, {
         type: 'spiritRoutesChanged',
         payload: 'spiritRoutes',
+      }, {
+        type: 'featuresChanged',
+        payload: 'features',
       }],
       forwardActions: forwardServer2ClientActions,
       ignoreClientMessages: this.ignoreClientMessages
     }
+    
     const hasError = this.wsConnection.send(initMessage);
     // if (hasError) {
     //   setTimeout(this.initClientConfig, 1000);
@@ -485,6 +533,14 @@ export class WsDataBinding extends AbstractEventProcessor {
 
     if (data.type === 'postNotification') {
       this.gameModel.emit2<WsEmitEvent>(data);
+      return;
+    }
+
+    if (data.type === 'featuresChanged') {
+      this.gameModel.emit2<WsEmitEvent>({
+        ...data,
+        type: 'setFeatures'
+      });
       return;
     }
 
