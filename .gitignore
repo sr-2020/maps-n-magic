@@ -61,3 +61,5 @@ dist
 tsconfig.tsbuildinfo
 
 packages/outdated/sr2020-mm-ts-*
+
+packages/test/*
