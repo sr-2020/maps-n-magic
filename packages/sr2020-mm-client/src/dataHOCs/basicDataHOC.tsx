@@ -39,7 +39,7 @@ export const basicDataHOC = function<
   return (Wrapped: any) => (props: any) => {
     const { gameModel } = props;
     if (R.isNil(gameModel)) {
-      throw new Error(`gameModel is nil for ${dataName} extraction`);
+      throw new Error(`gameModel is nil for ${dataName} extraction. Did you pass game model for HOC component?`);
     }
     const [data, setData] = useState<InitState | T[DataName]>(initState);
 

@@ -17,7 +17,10 @@ import { Feature } from "../types";
 
 // requests
 
-export type GetFeatures = (arg: TypeOnly<'features'>) => Feature[];
+export type GetFeatures = (arg: Typed<'features'>) => Feature[];
+export type GetFeature = (arg: Typed<'feature', {
+  id: string;
+}>) => Feature | undefined;
 
 // emit events
 
@@ -33,15 +36,17 @@ export type ESetFeatures = Typed<'setFeatures', FeatureList>;
 
 export interface FeatureServiceContract extends ServiceContract {
   Action: never;
-  Request: GetFeatures;
+  Request: GetFeatures | GetFeature;
   EmitEvent: EFeaturesChanged;
   NeedAction: never;
   NeedRequest: never;
   ListenEvent: ESetFeatures;
 }
 
+const sort = R.sortBy(R.pipe(R.prop('humanReadableName'), R.toLower)) as (features: Feature[]) => Feature[];
+
 export const featureMetadata: ServiceContractTypes<FeatureServiceContract> = {
-  requests: ['features'],
+  requests: ['features', 'feature'],
   actions: [],
   emitEvents: [
     'featuresChanged',
@@ -55,11 +60,13 @@ export const featureMetadata: ServiceContractTypes<FeatureServiceContract> = {
 
 export class FeatureService extends AbstractService<FeatureServiceContract> {
   features: Feature[];
+  featureIndex: Record<string, Feature>;
 
   constructor(gameModel: GameModel, logger: GMLogger) {
     super(gameModel, logger);
     this.setMetadata(featureMetadata);
     this.features = [];
+    this.featureIndex = {};
     this.setFeatures = this.setFeatures.bind(this);
   }
 
@@ -78,7 +85,9 @@ export class FeatureService extends AbstractService<FeatureServiceContract> {
     // const { updated, added, unchanged } = getArrDiff(spirits, this.spirits, R.prop('id'));
     // this.spirits = [...unchanged, ...R.pluck('item', updated), ...added];
     // return spirits.length === this.spirits && unchanged.length === spirits.length;
-    this.features = features;
+    // this.features = features;
+    this.features = sort(features);
+    this.featureIndex = R.indexBy(R.prop('id'), features);
     this.logger.info('Features received, length ' + features.length);
   }
 
@@ -90,11 +99,15 @@ export class FeatureService extends AbstractService<FeatureServiceContract> {
     // }
     this.emit2({
       type: 'featuresChanged',
-      features,
+      features: this.features
     });
   }
 
   getFeatures(request: Req<GetFeatures>): Res<GetFeatures> {
     return [...this.features];
+  }
+
+  getFeature(request: Req<GetFeature>): Res<GetFeature> {
+    return this.featureIndex[request.id];
   }
 }

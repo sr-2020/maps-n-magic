@@ -24,6 +24,7 @@ import { SpiritStatusControl } from "./SpiritStatusControl";
 
 import { WithSpiritRoutes } from '../../../dataHOCs';
 import { SpiritNumberSelect } from './SpiritNumberSelect';
+import { AbilitiesInput2 } from './AbilitiesInput2';
 
 // import { AbilitiesInput } from './AbilitiesInput';
 
@@ -43,6 +44,7 @@ type SpiritContentState = {
   // maxHitPoints: Spirit["maxHitPoints"];
   timetable: Spirit["timetable"];
   state: Spirit["state"];
+  abilities: Spirit["abilities"];
 };
 
 type spiritFields = 
@@ -54,6 +56,7 @@ type spiritFields =
   | 'state'
   | 'level'
   | 'hitPoints'
+  | 'abilities'
 ;
 
 const sortByTime = R.sortBy(R.prop('time'));
@@ -87,6 +90,7 @@ export class SpiritContent extends Component<
         level: spirit.level,
         hitPoints: spirit.hitPoints,
         state: spirit.state,
+        abilities: spirit.abilities,
       };
     } else {
       this.state = {
@@ -99,6 +103,7 @@ export class SpiritContent extends Component<
     this.removeRoute = this.removeRoute.bind(this);
     this.sortRoutes = this.sortRoutes.bind(this);
     this.changeSpiritStatus = this.changeSpiritStatus.bind(this);
+    this.changeSpiritAbilities = this.changeSpiritAbilities.bind(this);
     this.updateSpirit = this.updateSpirit.bind(this);
   }
 
@@ -191,6 +196,16 @@ export class SpiritContent extends Component<
     }, this.updateSpirit);
   }
 
+  changeSpiritAbilities (abilities: string[]): void {
+    this.setState((prevState) => {
+      if (!prevState.initialized) {
+        return;
+      }
+      
+      return { ...prevState, abilities };
+    }, this.updateSpirit);
+  }
+
   updateSpirit(): void {
     const { id, gameModel } = this.props;
     const { state } = this;
@@ -215,6 +230,7 @@ export class SpiritContent extends Component<
           // maxHitPoints: state.maxHitPoints,
           timetable: state.timetable,
           state: state.state,
+          abilities: state.abilities,
         }
       });
     }, 500);
@@ -234,7 +250,8 @@ export class SpiritContent extends Component<
       timetable, 
       state, 
       level, 
-      hitPoints
+      hitPoints,
+      abilities,
     } = componentState;
     const { gameModel, id, t, spiritRoutes } = this.props;
 
@@ -323,6 +340,17 @@ export class SpiritContent extends Component<
                     value={hitPoints}
                     domain={HIT_POINTS_LIST}
                     onChange={this.handleInputChange}
+                  />
+                </div>
+              </div>
+              <div className="tw-table-row">
+                <label htmlFor="abilitiesInput" className="tw-table-cell">Абилки</label>
+                <div className="tw-table-cell">
+                  <AbilitiesInput2
+                    id="abilitiesInput"
+                    gameModel={gameModel}
+                    abilities={abilities}
+                    onChange={this.changeSpiritAbilities}
                   />
                 </div>
               </div>

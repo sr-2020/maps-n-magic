@@ -21,6 +21,8 @@ import {
   SpiritRoute,
   SoundStageState,
   SoundSettings,
+  EFeaturesChanged,
+  Feature,
 } from 'sr2020-mm-event-engine';
 
 import { 
@@ -90,6 +92,9 @@ export interface WithSoundStageState {
 }
 export interface WithSoundSettings {
   soundSettings: SoundSettings | null;
+}
+export interface WithFeatures {
+  features: Feature[] | null;
 }
 
 function sortBy(prop: string) {
@@ -200,6 +205,12 @@ export const withSoundStageState = basicDataHOC<null, ESoundStageStateChanged>(
 export const withSoundSettings = basicDataHOC<null, ESoundSettingsChanged>(
   'soundSettingsChanged',
   'soundSettings',
+  null,
+);
+
+export const withFeatures = basicDataHOC<null, EFeaturesChanged>(
+  'featuresChanged',
+  'features',
   null,
 );
 
