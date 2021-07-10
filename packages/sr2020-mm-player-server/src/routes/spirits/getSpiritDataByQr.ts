@@ -1,11 +1,12 @@
-import { ErrorResponse } from "sr2020-mm-event-engine";
-import { createLogger, getQrModelData, validateSpiritJarQrModelData } from "sr2020-mm-server-event-engine";
+import { ErrorResponse, GetSpirit, isFullSpiritJar, Spirit } from "sr2020-mm-event-engine";
+import { createLogger, getQrModelData, PlayerAuthorizedRequest, validateSpiritJarQrModelData } from "sr2020-mm-server-event-engine";
 import { decode } from "../../utils";
 import { qrIdIsNanError } from "./utils";
 
 const logger = createLogger('getSpiritDataByQr.ts');
 
-export const getSpiritDataByQr = async (req, res, next) => {
+export const getSpiritDataByQr = async (req1, res, next) => {
+  const req = req1 as PlayerAuthorizedRequest;
   const { spiritJarQrString } = req.query;
   if (typeof spiritJarQrString !== 'string') {
     const errorResponse: ErrorResponse = {
@@ -33,8 +34,20 @@ export const getSpiritDataByQr = async (req, res, next) => {
       res.status(500).json(validationRes);
       return;
     }
+
+    let spirit: Spirit | undefined = undefined;
+    if (isFullSpiritJar(validationRes)) {
+      const { spiritId } = validationRes.workModel.data;
+      spirit = req.gameModel.get2<GetSpirit>({
+        type: 'spirit',
+        id: Number(spiritId)
+      });
+    }
     
-    res.json(validationRes);
+    res.json({
+      spiritJarQr: validationRes,
+      spirit
+    });
     
     // res.json({
     //   spiritJarQrString,

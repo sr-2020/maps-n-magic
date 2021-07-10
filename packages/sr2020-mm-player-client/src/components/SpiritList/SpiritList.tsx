@@ -7,6 +7,8 @@ import Card from "react-bootstrap/Card";
 import { useHistory } from 'react-router-dom';
 
 import { WithLocationDataOnly } from '../../hocs';
+import { getFractionName } from '../../utils';
+import { SpiritCard } from "../SpiritCard";
 
 interface SpiritListProps extends WithLocationDataOnly {
   setTitle: (title: string) => void;
@@ -64,13 +66,13 @@ export function SpiritList(props: SpiritListProps) {
             <Card>
               <Accordion.Toggle as={Card.Header} eventKey={String(index)}>
                 <div>{spiritView.name}</div>
-                <div className="text-muted tw-text-sm">{spiritView.fractionName}</div>
+                <div className="text-muted tw-text-sm">{getFractionName(spiritView.fraction)}</div>
               </Accordion.Toggle>
               <Accordion.Collapse eventKey={String(index)}>
                 <Card.Body>
-                  <div className="tw-mb-4">
-                    {'Фракция ' + spiritView.fractionName}
-                  </div>
+                  <SpiritCard
+                    spirit={spiritView}
+                  />
                   <Button 
                     variant="outline-primary" 
                     className="tw-w-full tw-text-left tw-py-4 tw-mb-2"

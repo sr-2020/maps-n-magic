@@ -6,6 +6,7 @@ import {
   isEmptySpiritJar, 
   isErrorResponse, 
   isFullSpiritJar, 
+  Spirit, 
   SpiritJarQr,
   validateEmptySpiritJarQr,
   validateFullSpiritJarQr
@@ -15,6 +16,7 @@ import Button from "react-bootstrap/Button";
 
 import { QrScannerWrapper } from "../QrScannerWrapper";
 import { getSpiritDataByQr, freeSpirit, catchSpirit } from "../../api";
+import { SpiritCard } from '../SpiritCard';
 
 // import { WithTranslation } from "react-i18next";
 
@@ -31,7 +33,10 @@ export function SpiritPage(props: SpiritPageProps) {
   // invalid qr string
   // const [spiritJarQrString, setSpiritJarQrString] = useState<string | null>('7437AQCgk_dhg359');
   const [errorResponse, setErrorResponse] = useState<ErrorResponse | null>(null);
-  const [spiritJarQr, setSpiritJarQr] = useState<SpiritJarQr | null>(null);
+  const [spiritJarQr, setSpiritJarQr] = useState<{
+    spiritJarQr: SpiritJarQr;
+    spirit: Spirit | undefined;
+  } | null>(null);
 
   useEffect(() => {
     if (spiritJarQrString === null) {
@@ -65,12 +70,15 @@ export function SpiritPage(props: SpiritPageProps) {
     if (spiritJarQr === null) {
       return;
     }
-    freeSpirit(Number(spiritJarQr.workModel.modelId), 'Маг освободил духа').then(res => {
+    freeSpirit(Number(spiritJarQr.spiritJarQr.workModel.modelId), 'Маг освободил духа').then(res => {
     // freeSpirit(Number(123456789), 'Маг освободил духа').then(res => {
       if (isErrorResponse(res)) {
         setErrorResponse(res);
       } else {
-        setSpiritJarQr(res);
+        setSpiritJarQr({
+          spiritJarQr: res,
+          spirit: undefined
+        });
         // setSpiritJarQrString(null);
       }
     }).catch(err => {
@@ -104,7 +112,7 @@ export function SpiritPage(props: SpiritPageProps) {
   // }
 
   return (
-    <div className="SpiritPage">
+    <div className="SpiritPage tw-p-4">
       {/* SpiritPage content
       <br/>
       {spiritJarQrString}
@@ -121,22 +129,26 @@ export function SpiritPage(props: SpiritPageProps) {
         )
       }
       {
-        (spiritJarQr !== null && isFullSpiritJar(spiritJarQr)) && 
+        (spiritJarQr !== null && isFullSpiritJar(spiritJarQr.spiritJarQr)) && 
         <>
-          <div>
-            В тотеме заключен дух {spiritJarQr.workModel.data.spiritId}
-          </div>
+          {
+            spiritJarQr.spirit !== undefined &&
+            <SpiritCard 
+              className="tw-m-4 tw-mb-8"
+              spirit={spiritJarQr.spirit}
+            />
+          }
           <Button variant="outline-secondary" onClick={onFreeSpiritClick}>
             Освободить духа
           </Button>
         </>
       }
       {
-        (spiritJarQr !== null && isEmptySpiritJar(spiritJarQr)) && 
+        (spiritJarQr !== null && isEmptySpiritJar(spiritJarQr.spiritJarQr)) && 
         <>
           <div>
             <div>Тотем пуст</div>
-            <div>{spiritJarQr.workModel.data.emptiness_reason}</div>
+            <div>{spiritJarQr.spiritJarQr.workModel.data.emptiness_reason}</div>
           </div>
           {/* <Button variant="primary" onClick={onCatchSpiritClick}>
             Поймать духа (тестовый вызов)

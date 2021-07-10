@@ -1,4 +1,5 @@
 import { Typed } from "..";
+import { Spirit } from "./spirits";
 
 export interface LocationView {
   id: number;
@@ -6,11 +7,7 @@ export interface LocationView {
   manaLevel: number;
 }
 
-export interface SpiritView {
-  id: number;
-  name: string;
-  fraction: number;
-  fractionName: string;
+export interface SpiritView extends Spirit {
   locationId: number;
 }
 

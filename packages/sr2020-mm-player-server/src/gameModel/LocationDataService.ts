@@ -121,11 +121,8 @@ export class LocationDataService extends AbstractService<LocationDataServiceCont
       });
       // this.logger.info('fraction', fraction);
       acc.push({
-        id: spirit.id,
-        name: spirit.name,
-        fraction: spirit.fraction,
-        fractionName: fraction?.name || '',
-        locationId
+        ...spirit,
+        locationId,
       });
       return acc;
     }, []);

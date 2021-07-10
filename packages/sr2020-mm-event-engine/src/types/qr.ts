@@ -161,11 +161,11 @@ export function isFullSpiritJar(qr: SpiritJarQr): qr is FullSpiritJarQr {
   return 'spiritId' in qr.workModel.data;
 }
 
-export interface SpiritDataForQrValidation {
-  name: string;
-  hitPoints: number;
-  abilities: string[];
-}
+// export interface SpiritDataForQrValidation {
+//   name: string;
+//   hitPoints: number;
+//   abilities: string[];
+// }
 
 export interface EmptyBodyStorageQr {
   workModel: {

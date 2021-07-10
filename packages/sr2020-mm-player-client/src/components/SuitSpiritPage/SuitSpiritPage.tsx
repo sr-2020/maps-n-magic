@@ -4,7 +4,11 @@ import './SuitSpiritPage.css';
 import Button from "react-bootstrap/Button";
 import { QrScannerWrapper } from '../QrScannerWrapper';
 import { isBodyStorageValid, isSpiritJarValid, suitSpirit } from '../../api';
-import { isErrorResponse, SpiritDataForQrValidation } from 'sr2020-mm-event-engine';
+import { 
+  isErrorResponse, Spirit, 
+  // SpiritDataForQrValidation 
+} from 'sr2020-mm-event-engine';
+import { SpiritCard } from '../SpiritCard';
 
 interface SuitSpiritPageProps {
 }
@@ -20,7 +24,7 @@ type BodyStorageStatus = {
 
 type SpiritJarStatus = {
   status: 'valid';
-  spirit: SpiritDataForQrValidation;
+  spirit: Spirit;
 } | {
   status: 'invalid';
   message: string;
@@ -151,10 +155,10 @@ export function SuitSpiritPage(props: SuitSpiritPageProps) {
     bodyStorageStatus.status === 'valid';
 
   return (
-    <div className="SuitSpiritPage">
-      <div>
-        <div>
-          <span>Телохранилище</span>
+    <div className="SuitSpiritPage tw-p-4">
+      <div className="tw-mb-8">
+        <div className="tw-flex tw-mb-4">
+          <div className="col-form-label tw-flex-1">Телохранилище</div>
           {
             bodyStorageStatus.status === 'valid' && <div>OK</div>
           }
@@ -167,9 +171,9 @@ export function SuitSpiritPage(props: SuitSpiritPageProps) {
           </div>
         }
       </div>
-      <div>
-        <div>
-          <span>Тотем</span>
+      <div className="tw-mb-8">
+        <div className="tw-flex tw-mb-4">
+          <div className="col-form-label tw-flex-1">Тотем</div>
           {
             spiritJarStatus.status === 'valid' && <div>OK</div>
           }
@@ -183,9 +187,10 @@ export function SuitSpiritPage(props: SuitSpiritPageProps) {
         }
         {
           spiritJarStatus.status === 'valid' && <div>
-            <div>{spiritJarStatus.spirit.name}</div>
-            <div>{spiritJarStatus.spirit.hitPoints}</div>
-            <div>{spiritJarStatus.spirit.abilities}</div>
+            <SpiritCard
+              className="tw-m-4"
+              spirit={spiritJarStatus.spirit} 
+            />
           </div>
         }
       </div>
@@ -199,7 +204,9 @@ export function SuitSpiritPage(props: SuitSpiritPageProps) {
         suitSpiritStatus !== '' && 
         <div>{suitSpiritStatus}</div>
       }
-      <Button disabled={!isValid} onClick={() => setDoSuitSpirit(true)}>Надеть</Button>
+      <div className="tw-text-right">
+        <Button disabled={!isValid} onClick={() => setDoSuitSpirit(true)}>Надеть</Button>
+      </div>
     </div>
   );
 }

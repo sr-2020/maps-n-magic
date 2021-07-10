@@ -5,7 +5,6 @@ import {
   invalidRequestBody, 
   isEmptySpiritJar, 
   isFullBodyStorage, 
-  SpiritDataForQrValidation, 
   SuitSpiritInternalRequest
 } from "sr2020-mm-event-engine";
 import { 

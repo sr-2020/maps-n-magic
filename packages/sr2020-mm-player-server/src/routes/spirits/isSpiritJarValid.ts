@@ -1,5 +1,19 @@
-import { ErrorResponse, GetSpirit, isEmptySpiritJar, isFullBodyStorage, isFullSpiritJar, SpiritDataForQrValidation } from "sr2020-mm-event-engine";
-import { createLogger, getQrModelData, PlayerAuthorizedRequest, validateBodyStorageQrModelData, validateSpiritJarQrModelData } from "sr2020-mm-server-event-engine";
+import { 
+  ErrorResponse, 
+  GetSpirit, 
+  isEmptySpiritJar, 
+  isFullBodyStorage, 
+  isFullSpiritJar, 
+  Spirit, 
+  // SpiritDataForQrValidation 
+} from "sr2020-mm-event-engine";
+import { 
+  createLogger, 
+  getQrModelData, 
+  PlayerAuthorizedRequest, 
+  validateBodyStorageQrModelData, 
+  validateSpiritJarQrModelData 
+} from "sr2020-mm-server-event-engine";
 import { decode } from "../../utils";
 import { qrIdIsNanError } from "./utils";
 
@@ -74,13 +88,18 @@ export const isSpiritJarValid = async (req1, res, next) => {
         return;
       }
   
-      const data: SpiritDataForQrValidation = {
-        name: spirit.name,
-        hitPoints: spirit.hitPoints,
-        abilities: [],
+      // const data: SpiritDataForQrValidation = {
+      //   name: spirit.name,
+      //   hitPoints: spirit.hitPoints,
+      //   abilities: [],
+      // };
+
+      // TODO add fraction abilities
+      const spirit2: Spirit = {
+        ...spirit
       };
       
-      res.json(data);
+      res.json(spirit2);
     }
   } catch (error) {
     const message = `${error} ${JSON.stringify(error)}`;
