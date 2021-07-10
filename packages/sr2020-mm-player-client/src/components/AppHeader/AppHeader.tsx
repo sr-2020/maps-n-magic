@@ -82,9 +82,9 @@ export function AppHeader(props: AppHeaderProps) {
           <FontAwesomeIcon icon={faEllipsisV} />
         </Dropdown.Toggle>
         <Dropdown.Menu style={{ zIndex: 2000 }}>
-          <Dropdown.Header>Заголовок меню</Dropdown.Header>
-          <Dropdown.Divider />
-          <Dropdown.Item
+          <Dropdown.Header>{`#${characterData.workModel.modelId}`}</Dropdown.Header>
+          {/* <Dropdown.Divider /> */}
+          {/* <Dropdown.Item
             as="button"
             type="button"
             onClick={() => loginManager.updateLoginState()}
@@ -92,8 +92,8 @@ export function AppHeader(props: AppHeaderProps) {
             className="tw-py-3 tw-text-lg"
           >
             Обновить данные персонажа
-          </Dropdown.Item>
-          <Dropdown.Item
+          </Dropdown.Item> */}
+          {/* <Dropdown.Item
             as="button"
             type="button"
             onClick={callSecureApi}
@@ -101,7 +101,7 @@ export function AppHeader(props: AppHeaderProps) {
             className="tw-py-3 tw-text-lg"
           >
             Запрос на защищенный эндпоинт
-          </Dropdown.Item>
+          </Dropdown.Item> */}
           <Dropdown.Divider />
           <Dropdown.Item
             as="button"

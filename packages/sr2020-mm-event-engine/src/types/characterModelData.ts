@@ -13,6 +13,7 @@ export type BodyType = 'physical' | 'astral' | 'drone' | 'ectoplasm' | 'vr';
 export type HealthState = 'healthy' | 'wounded' | 'clinically_dead' | 'biologically_dead';
 
 export interface Sr2020Character {
+  modelId: string;
   currentBody: BodyType;
   healthState: HealthState;
 }
@@ -51,10 +52,11 @@ export const validateHealthState = ajv.compile(healthStateSchema);
 const sr2020CharacterSchema: JSONSchemaType<Sr2020Character> = {
   type: 'object',
   properties: {
+    'modelId': { type: 'string' },
     'currentBody': bodyTypeSchema,
     'healthState': healthStateSchema
   },
-  required: ['currentBody', 'healthState']
+  required: ['currentBody', 'healthState', 'modelId']
 };
 
 export const validateSr2020Character = ajv.compile(sr2020CharacterSchema);
