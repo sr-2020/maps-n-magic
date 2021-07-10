@@ -5,6 +5,7 @@ import { QrScannerWrapper } from '../QrScannerWrapper';
 import './DispiritPage.css';
 
 import Button from "react-bootstrap/Button";
+import { StatusIcon } from '../StatusIcon';
 
 interface DispiritPageProps {
 }
@@ -152,13 +153,11 @@ export function DispiritPage(props: DispiritPageProps) {
     bodyStorageStatus.status === 'valid';
 
   return (
-    <div className="DispiritPage">
-      <div>
-        <div>
-          <span>Телохранилище</span>
-          {
-            bodyStorageStatus.status === 'valid' && <div>OK</div>
-          }
+    <div className="DispiritPage tw-p-4 tw-pl-16">
+      <div className="tw-mb-8">
+        <div className="tw-flex tw-mb-4">
+          <StatusIcon status={bodyStorageStatus.status}/>
+          <div className="col-form-label tw-flex-1">Телохранилище</div>
           <Button onClick={() => setScanBodyStorage(true)}>Сканировать</Button>
         </div>
         {
@@ -168,26 +167,26 @@ export function DispiritPage(props: DispiritPageProps) {
           </div>
         }
       </div>
-      <div>
-        <div>
-          <span>Тотем</span>
-          {
-            spiritJarStatus.status === 'valid' && <div>OK</div>
-          }
+      <div className="tw-mb-8">
+        <div className="tw-flex tw-mb-4">
+          <StatusIcon status={spiritJarStatus.status}/>
+          <div className="col-form-label tw-flex-1">Тотем</div>
           <Button onClick={() => setScanSpiritJar(true)}>Сканировать</Button>
         </div>
         {
           spiritJarStatus.status === 'invalid' && 
-          <div>
+          <div className="tw-m-4">
             {spiritJarStatus.message}
           </div>
         }
       </div>
       {
         dispiritStatus !== '' && 
-        <div>{dispiritStatus}</div>
+        <div className="tw-m-4">{dispiritStatus}</div>
       }
-      <Button disabled={!isValid} onClick={() => setDoDispirit(true)}>Снять</Button>
+      <div className="tw-text-right">
+        <Button disabled={!isValid} onClick={() => setDoDispirit(true)}>Снять</Button>
+      </div>
     </div>
   );
 }

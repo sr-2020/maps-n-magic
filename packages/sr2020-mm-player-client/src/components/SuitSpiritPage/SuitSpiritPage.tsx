@@ -10,6 +10,8 @@ import {
 } from 'sr2020-mm-event-engine';
 import { SpiritCard } from '../SpiritCard';
 
+import { StatusIcon } from '../StatusIcon';
+
 interface SuitSpiritPageProps {
 }
 
@@ -155,13 +157,11 @@ export function SuitSpiritPage(props: SuitSpiritPageProps) {
     bodyStorageStatus.status === 'valid';
 
   return (
-    <div className="SuitSpiritPage tw-p-4">
+    <div className="SuitSpiritPage tw-p-4 tw-pl-16">
       <div className="tw-mb-8">
         <div className="tw-flex tw-mb-4">
+          <StatusIcon status={bodyStorageStatus.status}/>
           <div className="col-form-label tw-flex-1">Телохранилище</div>
-          {
-            bodyStorageStatus.status === 'valid' && <div>OK</div>
-          }
           <Button onClick={() => setScanBodyStorage(true)}>Сканировать</Button>
         </div>
         {
@@ -173,10 +173,8 @@ export function SuitSpiritPage(props: SuitSpiritPageProps) {
       </div>
       <div className="tw-mb-8">
         <div className="tw-flex tw-mb-4">
+          <StatusIcon status={spiritJarStatus.status}/>
           <div className="col-form-label tw-flex-1">Тотем</div>
-          {
-            spiritJarStatus.status === 'valid' && <div>OK</div>
-          }
           <Button onClick={() => setScanSpiritJar(true)}>Сканировать</Button>
         </div>
         {
@@ -196,13 +194,13 @@ export function SuitSpiritPage(props: SuitSpiritPageProps) {
       </div>
       {
         isValid &&
-        <div>
+        <div className="tw-m-4">
           Время ношения духа 30 минут
         </div>
       }
       {
         suitSpiritStatus !== '' && 
-        <div>{suitSpiritStatus}</div>
+        <div className="tw-m-4">{suitSpiritStatus}</div>
       }
       <div className="tw-text-right">
         <Button disabled={!isValid} onClick={() => setDoSuitSpirit(true)}>Надеть</Button>
