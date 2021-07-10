@@ -99,6 +99,7 @@ export const translations = {
       defaultSatelliteLayer: 'Спутниковая карта',
       locationCentroidLayer: 'Центроиды геолокаций',
       locationNeighborLayer: 'Соседние локации',
+      beaconBindingsLayer: 'Привязки маяков',
 
       // track analysis
       trackDemo: 'Карта с треками пользователей',

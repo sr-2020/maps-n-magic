@@ -13,6 +13,7 @@ import { BackgroundImageDisplayLayer } from '../../layers/BackgroundImageDisplay
 import { GoogleMapsExportedDataLayer } from '../../layers/GoogleMapsExportedDataLayer';
 import { BeaconLayer4 } from '../../layers/BeaconLayer4';
 import { LocationLayer4 } from '../../layers/LocationLayer4';
+import { BeaconBindingsLayer } from '../../layers/BeaconBindingsLayer';
 
 interface BeaconEditorMapProps {
   gameModel: GameModel;
@@ -53,6 +54,9 @@ export function BeaconEditorMap(props: BeaconEditorMapProps) {
         }}
       />
       <BeaconLayer4
+        enableByDefault
+      />
+      <BeaconBindingsLayer
         enableByDefault
       />
     </Map>

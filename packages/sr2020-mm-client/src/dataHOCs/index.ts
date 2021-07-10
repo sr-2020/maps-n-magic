@@ -45,6 +45,7 @@ export * from './withCharacterIdHealthListForAudio';
 export * from './withGeoLocationRecords';
 export * from './withSpiritLocationData';
 export * from './loginState';
+export * from './withBeaconBindingsData';
 
 // links in HOC typing
 // https://medium.com/@jrwebdev/react-higher-order-component-patterns-in-typescript-42278f7590fb
