@@ -15,6 +15,7 @@ export interface GenericServerConstants {
   manaOceanConfigUrl: string;
   manaOceanEffectConfigUrl: string;
   playerServerTokenPayload: string;
+  putLocationToModelsManager: string;
 };
 
 export function getGenericEnvVariables() {
@@ -28,8 +29,9 @@ export function getGenericServerConstants(envVariables: EnvVariables): GenericSe
     loginUrl:                 values[GenericServerConstant.GATEWAY_URL] + '/api/v1/auth/login',
     manaOceanConfigUrl:       values[GenericServerConstant.GATEWAY_URL] + '/api/v1/config/manaOceanConfig',
     manaOceanEffectConfigUrl: values[GenericServerConstant.GATEWAY_URL] + '/api/v1/config/manaOceanEffectConfig',
-    characterModelUrl:  values[GenericServerConstant.MODELS_MANAGER_URL] + '/character/model',
-    qrModelUrl:         values[GenericServerConstant.MODELS_MANAGER_URL] + '/qr/model',
+    characterModelUrl:          values[GenericServerConstant.MODELS_MANAGER_URL] + '/character/model',
+    qrModelUrl:                 values[GenericServerConstant.MODELS_MANAGER_URL] + '/qr/model',
+    putLocationToModelsManager: values[GenericServerConstant.MODELS_MANAGER_URL] + '/location/default',
     playerServerTokenPayload: 'player-server'
   }
 }
@@ -42,8 +44,9 @@ export function genericServerConstants2(): GenericServerConstants {
     loginUrl:                 values[GenericServerConstant.GATEWAY_URL] + '/api/v1/auth/login',
     manaOceanConfigUrl:       values[GenericServerConstant.GATEWAY_URL] + '/api/v1/config/manaOceanConfig',
     manaOceanEffectConfigUrl: values[GenericServerConstant.GATEWAY_URL] + '/api/v1/config/manaOceanEffectConfig',
-    characterModelUrl:  values[GenericServerConstant.MODELS_MANAGER_URL] + '/character/model',
-    qrModelUrl:         values[GenericServerConstant.MODELS_MANAGER_URL] + '/qr/model',
+    characterModelUrl:          values[GenericServerConstant.MODELS_MANAGER_URL] + '/character/model',
+    qrModelUrl:                 values[GenericServerConstant.MODELS_MANAGER_URL] + '/qr/model',
+    putLocationToModelsManager: values[GenericServerConstant.MODELS_MANAGER_URL] + '/location/default',
     playerServerTokenPayload: 'player-server'
   }
 }

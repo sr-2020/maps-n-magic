@@ -84,6 +84,7 @@ import { PushNotificationEmitter } from '../api/pushNotificationEmitter';
 import { SpiritProvider, SpiritFractionProvider, SpiritRouteProvider } from '../api/spirits';
 import { createLogger } from '../logger';
 import { FeatureProvider } from '../api/features';
+import { ModelManagetLocInitializer } from '../services/ModelManagetLocInitializer';
 
 type EventBindingList = 
   | StrictEventBinding<EPutCharHealthRequested, EPutCharHealthConfirmed>
@@ -111,6 +112,7 @@ const services = [
   SpiritRouteService,
   SpiritMovementService,
   FeatureService,
+  ModelManagetLocInitializer,
   // RescueServicePushService,
 ];
 
