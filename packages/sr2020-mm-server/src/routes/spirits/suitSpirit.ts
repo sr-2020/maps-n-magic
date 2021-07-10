@@ -75,10 +75,12 @@ export const mainSuitSpirit = async (req1, res, next) => {
       return;
     }
 
+    // TODO add spirits from fractions
     const res2 = await suitSpirit(characterId, {
       "name": spirit.name,
       "hp": spirit.hitPoints,
-      "abilityIds": ["fireball-keeper", "aurma"],
+      // "abilityIds": ["fireball-keeper", "aurma"],
+      "abilityIds": spirit.abilities,
     }, bodyStorageId, spiritJarId);
 
     req.gameModel.emit2<EPutSpiritRequested>({
