@@ -13,6 +13,8 @@ export interface WithGeoLocationRecords {
   geoLocationRecords: LocationRecord[];
 }
 
+const sortById = R.sortBy(R.prop('id'));
+
 const filterLocationRecords = R.pipe(
   R.filter(isGeoLocation),
   R.filter(isNotEmptyPolygon),
@@ -20,6 +22,6 @@ const filterLocationRecords = R.pipe(
 
 export const withGeoLocationRecords = (Wrapped: any) => (props: any) => {
   const { locationRecords } = props as WithLocationRecords;
-  const geoLocationRecords = filterLocationRecords(locationRecords)
+  const geoLocationRecords = sortById(filterLocationRecords(locationRecords));
   return <Wrapped {...props} geoLocationRecords={geoLocationRecords} />;
 };

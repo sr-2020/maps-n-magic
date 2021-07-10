@@ -31,6 +31,7 @@ interface BeaconLayer4Props extends CommonLayerProps, WithTranslation, WithLatLn
 export interface CurBeacon {
   id: number;
   label: string;
+  location_id: number | null;
 }
 
 interface BeaconLayer4State {
@@ -59,6 +60,7 @@ export class BeaconLayer4 extends Component<
     this.closePopup = this.closePopup.bind(this);
     this.onBeaconEdit = this.onBeaconEdit.bind(this);
     this.onBeaconClick = this.onBeaconClick.bind(this);
+    this.onLocationSelect = this.onLocationSelect.bind(this);
   }
 
   componentDidMount() {
@@ -120,16 +122,18 @@ export class BeaconLayer4 extends Component<
   }
 
   onBeaconClick(e: L.LeafletMouseEvent) {
-    const { layerCommunicator, translator } = this.props;
+    const { layerCommunicator, translator, beaconRecords} = this.props;
     const {
       label, id, markers, manaLevel,
     } = e.target.options;
     // const latlng = translator.moveFrom(e.target.getLatLng());
     const latlng = e.target.getLatLng();
+    const beacon = beaconRecords.find(el => el.id === id);
     this.setState({
       curBeacon: {
         id,
         label,
+        location_id: beacon !== undefined ? beacon.location_id : null
       },
       beaconLatLng: latlng,
     });
@@ -199,12 +203,24 @@ export class BeaconLayer4 extends Component<
     this.closePopup();
   }
 
+  onLocationSelect (beaconId: number, locationId: number | null) {
+    const { gameModel } = this.props;
+
+    gameModel.execute2<PutBeaconRecord>({
+      type: 'putBeaconRecord',
+      id: beaconId,
+      props: {
+        'location_id': locationId,
+      },
+    });
+  }
+
   render() {
     const {
       beaconLatLng, curBeacon,
     } = this.state;
     const {
-      beaconRecords,
+      beaconRecords, gameModel
     } = this.props;
     const freeBeaconIds = getFreeBeaconIds(beaconRecords);
     return (
@@ -225,7 +241,9 @@ export class BeaconLayer4 extends Component<
               freeBeaconIds={freeBeaconIds}
               onSelect={this.onSelectBeacon}
               onClose={this.closePopup}
+              onLocationSelect={this.onLocationSelect}
               domContainer={this.beaconPopupContainer}
+              gameModel={gameModel}
             />
           )
         }

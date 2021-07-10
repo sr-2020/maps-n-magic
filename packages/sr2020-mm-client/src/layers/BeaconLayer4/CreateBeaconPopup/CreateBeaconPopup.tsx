@@ -7,6 +7,8 @@ import ReactDOM from 'react-dom';
 import classNames from 'classnames';
 
 import { CurBeacon } from "../BeaconLayer4";
+import { BeaconLocationSelect } from '../../../components/BeaconRecordEditor/BeaconLocationSelect';
+import { GameModel } from 'sr2020-mm-event-engine';
 
 interface CreateBeaconPopupProp extends WithTranslation {
   freeBeaconIds: number[];
@@ -15,6 +17,8 @@ interface CreateBeaconPopupProp extends WithTranslation {
   onClose: () => void;
   onSelect: (latLng: L.LatLng, id: number) => void;
   curBeacon: CurBeacon | null;
+  gameModel: GameModel;
+  onLocationSelect: (beaconId: number, locationId: number | null) => void;
 }
 
 export class CreateBeaconPopup extends Component<CreateBeaconPopupProp> {
@@ -25,21 +29,9 @@ export class CreateBeaconPopup extends Component<CreateBeaconPopupProp> {
     };
   }
 
-  componentDidMount() {
-    console.log('CreateBeaconPopup mounted');
-  }
-
-  componentDidUpdate() {
-    console.log('CreateBeaconPopup did update');
-  }
-
-  componentWillUnmount() {
-    console.log('CreateBeaconPopup will unmount');
-  }
-
   makeContent() {
     const {
-      t, onClose, freeBeaconIds, onSelect, latLng, curBeacon,
+      t, onClose, freeBeaconIds, onSelect, latLng, curBeacon, gameModel, onLocationSelect
     } = this.props;
 
     const common = 'tw-font-bold tw-py-2 focus:tw-outline-none focus:tw-shadow-outline tw-rounded';
@@ -47,6 +39,23 @@ export class CreateBeaconPopup extends Component<CreateBeaconPopupProp> {
     const unselectedButton = 'tw-bg-gray-300 hover:tw-bg-gray-400 tw-text-gray-800';
     return (
       <div className="CreateBeaconPopup">
+        {
+          curBeacon !== null &&
+          <div className="tw-mb-4">
+            <label
+              className="tw-block tw-text-gray-700 tw-text-sm tw-font-bold tw-mb-2"
+              htmlFor="locationName"
+            >
+              Локация
+            </label>
+            <BeaconLocationSelect
+              key={curBeacon.id}
+              gameModel={gameModel}
+              beacon={curBeacon}
+              onLocationSelect={onLocationSelect}
+            />
+          </div>
+        }
         <div className="tw-mb-4">
           <label
             className="tw-block tw-text-gray-700 tw-text-sm tw-font-bold tw-mb-2"

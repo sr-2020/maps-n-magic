@@ -35,6 +35,7 @@ import { WithTranslation } from "react-i18next";
 
 import { CreateBeaconPopover } from './CreateBeaconPopover';
 import { WithSortDataHOC } from "./SortDataHOC";
+import { BeaconLocationSelect } from './BeaconLocationSelect';
 
 interface BeaconRecordEditorProps extends WithTranslation, WithSortDataHOC {
   gameModel: GameModel;
@@ -115,7 +116,7 @@ export class BeaconRecordEditor extends Component<BeaconRecordEditorProps> {
 
   // eslint-disable-next-line max-lines-per-function
   render() {
-    const { t, beaconRecords, sortedLocationList } = this.props;
+    const { t, beaconRecords, sortedLocationList, gameModel } = this.props;
 
     if (!beaconRecords || !sortedLocationList) {
       return null;
@@ -172,24 +173,13 @@ export class BeaconRecordEditor extends Component<BeaconRecordEditorProps> {
                     />
                   </td>
                   <td>
-                    <Form.Control 
-                      as="select" 
-                      defaultValue={beacon.location_id !== null ? beacon.location_id : undefined} 
-                      data-id-str={beacon.id} 
-                      onChange={this.onLocationSelect}
-                    >
-                      <option value="beaconHasNoLocation">{t('beaconHasNoLocation')}</option>
-                      {
-                        sortedLocationList.map((location) => (
-                          <option
-                            key={location.id}
-                            value={location.id}
-                          >
-                            {`${location.label} (${location.id})`}
-                          </option>
-                        ))
-                      }
-                    </Form.Control>
+                    <BeaconLocationSelect
+                      gameModel={gameModel}
+                      beacon={beacon}
+                      onLocationSelect={(beaconId: number, locationId: number | null) => {
+                        this.putBeaconRecord(beaconId, {prop: 'location_id', value: locationId});
+                      }}
+                    />
                   </td>
                   <td>
                     <div className="menu tw-float-right">

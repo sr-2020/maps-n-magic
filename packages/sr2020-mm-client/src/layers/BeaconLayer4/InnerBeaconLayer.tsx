@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { WithTranslation } from 'react-i18next';
-import { L, CommonLayerProps } from "sr2020-mm-client-core";
+import { L, CommonLayerProps, getIcon, iconColors } from "sr2020-mm-client-core";
 import * as R from 'ramda';
 
 import { 
@@ -8,7 +8,9 @@ import {
   BeaconRecord, 
   ArrDiffUpdate, 
   ArrDiff,
-  LatLngBeaconRecord
+  LatLngBeaconRecord,
+  GameModel,
+  GetLocationRecord
 } from 'sr2020-mm-event-engine';
 import { WithLatLngBeacons } from "./withLatLngBeacons";
 
@@ -18,6 +20,7 @@ interface InnerBeaconLayerProps extends CommonLayerProps, WithTranslation, WithL
   enableByDefault: boolean;
   onBeaconClick: L.LeafletEventHandlerFn;
   onBeaconEdit: L.LeafletEventHandlerFn;
+  gameModel: GameModel;
 }
 
 export class InnerBeaconLayer extends Component<
@@ -102,12 +105,13 @@ export class InnerBeaconLayer extends Component<
     // const imagesData = gameModel.get('backgroundImages').map(translator.moveTo);
 
     const {
-      lat, lng, label, id,
+      lat, lng, label, id
     } = beaconRecord;
     // const beacon = L.marker({ lat, lng }, {
     const beacon = makeBeacon({ lat, lng }, {
       id, label,
     });
+    this.setIcon(beacon, beaconRecord);
     beacon.on('mouseover', function (this: Beacon, e) {
       beacon.bindTooltip(t('markerTooltip', { name: this.options.label }));
       this.openTooltip();
@@ -124,11 +128,28 @@ export class InnerBeaconLayer extends Component<
 
   updateBeacon({ item }: ArrDiffUpdate<LatLngBeaconRecord>) {
     const {
-      lat, lng, label, id,
+      lat, lng, label, id, location_id
     } = item;
     const marker = this.group.getLayers().find((rect2: Beacon) => rect2.options.id === id) as Beacon;
+    this.setIcon(marker, item);
     marker.setLatLng({ lat, lng });
     L.Util.setOptions(marker, { label });
+  }
+
+  setIcon(beacon: Beacon, beaconRecord: BeaconRecord) {
+    const { gameModel } = this.props;
+    const {
+      location_id
+    } = beaconRecord;
+    if (location_id !== null) {
+      const location = gameModel.get2<GetLocationRecord>({
+        type: 'locationRecord',
+        id: location_id
+      });
+      beacon.setIcon(getIcon(location === null ? iconColors.red : iconColors.blue));
+    } else {
+      beacon.setIcon(getIcon(iconColors.red));
+    }
   }
 
   removeBeacon(beaconRecord: LatLngBeaconRecord) {
