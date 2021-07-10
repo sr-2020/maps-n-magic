@@ -12,6 +12,7 @@ import { GameModel } from "sr2020-mm-event-engine";
 import { BackgroundImageDisplayLayer } from '../../layers/BackgroundImageDisplayLayer';
 import { GoogleMapsExportedDataLayer } from '../../layers/GoogleMapsExportedDataLayer';
 import { BeaconLayer4 } from '../../layers/BeaconLayer4';
+import { LocationLayer4 } from '../../layers/LocationLayer4';
 
 interface BeaconEditorMapProps {
   gameModel: GameModel;
@@ -43,6 +44,13 @@ export function BeaconEditorMap(props: BeaconEditorMapProps) {
       {/* @ts-ignore */}
       <GoogleMapsExportedDataLayer
         enableByDefault={false}
+      />
+      <LocationLayer4
+        editable={false}
+        enableByDefault={false}
+        enableLayerIndex={{
+          geoLocation: true,
+        }}
       />
       <BeaconLayer4
         enableByDefault

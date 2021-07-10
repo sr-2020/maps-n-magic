@@ -24,7 +24,7 @@ const defaultGroups = Object.keys(locationTypesEnum).reduce((acc, layerId: locat
 // type SubProps = Pick<LocationGroupLayerProps, 'geoLayerName'>;
 
 export interface InnerLocationLayerProps extends WithLocationRecords, LocationGroupLayerProps {
-
+  editable: boolean;
 }
 
 export function InnerLocationLayer(props: InnerLocationLayerProps) {

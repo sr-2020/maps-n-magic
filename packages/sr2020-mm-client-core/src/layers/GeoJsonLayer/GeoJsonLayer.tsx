@@ -90,6 +90,7 @@ export function GeoJsonLayer(props: GeoJsonLayerProps): null {
       };
       const geoJsonObj = L.geoJSON(feature, {
         style,
+        pmIgnore: true
       })
         // @ts-ignore
         .bindPopup((layer: L.GeoJSON) => layer.feature.properties.description || '')

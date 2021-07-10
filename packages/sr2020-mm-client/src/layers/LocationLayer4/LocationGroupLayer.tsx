@@ -22,6 +22,7 @@ export interface LocationGroupLayerProps extends CommonLayerProps, WithTranslati
   nameKey: SRTKey & string;
   onLocationClick?: L.LeafletEventHandlerFn;
   onLocationEdit?: L.LeafletEventHandlerFn;
+  editable: boolean;
 }
 
 type TooltipTemplate = 'unknownLocationTypeTooltip' | 'geoLocationTooltip' | 'regionTooltip' | 'gameLocationTooltip';
@@ -121,13 +122,19 @@ export class LocationGroupLayer extends Component<
   }
 
   createLocation(locationRecord: LocationRecord) {
-    const { t, onLocationClick, onLocationEdit } = this.props;
+    const { t, onLocationClick, onLocationEdit, editable } = this.props;
     const {
       polygon, label, id, layer_id, options,
     } = locationRecord;
     // const loc = L.polygon([polygon[0]], {
     const loc = basicLocation([polygon[0]], {
-      id, label, layer_id, color: options.color, weight: options.weight, fillOpacity: options.fillOpacity,
+      id, 
+      label, 
+      layer_id, 
+      color: options.color, 
+      weight: options.weight, 
+      fillOpacity: options.fillOpacity,
+      pmIgnore: !editable
     });
     loc.on('mouseover', function (this: BasicLocation, e) {
 
