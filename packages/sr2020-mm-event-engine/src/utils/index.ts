@@ -120,7 +120,21 @@ export function getPolygonCentroid(polygon: SRPolygon): SRLatLng {
   };
 }
 
-export const isClinicallyDead = (charState: RawCharacterHealthState): boolean => charState.healthState === BodyConditions.Clinically_dead;
+export const isClinicallyDead = (charState: RawCharacterHealthState): boolean => 
+  charState.healthState === BodyConditions.Clinically_dead;
+
+export const isBiologicallyDead = (charState: RawCharacterHealthState): boolean => 
+  charState.healthState === BodyConditions.Biologically_dead;
+
+export const isDead = (charState: RawCharacterHealthState): boolean => 
+  isClinicallyDead(charState) || isBiologicallyDead(charState);
+
+export const healthStateShortNames: Record<string, string> = {
+  'healthy': 'ЗД',
+  'wounded': 'ТЯЖ',
+  'clinically_dead': 'КС',
+  'biologically_dead': 'АС',
+};
 
 
 // Check if it is necessary to show clinically dead character.

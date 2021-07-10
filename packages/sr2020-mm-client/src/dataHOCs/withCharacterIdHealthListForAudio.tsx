@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import * as R from 'ramda';
 import { 
   isClinicallyDead, 
+  isDead,
   isRelevant,
   CharacterHealthStates, 
   CharacterHealthState,
@@ -56,7 +57,8 @@ export const withCharacterIdHealthListForAudio = (Wrapped: any) => (props: objec
     // });
     const timestamp = moment.utc().valueOf();
     const fullList3 = R.pipe(
-      R.filter(isClinicallyDead),
+      // R.filter(isClinicallyDead),
+      R.filter(isDead),
       R.filter(isRelevant(timestamp)),
       // @ts-ignore
       R.pluck('characterId'),

@@ -9,7 +9,9 @@ import {
   getArrDiff, 
   ArrDiff,
   getPolygonCentroid, 
-  isClinicallyDead,
+  // isClinicallyDead,
+  isDead,
+  healthStateShortNames,
   CharacterHealthStatesByLocation,
   CharacterHealthState
 } from 'sr2020-mm-event-engine';
@@ -21,14 +23,17 @@ function hasDifference(
   prevItem: CharacterHealthStatesByLocation
 ): boolean {
   // polygon, label, options.manaLevel
-  const list1 = R.pluck('characterId', item.characters.filter(isClinicallyDead));
-  const list2 = R.pluck('characterId', prevItem.characters.filter(isClinicallyDead));
+  // const list1 = R.pluck('characterId', item.characters.filter(isClinicallyDead));
+  // const list2 = R.pluck('characterId', prevItem.characters.filter(isClinicallyDead));
+  const list1 = R.pluck('characterId', item.characters.filter(isDead));
+  const list2 = R.pluck('characterId', prevItem.characters.filter(isDead));
   return R.symmetricDifference(list1, list2).length > 0
     || R.equals(item.location.polygon, prevItem.location.polygon);
 }
 
 const preFilterCharacters = (list: CharacterHealthStatesByLocation[]) => 
-  list.filter((item) => item.characters.some(isClinicallyDead));
+  // list.filter((item) => item.characters.some(isClinicallyDead));
+  list.filter((item) => item.characters.some(isDead));
 
 interface RescueServiceLayer2Props extends CommonLayerProps, WithCharacterHealthStatesForMap {
   enableByDefault: boolean;
@@ -115,12 +120,20 @@ export class RescueServiceLayer2 extends Component<
 
   updateMarkerTooltip(marker: LocationCentroid, characters: CharacterHealthState[]) {
     marker.unbindTooltip();
-    const deadCharacters = characters.filter(isClinicallyDead);
+    // const deadCharacters = characters.filter(isClinicallyDead);
+    const deadCharacters = characters.filter(isDead);
     // marker.bindTooltip(`id персонажей: ${R.pluck('userName', deadCharacters).join(', ')}`, {
     // marker.bindTooltip(`${R.pluck('userName', deadCharacters).join(', ')}`, {
-    marker.bindTooltip(`${R.pluck('personName', deadCharacters).join(', ')}`, {
+    const labels = deadCharacters.map(el => 
+      el.personName + ' ' + healthStateShortNames[el.healthState]
+    );
+    
+    marker.bindTooltip(labels.join(', '), {
       permanent: true,
     });
+    // marker.bindTooltip(`${R.pluck('personName', deadCharacters).join(', ')}`, {
+    //   permanent: true,
+    // });
   }
 
   createMarker(dataItem: CharacterHealthStatesByLocation) {

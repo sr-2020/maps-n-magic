@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import * as R from 'ramda';
 import { 
-  isClinicallyDead, 
+  isClinicallyDead,
+  isDead,
   isRelevant,
   CharacterHealthStates, 
   CharacterHealthState,
@@ -59,7 +60,8 @@ export const withCharacterHealthListForTable = (Wrapped: any) => (props: object 
     // type step = (states: CharacterHealthState[]) => CharacterHealthState[];
     // @ts-ignore
     const fullList3: CharacterHealthState[] = R.pipe(
-      R.filter(isClinicallyDead),
+      // R.filter(isClinicallyDead),
+      R.filter(isDead),
       // @ts-ignore
       R.filter(_isRelevant),
       R.sortWith([
