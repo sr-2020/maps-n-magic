@@ -154,6 +154,15 @@ export class SpiritService extends AbstractService<SpiritServiceContract> {
       ...R.omit(['id'], spirit),
       name: this._makeSpiritName(spirit.name),
     };
+    if ( props.state.status === 'NotInGame') {
+      props.state = {
+        status: 'NotInGame'
+      };
+    } else {
+      props.state = {
+        status: 'RestInAstral'
+      };
+    }
     this.emit2({
       type: 'postSpiritRequested',
       props
