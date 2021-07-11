@@ -46,12 +46,12 @@ export function SuitSpiritPage(props: SuitSpiritPageProps) {
   // const [bodyStorageQrString, setBodyStorageQrString] = useState<string | null>('01deAQCccuZg366');
 
   // 367 empty body storage
-  const [bodyStorageQrString, setBodyStorageQrString] = useState<string | null>('3c8eAQBobuZg367');
+  // const [bodyStorageQrString, setBodyStorageQrString] = useState<string | null>('3c8eAQBobuZg367');
 
   // 360 full body storage
   // const [bodyStorageQrString, setBodyStorageQrString] = useState<string | null>('bd1bAQBYa+Zg360');
 
-  // const [bodyStorageQrString, setBodyStorageQrString] = useState<string | null>(null);
+  const [bodyStorageQrString, setBodyStorageQrString] = useState<string | null>(null);
   const [scanBodyStorage, setScanBodyStorage] = useState<boolean>(false);
   const [bodyStorageStatus, setBodyStorageStatus] = useState<BodyStorageStatus>({status: 'unknown'});
 
