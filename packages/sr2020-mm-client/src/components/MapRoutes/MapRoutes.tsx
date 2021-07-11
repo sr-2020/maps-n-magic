@@ -27,6 +27,7 @@ import {
   locationsEditor2GeomanConfig, 
   beaconEditor2GeomanConfig,
 } from '../../configs';
+import { LocationEditorMap2 } from '../../maps/LocationEditorMap2';
 
 interface MapRoutesProps {
   gameModel: GameModel;
@@ -50,6 +51,12 @@ export function MapRoutes(props: MapRoutesProps) {
     // </Route>,
     <Route path="/locationsEditor2" key="locationsEditor2">
       <LocationEditorMap
+        gameModel={gameModel}
+        geomanConfig={locationsEditor2GeomanConfig}
+      />
+    </Route>,
+    <Route path="/locationsEditor3" key="locationsEditor3">
+      <LocationEditorMap2
         gameModel={gameModel}
         geomanConfig={locationsEditor2GeomanConfig}
       />

@@ -89,13 +89,17 @@ export class LocationLayer4 extends Component<
   }
 
   onCreateLayer(event: OnCreateLayerEvent) {
-    const { gameModel, translator } = this.props;
+    const { gameModel, translator, editable } = this.props;
     if (event.layer instanceof L.Polygon) {
       const location = event.layer;
       // @ts-ignore
       // const latlngs = translator.moveFrom({
       //   latlngs: location.getLatLngs(),
       // });
+      location.remove();
+      if (!editable) {
+        return;
+      }
       const latlngs = location.getLatLngs();
       gameModel.execute2<PostLocationRecord>({
         type: 'postLocationRecord',
@@ -103,14 +107,16 @@ export class LocationLayer4 extends Component<
         // @ts-ignore
         props: { polygon: latlngs },
       });
-      location.remove();
     }
   }
 
   onRemoveLayer(event: OnRemoveLayerEvent) {
     const {
-      gameModel, layerCommunicator,
+      gameModel, layerCommunicator, editable
     } = this.props;
+    if (!editable) {
+      return;
+    }
     if (event.layer instanceof L.Polygon) {
       const location = event.layer;
       gameModel.execute({

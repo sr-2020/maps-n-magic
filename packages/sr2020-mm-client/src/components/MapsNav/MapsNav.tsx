@@ -12,6 +12,9 @@ const navLinks: NavLinkData[] = [{
   to: '/locationsEditor2',
   tKey: 'locationsEditor2',
 }, {
+  to: '/locationsEditor3',
+  tKey: 'locationsEditor3',
+}, {
   to: '/beaconEditor2',
   tKey: 'beaconEditor2',
 // }, {

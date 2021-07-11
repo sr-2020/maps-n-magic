@@ -19,6 +19,7 @@ export const appDictionary = {
   buildingPlansEditor: 'Здания',
   locationsAndBeaconsEditor: 'Локации и маяки - 1',
   locationsEditor2: 'Локации',
+  locationsEditor3: 'Локации+',
   beaconEditor2: 'Маяки',
   mapEditors: 'Редакторы карт',
   spiritEditors: 'Редакторы духов',

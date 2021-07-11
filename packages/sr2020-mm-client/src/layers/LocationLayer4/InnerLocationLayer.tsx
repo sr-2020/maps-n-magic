@@ -28,13 +28,15 @@ export interface InnerLocationLayerProps extends WithLocationRecords, LocationGr
 }
 
 export function InnerLocationLayer(props: InnerLocationLayerProps) {
-  const { locationRecords } = props;
+  const { locationRecords, editable } = props;
 
   const locationGroups = R.groupBy(lr => {
     return layerIdToLayerName[lr.layer_id];
   }, locationRecords.filter(isNotEmptyPolygon)) as Record<keyof typeof locationTypesEnum, LocationRecord[]>;
 
   const mergedGroups = { ...defaultGroups, ...locationGroups };
+
+  const suffix: "_editable" | "_static" = editable === true ? '_editable' : '_static';
   return (
     <>
       {
@@ -42,7 +44,8 @@ export function InnerLocationLayer(props: InnerLocationLayerProps) {
           <LocationGroupLayer
             {...props}
             geoLayerName={locationType.name}
-            nameKey={locationTypeToLayerTkey(locationType.name)}
+            // @ts-ignore
+            nameKey={locationTypeToLayerTkey(locationType.name) + suffix}
             locationRecords={mergedGroups[locationType.name]}
           />
         ))
