@@ -83,6 +83,7 @@ export class SpiritList extends Component<SpiritListProps> {
 
     return (
       <EntityList
+        className="SpiritList"
         items={items}
         onCreateEntity={this.createSpirit}
         onCloneEntity={this.cloneSpirit}

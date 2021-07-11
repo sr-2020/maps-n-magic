@@ -8,6 +8,7 @@ export const appDictionary = {
   demo: 'Демо - 1',
   map2: 'Редактор карты',
   spiritEditor: 'Редактор духов',
+  spiritFractionEditor: 'Редактор фракций духов',
   spiritRouteEditor: 'Редактор маршрутов духов',
   spiritsOnMap: 'Духи на карте',
   soundMapping: 'Сопоставление звука',

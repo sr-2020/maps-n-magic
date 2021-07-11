@@ -79,6 +79,7 @@ export class SpiritRouteList extends Component<SpiritRouteListProps> {
 
     return (
       <EntityList
+        className="SpiritRouteList"
         items={items}
         onCreateEntity={this.createSpiritRoute}
         onCloneEntity={this.cloneSpiritRoute}

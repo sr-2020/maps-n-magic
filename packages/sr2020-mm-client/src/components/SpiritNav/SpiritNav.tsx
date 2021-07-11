@@ -15,6 +15,9 @@ const navLinks: NavLinkData[] = [{
   to: '/spiritEditor',
   tKey: 'spiritEditor',
 }, {
+  to: '/spiritFractionEditor',
+  tKey: 'spiritFractionEditor',
+}, {
   to: '/spiritRouteEditor',
   tKey: 'spiritRouteEditor',
 }, {

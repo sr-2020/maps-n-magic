@@ -59,6 +59,7 @@ import { LoginManager } from "../../utils";
 import { SoundStageEcho } from '../SoundManager/SoundStageEcho';
 import { SoundStageGuard } from '../SoundStageGuard';
 import { SoundResumer } from '../SoundResumer';
+import { SpiritFractionEditor } from '../SpiritFractionEditor';
 
 const TEST_POSITION = {
   coords: {
@@ -306,6 +307,9 @@ export class App extends Component<AppProps, AppState> {
                     </Route>,
                     <Route path="/spiritEditor">
                       <SpiritEditor gameModel={gameModel} />
+                    </Route>
+                    <Route path="/spiritFractionEditor">
+                      <SpiritFractionEditor gameModel={gameModel} />
                     </Route>
                     <Route path="/spiritRouteEditor">
                       <SpiritRouteEditor gameModel={gameModel} />

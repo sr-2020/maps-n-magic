@@ -297,3 +297,9 @@ export function getSpiritLocationId(spirit: Spirit): number | undefined {
   }
   return undefined;
 }
+
+export function assert(condition: any, msg?: string): asserts condition {
+  if (!condition) {
+    throw new Error(msg);
+  }
+}

@@ -22,6 +22,7 @@ export const spiritDictionary = {
   enterSpiritName: 'Введите имя духа',
   createSpirit: 'Создать духа',
   findSpirit: 'Найти духов',
+  findSpiritFraction: 'Найти фракцию',
   createSpirits: 'Создайте духов',
   
   // spirit route content

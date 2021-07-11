@@ -4,6 +4,10 @@ import './EntityList.css';
 
 import { WithTranslation } from "react-i18next";
 
+import { 
+  assert
+} from "sr2020-mm-event-engine";
+
 import { EntitiyListItem } from "./types";
 import { InnerEntityList,  } from "./InnerEntityList";
 import { InnerEntityRoutes } from "./InnerEntityRoutes";
@@ -11,13 +15,15 @@ import { CreateEntityControl } from "./CreateEntityControl";
 
 import { Search } from './Search';
 import { SRTKey } from 'sr2020-mm-client-core';
+import classNames from 'classnames';
+
 
 
 interface EntityListProps extends WithTranslation {
   items: EntitiyListItem[];
-  onCreateEntity: (entityName: string) => void;
-  onCloneEntity: (id: number) => void;
-  onRemoveEntity: (id: number) => void;
+  onCreateEntity?: (entityName: string) => void;
+  onCloneEntity?: (id: number) => void;
+  onRemoveEntity?: (id: number) => void;
   makeLink: (id: number, name: string) => string;
   linkRoot: string;
   createControlTitle: SRTKey;
@@ -25,6 +31,7 @@ interface EntityListProps extends WithTranslation {
   createSubmitButtonText: SRTKey;
   findEntity: SRTKey;
   noEntitiesAdvice: SRTKey;
+  className?: string;
 }
 interface EntityListState {
   removedEntityIndex: number | null,
@@ -51,6 +58,7 @@ onSearchChange(searchStr: string) {
 
 createEntity(entityName: string): void {
   const { onCreateEntity } = this.props;
+  assert(onCreateEntity !== undefined);
   onCreateEntity(entityName);
   // history.push(makeLink(id));
 }
@@ -61,6 +69,7 @@ cloneEntity(e: MouseEvent<HTMLInputElement>): void {
   // const { gameModel, history, makeLink } = this.props;
   const { onCloneEntity } = this.props;
   const { id } = e.currentTarget.dataset;
+  assert(onCloneEntity !== undefined);
   onCloneEntity(Number(id));
   // history.push(makeLink(id));
 }
@@ -71,6 +80,7 @@ removeEntity(e: MouseEvent<HTMLInputElement>): void {
   const { id } = e.currentTarget.dataset;
   const { onRemoveEntity } = this.props;
   const idNumber = Number(id);
+  assert(onRemoveEntity !== undefined);
   onRemoveEntity(idNumber);
   const { items } = this.props;
   // if (items === null) {
@@ -105,22 +115,29 @@ render() {
     createSubmitButtonText,
     findEntity,
     noEntitiesAdvice,
+    className,
+    onCreateEntity,
+    onCloneEntity,
+    onRemoveEntity
   } = this.props;
 
   return (
-    <div className="EntityList tw-flex-grow-0 tw-flex tw-flex-col tw-bg-gray-200">
+    <div className={classNames("EntityList tw-flex-grow-0 tw-flex tw-flex-col tw-bg-gray-200", className)}>
       <div className="tw-bg-gray-400 tw-flex-grow-0 tw-text-right tw-px-3 tw-py-2 tw-flex">
         <Search
           className="tw-flex-grow"
           placeholder={t(findEntity)}
           onSearchChange={this.onSearchChange}
         />
-        <CreateEntityControl 
-          onCreateEntity={this.createEntity}
-          controlTitle={createControlTitle}
-          formTitle={createFormTitle}
-          submitButtonText={createSubmitButtonText}
-        />
+        {
+          onCreateEntity !== undefined && 
+          <CreateEntityControl 
+            onCreateEntity={this.createEntity}
+            controlTitle={createControlTitle}
+            formTitle={createFormTitle}
+            submitButtonText={createSubmitButtonText}
+          />
+        }
       </div>
       <InnerEntityRoutes 
         items={items}
@@ -133,8 +150,8 @@ render() {
         <InnerEntityList
           highlightStr={searchStr.toLowerCase()}
           items={this.filterListItems(items)}
-          onCloneEntity={this.cloneEntity}
-          onRemoveEntity={this.removeEntity}
+          onCloneEntity={onCloneEntity !== undefined ? this.cloneEntity : undefined}
+          onRemoveEntity={onRemoveEntity !== undefined ? this.removeEntity : undefined}
           makeLink={makeLink}
         />
       </div>
