@@ -42,6 +42,8 @@ interface BeaconRecordEditorProps extends WithTranslation, WithSortDataHOC {
 }
 
 export class BeaconRecordEditor extends Component<BeaconRecordEditorProps> {
+  updateBeaconRecordTimeoutId: NodeJS.Timeout | undefined;
+  
   constructor(props: BeaconRecordEditorProps) {
     super(props);
     this.state = {
@@ -83,13 +85,19 @@ export class BeaconRecordEditor extends Component<BeaconRecordEditorProps> {
   putBeaconRecord(id: number, propChange: BeaconPropChange): void {
     const { gameModel } = this.props;
 
-    gameModel.execute2<PutBeaconRecord>({
-      type: 'putBeaconRecord',
-      id,
-      props: {
-        [propChange.prop]: propChange.value,
-      },
-    });
+    if (this.updateBeaconRecordTimeoutId !== undefined) {
+      clearTimeout(this.updateBeaconRecordTimeoutId);
+    }
+
+    this.updateBeaconRecordTimeoutId = setTimeout(() => {
+      gameModel.execute2<PutBeaconRecord>({
+        type: 'putBeaconRecord',
+        id,
+        props: {
+          [propChange.prop]: propChange.value,
+        },
+      });
+    }, 500);
   }
 
   removeBeacon(e: MouseEvent<DropdownItemProps>, id: number): void {

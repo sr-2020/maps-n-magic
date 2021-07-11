@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { Component, ChangeEvent } from 'react';
 import { WithTranslation } from 'react-i18next';
 import './BeaconLayer4.css';
 
@@ -14,6 +14,7 @@ import {
   GameModel, 
   BeaconRecord,
   PutBeaconRecord,
+  BeaconPropChange,
 } from 'sr2020-mm-event-engine';
 
 import { CreateBeaconPopup } from './CreateBeaconPopup';
@@ -47,6 +48,8 @@ export class BeaconLayer4 extends Component<
 
   createBeaconPopup: L.Popup;
 
+  updateBeaconRecordTimeoutId: NodeJS.Timeout | undefined;
+
   constructor(props: BeaconLayer4Props) {
     super(props);
     this.state = {
@@ -61,22 +64,23 @@ export class BeaconLayer4 extends Component<
     this.onBeaconEdit = this.onBeaconEdit.bind(this);
     this.onBeaconClick = this.onBeaconClick.bind(this);
     this.onLocationSelect = this.onLocationSelect.bind(this);
+    this.handleInputChange = this.handleInputChange.bind(this);
   }
 
   componentDidMount() {
     this.beaconPopupContainer = document.createElement('div');
     this.communicatorSubscribe('on');
     this.createBeaconPopup = L.popup();
-    console.log('BeaconLayer4 mounted');
+    // console.log('BeaconLayer4 mounted');
   }
 
   componentDidUpdate() {
-    console.log('BeaconLayer4 did update');
+    // console.log('BeaconLayer4 did update');
   }
 
   componentWillUnmount() {
     this.communicatorSubscribe('off');
-    console.log('BeaconLayer4 will unmount');
+    // console.log('BeaconLayer4 will unmount');
   }
 
   // eslint-disable-next-line react/sort-comp
@@ -215,6 +219,35 @@ export class BeaconLayer4 extends Component<
     });
   }
 
+  handleInputChange(event: ChangeEvent<HTMLInputElement>): void {
+    const { target } = event;
+    const { idStr } = event.target.dataset;
+    const { value } = target;
+    const name = target.name as 'bssid' | 'label';
+    if(!['bssid','label'].includes(name)) {
+      throw new Error('Unexpected beacon record prop name: ' + name);
+    }
+    this.putBeaconRecord(Number(idStr), {prop: name, value});
+  }
+
+  putBeaconRecord(id: number, propChange: BeaconPropChange): void {
+    const { gameModel } = this.props;
+
+    if (this.updateBeaconRecordTimeoutId !== undefined) {
+      clearTimeout(this.updateBeaconRecordTimeoutId);
+    }
+
+    this.updateBeaconRecordTimeoutId = setTimeout(() => {
+      gameModel.execute2<PutBeaconRecord>({
+        type: 'putBeaconRecord',
+        id,
+        props: {
+          [propChange.prop]: propChange.value,
+        },
+      });
+    }, 500);
+  }
+
   render() {
     const {
       beaconLatLng, curBeacon,
@@ -244,6 +277,7 @@ export class BeaconLayer4 extends Component<
               onLocationSelect={this.onLocationSelect}
               domContainer={this.beaconPopupContainer}
               gameModel={gameModel}
+              handleInputChange={this.handleInputChange}
             />
           )
         }

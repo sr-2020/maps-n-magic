@@ -1,14 +1,15 @@
-import React, { Component } from 'react';
+import React, { ChangeEvent, Component } from 'react';
 import { WithTranslation } from 'react-i18next';
 import './CreateBeaconPopup.css';
 import * as R from 'ramda';
-
 import ReactDOM from 'react-dom';
 import classNames from 'classnames';
+import Form from 'react-bootstrap/Form';
+
+import { GameModel } from 'sr2020-mm-event-engine';
 
 import { CurBeacon } from "../BeaconLayer4";
 import { BeaconLocationSelect } from '../../../components/BeaconRecordEditor/BeaconLocationSelect';
-import { GameModel } from 'sr2020-mm-event-engine';
 
 interface CreateBeaconPopupProp extends WithTranslation {
   freeBeaconIds: number[];
@@ -19,10 +20,10 @@ interface CreateBeaconPopupProp extends WithTranslation {
   curBeacon: CurBeacon | null;
   gameModel: GameModel;
   onLocationSelect: (beaconId: number, locationId: number | null) => void;
+  handleInputChange: (event: ChangeEvent<HTMLInputElement>) => void;
 }
 
 export class CreateBeaconPopup extends Component<CreateBeaconPopupProp> {
-
   constructor(props: CreateBeaconPopupProp) {
     super(props);
     this.state = {
@@ -31,30 +32,55 @@ export class CreateBeaconPopup extends Component<CreateBeaconPopupProp> {
 
   makeContent() {
     const {
-      t, onClose, freeBeaconIds, onSelect, latLng, curBeacon, gameModel, onLocationSelect
+      t, 
+      onClose, 
+      freeBeaconIds, 
+      onSelect, 
+      latLng, 
+      curBeacon, 
+      gameModel, 
+      onLocationSelect,
+      handleInputChange
     } = this.props;
 
     const common = 'tw-font-bold tw-py-2 focus:tw-outline-none focus:tw-shadow-outline tw-rounded';
     const selectedButton = 'tw-bg-blue-500 hover:tw-bg-blue-700 tw-text-white';
     const unselectedButton = 'tw-bg-gray-300 hover:tw-bg-gray-400 tw-text-gray-800';
     return (
-      <div className="CreateBeaconPopup">
+      <div className="CreateBeaconPopup" key={curBeacon?.id}>
         {
           curBeacon !== null &&
-          <div className="tw-mb-4">
-            <label
-              className="tw-block tw-text-gray-700 tw-text-sm tw-font-bold tw-mb-2"
-              htmlFor="locationName"
-            >
-              Локация
-            </label>
-            <BeaconLocationSelect
-              key={curBeacon.id}
-              gameModel={gameModel}
-              beacon={curBeacon}
-              onLocationSelect={onLocationSelect}
-            />
-          </div>
+          <>
+            <div className="tw-mb-4">
+              <label
+                className="tw-block tw-text-gray-700 tw-text-sm tw-font-bold tw-mb-2"
+                htmlFor="locationName"
+              >
+                Подпись
+              </label>
+              <Form.Control
+                name="label"
+                type="text"
+                defaultValue={curBeacon.label}
+                data-id-str={curBeacon.id}
+                onChange={handleInputChange}
+              />
+            </div>
+            <div className="tw-mb-4">
+              <label
+                className="tw-block tw-text-gray-700 tw-text-sm tw-font-bold tw-mb-2"
+                htmlFor="locationName"
+              >
+                Локация
+              </label>
+              <BeaconLocationSelect
+                key={curBeacon.id}
+                gameModel={gameModel}
+                beacon={curBeacon}
+                onLocationSelect={onLocationSelect}
+              />
+            </div>
+          </>
         }
         <div className="tw-mb-4">
           <label
