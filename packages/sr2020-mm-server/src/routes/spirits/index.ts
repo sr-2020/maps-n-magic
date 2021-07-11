@@ -4,6 +4,7 @@ import { ErrorResponse, GetSpirit, getSpiritLocationId, GetUserRecord, invalidRe
 import { createLogger, getQrModelData, InnerApiRequest } from 'sr2020-mm-server-event-engine';
 import { mainCatchSpirit } from './catchSpirit';
 import { mainDispirit } from './dispirit';
+import { mainEmergencyDispirit } from './emergencyDispirit';
 import { mainFreeSpirit } from './freeSpirit';
 import { mainSuitSpirit } from './suitSpirit';
 
@@ -13,5 +14,6 @@ router.post('/catchSpirit', mainCatchSpirit);
 router.post('/freeSpirit', mainFreeSpirit);
 router.post('/suitSpirit', mainSuitSpirit);
 router.post('/dispirit', mainDispirit);
+router.post('/emergencyDispirit', mainEmergencyDispirit);
 
 export const spiritRouter = router;

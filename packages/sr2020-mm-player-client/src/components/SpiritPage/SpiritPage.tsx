@@ -21,10 +21,16 @@ import { SpiritCard } from '../SpiritCard';
 // import { WithTranslation } from "react-i18next";
 
 interface SpiritPageProps {
+  setTitle: (title: string) => void;
 }
 
 export function SpiritPage(props: SpiritPageProps) {
-  // const { t } = props;
+  const { setTitle } = props;
+
+  useEffect(() => {
+    setTitle(`Осмотреть тотем`);
+  }, []);
+
   const [spiritJarQrString, setSpiritJarQrString] = useState<string | null>(null);
   // my QR from app
   // const [spiritJarQrString, setSpiritJarQrString] = useState<string | null>('6d15BQC35thg51935');

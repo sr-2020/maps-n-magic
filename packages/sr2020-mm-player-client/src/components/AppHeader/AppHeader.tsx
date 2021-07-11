@@ -67,9 +67,14 @@ export function AppHeader(props: AppHeaderProps) {
           }
           {
             characterData.isInSpiritSuit === true && 
-            <LinkContainer to="/dispirit">
-              <Nav.Link>Снять духа</Nav.Link>
-            </LinkContainer>
+            <>
+              <LinkContainer to="/dispirit">
+                <Nav.Link>Снять духа</Nav.Link>
+              </LinkContainer>
+              <LinkContainer to="/emergencyDispirit">
+                <Nav.Link>Экстренно снять духа</Nav.Link>
+              </LinkContainer>
+            </>
           }
           {/* <LinkContainer to="/qrTest">
             <Nav.Link>QR тест</Nav.Link>

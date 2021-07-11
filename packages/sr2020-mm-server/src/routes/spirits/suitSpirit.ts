@@ -91,7 +91,8 @@ export const mainSuitSpirit = async (req1, res, next) => {
           status: 'Suited',
           characterId,
           currentTime: Date.now(),
-          duration: 30 * 60 * 1000
+          duration: 30 * 60 * 1000,
+          emergencyDispirited: false,
         },
       }
     });

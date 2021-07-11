@@ -1,10 +1,11 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import './CharacterPage.css';
 
 import { WithLoginState, WithCharacterDataOnly } from '../../hocs';
 import { BodyType, HealthState } from 'sr2020-mm-event-engine';
 
 interface CharacterPageProps extends WithCharacterDataOnly {
+  setTitle: (title: string) => void;
 }
 
 const bodyTypeLabel: Record<BodyType, string> = {
@@ -23,7 +24,11 @@ const healthStateLabel: Record<HealthState, string> = {
 }
 
 export function CharacterPage(props: CharacterPageProps) {
-  const { characterData } = props;
+  const { characterData, setTitle } = props;
+
+  useEffect(() => {
+    setTitle(`Персонаж`);
+  }, []);
 
   if (characterData === null) {
     return <div>Данные персонажа загружаются</div>

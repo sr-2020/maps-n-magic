@@ -17,6 +17,7 @@ import { isBodyStorageValid } from './isBodyStorageValid';
 import { isSpiritJarValid } from './isSpiritJarValid';
 import { suitSpirit } from './suitSpirit';
 import { dispirit } from './dispirit';
+import { emergencyDispirit } from './emergencyDispirit';
 
 const logger = createLogger('player-server/spirits.ts');
 
@@ -30,6 +31,8 @@ router.post('/freeSpirit', freeSpirit);
 router.post('/suitSpirit', suitSpirit);
 
 router.post('/dispirit', dispirit);
+
+router.post('/emergencyDispirit', emergencyDispirit);
 
 router.get('/getSpiritDataByQr', getSpiritDataByQr);
 

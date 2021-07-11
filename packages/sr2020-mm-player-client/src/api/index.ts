@@ -108,6 +108,13 @@ export async function dispirit(
   return await res.json();
 }
 
+export async function emergencyDispirit(): Promise<ErrorResponse | true> {
+  const res = await fetch('/api/emergencyDispirit', {
+    method: 'POST',
+  });
+  return await res.json();
+}
+
 export async function freeSpirit(qrId: number, reason: string): Promise<ErrorResponse | SpiritJarQr> {
   const res = await fetch('/api/freeSpirit', {
     method: 'POST',

@@ -78,7 +78,13 @@ const inJarStateSchema: JSONSchemaType<InJarState> = {
 
 const suitedStateSchema: JSONSchemaType<SuitedState> = {
   type: 'object',
-  required: ['status', 'characterId', 'currentTime', 'duration'],
+  required: [
+    'status', 
+    'characterId', 
+    'currentTime', 
+    'duration', 
+    'emergencyDispirited'
+  ],
   additionalProperties: false,
   properties: {
     status: {
@@ -88,6 +94,7 @@ const suitedStateSchema: JSONSchemaType<SuitedState> = {
     characterId: { type: 'number' },
     currentTime: { type: 'number' },
     duration: { type: 'number' },
+    emergencyDispirited: { type: 'boolean' },
   }
 };
 

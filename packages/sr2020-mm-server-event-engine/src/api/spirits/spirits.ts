@@ -32,6 +32,10 @@ export const getSpirits = async function(): Promise<unknown[]> {
     if (data.level === undefined) {
       data.level = 1;
     }
+    if(data.state.status === 'Suited' && 
+      data.state.emergencyDispirited === undefined) {
+      data.state.emergencyDispirited = false;
+    }
   });
   return rows.map(row => ({
     ...row.data,

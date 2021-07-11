@@ -8,6 +8,7 @@ import Button from "react-bootstrap/Button";
 import { StatusIcon } from '../StatusIcon';
 
 interface DispiritPageProps {
+  setTitle: (title: string) => void;
 }
 
 type BodyStorageStatus2 = {
@@ -29,7 +30,11 @@ type SpiritJarStatus2 = {
 };
 
 export function DispiritPage(props: DispiritPageProps) {
-  // const { t } = props;
+  const { setTitle } = props;
+
+  useEffect(() => {
+    setTitle(`Снять духа`);
+  }, []);
 
   // 366 non body storage
   // const [bodyStorageQrString, setBodyStorageQrString] = useState<string | null>('01deAQCccuZg366');

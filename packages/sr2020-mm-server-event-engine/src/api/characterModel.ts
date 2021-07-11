@@ -88,7 +88,27 @@ export async function dispirit(
     return await res2.json();
   }
   const text = await res2.text();
-  throw new Error(`Ошибка при надевании духа персонажем ${characterId}, статус ${res2.status}, текст ошибки ${text}`);
+  throw new Error(`Ошибка при снятии духа персонажем ${characterId}, статус ${res2.status}, текст ошибки ${text}`);
+}
+
+export async function zeroSpiritAbilities(
+  characterId: number, 
+): Promise<unknown> {
+  const res2 = await fetch(`${genericServerConstants2().characterModelUrl}/${characterId}`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json;charset=utf-8',
+    },
+    body: JSON.stringify({
+      "eventType": "zeroSpiritAbilities", 
+      data: {}
+    }),
+  });
+  if (res2.status === 201) {
+    return await res2.json();
+  }
+  const text = await res2.text();
+  throw new Error(`Ошибка при аварийном снятии абилок духа с персонажа ${characterId}, статус ${res2.status}, текст ошибки ${text}`);
 }
 
 // {
@@ -97,22 +117,22 @@ export async function dispirit(
 //   }
 // }
 
-export async function emergencySpiritExit(
-  characterId: number
-): Promise<unknown> {
-  const res2 = await fetch(`${genericServerConstants2().characterModelUrl}/${characterId}`, {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json;charset=utf-8',
-    },
-    body: JSON.stringify({
-      "eventType": "emergencySpiritExit", 
-      "data": {}
-    }),
-  });
-  if (res2.status === 201) {
-    return await res2.json();
-  }
-  const text = await res2.text();
-  throw new Error(`Ошибка при экстренном снятии духа персонажем ${characterId}, статус ${res2.status}, текст ошибки ${text}`);
-}
+// export async function emergencySpiritExit(
+//   characterId: number
+// ): Promise<unknown> {
+//   const res2 = await fetch(`${genericServerConstants2().characterModelUrl}/${characterId}`, {
+//     method: 'POST',
+//     headers: {
+//       'Content-Type': 'application/json;charset=utf-8',
+//     },
+//     body: JSON.stringify({
+//       "eventType": "emergencySpiritExit", 
+//       "data": {}
+//     }),
+//   });
+//   if (res2.status === 201) {
+//     return await res2.json();
+//   }
+//   const text = await res2.text();
+//   throw new Error(`Ошибка при экстренном снятии духа персонажем ${characterId}, статус ${res2.status}, текст ошибки ${text}`);
+// }
