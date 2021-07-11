@@ -69,7 +69,7 @@ export async function suitSpirit(
 export async function dispirit(
   characterId: number, 
   bodyStorageId: number, 
-  spiritStorageId: number
+  spiritStorageId: number | null
 ): Promise<unknown> {
   const res2 = await fetch(`${genericServerConstants2().characterModelUrl}/${characterId}`, {
     method: 'POST',
@@ -80,7 +80,7 @@ export async function dispirit(
       "eventType": "dispirit", 
       "data": {
         bodyStorageId: String(bodyStorageId),
-        qrCodeId: String(spiritStorageId)
+        qrCodeId: spiritStorageId !== null ? String(spiritStorageId) : undefined
       }
     }),
   });

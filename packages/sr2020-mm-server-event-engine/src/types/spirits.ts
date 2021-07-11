@@ -59,8 +59,8 @@ const catchSpirit2RequestBodySchema: JSONSchemaType<CatchSpirit2RequestBody> = {
 export const validateCatchSpirit2RequestBody = ajv.compile(catchSpirit2RequestBodySchema);
 
 export interface SuitSpiritRequestBody {
-  spiritJarQrString: string;
   bodyStorageQrString: string;
+  spiritJarQrString: string;
 }
 
 const suitSpiritRequestBodySchema: JSONSchemaType<SuitSpiritRequestBody> = {
@@ -73,6 +73,22 @@ const suitSpiritRequestBodySchema: JSONSchemaType<SuitSpiritRequestBody> = {
 };
 
 export const validateSuitSpiritRequestBody = ajv.compile(suitSpiritRequestBodySchema);
+
+export interface DispiritRequestBody {
+  bodyStorageQrString: string;
+  spiritJarQrString: string | null;
+}
+
+const dispiritRequestBodySchema: JSONSchemaType<DispiritRequestBody> = {
+  type: "object",
+  properties: {
+    bodyStorageQrString: { type: 'string' },
+    spiritJarQrString: { type: 'string', nullable: true },
+  },
+  required: ["bodyStorageQrString", "spiritJarQrString"],
+};
+
+export const validateDispiritRequestBody = ajv.compile(dispiritRequestBodySchema);
 
 export function validateSpiritJarQrModelData(qrModelData: unknown): 
   SpiritJarQr | ErrorResponse

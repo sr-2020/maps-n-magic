@@ -25,6 +25,18 @@ export function CatchSpiritPage(props: CatchSpiritPageProps) {
   const history = useHistory();
 
   useEffect(() => {
+    if (catchResult === null) {
+      return;
+    }
+    const redirectTimeoutId = setTimeout(() => {
+      history.push('/spirits');
+    }, 2000);
+    return () => {
+      clearTimeout(redirectTimeoutId);
+    }; 
+  }, [catchResult]);
+
+  useEffect(() => {
     if (spiritJarQrString === null) {
       return;
     }
@@ -56,9 +68,13 @@ export function CatchSpiritPage(props: CatchSpiritPageProps) {
   }
 
   return (
-    <div className="CatchSpiritPage">
-      {id}
-      {JSON.stringify(catchResult)}
+    <div className="CatchSpiritPage tw-p-4">
+      {
+        catchResult !== null &&
+        <div className="tw-text-center">
+          <h2 className="tw-font-bold">Дух пойман</h2>
+        </div>
+      }
       {
         errorResponse !== null && (
           <ErrorAlert errorResponse={errorResponse} />

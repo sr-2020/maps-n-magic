@@ -1,6 +1,30 @@
 import * as R from 'ramda';
-import { EPutSpiritRequested, ErrorResponse, GetSpirit, getSpiritLocationId, GetSpirits, GetUserRecord, invalidRequestBody, isEmptySpiritJar, isFullBodyStorage, isFullSpiritJar, validateCatchSpiritInternalRequest, validateSuitSpiritInternalRequest } from 'sr2020-mm-event-engine';
-import { createLogger, dispirit, freeSpiritFromStorage, getQrModelData, InnerApiRequest, putSpiritInStorage, suitSpirit, validateBodyStorageQrModelData, validateSpiritJarQrModelData } from 'sr2020-mm-server-event-engine';
+import { 
+  EPutSpiritRequested, 
+  ErrorResponse, 
+  GetSpirit, 
+  getSpiritLocationId, 
+  GetSpirits, 
+  GetUserRecord, 
+  invalidRequestBody, 
+  isEmptySpiritJar, 
+  isFullBodyStorage, 
+  isFullSpiritJar, 
+  validateCatchSpiritInternalRequest, 
+  validateDispiritInternalRequest, 
+  validateSuitSpiritInternalRequest 
+} from 'sr2020-mm-event-engine';
+import { 
+  createLogger, 
+  dispirit, 
+  freeSpiritFromStorage, 
+  getQrModelData, 
+  InnerApiRequest, 
+  putSpiritInStorage, 
+  suitSpirit, 
+  validateBodyStorageQrModelData, 
+  validateSpiritJarQrModelData 
+} from 'sr2020-mm-server-event-engine';
 
 const logger = createLogger('dispirit.ts');
 
@@ -10,8 +34,8 @@ export const mainDispirit = async (req1, res, next) => {
     const req = req1 as InnerApiRequest;
     const { body } = req;
 
-    if (!validateSuitSpiritInternalRequest(body)) {
-      res.status(400).json(invalidRequestBody(body, validateSuitSpiritInternalRequest.errors));
+    if (!validateDispiritInternalRequest(body)) {
+      res.status(400).json(invalidRequestBody(body, validateDispiritInternalRequest.errors));
       return;
     }
 
@@ -101,16 +125,28 @@ export const mainDispirit = async (req1, res, next) => {
 
     const res2 = await dispirit(characterId, bodyStorageId, spiritJarId);
 
-    req.gameModel.emit2<EPutSpiritRequested>({
-      type: 'putSpiritRequested',
-      id: spirit.id,
-      props: {
-        state: {
-          status: 'InJar',
-          qrId: spiritJarId
-        },
-      }
-    });
+    if (spiritJarId !== null) {
+      req.gameModel.emit2<EPutSpiritRequested>({
+        type: 'putSpiritRequested',
+        id: spirit.id,
+        props: {
+          state: {
+            status: 'InJar',
+            qrId: spiritJarId
+          },
+        }
+      });
+    } else {
+      req.gameModel.emit2<EPutSpiritRequested>({
+        type: 'putSpiritRequested',
+        id: spirit.id,
+        props: {
+          state: {
+            status: 'RestInAstral',
+          },
+        }
+      });
+    }
 
     res.status(200).json(true);
   } catch(error) {

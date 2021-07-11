@@ -63,7 +63,7 @@ export function SpiritList(props: SpiritListProps) {
       >
         {
           sortedSpiritViews.map((spiritView, index) => 
-            <Card>
+            <Card key={spiritView.id}>
               <Accordion.Toggle as={Card.Header} eventKey={String(index)}>
                 <div>{spiritView.name}</div>
                 <div className="text-muted tw-text-sm">{getFractionName(spiritView.fraction)}</div>

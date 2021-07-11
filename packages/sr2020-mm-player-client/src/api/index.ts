@@ -93,7 +93,7 @@ export async function suitSpirit(
 
 export async function dispirit(
   bodyStorageQrString: string, 
-  spiritJarQrString: string
+  spiritJarQrString: string | null
 ): Promise<ErrorResponse | true> {
   const res = await fetch('/api/dispirit', {
     method: 'POST',

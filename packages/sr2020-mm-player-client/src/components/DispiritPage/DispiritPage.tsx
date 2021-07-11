@@ -105,7 +105,7 @@ export function DispiritPage(props: DispiritPageProps) {
   const [dispiritStatus, setDispiritStatus] = useState<string>('');
 
   useEffect(() => {
-    if (doDispirit === false || bodyStorageQrString === null || spiritJarQrString === null) {
+    if (doDispirit === false || bodyStorageQrString === null) {
       return;
     }
     dispirit(bodyStorageQrString, spiritJarQrString).then(res => {
@@ -184,6 +184,14 @@ export function DispiritPage(props: DispiritPageProps) {
         dispiritStatus !== '' && 
         <div className="tw-m-4">{dispiritStatus}</div>
       }
+      <div className="tw-text-right tw-mb-8 tw-mt-12">
+        <Button 
+          disabled={!(bodyStorageStatus.status === 'valid')} 
+          onClick={() => setDoDispirit(true)}
+        >
+          Снять и отпустить духа
+        </Button>
+      </div>
       <div className="tw-text-right">
         <Button disabled={!isValid} onClick={() => setDoDispirit(true)}>Снять</Button>
       </div>

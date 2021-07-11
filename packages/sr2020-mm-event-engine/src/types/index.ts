@@ -230,8 +230,6 @@ export interface SuitSpiritInternalRequest {
   bodyStorageId: number;
 }
 
-export type DispiritInternalRequest = SuitSpiritInternalRequest;
-
 const suitSpiritInternalRequestSchema: JSONSchemaType<SuitSpiritInternalRequest> = {
   type: "object",
   properties: {
@@ -243,6 +241,24 @@ const suitSpiritInternalRequestSchema: JSONSchemaType<SuitSpiritInternalRequest>
 };
 
 export const validateSuitSpiritInternalRequest = ajv.compile(suitSpiritInternalRequestSchema);
+
+export interface DispiritInternalRequest {
+  characterId: number;
+  spiritJarId: number | null;
+  bodyStorageId: number;
+}
+
+const dispiritInternalRequestSchema: JSONSchemaType<DispiritInternalRequest> = {
+  type: "object",
+  properties: {
+    characterId: { type: 'number' },
+    spiritJarId: { type: 'number', nullable: true },
+    bodyStorageId: { type: 'number' },
+  },
+  required: ["characterId", "spiritJarId", "bodyStorageId"],
+};
+
+export const validateDispiritInternalRequest = ajv.compile(dispiritInternalRequestSchema);
 
 
 export interface CatchSpiritInternalRequest {

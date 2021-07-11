@@ -13,6 +13,7 @@ import {
   PlayerAuthorizedRequest, 
   playerServerConstants, 
   validateBodyStorageQrModelData, 
+  validateDispiritRequestBody, 
   validateSpiritJarQrModelData, 
   validateSuitSpiritRequestBody 
 } from "sr2020-mm-server-event-engine";
@@ -24,20 +25,23 @@ const logger = createLogger('dispirit.ts');
 export const dispirit = async (req1, res, next) => {
   const req = req1 as PlayerAuthorizedRequest;
   const { body } = req;
-  if (!validateSuitSpiritRequestBody(body)) {
-    res.status(400).json(invalidRequestBody(body, validateSuitSpiritRequestBody.errors));
+  if (!validateDispiritRequestBody(body)) {
+    res.status(400).json(invalidRequestBody(body, validateDispiritRequestBody.errors));
     return;
   }
 
   const { spiritJarQrString, bodyStorageQrString } = body;
 
   try {
-    const spiritJarQrData = decode(spiritJarQrString);
-    const spiritJarId = Number(spiritJarQrData.payload);
-
-    if (Number.isNaN(spiritJarId)) {
-      res.status(400).json(qrIdIsNanError(spiritJarQrData.payload));
-      return;
+    let spiritJarId: number | null = null;
+    if (spiritJarQrString !== null) {
+      const spiritJarQrData = decode(spiritJarQrString);
+      spiritJarId = Number(spiritJarQrData.payload);
+  
+      if (Number.isNaN(spiritJarId)) {
+        res.status(400).json(qrIdIsNanError(spiritJarQrData.payload));
+        return;
+      }
     }
 
     const bodyStorageQrData = decode(bodyStorageQrString);
