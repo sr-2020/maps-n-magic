@@ -10,6 +10,7 @@ import {
 import { 
   createLogger, 
   getQrModelData, 
+  getSpiritWithFractionAbilities, 
   PlayerAuthorizedRequest, 
   validateBodyStorageQrModelData, 
   validateSpiritJarQrModelData 
@@ -88,16 +89,7 @@ export const isSpiritJarValid = async (req1, res, next) => {
         return;
       }
   
-      // const data: SpiritDataForQrValidation = {
-      //   name: spirit.name,
-      //   hitPoints: spirit.hitPoints,
-      //   abilities: [],
-      // };
-
-      // TODO add fraction abilities
-      const spirit2: Spirit = {
-        ...spirit
-      };
+      const spirit2 = getSpiritWithFractionAbilities(req.gameModel, spirit);
       
       res.json(spirit2);
     }

@@ -1,6 +1,6 @@
 import * as R from 'ramda';
 import { EPutSpiritRequested, ErrorResponse, GetSpirit, getSpiritLocationId, GetUserRecord, invalidRequestBody, isEmptySpiritJar, isFullBodyStorage, isFullSpiritJar, validateCatchSpiritInternalRequest, validateSuitSpiritInternalRequest } from 'sr2020-mm-event-engine';
-import { createLogger, freeSpiritFromStorage, getQrModelData, InnerApiRequest, putSpiritInStorage, suitSpirit, validateBodyStorageQrModelData, validateSpiritJarQrModelData } from 'sr2020-mm-server-event-engine';
+import { createLogger, freeSpiritFromStorage, getQrModelData, getSpiritWithFractionAbilities, InnerApiRequest, putSpiritInStorage, suitSpirit, validateBodyStorageQrModelData, validateSpiritJarQrModelData } from 'sr2020-mm-server-event-engine';
 
 const logger = createLogger('suitSpirit.ts');
 
@@ -75,12 +75,14 @@ export const mainSuitSpirit = async (req1, res, next) => {
       return;
     }
 
+    const spirit2 = getSpiritWithFractionAbilities(req.gameModel, spirit);
+
     // TODO add spirits from fractions
     const res2 = await suitSpirit(characterId, {
       "name": spirit.name,
       "hp": spirit.hitPoints,
       // "abilityIds": ["fireball-keeper", "aurma"],
-      "abilityIds": spirit.abilities,
+      "abilityIds": spirit2.abilities,
     }, bodyStorageId, spiritJarId);
 
     req.gameModel.emit2<EPutSpiritRequested>({

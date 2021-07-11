@@ -1,5 +1,6 @@
-import { ErrorResponse, GetSpirit, isFullSpiritJar, Spirit } from "sr2020-mm-event-engine";
-import { createLogger, getQrModelData, PlayerAuthorizedRequest, validateSpiritJarQrModelData } from "sr2020-mm-server-event-engine";
+import * as R from 'ramda';
+import { ErrorResponse, GameModel, GetSpirit, GetSpiritFraction, isFullSpiritJar, Spirit } from "sr2020-mm-event-engine";
+import { createLogger, getQrModelData, getSpiritWithFractionAbilities, PlayerAuthorizedRequest, validateSpiritJarQrModelData } from "sr2020-mm-server-event-engine";
 import { decode } from "../../utils";
 import { qrIdIsNanError } from "./utils";
 
@@ -42,6 +43,9 @@ export const getSpiritDataByQr = async (req1, res, next) => {
         type: 'spirit',
         id: Number(spiritId)
       });
+      if (spirit !== undefined) {
+        spirit = getSpiritWithFractionAbilities(req.gameModel, spirit);
+      }
     }
     
     res.json({

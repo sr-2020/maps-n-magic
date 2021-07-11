@@ -1,5 +1,6 @@
 import Ajv, { JSONSchemaType } from "ajv";
-import { BodyStorageQr, ErrorResponse, SpiritJarQr, validateBodyStorageQr, validateCommonQr, validateSpiritJarQr } from "sr2020-mm-event-engine";
+import * as R from 'ramda';
+import { BodyStorageQr, ErrorResponse, GameModel, GetSpiritFraction, Spirit, SpiritJarQr, validateBodyStorageQr, validateCommonQr, validateSpiritJarQr } from "sr2020-mm-event-engine";
 import { createLogger } from "../logger";
 
 const logger = createLogger('server-ee/spirits.ts');
@@ -157,4 +158,19 @@ export function validateBodyStorageQrModelData(qrModelData: unknown):
     return errorResponse;
   }
   return qrModelData;
+}
+
+
+export function getSpiritWithFractionAbilities(gameModel: GameModel, spirit: Spirit): Spirit {
+  const clone = {...spirit};
+  const spiritFraction = gameModel.get2<GetSpiritFraction>({
+    type: 'spiritFraction',
+    id: spirit.fraction
+  });
+  if (spiritFraction !== undefined) {
+    const abilities = R.uniq([...spirit.abilities, ...spiritFraction.abilities]);
+    abilities.sort();
+    clone.abilities = abilities;
+  }
+  return clone;
 }

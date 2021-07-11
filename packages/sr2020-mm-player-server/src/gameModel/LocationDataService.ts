@@ -119,11 +119,20 @@ export class LocationDataService extends AbstractService<LocationDataServiceCont
         type: 'spiritFraction', 
         id: spirit.fraction
       });
+      let abilities = [...spirit.abilities];
+      if (fraction !== undefined) {
+        abilities = R.uniq([...abilities, ...fraction.abilities]);
+        abilities.sort();
+      } else {
+        this.logger.error(`Spirit ${spirit.id} fraction not found. Fraction id ${spirit.fraction}`);
+      }
       // this.logger.info('fraction', fraction);
       acc.push({
         ...spirit,
         locationId,
+        abilities
       });
+
       return acc;
     }, []);
     
