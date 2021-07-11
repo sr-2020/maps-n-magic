@@ -56,6 +56,27 @@ export function App(props: AppProps) {
 
   const soundStageState = locationData2SoundStageState(locationData);
 
+  if (characterData.workModel.healthState !== 'healthy') {
+    return (
+    <DocumentTitle title={title}>
+      <Router>
+        <div className="App">
+          <AppHeader
+            title={title}
+            loginManager={loginManager}
+            locationData={locationData}
+            characterData={characterData}
+          />
+          <CharacterPage 
+            setTitle={setTitle}
+            characterData={characterData}
+          />
+          </div>
+        </Router>
+      </DocumentTitle>
+    );
+  }
+
   return (
     <DocumentTitle title={title}>
       <Router>
