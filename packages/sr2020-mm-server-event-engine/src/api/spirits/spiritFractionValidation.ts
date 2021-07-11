@@ -15,8 +15,9 @@ const spiritFractionSchema: JSONSchemaType<SpiritFraction> = {
   properties: {
     id: {type: "integer"},
     name: {type: "string"},
+    abilities: {type:'array', items: {type: 'string'}}
   },
-  required: ["name", "id"],
+  required: ["name", "id", "abilities"],
   additionalProperties: false,
 }
 

@@ -21,6 +21,13 @@ export const getSpiritFractions = async function(): Promise<unknown[]> {
   if(!validateGenericRows(rows)) {
     throw new Error(`Generic row check got validation error. ${JSON.stringify(validateGenericRows.errors)}`);
   }
+
+  rows.forEach((row) => {
+    const data = row.data as any;
+    if (data.abilities === undefined) {
+      data.abilities = [];
+    }
+  });
   return rows.map(row => ({
     ...row.data,
     id: row.id,

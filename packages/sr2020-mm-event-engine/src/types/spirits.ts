@@ -79,6 +79,7 @@ export interface Spirit {
 export interface SpiritFraction {
   id: number;
   name: string;
+  abilities: string[];
 }
 
 export interface SpiritRoute {
