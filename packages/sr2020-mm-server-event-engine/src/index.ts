@@ -8,5 +8,6 @@ export * from './types';
 export * from './api';
 export * from './logger';
 export * from './characterWatcher';
+export * from './api/spirits/spirits'
 
 import "./processTerminationHandler";
