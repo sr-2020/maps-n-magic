@@ -39,6 +39,7 @@ export function QrScannerWrapper(props: QrScannerWrapperProps) {
       }
       <ErrorBoundary fallback={<>Ошибка при сканировании QR</>}>
         <QRScanner
+          cursorResolution={600}
           timeout={10 * 60000} // 10 minutes
           onFailed={onFailed || defaultOnFailed}
           onSuccess={({ data }) => onSuccess(data)}
