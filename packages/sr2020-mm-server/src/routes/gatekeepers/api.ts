@@ -1,4 +1,5 @@
 import { Router } from 'express';
+import { NextFunction, Request, Response } from 'express-serve-static-core';
 import * as jwt from "jsonwebtoken";
 import { isErrorResponse, ErrorResponse, validateTokenData, validateWeakTokenData } from 'sr2020-mm-event-engine';
 import { mainServerConstants, MainAuthorizedRequest } from 'sr2020-mm-server-event-engine';
@@ -6,11 +7,9 @@ import {
   createLogger 
 } from 'sr2020-mm-server-event-engine';
 
-const logger = createLogger('parseUserData.ts');
+const logger = createLogger('gatekeepers/api.ts');
 
-const router = Router();
-
-router.use((req1, res, next) => {
+export const apiGatekeeper = (req1: Request, res: Response, next: NextFunction) => {
   const req = req1 as MainAuthorizedRequest;
 
   const { mm_token } = req.cookies;
@@ -47,13 +46,4 @@ router.use((req1, res, next) => {
     // res.status(500).send(`parseUserData: User token verification failed ${JSON.stringify(err)}`);
     return;
   }
-});
-
-router.get('/isLoggedIn', (req1, res, next) => {
-  const req = req1 as MainAuthorizedRequest;
-  logger.info('/api/isLoggedIn');
-  // if we are here then parsing user data was successful
-  res.status(200).json(req.userData);
-});
-
-export const parseUserData = router;
+}

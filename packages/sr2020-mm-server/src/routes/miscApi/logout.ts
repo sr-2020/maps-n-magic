@@ -2,12 +2,11 @@ import { Router } from 'express';
 import { 
   createLogger 
 } from 'sr2020-mm-server-event-engine';
+import { NextFunction, Request, Response } from "express-serve-static-core";
 
 const logger = createLogger('logout.ts');
 
-const router = Router();
-
-router.post('/logout', (req, res) => {
+export const logout = (req: Request, res: Response) => {
   logger.info('/api/logout');
   // req.logOut();
   res.status(200).clearCookie('mm_token', {
@@ -21,13 +20,4 @@ router.post('/logout', (req, res) => {
   // req.session.destroy(function (err) {
   //   res.redirect('/');
   // });
-});
-
-router.use('/secureEndpoint', (req, res, next) => {
-  res.json({
-    message: 'Secure endpoint answer',
-    date: new Date(),
-  });
-});
-
-export const logoutRouter = router;
+}

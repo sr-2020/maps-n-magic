@@ -23,13 +23,16 @@ import { ErrorResponse, validateWebSocketInitClientConfig, WebSocketInitClientCo
 // import { fileRouter } from './routes/file';
 import { pingRouter } from './routes/ping';
 // import { usersRouter } from './routes/users';
-import { postUserPosition } from './routes/postUserPosition';
+// import { postUserPosition } from './routes/postUserPosition';
 import { WebSocketWrapper } from './webSocketWrapper';
 import { SseDataSender } from "./sseDataSender";
-import { loginRouter } from './routes/login';
-import { logoutRouter } from './routes/logout';
-import { parseUserData } from './routes/parseUserData';
+import { publicApi } from './routes/publicApi';
+// import { logoutRouter } from './routes/logout';
+// import { parseUserData } from './routes/parseUserData';
 import { spiritRouter } from './routes/spirits';
+import { innerApi2 } from './routes/innerApi2';
+import { getInnerApiGatekeeper, apiGatekeeper } from "./routes/gatekeepers";
+import { miscRouter } from "./routes/miscApi";
 
 const logger = createLogger('mainServer/app.ts');
 
@@ -62,37 +65,11 @@ app.use(cookieParser());
 // app.use('/users', usersRouter);
 app.get('/ping', pingRouter);
 
-app.use(loginRouter);
 
-app.use('/innerApi', (req1, res, next) => {
-  const req = req1 as InnerApiRequest;
 
-  const { mm_token } = req.cookies;
-  if (mm_token === undefined) {
-    logger.info('innerApi connection FAILED: Request has no user token');
-    res.status(401).send('Request has no user token');
-    return;
-  }
+// player server - main server API
 
-  try {
-    const parsedToken = jwt.verify(mm_token, mainServerConstants().JWT_SECRET);
-    logger.info('parsedToken', parsedToken);
-
-    if (parsedToken !== mainServerConstants().playerServerTokenPayload) {
-      logger.info('innerApi connection FAILED: token parsing');
-      res.status(401).send('Error on token parsing');
-      return;
-    }
-  } catch (err) {
-    logger.error('innerApi connection FAILED: Error on token parsing', err);
-    res.status(401).send('Error on token parsing');
-    return;
-  }
-
-  req.gameModel = gameModel;
-
-  next();
-});
+app.use('/innerApi', getInnerApiGatekeeper(gameModel));
 
 app.use('/innerApi', spiritRouter);
 
@@ -102,15 +79,21 @@ app.get('/innerApi/playerDataSse', (req1, res, next) => {
   new SseDataSender(req, res, next, logger);
 });
 
-app.use('/api', parseUserData);
 
-app.use('/api', logoutRouter);
 
-app.use('/api', postUserPosition);
+// external server - main server API
+//   At this moment only for shop
 
-wsApp.app.ws('/ws', (ws, req, next) => {
-  logger.error('old ws path /ws is not working anymore');
-});
+app.use('/innerApi2', innerApi2);
+
+
+// client-server API
+
+app.use('/api', publicApi);
+
+app.use('/api', apiGatekeeper);
+
+app.use('/api', miscRouter);
 
 wsApp.app.ws('/api/ws', (ws, req, next) => {
   ws.on('message', (msgStr) => {
@@ -135,6 +118,10 @@ wsApp.app.ws('/api/ws', (ws, req, next) => {
       logger.error('Error on establishing websocket connection', err);
     }
   });
+});
+
+wsApp.app.ws('/ws', (ws, req, next) => {
+  logger.error('old ws path /ws is not working anymore');
 });
 
 app.use(Express.static(path.join(__dirname, './static')));

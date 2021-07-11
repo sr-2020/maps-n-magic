@@ -306,3 +306,27 @@ const freeSpiritInternalRequestSchema: JSONSchemaType<FreeSpiritInternalRequest>
 };
 
 export const validateFreeSpiritInternalRequest = ajv.compile(freeSpiritInternalRequestSchema);
+
+
+
+export interface PutSpiritInJarRequestBody {
+  spiritType: "mr-cellophane" | "fireball-keeper" | "tick-a-lick-a-boo";
+  qrId: number; // qrId пустого духохранилища
+}
+
+const putSpiritInJarRequestBodySchema: JSONSchemaType<PutSpiritInJarRequestBody> = {
+  type: "object",
+  properties: {
+    qrId: {
+      type: "number",
+    },
+    spiritType: {
+      type: "string",
+      enum: ['fireball-keeper', 'mr-cellophane', 'tick-a-lick-a-boo']
+    },
+  },
+  required: ["qrId", "spiritType"],
+  additionalProperties: false
+};
+
+export const validatePutSpiritInJarRequestBody = ajv.compile(putSpiritInJarRequestBodySchema);

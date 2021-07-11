@@ -1,4 +1,5 @@
 import { Router } from 'express';
+import { Request, Response } from 'express-serve-static-core';
 import * as jwt from "jsonwebtoken";
 import { 
   ErrorResponse,
@@ -17,9 +18,7 @@ import {
 
 const logger = createLogger('login.ts');
 
-const router = Router();
-
-router.post('/api/login', async (req, res) => {
+export const login = async (req: Request, res: Response) => {
   // logger.info('/api/login', req.body);
 
   const authRequest = req.body;
@@ -129,9 +128,7 @@ router.post('/api/login', async (req, res) => {
     res.status(res2.status).json(errorResponse);
     logger.info(`FAIL login ${authRequest.username} ${JSON.stringify(errorResponse)}`);
   }
-});
-
-export const loginRouter = router;
+}
 
 
 
