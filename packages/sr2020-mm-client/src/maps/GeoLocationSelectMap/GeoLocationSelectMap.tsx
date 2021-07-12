@@ -50,7 +50,8 @@ export function GeoLocationSelectMap(props: GeoLocationSelectMapProps) {
         {...props}
         enableByDefault
         geoLayerName={locationTypesEnum.geoLocation}
-        nameKey={locationTypeToLayerTkey(locationTypesEnum.geoLocation)}
+        // @ts-ignore
+        nameKey={locationTypeToLayerTkey(locationTypesEnum.geoLocation) + '_static'}
         locationRecords={geoLocationRecords}
         onLocationClick={onLocationClick}
       />
