@@ -146,7 +146,7 @@ export class InnerBeaconLayer extends Component<
         type: 'locationRecord',
         id: location_id
       });
-      beacon.setIcon(getIcon(location === null ? iconColors.red : iconColors.blue));
+      beacon.setIcon(getIcon(location === null || location.layer_id !== 1 ? iconColors.red : iconColors.blue));
     } else {
       beacon.setIcon(getIcon(iconColors.red));
     }
