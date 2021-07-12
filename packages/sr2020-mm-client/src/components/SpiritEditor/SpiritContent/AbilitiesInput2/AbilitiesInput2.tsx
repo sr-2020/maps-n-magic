@@ -9,12 +9,12 @@ import Form from 'react-bootstrap/Form';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faTimes } from '@fortawesome/free-solid-svg-icons';
 
-import { WithFeatures } from '../../../../dataHOCs';
+import { WithSpiritFeatures } from '../../../../dataHOCs';
 
 import { WithTranslation } from "react-i18next";
 import { GameModel, GetFeatures, GetFeature } from 'sr2020-mm-event-engine';
 
-interface AbilitiesInput2Props extends WithTranslation, WithFeatures {
+interface AbilitiesInput2Props extends WithTranslation, WithSpiritFeatures {
   id: string;
   abilities: string[];
   gameModel: GameModel;
@@ -25,13 +25,13 @@ export function AbilitiesInput2(props: AbilitiesInput2Props) {
   const { 
     abilities, 
     t, 
-    features, 
+    spiritFeatures, 
     gameModel, 
     id, 
     onChange 
   } = props;
 
-  if (features === null) {
+  if (spiritFeatures === null) {
     return (
       <div>
         Фичи загружаются...
@@ -93,7 +93,7 @@ export function AbilitiesInput2(props: AbilitiesInput2Props) {
         {
         // eslint-disable-next-line jsx-a11y/control-has-associated-label
           // datalistAbilities.map((ability) => <option key={ability} value={ability} />)
-          features.map((feature) => <option key={feature.id} value={feature.id}>{feature.humanReadableName}</option>)
+          spiritFeatures.map((feature) => <option key={feature.id} value={feature.id}>{feature.humanReadableName}</option>)
         }
       </datalist>
     </div>
