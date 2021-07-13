@@ -6,14 +6,16 @@ import {
   validateTokenRequestBody,
   playerServerConstants,
   getUserTokenData,
-  createLogger
+  createLogger,
+  PlayerAuthorizedRequest
 } from 'sr2020-mm-server-event-engine';
 
 const logger = createLogger('login.ts');
 
 const router = Router();
 
-router.post('/api/login', async (req, res) => {
+router.post('/api/login', async (req1, res) => {
+  const req = req1 as PlayerAuthorizedRequest;
   // logger.info('/api/login', req.body);
 
   const authRequest = req.body;
@@ -58,7 +60,18 @@ router.post('/api/login', async (req, res) => {
       // const data = await getCharacterModelData(authRequest.username);
       // logger.info(data);
 
-      // TODO - login only mages
+      const data = await req.characterWatcher.getCharacterModel(parsedToken.modelId);
+
+      const { passiveAbilities } = data.workModel;
+      const archMage = passiveAbilities.find(({id}) => id === 'arch-mage');
+      if (archMage === undefined) {
+        const errorResponse: ErrorResponse = {
+          errorTitle: 'Вы не являетесь магом',
+          errorSubtitle: ``
+        };
+        res.status(400).json(errorResponse);
+        return;
+      }
 
       res.cookie('mm_token', api_key, { httpOnly: true });
       res.json(parsedToken);

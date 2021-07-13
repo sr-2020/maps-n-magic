@@ -85,7 +85,6 @@ app.use(cookieParser());
 // app.use(express.static(path.join(__dirname, 'public')));
 
 app.get('/ping', pingRouter);
-app.use(loginRouter);
 
 app.use((req1, res, next) => {
   const req = req1 as PlayerAuthorizedRequest;
@@ -93,6 +92,8 @@ app.use((req1, res, next) => {
   req.characterWatcher = characterWatcher;
   next();
 });
+
+app.use(loginRouter);
 
 app.use('/api', parseUserData);
 

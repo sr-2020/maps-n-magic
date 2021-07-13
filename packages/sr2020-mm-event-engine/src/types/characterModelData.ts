@@ -10,12 +10,47 @@ const ajv = new Ajv({
 // https://github.com/sr-2020/nodejs-monorepo/blob/7d4c387bdc31ce0d6f4baf2d9bb2ee1c81258a73/packages/sr2020-common/models/sr2020-character.model.ts
 export type BodyType = 'physical' | 'astral' | 'drone' | 'ectoplasm' | 'vr';
 
+export type MetaRace =
+  | 'meta-norm'
+  | 'meta-elf'
+  | 'meta-dwarf'
+  | 'meta-ork'
+  | 'meta-troll'
+  | 'meta-vampire'
+  | 'meta-ghoul'
+  | 'meta-digital'
+  | 'meta-spirit'
+;
+
 export type HealthState = 'healthy' | 'wounded' | 'clinically_dead' | 'biologically_dead';
+
+interface AddedPassiveAbility {
+  // Unique string identifier. Should be unique not only among all AddedPassiveAbility, but also among
+  // other features: active abilities, spells, etc.
+  id: string;
+
+  // Short-ish human-readable name to be shown in the UI.
+  // humanReadableName: string;
+
+  // Full description. Can be multiline.
+  // description: string;
+
+  // Unix timestamp in milliseconds. Set only if ability is temporary
+  // (e.g. was added by effect of some other ability or spell)
+  // validUntil?: number;
+
+  // List of modifiers added by this passive ability. Used to remove them when feature is being removed.
+  // Can be omitted if this passive abiliy doesn't have any modifiers (i.e. it's only effect is to
+  // show some text to the user).
+  // modifierIds?: string[];
+}
 
 export interface Sr2020Character {
   modelId: string;
   currentBody: BodyType;
   healthState: HealthState;
+  metarace: MetaRace;
+  passiveAbilities: AddedPassiveAbility[];
 }
 
 export interface CharacterModelData {
@@ -49,12 +84,44 @@ const healthStateSchema: JSONSchemaType<HealthState> = {
 
 export const validateHealthState = ajv.compile(healthStateSchema);
 
+const addedPassiveAbilitySchema: JSONSchemaType<AddedPassiveAbility> = {
+  type: 'object',
+  required: ['id'],
+  properties: {
+    id: { type: 'string' }
+  }
+};
+
+export const validateAddedPassiveAbility = ajv.compile(addedPassiveAbilitySchema);
+
+
+const metaRaceSchema: JSONSchemaType<MetaRace> = {
+  oneOf: [
+    { type: 'string', const: 'meta-norm' },
+    { type: 'string', const: 'meta-elf' },
+    { type: 'string', const: 'meta-dwarf' },
+    { type: 'string', const: 'meta-ork' },
+    { type: 'string', const: 'meta-troll' },
+    { type: 'string', const: 'meta-vampire' },
+    { type: 'string', const: 'meta-ghoul' },
+    { type: 'string', const: 'meta-digital' },
+    { type: 'string', const: 'meta-spirit' },
+  ]
+};
+
+export const validateMetaRace = ajv.compile(metaRaceSchema);
+
 const sr2020CharacterSchema: JSONSchemaType<Sr2020Character> = {
   type: 'object',
   properties: {
     'modelId': { type: 'string' },
     'currentBody': bodyTypeSchema,
-    'healthState': healthStateSchema
+    'healthState': healthStateSchema,
+    'metarace': metaRaceSchema,
+    'passiveAbilities': {
+      type: 'array',
+      items: addedPassiveAbilitySchema
+    }
   },
   required: ['currentBody', 'healthState', 'modelId']
 };
