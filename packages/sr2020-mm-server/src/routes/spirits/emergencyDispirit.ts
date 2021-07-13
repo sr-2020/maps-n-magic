@@ -40,7 +40,7 @@ export const mainEmergencyDispirit = async (req1, res, next) => {
     }
 
     const state = spirit.state as SuitedState; 
-    if (state.status === 'Suited' && state.emergencyDispirited) {
+    if (state.status === 'Suited' && state.suitStatus === 'emergencyDispirited') {
       const errorResponse: ErrorResponse = { 
         errorTitle: 'Абилки духа уже были сняты',
         errorSubtitle: JSON.stringify(body)
@@ -57,7 +57,7 @@ export const mainEmergencyDispirit = async (req1, res, next) => {
       props: {
         state: {
           ...state,
-          emergencyDispirited: true
+          suitStatus: 'emergencyDispirited'
         },
       }
     });

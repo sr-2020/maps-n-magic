@@ -94,7 +94,7 @@ export const mainSuitSpirit = async (req1, res, next) => {
           characterId,
           currentTime: Date.now(),
           duration: 30 * 60 * 1000,
-          emergencyDispirited: false,
+          suitStatus: 'normal'
         },
       }
     });

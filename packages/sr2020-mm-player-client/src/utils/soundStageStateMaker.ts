@@ -1,7 +1,22 @@
-import { FRACTION_SOUNDS, MANA_LEVEL_SOUNDS } from "sr2020-mm-client-event-engine";
-import { AggregatedLocationView, Rotation, SoundStageState, TrackData } from "sr2020-mm-event-engine";
+import { FRACTION_SOUNDS, MANA_LEVEL_SOUNDS, whitenoise } from "sr2020-mm-client-event-engine";
+import { AggregatedLocationView, CharacterModelData2, Rotation, SoundStageState, TrackData } from "sr2020-mm-event-engine";
 
-export function locationData2SoundStageState (locationData: AggregatedLocationView | null): SoundStageState {
+export function locationData2SoundStageState (
+  characterData: CharacterModelData2, 
+  locationData: AggregatedLocationView | null
+): SoundStageState {
+  const { spiritSuitState } = characterData;
+  if ( spiritSuitState !== undefined && spiritSuitState.suitStatus !== 'normal' ) {
+    return {
+      backgroundSound: {
+        key: whitenoise,
+        name: whitenoise,
+        volumePercent: 50
+      },
+      rotationSounds: null,
+    };
+  } 
+
   if (locationData === null) {
     return {
       backgroundSound: null,

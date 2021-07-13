@@ -47,7 +47,7 @@ export interface SuitedState {
   characterId: number;
   currentTime: number;
   duration: number;
-  emergencyDispirited: boolean;
+  suitStatus: 'normal' | 'emergencyDispirited' | 'suitTimeout';
 }
 
 export type SpiritState = 

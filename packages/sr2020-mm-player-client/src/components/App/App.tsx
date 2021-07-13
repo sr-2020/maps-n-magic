@@ -54,7 +54,7 @@ export function App(props: AppProps) {
     return <div>Загружаются данные персонажа...</div>
   }
 
-  const soundStageState = locationData2SoundStageState(locationData);
+  const soundStageState = locationData2SoundStageState(characterData, locationData);
 
   if (characterData.workModel.healthState !== 'healthy') {
     return (
@@ -103,7 +103,7 @@ export function App(props: AppProps) {
               />
             </Route>
             {
-              !characterData.isInSpiritSuit && 
+              characterData.spiritSuitState === undefined && 
               <Route path="/suitSpirit">
                 <SuitSpiritPage 
                   setTitle={setTitle}
@@ -111,7 +111,7 @@ export function App(props: AppProps) {
               </Route>
             }
             {
-              characterData.isInSpiritSuit && 
+              characterData.spiritSuitState !== undefined && 
               <Route path="/dispirit">
                 <DispiritPage 
                   setTitle={setTitle}
@@ -119,7 +119,7 @@ export function App(props: AppProps) {
               </Route>
             }
             {
-              characterData.isInSpiritSuit && 
+              characterData.spiritSuitState !== undefined && 
               <Route path="/emergencyDispirit">
                 <EmergencyDispiritPage 
                   setTitle={setTitle}

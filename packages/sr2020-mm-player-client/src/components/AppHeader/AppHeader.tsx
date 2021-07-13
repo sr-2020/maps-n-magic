@@ -60,13 +60,13 @@ export function AppHeader(props: AppHeaderProps) {
             <Nav.Link>Осмотреть тотем</Nav.Link>
           </LinkContainer>
           {
-            characterData.isInSpiritSuit === false && 
+            characterData.spiritSuitState === undefined && 
             <LinkContainer to="/suitSpirit">
               <Nav.Link>Надеть духа</Nav.Link>
             </LinkContainer>
           }
           {
-            characterData.isInSpiritSuit === true && 
+            characterData.spiritSuitState !== undefined && 
             <>
               <LinkContainer to="/dispirit">
                 <Nav.Link>Снять духа</Nav.Link>

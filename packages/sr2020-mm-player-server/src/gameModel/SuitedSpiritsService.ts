@@ -9,11 +9,12 @@ import {
   ESpiritsChanged,
   Req,
   Res,
-  GetIsInSpiritSuit
+  GetSpiritSuitState,
+  SuitedState
 } from 'sr2020-mm-event-engine';
 
 export interface SuitedSpiritsServiceContract extends ServiceContract {
-  Request: GetIsInSpiritSuit;
+  Request: GetSpiritSuitState;
   Action: never;
   EmitEvent: never;
   ListenEvent: 
@@ -25,7 +26,7 @@ export interface SuitedSpiritsServiceContract extends ServiceContract {
 
 const metadata: ServiceContractTypes<SuitedSpiritsServiceContract> = {
   actions: [],
-  requests: ['isInSpiritSuit'],
+  requests: ['spiritSuitState'],
   emitEvents: [],
   listenEvents: ['spiritsChanged'],
   needRequests: [],
@@ -33,7 +34,7 @@ const metadata: ServiceContractTypes<SuitedSpiritsServiceContract> = {
 };
 
 export class SuitedSpiritsService extends AbstractService<SuitedSpiritsServiceContract> {
-  charactersInSuit: Set<number> = new Set();
+  charactersInSuit: Map<number, SuitedState> = new Map();
 
   constructor(gameModel: GameModel, logger: GMLogger) {
     super(gameModel, logger);
@@ -58,12 +59,12 @@ export class SuitedSpiritsService extends AbstractService<SuitedSpiritsServiceCo
     spirits.forEach(spirit => {
       const { state } = spirit;
       if (state.status === 'Suited') {
-        this.charactersInSuit.add(state.characterId);
+        this.charactersInSuit.set(state.characterId, state);
       }
     })
   }
 
-  getIsInSpiritSuit ({ characterid }: Req<GetIsInSpiritSuit>): Res<GetIsInSpiritSuit> {
-    return this.charactersInSuit.has(characterid)
+  getSpiritSuitState ({ characterid }: Req<GetSpiritSuitState>): Res<GetSpiritSuitState> {
+    return this.charactersInSuit.get(characterid)
   }
 }

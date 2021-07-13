@@ -1,5 +1,5 @@
 import { Typed } from "..";
-import { Spirit } from "./spirits";
+import { Spirit, SuitedState } from "./spirits";
 
 export interface LocationView {
   id: number;
@@ -18,5 +18,5 @@ export interface AggregatedLocationView extends LocationView {
 export type GetAggLocationView = (arg: Typed<'aggLocationView', {id: number}>) => 
   AggregatedLocationView | undefined;
 
-export type GetIsInSpiritSuit = (arg: Typed<'isInSpiritSuit', {characterid: number}>) => 
-  boolean;
+export type GetSpiritSuitState = (arg: Typed<'spiritSuitState', {characterid: number}>) => 
+  SuitedState | undefined;

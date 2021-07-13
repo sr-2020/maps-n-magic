@@ -7,7 +7,7 @@ import {
   ESpiritsChanged, 
   GameModel, 
   GetAggLocationView, 
-  GetIsInSpiritSuit, 
+  GetSpiritSuitState,
   GetLocationRecords, 
   GetSpirits, 
   GetUserRecord, 
@@ -70,13 +70,13 @@ export class SsePlayerDataSender {
   }
 
   onCharacterModelUpdate(data: CharacterModelData) {
-    const isInSpiritSuit = this.gameModel.get2<GetIsInSpiritSuit>({
-      type: 'isInSpiritSuit',
+    const spiritSuitState = this.gameModel.get2<GetSpiritSuitState>({
+      type: 'spiritSuitState',
       characterid: this.userData.modelId
     });
     const data2: CharacterModelData2 = {
       ...data,
-      isInSpiritSuit
+      spiritSuitState
     };
     this.send(data2);
     // this.logger.info(`got character update. model id ${this.userData.modelId}`);

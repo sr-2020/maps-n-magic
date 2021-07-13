@@ -83,7 +83,7 @@ const suitedStateSchema: JSONSchemaType<SuitedState> = {
     'characterId', 
     'currentTime', 
     'duration', 
-    'emergencyDispirited'
+    'suitStatus'
   ],
   additionalProperties: false,
   properties: {
@@ -94,7 +94,7 @@ const suitedStateSchema: JSONSchemaType<SuitedState> = {
     characterId: { type: 'number' },
     currentTime: { type: 'number' },
     duration: { type: 'number' },
-    emergencyDispirited: { type: 'boolean' },
+    suitStatus: { type: 'string', enum: ['normal', 'emergencyDispirited', 'suitTimeout'] },
   }
 };
 

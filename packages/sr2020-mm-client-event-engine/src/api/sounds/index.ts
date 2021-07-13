@@ -26,10 +26,13 @@ export const FRACTION_SOUNDS: Record<number, string> = {
   4: 'spirit_sarma_4.mp3',
 };
 
+export const whitenoise = 'whitenoise.mp3';
+
 export const SOUND_LIST = [
   ...Object.values(MANA_LEVEL_SOUNDS),
   ...Object.values(FRACTION_SOUNDS),
-]
+  whitenoise
+];
 
 export async function getSound(name: string, abortController: AbortController): Promise<ArrayBuffer> {
   // return fetch(getUrl(SOUND_ROUTE, '/', name), {
