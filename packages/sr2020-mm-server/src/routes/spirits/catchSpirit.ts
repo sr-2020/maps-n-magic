@@ -1,17 +1,23 @@
 import * as R from 'ramda';
 import { EPutSpiritRequested, ErrorResponse, GetSpirit, getSpiritLocationId, GetUserRecord, invalidRequestBody, isFullSpiritJar, validateCatchSpiritInternalRequest } from 'sr2020-mm-event-engine';
 import { createLogger, getQrModelData, InnerApiRequest, putSpiritInStorage, validateSpiritJarQrModelData } from 'sr2020-mm-server-event-engine';
+import shortid from 'shortid';
 
 const logger = createLogger('catchSpirit.ts');
 
 export const mainCatchSpirit = async (req1, res, next) => {
+  const uid = shortid.generate();
   try {
     logger.info('mainCatchSpirit')
     const req = req1 as InnerApiRequest;
     const { body } = req;
 
+    logger.info(`CATCH_SPIRIT_ATTEMPT ${uid} data ${JSON.stringify(body)}`);
+
     if (!validateCatchSpiritInternalRequest(body)) {
-      res.status(400).json(invalidRequestBody(body, validateCatchSpiritInternalRequest.errors));
+      const errorResponse = invalidRequestBody(body, validateCatchSpiritInternalRequest.errors);
+      res.status(400).json(errorResponse);
+      logger.info(`CATCH_SPIRIT_FAIL ${uid} error ${JSON.stringify(errorResponse)}`);
       return;
     }
 
@@ -34,6 +40,7 @@ export const mainCatchSpirit = async (req1, res, next) => {
         errorSubtitle: `Дух с id ${spiritId} не найден`
       };
       res.status(400).json(errorResponse);
+      logger.info(`CATCH_SPIRIT_FAIL ${uid} error ${JSON.stringify(errorResponse)}`);
       return;
     }
 
@@ -44,6 +51,7 @@ export const mainCatchSpirit = async (req1, res, next) => {
 
     if ('errorTitle' in validationRes) {
       res.status(500).json(validationRes);
+      logger.info(`CATCH_SPIRIT_FAIL ${uid} error ${JSON.stringify(validationRes)}`);
       return;
     }
 
@@ -61,6 +69,7 @@ export const mainCatchSpirit = async (req1, res, next) => {
         errorSubtitle: `Персонаж с id ${characterId} не найден`
       };
       res.status(400).json(errorResponse);
+      logger.info(`CATCH_SPIRIT_FAIL ${uid} error ${JSON.stringify(errorResponse)}`);
       return;
     }
 
@@ -80,6 +89,7 @@ export const mainCatchSpirit = async (req1, res, next) => {
         errorSubtitle: `Маг с id ${userRecord.id} в неизвестной локации`
       };
       res.status(400).json(errorResponse);
+      logger.info(`CATCH_SPIRIT_FAIL ${uid} error ${JSON.stringify(errorResponse)}`);
       return;
     }
 
@@ -91,6 +101,7 @@ export const mainCatchSpirit = async (req1, res, next) => {
         errorSubtitle: `Дух с id ${spiritId} в неизвестной локации`
       };
       res.status(400).json(errorResponse);
+      logger.info(`CATCH_SPIRIT_FAIL ${uid} error ${JSON.stringify(errorResponse)}`);
       return;
     }
 
@@ -103,10 +114,12 @@ export const mainCatchSpirit = async (req1, res, next) => {
         userLocationId,
         spiritLocationId
       })}`);
-      res.status(400).json({
+      const resBody = {
         status: 'fail',
         message: 'Попытка не удалась'
-      });
+      };
+      logger.info(`CATCH_SPIRIT_FAIL ${uid} error ${JSON.stringify(resBody)}`);
+      res.status(400).json(resBody);
       return;
     }
 
@@ -116,6 +129,7 @@ export const mainCatchSpirit = async (req1, res, next) => {
         errorSubtitle: `В тотеме уже находится дух`
       };
       res.status(400).json(errorResponse);
+      logger.info(`CATCH_SPIRIT_FAIL ${uid} error ${JSON.stringify(errorResponse)}`);
       return;
     }
 
@@ -124,7 +138,7 @@ export const mainCatchSpirit = async (req1, res, next) => {
     //   put new spirit state: InJar + qr id
 
     const putResult = await putSpiritInStorage(qrId, spiritId);
-    logger.info('put spirit success confirmation', putResult);
+    // logger.info('put spirit success confirmation', putResult);
 
     req.gameModel.emit2<EPutSpiritRequested>({
       type: 'putSpiritRequested',
@@ -137,7 +151,7 @@ export const mainCatchSpirit = async (req1, res, next) => {
       }
     });
     
-    logger.info(`Character ${characterId} catch spirit ${spirit.id} ${spirit.name} in qr ${qrId}`);
+    logger.info(`CATCH_SPIRIT_SUCCESS ${uid} Character ${characterId} catch spirit ${spirit.id} ${spirit.name} in qr ${qrId}`);
 
     // res.status(200).json(body);
     res.status(200).json({
@@ -152,6 +166,7 @@ export const mainCatchSpirit = async (req1, res, next) => {
       errorSubtitle: message 
     };
     res.status(500).json(errorResponse);
+    logger.info(`CATCH_SPIRIT_FAIL ${uid} error ${JSON.stringify(errorResponse)}`);
     return;
   }
 }

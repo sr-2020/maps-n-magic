@@ -1,17 +1,24 @@
 import * as R from 'ramda';
 import { EPutSpiritRequested, ErrorResponse, GetSpirit, getSpiritLocationId, GetUserRecord, invalidRequestBody, isEmptySpiritJar, isFullBodyStorage, isFullSpiritJar, validateCatchSpiritInternalRequest, validateSuitSpiritInternalRequest } from 'sr2020-mm-event-engine';
 import { createLogger, freeSpiritFromStorage, getQrModelData, getSpiritWithFractionAbilities, InnerApiRequest, putSpiritInStorage, suitSpirit, validateBodyStorageQrModelData, validateSpiritJarQrModelData } from 'sr2020-mm-server-event-engine';
+import shortid from 'shortid';
 
 const logger = createLogger('suitSpirit.ts');
 
 export const mainSuitSpirit = async (req1, res, next) => {
+  const uid = shortid.generate();
   try {
+    
     // logger.info('mainSuitSpirit')
     const req = req1 as InnerApiRequest;
     const { body } = req;
 
+    logger.info(`SUIT_SPIRIT_ATTEMPT ${uid} data ${JSON.stringify(body)}`);
+
     if (!validateSuitSpiritInternalRequest(body)) {
-      res.status(400).json(invalidRequestBody(body, validateSuitSpiritInternalRequest.errors));
+      const errorResponse = invalidRequestBody(body, validateSuitSpiritInternalRequest.errors);
+      res.status(400).json(errorResponse);
+      logger.info(`SUIT_SPIRIT_FAIL ${uid} error ${JSON.stringify(errorResponse)}`);
       return;
     }
 
@@ -26,6 +33,7 @@ export const mainSuitSpirit = async (req1, res, next) => {
 
     if ('errorTitle' in validationRes1) {
       res.status(500).json(validationRes1);
+      logger.info(`SUIT_SPIRIT_FAIL ${uid} error ${JSON.stringify(validationRes1)}`);
       return;
     }
 
@@ -35,6 +43,7 @@ export const mainSuitSpirit = async (req1, res, next) => {
         errorSubtitle: '' 
       };
       res.status(400).json(errorResponse);
+      logger.info(`SUIT_SPIRIT_FAIL ${uid} error ${JSON.stringify(errorResponse)}`);
       return;
     }
 
@@ -51,6 +60,7 @@ export const mainSuitSpirit = async (req1, res, next) => {
         errorSubtitle: '' 
       };
       res.status(400).json(errorResponse);
+      logger.info(`SUIT_SPIRIT_FAIL ${uid} error ${JSON.stringify(errorResponse)}`);
       return;
     }
 
@@ -63,6 +73,7 @@ export const mainSuitSpirit = async (req1, res, next) => {
 
     if ('errorTitle' in validationRes) {
       res.status(500).json(validationRes);
+      logger.info(`SUIT_SPIRIT_FAIL ${uid} error ${JSON.stringify(validationRes)}`);
       return;
     }
 
@@ -72,6 +83,7 @@ export const mainSuitSpirit = async (req1, res, next) => {
         errorSubtitle: '' 
       };
       res.status(400).json(errorResponse);
+      logger.info(`SUIT_SPIRIT_FAIL ${uid} error ${JSON.stringify(errorResponse)}`);
       return;
     }
 
@@ -101,7 +113,7 @@ export const mainSuitSpirit = async (req1, res, next) => {
       }
     });
 
-    logger.info(`Character ${characterId} suit spirit ${spirit.id} ${spirit.name}, data ${JSON.stringify({
+    logger.info(`SUIT_SPIRIT_SUCCESS ${uid} Character ${characterId} suit spirit ${spirit.id} ${spirit.name}, data ${JSON.stringify({
       currentTime,
       duration
     })}`);
@@ -115,6 +127,7 @@ export const mainSuitSpirit = async (req1, res, next) => {
       errorSubtitle: message 
     };
     res.status(500).json(errorResponse);
+    logger.info(`SUIT_SPIRIT_FAIL ${uid} error ${JSON.stringify(errorResponse)}`);
     return;
   }
 }

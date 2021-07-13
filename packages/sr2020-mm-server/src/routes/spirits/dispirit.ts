@@ -25,17 +25,23 @@ import {
   validateBodyStorageQrModelData, 
   validateSpiritJarQrModelData 
 } from 'sr2020-mm-server-event-engine';
+import shortid from 'shortid';
 
 const logger = createLogger('dispirit.ts');
 
 export const mainDispirit = async (req1, res, next) => {
+  const uid = shortid.generate();
   try {
     // logger.info('mainDispirit')
     const req = req1 as InnerApiRequest;
     const { body } = req;
 
+    logger.info(`DISPIRIT_ATTEMPT ${uid} data ${JSON.stringify(body)}`);
+
     if (!validateDispiritInternalRequest(body)) {
-      res.status(400).json(invalidRequestBody(body, validateDispiritInternalRequest.errors));
+      const errorResponse = invalidRequestBody(body, validateDispiritInternalRequest.errors);
+      res.status(400).json(errorResponse);
+      logger.info(`DISPIRIT_FAIL ${uid} error ${JSON.stringify(errorResponse)}`);
       return;
     }
 
@@ -120,6 +126,7 @@ export const mainDispirit = async (req1, res, next) => {
         errorSubtitle: JSON.stringify(body)
       };
       res.status(400).json(errorResponse);
+      logger.info(`DISPIRIT_FAIL ${uid} error ${JSON.stringify(errorResponse)}`);
       return;
     }
 
@@ -148,7 +155,7 @@ export const mainDispirit = async (req1, res, next) => {
       });
     }
 
-    logger.info(`Character ${characterId} dispirit ${spirit.id} ${spirit.name}`);
+    logger.info(`DISPIRIT_SUCCESS ${uid} Character ${characterId} dispirit ${spirit.id} ${spirit.name}`);
 
     res.status(200).json(true);
   } catch(error) {
@@ -159,6 +166,7 @@ export const mainDispirit = async (req1, res, next) => {
       errorSubtitle: message 
     };
     res.status(500).json(errorResponse);
+    logger.info(`DISPIRIT_FAIL ${uid} error ${JSON.stringify(errorResponse)}`);
     return;
   }
 }
