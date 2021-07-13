@@ -7,6 +7,7 @@ import {
 export interface SpiritRouteContext {
   routeIndex: Record<number, SpiritRoute | undefined>;
   moscowTimeInMinutes: number;
+  dateNow: number;
   logger: GMLogger;
 }
 

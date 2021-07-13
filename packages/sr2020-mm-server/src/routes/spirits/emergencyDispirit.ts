@@ -40,7 +40,7 @@ export const mainEmergencyDispirit = async (req1, res, next) => {
     }
 
     const state = spirit.state as SuitedState; 
-    if (state.status === 'Suited' && state.suitStatus === 'emergencyDispirited') {
+    if (state.status === 'Suited' && state.suitStatus !== 'normal') {
       const errorResponse: ErrorResponse = { 
         errorTitle: 'Абилки духа уже были сняты',
         errorSubtitle: JSON.stringify(body)

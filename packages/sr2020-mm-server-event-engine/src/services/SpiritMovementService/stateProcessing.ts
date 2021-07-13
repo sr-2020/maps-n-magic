@@ -7,6 +7,7 @@ import {
   SpiritStatus,
   SpiritState,
   RestInAstralState,
+  SuitedState,
 } from 'sr2020-mm-event-engine';
 
 import { SpiritRouteContext, CurRouteSearchRes } from "./types";
@@ -25,8 +26,37 @@ export function getNewSpiritState(
   if (state.status === 'OnRoute') {
     newState = getUpdatedOnRouteState(spirit, context);
   }
+  if (state.status === 'Suited') {
+    newState = getUpdatedSuitedState(spirit, context);
+  }
   return newState;
 }
+
+
+function getUpdatedSuitedState(
+  spirit: Spirit, 
+  context: SpiritRouteContext,
+): SuitedState | undefined {
+  const { logger, moscowTimeInMinutes, dateNow } = context;
+  const state = spirit.state;
+  if (state.status !== SpiritStatus.Suited) {
+    logger.warn('Trying getUpdatedSuitedState in suited spirit', spirit);
+    return undefined;
+  }
+  const { suitStatus, currentTime, duration } = state;
+  if (suitStatus !== 'normal') {
+    return undefined;
+  }
+  if ((currentTime + duration) < dateNow ) {
+    const newState: SuitedState = {
+      ...state,
+      suitStatus: 'suitTimeout'
+    };
+    return newState;
+  }
+  return undefined;
+}
+
 
 function getUpdatedOnRouteState(
   spirit: Spirit, 

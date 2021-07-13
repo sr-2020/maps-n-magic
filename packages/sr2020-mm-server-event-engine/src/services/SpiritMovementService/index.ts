@@ -97,11 +97,13 @@ export class SpiritMovementService extends AbstractService<SpiritMovementService
     
     const routeIndex: Record<number, SpiritRoute | undefined> = getRouteIndex(spiritRoutes);
     const { moscowTimeInMinutes } = getMoscowTime();
+    const dateNow = Date.now();
 
     const updates = spirits.reduce((acc: PutSpiritArgs[], spirit) => {
       const newState = getNewSpiritState(spirit, {
         routeIndex, 
         moscowTimeInMinutes,
+        dateNow,
         logger: this.logger
       });
       if (newState !== undefined) {
