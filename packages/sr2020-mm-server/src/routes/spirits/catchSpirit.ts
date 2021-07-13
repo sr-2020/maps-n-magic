@@ -137,10 +137,7 @@ export const mainCatchSpirit = async (req1, res, next) => {
       }
     });
     
-    logger.info({
-      status: 'success',
-      message: 'Дух пойман'
-    });
+    logger.info(`Character ${characterId} catch spirit ${spirit.id} ${spirit.name} in qr ${qrId}`);
 
     // res.status(200).json(body);
     res.status(200).json({

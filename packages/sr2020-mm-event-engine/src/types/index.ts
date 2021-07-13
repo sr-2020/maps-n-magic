@@ -291,6 +291,7 @@ export const validateCatchSpiritInternalRequest = ajv.compile(catchSpiritInterna
 export interface FreeSpiritInternalRequest {
   qrId: number;
   reason: string;
+  characterId: number;
 }
 
 const freeSpiritInternalRequestSchema: JSONSchemaType<FreeSpiritInternalRequest> = {
@@ -302,8 +303,11 @@ const freeSpiritInternalRequestSchema: JSONSchemaType<FreeSpiritInternalRequest>
     reason: {
       type: "string",
     },
+    characterId: {
+      type: "number",
+    },
   },
-  required: ["qrId", "reason"],
+  required: ["qrId", "reason", "characterId"],
   additionalProperties: false
 };
 

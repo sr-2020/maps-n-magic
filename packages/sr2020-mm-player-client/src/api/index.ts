@@ -115,7 +115,10 @@ export async function emergencyDispirit(): Promise<ErrorResponse | true> {
   return await res.json();
 }
 
-export async function freeSpirit(qrId: number, reason: string): Promise<ErrorResponse | SpiritJarQr> {
+export async function freeSpirit(qrId: number, reason: string): Promise<ErrorResponse | {
+  status: 'success',
+  qrModelData: SpiritJarQr
+}> {
   const res = await fetch('/api/freeSpirit', {
     method: 'POST',
     headers: {

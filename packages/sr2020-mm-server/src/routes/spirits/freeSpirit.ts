@@ -5,7 +5,7 @@ const logger = createLogger('freeSpirit.ts');
 
 export const mainFreeSpirit = async (req1, res, next) => {
   try {
-    logger.info('mainCatchSpirit')
+    // logger.info('mainCatchSpirit')
     const req = req1 as InnerApiRequest;
     const { body } = req;
 
@@ -14,7 +14,7 @@ export const mainFreeSpirit = async (req1, res, next) => {
       return;
     }
 
-    const { qrId, reason } = body;
+    const { qrId, reason, characterId } = body;
 
     const qrModelData1 = await getQrModelData(qrId);
 
@@ -53,14 +53,16 @@ export const mainFreeSpirit = async (req1, res, next) => {
 
       const errorResponse = validateSpiritJarQrModelData(qrModelData);
 
-      if (errorResponse !== null) {
+      if ('errorTitle' in errorResponse) {
         res.status(500).json(errorResponse);
         return;
       }
 
+      logger.info(`Character ${characterId} free non existing spirit ${spiritId}`);
+
       res.status(200).json({
         status: 'success',
-        qrModelData
+        qrModelData: errorResponse
       });
       return;
     }
@@ -91,14 +93,16 @@ export const mainFreeSpirit = async (req1, res, next) => {
 
     const errorResponse = validateSpiritJarQrModelData(qrModelData2);
 
-    if (errorResponse !== null) {
+    if ('errorTitle' in errorResponse) {
       res.status(500).json(errorResponse);
       return;
     }
 
+    logger.info(`Character ${characterId} free spirit ${spirit.id} ${spirit.name}`);
+
     res.status(200).json({
       status: 'success',
-      qrModelData
+      qrModelData: errorResponse
     });
 
   } catch(error) {

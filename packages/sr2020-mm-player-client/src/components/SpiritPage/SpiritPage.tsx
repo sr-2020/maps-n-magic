@@ -82,7 +82,7 @@ export function SpiritPage(props: SpiritPageProps) {
         setErrorResponse(res);
       } else {
         setSpiritJarQr({
-          spiritJarQr: res,
+          spiritJarQr: res.qrModelData,
           spirit: undefined
         });
         // setSpiritJarQrString(null);
