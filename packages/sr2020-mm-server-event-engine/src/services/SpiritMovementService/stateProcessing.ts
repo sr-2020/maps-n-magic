@@ -9,10 +9,13 @@ import {
   RestInAstralState,
   SuitedState,
 } from 'sr2020-mm-event-engine';
+import { createLogger } from '../../logger';
 
 import { SpiritRouteContext, CurRouteSearchRes } from "./types";
 
 import { getWaypointIndex, isInSemiInterval, getRouteIndex } from "./utils";
+
+const logger = createLogger('stateProcessing.ts');
 
 export function getNewSpiritState(
   spirit: Spirit,
@@ -31,7 +34,6 @@ export function getNewSpiritState(
   }
   return newState;
 }
-
 
 function getUpdatedSuitedState(
   spirit: Spirit, 
@@ -52,6 +54,9 @@ function getUpdatedSuitedState(
       ...state,
       suitStatus: 'suitTimeout'
     };
+    logger.info(`suitTimeout triggered ${spirit.id} ${spirit.name}. Data ${JSON.stringify({
+      state
+    })}`);
     return newState;
   }
   return undefined;

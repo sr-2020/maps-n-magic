@@ -5,6 +5,7 @@ import Button from "react-bootstrap/Button";
 import { QrScannerWrapper } from '../QrScannerWrapper';
 import { isBodyStorageValid, isSpiritJarValid, suitSpirit } from '../../api';
 import { 
+  CharacterModelData2,
   isErrorResponse, Spirit, 
   // SpiritDataForQrValidation 
 } from 'sr2020-mm-event-engine';
@@ -14,6 +15,7 @@ import { StatusIcon } from '../StatusIcon';
 
 interface SuitSpiritPageProps {
   setTitle: (title: string) => void;
+  characterData: CharacterModelData2;
 }
 
 type BodyStorageStatus = {
@@ -36,7 +38,7 @@ type SpiritJarStatus = {
 };
 
 export function SuitSpiritPage(props: SuitSpiritPageProps) {
-  const { setTitle } = props;
+  const { setTitle, characterData } = props;
 
   useEffect(() => {
     setTitle(`Надеть духа`);
@@ -163,6 +165,12 @@ export function SuitSpiritPage(props: SuitSpiritPageProps) {
     spiritJarStatus.status === 'valid' && 
     bodyStorageStatus.status === 'valid';
 
+  const extenders = characterData.workModel.passiveAbilities.filter(el => {
+    return el.id === 'nice-suit' || el.id === 'leisure-suit';
+  });
+
+  const timeInSpirit = 30 * (1 + extenders.length);
+
   return (
     <div className="SuitSpiritPage tw-p-4 tw-pl-16">
       <div className="tw-mb-8">
@@ -202,7 +210,7 @@ export function SuitSpiritPage(props: SuitSpiritPageProps) {
       {
         isValid &&
         <div className="tw-m-4">
-          Время ношения духа 30 минут
+          {`Время ношения духа ${timeInSpirit} минут`}
         </div>
       }
       {

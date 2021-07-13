@@ -20,9 +20,11 @@ import { qrIdIsNanError } from "./utils";
 
 const logger = createLogger('suitSpirit.ts');
 
+const basicSuitTime = 30 * 60 * 1000;
+
 export const suitSpirit = async (req1, res, next) => {
   const req = req1 as PlayerAuthorizedRequest;
-  const { body } = req;
+  const { body, characterModelData } = req;
   if (!validateSuitSpiritRequestBody(body)) {
     res.status(400).json(invalidRequestBody(body, validateSuitSpiritRequestBody.errors));
     return;
@@ -46,11 +48,16 @@ export const suitSpirit = async (req1, res, next) => {
       res.status(400).json(qrIdIsNanError(bodyStorageQrData.payload));
       return;
     }
+    
+    const extenders = characterModelData.workModel.passiveAbilities.filter(el => {
+      return el.id === 'nice-suit' || el.id === 'leisure-suit';
+    });
 
     const reqBody: SuitSpiritInternalRequest = {
       spiritJarId,
       bodyStorageId,
-      characterId: req.userData.modelId
+      characterId: req.userData.modelId,
+      duration: (1 + extenders.length) * basicSuitTime
     };
 
     const suitSpiritRes = await fetch(playerServerConstants().suitSpiritUrl, {

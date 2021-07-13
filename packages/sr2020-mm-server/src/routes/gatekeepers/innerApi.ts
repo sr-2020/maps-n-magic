@@ -18,7 +18,7 @@ export const getInnerApiGatekeeper = (gameModel: GameModel) => {
   
     try {
       const parsedToken = jwt.verify(mm_token, mainServerConstants().JWT_SECRET);
-      logger.info('parsedToken', parsedToken);
+      // logger.info('parsedToken', parsedToken);
   
       if (parsedToken !== mainServerConstants().playerServerTokenPayload) {
         logger.info('innerApi connection FAILED: token parsing');

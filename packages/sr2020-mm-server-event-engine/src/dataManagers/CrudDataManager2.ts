@@ -88,7 +88,7 @@ export class CrudDataManager2<
   // put entity should not be deferred
   // It is better to defer gameModel events emitting (mostly UI code).
   onPutEntityRequested({ id, props }: PutEntityArg<Entity>): void {
-    this.logger.info('onPutEntityRequested', this.entityName, id);
+    // this.logger.info('onPutEntityRequested', this.entityName, id);
     const index = this.entities.findIndex((br) => br.id === id);
     if (index === -1) {
       this.logger.warn(`Put entity not exists: id ${id}`);

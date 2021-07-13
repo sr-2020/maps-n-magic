@@ -15,7 +15,7 @@ const logger = createLogger('emergencyDispirit.ts');
 
 export const mainEmergencyDispirit = async (req1, res, next) => {
   try {
-    logger.info('mainEmergencyDispirit')
+    // logger.info('mainEmergencyDispirit')
     const req = req1 as InnerApiRequest;
     const { body } = req;
 
@@ -61,6 +61,8 @@ export const mainEmergencyDispirit = async (req1, res, next) => {
         },
       }
     });
+
+    logger.info(`Character ${characterId} has emergency dispirit ${spirit.id} ${spirit.name}`);
 
     res.status(200).json(true);
   } catch(error) {

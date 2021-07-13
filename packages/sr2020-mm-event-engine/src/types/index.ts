@@ -228,6 +228,7 @@ export interface SuitSpiritInternalRequest {
   characterId: number;
   spiritJarId: number;
   bodyStorageId: number;
+  duration: number;
 }
 
 const suitSpiritInternalRequestSchema: JSONSchemaType<SuitSpiritInternalRequest> = {
@@ -236,8 +237,9 @@ const suitSpiritInternalRequestSchema: JSONSchemaType<SuitSpiritInternalRequest>
     characterId: { type: 'number' },
     spiritJarId: { type: 'number' },
     bodyStorageId: { type: 'number' },
+    duration: { type: 'number' },
   },
-  required: ["characterId", "spiritJarId", "bodyStorageId"],
+  required: ["characterId", "spiritJarId", "bodyStorageId", "duration"],
 };
 
 export const validateSuitSpiritInternalRequest = ajv.compile(suitSpiritInternalRequestSchema);

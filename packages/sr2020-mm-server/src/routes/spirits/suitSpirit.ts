@@ -6,7 +6,7 @@ const logger = createLogger('suitSpirit.ts');
 
 export const mainSuitSpirit = async (req1, res, next) => {
   try {
-    logger.info('mainSuitSpirit')
+    // logger.info('mainSuitSpirit')
     const req = req1 as InnerApiRequest;
     const { body } = req;
 
@@ -15,7 +15,7 @@ export const mainSuitSpirit = async (req1, res, next) => {
       return;
     }
 
-    const { characterId, spiritJarId, bodyStorageId } = body;
+    const { characterId, spiritJarId, bodyStorageId, duration } = body;
 
     // copied from player-server isSpiritJarValid
 
@@ -85,6 +85,7 @@ export const mainSuitSpirit = async (req1, res, next) => {
       "abilityIds": spirit2.abilities,
     }, bodyStorageId, spiritJarId);
 
+    const currentTime = Date.now();
     req.gameModel.emit2<EPutSpiritRequested>({
       type: 'putSpiritRequested',
       id: spirit.id,
@@ -92,12 +93,18 @@ export const mainSuitSpirit = async (req1, res, next) => {
         state: {
           status: 'Suited',
           characterId,
-          currentTime: Date.now(),
-          duration: 30 * 60 * 1000,
+          currentTime,
+          // duration: 2 * 60 * 1000, // 2 min
+          duration,
           suitStatus: 'normal'
         },
       }
     });
+
+    logger.info(`Character ${characterId} suit spirit ${spirit.id} ${spirit.name}, data ${JSON.stringify({
+      currentTime,
+      duration
+    })}`);
 
     res.status(200).json(true);
   } catch(error) {

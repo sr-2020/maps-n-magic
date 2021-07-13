@@ -107,6 +107,7 @@ export function App(props: AppProps) {
               <Route path="/suitSpirit">
                 <SuitSpiritPage 
                   setTitle={setTitle}
+                  characterData={characterData}
                 />
               </Route>
             }
@@ -115,7 +116,7 @@ export function App(props: AppProps) {
               <Route path="/dispirit">
                 <DispiritPage 
                   setTitle={setTitle}
-                  />
+                />
               </Route>
             }
             {
