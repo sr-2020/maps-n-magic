@@ -27,7 +27,7 @@ export function EmergencyDispiritPage(props: EmergencyDispiritPageProps) {
       if (isErrorResponse(res)) {
         setDispiritStatus(res.errorTitle);
       } else {
-        setDispiritStatus("Способности духа сняты");
+        setDispiritStatus("Способности духа сняты. Надо быстрее вернуться в своё тело");
       }
       setDoEmergencyDispirit(false);
     }).catch(err => {
