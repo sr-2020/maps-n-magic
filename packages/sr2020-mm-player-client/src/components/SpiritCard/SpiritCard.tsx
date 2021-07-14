@@ -26,6 +26,10 @@ export function SpiritCard(props: SpiritCardProps) {
         <span>{spirit.hitPoints}</span>
       </div>
       <div className="tw-mb-4">
+        <span className="tw-inline-block tw-w-16">Ранг</span>
+        <span>{spirit.level}</span>
+      </div>
+      <div className="tw-mb-4">
         <div className="tw-mb-2">Абилки</div>
         <div>
           {
