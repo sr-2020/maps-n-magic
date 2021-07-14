@@ -121,13 +121,6 @@ export function SpiritPage(props: SpiritPageProps) {
 
   return (
     <div className="SpiritPage tw-p-4">
-      {/* SpiritPage content
-      <br/>
-      {spiritJarQrString}
-      {
-        JSON.stringify(spiritJarQr)
-      }
-      <SpiritJarQrCard /> */}
       {
         errorResponse !== null && (
           <Alert className="tw-m-4" variant="warning">

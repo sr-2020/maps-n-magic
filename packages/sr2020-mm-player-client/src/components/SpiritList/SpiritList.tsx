@@ -16,6 +16,12 @@ interface SpiritListProps extends WithLocationDataOnly {
   characterData: CharacterModelData2;
 }
 
+const spiritMasterMap: Record<number, Ability> = {
+  1: Ability.SpiritMaster1,
+  2: Ability.SpiritMaster2,
+  3: Ability.SpiritMaster3,
+};
+
 export function SpiritList(props: SpiritListProps) {
   const { locationData, setTitle, characterData } = props;
   const history = useHistory();
@@ -68,13 +74,21 @@ export function SpiritList(props: SpiritListProps) {
                     spirit={spiritView}
                     characterData={characterData}
                   />
-                  <Button 
-                    variant="outline-primary" 
-                    className="tw-w-full tw-text-left tw-py-4 tw-mb-2"
-                    onClick={() => history.push(`/catchSpirit/${spiritView.id}`)}
-                  >
-                    Поймать
-                  </Button>
+                  {
+                    // hasAbility(characterData, spiritMasterMap[spiritView.level]) &&
+                    true &&
+                    <Button 
+                      variant="outline-primary" 
+                      className="tw-w-full tw-text-left tw-py-4 tw-mb-2"
+                      onClick={() => history.push(`/catchSpirit/${spiritView.id}`)}
+                    >
+                      Поймать
+                    </Button>
+                  }
+                  {/* {
+                    !hasAbility(characterData, spiritMasterMap[spiritView.level]) &&
+                    <div>Для ловли духа нужна способность spirit-master-{spiritView.level}</div>
+                  } */}
                 </Card.Body>
               </Accordion.Collapse>
             </Card>

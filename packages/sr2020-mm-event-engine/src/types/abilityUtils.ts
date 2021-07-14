@@ -7,6 +7,9 @@ export enum Ability {
   // OwnSpirit = 'own-spirit', // способность видеть и ловить духов
   SuitUp = 'suit-up', // способность надевать духа
   FineHearing = 'fine-hearing', // способность видеть абилки духов
+  SpiritMaster1 = 'spirit-master-1', // способность захватывать духов 1 ранга
+  SpiritMaster2 = 'spirit-master-2', // способность захватывать духов 2 ранга
+  SpiritMaster3 = 'spirit-master-3', // способность захватывать духов 3 ранга
 }
 
 export enum Spell {
