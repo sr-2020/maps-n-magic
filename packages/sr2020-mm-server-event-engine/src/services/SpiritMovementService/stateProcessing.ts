@@ -54,7 +54,7 @@ function getUpdatedSuitedState(
       ...state,
       suitStatus: 'suitTimeout'
     };
-    logger.info(`suitTimeout triggered ${spirit.id} ${spirit.name}. Data ${JSON.stringify({
+    logger.info(`TIMEOUT_DISPIRIT triggered ${spirit.id} ${spirit.name}. Data ${JSON.stringify({
       state
     })}`);
     return newState;

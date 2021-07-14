@@ -8,7 +8,7 @@ const logger = createLogger('catchSpirit.ts');
 export const mainCatchSpirit = async (req1, res, next) => {
   const uid = shortid.generate();
   try {
-    logger.info('mainCatchSpirit')
+    // logger.info('mainCatchSpirit')
     const req = req1 as InnerApiRequest;
     const { body } = req;
 
