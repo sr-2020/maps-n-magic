@@ -52,8 +52,9 @@ export interface Sr2020Character {
   healthState: HealthState;
   metarace: MetaRace;
   passiveAbilities: AddedPassiveAbility[];
-  // I use only id so I don't care about passive and active abilities here
+  // I use only id so I don't care about passive or active abilities or spells here
   activeAbilities: AddedPassiveAbility[];
+  spells: AddedPassiveAbility[];
 }
 
 export interface CharacterModelData {
@@ -128,9 +129,21 @@ const sr2020CharacterSchema: JSONSchemaType<Sr2020Character> = {
     'activeAbilities': {
       type: 'array',
       items: addedPassiveAbilitySchema
-    }
+    },
+    'spells': {
+      type: 'array',
+      items: addedPassiveAbilitySchema
+    },
   },
-  required: ['currentBody', 'healthState', 'modelId', 'metarace', 'activeAbilities', 'passiveAbilities']
+  required: [
+    'currentBody', 
+    'healthState', 
+    'modelId', 
+    'metarace', 
+    'activeAbilities', 
+    'passiveAbilities',
+    'spells',
+  ]
 };
 
 export const validateSr2020Character = ajv.compile(sr2020CharacterSchema);

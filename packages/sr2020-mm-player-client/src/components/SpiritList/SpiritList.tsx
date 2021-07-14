@@ -9,7 +9,7 @@ import { useHistory } from 'react-router-dom';
 import { WithLocationDataOnly } from '../../hocs';
 import { getFractionName } from '../../utils';
 import { SpiritCard } from "../SpiritCard";
-import { Ability, CharacterModelData2, hasAbility } from 'sr2020-mm-event-engine';
+import { Ability, CharacterModelData2, hasAbility, hasSpell, Spell } from 'sr2020-mm-event-engine';
 
 interface SpiritListProps extends WithLocationDataOnly {
   setTitle: (title: string) => void;
@@ -32,10 +32,10 @@ export function SpiritList(props: SpiritListProps) {
     );
   }
 
-  if (!hasAbility(characterData, Ability.OwnSpirit)) {
+  if (!hasSpell(characterData, Spell.SpiritCatcher)) {
     return (
       <div className="tw-text-center">
-        <h2 className="tw-my-16">Вы не овладели навыком Own spirit, поэтому не видите духов вокруг и не можете их поймать</h2>
+        <h2 className="tw-my-16">Вы не овладели навыком Spirit Catcher, поэтому не видите духов вокруг и не можете их поймать</h2>
       </div>
     );
   }
