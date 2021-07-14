@@ -69,10 +69,12 @@ export const dispirit = async (req1, res, next) => {
 
     const json = await dispiritRes.json();
 
-    logger.info('dispiritRes json', json);
+    // logger.info('dispiritRes json', json);
 
     if (dispiritRes.status === 200) {
-      req.characterWatcher.forceUpdateCharacterModel(req.userData.modelId);
+      setTimeout(() => {
+        req.characterWatcher.forceUpdateCharacterModel(req.userData.modelId);
+      }, 5000);
     }
 
     res.status(dispiritRes.status).json(json);

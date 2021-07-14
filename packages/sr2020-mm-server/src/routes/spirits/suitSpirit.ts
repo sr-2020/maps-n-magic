@@ -108,7 +108,8 @@ export const mainSuitSpirit = async (req1, res, next) => {
           currentTime,
           // duration: 2 * 60 * 1000, // 2 min
           duration,
-          suitStatus: 'normal'
+          suitStatus: 'normal',
+          suitStatusChangeTime: -1
         },
       }
     });

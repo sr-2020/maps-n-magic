@@ -52,7 +52,8 @@ function getUpdatedSuitedState(
   if ((currentTime + duration) < dateNow ) {
     const newState: SuitedState = {
       ...state,
-      suitStatus: 'suitTimeout'
+      suitStatus: 'suitTimeout',
+      suitStatusChangeTime: dateNow
     };
     logger.info(`TIMEOUT_DISPIRIT triggered ${spirit.id} ${spirit.name}. Data ${JSON.stringify({
       state
@@ -119,7 +120,8 @@ function getOnRouteState(
   const { logger, moscowTimeInMinutes } = context;
   const { timetable, name } = spirit;
   if (timetable.length === 0) {
-    logger.info(`Spirit ${spirit.name} ${spirit.id} is in game but there is no routes in its timetable`);
+    // this logging will spam logs for shop spirits
+    // logger.info(`Spirit ${spirit.name} ${spirit.id} is in game but there is no routes in its timetable`);
     return undefined;
   }
   // this.logger.info(spirit.name);

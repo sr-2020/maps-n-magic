@@ -48,7 +48,10 @@ export interface SuitedState {
   currentTime: number;
   duration: number;
   suitStatus: 'normal' | 'emergencyDispirited' | 'suitTimeout';
+  suitStatusChangeTime: number;
 }
+
+export type consequenceStatus = 'noConsequences' | 'woundConsequence' | 'deathConsequence';
 
 export type SpiritState = 
   | NotInGameState 

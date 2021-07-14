@@ -29,6 +29,12 @@ type SpiritJarStatus2 = {
   status: 'unknown';
 };
 
+const consequenceTexts = {
+  'noConsequences': 'Дух снят без негативных последствий',
+  'woundConsequence': 'При снятии духа вы потеряли 2 хита',
+  'deathConsequence': 'Вы сняли духа слишком поздно и попали в клиническую смерть',
+};
+
 export function DispiritPage(props: DispiritPageProps) {
   const { setTitle } = props;
 
@@ -117,7 +123,7 @@ export function DispiritPage(props: DispiritPageProps) {
       if (isErrorResponse(res)) {
         setDispiritStatus(res.errorTitle);
       } else {
-        setDispiritStatus("Дух снят");
+        setDispiritStatus(consequenceTexts[res]);
       }
       setDoDispirit(false);
     }).catch(err => {

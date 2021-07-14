@@ -63,7 +63,8 @@ export const mainEmergencyDispirit = async (req1, res, next) => {
       props: {
         state: {
           ...state,
-          suitStatus: 'emergencyDispirited'
+          suitStatus: 'emergencyDispirited',
+          suitStatusChangeTime: Date.now()
         },
       }
     });

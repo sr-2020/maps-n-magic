@@ -95,6 +95,7 @@ const suitedStateSchema: JSONSchemaType<SuitedState> = {
     currentTime: { type: 'number' },
     duration: { type: 'number' },
     suitStatus: { type: 'string', enum: ['normal', 'emergencyDispirited', 'suitTimeout'] },
+    suitStatusChangeTime: { type: 'number' },
   }
 };
 

@@ -12,7 +12,8 @@ import {
   isFullSpiritJar, 
   validateCatchSpiritInternalRequest, 
   validateDispiritInternalRequest, 
-  validateSuitSpiritInternalRequest 
+  validateSuitSpiritInternalRequest,
+  consequenceStatus
 } from 'sr2020-mm-event-engine';
 import { 
   createLogger, 
@@ -130,20 +131,31 @@ export const mainDispirit = async (req1, res, next) => {
       return;
     }
 
-    const res2 = await dispirit(characterId, bodyStorageId, spiritJarId);
+    const { state } = spirit;
 
-    if (spiritJarId !== null) {
+    if (state.status !== 'Suited') {
+      // should never happen
+      throw new Error(`${uid} Spirit state status is not Suited`);
+    }
+
+    const shouldSaveSpiritInJar = spiritJarId !== null && state.suitStatus === 'normal';
+
+    if (shouldSaveSpiritInJar) {
+      const res2 = await dispirit(characterId, bodyStorageId, spiritJarId);
       req.gameModel.emit2<EPutSpiritRequested>({
         type: 'putSpiritRequested',
         id: spirit.id,
         props: {
           state: {
             status: 'InJar',
+            // @ts-ignore
             qrId: spiritJarId
           },
         }
       });
     } else {
+      // TODO - call special state for spirit after emerency dispirit
+      const res2 = await dispirit(characterId, bodyStorageId, null);
       req.gameModel.emit2<EPutSpiritRequested>({
         type: 'putSpiritRequested',
         id: spirit.id,
@@ -155,9 +167,24 @@ export const mainDispirit = async (req1, res, next) => {
       });
     }
 
-    logger.info(`DISPIRIT_SUCCESS ${uid} Character ${characterId} dispirit ${spirit.id} ${spirit.name}`);
+    let consequenceStatus: consequenceStatus = 'noConsequences';
+    if (state.status === 'Suited') { // should be always true
+      if (state.suitStatus !== 'normal') {
+        const dateNow = Date.now();
+        const { suitStatusChangeTime } = state;
+        if (dateNow < (suitStatusChangeTime + 10 * 60 * 1000)) {
+          consequenceStatus = 'woundConsequence';
+        } else {
+          consequenceStatus = 'deathConsequence';
+          // TODO - call clinical_death for character
+        }
+        
+      }
+    }
 
-    res.status(200).json(true);
+    logger.info(`DISPIRIT_SUCCESS ${uid} Character ${characterId} dispirit ${spirit.id} ${spirit.name}, consequenceStatus ${consequenceStatus}`);
+
+    res.status(200).json(consequenceStatus);
   } catch(error) {
     const message = `${error} ${JSON.stringify(error)}`;
     logger.error(message, error);
