@@ -9,13 +9,15 @@ import { useHistory } from 'react-router-dom';
 import { WithLocationDataOnly } from '../../hocs';
 import { getFractionName } from '../../utils';
 import { SpiritCard } from "../SpiritCard";
+import { Ability, CharacterModelData2, hasAbility } from 'sr2020-mm-event-engine';
 
 interface SpiritListProps extends WithLocationDataOnly {
   setTitle: (title: string) => void;
+  characterData: CharacterModelData2;
 }
 
 export function SpiritList(props: SpiritListProps) {
-  const { locationData, setTitle } = props;
+  const { locationData, setTitle, characterData } = props;
   const history = useHistory();
   
   useEffect(() => {
@@ -26,6 +28,14 @@ export function SpiritList(props: SpiritListProps) {
     return (
       <div className="tw-text-center">
         <h2 className="tw-my-16 tw-text-2xl">Локация неизвестна</h2>
+      </div>
+    );
+  }
+
+  if (!hasAbility(characterData, Ability.OwnSpirit)) {
+    return (
+      <div className="tw-text-center">
+        <h2 className="tw-my-16">Вы не овладели навыком Own spirit, поэтому не видите духов вокруг и не можете их поймать</h2>
       </div>
     );
   }
@@ -44,23 +54,7 @@ export function SpiritList(props: SpiritListProps) {
   
   return (
     <div className="SpiritList">
-      {/* <div>
-        {JSON.stringify(locationData)}
-      </div> */}
-      {/* {
-        sortedSpiritViews.map(spiritView => 
-          <Button 
-            variant="outline-primary" 
-            className="tw-w-full tw-text-left tw-py-4 tw-mb-2"
-          >
-            {spiritView.name}
-          </Button>
-        )
-      } */}
-
-      <Accordion 
-        // defaultActiveKey="0"
-      >
+      <Accordion>
         {
           sortedSpiritViews.map((spiritView, index) => 
             <Card key={spiritView.id}>

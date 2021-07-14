@@ -1,6 +1,6 @@
 import { Router } from 'express';
 import * as jwt from "jsonwebtoken";
-import { ErrorResponse, validateTokenData } from 'sr2020-mm-event-engine';
+import { Ability, ErrorResponse, hasAbility, validateTokenData } from 'sr2020-mm-event-engine';
 import { 
   validateAuthRequest, 
   validateTokenRequestBody,
@@ -62,9 +62,7 @@ router.post('/api/login', async (req1, res) => {
 
       const data = await req.characterWatcher.getCharacterModel(parsedToken.modelId);
 
-      const { passiveAbilities } = data.workModel;
-      const archMage = passiveAbilities.find(({id}) => id === 'arch-mage');
-      if (archMage === undefined) {
+      if (!hasAbility(data, Ability.ArchMage)) {
         const errorResponse: ErrorResponse = {
           errorTitle: 'Вы не являетесь магом',
           errorSubtitle: ``

@@ -7,6 +7,9 @@ import { isBodyStorageValid, isSpiritJarValid, suitSpirit } from '../../api';
 import { 
   CharacterModelData2,
   isErrorResponse, Spirit, 
+  getSuitSpiritDurationItems,
+  hasAbility,
+  Ability
   // SpiritDataForQrValidation 
 } from 'sr2020-mm-event-engine';
 import { SpiritCard } from '../SpiritCard';
@@ -135,6 +138,14 @@ export function SuitSpiritPage(props: SuitSpiritPageProps) {
     });
   }, [doSuitSpirit]);
 
+  if (!hasAbility(characterData, Ability.SuitUp)) {
+    return (
+      <div className="tw-text-center">
+        <h2 className="tw-my-16">Вы не овладели навыком Suit Up, поэтому не можете надеть духа</h2>
+      </div>
+    );
+  }
+
   if (scanBodyStorage) {
     return (
       <QrScannerWrapper
@@ -165,11 +176,7 @@ export function SuitSpiritPage(props: SuitSpiritPageProps) {
     spiritJarStatus.status === 'valid' && 
     bodyStorageStatus.status === 'valid';
 
-  const extenders = characterData.workModel.passiveAbilities.filter(el => {
-    return el.id === 'nice-suit' || el.id === 'leisure-suit';
-  });
-
-  const timeInSpirit = 30 * (1 + extenders.length);
+  const timeInSpirit = 30 * getSuitSpiritDurationItems(characterData);
 
   return (
     <div className="SuitSpiritPage tw-p-4 tw-pl-16">
@@ -223,6 +230,4 @@ export function SuitSpiritPage(props: SuitSpiritPageProps) {
     </div>
   );
 }
-
-
 

@@ -1,6 +1,7 @@
 import { 
   ErrorResponse, 
   GetSpirit, 
+  getSuitSpiritDurationItems, 
   invalidRequestBody, 
   isEmptySpiritJar, 
   isFullBodyStorage, 
@@ -49,15 +50,11 @@ export const suitSpirit = async (req1, res, next) => {
       return;
     }
     
-    const extenders = characterModelData.workModel.passiveAbilities.filter(el => {
-      return el.id === 'nice-suit' || el.id === 'leisure-suit';
-    });
-
     const reqBody: SuitSpiritInternalRequest = {
       spiritJarId,
       bodyStorageId,
       characterId: req.userData.modelId,
-      duration: (1 + extenders.length) * basicSuitTime
+      duration: getSuitSpiritDurationItems(characterModelData) * basicSuitTime
     };
 
     const suitSpiritRes = await fetch(playerServerConstants().suitSpiritUrl, {

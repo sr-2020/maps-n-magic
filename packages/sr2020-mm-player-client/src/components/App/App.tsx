@@ -95,6 +95,7 @@ export function App(props: AppProps) {
               <SpiritList 
                 setTitle={setTitle}
                 locationData={locationData}
+                characterData={characterData}
               />
             </Route>
             <Route path="/scanSpirit">
