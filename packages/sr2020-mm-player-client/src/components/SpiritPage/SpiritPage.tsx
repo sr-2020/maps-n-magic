@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import './SpiritPage.css';
 
 import { 
+  CharacterModelData2,
   ErrorResponse, 
   isEmptySpiritJar, 
   isErrorResponse, 
@@ -22,10 +23,11 @@ import { SpiritCard } from '../SpiritCard';
 
 interface SpiritPageProps {
   setTitle: (title: string) => void;
+  characterData: CharacterModelData2;
 }
 
 export function SpiritPage(props: SpiritPageProps) {
-  const { setTitle } = props;
+  const { setTitle, characterData } = props;
 
   useEffect(() => {
     setTitle(`Осмотреть тотем`);
@@ -142,6 +144,7 @@ export function SpiritPage(props: SpiritPageProps) {
             <SpiritCard 
               className="tw-m-4 tw-mb-8"
               spirit={spiritJarQr.spirit}
+              characterData={characterData}
             />
           }
           <Button variant="outline-secondary" onClick={onFreeSpiritClick}>

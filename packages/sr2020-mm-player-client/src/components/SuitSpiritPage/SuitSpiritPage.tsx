@@ -210,6 +210,7 @@ export function SuitSpiritPage(props: SuitSpiritPageProps) {
             <SpiritCard
               className="tw-m-4"
               spirit={spiritJarStatus.spirit} 
+              characterData={characterData}
             />
           </div>
         }

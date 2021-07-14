@@ -66,6 +66,7 @@ export function SpiritList(props: SpiritListProps) {
                 <Card.Body>
                   <SpiritCard
                     spirit={spiritView}
+                    characterData={characterData}
                   />
                   <Button 
                     variant="outline-primary" 

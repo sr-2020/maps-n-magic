@@ -101,6 +101,7 @@ export function App(props: AppProps) {
             <Route path="/scanSpirit">
               <SpiritPage 
                 setTitle={setTitle}
+                characterData={characterData}
               />
             </Route>
             {

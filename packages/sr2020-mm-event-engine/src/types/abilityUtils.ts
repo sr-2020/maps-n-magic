@@ -6,6 +6,7 @@ export enum Ability {
   LeisureSuit = 'leisure-suit', // +30 минут к ношению духа, требует nice-suit
   OwnSpirit = 'own-spirit', // способность видеть и ловить духов
   SuitUp = 'suit-up', // способность надевать духа
+  FineHearing = 'fine-hearing', // способность видеть абилки духов
 }
 
 export function hasAbility(characterData: CharacterModelData, ability: Ability): boolean {
