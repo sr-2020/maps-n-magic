@@ -34,6 +34,9 @@ export function SpiritStatusControl(props: SpiritStatusControlProps) {
           Снять с маршрута
         </Button>
       }
+      {state.status === SpiritStatus.InJar && 
+        <div>Id тотема {state.qrId}</div>
+      }
     </div>
   );
 }
