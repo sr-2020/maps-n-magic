@@ -91,6 +91,50 @@ export async function dispirit(
   throw new Error(`Ошибка при снятии духа персонажем ${characterId}, статус ${res2.status}, текст ошибки ${text}`);
 }
 
+export async function wound(
+  characterId: number, 
+): Promise<unknown> {
+  const res2 = await fetch(`${genericServerConstants2().characterModelUrl}/${characterId}`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json;charset=utf-8',
+    },
+    body: JSON.stringify({
+      "eventType": "wound"
+    }),
+  });
+  if (res2.status === 201) {
+    return await res2.json();
+  }
+  const text = await res2.text();
+  throw new Error(`Ошибка при тяжране персонажа ${characterId}, статус ${res2.status}, текст ошибки ${text}`);
+}
+
+export async function clinicalDeath(
+  characterId: number, 
+  locationId: number | null
+): Promise<unknown> {
+  const res2 = await fetch(`${genericServerConstants2().characterModelUrl}/${characterId}`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json;charset=utf-8',
+    },
+    body: JSON.stringify({
+      "eventType": "clinicalDeath",
+      "data": {
+        "location": { 
+          "id": locationId
+        }
+      }
+    }),
+  });
+  if (res2.status === 201) {
+    return await res2.json();
+  }
+  const text = await res2.text();
+  throw new Error(`Ошибка при тяжране персонажа ${characterId}, статус ${res2.status}, текст ошибки ${text}`);
+}
+
 export async function zeroSpiritAbilities(
   characterId: number, 
 ): Promise<unknown> {

@@ -16,6 +16,7 @@ import {
   consequenceStatus
 } from 'sr2020-mm-event-engine';
 import { 
+  clinicalDeath,
   createLogger, 
   dispirit, 
   freeSpiritFromStorage, 
@@ -24,7 +25,8 @@ import {
   putSpiritInStorage, 
   suitSpirit, 
   validateBodyStorageQrModelData, 
-  validateSpiritJarQrModelData 
+  validateSpiritJarQrModelData, 
+  wound
 } from 'sr2020-mm-server-event-engine';
 import shortid from 'shortid';
 
@@ -138,6 +140,16 @@ export const mainDispirit = async (req1, res, next) => {
       throw new Error(`${uid} Spirit state status is not Suited`);
     }
 
+    const userRecord = req.gameModel.get2<GetUserRecord>({
+      type: 'userRecord',
+      id: characterId
+    });
+
+    if (userRecord === undefined) {
+      // should never happen
+      throw new Error(`${uid} not found user record for character ${characterId}`);
+    }
+
     const shouldSaveSpiritInJar = spiritJarId !== null && state.suitStatus === 'normal';
 
     if (shouldSaveSpiritInJar) {
@@ -168,17 +180,15 @@ export const mainDispirit = async (req1, res, next) => {
     }
 
     let consequenceStatus: consequenceStatus = 'noConsequences';
-    if (state.status === 'Suited') { // should be always true
-      if (state.suitStatus !== 'normal') {
-        const dateNow = Date.now();
-        const { suitStatusChangeTime } = state;
-        if (dateNow < (suitStatusChangeTime + 10 * 60 * 1000)) {
-          consequenceStatus = 'woundConsequence';
-        } else {
-          consequenceStatus = 'deathConsequence';
-          // TODO - call clinical_death for character
-        }
-        
+    if (state.suitStatus !== 'normal') {
+      const dateNow = Date.now();
+      const { suitStatusChangeTime } = state;
+      if (dateNow < (suitStatusChangeTime + 10 * 60 * 1000)) {
+        consequenceStatus = 'woundConsequence';
+      } else {
+        consequenceStatus = 'deathConsequence';
+        const res3 = await wound(characterId);
+        const res4 = await clinicalDeath(characterId, userRecord.location_id);
       }
     }
 
