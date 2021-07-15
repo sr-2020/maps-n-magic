@@ -4,6 +4,9 @@ import './QrScannerWrapper.css';
 import QRScanner, { QRCode } from 'qrx-scanner';
 import { ErrorBoundary } from "react-error-boundary";
 import Button from "react-bootstrap/Button";
+
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faSync } from '@fortawesome/free-solid-svg-icons';
 // import { WithTranslation } from "react-i18next";
 
 interface QrScannerWrapperProps {
@@ -13,18 +16,19 @@ interface QrScannerWrapperProps {
   message?: string;
 }
 
-const facingMode = process.env.NODE_ENV === 'production' 
+const defaultFacingMode = process.env.NODE_ENV === 'production' 
   ? 'environment' 
   : 'user';
-
-const videoConstraints: MediaTrackConstraints  = {
-  facingMode,
-  height: 1080,
-};
 
 export function QrScannerWrapper(props: QrScannerWrapperProps) {
   const { onFailed, onSuccess, message, onCancel } = props;
 
+  const [facingMode, setFacingMode] = useState<string>(defaultFacingMode);
+  
+  const videoConstraints: MediaTrackConstraints  = {
+    facingMode: facingMode,
+    height: 1080,
+  };
   const defaultOnFailed = (error: Error) => {throw error};
 
   return (
@@ -62,6 +66,16 @@ export function QrScannerWrapper(props: QrScannerWrapperProps) {
           </Button>
         )
       }
+      <Button 
+        className="tw-absolute tw-right-0 tw-bg-green-900 tw-border-green-900 tw-opacity-70"
+        style={{top: '6rem'}}
+        onClick={() => setFacingMode(facingMode === 'user' ? 'environment' : 'user')}
+        title="Сменить камеру"
+      >
+        <FontAwesomeIcon
+          icon={faSync}
+        />
+      </Button>
     </div>
   );
 }
