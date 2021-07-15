@@ -3,8 +3,16 @@ import { AggregatedLocationView, CharacterModelData2, Rotation, SoundStageState,
 
 export function locationData2SoundStageState (
   characterData: CharacterModelData2, 
-  locationData: AggregatedLocationView | null
+  locationData: AggregatedLocationView | null,
+  mute: boolean
 ): SoundStageState {
+  if (mute) {
+    return {
+      backgroundSound: null,
+      rotationSounds: null,
+    };
+  }
+
   const { spiritSuitState } = characterData;
   if ( spiritSuitState !== undefined && spiritSuitState.suitStatus !== 'normal' ) {
     return {

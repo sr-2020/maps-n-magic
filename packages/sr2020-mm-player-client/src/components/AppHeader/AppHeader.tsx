@@ -9,6 +9,7 @@ import Navbar from "react-bootstrap/Navbar";
 import Nav from "react-bootstrap/Nav";
 import NavDropdown from "react-bootstrap/NavDropdown";
 import Dropdown from "react-bootstrap/Dropdown";
+import Form from "react-bootstrap/Form";
 
 import { LinkContainer } from 'react-router-bootstrap'
 
@@ -21,10 +22,12 @@ interface AppHeaderProps {
   title: string;
   locationData: AggregatedLocationView | null;
   characterData: CharacterModelData2;
+  mute: boolean;
+  setMute: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
 export function AppHeader(props: AppHeaderProps) {
-  const { loginManager, title, locationData, characterData } = props;
+  const { loginManager, title, locationData, characterData, mute, setMute } = props;
 
   const onLogout = async () => {
     await logoutUser();
@@ -88,7 +91,21 @@ export function AppHeader(props: AppHeaderProps) {
         </Dropdown.Toggle>
         <Dropdown.Menu style={{ zIndex: 2000 }}>
           <Dropdown.Header>{`#${characterData.workModel.modelId}`}</Dropdown.Header>
-          {/* <Dropdown.Divider /> */}
+          <Dropdown.Divider />
+          <Dropdown.Item as="button" onClick={(event) => {
+            event.preventDefault();
+            event.stopPropagation();
+            console.log('mute change', !mute) 
+            setMute(!mute)
+          }}>
+            <Form.Check
+              type="switch"
+              id="soundSwitch"
+              label="Выключить звук"
+              checked={mute}
+              className="tw-py-3 tw-text-lg"
+            />
+          </Dropdown.Item>
           {/* <Dropdown.Item
             as="button"
             type="button"

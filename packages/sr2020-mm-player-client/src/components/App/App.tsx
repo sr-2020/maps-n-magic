@@ -49,12 +49,13 @@ export function App(props: AppProps) {
   } = props;
   const manageTitle = useState<string>('SR 2020 магия');
   const [title, setTitle] = manageTitle;
+  const [mute, setMute] = useState<boolean>(false);
 
   if (characterData === null) {
     return <div>Загружаются данные персонажа...</div>
   }
 
-  const soundStageState = locationData2SoundStageState(characterData, locationData);
+  const soundStageState = locationData2SoundStageState(characterData, locationData, mute);
 
   if (characterData.workModel.healthState !== 'healthy') {
     return (
@@ -66,6 +67,8 @@ export function App(props: AppProps) {
             loginManager={loginManager}
             locationData={locationData}
             characterData={characterData}
+            mute={mute}
+            setMute={setMute}
           />
           <CharacterPage 
             setTitle={setTitle}
@@ -86,6 +89,8 @@ export function App(props: AppProps) {
             loginManager={loginManager}
             locationData={locationData}
             characterData={characterData}
+            mute={mute}
+            setMute={setMute}
           />
 
         {/* {JSON.stringify(locationData)} */}
