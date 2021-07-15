@@ -11,7 +11,7 @@ import {
   SetLocationRecords, 
   SetUserRecords 
 } from 'sr2020-mm-event-engine';
-import { createLogger, playerServerConstants } from "sr2020-mm-server-event-engine";
+import { createLogger, ECatcherStatesChanged, playerServerConstants, SetCatcherStates } from "sr2020-mm-server-event-engine";
 import { playerServerCookie } from "../utils";
 
 const logger = createLogger('playerDataSse');
@@ -63,6 +63,12 @@ export function connectToMainServerSse(gameModel: GameModel): void {
           ...parsedData,
           type: 'setUserRecords',
         });
+      } else if(isCatcherStatesChanged(parsedData)) {
+        logger.info(parsedData.type);
+        gameModel.execute2<SetCatcherStates>({
+          ...parsedData,
+          type: 'setCatcherStates',
+        });
       } else {
         logger.warn(`Unexpected sse message data ${JSON.stringify(e)}`);
       }
@@ -84,4 +90,7 @@ const isLocationRecordsChanged = (obj: any): obj is ELocationRecordsChanged2 => 
 }
 const isUserRecordsChanged = (obj: any): obj is EUserRecordsChanged => {
   return obj.type === 'userRecordsChanged';
+}
+const isCatcherStatesChanged = (obj: any): obj is ECatcherStatesChanged => {
+  return obj.type === 'catcherStatesChanged';
 }

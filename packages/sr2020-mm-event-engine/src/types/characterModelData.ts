@@ -1,4 +1,5 @@
 import Ajv, { JSONSchemaType } from "ajv";
+import { CatcherData } from "./spiritCatcher";
 import { SuitedState } from "./spirits";
 
 const ajv = new Ajv({
@@ -63,6 +64,7 @@ export interface CharacterModelData {
 
 export interface CharacterModelData2 extends CharacterModelData {
   spiritSuitState: SuitedState | undefined;
+  catcherData: CatcherData | undefined;
 }
 
 const bodyTypeSchema: JSONSchemaType<BodyType> = {

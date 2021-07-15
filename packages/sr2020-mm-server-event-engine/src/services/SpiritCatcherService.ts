@@ -12,10 +12,11 @@ import {
   ServiceContractTypes, 
   Spell, 
   Typed, 
-  validateCharacterModelData 
+  validateCharacterModelData,
+  CatcherData, 
+  CatcherStates 
 } from 'sr2020-mm-event-engine';
 import { getCharacterModelData } from '../api';
-import { CatcherData, CatcherStates } from '../types';
 
 export type CatcherStatesArg = {
   catcherStates: CatcherStates
@@ -35,6 +36,7 @@ export type RemoveCatcherStates = Typed<'removeCatcherStates', {
 export type DecrementAttempt = Typed<'decrementAttempt', {
   characterId: number;
 }>;
+export type SetCatcherStates = Typed<'setCatcherStates', CatcherStatesArg>;
 
 // emit events
 
@@ -42,25 +44,22 @@ export type ECatcherStatesChanged = Typed<'catcherStatesChanged', CatcherStatesA
 
 // listen events
 
-export type ESetCatcherStates = Typed<'setCatcherStates', CatcherStatesArg>;
-
 export interface SpiritCatcherServiceContract extends ServiceContract {
   Request: GetCatcherStates | GetCatcherState;
-  Action: RemoveCatcherStates | DecrementAttempt;
+  Action: RemoveCatcherStates | DecrementAttempt | SetCatcherStates;
   EmitEvent: ECatcherStatesChanged;
   NeedAction: never;
   NeedRequest: never;
-  ListenEvent: ESpellCast | ESetCatcherStates;
+  ListenEvent: ESpellCast;
 }
 
 export const spiritCatcherMetadata: ServiceContractTypes<SpiritCatcherServiceContract> = {
   requests: ['catcherState', 'catcherStates'],
-  actions: ['removeCatcherStates', 'decrementAttempt'],
+  actions: ['removeCatcherStates', 'decrementAttempt', 'setCatcherStates'],
   emitEvents: [
     'catcherStatesChanged',
   ],
   listenEvents: [
-    'setCatcherStates',
     'spellCast',
   ],
   needActions: [],
@@ -81,7 +80,6 @@ export class SpiritCatcherService extends AbstractService<SpiritCatcherServiceCo
   init() {
     super.init();
     this.on2('spellCast', this.onSpellCast);
-    this.on2('setCatcherStates', this.setCatcherStates);
     setTimeout(() => {
       this.onSpellCast({
         type: 'spellCast',
@@ -102,7 +100,6 @@ export class SpiritCatcherService extends AbstractService<SpiritCatcherServiceCo
 
   dispose() {
     this.off2('spellCast', this.onSpellCast);
-    this.off2('setCatcherStates', this.setCatcherStates);
   }
 
   async onSpellCast({ data }: ESpellCast): Promise<void> {
@@ -112,7 +109,7 @@ export class SpiritCatcherService extends AbstractService<SpiritCatcherServiceCo
     const { characterId, power } = data;
     
     const characterData = await getCharacterModelData(Number(characterId));
-    if (!validateCharacterModelData(data)) {
+    if (!validateCharacterModelData(characterData)) {
       this.logger.warn(`model ${characterId} is not valid. Model ${JSON.stringify(data)}, errors ${JSON.stringify(validateCharacterModelData.errors)}`);
     } else {
       // logger.info(`model ${modelId} is valid`);
@@ -137,7 +134,8 @@ export class SpiritCatcherService extends AbstractService<SpiritCatcherServiceCo
     });
   }
 
-  setCatcherStates({ catcherStates }: ESetCatcherStates): void {
+  setCatcherStates({ catcherStates }: SetCatcherStates): void {
+    // this.logger.info('setCatcherStates');
     this.catcherStates = catcherStates;
     this.emit2({
       type: 'catcherStatesChanged',

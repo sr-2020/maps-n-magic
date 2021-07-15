@@ -16,6 +16,7 @@ export * from "./qrType";
 export * from "./tokenData";
 export * from "./characterModelData";
 export * from "./abilityUtils";
+export * from "./spiritCatcher";
 
 import { LifeStylesValues } from "./enums";
 

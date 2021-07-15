@@ -10,6 +10,7 @@ import { WithLocationDataOnly } from '../../hocs';
 import { getFractionName } from '../../utils';
 import { SpiritCard } from "../SpiritCard";
 import { Ability, CharacterModelData2, hasAbility, hasSpell, Spell } from 'sr2020-mm-event-engine';
+import moment from 'moment';
 
 interface SpiritListProps extends WithLocationDataOnly {
   setTitle: (title: string) => void;
@@ -60,6 +61,17 @@ export function SpiritList(props: SpiritListProps) {
   
   return (
     <div className="SpiritList">
+      {
+        characterData.catcherData !== undefined &&
+        <div className="tw-m-4 tw-p-4 tw-bg-green-200 tw-font-semibold">
+          У вас {characterData.catcherData.attemptNumber} попытки 
+          до {
+            moment(characterData.catcherData.startTime + 
+            characterData.catcherData.durationMillis).format('HH:mm')
+          } 
+          , вероятность поимки {characterData.catcherData.catchProbability}%
+        </div>
+      }
       <Accordion>
         {
           sortedSpiritViews.map((spiritView, index) => 
@@ -76,7 +88,7 @@ export function SpiritList(props: SpiritListProps) {
                   />
                   {
                     // hasAbility(characterData, spiritMasterMap[spiritView.level]) &&
-                    true &&
+                    characterData.catcherData !== undefined &&
                     <Button 
                       variant="outline-primary" 
                       className="tw-w-full tw-text-left tw-py-4 tw-mb-2"

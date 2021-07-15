@@ -22,7 +22,7 @@
     "classnames": "^2.3.1",
     "dateformat": "^3.0.3",
     "events": "^3.3.0",
-    "moment": "^2.27.0",
+    "moment": "^2.29.1",
     "qrx-scanner": "^1.0.3",
     "ramda": "^0.27.1",
     "react": "^17.0.1",

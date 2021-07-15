@@ -15,7 +15,7 @@ import {
   TokenData
 } from "sr2020-mm-event-engine";
 import shortid from 'shortid';
-import { CharacterWatcher } from "sr2020-mm-server-event-engine";
+import { CharacterWatcher, GetCatcherState } from "sr2020-mm-server-event-engine";
 
 export class SsePlayerDataSender {
   sse: SSE;
@@ -74,9 +74,14 @@ export class SsePlayerDataSender {
       type: 'spiritSuitState',
       characterid: this.userData.modelId
     });
+    const catcherData = this.gameModel.get2<GetCatcherState>({
+      type: 'catcherState',
+      id: String(this.userData.modelId)
+    });
     const data2: CharacterModelData2 = {
       ...data,
-      spiritSuitState
+      spiritSuitState,
+      catcherData
     };
     this.send(data2);
     // this.logger.info(`got character update. model id ${this.userData.modelId}`);
