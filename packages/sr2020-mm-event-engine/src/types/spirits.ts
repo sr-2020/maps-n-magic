@@ -14,6 +14,7 @@ export const SpiritStatus = {
   OnRoute: 'OnRoute',
   InJar: 'InJar',
   Suited: 'Suited',
+  DoHeal: 'DoHeal',
 } as const;
 
 export type SpiritStatusList = keyof typeof SpiritStatus;
@@ -51,6 +52,11 @@ export interface SuitedState {
   suitStatusChangeTime: number;
 }
 
+export interface DoHealState {
+  status: typeof SpiritStatus.DoHeal;
+  currentTime: number;
+}
+
 export type consequenceStatus = 'noConsequences' | 'woundConsequence' | 'deathConsequence';
 
 export type SpiritState = 
@@ -59,6 +65,7 @@ export type SpiritState =
   | OnRouteState
   | InJarState
   | SuitedState
+  | DoHealState
 ;
 
 export interface Spirit {

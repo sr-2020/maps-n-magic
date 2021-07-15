@@ -8,7 +8,8 @@ import {
   InJarState,
   SuitedState,
   TimetableItem,
-  OnRouteState
+  OnRouteState,
+  DoHealState
 } from 'sr2020-mm-event-engine';
 
 import { spiritRouteSchema } from "./spiritRouteValidation";
@@ -76,6 +77,19 @@ const inJarStateSchema: JSONSchemaType<InJarState> = {
   }
 };
 
+const doHealStateSchema: JSONSchemaType<DoHealState> = {
+  type: 'object',
+  required: ['status', 'currentTime'],
+  additionalProperties: false,
+  properties: {
+    status: {
+      type: 'string',
+      const: 'DoHeal',
+    },
+    currentTime: { type: 'number' }
+  }
+};
+
 const suitedStateSchema: JSONSchemaType<SuitedState> = {
   type: 'object',
   required: [
@@ -105,6 +119,7 @@ export const spiritStateSchema: JSONSchemaType<SpiritState> = {
     restInAstralStateSchema,
     onRouteStateSchema,
     inJarStateSchema,
-    suitedStateSchema
+    suitedStateSchema,
+    doHealStateSchema,
   ]
 };

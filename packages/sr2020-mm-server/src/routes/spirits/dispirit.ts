@@ -13,7 +13,8 @@ import {
   validateCatchSpiritInternalRequest, 
   validateDispiritInternalRequest, 
   validateSuitSpiritInternalRequest,
-  consequenceStatus
+  consequenceStatus,
+  SpiritState
 } from 'sr2020-mm-event-engine';
 import { 
   clinicalDeath,
@@ -152,32 +153,36 @@ export const mainDispirit = async (req1, res, next) => {
 
     const shouldSaveSpiritInJar = spiritJarId !== null && state.suitStatus === 'normal';
 
+    let newSpiritState: SpiritState;
+
     if (shouldSaveSpiritInJar) {
       const res2 = await dispirit(characterId, bodyStorageId, spiritJarId);
-      req.gameModel.emit2<EPutSpiritRequested>({
-        type: 'putSpiritRequested',
-        id: spirit.id,
-        props: {
-          state: {
-            status: 'InJar',
-            // @ts-ignore
-            qrId: spiritJarId
-          },
-        }
-      });
+      newSpiritState = {
+        status: 'InJar',
+        // @ts-ignore
+        qrId: spiritJarId
+      };
     } else {
-      // TODO - call special state for spirit after emerency dispirit
       const res2 = await dispirit(characterId, bodyStorageId, null);
-      req.gameModel.emit2<EPutSpiritRequested>({
-        type: 'putSpiritRequested',
-        id: spirit.id,
-        props: {
-          state: {
-            status: 'RestInAstral',
-          },
-        }
-      });
+      if (state.suitStatus === 'emergencyDispirited') {
+        newSpiritState = {
+          status: 'DoHeal',
+          currentTime: Date.now()
+        };
+      } else {
+        newSpiritState = {
+          status: 'RestInAstral',
+        };
+      }
     }
+
+    req.gameModel.emit2<EPutSpiritRequested>({
+      type: 'putSpiritRequested',
+      id: spirit.id,
+      props: {
+        state: newSpiritState,
+      }
+    });
 
     let consequenceStatus: consequenceStatus = 'noConsequences';
     if (state.suitStatus !== 'normal') {
