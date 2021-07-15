@@ -8,6 +8,7 @@ import {
   SpiritState,
   RestInAstralState,
   SuitedState,
+  DoHealState,
 } from 'sr2020-mm-event-engine';
 import { createLogger } from '../../logger';
 
@@ -27,24 +28,43 @@ export function getNewSpiritState(
     newState = getOnRouteState(spirit, context);
   }
   if (state.status === 'OnRoute') {
-    newState = getUpdatedOnRouteState(spirit, context);
+    newState = getUpdatedOnRouteState(state, spirit, context);
   }
   if (state.status === 'Suited') {
-    newState = getUpdatedSuitedState(spirit, context);
+    newState = getUpdatedSuitedState(state, spirit, context);
+  }
+  if (state.status === 'DoHeal') {
+    newState = getUpdatedDoHealState(state, spirit, context);
   }
   return newState;
 }
 
+function getUpdatedDoHealState(
+  state: DoHealState,
+  spirit: Spirit, 
+  context: SpiritRouteContext,
+): RestInAstralState | undefined {
+  const { dateNow } = context;
+  const { currentTime } = state;
+  const healTimeout = 60 * 60 * 1000;
+  if ((currentTime + healTimeout) < dateNow ) {
+    const newState: RestInAstralState = {
+      status: 'RestInAstral'
+    };
+    logger.info(`SPIRIT_HEALED ${spirit.id} ${spirit.name}. Data ${JSON.stringify({
+      state
+    })}`);
+    return newState;
+  }
+  return undefined;
+}
+
 function getUpdatedSuitedState(
+  state: SuitedState,
   spirit: Spirit, 
   context: SpiritRouteContext,
 ): SuitedState | undefined {
   const { logger, moscowTimeInMinutes, dateNow } = context;
-  const state = spirit.state;
-  if (state.status !== SpiritStatus.Suited) {
-    logger.warn('Trying getUpdatedSuitedState in suited spirit', spirit);
-    return undefined;
-  }
   const { suitStatus, currentTime, duration } = state;
   if (suitStatus !== 'normal') {
     return undefined;
@@ -65,15 +85,11 @@ function getUpdatedSuitedState(
 
 
 function getUpdatedOnRouteState(
+  state: OnRouteState,
   spirit: Spirit, 
   context: SpiritRouteContext,
 ): OnRouteState | RestInAstralState | undefined {
   const { logger, moscowTimeInMinutes } = context;
-  const state = spirit.state;
-  if (state.status !== SpiritStatus.OnRoute) {
-    logger.warn('Trying getUpdatedOnRouteState in non route spirit', spirit);
-    return undefined;
-  }
   const { timetableItem, route, waypointIndex } = state;
   const { timeOnRoute, timeOnWaypoint } = getTimeOnRoute(route, timetableItem.speedPercent);
   const res = getWaypointIndex(moscowTimeInMinutes, timetableItem.time, timeOnWaypoint);

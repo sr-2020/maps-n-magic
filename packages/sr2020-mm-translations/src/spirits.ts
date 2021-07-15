@@ -16,6 +16,7 @@ export const spiritDictionary = {
   OnRoute: 'На маршруте',
   InJar: 'В тотеме',
   Suited: 'Надет',
+  DoHeal: 'Восстанавливается',
 
   // spirit route list
   newSpirit: 'Новый дух',
