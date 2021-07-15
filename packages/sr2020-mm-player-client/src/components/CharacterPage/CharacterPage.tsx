@@ -1,5 +1,6 @@
 import React, { useEffect } from 'react';
 import './CharacterPage.css';
+import moment from 'moment';
 
 import { WithLoginState, WithCharacterDataOnly } from '../../hocs';
 import { BodyType, HealthState } from 'sr2020-mm-event-engine';
@@ -36,6 +37,16 @@ export function CharacterPage(props: CharacterPageProps) {
 
   return (
     <div className="CharacterPage tw-p-4">
+      {
+        characterData.spiritSuitState !== undefined &&
+        <div className="tw-m-4 tw-p-4 tw-bg-green-200 tw-font-semibold">
+          Вы можете быть в теле духа до 
+          {
+            ' ' + moment(characterData.spiritSuitState.currentTime + 
+            characterData.spiritSuitState.duration).format('HH:mm')
+          } 
+        </div>
+      }
       <div className="tw-mb-2">
         <span className="tw-w-24 tw-inline-block">Тело</span><span>{bodyTypeLabel[characterData.workModel.currentBody]}</span>
       </div>
