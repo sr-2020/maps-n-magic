@@ -10,10 +10,13 @@ export enum Ability {
   SpiritMaster1 = 'spirit-master-1', // способность захватывать духов 1 ранга
   SpiritMaster2 = 'spirit-master-2', // способность захватывать духов 2 ранга
   SpiritMaster3 = 'spirit-master-3', // способность захватывать духов 3 ранга
+  SpiritFeed = 'spirit-feed', // знакомец духов - увеличивает шанс поимки духа
 }
 
 export enum Spell {
   SpiritCatcher = 'spirit-catcher',
+  InputStream = 'input-stream',
+  OutputStream = 'output-stream'
 }
 
 export function hasAbility(characterData: CharacterModelData, ability: Ability): boolean {

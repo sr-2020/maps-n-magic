@@ -1,6 +1,6 @@
 import * as R from 'ramda';
 import { EPutSpiritRequested, ErrorResponse, GetSpirit, getSpiritLocationId, GetUserRecord, invalidRequestBody, isFullSpiritJar, validateCatchSpiritInternalRequest } from 'sr2020-mm-event-engine';
-import { createLogger, getQrModelData, InnerApiRequest, putSpiritInStorage, validateSpiritJarQrModelData } from 'sr2020-mm-server-event-engine';
+import { createLogger, DecrementAttempt, GetCatcherState, getQrModelData, InnerApiRequest, putSpiritInStorage, validateSpiritJarQrModelData } from 'sr2020-mm-server-event-engine';
 import shortid from 'shortid';
 
 const logger = createLogger('catchSpirit.ts');
@@ -22,6 +22,21 @@ export const mainCatchSpirit = async (req1, res, next) => {
     }
 
     const { characterId, qrId, spiritId } = body;
+
+    const catcherState = req.gameModel.get2<GetCatcherState>({
+      type: 'catcherState',
+      id: String(characterId)
+    });
+
+    if (catcherState === undefined) {
+      const errorResponse: ErrorResponse = {
+        errorTitle: 'Спелл spirit catcher не активен',
+        errorSubtitle: `Спелл spirit catcher для персонажа ${characterId} не активен`
+      };
+      res.status(400).json(errorResponse);
+      logger.info(`CATCH_SPIRIT_FAIL ${uid} error ${JSON.stringify(errorResponse)}`);
+      return;
+    }
 
     // First set of checks
     //   user with characterId exists
@@ -136,6 +151,25 @@ export const mainCatchSpirit = async (req1, res, next) => {
     // action
     //   put spirit id in QR
     //   put new spirit state: InJar + qr id
+
+    req.gameModel.execute2<DecrementAttempt>({
+      type: 'decrementAttempt',
+      characterId: characterId
+    });
+
+    const { catchProbability } = catcherState;
+
+    const testValue = Math.random() * 100;
+
+    if (testValue > catchProbability) {
+      const errorResponse: ErrorResponse = {
+        errorTitle: 'Попытка поймать духа не удалась',
+        errorSubtitle: `Вероятность поимки ${catchProbability}%, выпавшее значение ${testValue.toFixed(1)}`
+      };
+      res.status(400).json(errorResponse);
+      logger.info(`CATCH_SPIRIT_FAIL ${uid} error ${JSON.stringify(errorResponse)}`);
+      return;
+    }
 
     const putResult = await putSpiritInStorage(qrId, spiritId);
     // logger.info('put spirit success confirmation', putResult);

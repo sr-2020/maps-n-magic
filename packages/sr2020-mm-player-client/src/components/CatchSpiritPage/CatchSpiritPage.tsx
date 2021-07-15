@@ -2,6 +2,8 @@ import React, { useEffect, useState } from 'react';
 import { useHistory } from 'react-router-dom';
 
 import { ErrorResponse, isErrorResponse } from 'sr2020-mm-event-engine';
+import Button from "react-bootstrap/Button";
+
 import { catchSpirit, catchSpirit2 } from '../../api';
 import { ErrorAlert } from '../ErrorAlert';
 import { QrScannerWrapper } from '../QrScannerWrapper';
@@ -77,7 +79,16 @@ export function CatchSpiritPage(props: CatchSpiritPageProps) {
       }
       {
         errorResponse !== null && (
-          <ErrorAlert errorResponse={errorResponse} />
+          <>
+            <ErrorAlert errorResponse={errorResponse} />
+            <Button 
+              variant="primary" 
+              className="tw-w-full tw-text-left tw-py-4 tw-mb-2"
+              onClick={() => history.push(`/spirits`)}
+            >
+              Вернуться к списку духов
+            </Button>
+          </>
         )
       }
     </div>

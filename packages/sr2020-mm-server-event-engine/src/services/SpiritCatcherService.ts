@@ -1,0 +1,188 @@
+import * as R from 'ramda';
+import { 
+  Ability, 
+  AbstractService, 
+  ESpellCast, 
+  GameModel, 
+  GMLogger, 
+  hasAbility, 
+  Req, 
+  Res, 
+  ServiceContract, 
+  ServiceContractTypes, 
+  Spell, 
+  Typed, 
+  validateCharacterModelData 
+} from 'sr2020-mm-event-engine';
+import { getCharacterModelData } from '../api';
+import { CatcherData, CatcherStates } from '../types';
+
+export type CatcherStatesArg = {
+  catcherStates: CatcherStates
+};
+
+// requests
+
+export type GetCatcherStates = (arg: Typed<'catcherStates'>) => CatcherStates;
+export type GetCatcherState = (arg: Typed<'catcherState', {
+  id: string;
+}>) => CatcherData | undefined;
+
+// export type SetCatcherStateUpdates = Typed<'setCatcherStateUpdates', CatcherStatesArg>;
+export type RemoveCatcherStates = Typed<'removeCatcherStates', {
+  expiredStatesList: string[];
+}>;
+export type DecrementAttempt = Typed<'decrementAttempt', {
+  characterId: number;
+}>;
+
+// emit events
+
+export type ECatcherStatesChanged = Typed<'catcherStatesChanged', CatcherStatesArg>;
+
+// listen events
+
+export type ESetCatcherStates = Typed<'setCatcherStates', CatcherStatesArg>;
+
+export interface SpiritCatcherServiceContract extends ServiceContract {
+  Request: GetCatcherStates | GetCatcherState;
+  Action: RemoveCatcherStates | DecrementAttempt;
+  EmitEvent: ECatcherStatesChanged;
+  NeedAction: never;
+  NeedRequest: never;
+  ListenEvent: ESpellCast | ESetCatcherStates;
+}
+
+export const spiritCatcherMetadata: ServiceContractTypes<SpiritCatcherServiceContract> = {
+  requests: ['catcherState', 'catcherStates'],
+  actions: ['removeCatcherStates', 'decrementAttempt'],
+  emitEvents: [
+    'catcherStatesChanged',
+  ],
+  listenEvents: [
+    'setCatcherStates',
+    'spellCast',
+  ],
+  needActions: [],
+  needRequests: [],
+};
+
+export class SpiritCatcherService extends AbstractService<SpiritCatcherServiceContract> {
+  catcherStates: CatcherStates;
+
+  constructor(gameModel: GameModel, logger: GMLogger) {
+    super(gameModel, logger);
+    this.setMetadata(spiritCatcherMetadata);
+    this.catcherStates = {};
+    this.onSpellCast = this.onSpellCast.bind(this);
+    this.setCatcherStates = this.setCatcherStates.bind(this);
+  }
+
+  init() {
+    super.init();
+    this.on2('spellCast', this.onSpellCast);
+    this.on2('setCatcherStates', this.setCatcherStates);
+    setTimeout(() => {
+      this.onSpellCast({
+        type: 'spellCast',
+        data: {
+          characterId: '51935',
+          id: Spell.SpiritCatcher,
+          location: {id: 234},
+          name: Spell.SpiritCatcher,
+          // power: 2,
+          power: 1,
+          ritualMembersIds: [],
+          ritualVictimIds: [],
+          timestamp: Date.now()
+        }
+      })
+    }, 10000);
+  }
+
+  dispose() {
+    this.off2('spellCast', this.onSpellCast);
+    this.off2('setCatcherStates', this.setCatcherStates);
+  }
+
+  async onSpellCast({ data }: ESpellCast): Promise<void> {
+    if (data.id !== Spell.SpiritCatcher) {
+      return;
+    }
+    const { characterId, power } = data;
+    
+    const characterData = await getCharacterModelData(Number(characterId));
+    if (!validateCharacterModelData(data)) {
+      this.logger.warn(`model ${characterId} is not valid. Model ${JSON.stringify(data)}, errors ${JSON.stringify(validateCharacterModelData.errors)}`);
+    } else {
+      // logger.info(`model ${modelId} is valid`);
+    }
+
+    const durationMillis = power * 5 * 60000;
+    const hasSpiritFeed = hasAbility(characterData, Ability.SpiritFeed);
+    const catchProbability = power * 20 + (hasSpiritFeed ? 20 : 0);
+
+    const catcherData: CatcherData = {
+      startTime: Date.now(),
+      durationMillis,
+      catchProbability,
+      attemptNumber: 3
+    };
+    this.catcherStates[characterId] = catcherData;
+    this.logger.info(`SPIRIT_CATCHER_SPELL character ${characterId} applied spirit catcher. Data ${JSON.stringify(catcherData)}`);
+
+    this.emit2({
+      type: 'catcherStatesChanged',
+      catcherStates: this.catcherStates
+    });
+  }
+
+  setCatcherStates({ catcherStates }: ESetCatcherStates): void {
+    this.catcherStates = catcherStates;
+    this.emit2({
+      type: 'catcherStatesChanged',
+      catcherStates: this.catcherStates
+    });
+  }
+
+  decrementAttempt({ characterId }: DecrementAttempt): void {
+    const catcherData: CatcherData | undefined = this.catcherStates[characterId];
+    if (catcherData === undefined) {
+      this.logger.info(`Not found catcher state for character ${characterId} for decrement attempt`);
+      return;
+    }
+    if (catcherData.attemptNumber === 1) {
+      delete this.catcherStates[characterId];
+      this.logger.info(`SPIRIT_CATCHER_DECREMENT_ATTEMPT character ${characterId} attempts ended.`);
+    } else {
+      this.catcherStates[characterId] = {
+        ...catcherData,
+        attemptNumber: catcherData.attemptNumber - 1
+      };
+      this.logger.info(`SPIRIT_CATCHER_DECREMENT_ATTEMPT character ${characterId} made catch attempt. New attempt ${catcherData.attemptNumber - 1}`);
+    }
+    this.emit2({
+      type: 'catcherStatesChanged',
+      catcherStates: this.catcherStates
+    });
+  }
+
+  removeCatcherStates({ expiredStatesList }: RemoveCatcherStates): void {
+    expiredStatesList.forEach(characterId => {
+      delete this.catcherStates[characterId];
+    });
+    
+    this.emit2({
+      type: 'catcherStatesChanged',
+      catcherStates: this.catcherStates
+    });
+  }
+
+  getCatcherStates(request: Req<GetCatcherStates>): Res<GetCatcherStates> {
+    return R.clone(this.catcherStates);
+  }
+
+  getCatcherState(request: Req<GetCatcherState>): Res<GetCatcherState> {
+    return this.catcherStates[request.id];
+  }
+}

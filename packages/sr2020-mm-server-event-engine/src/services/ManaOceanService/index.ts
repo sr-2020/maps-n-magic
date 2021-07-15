@@ -39,7 +39,8 @@ import {
   GetLocationRecord,
   GetLocationRecords,
   GetEnableManaOcean,
-  PutLocationRecords
+  PutLocationRecords,
+  Spell
 } from 'sr2020-mm-event-engine';
 
 // import { EMassacreTriggered } from "../../index";
@@ -143,7 +144,7 @@ export class ManaOceanService extends AbstractService<ManaOceanServiceContract> 
     const locationRecord = this.getLocation(locationId);
     if (!locationRecord) {
       this.logger.error('location not found', locationId);
-      if (data.id === 'input-stream' || data.id === 'output-stream') {
+      if (data.id === Spell.InputStream || data.id === Spell.OutputStream) {
         const {
           characterId, name,
         } = data;
@@ -185,7 +186,7 @@ export class ManaOceanService extends AbstractService<ManaOceanServiceContract> 
 
     // 0 1 2 3 4 5 - момент каста уже считается попыткой
     // 0 1 4 5
-    if (id !== 'input-stream' && id !== 'output-stream') {
+    if (id !== Spell.InputStream && id !== Spell.OutputStream) {
       return;
     }
 
@@ -208,11 +209,11 @@ export class ManaOceanService extends AbstractService<ManaOceanServiceContract> 
     }
 
     effectCollector.addEffect(locationRecord, {
-      type: id === 'input-stream' ? 'inputStream' : 'outputStream',
+      type: id === Spell.InputStream ? 'inputStream' : 'outputStream',
       id: shortid.generate(),
       start: startTime,
       end: endTime,
-      manaLevelChange: id === 'input-stream' ? 1 : -1,
+      manaLevelChange: id === Spell.InputStream ? 1 : -1,
       locationId: locationRecord.id,
       range,
     } as SpellEffect);

@@ -45,6 +45,8 @@ import { PushNotificationService } from '../services/PushNotificationService';
 import { AudioStageService } from '../services/AudioStageService';
 import { CharacterLocationService } from '../services/CharacterLocationService';
 import { SpiritMovementService } from '../services/SpiritMovementService';
+import { SpiritCatcherService } from '../services/SpiritCatcherService';
+import { SpiritCatcherUpdateService } from '../services/SpiritCatcherUpdateService';
 // Push notifications delivery was unstable so decided to disable this feature
 // if we don't have better solution.
 // For details see https://trello.com/c/giDbdVGa/628-фантомные-кс-пуши-в-уведомлении
@@ -113,6 +115,8 @@ const services = [
   SpiritMovementService,
   FeatureService,
   ModelManagetLocInitializer,
+  SpiritCatcherService,
+  SpiritCatcherUpdateService,
   // RescueServicePushService,
 ];
 
@@ -278,6 +282,8 @@ export function makeGameModel(): {
         'putSpiritRouteRequested',
         'deleteSpiritRouteRequested',
         'cloneSpiritRouteRequested',
+        // not used on main server
+        'setCatcherStates'
       ]
     }
   ));
