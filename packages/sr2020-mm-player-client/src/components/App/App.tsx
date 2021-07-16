@@ -123,6 +123,7 @@ export function App(props: AppProps) {
               <Route path="/dispirit">
                 <DispiritPage 
                   setTitle={setTitle}
+                  characterData={characterData}
                 />
               </Route>
             }

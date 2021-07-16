@@ -39,11 +39,23 @@ export function CharacterPage(props: CharacterPageProps) {
     <div className="CharacterPage tw-p-4">
       {
         characterData.spiritSuitState !== undefined &&
+        characterData.spiritSuitState.suitStatus === 'normal' &&
         <div className="tw-m-4 tw-p-4 tw-bg-green-200 tw-font-semibold">
           Вы можете быть в теле духа до 
           {
             ' ' + moment(characterData.spiritSuitState.currentTime + 
             characterData.spiritSuitState.duration).format('HH:mm')
+          } 
+        </div>
+      }
+      {
+        characterData.spiritSuitState !== undefined &&
+        characterData.spiritSuitState.suitStatus !== 'normal' &&
+        <div className="tw-m-4 tw-p-4 tw-bg-green-200 tw-font-semibold">
+          Вернитесь к телохранилищу до 
+          {
+            ' ' + moment(characterData.spiritSuitState.suitStatusChangeTime + 
+            10 * 60 * 1000).format('HH:mm')
           } 
         </div>
       }

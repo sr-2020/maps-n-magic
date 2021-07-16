@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { isErrorResponse } from 'sr2020-mm-event-engine';
+import { CharacterModelData2, isErrorResponse } from 'sr2020-mm-event-engine';
 import { dispirit, isBodyStorageValid, isSpiritJarValid } from '../../api';
 import { QrScannerWrapper } from '../QrScannerWrapper';
 import './DispiritPage.css';
@@ -9,6 +9,7 @@ import { StatusIcon } from '../StatusIcon';
 
 interface DispiritPageProps {
   setTitle: (title: string) => void;
+  characterData: CharacterModelData2;
 }
 
 type BodyStorageStatus2 = {
@@ -36,7 +37,7 @@ const consequenceTexts = {
 };
 
 export function DispiritPage(props: DispiritPageProps) {
-  const { setTitle } = props;
+  const { setTitle, characterData } = props;
 
   useEffect(() => {
     setTitle(`Снять духа`);
@@ -163,6 +164,7 @@ export function DispiritPage(props: DispiritPageProps) {
     spiritJarStatus.status === 'valid' && 
     bodyStorageStatus.status === 'valid';
 
+  const isNormal = characterData.spiritSuitState?.suitStatus === 'normal';
   return (
     <div className="DispiritPage tw-p-4 tw-pl-16">
       <div className="tw-mb-8">
@@ -178,19 +180,22 @@ export function DispiritPage(props: DispiritPageProps) {
           </div>
         }
       </div>
-      <div className="tw-mb-8">
-        <div className="tw-flex tw-mb-4">
-          <StatusIcon status={spiritJarStatus.status}/>
-          <div className="col-form-label tw-flex-1">Тотем</div>
-          <Button onClick={() => setScanSpiritJar(true)}>Сканировать</Button>
-        </div>
-        {
-          spiritJarStatus.status === 'invalid' && 
-          <div className="tw-m-4">
-            {spiritJarStatus.message}
+      {
+        isNormal &&
+        <div className="tw-mb-8">
+          <div className="tw-flex tw-mb-4">
+            <StatusIcon status={spiritJarStatus.status}/>
+            <div className="col-form-label tw-flex-1">Тотем</div>
+            <Button onClick={() => setScanSpiritJar(true)}>Сканировать</Button>
           </div>
-        }
-      </div>
+          {
+            spiritJarStatus.status === 'invalid' && 
+            <div className="tw-m-4">
+              {spiritJarStatus.message}
+            </div>
+          }
+        </div>
+      }
       {
         dispiritStatus !== '' && 
         <div className="tw-m-4">{dispiritStatus}</div>
@@ -203,9 +208,14 @@ export function DispiritPage(props: DispiritPageProps) {
           Снять и отпустить духа
         </Button>
       </div>
-      <div className="tw-text-right">
-        <Button disabled={!isValid} onClick={() => setDoDispirit(true)}>Снять</Button>
-      </div>
+      {
+        isNormal &&
+        <div className="tw-text-right">
+          <Button disabled={!isValid} onClick={() => setDoDispirit(true)}>
+            Снять
+          </Button>
+        </div>
+      }
     </div>
   );
 }
