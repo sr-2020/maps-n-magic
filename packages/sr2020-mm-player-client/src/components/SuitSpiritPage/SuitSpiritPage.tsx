@@ -141,7 +141,7 @@ export function SuitSpiritPage(props: SuitSpiritPageProps) {
   if (!hasAbility(characterData, Ability.SuitUp)) {
     return (
       <div className="tw-text-center">
-        <h2 className="tw-my-16">Вы не овладели навыком Suit Up, поэтому не можете надеть духа</h2>
+        <h2 className="tw-my-16">Вы не овладели навыком Suit Up (A), поэтому не можете надеть духа</h2>
       </div>
     );
   }

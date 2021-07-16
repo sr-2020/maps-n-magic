@@ -23,6 +23,12 @@ const spiritMasterMap: Record<number, Ability> = {
   3: Ability.SpiritMaster3,
 };
 
+const spiritMasterNames: Record<number, string> = {
+  1: 'Spirit Apprentice (P)',
+  2: 'Spirit Disciple (P)',
+  3: 'Spirit Master (P)',
+};
+
 export function SpiritList(props: SpiritListProps) {
   const { locationData, setTitle, characterData } = props;
   const history = useHistory();
@@ -99,7 +105,7 @@ export function SpiritList(props: SpiritListProps) {
                   }
                   {
                     !hasAbility(characterData, spiritMasterMap[spiritView.level]) &&
-                    <div>Для ловли духа нужна способность spirit-master-{spiritView.level}</div>
+                    <div>Для ловли духа нужна способность {spiritMasterNames[spiritView.level]}</div>
                   }
                 </Card.Body>
               </Accordion.Collapse>
