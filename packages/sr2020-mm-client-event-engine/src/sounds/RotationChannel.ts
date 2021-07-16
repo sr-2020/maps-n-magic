@@ -33,10 +33,24 @@ export class RotationChannel {
 
   disposed: boolean = false;
 
+  mute: boolean = false;
+
   constructor(private context: RotationChannelContext) {
     this.uid = counter;
     counter++;
     this.playSound = this.playSound.bind(this);
+  }
+
+  setMute (mute: boolean): void {
+    this.mute = mute;
+    if (this.soundCtl === null) {
+      return;
+    }
+    if (mute) {
+      this.soundCtl.gainNode.gain.value = 0;
+    } else {
+      this.soundCtl.gainNode.gain.value = this.soundCtl.originalVolumePercent / 100;
+    }
   }
 
   run() {
@@ -108,7 +122,12 @@ export class RotationChannel {
       this.soundCtl = ctl;
       ctl.source.addEventListener('ended', this.playSound);
       ctl.source.customData = { soundName: sound.name };
-      ctl.gainNode.gain.value = playlistItem.volumePercent / 100;
+      if (this.mute) {
+        ctl.gainNode.gain.value = 0;
+      } else {
+        ctl.gainNode.gain.value = playlistItem.volumePercent / 100;
+      }
+      this.soundCtl.originalVolumePercent = playlistItem.volumePercent;
       // ctl.gainNode.gain.value = 0;
       ctlStart(ctl);
       this.context.setCurRotationSoundData(JSON.stringify({

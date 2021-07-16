@@ -27,10 +27,24 @@ export class BackgroundChannel {
 
   disposed: boolean = false;
 
+  mute: boolean = false;
+
   constructor(private context: BackgroundChannelContext) {
     this.uid = counter;
     counter++;
     this.run = this.run.bind(this);
+  }
+
+  setMute (mute: boolean): void {
+    this.mute = mute;
+    if (this.soundCtl === null) {
+      return;
+    }
+    if (mute) {
+      this.soundCtl.gainNode.gain.value = 0;
+    } else {
+      this.soundCtl.gainNode.gain.value = this.soundCtl.originalVolumePercent / 100;
+    }
   }
 
   run() {
@@ -59,7 +73,13 @@ export class BackgroundChannel {
         this.soundCtl = ctl;
         ctl.source.addEventListener('ended', this.run);
         ctl.source.customData = { soundName: sound.name };
-        ctl.gainNode.gain.value = backgroundSound.volumePercent / 100; // 50 / 100
+
+        if (this.mute) {
+          ctl.gainNode.gain.value = 0;
+        } else {
+          ctl.gainNode.gain.value = backgroundSound.volumePercent / 100;
+        }
+        this.soundCtl.originalVolumePercent = backgroundSound.volumePercent;
         ctlStart(ctl);
         this.context.setCurBgSoundData(JSON.stringify({
           type: 'sound', 

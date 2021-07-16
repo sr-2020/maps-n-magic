@@ -16,6 +16,7 @@ interface SoundStageProps {
   soundStorage: SoundStorage;
   soundStageState: SoundStageState;
   soundSettings: SoundSettings;
+  mute: boolean;
 }
 
 interface ComponentSoundStageState {
@@ -48,19 +49,25 @@ export class SoundStage extends React.Component<SoundStageProps, ComponentSoundS
 
 
   componentDidMount() {
-    const { soundStageState, soundStorage, soundSettings } = this.props;
+    const { soundStageState, soundStorage, soundSettings, mute } = this.props;
     this.soundStageState = R.clone(soundStageState);
+    this.rotationChannel.setMute(mute);
     this.rotationChannel.run();
+    this.backgroundChannel.setMute(mute);
     this.backgroundChannel.run();
   }
 
   componentDidUpdate(prevProps: SoundStageProps) {
-    const { soundStageState } = this.props;
+    const { soundStageState, mute } = this.props;
     if (!R.equals(soundStageState, prevProps.soundStageState)) {
       this.soundStageState = R.clone(soundStageState);
       if (soundStageState.rotationSounds?.key !== prevProps.soundStageState.rotationSounds?.key) {
         this.rotationChannel.smoothEndRotation();
       }
+    }
+    if (mute !== prevProps.mute) {
+      this.rotationChannel.setMute(mute);
+      this.backgroundChannel.setMute(mute);
     }
   }
 

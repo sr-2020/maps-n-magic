@@ -55,7 +55,7 @@ export function App(props: AppProps) {
     return <div>Загружаются данные персонажа...</div>
   }
 
-  const soundStageState = locationData2SoundStageState(characterData, locationData, mute);
+  const soundStageState = locationData2SoundStageState(characterData, locationData);
 
   if (characterData.workModel.healthState !== 'healthy') {
     return (
@@ -169,6 +169,7 @@ export function App(props: AppProps) {
             soundStageState={soundStageState} 
             audioContextWrapper={audioContextWrapper} 
             soundStorage={soundStorage}
+            mute={mute}
           />
         </div>
       </Router>

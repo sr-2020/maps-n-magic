@@ -27,7 +27,8 @@ export interface SoundCtl {
     noteOn?: any ,
     noteOff?: any
   };
-  gainNode: GainNode
+  gainNode: GainNode,
+  originalVolumePercent: number;
 };
 
 export type SoundChannel = {

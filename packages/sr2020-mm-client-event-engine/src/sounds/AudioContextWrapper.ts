@@ -34,6 +34,7 @@ export class AudioContextWrapper {
     return {
       source,
       gainNode,
+      originalVolumePercent: 0
     };
   }
 }
