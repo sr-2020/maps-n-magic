@@ -6,6 +6,7 @@ import {
   SpiritFractionService,
   StubEventProcessor,
   UserRecordService,
+  FeatureService,
 } from "sr2020-mm-event-engine";
 
 import { 
@@ -24,6 +25,7 @@ const services = [
   LocationDataService,
   SuitedSpiritsService,
   SpiritCatcherService,
+  FeatureService,
 ];
 
 export function makeGameModel(): {
@@ -48,8 +50,9 @@ export function makeGameModel(): {
         'setSpiritFractions',
         // spell cast processed on main server
         'spellCast',
-        // sended from main server
+        // sended from main server sse
         'setCatcherStates',
+        'setFeatures',
       ]
     }
   ));

@@ -1,7 +1,9 @@
 import EventSource from "eventsource";
 
 import { 
+  EFeaturesChanged,
   ELocationRecordsChanged2, 
+  ESetFeatures, 
   ESetSpiritFractions, 
   ESetSpirits, 
   ESpiritFractionsChanged, 
@@ -69,6 +71,12 @@ export function connectToMainServerSse(gameModel: GameModel): void {
           ...parsedData,
           type: 'setCatcherStates',
         });
+      } else if(isFeaturesChanged(parsedData)) {
+        logger.info(parsedData.type);
+        gameModel.emit2<ESetFeatures>({
+          ...parsedData,
+          type: 'setFeatures',
+        });
       } else {
         logger.warn(`Unexpected sse message data ${JSON.stringify(e)}`);
       }
@@ -93,4 +101,7 @@ const isUserRecordsChanged = (obj: any): obj is EUserRecordsChanged => {
 }
 const isCatcherStatesChanged = (obj: any): obj is ECatcherStatesChanged => {
   return obj.type === 'catcherStatesChanged';
+}
+const isFeaturesChanged = (obj: any): obj is EFeaturesChanged => {
+  return obj.type === 'featuresChanged';
 }

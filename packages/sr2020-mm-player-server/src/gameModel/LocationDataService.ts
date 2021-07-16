@@ -24,8 +24,10 @@ import {
   GetSpiritFraction,
   ESpiritFractionsChanged,
   GetSpirits,
-  getSpiritLocationId
+  getSpiritLocationId,
+  EFeaturesChanged
 } from 'sr2020-mm-event-engine';
+import { translateAbilities } from 'sr2020-mm-server-event-engine';
 
 export interface LocationDataServiceContract extends ServiceContract {
   Request: GetAggLocationView;
@@ -36,6 +38,7 @@ export interface LocationDataServiceContract extends ServiceContract {
     | ELocationRecordsChanged2
     | ESpiritsChanged
     | ESpiritFractionsChanged
+    | EFeaturesChanged
   ;
   NeedAction: never;
   NeedRequest: 
@@ -52,7 +55,7 @@ const metadata: ServiceContractTypes<LocationDataServiceContract> = {
   emitEvents: [
     // 'massacreTriggered'
   ],
-  listenEvents: ['locationRecordsChanged2', 'spiritsChanged', 'spiritFractionsChanged'],
+  listenEvents: ['locationRecordsChanged2', 'spiritsChanged', 'spiritFractionsChanged', 'featuresChanged'],
   needRequests: ['spiritFraction', 'spirits'],
   needActions: []
 };
@@ -70,20 +73,22 @@ export class LocationDataService extends AbstractService<LocationDataServiceCont
     this.setMetadata(metadata);
     this.onLocationRecordsChanged = this.onLocationRecordsChanged.bind(this);
     this.onSpiritsChanged = this.onSpiritsChanged.bind(this);
-    this.onSpiritFractionsChanged = this.onSpiritFractionsChanged.bind(this);
+    this.forceOnSpiritsChanged = this.forceOnSpiritsChanged.bind(this);
   }
 
   init() {
     super.init();
     this.on2('locationRecordsChanged2', this.onLocationRecordsChanged);
     this.on2('spiritsChanged', this.onSpiritsChanged);
-    this.on2('spiritFractionsChanged', this.onSpiritFractionsChanged);
+    this.on2('spiritFractionsChanged', this.forceOnSpiritsChanged);
+    this.on2('featuresChanged', this.forceOnSpiritsChanged);
   }
   
   dispose() {
     this.off2('locationRecordsChanged2', this.onLocationRecordsChanged);
     this.off2('spiritsChanged', this.onSpiritsChanged);
-    this.off2('spiritFractionsChanged', this.onSpiritFractionsChanged);
+    this.off2('spiritFractionsChanged', this.forceOnSpiritsChanged);
+    this.off2('featuresChanged', this.forceOnSpiritsChanged);
   }
 
   onLocationRecordsChanged(data: ELocationRecordsChanged2): void {
@@ -99,7 +104,7 @@ export class LocationDataService extends AbstractService<LocationDataServiceCont
     this.updateAggregatedLocationViews();
   }
 
-  onSpiritFractionsChanged(): void {
+  forceOnSpiritsChanged(): void {
     this.onSpiritsChanged({
       type: 'spiritsChanged',
       spirits: this.getFromModel2({type: 'spirits'})
@@ -122,10 +127,12 @@ export class LocationDataService extends AbstractService<LocationDataServiceCont
       let abilities = [...spirit.abilities];
       if (fraction !== undefined) {
         abilities = R.uniq([...abilities, ...fraction.abilities]);
-        abilities.sort();
       } else {
         this.logger.error(`Spirit ${spirit.id} fraction not found. Fraction id ${spirit.fraction}`);
       }
+
+      abilities = translateAbilities(this.gameModel, abilities);
+      abilities.sort();
       // this.logger.info('fraction', fraction);
       acc.push({
         ...spirit,

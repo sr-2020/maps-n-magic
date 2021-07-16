@@ -93,7 +93,7 @@ export function SpiritList(props: SpiritListProps) {
                     characterData={characterData}
                   />
                   {
-                    hasAbility(characterData, spiritMasterMap[spiritView.level]) &&
+                    // hasAbility(characterData, spiritMasterMap[spiritView.level]) &&
                     characterData.catcherData !== undefined &&
                     <Button 
                       variant="outline-primary" 
@@ -104,8 +104,8 @@ export function SpiritList(props: SpiritListProps) {
                     </Button>
                   }
                   {
-                    !hasAbility(characterData, spiritMasterMap[spiritView.level]) &&
-                    <div>Для ловли духа нужна способность {spiritMasterNames[spiritView.level]}</div>
+                    // !hasAbility(characterData, spiritMasterMap[spiritView.level]) &&
+                    // <div>Для ловли духа нужна способность {spiritMasterNames[spiritView.level]}</div>
                   }
                 </Card.Body>
               </Accordion.Collapse>

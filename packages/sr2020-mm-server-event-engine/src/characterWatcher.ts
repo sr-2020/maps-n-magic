@@ -40,7 +40,7 @@ export class CharacterWatcher extends EventEmitter {
   }
 
   updateCharacters() {
-    logger.info(`updateCharacters`);
+    // logger.info(`updateCharacters`);
     const keys = R.keys(this.characterCache);
     keys.filter(modelId => {
       return this.characterCache[modelId].sseListenerIds.size !== 0
@@ -86,7 +86,7 @@ export class CharacterWatcher extends EventEmitter {
   }
 
   public async getCharacterModel(modelId: number): Promise<CharacterModelData> {
-    logger.info(`getCharacterModel modelId ${modelId}`);
+    // logger.info(`getCharacterModel modelId ${modelId}`);
     const item: CharacterCacheItem | undefined = this.characterCache[modelId];
     const now = Date.now();
     if (item === undefined) {

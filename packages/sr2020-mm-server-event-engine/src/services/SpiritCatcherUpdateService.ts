@@ -61,6 +61,7 @@ export class SpiritCatcherUpdateService extends AbstractService<SpiritCatcherUpd
     const expiredStatesList = R.toPairs(catcherStates)
       .reduce((acc: string[], [characterId, data]) => {
         if ((data.startTime + data.durationMillis) < dateNow) {
+        // if ((data.startTime + 30000) < dateNow) {
           acc.push(characterId);
         }
         return acc;

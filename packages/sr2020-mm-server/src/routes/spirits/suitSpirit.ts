@@ -1,6 +1,6 @@
 import * as R from 'ramda';
 import { EPutSpiritRequested, ErrorResponse, GetSpirit, getSpiritLocationId, GetUserRecord, invalidRequestBody, isEmptySpiritJar, isFullBodyStorage, isFullSpiritJar, validateCatchSpiritInternalRequest, validateSuitSpiritInternalRequest } from 'sr2020-mm-event-engine';
-import { createLogger, freeSpiritFromStorage, getQrModelData, getSpiritWithFractionAbilities, InnerApiRequest, putSpiritInStorage, suitSpirit, validateBodyStorageQrModelData, validateSpiritJarQrModelData } from 'sr2020-mm-server-event-engine';
+import { createLogger, freeSpiritFromStorage, getQrModelData, getSpiritWithFractionAbilities, InnerApiRequest, putSpiritInStorage, suitSpirit, translateAbilities, validateBodyStorageQrModelData, validateSpiritJarQrModelData } from 'sr2020-mm-server-event-engine';
 import shortid from 'shortid';
 
 const logger = createLogger('suitSpirit.ts');
@@ -88,8 +88,7 @@ export const mainSuitSpirit = async (req1, res, next) => {
     }
 
     const spirit2 = getSpiritWithFractionAbilities(req.gameModel, spirit);
-
-    // TODO add spirits from fractions
+    
     const res2 = await suitSpirit(characterId, {
       "name": spirit.name,
       "hp": spirit.hitPoints,

@@ -12,6 +12,7 @@ import {
   getQrModelData, 
   getSpiritWithFractionAbilities, 
   PlayerAuthorizedRequest, 
+  translateAbilities, 
   validateBodyStorageQrModelData, 
   validateSpiritJarQrModelData 
 } from "sr2020-mm-server-event-engine";
@@ -90,6 +91,7 @@ export const isSpiritJarValid = async (req1, res, next) => {
       }
   
       const spirit2 = getSpiritWithFractionAbilities(req.gameModel, spirit);
+      spirit2.abilities = translateAbilities(req.gameModel, spirit2.abilities);
       
       res.json(spirit2);
     }

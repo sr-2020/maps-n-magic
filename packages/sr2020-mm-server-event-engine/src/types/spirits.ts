@@ -1,6 +1,6 @@
 import Ajv, { JSONSchemaType } from "ajv";
 import * as R from 'ramda';
-import { BodyStorageQr, ErrorResponse, GameModel, GetSpiritFraction, Spirit, SpiritJarQr, validateBodyStorageQr, validateCommonQr, validateSpiritJarQr } from "sr2020-mm-event-engine";
+import { BodyStorageQr, ErrorResponse, GameModel, GetFeature, GetSpiritFraction, Spirit, SpiritJarQr, validateBodyStorageQr, validateCommonQr, validateSpiritJarQr } from "sr2020-mm-event-engine";
 import { createLogger } from "../logger";
 
 const logger = createLogger('server-ee/spirits.ts');
@@ -173,4 +173,17 @@ export function getSpiritWithFractionAbilities(gameModel: GameModel, spirit: Spi
     clone.abilities = abilities;
   }
   return clone;
+}
+
+export function translateAbilities(gameModel: GameModel, abilities: string[]): string[] {
+  const translatedAbilities = abilities.map(abilityId => {
+    const ability = gameModel.get2<GetFeature>({
+      type: 'feature',
+      id: abilityId
+    });
+    // logger.info('abilityId', abilityId, 'ability', ability);
+    return ability?.humanReadableName || abilityId;
+  });
+  translatedAbilities.sort();
+  return translatedAbilities;
 }

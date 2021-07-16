@@ -80,22 +80,22 @@ export class SpiritCatcherService extends AbstractService<SpiritCatcherServiceCo
   init() {
     super.init();
     this.on2('spellCast', this.onSpellCast);
-    setTimeout(() => {
-      this.onSpellCast({
-        type: 'spellCast',
-        data: {
-          characterId: '51935',
-          id: Spell.SpiritCatcher,
-          location: {id: 234},
-          name: Spell.SpiritCatcher,
-          // power: 2,
-          power: 1,
-          ritualMembersIds: [],
-          ritualVictimIds: [],
-          timestamp: Date.now()
-        }
-      })
-    }, 10000);
+    // setTimeout(() => {
+    //   this.onSpellCast({
+    //     type: 'spellCast',
+    //     data: {
+    //       characterId: '51935',
+    //       id: Spell.SpiritCatcher,
+    //       location: {id: 234},
+    //       name: Spell.SpiritCatcher,
+    //       // power: 2,
+    //       power: 1,
+    //       ritualMembersIds: [],
+    //       ritualVictimIds: [],
+    //       timestamp: Date.now()
+    //     }
+    //   })
+    // }, 10000);
   }
 
   dispose() {
@@ -103,6 +103,8 @@ export class SpiritCatcherService extends AbstractService<SpiritCatcherServiceCo
   }
 
   async onSpellCast({ data }: ESpellCast): Promise<void> {
+    this.logger.info('spell cast', data);
+    
     if (data.id !== Spell.SpiritCatcher) {
       return;
     }
