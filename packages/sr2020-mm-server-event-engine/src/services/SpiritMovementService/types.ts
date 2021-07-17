@@ -1,4 +1,5 @@
 import { 
+  GameModel,
   GMLogger,
   SpiritRoute,
   TimetableItem,
@@ -9,6 +10,7 @@ export interface SpiritRouteContext {
   moscowTimeInMinutes: number;
   dateNow: number;
   logger: GMLogger;
+  gameModel: GameModel;
 }
 
 export type CurRouteSearchRes = undefined | {

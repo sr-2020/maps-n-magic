@@ -1,6 +1,29 @@
 import * as R from 'ramda';
-import { EPutSpiritRequested, ErrorResponse, GetSpirit, getSpiritLocationId, GetUserRecord, invalidRequestBody, isEmptySpiritJar, isFullBodyStorage, isFullSpiritJar, validateCatchSpiritInternalRequest, validateSuitSpiritInternalRequest } from 'sr2020-mm-event-engine';
-import { createLogger, freeSpiritFromStorage, getQrModelData, getSpiritWithFractionAbilities, InnerApiRequest, putSpiritInStorage, suitSpirit, translateAbilities, validateBodyStorageQrModelData, validateSpiritJarQrModelData } from 'sr2020-mm-server-event-engine';
+import { 
+  EPutSpiritRequested, 
+  ErrorResponse, 
+  GetSpirit, 
+  getSpiritLocationId, 
+  GetUserRecord, 
+  invalidRequestBody, 
+  isEmptySpiritJar, 
+  isFullBodyStorage, 
+  isFullSpiritJar, 
+  validateCatchSpiritInternalRequest, 
+  validateSuitSpiritInternalRequest 
+} from 'sr2020-mm-event-engine';
+import { 
+  createLogger, 
+  freeSpiritFromStorage, 
+  getQrModelData, 
+  getSpiritWithFractionAbilities, 
+  InnerApiRequest, 
+  putSpiritInStorage, 
+  suitSpirit, 
+  translateAbilities, 
+  validateBodyStorageQrModelData, 
+  validateSpiritJarQrModelData 
+} from 'sr2020-mm-server-event-engine';
 import shortid from 'shortid';
 
 const logger = createLogger('suitSpirit.ts');
@@ -22,7 +45,7 @@ export const mainSuitSpirit = async (req1, res, next) => {
       return;
     }
 
-    const { characterId, spiritJarId, bodyStorageId, duration } = body;
+    const { characterId, spiritJarId, bodyStorageId, suitDuration } = body;
 
     // copied from player-server isSpiritJarValid
 
@@ -96,7 +119,7 @@ export const mainSuitSpirit = async (req1, res, next) => {
       "abilityIds": spirit2.abilities,
     }, bodyStorageId, spiritJarId);
 
-    const currentTime = Date.now();
+    const suitStartTime = Date.now();
     req.gameModel.emit2<EPutSpiritRequested>({
       type: 'putSpiritRequested',
       id: spirit.id,
@@ -104,18 +127,19 @@ export const mainSuitSpirit = async (req1, res, next) => {
         state: {
           status: 'Suited',
           characterId,
-          currentTime,
+          suitStartTime,
+          suitDuration,
           // duration: 2 * 60 * 1000, // 2 min
-          duration,
           suitStatus: 'normal',
-          suitStatusChangeTime: -1
+          suitStatusChangeTime: -1,
+          bodyStorageId
         },
       }
     });
 
     logger.info(`SUIT_SPIRIT_SUCCESS ${uid} Character ${characterId} suit spirit ${spirit.id} ${spirit.name}, data ${JSON.stringify({
-      currentTime,
-      duration
+      suitStartTime,
+      suitDuration
     })}`);
 
     res.status(200).json(true);

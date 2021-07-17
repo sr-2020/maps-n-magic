@@ -18,6 +18,7 @@ import {
 } from 'sr2020-mm-event-engine';
 import { 
   clinicalDeath,
+  clinicalDeathCombo,
   createLogger, 
   dispirit, 
   freeSpiritFromStorage, 
@@ -167,7 +168,7 @@ export const mainDispirit = async (req1, res, next) => {
       if (state.suitStatus === 'emergencyDispirited') {
         newSpiritState = {
           status: 'DoHeal',
-          currentTime: Date.now()
+          healStartTime: Date.now()
         };
       } else {
         newSpiritState = {
@@ -192,8 +193,8 @@ export const mainDispirit = async (req1, res, next) => {
         consequenceStatus = 'woundConsequence';
       } else {
         consequenceStatus = 'deathConsequence';
-        const res3 = await wound(characterId);
-        const res4 = await clinicalDeath(characterId, userRecord.location_id);
+        // spirit state processing forces clinical death so this code should not work
+        // const res4 = await clinicalDeathCombo(characterId, userRecord.location_id);
       }
     }
 

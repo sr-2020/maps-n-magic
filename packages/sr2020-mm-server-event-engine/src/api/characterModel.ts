@@ -110,6 +110,21 @@ export async function wound(
   throw new Error(`Ошибка при тяжране персонажа ${characterId}, статус ${res2.status}, текст ошибки ${text}`);
 }
 
+export async function clinicalDeathCombo(
+  characterId: number, 
+  bodyStorageId: number, 
+  locationId: number | null
+): Promise<unknown> {
+  const res2 = await dispirit(characterId, bodyStorageId, null);
+  const res3 = await wound(characterId);
+  const res4 = await clinicalDeath(characterId, locationId);
+  return {
+    res2,
+    res3,
+    res4
+  };
+}
+
 export async function clinicalDeath(
   characterId: number, 
   locationId: number | null

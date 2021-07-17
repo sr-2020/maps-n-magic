@@ -32,7 +32,7 @@ type SpiritJarStatus2 = {
 
 const consequenceTexts = {
   'noConsequences': 'Дух снят без негативных последствий',
-  'woundConsequence': 'При снятии духа вы потеряли 2 хита',
+  'woundConsequence': 'При снятии духа вы были ранены. Вычтите 2 хита.',
   'deathConsequence': 'Вы сняли духа слишком поздно и попали в клиническую смерть',
 };
 

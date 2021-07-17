@@ -54,7 +54,8 @@ export const suitSpirit = async (req1, res, next) => {
       spiritJarId,
       bodyStorageId,
       characterId: req.userData.modelId,
-      duration: getSuitSpiritDurationItems(characterModelData) * basicSuitTime
+      suitDuration: getSuitSpiritDurationItems(characterModelData) * basicSuitTime
+      // suitDuration: 60000
     };
 
     const suitSpiritRes = await fetch(playerServerConstants().suitSpiritUrl, {

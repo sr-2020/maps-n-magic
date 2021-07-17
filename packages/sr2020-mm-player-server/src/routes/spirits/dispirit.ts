@@ -9,6 +9,7 @@ import {
 } from "sr2020-mm-event-engine";
 import { 
   createLogger, 
+  dispirit, 
   getQrModelData, 
   PlayerAuthorizedRequest, 
   playerServerConstants, 
@@ -22,7 +23,7 @@ import { qrIdIsNanError } from "./utils";
 
 const logger = createLogger('dispirit.ts');
 
-export const dispirit = async (req1, res, next) => {
+export const playerDispirit = async (req1, res, next) => {
   const req = req1 as PlayerAuthorizedRequest;
   const { body } = req;
   if (!validateDispiritRequestBody(body)) {
@@ -46,6 +47,9 @@ export const dispirit = async (req1, res, next) => {
 
     const bodyStorageQrData = decode(bodyStorageQrString);
     const bodyStorageId = Number(bodyStorageQrData.payload);
+
+    // hack to dispirit body from model
+    // const res2 = await dispirit(req.userData.modelId, bodyStorageId, null);
 
     if (Number.isNaN(bodyStorageId)) {
       res.status(400).json(qrIdIsNanError(bodyStorageQrData.payload));

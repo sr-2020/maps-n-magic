@@ -9,7 +9,9 @@ import {
   RestInAstralState,
   SuitedState,
   DoHealState,
+  GetUserRecord,
 } from 'sr2020-mm-event-engine';
+import { clinicalDeathCombo, zeroSpiritAbilities } from '../../api/characterModel';
 import { createLogger } from '../../logger';
 
 import { SpiritRouteContext, CurRouteSearchRes } from "./types";
@@ -30,8 +32,11 @@ export function getNewSpiritState(
   if (state.status === 'OnRoute') {
     newState = getUpdatedOnRouteState(state, spirit, context);
   }
-  if (state.status === 'Suited') {
-    newState = getUpdatedSuitedState(state, spirit, context);
+  if (state.status === 'Suited' && state.suitStatus === 'normal') {
+    newState = getUpdatedNormalSuitedState(state, spirit, context);
+  }
+  if (state.status === 'Suited' && state.suitStatus !== 'normal') {
+    newState = getUpdatedNonNormalSuitedState(state, spirit, context);
   }
   if (state.status === 'DoHeal') {
     newState = getUpdatedDoHealState(state, spirit, context);
@@ -45,9 +50,9 @@ function getUpdatedDoHealState(
   context: SpiritRouteContext,
 ): RestInAstralState | undefined {
   const { dateNow } = context;
-  const { currentTime } = state;
-  const healTimeout = 60 * 60 * 1000;
-  if ((currentTime + healTimeout) < dateNow ) {
+  const { healStartTime } = state;
+  const healTimeout = 60 * 60 * 1000; // 1 hour
+  if ((healStartTime + healTimeout) < dateNow ) {
     const newState: RestInAstralState = {
       status: 'RestInAstral'
     };
@@ -59,23 +64,75 @@ function getUpdatedDoHealState(
   return undefined;
 }
 
-function getUpdatedSuitedState(
+function getUpdatedNonNormalSuitedState(
+  state: SuitedState,
+  spirit: Spirit, 
+  context: SpiritRouteContext,
+): RestInAstralState | DoHealState | undefined {
+  const { logger, moscowTimeInMinutes, dateNow, gameModel } = context;
+  const { 
+    suitStatus, 
+    suitStartTime, 
+    suitDuration, 
+    suitStatusChangeTime, 
+    characterId,
+    bodyStorageId
+  } = state;
+  const TEN_MIN = 10 * 60 * 1000;
+  if ((suitStatusChangeTime + TEN_MIN) < dateNow ) {
+    let newState: RestInAstralState | DoHealState | undefined;
+    if (suitStatus === 'suitTimeout') {
+      newState = {
+        status: 'RestInAstral'
+      };
+    }
+    if (suitStatus === 'emergencyDispirited') {
+      newState = {
+        status: 'DoHeal',
+        healStartTime: Date.now()
+      };
+    }
+    const userRecord = gameModel.get2<GetUserRecord>({
+      type: 'userRecord',
+      id: characterId
+    });
+    clinicalDeathCombo(characterId, bodyStorageId, userRecord?.location_id || null).then(() => {
+      logger.info(`TIMEOUT_DISPIRIT applied clinicalDeath to character ${characterId}`);
+    }).catch( err => {
+      logger.error(`TIMEOUT_DISPIRIT_ERROR applied clinicalDeath to character ${characterId}`, err);
+    });
+    logger.info(`TIMEOUT_DISPIRIT spirit clinical death timeout ${spirit.id} ${spirit.name}. Data ${JSON.stringify({
+      state
+    })}`);
+    return newState;
+  }
+
+  return undefined;
+}
+
+function getUpdatedNormalSuitedState(
   state: SuitedState,
   spirit: Spirit, 
   context: SpiritRouteContext,
 ): SuitedState | undefined {
   const { logger, moscowTimeInMinutes, dateNow } = context;
-  const { suitStatus, currentTime, duration } = state;
-  if (suitStatus !== 'normal') {
-    return undefined;
-  }
-  if ((currentTime + duration) < dateNow ) {
+  const { suitStatus, suitStartTime, suitDuration, characterId } = state;
+  // if (suitStatus !== 'normal') {
+  //   return undefined;
+  // }
+  if ((suitStartTime + suitDuration) < dateNow ) {
     const newState: SuitedState = {
       ...state,
       suitStatus: 'suitTimeout',
       suitStatusChangeTime: dateNow
     };
-    logger.info(`TIMEOUT_DISPIRIT triggered ${spirit.id} ${spirit.name}. Data ${JSON.stringify({
+    zeroSpiritAbilities(characterId).then(() => {
+      logger.info(`TIMEOUT_DISPIRIT zeroSpiritAbilities for character ${characterId}`);
+    }).catch(err => {
+      logger.error(`TIMEOUT_DISPIRIT_ERROR zeroSpiritAbilities for character ${characterId}`, err);
+    });
+
+    logger.info(`TIMEOUT_DISPIRIT suit spirit timeout ${spirit.id} ${spirit.name}. Data ${JSON.stringify({
       state
     })}`);
     return newState;

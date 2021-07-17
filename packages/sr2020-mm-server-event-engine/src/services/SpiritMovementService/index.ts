@@ -104,7 +104,8 @@ export class SpiritMovementService extends AbstractService<SpiritMovementService
         routeIndex, 
         moscowTimeInMinutes,
         dateNow,
-        logger: this.logger
+        logger: this.logger,
+        gameModel: this.gameModel
       });
       if (newState !== undefined) {
         acc.push({

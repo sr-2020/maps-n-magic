@@ -79,14 +79,14 @@ const inJarStateSchema: JSONSchemaType<InJarState> = {
 
 const doHealStateSchema: JSONSchemaType<DoHealState> = {
   type: 'object',
-  required: ['status', 'currentTime'],
+  required: ['status', 'healStartTime'],
   additionalProperties: false,
   properties: {
     status: {
       type: 'string',
       const: 'DoHeal',
     },
-    currentTime: { type: 'number' }
+    healStartTime: { type: 'number' }
   }
 };
 
@@ -95,9 +95,10 @@ const suitedStateSchema: JSONSchemaType<SuitedState> = {
   required: [
     'status', 
     'characterId', 
-    'currentTime', 
-    'duration', 
-    'suitStatus'
+    'suitStartTime', 
+    'suitDuration', 
+    'suitStatus',
+    'bodyStorageId'
   ],
   additionalProperties: false,
   properties: {
@@ -106,10 +107,11 @@ const suitedStateSchema: JSONSchemaType<SuitedState> = {
       const: 'Suited',
     },
     characterId: { type: 'number' },
-    currentTime: { type: 'number' },
-    duration: { type: 'number' },
+    suitStartTime: { type: 'number' },
+    suitDuration: { type: 'number' },
     suitStatus: { type: 'string', enum: ['normal', 'emergencyDispirited', 'suitTimeout'] },
     suitStatusChangeTime: { type: 'number' },
+    bodyStorageId: { type: 'number' },
   }
 };
 

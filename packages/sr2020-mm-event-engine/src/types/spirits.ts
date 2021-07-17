@@ -46,15 +46,16 @@ export interface InJarState {
 export interface SuitedState {
   status: typeof SpiritStatus.Suited;
   characterId: number;
-  currentTime: number;
-  duration: number;
+  suitStartTime: number;
+  suitDuration: number;
   suitStatus: 'normal' | 'emergencyDispirited' | 'suitTimeout';
   suitStatusChangeTime: number;
+  bodyStorageId: number;
 }
 
 export interface DoHealState {
   status: typeof SpiritStatus.DoHeal;
-  currentTime: number;
+  healStartTime: number;
 }
 
 export type consequenceStatus = 'noConsequences' | 'woundConsequence' | 'deathConsequence';
