@@ -26,6 +26,7 @@ import { SsePlayerDataSender } from './ssePlayerDataSender';
 import { spiritRouter } from "./routes/spirits";
 import { logoutRouter } from "./routes/logout";
 import { connectToMainServerSse } from './routes/playerDataSse';
+import { refreshCharacterModelRouter } from './routes/refreshCharacterModel';
 
 const logger = createLogger('playerServer/app.ts');
 
@@ -106,6 +107,8 @@ app.use((req1, res, next) => {
 app.use('/api', spiritRouter);
 
 app.use('/api', logoutRouter);
+
+app.use('/api', refreshCharacterModelRouter);
 
 app.get('/api/singlePlayerDataSse', (req, res, next) => {
   logger.info('Processing playerDataSse connection');

@@ -13,7 +13,7 @@ import Form from "react-bootstrap/Form";
 
 import { LinkContainer } from 'react-router-bootstrap'
 
-import { logoutUser, callSecureApi } from "../../api";
+import { logoutUser, callSecureApi, refreshCharacterModel } from "../../api";
 import { LoginManager } from '../../utils';
 import { AggregatedLocationView, CharacterModelData2 } from 'sr2020-mm-event-engine';
 
@@ -124,6 +124,15 @@ export function AppHeader(props: AppHeaderProps) {
           >
             Запрос на защищенный эндпоинт
           </Dropdown.Item> */}
+          <Dropdown.Item
+            as="button"
+            type="button"
+            onClick={refreshCharacterModel}
+            title="Выйти"
+            className="tw-py-3 tw-text-lg"
+          >
+            Обновить данные персонажа
+          </Dropdown.Item>
           <Dropdown.Divider />
           <Dropdown.Item
             as="button"

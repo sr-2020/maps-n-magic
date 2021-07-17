@@ -44,6 +44,13 @@ export async function logoutUser() {
   return res;
 }
 
+export async function refreshCharacterModel() {
+  const res = await fetch('/api/refreshCharacterModel', {
+    method: 'POST',
+  });
+  return res;
+}
+
 export async function callSecureApi() {
   const res = await fetch('/api/secureEndpoint', {method: 'POST'});
   return res;
