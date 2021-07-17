@@ -41,6 +41,7 @@ export function listenCharacterLocations(
   callback: (data: CharLocationMessage) => void, 
   simulateMessages = false
 ) {
+  logger.info('Starting character locations pubsub subscription');
   // References an existing subscription
   const subscription = pubSubClient.subscription(charLocChangeSubscriptionName);
 
@@ -61,7 +62,7 @@ export function listenCharacterLocations(
     if (!validateCharLocationMessage(parsedData)) {
       logger.error(`Received invalid listenCharacterLocations. ${JSON.stringify(parsedData)} ${JSON.stringify(validateCharLocationMessage.errors)}`);
     } else {
-      logger.info('listenCharacterLocations validation OK');
+      // logger.info('listenCharacterLocations validation OK');
     }
 
     callback(parsedData);

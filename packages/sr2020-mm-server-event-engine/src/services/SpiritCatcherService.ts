@@ -103,11 +103,10 @@ export class SpiritCatcherService extends AbstractService<SpiritCatcherServiceCo
   }
 
   async onSpellCast({ data }: ESpellCast): Promise<void> {
-    this.logger.info('spell cast', data);
-    
     if (data.id !== Spell.SpiritCatcher) {
       return;
     }
+    this.logger.info('SPELL_CAST_SPIRIT_CATCHER', JSON.stringify(data));
     const { characterId, power } = data;
     
     const characterData = await getCharacterModelData(Number(characterId));

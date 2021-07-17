@@ -92,6 +92,8 @@ export function listenSpellCasts(
   callback: (spellCast: SpellCast) => Promise<void>, 
   simulateMessages: boolean = false
 ) {
+
+  logger.info('Starting spell cast pubsub subscription');
   // References an existing subscription
   const subscription = pubSubClient.subscription(manaOceanSpellCastSubscriptionName);
 
@@ -111,7 +113,7 @@ export function listenSpellCasts(
     if (!validateSpellCast(parsedData)) {
       logger.error(`Received invalid listenSpellCasts. ${JSON.stringify(parsedData)} ${JSON.stringify(validateSpellCast.errors)}`);
     } else {
-      logger.info('listenSpellCasts validation OK');
+      // logger.info('listenSpellCasts validation OK');
     }
 
     callback(parsedData);

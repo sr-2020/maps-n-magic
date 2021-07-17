@@ -79,7 +79,7 @@ export async function getCharacterLocation(characterId: number, simulateLocation
   if (!validateRawUserRecord(result)) {
     logger.error(`Received invalid getCharacterLocation. ${JSON.stringify(result)} ${JSON.stringify(validateRawUserRecord.errors)}`);
   } else {
-    logger.info('getCharacterLocation validation OK');
+    // logger.info('getCharacterLocation validation OK');
   }
 
   // logger.info('getCharacterLocation ' + JSON.stringify(result));

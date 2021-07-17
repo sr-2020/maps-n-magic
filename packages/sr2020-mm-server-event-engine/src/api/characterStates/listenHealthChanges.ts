@@ -44,6 +44,7 @@ export const validateHealthChangeMessage = ajv.compile(healthChangeMessageSchema
 
 
 export function listenHealthChanges(callback: (msg: HealthChangeMessage) => void, simulateMessages = false) {
+  logger.info('Starting health changes pubsub subscription for EMERCOM');
   // References an existing subscription
   const subscription = pubSubClient.subscription(rescueServiceSubscriptionName);
 

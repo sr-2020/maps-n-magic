@@ -121,7 +121,7 @@ export class ManaOceanService extends AbstractService<ManaOceanServiceContract> 
   }
 
   spellCast({ data }: ESpellCast): void {
-    this.logger.info('spellCast', data);
+    // this.logger.info('spellCast', data);
 
     // {
     //   timestamp: moment.utc().valueOf(), // Unix time в миллисекундах
@@ -189,6 +189,8 @@ export class ManaOceanService extends AbstractService<ManaOceanServiceContract> 
     if (id !== Spell.InputStream && id !== Spell.OutputStream) {
       return;
     }
+
+    this.logger.info('SPELL_CAST_MANA_OCEAN_STREAM', JSON.stringify(data));
 
     this.executeOnModel2({
       type: 'pushNotification',

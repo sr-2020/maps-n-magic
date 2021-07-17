@@ -98,7 +98,7 @@ export async function getCharacterLifeStyle(characterId: number): Promise<{
   if (!validateCharacterLifeStyleMessage(result)) {
     logger.error(`Received invalid getCharacterLifeStyle. ${JSON.stringify(result)} ${JSON.stringify(validateCharacterLifeStyleMessage.errors)}`);
   } else {
-    logger.info('getCharacterLifeStyle validation OK');
+    // logger.info('getCharacterLifeStyle validation OK');
   }
   // logger.info('getCharacterLifeStyle ' + JSON.stringify(result));
 

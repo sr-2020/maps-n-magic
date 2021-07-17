@@ -87,6 +87,7 @@ export class CharacterLocDataManager extends AbstractEventProcessor {
 
   async init() {
     try {
+      this.logger.info('Starting character locations pubsub subscription 2');
       this.pubSubClient = new PubSub();
       await this.load();
       // this.logger.info('charLocChange2SubscriptionName', charLocChange2SubscriptionName);
