@@ -78,6 +78,12 @@ export function SpiritList(props: SpiritListProps) {
           , вероятность поимки {characterData.catcherData.catchProbability}%
         </div>
       }
+      {
+        characterData.catcherData === undefined &&
+        <div className="tw-m-4 tw-p-4 tw-bg-blue-200 tw-font-semibold">
+          Примените заклинание Spirit Catcher, чтобы ловить духов.
+        </div>
+      }
       <Accordion>
         {
           sortedSpiritViews.map((spiritView, index) => 

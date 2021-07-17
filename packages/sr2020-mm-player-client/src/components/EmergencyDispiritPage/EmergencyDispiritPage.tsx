@@ -61,7 +61,9 @@ export function EmergencyDispiritPage(props: EmergencyDispiritPageProps) {
       </div>
       {
         dispiritStatus !== '' && 
-        <div className="tw-m-4">{dispiritStatus}</div>
+        <div className="tw-m-4 tw-p-4 tw-bg-red-200 tw-font-semibold">
+          {dispiritStatus}
+        </div>
       }
     </div>
   );

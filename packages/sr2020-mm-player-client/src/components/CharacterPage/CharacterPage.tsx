@@ -40,7 +40,7 @@ export function CharacterPage(props: CharacterPageProps) {
       {
         characterData.spiritSuitState !== undefined &&
         characterData.spiritSuitState.suitStatus === 'normal' &&
-        <div className="tw-m-4 tw-p-4 tw-bg-green-200 tw-font-semibold">
+        <div className="tw-m-4 tw-p-4 tw-bg-yellow-300 tw-font-semibold">
           Вы можете быть в теле духа до 
           {
             ' ' + moment(characterData.spiritSuitState.suitStartTime + 
@@ -51,7 +51,7 @@ export function CharacterPage(props: CharacterPageProps) {
       {
         characterData.spiritSuitState !== undefined &&
         characterData.spiritSuitState.suitStatus !== 'normal' &&
-        <div className="tw-m-4 tw-p-4 tw-bg-green-200 tw-font-semibold">
+        <div className="tw-m-4 tw-p-4 tw-bg-red-200 tw-font-semibold">
           Верните свое тело до 
           {
             ' ' + moment(characterData.spiritSuitState.suitStatusChangeTime + 

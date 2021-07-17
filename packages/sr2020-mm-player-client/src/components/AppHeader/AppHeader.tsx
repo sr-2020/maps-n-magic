@@ -57,7 +57,7 @@ export function AppHeader(props: AppHeaderProps) {
             <Nav.Link>Персонаж</Nav.Link>
           </LinkContainer>
           <LinkContainer to="/spirits">
-            <Nav.Link>Духи</Nav.Link>
+            <Nav.Link>Поймать духа</Nav.Link>
           </LinkContainer>
           <LinkContainer to="/scanSpirit">
             <Nav.Link>Осмотреть тотем</Nav.Link>
