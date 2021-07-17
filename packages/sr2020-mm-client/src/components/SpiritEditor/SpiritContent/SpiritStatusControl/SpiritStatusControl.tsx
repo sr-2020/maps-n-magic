@@ -37,6 +37,10 @@ export function SpiritStatusControl(props: SpiritStatusControlProps) {
       {state.status === SpiritStatus.InJar && 
         <div>Id тотема {state.qrId}</div>
       }
+      <div>{JSON.stringify(state)}</div>
+      <Button variant="outline-secondary" onClick={() => changeSpiritStatus("RestInAstral")}>
+        Сбросить состояние
+      </Button>
     </div>
   );
 }
