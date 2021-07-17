@@ -131,7 +131,7 @@ export class BeaconRecordEditor extends Component<BeaconRecordEditorProps> {
     }
     // console.log(beaconRecords.length);
     return (
-      <div className="BeaconRecordEditor tw-mx-8 tw-my-4">
+      <div className="BeaconRecordEditor tw-px-8 tw-py-4 tw-h-full tw-overflow-auto">
         <CreateBeaconPopover createBeacon={this.createBeacon} />
 
         <Table

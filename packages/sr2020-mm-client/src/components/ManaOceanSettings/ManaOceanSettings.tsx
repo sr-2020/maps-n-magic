@@ -181,7 +181,7 @@ export class ManaOceanSettings extends Component<
     const timeSum = R.sum(R.values(statistics));
 
     return (
-      <div className="ManaOceanSettings">
+      <div className="ManaOceanSettings tw-h-full tw-overflow-auto">
         <div className="tw-flex">
           {/* <Form.Group className="tw-m-4">
             <Form.Label>{t('neutralManaLevel')}</Form.Label>

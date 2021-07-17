@@ -300,7 +300,7 @@ export class App extends Component<AppProps, AppState> {
                   switchMovementMode={this.switchMovementMode}
                 />
 
-                <main className="tw-flex-auto tw-h-full">
+                <main className="tw-flex-auto tw-h-full tw-overflow-hidden">
                   <Switch>
                     <Route path="/spiritNav">
                       <SpiritNav />
