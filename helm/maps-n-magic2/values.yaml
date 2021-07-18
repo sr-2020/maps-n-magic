@@ -5,7 +5,7 @@
 replicaCount: 1
 
 app:
-  env: developer
+  env: production
   skipPreflightCheck: true
   dbHost: postgres13
   dbPort: 5432
