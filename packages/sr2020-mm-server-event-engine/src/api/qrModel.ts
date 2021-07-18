@@ -2,7 +2,11 @@ import fetch from 'isomorphic-fetch';
 import { genericServerConstants2 } from './constants';
 
 export async function getQrModelData(qrId: number): Promise<unknown> {
-  const res2 = await fetch(`${genericServerConstants2().qrModelUrl}/${qrId}`);
+  const res2 = await fetch(`${genericServerConstants2().qrModelUrl}/${qrId}`, {
+    headers: {
+      'Authorization': `Bearer ${genericServerConstants2().modelsManagerToken}`,
+    },
+  });
   if (res2.status === 200) {
     const characterModelData = await res2.json();
     return characterModelData;
@@ -26,6 +30,7 @@ export async function freeSpiritFromStorage(spiritStorageId: number, reason?: st
     method: 'POST',
     headers: {
       'Content-Type': 'application/json;charset=utf-8',
+      'Authorization': `Bearer ${genericServerConstants2().modelsManagerToken}`,
     },
     body: JSON.stringify({
       "eventType": "freeSpirit", 
@@ -49,6 +54,7 @@ export async function putSpiritInStorage(spiritStorageId: number, spiritId: numb
     method: 'POST',
     headers: {
       'Content-Type': 'application/json;charset=utf-8',
+      'Authorization': `Bearer ${genericServerConstants2().modelsManagerToken}`,
     },
     body: JSON.stringify({
       "eventType": "putSpiritInJar", 

@@ -57,7 +57,8 @@ export class ModelManagetLocInitializer extends AbstractService<ModelManagetLocI
     fetch(genericServerConstants2().putLocationToModelsManager + '/' + id, {
       method: 'PUT',
       headers: {
-        'Content-Type': 'application/json;charset=utf-8'
+        'Content-Type': 'application/json;charset=utf-8',
+        'Authorization': `Bearer ${genericServerConstants2().modelsManagerToken}`,
       },
       body: JSON.stringify({})
     }).catch(err => {

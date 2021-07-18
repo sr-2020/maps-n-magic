@@ -5,7 +5,11 @@ import { genericServerConstants2 } from './constants';
 
 // https://models-manager.evarun.ru/character/model/51935
 export async function getCharacterModelData(modelId: number): Promise<CharacterModelData> {
-  const res2 = await fetch(`${genericServerConstants2().characterModelUrl}/${modelId}`);
+  const res2 = await fetch(`${genericServerConstants2().characterModelUrl}/${modelId}`, {
+    headers: {
+      'Authorization': `Bearer ${genericServerConstants2().modelsManagerToken}`,
+    }
+  });
   if (res2.status === 200) {
     const characterModelData = await res2.json();
     return characterModelData;
@@ -41,6 +45,7 @@ export async function suitSpirit(
     method: 'POST',
     headers: {
       'Content-Type': 'application/json;charset=utf-8',
+      'Authorization': `Bearer ${genericServerConstants2().modelsManagerToken}`,
     },
     body: JSON.stringify({
       "eventType": "suitSpirit", 
@@ -75,6 +80,7 @@ export async function dispirit(
     method: 'POST',
     headers: {
       'Content-Type': 'application/json;charset=utf-8',
+      'Authorization': `Bearer ${genericServerConstants2().modelsManagerToken}`,
     },
     body: JSON.stringify({
       "eventType": "dispirit", 
@@ -98,6 +104,7 @@ export async function wound(
     method: 'POST',
     headers: {
       'Content-Type': 'application/json;charset=utf-8',
+      'Authorization': `Bearer ${genericServerConstants2().modelsManagerToken}`,
     },
     body: JSON.stringify({
       "eventType": "wound"
@@ -133,6 +140,7 @@ export async function clinicalDeath(
     method: 'POST',
     headers: {
       'Content-Type': 'application/json;charset=utf-8',
+      'Authorization': `Bearer ${genericServerConstants2().modelsManagerToken}`,
     },
     body: JSON.stringify({
       "eventType": "clinicalDeath",
@@ -157,6 +165,7 @@ export async function zeroSpiritAbilities(
     method: 'POST',
     headers: {
       'Content-Type': 'application/json;charset=utf-8',
+      'Authorization': `Bearer ${genericServerConstants2().modelsManagerToken}`,
     },
     body: JSON.stringify({
       "eventType": "zeroSpiritAbilities", 
@@ -183,6 +192,7 @@ export async function zeroSpiritAbilities(
 //     method: 'POST',
 //     headers: {
 //       'Content-Type': 'application/json;charset=utf-8',
+//       'Authorization': `Bearer ${genericServerConstants2().modelsManagerToken}`,
 //     },
 //     body: JSON.stringify({
 //       "eventType": "emergencySpiritExit", 

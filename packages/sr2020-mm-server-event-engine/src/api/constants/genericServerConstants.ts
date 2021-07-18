@@ -16,6 +16,7 @@ export interface GenericServerConstants {
   manaOceanEffectConfigUrl: string;
   playerServerTokenPayload: string;
   putLocationToModelsManager: string;
+  modelsManagerToken: string;
 };
 
 export function getGenericEnvVariables() {
@@ -32,7 +33,8 @@ export function getGenericServerConstants(envVariables: EnvVariables): GenericSe
     characterModelUrl:          values[GenericServerConstant.MODELS_MANAGER_URL] + '/character/model',
     qrModelUrl:                 values[GenericServerConstant.MODELS_MANAGER_URL] + '/qr/model',
     putLocationToModelsManager: values[GenericServerConstant.MODELS_MANAGER_URL] + '/location/default',
-    playerServerTokenPayload: 'player-server'
+    playerServerTokenPayload: 'player-server',
+    modelsManagerToken: process.env.MODELS_MANAGER_TOKEN || '',
   }
 }
 
@@ -47,7 +49,8 @@ export function genericServerConstants2(): GenericServerConstants {
     characterModelUrl:          values[GenericServerConstant.MODELS_MANAGER_URL] + '/character/model',
     qrModelUrl:                 values[GenericServerConstant.MODELS_MANAGER_URL] + '/qr/model',
     putLocationToModelsManager: values[GenericServerConstant.MODELS_MANAGER_URL] + '/location/default',
-    playerServerTokenPayload: 'player-server'
+    playerServerTokenPayload: 'player-server',
+    modelsManagerToken: process.env.MODELS_MANAGER_TOKEN || '',
   }
 }
 
