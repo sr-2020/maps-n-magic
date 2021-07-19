@@ -19,6 +19,8 @@ export * from './services/SpiritFractionService/index';
 export * from './services/SpiritFractionService/types';
 export * from './services/SpiritRouteService/index'; 
 export * from './services/SpiritRouteService/types';
+export * from './services/SpiritPhraseService/index'; 
+export * from './services/SpiritPhraseService/types'; 
 export * from './services/FeatureService';
 export * from './services/SpiritMovementEnableService'; 
 

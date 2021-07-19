@@ -14,6 +14,7 @@ import {
   StubEventProcessor,
   GameModel,
   FeatureService,
+  SpiritPhraseService,
 } from 'sr2020-mm-event-engine';
 
 // import { Migrator } from './Migrator';
@@ -65,7 +66,8 @@ const services = [
   SpiritMovementEnableService,
   // ManaOceanStubService,
   TrackedCharacterService,
-  FeatureService
+  FeatureService,
+  SpiritPhraseService
 ];
 
 export function makeGameModel(ignoreClientMessages: boolean = false): {
@@ -116,6 +118,14 @@ export function makeGameModel(ignoreClientMessages: boolean = false): {
         "putSpiritRouteRequested",
         "deleteSpiritRouteRequested",
         "cloneSpiritRouteRequested",
+        
+        // SpiritPhraseService
+        "postSpiritPhraseConfirmed",
+        "putSpiritPhraseConfirmed",
+        "deleteSpiritPhraseConfirmed",
+        "postSpiritPhraseRequested",
+        "putSpiritPhraseRequested",
+        "deleteSpiritPhraseRequested",
 
         // used to forward character health states from server to client
         "setCharacterHealthStates",

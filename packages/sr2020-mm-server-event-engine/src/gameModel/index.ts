@@ -12,6 +12,7 @@ import {
   SpiritFractionService,
   SpiritRouteService,
   FeatureService,
+  SpiritPhraseService,
   
   // 
   EventEngine,
@@ -37,6 +38,7 @@ import {
   SpiritRoute,
   EEnableSpiritMovementRequested,
   EEnableSpiritMovementConfirmed,
+  SpiritPhrase,
 } from 'sr2020-mm-event-engine';
 
 import { ManaOceanService } from '../services/ManaOceanService';
@@ -83,7 +85,12 @@ import { CharacterStatesListener } from '../api/characterStates/CharacterStatesL
 import { CharacterLocationListener } from '../api/position/CharacterLocationListener';
 import { SpellCastsListener } from '../api/spellCasts/SpellCastsListener';
 import { PushNotificationEmitter } from '../api/pushNotificationEmitter';
-import { SpiritProvider, SpiritFractionProvider, SpiritRouteProvider } from '../api/spirits';
+import { 
+  SpiritProvider, 
+  SpiritFractionProvider, 
+  SpiritRouteProvider,
+  SpiritPhraseProvider
+} from '../api/spirits';
 import { createLogger } from '../logger';
 import { FeatureProvider } from '../api/features';
 import { ModelManagetLocInitializer } from '../services/ModelManagetLocInitializer';
@@ -117,6 +124,7 @@ const services = [
   ModelManagetLocInitializer,
   SpiritCatcherService,
   SpiritCatcherUpdateService,
+  SpiritPhraseService,
   // RescueServicePushService,
 ];
 
@@ -186,6 +194,17 @@ export function makeGameModel(): {
   );
   spiritRouteDataBinding.init();
   gameServer.addDataBinding(spiritRouteDataBinding);
+
+  const spiritPhraseLogger = createLogger('spiritPhraseDataBinding');
+  const spiritPhraseDataBinding = new CrudDataManager2<SpiritPhrase, SpiritPhraseProvider>(
+    gameModel,
+    new SpiritPhraseProvider(),
+    'spiritPhrase',
+    new PollingReadStrategy(gameModel, 15000, spiritPhraseLogger),
+    spiritPhraseLogger
+  );
+  spiritPhraseDataBinding.init();
+  gameServer.addDataBinding(spiritPhraseDataBinding);
 
   const userRecordLogger = createLogger('userRecordDataBinding');
   const userRecordDataBinding = new ReadDataManager<RawUserRecord, UserRecordProvider>(
@@ -282,6 +301,9 @@ export function makeGameModel(): {
         'putSpiritRouteRequested',
         'deleteSpiritRouteRequested',
         'cloneSpiritRouteRequested',
+        // event from client to manage spirit phrases
+        'putSpiritPhraseRequested',
+        'deleteSpiritPhraseRequested',
         // not used on main server
         'setCatcherStates'
       ]

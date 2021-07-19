@@ -2,6 +2,7 @@ import {
   Identifiable,
   Spirit,
   SpiritFraction,
+  SpiritPhrase,
   SpiritRoute,
 } from 'sr2020-mm-event-engine';
 
@@ -25,6 +26,13 @@ import {
   deleteSpiritRoute 
 } from "./spiritRoutes";
 
+import { 
+  getSpiritPhrases,
+  postSpiritPhrase,
+  putSpiritPhrase,
+  deleteSpiritPhrase
+} from "./spiritPhrases";
+
 import {  
   Gettable2,
   Postable2,
@@ -44,6 +52,12 @@ import {
   validateNewSpiritRoute, 
   validateSpiritRoute 
 } from "./spiritRouteValidation";
+
+import { 
+  fillNewSpiritPhrase,
+  validateNewSpiritPhrase,
+  validateSpiritPhrase
+} from "./spiritPhraseValidation";
 
 import { validateSpiritFraction } from "./spiritFractionValidation";
 
@@ -99,4 +113,19 @@ export class SpiritRouteProvider implements
   validateNewEntity = validateNewSpiritRoute;
   fillNewEntity = fillNewSpiritRoute;
   validateEntity = validateSpiritRoute;
+}
+
+export class SpiritPhraseProvider implements 
+  Gettable2<SpiritPhrase>, 
+  Postable2<SpiritPhrase>, 
+  Puttable2<SpiritPhrase>, 
+  Deletable2<SpiritPhrase>
+{
+  get = getSpiritPhrases;
+  post = postSpiritPhrase;
+  put = putSpiritPhrase;
+  delete = deleteSpiritPhrase;
+  validateNewEntity = validateNewSpiritPhrase;
+  fillNewEntity = fillNewSpiritPhrase;
+  validateEntity = validateSpiritPhrase;
 }

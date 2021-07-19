@@ -60,17 +60,17 @@ export class CreateBeaconPopover extends Component<CreateBeaconPopoverProps, Cre
     this.onMacAddressChange = this.onMacAddressChange.bind(this);
   }
 
-  componentDidMount() {
-    console.log('CreateBeaconPopover mounted');
-  }
+  // componentDidMount() {
+  //   console.log('CreateBeaconPopover mounted');
+  // }
 
-  componentDidUpdate() {
-    console.log('CreateBeaconPopover did update');
-  }
+  // componentDidUpdate() {
+  //   console.log('CreateBeaconPopover did update');
+  // }
 
-  componentWillUnmount() {
-    console.log('CreateBeaconPopover will unmount');
-  }
+  // componentWillUnmount() {
+  //   console.log('CreateBeaconPopover will unmount');
+  // }
 
 
   onMacAddressChange(e: ChangeEvent<HTMLInputElement>) {

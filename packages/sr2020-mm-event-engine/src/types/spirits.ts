@@ -99,3 +99,10 @@ export interface SpiritRoute {
   waypoints: number[];
   waitTimeMinutes: number;
 }
+
+export interface SpiritPhrase {
+  id: number;
+  startDate: number;
+  endDate: number;
+  message: string;
+}

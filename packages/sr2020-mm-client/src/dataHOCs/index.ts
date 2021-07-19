@@ -18,6 +18,8 @@ import {
   ESpiritsChanged,
   ESpiritFractionsChanged,
   ESpiritRoutesChanged,
+  ESpiritPhrasesChanged,
+  SpiritPhrase,
   SpiritRoute,
   SoundStageState,
   SoundSettings,
@@ -82,6 +84,9 @@ export interface WithSpiritFractions {
 }
 export interface WithSpiritRoutes {
   spiritRoutes: SpiritRoute[] | null;
+}
+export interface WithSpiritPhrases {
+  spiritPhrases: SpiritPhrase[] | null;
 }
 export interface WithCharacterId {
   trackedCharacterId: number | null;
@@ -178,6 +183,13 @@ export const withSpiritRoutes = basicDataHOC<null, ESpiritRoutesChanged>(
   'spiritRoutes',
   null,
   sortBy('name')
+);
+
+export const withSpiritPhrases = basicDataHOC<null, ESpiritPhrasesChanged>(
+  'spiritPhrasesChanged',
+  'spiritPhrases',
+  null,
+  sortBy('startDate')
 );
 
 export const withEnableManaOcean = basicDataHOC<true, EEnableManaOceanChanged>(

@@ -10,6 +10,7 @@ export const appDictionary = {
   spiritEditor: 'Редактор духов',
   spiritFractionEditor: 'Редактор фракций духов',
   spiritRouteEditor: 'Редактор маршрутов духов',
+  spiritPhraseEditor: 'Редактор фраз духов',
   spiritsOnMap: 'Духи на карте',
   soundMapping: 'Сопоставление звука',
   trackAnalysisNav: 'Анализ мастерки',

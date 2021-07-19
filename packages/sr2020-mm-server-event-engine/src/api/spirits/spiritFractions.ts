@@ -1,7 +1,5 @@
 import { 
-  Spirit,
   SpiritFraction,
-  SpiritRoute
 } from 'sr2020-mm-event-engine';
 import * as R from 'ramda';
 
