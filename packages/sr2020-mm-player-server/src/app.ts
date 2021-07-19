@@ -110,6 +110,8 @@ app.use('/api', logoutRouter);
 
 app.use('/api', refreshCharacterModelRouter);
 
+app.use('/api', postUserPosition);
+
 app.get('/api/singlePlayerDataSse', (req, res, next) => {
   logger.info('Processing playerDataSse connection');
   const { userData, characterWatcher, characterModelData } = req as PlayerAuthorizedRequest;

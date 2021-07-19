@@ -56,6 +56,19 @@ export async function callSecureApi() {
   return res;
 }
 
+export async function postUserPosition(location_id: number) {
+  const res = await fetch('/api/postUserPosition', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json;charset=utf-8',
+    },
+    body: JSON.stringify({
+      location_id
+    }),
+  });
+  return res;
+}
+
 export async function getSpiritDataByQr(spiritJarQrString: string): Promise<ErrorResponse | {
   spiritJarQr: SpiritJarQr;
   spirit: Spirit | undefined;

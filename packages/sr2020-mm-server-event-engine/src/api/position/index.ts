@@ -181,6 +181,23 @@ export async function innerPostUserPosition(characterId: number, beacon: BeaconR
   });
 }
 
+export async function innerPostUserPosition2(characterId: number, ssid: string) {
+  return fetchWithTimeout(mainServerConstants().positionUrl, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json;charset=utf-8',
+      'X-User-Id': String(characterId),
+    },
+    body: JSON.stringify({
+      beacons: [{
+        ssid: ssid,
+        bssid: ssid,
+        level: -10,
+      }],
+    }),
+  });
+}
+
 // function ReadWriteResourceProvider(url) {
 //   this.url = url;
 

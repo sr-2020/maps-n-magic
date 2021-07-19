@@ -8,6 +8,7 @@ import * as gcp from '@thi.ng/geom-closest-point';
 import clippingUtils from 'polygon-clipping';
 import AbortController from 'abort-controller';
 import fetch from 'isomorphic-fetch';
+export * from './tmpLocIndex';
 
 import { 
   LocationRecord, 

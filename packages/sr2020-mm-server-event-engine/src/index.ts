@@ -10,6 +10,7 @@ export * from './types';
 export * from './api';
 export * from './logger';
 export * from './characterWatcher';
-export * from './api/spirits/spirits'
+export * from './api/spirits/spirits';
+export * from './api/position';
 
 import "./processTerminationHandler";

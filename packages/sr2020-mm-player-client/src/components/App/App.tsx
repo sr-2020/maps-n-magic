@@ -23,6 +23,7 @@ import { CatchSpiritPage } from '../CatchSpiritPage';
 import { CharacterPage } from '../CharacterPage';
 import { DispiritPage } from '../DispiritPage';
 import { EmergencyDispiritPage } from '../EmergencyDispiritPage';
+import { LocationChangePage } from '../LocationChangePage';
 
 interface AppProps extends WithLoginState, WithAggregatedLocationData {
   loginManager: LoginManager;
@@ -142,6 +143,11 @@ export function App(props: AppProps) {
               <CharacterPage 
                 setTitle={setTitle}
                 characterData={characterData}
+              />
+            </Route>
+            <Route path="/locationChange">
+              <LocationChangePage 
+                locationData={locationData}
               />
             </Route>
             <Route

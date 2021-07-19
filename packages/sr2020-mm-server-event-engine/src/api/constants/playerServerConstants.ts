@@ -12,6 +12,7 @@ interface PlayerServerConstants extends GenericServerConstants {
   dispiritUrl: string;
   emergencyDispiritUrl: string;
   freeSpiritUrl: string;
+  postUserPositionUrl: string;
 };
 
 let constantsInstance: PlayerServerConstants | null = null;
@@ -44,6 +45,7 @@ export function playerServerConstants(): PlayerServerConstants {
       suitSpiritUrl: values[PlayerServerConstant.MM_MASTER_SERVER_URL] + '/innerApi/suitSpirit',
       dispiritUrl: values[PlayerServerConstant.MM_MASTER_SERVER_URL] + '/innerApi/dispirit',
       emergencyDispiritUrl: values[PlayerServerConstant.MM_MASTER_SERVER_URL] + '/innerApi/emergencyDispirit',
+      postUserPositionUrl: values[PlayerServerConstant.MM_MASTER_SERVER_URL] + '/innerApi/postUserPosition',
     };
   }
   assert(constantsInstance !== null);

@@ -62,6 +62,9 @@ export function AppHeader(props: AppHeaderProps) {
           <LinkContainer to="/scanSpirit">
             <Nav.Link>Осмотреть тотем</Nav.Link>
           </LinkContainer>
+          <LinkContainer to="/locationChange">
+            <Nav.Link>Смена локации (отладка)</Nav.Link>
+          </LinkContainer>
           {
             characterData.spiritSuitState === undefined && 
             <LinkContainer to="/suitSpirit">
