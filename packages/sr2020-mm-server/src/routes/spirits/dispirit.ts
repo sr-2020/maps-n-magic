@@ -24,6 +24,7 @@ import {
   freeSpiritFromStorage, 
   getQrModelData, 
   InnerApiRequest, 
+  mmLog, 
   putSpiritInStorage, 
   suitSpirit, 
   validateBodyStorageQrModelData, 
@@ -42,11 +43,13 @@ export const mainDispirit = async (req1, res, next) => {
     const { body } = req;
 
     logger.info(`DISPIRIT_ATTEMPT ${uid} data ${JSON.stringify(body)}`);
+    mmLog('DISPIRIT_ATTEMPT', `${uid} data ${JSON.stringify(body)}`);
 
     if (!validateDispiritInternalRequest(body)) {
       const errorResponse = invalidRequestBody(body, validateDispiritInternalRequest.errors);
       res.status(400).json(errorResponse);
       logger.info(`DISPIRIT_FAIL ${uid} error ${JSON.stringify(errorResponse)}`);
+      mmLog('DISPIRIT_FAIL', `${uid} error ${JSON.stringify(errorResponse)}`);
       return;
     }
 
@@ -132,6 +135,7 @@ export const mainDispirit = async (req1, res, next) => {
       };
       res.status(400).json(errorResponse);
       logger.info(`DISPIRIT_FAIL ${uid} error ${JSON.stringify(errorResponse)}`);
+      mmLog('DISPIRIT_FAIL', `${uid} error ${JSON.stringify(errorResponse)}`);
       return;
     }
 
@@ -199,6 +203,7 @@ export const mainDispirit = async (req1, res, next) => {
     }
 
     logger.info(`DISPIRIT_SUCCESS ${uid} Character ${characterId} dispirit ${spirit.id} ${spirit.name}, consequenceStatus ${consequenceStatus}`);
+    mmLog('DISPIRIT_SUCCESS', `${uid} Character ${characterId} dispirit ${spirit.id} ${spirit.name}, consequenceStatus ${consequenceStatus}`);
 
     res.status(200).json(consequenceStatus);
   } catch(error) {
@@ -210,6 +215,7 @@ export const mainDispirit = async (req1, res, next) => {
     };
     res.status(500).json(errorResponse);
     logger.info(`DISPIRIT_FAIL ${uid} error ${JSON.stringify(errorResponse)}`);
+    mmLog('DISPIRIT_FAIL', `${uid} error ${JSON.stringify(errorResponse)}`);
     return;
   }
 }

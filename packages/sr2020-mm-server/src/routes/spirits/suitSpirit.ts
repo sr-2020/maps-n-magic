@@ -18,6 +18,7 @@ import {
   getQrModelData, 
   getSpiritWithFractionAbilities, 
   InnerApiRequest, 
+  mmLog, 
   putSpiritInStorage, 
   suitSpirit, 
   translateAbilities, 
@@ -37,11 +38,13 @@ export const mainSuitSpirit = async (req1, res, next) => {
     const { body } = req;
 
     logger.info(`SUIT_SPIRIT_ATTEMPT ${uid} data ${JSON.stringify(body)}`);
+    mmLog('SUIT_SPIRIT_ATTEMPT', `${uid} data ${JSON.stringify(body)}`);
 
     if (!validateSuitSpiritInternalRequest(body)) {
       const errorResponse = invalidRequestBody(body, validateSuitSpiritInternalRequest.errors);
       res.status(400).json(errorResponse);
       logger.info(`SUIT_SPIRIT_FAIL ${uid} error ${JSON.stringify(errorResponse)}`);
+      mmLog('SUIT_SPIRIT_FAIL', `${uid} error ${JSON.stringify(errorResponse)}`);
       return;
     }
 
@@ -57,6 +60,7 @@ export const mainSuitSpirit = async (req1, res, next) => {
     if ('errorTitle' in validationRes1) {
       res.status(500).json(validationRes1);
       logger.info(`SUIT_SPIRIT_FAIL ${uid} error ${JSON.stringify(validationRes1)}`);
+      mmLog('SUIT_SPIRIT_FAIL', `${uid} error ${JSON.stringify(validationRes1)}`);
       return;
     }
 
@@ -67,6 +71,7 @@ export const mainSuitSpirit = async (req1, res, next) => {
       };
       res.status(400).json(errorResponse);
       logger.info(`SUIT_SPIRIT_FAIL ${uid} error ${JSON.stringify(errorResponse)}`);
+      mmLog('SUIT_SPIRIT_FAIL', `${uid} error ${JSON.stringify(errorResponse)}`);
       return;
     }
 
@@ -84,6 +89,7 @@ export const mainSuitSpirit = async (req1, res, next) => {
       };
       res.status(400).json(errorResponse);
       logger.info(`SUIT_SPIRIT_FAIL ${uid} error ${JSON.stringify(errorResponse)}`);
+      mmLog('SUIT_SPIRIT_FAIL', `${uid} error ${JSON.stringify(errorResponse)}`);
       return;
     }
 
@@ -97,6 +103,7 @@ export const mainSuitSpirit = async (req1, res, next) => {
     if ('errorTitle' in validationRes) {
       res.status(500).json(validationRes);
       logger.info(`SUIT_SPIRIT_FAIL ${uid} error ${JSON.stringify(validationRes)}`);
+      mmLog('SUIT_SPIRIT_FAIL', `${uid} error ${JSON.stringify(validationRes)}`);
       return;
     }
 
@@ -107,6 +114,7 @@ export const mainSuitSpirit = async (req1, res, next) => {
       };
       res.status(400).json(errorResponse);
       logger.info(`SUIT_SPIRIT_FAIL ${uid} error ${JSON.stringify(errorResponse)}`);
+      mmLog('SUIT_SPIRIT_FAIL', `${uid} error ${JSON.stringify(errorResponse)}`);
       return;
     }
 
@@ -141,6 +149,10 @@ export const mainSuitSpirit = async (req1, res, next) => {
       suitStartTime,
       suitDuration
     })}`);
+    mmLog('SUIT_SPIRIT_SUCCESS', `${uid} Character ${characterId} suit spirit ${spirit.id} ${spirit.name}, data ${JSON.stringify({
+      suitStartTime,
+      suitDuration
+    })}`);
 
     res.status(200).json(true);
   } catch(error) {
@@ -152,6 +164,7 @@ export const mainSuitSpirit = async (req1, res, next) => {
     };
     res.status(500).json(errorResponse);
     logger.info(`SUIT_SPIRIT_FAIL ${uid} error ${JSON.stringify(errorResponse)}`);
+    mmLog('SUIT_SPIRIT_FAIL', `${uid} error ${JSON.stringify(errorResponse)}`);
     return;
   }
 }

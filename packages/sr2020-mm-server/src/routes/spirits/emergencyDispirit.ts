@@ -8,6 +8,7 @@ import {
 import { 
   createLogger, 
   InnerApiRequest, 
+  mmLog, 
   zeroSpiritAbilities
 } from 'sr2020-mm-server-event-engine';
 import shortid from 'shortid';
@@ -22,6 +23,7 @@ export const mainEmergencyDispirit = async (req1, res, next) => {
     const { body } = req;
 
     logger.info(`EMERGENCY_DISPIRIT_ATTEMPT ${uid} data ${JSON.stringify(body)}`);
+    mmLog('EMERGENCY_DISPIRIT_ATTEMPT', `${uid} data ${JSON.stringify(body)}`);
 
     const { characterId } = body as { characterId: number };
 
@@ -41,6 +43,7 @@ export const mainEmergencyDispirit = async (req1, res, next) => {
       };
       res.status(400).json(errorResponse);
       logger.info(`EMERGENCY_DISPIRIT_FAIL ${uid} error ${JSON.stringify(errorResponse)}`);
+      mmLog('EMERGENCY_DISPIRIT_FAIL', `${uid} error ${JSON.stringify(errorResponse)}`);
       return;
     }
 
@@ -52,6 +55,7 @@ export const mainEmergencyDispirit = async (req1, res, next) => {
       };
       res.status(400).json(errorResponse);
       logger.info(`EMERGENCY_DISPIRIT_FAIL ${uid} error ${JSON.stringify(errorResponse)}`);
+      mmLog('EMERGENCY_DISPIRIT_FAIL', `${uid} error ${JSON.stringify(errorResponse)}`);
       return;
     }
 
@@ -70,6 +74,7 @@ export const mainEmergencyDispirit = async (req1, res, next) => {
     });
 
     logger.info(`EMERGENCY_DISPIRIT_SUCCESS ${uid} Character ${characterId} has emergency dispirit ${spirit.id} ${spirit.name}`);
+    mmLog('EMERGENCY_DISPIRIT_SUCCESS', `${uid} Character ${characterId} has emergency dispirit ${spirit.id} ${spirit.name}`);
 
     res.status(200).json(true);
   } catch(error) {
@@ -81,6 +86,7 @@ export const mainEmergencyDispirit = async (req1, res, next) => {
     };
     res.status(500).json(errorResponse);
     logger.info(`EMERGENCY_DISPIRIT_FAIL ${uid} error ${JSON.stringify(errorResponse)}`);
+    mmLog('EMERGENCY_DISPIRIT_FAIL', `${uid} error ${JSON.stringify(errorResponse)}`);
     return;
   }
 }

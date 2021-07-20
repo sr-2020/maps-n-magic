@@ -11,7 +11,7 @@ import {
   isFullSpiritJar,
   Spirit
 } from 'sr2020-mm-event-engine';
-import { createLogger, getQrModelData, InnerApiRequest, putSpiritInStorage, validateSpiritJarQrModelData } from 'sr2020-mm-server-event-engine';
+import { createLogger, getQrModelData, InnerApiRequest, mmLog, putSpiritInStorage, validateSpiritJarQrModelData } from 'sr2020-mm-server-event-engine';
 import { NextFunction, Request, Response } from "express-serve-static-core";
 import shortid from 'shortid';
 import { postSpirit } from 'sr2020-mm-server-event-engine';
@@ -33,8 +33,9 @@ const fractionIndex: Record<string, number> = {
 };
 
 export const putSpiritInJar = async (req1: Request, res: Response, next: NextFunction) => {
+  const uid = shortid.generate();
   try {
-    logger.info('putSpiritInJar')
+    // logger.info('putSpiritInJar')
     const req = req1 as InnerApiRequest;
     const { body } = req;
 
@@ -46,6 +47,8 @@ export const putSpiritInJar = async (req1: Request, res: Response, next: NextFun
     
     const { qrId, spiritType } = body;
 
+    mmLog('SPIRIT_SELL_ATTEMPT', `${uid} data ${JSON.stringify(body)}`);
+
     // 2. get qr model and check if it is SpiritJar
     const qrModelData1 = await getQrModelData(qrId);
 
@@ -53,6 +56,7 @@ export const putSpiritInJar = async (req1: Request, res: Response, next: NextFun
 
     if ('errorTitle' in validationRes) {
       res.status(500).json(validationRes);
+      mmLog('SPIRIT_SELL_FAIL', `${uid} error ${JSON.stringify(validationRes)}`);
       return;
     }
 
@@ -63,6 +67,7 @@ export const putSpiritInJar = async (req1: Request, res: Response, next: NextFun
         errorTitle: 'Тотем содержит духа',
         errorSubtitle: `В тотеме уже находится дух`
       };
+      mmLog('SPIRIT_SELL_FAIL', `${uid} error ${JSON.stringify(errorResponse)}`);
       res.status(400).json(errorResponse);
       return;
     }
@@ -84,7 +89,9 @@ export const putSpiritInJar = async (req1: Request, res: Response, next: NextFun
     const spirit = await postSpirit(rawSpirit);
 
     const putResult = await putSpiritInStorage(qrId, spirit.id);
-    logger.info('put spirit success confirmation', putResult);
+    logger.info(`SPIRIT_SELL_SUCCESS ${uid} ${spirit} ${putResult}`);
+
+    mmLog('SPIRIT_SELL_SUCCESS', `${uid} ${JSON.stringify(spirit)}`);
 
     res.status(200).json(spirit);
   } catch(error) {
@@ -95,6 +102,7 @@ export const putSpiritInJar = async (req1: Request, res: Response, next: NextFun
       errorSubtitle: message 
     };
     res.status(500).json(errorResponse);
+    mmLog('SPIRIT_SELL_FAIL', `${uid} error ${JSON.stringify(errorResponse)}`);
     return;
   }
 }

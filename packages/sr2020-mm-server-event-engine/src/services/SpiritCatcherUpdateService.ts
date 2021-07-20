@@ -6,6 +6,7 @@ import {
   ServiceContract, 
   ServiceContractTypes, 
 } from 'sr2020-mm-event-engine';
+import { mmLog } from '../api/spirits/mmLog';
 import { GetCatcherStates, RemoveCatcherStates } from './SpiritCatcherService';
 
 export interface SpiritCatcherUpdateServiceContract extends ServiceContract {
@@ -68,6 +69,7 @@ export class SpiritCatcherUpdateService extends AbstractService<SpiritCatcherUpd
       }, []);
     if (expiredStatesList.length !== 0) {
       this.logger.info(`SPIRIT_CATCHER_EXPIRED expired list ${JSON.stringify(expiredStatesList)}`);
+      mmLog('SPIRIT_CATCHER_EXPIRED', `expired list ${JSON.stringify(expiredStatesList)}`);
       this.executeOnModel2({
         type: 'removeCatcherStates',
         expiredStatesList

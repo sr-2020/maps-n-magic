@@ -9,7 +9,7 @@ const logger = createLogger('isLoggedIn.ts');
 
 export const isLoggedIn = (req1: Request, res: Response) => {
   const req = req1 as MainAuthorizedRequest;
-  logger.info('/api/isLoggedIn');
+  // logger.info('/api/isLoggedIn');
   // if we are here then parsing user data was successful
   res.status(200).json(req.userData);
 }

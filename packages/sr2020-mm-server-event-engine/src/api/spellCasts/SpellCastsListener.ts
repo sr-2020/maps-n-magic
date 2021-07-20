@@ -12,6 +12,7 @@ import {
 } from "sr2020-mm-event-engine";
 
 import { listenSpellCasts } from './listenSpellCasts';
+import { mmLog } from '../spirits/mmLog';
 
 // const { listenHealthChanges } = require('./listenHealthChanges');
 // const { getCharacterLocation } = require('./getCharacterLocation');
@@ -44,6 +45,7 @@ export class SpellCastsListener extends AbstractEventProcessor {
       type: 'spellCast',
       data,
     });
+    mmLog('SPELL_CAST', JSON.stringify(data));
     // // this.logger.info('onMessageRecieved');
     // // const { characterId } = this.logger.info(data);
     // const {

@@ -17,6 +17,7 @@ import {
   CatcherStates 
 } from 'sr2020-mm-event-engine';
 import { getCharacterModelData } from '../api';
+import { mmLog } from '../api/spirits/mmLog';
 
 export type CatcherStatesArg = {
   catcherStates: CatcherStates
@@ -107,6 +108,7 @@ export class SpiritCatcherService extends AbstractService<SpiritCatcherServiceCo
       return;
     }
     this.logger.info('SPELL_CAST_SPIRIT_CATCHER', JSON.stringify(data));
+    mmLog('SPELL_CAST_SPIRIT_CATCHER', JSON.stringify(data));
     const { characterId, power } = data;
     
     const characterData = await getCharacterModelData(Number(characterId));
@@ -128,6 +130,7 @@ export class SpiritCatcherService extends AbstractService<SpiritCatcherServiceCo
     };
     this.catcherStates[characterId] = catcherData;
     this.logger.info(`SPIRIT_CATCHER_SPELL character ${characterId} applied spirit catcher. Data ${JSON.stringify(catcherData)}`);
+    mmLog('SPIRIT_CATCHER_SPELL', `character ${characterId} applied spirit catcher. Data ${JSON.stringify(catcherData)}`);
 
     this.emit2({
       type: 'catcherStatesChanged',
@@ -147,18 +150,21 @@ export class SpiritCatcherService extends AbstractService<SpiritCatcherServiceCo
   decrementAttempt({ characterId }: DecrementAttempt): void {
     const catcherData: CatcherData | undefined = this.catcherStates[characterId];
     if (catcherData === undefined) {
-      this.logger.info(`Not found catcher state for character ${characterId} for decrement attempt`);
+      this.logger.info(`SPIRIT_CATCHER_FAIL Not found catcher state for character ${characterId} for decrement attempt`);
+      mmLog('SPIRIT_CATCHER_FAIL', `Not found catcher state for character ${characterId} for decrement attempt`);
       return;
     }
     if (catcherData.attemptNumber === 1) {
       delete this.catcherStates[characterId];
       this.logger.info(`SPIRIT_CATCHER_DECREMENT_ATTEMPT character ${characterId} attempts ended.`);
+      mmLog('SPIRIT_CATCHER_DECREMENT_ATTEMPT', `character ${characterId} attempts ended.`);
     } else {
       this.catcherStates[characterId] = {
         ...catcherData,
         attemptNumber: catcherData.attemptNumber - 1
       };
       this.logger.info(`SPIRIT_CATCHER_DECREMENT_ATTEMPT character ${characterId} made catch attempt. New attempt ${catcherData.attemptNumber - 1}`);
+      mmLog('SPIRIT_CATCHER_DECREMENT_ATTEMPT', `character ${characterId} made catch attempt. New attempt ${catcherData.attemptNumber - 1}`);
     }
     this.emit2({
       type: 'catcherStatesChanged',

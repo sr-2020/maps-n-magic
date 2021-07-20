@@ -11,6 +11,7 @@ export * from './api';
 export * from './logger';
 export * from './characterWatcher';
 export * from './api/spirits/spirits';
+export * from './api/spirits/mmLog';
 export * from './api/position';
 
 import "./processTerminationHandler";

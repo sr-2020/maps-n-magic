@@ -1,6 +1,6 @@
 import * as R from 'ramda';
 import { EPutSpiritRequested, ErrorResponse, GetSpirit, getSpiritLocationId, GetUserRecord, invalidRequestBody, isFullSpiritJar, validateCatchSpiritInternalRequest } from 'sr2020-mm-event-engine';
-import { createLogger, DecrementAttempt, GetCatcherState, getQrModelData, InnerApiRequest, putSpiritInStorage, validateSpiritJarQrModelData } from 'sr2020-mm-server-event-engine';
+import { createLogger, DecrementAttempt, GetCatcherState, getQrModelData, InnerApiRequest, mmLog, putSpiritInStorage, validateSpiritJarQrModelData } from 'sr2020-mm-server-event-engine';
 import shortid from 'shortid';
 
 const logger = createLogger('catchSpirit.ts');
@@ -13,11 +13,13 @@ export const mainCatchSpirit = async (req1, res, next) => {
     const { body } = req;
 
     logger.info(`CATCH_SPIRIT_ATTEMPT ${uid} data ${JSON.stringify(body)}`);
+    mmLog('CATCH_SPIRIT_ATTEMPT', `${uid} data ${JSON.stringify(body)}`);
 
     if (!validateCatchSpiritInternalRequest(body)) {
       const errorResponse = invalidRequestBody(body, validateCatchSpiritInternalRequest.errors);
       res.status(400).json(errorResponse);
       logger.info(`CATCH_SPIRIT_FAIL ${uid} error ${JSON.stringify(errorResponse)}`);
+      mmLog('CATCH_SPIRIT_FAIL', `${uid} error ${JSON.stringify(errorResponse)}`);
       return;
     }
 
@@ -35,6 +37,7 @@ export const mainCatchSpirit = async (req1, res, next) => {
       };
       res.status(400).json(errorResponse);
       logger.info(`CATCH_SPIRIT_FAIL ${uid} error ${JSON.stringify(errorResponse)}`);
+      mmLog('CATCH_SPIRIT_FAIL', `${uid} error ${JSON.stringify(errorResponse)}`);
       return;
     }
 
@@ -56,6 +59,7 @@ export const mainCatchSpirit = async (req1, res, next) => {
       };
       res.status(400).json(errorResponse);
       logger.info(`CATCH_SPIRIT_FAIL ${uid} error ${JSON.stringify(errorResponse)}`);
+      mmLog('CATCH_SPIRIT_FAIL', `${uid} error ${JSON.stringify(errorResponse)}`);
       return;
     }
 
@@ -67,6 +71,7 @@ export const mainCatchSpirit = async (req1, res, next) => {
     if ('errorTitle' in validationRes) {
       res.status(500).json(validationRes);
       logger.info(`CATCH_SPIRIT_FAIL ${uid} error ${JSON.stringify(validationRes)}`);
+      mmLog('CATCH_SPIRIT_FAIL', `${uid} error ${JSON.stringify(validationRes)}`);
       return;
     }
 
@@ -85,6 +90,7 @@ export const mainCatchSpirit = async (req1, res, next) => {
       };
       res.status(400).json(errorResponse);
       logger.info(`CATCH_SPIRIT_FAIL ${uid} error ${JSON.stringify(errorResponse)}`);
+      mmLog('CATCH_SPIRIT_FAIL', `${uid} error ${JSON.stringify(errorResponse)}`);
       return;
     }
 
@@ -105,6 +111,7 @@ export const mainCatchSpirit = async (req1, res, next) => {
       };
       res.status(400).json(errorResponse);
       logger.info(`CATCH_SPIRIT_FAIL ${uid} error ${JSON.stringify(errorResponse)}`);
+      mmLog('CATCH_SPIRIT_FAIL', `${uid} error ${JSON.stringify(errorResponse)}`);
       return;
     }
 
@@ -117,6 +124,7 @@ export const mainCatchSpirit = async (req1, res, next) => {
       };
       res.status(400).json(errorResponse);
       logger.info(`CATCH_SPIRIT_FAIL ${uid} error ${JSON.stringify(errorResponse)}`);
+      mmLog('CATCH_SPIRIT_FAIL', `${uid} error ${JSON.stringify(errorResponse)}`);
       return;
     }
 
@@ -134,6 +142,7 @@ export const mainCatchSpirit = async (req1, res, next) => {
         message: 'Попытка не удалась'
       };
       logger.info(`CATCH_SPIRIT_FAIL ${uid} error ${JSON.stringify(resBody)}`);
+      mmLog('CATCH_SPIRIT_FAIL', `${uid} error ${JSON.stringify(resBody)}`);
       res.status(400).json(resBody);
       return;
     }
@@ -145,6 +154,7 @@ export const mainCatchSpirit = async (req1, res, next) => {
       };
       res.status(400).json(errorResponse);
       logger.info(`CATCH_SPIRIT_FAIL ${uid} error ${JSON.stringify(errorResponse)}`);
+      mmLog('CATCH_SPIRIT_FAIL', `${uid} error ${JSON.stringify(errorResponse)}`);
       return;
     }
 
@@ -168,6 +178,7 @@ export const mainCatchSpirit = async (req1, res, next) => {
       };
       res.status(400).json(errorResponse);
       logger.info(`CATCH_SPIRIT_FAIL ${uid} error ${JSON.stringify(errorResponse)}`);
+      mmLog('CATCH_SPIRIT_FAIL', `${uid} error ${JSON.stringify(errorResponse)}`);
       return;
     }
 
@@ -186,6 +197,7 @@ export const mainCatchSpirit = async (req1, res, next) => {
     });
     
     logger.info(`CATCH_SPIRIT_SUCCESS ${uid} Character ${characterId} catch spirit ${spirit.id} ${spirit.name} in qr ${qrId}`);
+    mmLog('CATCH_SPIRIT_SUCCESS', `${uid} Character ${characterId} catch spirit ${spirit.id} ${spirit.name} in qr ${qrId}`);
 
     // res.status(200).json(body);
     res.status(200).json({
@@ -201,6 +213,7 @@ export const mainCatchSpirit = async (req1, res, next) => {
     };
     res.status(500).json(errorResponse);
     logger.info(`CATCH_SPIRIT_FAIL ${uid} error ${JSON.stringify(errorResponse)}`);
+    mmLog('CATCH_SPIRIT_FAIL', `${uid} error ${JSON.stringify(errorResponse)}`);
     return;
   }
 }

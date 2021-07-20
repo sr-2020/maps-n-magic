@@ -12,6 +12,7 @@ import {
   GetUserRecord,
 } from 'sr2020-mm-event-engine';
 import { clinicalDeathCombo, zeroSpiritAbilities } from '../../api/characterModel';
+import { mmLog } from '../../api/spirits/mmLog';
 import { createLogger } from '../../logger';
 
 import { SpiritRouteContext, CurRouteSearchRes } from "./types";
@@ -59,6 +60,9 @@ function getUpdatedDoHealState(
     logger.info(`SPIRIT_HEALED ${spirit.id} ${spirit.name}. Data ${JSON.stringify({
       state
     })}`);
+    mmLog('SPIRIT_HEALED', `${spirit.id} ${spirit.name}. Data ${JSON.stringify({
+      state
+    })}`);
     return newState;
   }
   return undefined;
@@ -98,10 +102,15 @@ function getUpdatedNonNormalSuitedState(
     });
     clinicalDeathCombo(characterId, bodyStorageId, userRecord?.location_id || null).then(() => {
       logger.info(`TIMEOUT_DISPIRIT applied clinicalDeath to character ${characterId}`);
+      mmLog('TIMEOUT_DISPIRIT', `applied clinicalDeath to character ${characterId}`);
     }).catch( err => {
       logger.error(`TIMEOUT_DISPIRIT_ERROR applied clinicalDeath to character ${characterId}`, err);
+      mmLog('TIMEOUT_DISPIRIT_ERROR', `applied clinicalDeath to character ${characterId} ${JSON.stringify(err)}`);
     });
     logger.info(`TIMEOUT_DISPIRIT spirit clinical death timeout ${spirit.id} ${spirit.name}. Data ${JSON.stringify({
+      state
+    })}`);
+    mmLog('TIMEOUT_DISPIRIT', `spirit clinical death timeout ${spirit.id} ${spirit.name}. Data ${JSON.stringify({
       state
     })}`);
     return newState;
@@ -128,11 +137,18 @@ function getUpdatedNormalSuitedState(
     };
     zeroSpiritAbilities(characterId).then(() => {
       logger.info(`TIMEOUT_DISPIRIT zeroSpiritAbilities for character ${characterId}`);
+      mmLog('TIMEOUT_DISPIRIT', `zeroSpiritAbilities for character ${characterId}`);
     }).catch(err => {
       logger.error(`TIMEOUT_DISPIRIT_ERROR zeroSpiritAbilities for character ${characterId}`, err);
+      mmLog('TIMEOUT_DISPIRIT_ERROR', `zeroSpiritAbilities for character ${characterId}. err ${JSON.stringify({
+        err
+      })}`);
     });
 
     logger.info(`TIMEOUT_DISPIRIT suit spirit timeout ${spirit.id} ${spirit.name}. Data ${JSON.stringify({
+      state
+    })}`);
+    mmLog('TIMEOUT_DISPIRIT', `suit spirit timeout ${spirit.id} ${spirit.name}. Data ${JSON.stringify({
       state
     })}`);
     return newState;

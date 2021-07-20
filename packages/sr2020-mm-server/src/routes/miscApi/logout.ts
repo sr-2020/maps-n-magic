@@ -7,7 +7,7 @@ import { NextFunction, Request, Response } from "express-serve-static-core";
 const logger = createLogger('logout.ts');
 
 export const logout = (req: Request, res: Response) => {
-  logger.info('/api/logout');
+  // logger.info('/api/logout');
   // req.logOut();
   res.status(200).clearCookie('mm_token', {
     // path: '/',

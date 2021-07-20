@@ -46,6 +46,7 @@ import {
 // import { EMassacreTriggered } from "../../index";
 
 import { EffectCollector } from "./EffectCollector";
+import { mmLog } from '../../api/spirits/mmLog';
 
 // import { manaOceanEffectSettings } from '../api/constants';
 
@@ -191,6 +192,7 @@ export class ManaOceanService extends AbstractService<ManaOceanServiceContract> 
     }
 
     this.logger.info('SPELL_CAST_MANA_OCEAN_STREAM', JSON.stringify(data));
+    mmLog('SPELL_CAST_MANA_OCEAN_STREAM', JSON.stringify(data));
 
     this.executeOnModel2({
       type: 'pushNotification',
