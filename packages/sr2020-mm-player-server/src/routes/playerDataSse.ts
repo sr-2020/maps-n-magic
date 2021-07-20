@@ -5,8 +5,10 @@ import {
   ELocationRecordsChanged2, 
   ESetFeatures, 
   ESetSpiritFractions, 
+  ESetSpiritPhrases, 
   ESetSpirits, 
   ESpiritFractionsChanged, 
+  ESpiritPhrasesChanged, 
   ESpiritsChanged, 
   EUserRecordsChanged, 
   GameModel, 
@@ -16,7 +18,7 @@ import {
 import { createLogger, ECatcherStatesChanged, playerServerConstants, SetCatcherStates } from "sr2020-mm-server-event-engine";
 import { playerServerCookie } from "../utils";
 
-const logger = createLogger('playerDataSse');
+const logger = createLogger('playerDataSse.ts');
 
 export function connectToMainServerSse(gameModel: GameModel): void {
   const es = new EventSource(playerServerConstants().playerDataSseUrl, {
@@ -77,6 +79,12 @@ export function connectToMainServerSse(gameModel: GameModel): void {
           ...parsedData,
           type: 'setFeatures',
         });
+      } else if(isSpiritPhrasesChanged(parsedData)) {
+        logger.info(parsedData.type);
+        gameModel.emit2<ESetSpiritPhrases>({
+          ...parsedData,
+          type: 'setSpiritPhrases',
+        });
       } else {
         logger.warn(`Unexpected sse message data ${JSON.stringify(e)}`);
       }
@@ -104,4 +112,7 @@ const isCatcherStatesChanged = (obj: any): obj is ECatcherStatesChanged => {
 }
 const isFeaturesChanged = (obj: any): obj is EFeaturesChanged => {
   return obj.type === 'featuresChanged';
+}
+const isSpiritPhrasesChanged = (obj: any): obj is ESpiritPhrasesChanged => {
+  return obj.type === 'spiritPhrasesChanged';
 }

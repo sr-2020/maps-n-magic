@@ -216,7 +216,7 @@ const errorResponseSchema: JSONSchemaType<ErrorResponse> = {
 export const validateErrorResponse = ajv.compile(errorResponseSchema);
 
 export function isErrorResponse(data: any): data is ErrorResponse {
-  return typeof data.errorTitle === 'string';
+  return data != null && typeof data === 'object' && typeof data.errorTitle === 'string';
 }
 
 export function invalidRequestBody(body: any, errors: any): ErrorResponse {

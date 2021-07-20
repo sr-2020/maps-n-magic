@@ -3,7 +3,7 @@ import './SuitSpiritPage.css';
 
 import Button from "react-bootstrap/Button";
 import { QrScannerWrapper } from '../QrScannerWrapper';
-import { isBodyStorageValid, isSpiritJarValid, suitSpirit } from '../../api';
+import { isBodyStorageValid, isSpiritJarValid, refreshCharacterModel, suitSpirit } from '../../api';
 import { 
   CharacterModelData2,
   isErrorResponse, Spirit, 
@@ -128,7 +128,11 @@ export function SuitSpiritPage(props: SuitSpiritPageProps) {
       if (isErrorResponse(res)) {
         setSuitSpiritStatus(res.errorTitle);
       } else {
-        setSuitSpiritStatus("Дух надет");
+        if (res !== null) {
+          setSuitSpiritStatus("Дух надет. Вы прочитали мысль духа: " + res);
+        } else {
+          setSuitSpiritStatus("Дух надет");
+        }
       }
       setDoSuitSpirit(false);
     }).catch(err => {
@@ -223,7 +227,14 @@ export function SuitSpiritPage(props: SuitSpiritPageProps) {
       }
       {
         suitSpiritStatus !== '' && 
-        <div className="tw-m-4">{suitSpiritStatus}</div>
+        <>
+          <div className="tw-m-4 tw-p-4 tw-bg-blue-200 tw-font-semibold">
+            {suitSpiritStatus}
+          </div>
+          <div className="tw-text-right tw-mb-8">
+            <Button onClick={refreshCharacterModel}>Обновить данные персонажа</Button>
+          </div>
+        </>
       }
       <div className="tw-text-right">
         <Button disabled={!isValid} onClick={() => setDoSuitSpirit(true)}>Надеть</Button>

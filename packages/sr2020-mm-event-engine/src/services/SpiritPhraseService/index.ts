@@ -10,6 +10,7 @@ import {
 } from '../../core';
 
 import { SpiritPhrase } from "../../types";
+import { sample } from '../../utils';
 
 import { 
   spiritPhraseMetadata,
@@ -22,7 +23,8 @@ import {
   SpiritPhraseEmitEvents,
   SpiritPhraseListenEvents,
   SpiritPhraseList,
-  SpiritPhraseServiceContract
+  SpiritPhraseServiceContract,
+  GetRandomSpiritPhrase
 } from "./types";
 
 
@@ -73,6 +75,13 @@ export class SpiritPhraseService extends AbstractService<SpiritPhraseServiceCont
   getSpiritPhrase ({ id }: Req<GetSpiritPhrase>): Res<GetSpiritPhrase> {
     const spiritPhrase = this.spiritPhrases.find((spiritPhrase) => spiritPhrase.id === id);
     return spiritPhrase !== undefined ? {...spiritPhrase} : undefined;
+  }
+
+  getRandomSpiritPhrase (arg: Req<GetRandomSpiritPhrase>): Res<GetRandomSpiritPhrase> {
+    const curTime = Date.now();
+    const phrases = this.spiritPhrases.filter((spiritPhrase) => spiritPhrase.startDate <= curTime && curTime < spiritPhrase.endDate);
+    const item = sample(phrases);
+    return item !== null ? item.message : item;
   }
 
   setSpiritPhrases({ spiritPhrases }: ESetSpiritPhrases ): void {

@@ -7,6 +7,7 @@ import {
   StubEventProcessor,
   UserRecordService,
   FeatureService,
+  SpiritPhraseService,
 } from "sr2020-mm-event-engine";
 
 import { 
@@ -26,6 +27,7 @@ const services = [
   SuitedSpiritsService,
   SpiritCatcherService,
   FeatureService,
+  SpiritPhraseService,
 ];
 
 export function makeGameModel(): {
@@ -48,11 +50,15 @@ export function makeGameModel(): {
         'putSpiritsConfirmed',
         'putSpiritFractionConfirmed',
         'setSpiritFractions',
+        'postSpiritPhraseConfirmed',
+        'putSpiritPhraseConfirmed',
+        'deleteSpiritPhraseConfirmed',
         // spell cast processed on main server
         'spellCast',
         // sended from main server sse
         'setCatcherStates',
         'setFeatures',
+        'setSpiritPhrases'
       ]
     }
   ));

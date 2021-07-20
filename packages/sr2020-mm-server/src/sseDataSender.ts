@@ -1,6 +1,6 @@
 import SSE from "./express-sse-ts";
 import { Request, Response, NextFunction } from "express";
-import { EFeaturesChanged, ELocationRecordsChanged2, ESpiritFractionsChanged, ESpiritsChanged, EUserRecordsChanged, GameModel, GetFeatures, GetLocationRecords, GetSpiritFractions, GetSpirits, GetUserRecords, GMLogger } from "sr2020-mm-event-engine";
+import { EFeaturesChanged, ELocationRecordsChanged2, ESpiritFractionsChanged, ESpiritPhrasesChanged, ESpiritsChanged, EUserRecordsChanged, GameModel, GetFeatures, GetLocationRecords, GetSpiritFractions, GetSpiritPhrases, GetSpirits, GetUserRecords, GMLogger } from "sr2020-mm-event-engine";
 import { ECatcherStatesChanged, GetCatcherStates, InnerApiRequest } from "sr2020-mm-server-event-engine";
 
 export class SseDataSender {
@@ -27,6 +27,19 @@ export class SseDataSender {
     this.initUserDataSending(this.gameModel);
     this.initCatcherStatesSending(this.gameModel);
     this.initFeaturesSending(this.gameModel);
+    this.initSpiritPhrasesSending(this.gameModel);
+  }
+
+  private initSpiritPhrasesSending(gameModel: GameModel) {
+    const spiritPhrases = gameModel.get2<GetSpiritPhrases>({
+      type: 'spiritPhrases'
+    });
+    const spiritPhrasesChanged: ESpiritPhrasesChanged = {
+      'type': 'spiritPhrasesChanged',
+      spiritPhrases
+    };
+    this.send(spiritPhrasesChanged);
+    gameModel.on2<ESpiritPhrasesChanged>('spiritPhrasesChanged', this.send);
   }
 
   private initFeaturesSending(gameModel: GameModel) {
@@ -105,5 +118,6 @@ export class SseDataSender {
     this.gameModel.off('userRecordsChanged', this.send);
     this.gameModel.off('catcherStatesChanged', this.send);
     this.gameModel.off('featuresChanged', this.send);
+    this.gameModel.off('spiritPhrasesChanged', this.send);
   }
 }

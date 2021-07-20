@@ -12,8 +12,9 @@ import {
 
 // requests
 
-export type GetSpiritPhrases = (arg: TypeOnly<'spiritPhrases'>) => SpiritPhrase[];
+export type GetSpiritPhrases = (arg: Typed<'spiritPhrases'>) => SpiritPhrase[];
 export type GetSpiritPhrase = (arg: Typed<'spiritPhrase', {id: number}>) => SpiritPhrase | undefined;
+export type GetRandomSpiritPhrase = (arg: Typed<'randomSpiritPhrase', {}>) => string | null;
 
 // emit events
 
@@ -70,7 +71,7 @@ export type SpiritPhraseListenEvents =
 ;
 
 export interface SpiritPhraseServiceContract extends ServiceContract {
-  Request: GetSpiritPhrases | GetSpiritPhrase;
+  Request: GetSpiritPhrases | GetSpiritPhrase | GetRandomSpiritPhrase;
   Action: never;
   EmitEvent: SpiritPhraseEmitEvents;
   ListenEvent: SpiritPhraseListenEvents;
@@ -79,7 +80,7 @@ export interface SpiritPhraseServiceContract extends ServiceContract {
 }
 
 export const spiritPhraseMetadata: ServiceContractTypes<SpiritPhraseServiceContract> = {
-  requests: ['spiritPhrases', 'spiritPhrase'],
+  requests: ['spiritPhrases', 'spiritPhrase', 'randomSpiritPhrase'],
   actions: [],
   emitEvents: [
     'postSpiritPhrase',
