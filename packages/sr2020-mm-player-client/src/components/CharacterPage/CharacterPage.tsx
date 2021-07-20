@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import './CharacterPage.css';
 import moment from 'moment';
 
@@ -62,7 +62,7 @@ export function CharacterPage(props: CharacterPageProps) {
       <div className="tw-mb-2">
         <span className="tw-w-24 tw-inline-block">Тело</span><span>{bodyTypeLabel[characterData.workModel.currentBody]}</span>
       </div>
-      <div>
+      <div className="tw-mb-2">
         <span className="tw-w-24 tw-inline-block">Состояние</span><span>{healthStateLabel[characterData.workModel.healthState]}</span>
       </div>
     </div>

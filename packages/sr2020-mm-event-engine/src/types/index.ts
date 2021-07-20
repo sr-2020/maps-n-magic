@@ -250,6 +250,7 @@ export interface DispiritInternalRequest {
   characterId: number;
   spiritJarId: number | null;
   bodyStorageId: number;
+  messageBody: string;
 }
 
 const dispiritInternalRequestSchema: JSONSchemaType<DispiritInternalRequest> = {
@@ -258,8 +259,9 @@ const dispiritInternalRequestSchema: JSONSchemaType<DispiritInternalRequest> = {
     characterId: { type: 'number' },
     spiritJarId: { type: 'number', nullable: true },
     bodyStorageId: { type: 'number' },
+    messageBody: { type: 'string' },
   },
-  required: ["characterId", "spiritJarId", "bodyStorageId"],
+  required: ["characterId", "spiritJarId", "bodyStorageId", "messageBody"],
 };
 
 export const validateDispiritInternalRequest = ajv.compile(dispiritInternalRequestSchema);

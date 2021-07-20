@@ -78,6 +78,7 @@ export const validateSuitSpiritRequestBody = ajv.compile(suitSpiritRequestBodySc
 export interface DispiritRequestBody {
   bodyStorageQrString: string;
   spiritJarQrString: string | null;
+  messageBody: string;
 }
 
 const dispiritRequestBodySchema: JSONSchemaType<DispiritRequestBody> = {
@@ -85,8 +86,9 @@ const dispiritRequestBodySchema: JSONSchemaType<DispiritRequestBody> = {
   properties: {
     bodyStorageQrString: { type: 'string' },
     spiritJarQrString: { type: 'string', nullable: true },
+    messageBody: { type: 'string' },
   },
-  required: ["bodyStorageQrString", "spiritJarQrString"],
+  required: ["bodyStorageQrString", "spiritJarQrString", "messageBody"],
 };
 
 export const validateDispiritRequestBody = ajv.compile(dispiritRequestBodySchema);

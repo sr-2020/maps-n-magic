@@ -31,7 +31,7 @@ export const playerDispirit = async (req1, res, next) => {
     return;
   }
 
-  const { spiritJarQrString, bodyStorageQrString } = body;
+  const { spiritJarQrString, bodyStorageQrString, messageBody } = body;
 
   try {
     let spiritJarId: number | null = null;
@@ -59,7 +59,8 @@ export const playerDispirit = async (req1, res, next) => {
     const reqBody: DispiritInternalRequest = {
       spiritJarId,
       bodyStorageId,
-      characterId: req.userData.modelId
+      characterId: req.userData.modelId,
+      messageBody
     };
 
     const dispiritRes = await fetch(playerServerConstants().dispiritUrl, {

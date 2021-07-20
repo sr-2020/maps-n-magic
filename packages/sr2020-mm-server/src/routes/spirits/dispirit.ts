@@ -25,6 +25,7 @@ import {
   getQrModelData, 
   InnerApiRequest, 
   mmLog, 
+  playerMessages, 
   putSpiritInStorage, 
   suitSpirit, 
   validateBodyStorageQrModelData, 
@@ -53,7 +54,7 @@ export const mainDispirit = async (req1, res, next) => {
       return;
     }
 
-    const { characterId, spiritJarId, bodyStorageId } = body;
+    const { characterId, spiritJarId, bodyStorageId, messageBody } = body;
 
     // // copied from player-server isSpiritJarValid
 
@@ -202,6 +203,14 @@ export const mainDispirit = async (req1, res, next) => {
         // spirit state processing forces clinical death so this code should not work
         // const res4 = await clinicalDeathCombo(characterId, userRecord.location_id);
       }
+    }
+
+    if (messageBody !== '') {
+      playerMessages(JSON.stringify({
+        characterId,
+        time: new Date(),
+        messageBody
+      }));
     }
 
     logger.info(`DISPIRIT_SUCCESS ${uid} Character ${characterId} dispirit ${spirit.id} ${spirit.name}, consequenceStatus ${consequenceStatus}`);
