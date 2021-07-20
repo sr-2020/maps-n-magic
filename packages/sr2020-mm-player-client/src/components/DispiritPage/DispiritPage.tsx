@@ -113,14 +113,14 @@ export function DispiritPage(props: DispiritPageProps) {
     });
   }, [spiritJarQrString]);
 
-  const [doDispirit, setDoDispirit] = useState<boolean>(false);
+  const [doDispirit, setDoDispirit] = useState<boolean | null>(null);
   const [dispiritStatus, setDispiritStatus] = useState<string>('');
 
   useEffect(() => {
-    if (doDispirit === false || bodyStorageQrString === null) {
+    if (doDispirit === null || bodyStorageQrString === null) {
       return;
     }
-    dispirit(bodyStorageQrString, spiritJarQrString).then(res => {
+    dispirit(bodyStorageQrString, doDispirit ? spiritJarQrString : null).then(res => {
       if (isErrorResponse(res)) {
         setDispiritStatus(res.errorTitle);
       } else {
@@ -203,7 +203,7 @@ export function DispiritPage(props: DispiritPageProps) {
       <div className="tw-text-right tw-mb-8 tw-mt-12">
         <Button 
           disabled={!(bodyStorageStatus.status === 'valid')} 
-          onClick={() => setDoDispirit(true)}
+          onClick={() => setDoDispirit(false)}
         >
           Снять и отпустить духа
         </Button>

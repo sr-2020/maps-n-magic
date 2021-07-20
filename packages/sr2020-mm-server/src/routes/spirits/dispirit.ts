@@ -123,6 +123,8 @@ export const mainDispirit = async (req1, res, next) => {
       type: 'spirits'
     });
 
+    // logger.info(spirits);
+
     const spirit = spirits.find(spirit => {
       const { state } = spirit;
       return state.status === 'Suited' && state.characterId === characterId;
