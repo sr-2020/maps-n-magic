@@ -11,8 +11,8 @@ const ajv = new Ajv({
 });
 
 const defaultSpiritPhrase: Omit<SpiritPhrase, "id"> = {
-  endDate: 0,
-  startDate: 0,
+  startDate: new Date("Jul 28 2021 20:00").getTime(),
+  endDate: new Date("Jul 31 2021 20:00").getTime(),
   message: '',
 };
 
