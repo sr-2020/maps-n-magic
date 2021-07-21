@@ -12,12 +12,14 @@ import {
   SpiritRoute,
   EPutSpiritsRequested,
   GetEnableSpiritMovement,
-  PutSpiritArgs
+  PutSpiritArgs,
+  SpiritState
 } from 'sr2020-mm-event-engine';
 
 import { getRouteIndex } from "./utils";
 
 import { getNewSpiritState } from "./stateProcessing";
+import { mmLog } from '../../api/spirits/mmLog';
 
 const SPIRIT_UPDATE_INTERVAL: number = 5000; // millis
 
@@ -99,6 +101,11 @@ export class SpiritMovementService extends AbstractService<SpiritMovementService
     const { moscowTimeInMinutes } = getMoscowTime();
     const dateNow = Date.now();
 
+    const spiritUpdatesLog: {
+      spiritId: number;
+      stateStatus: SpiritState;
+      prevStateStatus: SpiritState;
+    }[] = [];
     const updates = spirits.reduce((acc: PutSpiritArgs[], spirit) => {
       const newState = getNewSpiritState(spirit, {
         routeIndex, 
@@ -114,6 +121,11 @@ export class SpiritMovementService extends AbstractService<SpiritMovementService
             state: newState
           }
         });
+        spiritUpdatesLog.push({
+          spiritId: spirit.id,
+          stateStatus: newState,
+          prevStateStatus: spirit.state,
+        });
       }
       return acc;
     }, []);
@@ -121,7 +133,8 @@ export class SpiritMovementService extends AbstractService<SpiritMovementService
     // this.logger.info('updates', updates);
     
     if (updates.length > 0) {
-      this.logger.info('spirit updates', updates.length);
+      this.logger.info('SPIRIT_UPDATES', JSON.stringify(spiritUpdatesLog));
+      mmLog('SPIRIT_UPDATES', JSON.stringify(spiritUpdatesLog));
       this.emit2({
         type: 'putSpiritsRequested',
         updates

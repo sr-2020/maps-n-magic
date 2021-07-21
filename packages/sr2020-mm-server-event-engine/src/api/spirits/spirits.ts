@@ -58,7 +58,7 @@ export const postSpirit = async function(entity: Omit<Spirit, "id">): Promise<Sp
 }
 
 export const putSpirit = async function(entity: Spirit): Promise<Spirit> {
-  logger.info("put", entity.id);
+  // logger.info("put", entity.id);
   // await pool.query('UPDATE spirit SET data = $1 WHERE id = $2', [R.omit(['id'], entity), entity.id]);
   const { queryText, values } = generatePutQuery([entity]);
   await pool.query(queryText, values);
@@ -106,14 +106,14 @@ function generatePutQuery(spirits: Spirit[]): {
 }
 
 export const putMultipleSpirits = async function(entities: Spirit[]): Promise<Spirit[]> {
-  logger.info("put multiple", R.pluck('id', entities));
+  // logger.info("put multiple", R.pluck('id', entities));
   const { queryText, values } = generatePutQuery(entities);
   await pool.query(queryText, values);
   return entities;
 }
 
 export const deleteSpirit = async function(id: number): Promise<unknown | null> {
-  logger.info("delete", id);
+  // logger.info("delete", id);
   const { rows } = await pool.query('DELETE FROM spirit WHERE id = $1 RETURNING id, data', [id]);
   const row: unknown | null = rows[0] ? rows[0] : null;
   if(row === null) {
