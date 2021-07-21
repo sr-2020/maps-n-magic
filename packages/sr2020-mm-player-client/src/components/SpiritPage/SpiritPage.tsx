@@ -161,6 +161,7 @@ export function SpiritPage(props: SpiritPageProps) {
           onClick={() => {
             setSpiritJarQr(null);
             setSpiritJarQrString(null);
+            setErrorResponse(null);
           }}
         >
           Осмотреть другой тотем
