@@ -12,6 +12,7 @@ import { ErrorBoundry } from "./components/ErrorBoundry";
 import { AudioContextWrapper, SoundStorage } from 'sr2020-mm-client-event-engine';
 
 import Button from 'react-bootstrap/Button';
+import DocumentTitle from 'react-document-title';
 
 const loginManager = new LoginManager();
 // import reportWebVitals from './reportWebVitals';
@@ -48,9 +49,11 @@ class AudioContainer extends React.Component {
 ReactDOM.render(
   <React.StrictMode>
     <ErrorBoundry>
-      <AuthWrapper loginManager={loginManager}>
-        <AudioContainer />
-      </AuthWrapper>
+      <DocumentTitle title="SR 2020 Магия">
+        <AuthWrapper loginManager={loginManager}>
+          <AudioContainer />
+        </AuthWrapper>
+      </DocumentTitle>
     </ErrorBoundry>
   </React.StrictMode>,
   document.getElementById('root')

@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import './LocationChangePage.css';
 import { AggregatedLocationView, tmpLocIndex } from "sr2020-mm-event-engine";
 import classNames from 'classnames';
@@ -8,10 +8,15 @@ import { postUserPosition } from '../../api';
 
 interface LocationChangePageProps {
   locationData: AggregatedLocationView | null;
+  setTitle: (title: string) => void;
 }
 
 export function LocationChangePage(props: LocationChangePageProps) {
-  const { locationData } = props;
+  const { locationData, setTitle } = props;
+
+  useEffect(() => {
+    setTitle(`Смена локации (отладка)`);
+  }, []);
 
   if (locationData === null) {
     return <div>

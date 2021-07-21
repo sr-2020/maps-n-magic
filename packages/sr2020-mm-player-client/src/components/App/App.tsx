@@ -146,7 +146,8 @@ export function App(props: AppProps) {
               />
             </Route>
             <Route path="/locationChange">
-              <LocationChangePage 
+              <LocationChangePage
+                setTitle={setTitle}
                 locationData={locationData}
               />
             </Route>

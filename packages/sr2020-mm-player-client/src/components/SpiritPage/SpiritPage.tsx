@@ -150,15 +150,12 @@ export function SpiritPage(props: SpiritPageProps) {
         <>
           <div>
             <div>Тотем пуст</div>
-            <div>{spiritJarQr.spiritJarQr.workModel.data.emptiness_reason}</div>
+            <div>Причина: {spiritJarQr.spiritJarQr.workModel.data.emptiness_reason}</div>
           </div>
-          {/* <Button variant="primary" onClick={onCatchSpiritClick}>
-            Поймать духа (тестовый вызов)
-          </Button> */}
         </>
       }
       {
-        spiritJarQr !== null &&
+        (spiritJarQr !== null || errorResponse !== null) &&
         <Button 
           className="tw-fixed tw-bottom-0 tw-w-40"
           onClick={() => {
@@ -166,7 +163,7 @@ export function SpiritPage(props: SpiritPageProps) {
             setSpiritJarQrString(null);
           }}
         >
-          Осмотреть другого духа
+          Осмотреть другой тотем
         </Button>
       }
     </div>
