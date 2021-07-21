@@ -20,11 +20,11 @@ let defaultFacingMode = process.env.NODE_ENV === 'production'
   ? 'environment' 
   : 'user';
 
-if (localStorage.getItem("invertCamera") !== undefined ) {
-  defaultFacingMode = process.env.NODE_ENV !== 'production' 
-  ? 'environment' 
-  : 'user';
-}
+// if (localStorage.getItem("invertCamera") !== undefined ) {
+//   defaultFacingMode = process.env.NODE_ENV !== 'production' 
+//   ? 'environment' 
+//   : 'user';
+// }
 
 export function QrScannerWrapper(props: QrScannerWrapperProps) {
   const { onFailed, onSuccess, message, onCancel } = props;
