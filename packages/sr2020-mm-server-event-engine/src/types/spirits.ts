@@ -148,7 +148,7 @@ export function validateBodyStorageQrModelData(qrModelData: unknown):
       errorTitle = 'Телохраниилище некорректно';
       errorSubtitle = `Данные модели ${JSON.stringify(qrModelData)}, ошибки валидации ${JSON.stringify(validateSpiritJarQr.errors)}`;
     } else {
-      errorTitle = 'QR не является телохраниилищем';
+      errorTitle = 'QR не является телохранилищем';
       errorSubtitle = `Тип QR: ${qrModelData.workModel.type}`;
     }
 
