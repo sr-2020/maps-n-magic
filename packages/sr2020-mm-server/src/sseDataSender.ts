@@ -27,20 +27,20 @@ export class SseDataSender {
     this.initUserDataSending(this.gameModel);
     this.initCatcherStatesSending(this.gameModel);
     this.initFeaturesSending(this.gameModel);
-    this.initSpiritPhrasesSending(this.gameModel);
+    // this.initSpiritPhrasesSending(this.gameModel);
   }
 
-  private initSpiritPhrasesSending(gameModel: GameModel) {
-    const spiritPhrases = gameModel.get2<GetSpiritPhrases>({
-      type: 'spiritPhrases'
-    });
-    const spiritPhrasesChanged: ESpiritPhrasesChanged = {
-      'type': 'spiritPhrasesChanged',
-      spiritPhrases
-    };
-    this.send(spiritPhrasesChanged);
-    gameModel.on2<ESpiritPhrasesChanged>('spiritPhrasesChanged', this.send);
-  }
+  // private initSpiritPhrasesSending(gameModel: GameModel) {
+  //   const spiritPhrases = gameModel.get2<GetSpiritPhrases>({
+  //     type: 'spiritPhrases'
+  //   });
+  //   const spiritPhrasesChanged: ESpiritPhrasesChanged = {
+  //     'type': 'spiritPhrasesChanged',
+  //     spiritPhrases
+  //   };
+  //   this.send(spiritPhrasesChanged);
+  //   gameModel.on2<ESpiritPhrasesChanged>('spiritPhrasesChanged', this.send);
+  // }
 
   private initFeaturesSending(gameModel: GameModel) {
     const features = gameModel.get2<GetFeatures>({
@@ -118,6 +118,6 @@ export class SseDataSender {
     this.gameModel.off('userRecordsChanged', this.send);
     this.gameModel.off('catcherStatesChanged', this.send);
     this.gameModel.off('featuresChanged', this.send);
-    this.gameModel.off('spiritPhrasesChanged', this.send);
+    // this.gameModel.off('spiritPhrasesChanged', this.send);
   }
 }

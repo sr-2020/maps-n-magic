@@ -98,7 +98,7 @@ export async function isSpiritJarValid(spiritJarQrString: string, shouldBeEmpty:
 export async function suitSpirit(
   bodyStorageQrString: string, 
   spiritJarQrString: string
-): Promise<ErrorResponse | string | null> {
+): Promise<ErrorResponse | true> {
   const res = await fetch('/api/suitSpirit', {
     method: 'POST',
     headers: {

@@ -51,6 +51,7 @@ export interface SuitedState {
   suitStatus: 'normal' | 'emergencyDispirited' | 'suitTimeout';
   suitStatusChangeTime: number;
   bodyStorageId: number;
+  message: string | null;
 }
 
 export interface DoHealState {

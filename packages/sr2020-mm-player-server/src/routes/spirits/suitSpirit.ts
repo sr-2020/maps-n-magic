@@ -73,16 +73,16 @@ export const suitSpirit = async (req1, res, next) => {
     logger.info('suitSpiritRes json', json);
 
     if (suitSpiritRes.status === 200) {
-      setTimeout(() => {
-        req.characterWatcher.forceUpdateCharacterModel(req.userData.modelId);
-      }, 30000);
+      // setTimeout(() => {
+      req.characterWatcher.forceUpdateCharacterModel(req.userData.modelId);
+      // }, 30000);
     }
 
-    // res.status(suitSpiritRes.status).json(json);
-    const message = req.gameModel.get2<GetRandomSpiritPhrase>({
-      type: 'randomSpiritPhrase'
-    });
-    res.status(suitSpiritRes.status).json(message);
+    res.status(suitSpiritRes.status).json(json);
+    // const message = req.gameModel.get2<GetRandomSpiritPhrase>({
+    //   type: 'randomSpiritPhrase'
+    // });
+    // res.status(suitSpiritRes.status).json(message);
 
   } catch (error) {
     const message = `${error} ${JSON.stringify(error)}`;

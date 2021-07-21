@@ -50,6 +50,13 @@ export function CharacterPage(props: CharacterPageProps) {
       }
       {
         characterData.spiritSuitState !== undefined &&
+        characterData.spiritSuitState.message !== null &&
+        <div className="tw-m-4 tw-p-4 tw-bg-blue-200 tw-font-semibold">
+          Вы прочитали мысль духа: {characterData.spiritSuitState.message}
+        </div>
+      }
+      {
+        characterData.spiritSuitState !== undefined &&
         characterData.spiritSuitState.suitStatus !== 'normal' &&
         <div className="tw-m-4 tw-p-4 tw-bg-red-200 tw-font-semibold">
           Верните свое тело до 

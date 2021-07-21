@@ -98,7 +98,8 @@ const suitedStateSchema: JSONSchemaType<SuitedState> = {
     'suitStartTime', 
     'suitDuration', 
     'suitStatus',
-    'bodyStorageId'
+    'bodyStorageId',
+    'message'
   ],
   additionalProperties: false,
   properties: {
@@ -112,6 +113,7 @@ const suitedStateSchema: JSONSchemaType<SuitedState> = {
     suitStatus: { type: 'string', enum: ['normal', 'emergencyDispirited', 'suitTimeout'] },
     suitStatusChangeTime: { type: 'number' },
     bodyStorageId: { type: 'number' },
+    message: { type: 'string', nullable: true },
   }
 };
 

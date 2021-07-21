@@ -2,6 +2,7 @@ import * as R from 'ramda';
 import { 
   EPutSpiritRequested, 
   ErrorResponse, 
+  GetRandomSpiritPhrase, 
   GetSpirit, 
   getSpiritLocationId, 
   GetUserRecord, 
@@ -127,6 +128,10 @@ export const mainSuitSpirit = async (req1, res, next) => {
       "abilityIds": spirit2.abilities,
     }, bodyStorageId, spiritJarId);
 
+    const message = req.gameModel.get2<GetRandomSpiritPhrase>({
+      type: 'randomSpiritPhrase'
+    });
+
     const suitStartTime = Date.now();
     req.gameModel.emit2<EPutSpiritRequested>({
       type: 'putSpiritRequested',
@@ -140,7 +145,8 @@ export const mainSuitSpirit = async (req1, res, next) => {
           // duration: 2 * 60 * 1000, // 2 min
           suitStatus: 'normal',
           suitStatusChangeTime: -1,
-          bodyStorageId
+          bodyStorageId,
+          message
         },
       }
     });

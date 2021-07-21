@@ -5,10 +5,10 @@ import {
   ELocationRecordsChanged2, 
   ESetFeatures, 
   ESetSpiritFractions, 
-  ESetSpiritPhrases, 
+  // ESetSpiritPhrases, 
   ESetSpirits, 
   ESpiritFractionsChanged, 
-  ESpiritPhrasesChanged, 
+  // ESpiritPhrasesChanged, 
   ESpiritsChanged, 
   EUserRecordsChanged, 
   GameModel, 
@@ -79,12 +79,12 @@ export function connectToMainServerSse(gameModel: GameModel): void {
           ...parsedData,
           type: 'setFeatures',
         });
-      } else if(isSpiritPhrasesChanged(parsedData)) {
-        logger.info(parsedData.type);
-        gameModel.emit2<ESetSpiritPhrases>({
-          ...parsedData,
-          type: 'setSpiritPhrases',
-        });
+      // } else if(isSpiritPhrasesChanged(parsedData)) {
+      //   logger.info(parsedData.type);
+      //   gameModel.emit2<ESetSpiritPhrases>({
+      //     ...parsedData,
+      //     type: 'setSpiritPhrases',
+      //   });
       } else {
         logger.warn(`Unexpected sse message data ${JSON.stringify(e)}`);
       }
@@ -113,6 +113,6 @@ const isCatcherStatesChanged = (obj: any): obj is ECatcherStatesChanged => {
 const isFeaturesChanged = (obj: any): obj is EFeaturesChanged => {
   return obj.type === 'featuresChanged';
 }
-const isSpiritPhrasesChanged = (obj: any): obj is ESpiritPhrasesChanged => {
-  return obj.type === 'spiritPhrasesChanged';
-}
+// const isSpiritPhrasesChanged = (obj: any): obj is ESpiritPhrasesChanged => {
+//   return obj.type === 'spiritPhrasesChanged';
+// }
