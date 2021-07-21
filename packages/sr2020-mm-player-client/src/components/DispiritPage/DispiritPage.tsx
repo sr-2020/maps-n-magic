@@ -129,11 +129,11 @@ export function DispiritPage(props: DispiritPageProps) {
       } else {
         setDispiritStatus(consequenceTexts[res]);
       }
-      setDoDispirit(false);
+      setDoDispirit(null);
     }).catch(err => {
       console.error(err);
       setDispiritStatus('Непредвиденная ошибка');
-      setDoDispirit(false);
+      setDoDispirit(null);
     });
   }, [doDispirit]);
 
