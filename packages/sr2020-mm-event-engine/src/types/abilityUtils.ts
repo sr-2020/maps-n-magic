@@ -10,7 +10,8 @@ export enum Ability {
   SpiritMaster1 = 'spirit-master-1', // способность захватывать духов 1 ранга
   SpiritMaster2 = 'spirit-master-2', // способность захватывать духов 2 ранга
   SpiritMaster3 = 'spirit-master-3', // способность захватывать духов 3 ранга
-  SpiritFeed = 'spirit-feed', // знакомец духов - увеличивает шанс поимки духа
+  SpiritFeed = 'spirit-feed', // друг духов - увеличивает шанс поимки духа на 20% для орков
+  SpiritKnown = 'spirit-known' // Знакомый духов (P) - увеличивает шанс поимки духа на 10% для всех
 }
 
 export enum Spell {

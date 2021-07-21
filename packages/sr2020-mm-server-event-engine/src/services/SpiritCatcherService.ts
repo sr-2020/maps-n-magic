@@ -120,7 +120,11 @@ export class SpiritCatcherService extends AbstractService<SpiritCatcherServiceCo
 
     const durationMillis = power * 5 * 60000;
     const hasSpiritFeed = hasAbility(characterData, Ability.SpiritFeed);
-    const catchProbability = power * 20 + (hasSpiritFeed ? 20 : 0);
+    const hasSpiritKnown = hasAbility(characterData, Ability.SpiritKnown);
+    const catchProbability = power * 20
+      + (hasSpiritFeed ? 20 : 0)
+      + (hasSpiritKnown ? 10 : 0)
+    ;
 
     const catcherData: CatcherData = {
       startTime: Date.now(),
