@@ -378,6 +378,7 @@ export class ManaOceanService extends AbstractService<ManaOceanServiceContract> 
 
   pushEffects(updates: LocationUpdate[]): void {
     // this.logger.info('pushEffects', updates);
+    this.logUpdates(updates);
     this.executeOnModel2<PutLocationRecords>({
       type: 'putLocationRecords',
       updates,
@@ -494,6 +495,7 @@ export class ManaOceanService extends AbstractService<ManaOceanServiceContract> 
       return acc;
     }, [] as LocationUpdate[]);
 
+    this.logUpdates(updates);
     this.executeOnModel2({
       type: 'putLocationRecords',
       updates,
@@ -610,9 +612,10 @@ export class ManaOceanService extends AbstractService<ManaOceanServiceContract> 
       // this.logger.info('no updates for mana ocean');
       return;
     }
-    this.logger.info('mana ocean updates', updates.length);
+    // this.logger.info('mana ocean updates', updates.length);
 
     // this.logger.info('updates', updates);
+    this.logUpdates(updates);
 
     this.executeOnModel2({
       type: 'putLocationRecords',
@@ -621,6 +624,17 @@ export class ManaOceanService extends AbstractService<ManaOceanServiceContract> 
 
     // const nonNeutralOpts = R.filter((el) => (el.manaLevel !== (neutralManaLevel + tideHeight)), optIndex);
     // this.logger.info('optIndex', JSON.stringify(nonNeutralOpts, null, '  '));
+  }
+
+  logUpdates(updates: LocationUpdate[]) {
+    this.logger.info('MANA_OCEAN_UPDATES', `[id, manaLevel] ${JSON.stringify(updates.map(el => ([
+      el.id,
+      el.body.options?.manaLevel
+    ])))}`);
+    mmLog('MANA_OCEAN_UPDATES', `[id, manaLevel] ${JSON.stringify(updates.map(el => ([
+      el.id,
+      el.body.options?.manaLevel
+    ])))}`);
   }
 
   // eslint-disable-next-line max-lines-per-function

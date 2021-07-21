@@ -103,8 +103,8 @@ export class SpiritMovementService extends AbstractService<SpiritMovementService
 
     const spiritUpdatesLog: {
       spiritId: number;
-      stateStatus: SpiritState;
-      prevStateStatus: SpiritState;
+      stateStatus: string;
+      prevStateStatus: string;
     }[] = [];
     const updates = spirits.reduce((acc: PutSpiritArgs[], spirit) => {
       const newState = getNewSpiritState(spirit, {
@@ -123,8 +123,8 @@ export class SpiritMovementService extends AbstractService<SpiritMovementService
         });
         spiritUpdatesLog.push({
           spiritId: spirit.id,
-          stateStatus: newState,
-          prevStateStatus: spirit.state,
+          stateStatus: newState.status,
+          prevStateStatus: spirit.state.status,
         });
       }
       return acc;
