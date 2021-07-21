@@ -7,7 +7,7 @@ replicaCount: 1
 app:
   env: production
   skipPreflightCheck: true
-  dbHost: postgres13
+  dbHost: pg13-postgresql
   dbPort: 5432
   dbName: mm
   services:
