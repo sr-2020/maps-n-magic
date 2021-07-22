@@ -149,16 +149,6 @@ export const mainDispirit = async (req1, res, next) => {
       throw new Error(`${uid} Spirit state status is not Suited`);
     }
 
-    const userRecord = req.gameModel.get2<GetUserRecord>({
-      type: 'userRecord',
-      id: characterId
-    });
-
-    if (userRecord === undefined) {
-      // should never happen
-      throw new Error(`${uid} not found user record for character ${characterId}`);
-    }
-
     const shouldSaveSpiritInJar = spiritJarId !== null && state.suitStatus === 'normal';
 
     let newSpiritState: SpiritState;
@@ -200,8 +190,6 @@ export const mainDispirit = async (req1, res, next) => {
         consequenceStatus = 'woundConsequence';
       } else {
         consequenceStatus = 'deathConsequence';
-        // spirit state processing forces clinical death so this code should not work
-        // const res4 = await clinicalDeathCombo(characterId, userRecord.location_id);
       }
     }
 
