@@ -128,24 +128,24 @@ export const mainCatchSpirit = async (req1, res, next) => {
       return;
     }
 
-    if (userLocationId !== spiritLocationId) {
-      logger.warn(`Пользователь пытается поймать духа не из своей локации. Данные ${JSON.stringify({
-        characterId,
-        qrId, 
-        spiritId,
-        spiritName: spirit.name,
-        userLocationId,
-        spiritLocationId
-      })}`);
-      const resBody = {
-        status: 'fail',
-        message: 'Попытка не удалась'
-      };
-      logger.info(`CATCH_SPIRIT_FAIL ${uid} error ${JSON.stringify(resBody)}`);
-      mmLog('CATCH_SPIRIT_FAIL', `${uid} error ${JSON.stringify(resBody)}`);
-      res.status(400).json(resBody);
-      return;
-    }
+    // if (userLocationId !== spiritLocationId) {
+    //   logger.warn(`Пользователь пытается поймать духа не из своей локации. Данные ${JSON.stringify({
+    //     characterId,
+    //     qrId, 
+    //     spiritId,
+    //     spiritName: spirit.name,
+    //     userLocationId,
+    //     spiritLocationId
+    //   })}`);
+    //   const resBody = {
+    //     status: 'fail',
+    //     message: 'Попытка не удалась'
+    //   };
+    //   logger.info(`CATCH_SPIRIT_FAIL ${uid} error ${JSON.stringify(resBody)}`);
+    //   mmLog('CATCH_SPIRIT_FAIL', `${uid} error ${JSON.stringify(resBody)}`);
+    //   res.status(400).json(resBody);
+    //   return;
+    // }
 
     if (isFullSpiritJar(qrModelData)) {
       const errorResponse: ErrorResponse = {
