@@ -19,37 +19,36 @@ import {
   getQrModelData, 
   getSpiritWithFractionAbilities, 
   InnerApiRequest, 
-  mmLog, 
   putSpiritInStorage, 
   suitSpirit, 
   translateAbilities, 
   validateBodyStorageQrModelData, 
   validateSpiritJarQrModelData 
 } from 'sr2020-mm-server-event-engine';
-import shortid from 'shortid';
+
+import { EndpointLogger, EndpointId } from './logUtils';
 
 const logger = createLogger('suitSpirit.ts');
 
 export const mainSuitSpirit = async (req1, res, next) => {
-  const uid = shortid.generate();
+  const eLogger = new EndpointLogger(logger, EndpointId.SUIT_SPIRIT);
   try {
     
     // logger.info('mainSuitSpirit')
     const req = req1 as InnerApiRequest;
     const { body } = req;
 
-    logger.info(`SUIT_SPIRIT_ATTEMPT ${uid} data ${JSON.stringify(body)}`);
-    mmLog('SUIT_SPIRIT_ATTEMPT', `${uid} data ${JSON.stringify(body)}`);
+    eLogger.attempt(body);
 
     if (!validateSuitSpiritInternalRequest(body)) {
       const errorResponse = invalidRequestBody(body, validateSuitSpiritInternalRequest.errors);
       res.status(400).json(errorResponse);
-      logger.info(`SUIT_SPIRIT_FAIL ${uid} error ${JSON.stringify(errorResponse)}`);
-      mmLog('SUIT_SPIRIT_FAIL', `${uid} error ${JSON.stringify(errorResponse)}`);
+      eLogger.fail(errorResponse);
       return;
     }
 
     const { characterId, spiritJarId, bodyStorageId, suitDuration } = body;
+    eLogger.setCharacterId(characterId);
 
     // copied from player-server isSpiritJarValid
 
@@ -60,8 +59,7 @@ export const mainSuitSpirit = async (req1, res, next) => {
 
     if ('errorTitle' in validationRes1) {
       res.status(500).json(validationRes1);
-      logger.info(`SUIT_SPIRIT_FAIL ${uid} error ${JSON.stringify(validationRes1)}`);
-      mmLog('SUIT_SPIRIT_FAIL', `${uid} error ${JSON.stringify(validationRes1)}`);
+      eLogger.fail(validationRes1);
       return;
     }
 
@@ -71,8 +69,7 @@ export const mainSuitSpirit = async (req1, res, next) => {
         errorSubtitle: '' 
       };
       res.status(400).json(errorResponse);
-      logger.info(`SUIT_SPIRIT_FAIL ${uid} error ${JSON.stringify(errorResponse)}`);
-      mmLog('SUIT_SPIRIT_FAIL', `${uid} error ${JSON.stringify(errorResponse)}`);
+      eLogger.fail(errorResponse);
       return;
     }
 
@@ -89,8 +86,7 @@ export const mainSuitSpirit = async (req1, res, next) => {
         errorSubtitle: '' 
       };
       res.status(400).json(errorResponse);
-      logger.info(`SUIT_SPIRIT_FAIL ${uid} error ${JSON.stringify(errorResponse)}`);
-      mmLog('SUIT_SPIRIT_FAIL', `${uid} error ${JSON.stringify(errorResponse)}`);
+      eLogger.fail(errorResponse);
       return;
     }
 
@@ -103,8 +99,7 @@ export const mainSuitSpirit = async (req1, res, next) => {
 
     if ('errorTitle' in validationRes) {
       res.status(500).json(validationRes);
-      logger.info(`SUIT_SPIRIT_FAIL ${uid} error ${JSON.stringify(validationRes)}`);
-      mmLog('SUIT_SPIRIT_FAIL', `${uid} error ${JSON.stringify(validationRes)}`);
+      eLogger.fail(validationRes);
       return;
     }
 
@@ -114,8 +109,7 @@ export const mainSuitSpirit = async (req1, res, next) => {
         errorSubtitle: '' 
       };
       res.status(400).json(errorResponse);
-      logger.info(`SUIT_SPIRIT_FAIL ${uid} error ${JSON.stringify(errorResponse)}`);
-      mmLog('SUIT_SPIRIT_FAIL', `${uid} error ${JSON.stringify(errorResponse)}`);
+      eLogger.fail(errorResponse);
       return;
     }
 
@@ -151,11 +145,7 @@ export const mainSuitSpirit = async (req1, res, next) => {
       }
     });
 
-    logger.info(`SUIT_SPIRIT_SUCCESS ${uid} Character ${characterId} suit spirit ${spirit.id} ${spirit.name}, data ${JSON.stringify({
-      suitStartTime,
-      suitDuration
-    })}`);
-    mmLog('SUIT_SPIRIT_SUCCESS', `${uid} Character ${characterId} suit spirit ${spirit.id} ${spirit.name}, data ${JSON.stringify({
+    eLogger.success(`suit spirit ${spirit.id} ${spirit.name}, data ${JSON.stringify({
       suitStartTime,
       suitDuration
     })}`);
@@ -169,8 +159,7 @@ export const mainSuitSpirit = async (req1, res, next) => {
       errorSubtitle: message 
     };
     res.status(500).json(errorResponse);
-    logger.info(`SUIT_SPIRIT_FAIL ${uid} error ${JSON.stringify(errorResponse)}`);
-    mmLog('SUIT_SPIRIT_FAIL', `${uid} error ${JSON.stringify(errorResponse)}`);
+    eLogger.fail(errorResponse);
     return;
   }
 }

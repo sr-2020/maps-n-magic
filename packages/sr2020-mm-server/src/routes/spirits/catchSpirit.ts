@@ -1,29 +1,45 @@
 import * as R from 'ramda';
-import { EPutSpiritRequested, ErrorResponse, GetSpirit, getSpiritLocationId, GetUserRecord, invalidRequestBody, isFullSpiritJar, validateCatchSpiritInternalRequest } from 'sr2020-mm-event-engine';
-import { createLogger, DecrementAttempt, GetCatcherState, getQrModelData, InnerApiRequest, mmLog, putSpiritInStorage, validateSpiritJarQrModelData } from 'sr2020-mm-server-event-engine';
-import shortid from 'shortid';
+import { 
+  EPutSpiritRequested, 
+  ErrorResponse, 
+  GetSpirit, 
+  getSpiritLocationId, 
+  GetUserRecord, 
+  invalidRequestBody, 
+  isFullSpiritJar, 
+  validateCatchSpiritInternalRequest 
+} from 'sr2020-mm-event-engine';
+import { 
+  createLogger, 
+  DecrementAttempt, 
+  GetCatcherState, 
+  getQrModelData, 
+  InnerApiRequest, 
+  putSpiritInStorage, 
+  validateSpiritJarQrModelData 
+} from 'sr2020-mm-server-event-engine';
+import { EndpointLogger, EndpointId } from './logUtils';
 
 const logger = createLogger('catchSpirit.ts');
 
 export const mainCatchSpirit = async (req1, res, next) => {
-  const uid = shortid.generate();
+  const eLogger = new EndpointLogger(logger, EndpointId.CATCH_SPIRIT);
   try {
     // logger.info('mainCatchSpirit')
     const req = req1 as InnerApiRequest;
     const { body } = req;
 
-    logger.info(`CATCH_SPIRIT_ATTEMPT ${uid} data ${JSON.stringify(body)}`);
-    mmLog('CATCH_SPIRIT_ATTEMPT', `${uid} data ${JSON.stringify(body)}`);
+    eLogger.attempt(body);
 
     if (!validateCatchSpiritInternalRequest(body)) {
       const errorResponse = invalidRequestBody(body, validateCatchSpiritInternalRequest.errors);
       res.status(400).json(errorResponse);
-      logger.info(`CATCH_SPIRIT_FAIL ${uid} error ${JSON.stringify(errorResponse)}`);
-      mmLog('CATCH_SPIRIT_FAIL', `${uid} error ${JSON.stringify(errorResponse)}`);
+      eLogger.fail(errorResponse);
       return;
     }
 
     const { characterId, qrId, spiritId } = body;
+    eLogger.setCharacterId(characterId);
 
     const catcherState = req.gameModel.get2<GetCatcherState>({
       type: 'catcherState',
@@ -36,8 +52,7 @@ export const mainCatchSpirit = async (req1, res, next) => {
         errorSubtitle: `Спелл spirit catcher для персонажа ${characterId} не активен`
       };
       res.status(400).json(errorResponse);
-      logger.info(`CATCH_SPIRIT_FAIL ${uid} error ${JSON.stringify(errorResponse)}`);
-      mmLog('CATCH_SPIRIT_FAIL', `${uid} error ${JSON.stringify(errorResponse)}`);
+      eLogger.fail(errorResponse);
       return;
     }
 
@@ -58,8 +73,7 @@ export const mainCatchSpirit = async (req1, res, next) => {
         errorSubtitle: `Дух с id ${spiritId} не найден`
       };
       res.status(400).json(errorResponse);
-      logger.info(`CATCH_SPIRIT_FAIL ${uid} error ${JSON.stringify(errorResponse)}`);
-      mmLog('CATCH_SPIRIT_FAIL', `${uid} error ${JSON.stringify(errorResponse)}`);
+      eLogger.fail(errorResponse);
       return;
     }
 
@@ -70,8 +84,7 @@ export const mainCatchSpirit = async (req1, res, next) => {
 
     if ('errorTitle' in validationRes) {
       res.status(500).json(validationRes);
-      logger.info(`CATCH_SPIRIT_FAIL ${uid} error ${JSON.stringify(validationRes)}`);
-      mmLog('CATCH_SPIRIT_FAIL', `${uid} error ${JSON.stringify(validationRes)}`);
+      eLogger.fail(validationRes);
       return;
     }
 
@@ -89,8 +102,7 @@ export const mainCatchSpirit = async (req1, res, next) => {
         errorSubtitle: `Персонаж с id ${characterId} не найден`
       };
       res.status(400).json(errorResponse);
-      logger.info(`CATCH_SPIRIT_FAIL ${uid} error ${JSON.stringify(errorResponse)}`);
-      mmLog('CATCH_SPIRIT_FAIL', `${uid} error ${JSON.stringify(errorResponse)}`);
+      eLogger.fail(errorResponse);
       return;
     }
 
@@ -110,8 +122,7 @@ export const mainCatchSpirit = async (req1, res, next) => {
         errorSubtitle: `Маг с id ${userRecord.id} в неизвестной локации`
       };
       res.status(400).json(errorResponse);
-      logger.info(`CATCH_SPIRIT_FAIL ${uid} error ${JSON.stringify(errorResponse)}`);
-      mmLog('CATCH_SPIRIT_FAIL', `${uid} error ${JSON.stringify(errorResponse)}`);
+      eLogger.fail(errorResponse);
       return;
     }
 
@@ -123,8 +134,7 @@ export const mainCatchSpirit = async (req1, res, next) => {
         errorSubtitle: `Дух с id ${spiritId} в неизвестной локации`
       };
       res.status(400).json(errorResponse);
-      logger.info(`CATCH_SPIRIT_FAIL ${uid} error ${JSON.stringify(errorResponse)}`);
-      mmLog('CATCH_SPIRIT_FAIL', `${uid} error ${JSON.stringify(errorResponse)}`);
+      eLogger.fail(errorResponse);
       return;
     }
 
@@ -141,8 +151,7 @@ export const mainCatchSpirit = async (req1, res, next) => {
     //     status: 'fail',
     //     message: 'Попытка не удалась'
     //   };
-    //   logger.info(`CATCH_SPIRIT_FAIL ${uid} error ${JSON.stringify(resBody)}`);
-    //   mmLog('CATCH_SPIRIT_FAIL', `${uid} error ${JSON.stringify(resBody)}`);
+    //   eLogger.fail(errorResponse);
     //   res.status(400).json(resBody);
     //   return;
     // }
@@ -153,8 +162,7 @@ export const mainCatchSpirit = async (req1, res, next) => {
         errorSubtitle: `В тотеме уже находится дух`
       };
       res.status(400).json(errorResponse);
-      logger.info(`CATCH_SPIRIT_FAIL ${uid} error ${JSON.stringify(errorResponse)}`);
-      mmLog('CATCH_SPIRIT_FAIL', `${uid} error ${JSON.stringify(errorResponse)}`);
+      eLogger.fail(errorResponse);
       return;
     }
 
@@ -177,8 +185,7 @@ export const mainCatchSpirit = async (req1, res, next) => {
         errorSubtitle: `Вероятность поимки ${catchProbability}%, выпавшее значение ${testValue.toFixed(1)}`
       };
       res.status(400).json(errorResponse);
-      logger.info(`CATCH_SPIRIT_FAIL ${uid} error ${JSON.stringify(errorResponse)}`);
-      mmLog('CATCH_SPIRIT_FAIL', `${uid} error ${JSON.stringify(errorResponse)}`);
+      eLogger.fail(errorResponse);
       return;
     }
 
@@ -195,9 +202,8 @@ export const mainCatchSpirit = async (req1, res, next) => {
         },
       }
     });
-    
-    logger.info(`CATCH_SPIRIT_SUCCESS ${uid} Character ${characterId} catch spirit ${spirit.id} ${spirit.name} in qr ${qrId}`);
-    mmLog('CATCH_SPIRIT_SUCCESS', `${uid} Character ${characterId} catch spirit ${spirit.id} ${spirit.name} in qr ${qrId}`);
+
+    eLogger.success(`catch spirit ${spirit.id} ${spirit.name} in qr ${qrId}`);
 
     // res.status(200).json(body);
     res.status(200).json({
@@ -212,8 +218,7 @@ export const mainCatchSpirit = async (req1, res, next) => {
       errorSubtitle: message 
     };
     res.status(500).json(errorResponse);
-    logger.info(`CATCH_SPIRIT_FAIL ${uid} error ${JSON.stringify(errorResponse)}`);
-    mmLog('CATCH_SPIRIT_FAIL', `${uid} error ${JSON.stringify(errorResponse)}`);
+    eLogger.fail(errorResponse);
     return;
   }
 }

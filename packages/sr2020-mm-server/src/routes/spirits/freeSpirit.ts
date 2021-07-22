@@ -1,29 +1,41 @@
-import { EPutSpiritRequested, ErrorResponse, GetSpirit, invalidRequestBody, isEmptySpiritJar, validateFreeSpiritInternalRequest } from "sr2020-mm-event-engine";
-import { createLogger, freeSpiritFromStorage, getQrModelData, InnerApiRequest, mmLog, validateSpiritJarQrModelData } from "sr2020-mm-server-event-engine";
+import { 
+  EPutSpiritRequested, 
+  ErrorResponse, 
+  GetSpirit, 
+  invalidRequestBody, 
+  isEmptySpiritJar, 
+  validateFreeSpiritInternalRequest 
+} from "sr2020-mm-event-engine";
+import { 
+  createLogger, 
+  freeSpiritFromStorage, 
+  getQrModelData, 
+  InnerApiRequest, 
+  validateSpiritJarQrModelData 
+} from "sr2020-mm-server-event-engine";
 
-import shortid from 'shortid';
+import { EndpointLogger, EndpointId } from './logUtils';
 
 const logger = createLogger('freeSpirit.ts');
 
 export const mainFreeSpirit = async (req1, res, next) => {
-  const uid = shortid.generate();
+  const eLogger = new EndpointLogger(logger, EndpointId.FREE_SPIRIT);
   try {
     // logger.info('mainCatchSpirit')
     const req = req1 as InnerApiRequest;
     const { body } = req;
 
-    logger.info(`FREE_SPIRIT_ATTEMPT ${uid} data ${JSON.stringify(body)}`);
-    mmLog('FREE_SPIRIT_ATTEMPT', `${uid} data ${JSON.stringify(body)}`);
+    eLogger.attempt(body);
 
     if (!validateFreeSpiritInternalRequest(body)) {
       const errorResponse = invalidRequestBody(body, validateFreeSpiritInternalRequest.errors);
       res.status(400).json(errorResponse);
-      logger.info(`FREE_SPIRIT_FAIL ${uid} error ${JSON.stringify(errorResponse)}`);
-      mmLog('FREE_SPIRIT_FAIL', `${uid} error ${JSON.stringify(errorResponse)}`);
+      eLogger.fail(errorResponse);
       return;
     }
 
     const { qrId, reason, characterId } = body;
+    eLogger.setCharacterId(characterId);
 
     const qrModelData1 = await getQrModelData(qrId);
 
@@ -31,8 +43,7 @@ export const mainFreeSpirit = async (req1, res, next) => {
 
     if ('errorTitle' in validationRes) {
       res.status(500).json(validationRes);
-      logger.info(`FREE_SPIRIT_FAIL ${uid} error ${JSON.stringify(validationRes)}`);
-      mmLog('FREE_SPIRIT_FAIL', `${uid} error ${JSON.stringify(validationRes)}`);
+      eLogger.fail(validationRes);
       return;
     }
 
@@ -44,8 +55,7 @@ export const mainFreeSpirit = async (req1, res, next) => {
         errorSubtitle: ``
       };
       res.status(400).json(errorResponse);
-      logger.info(`FREE_SPIRIT_FAIL ${uid} error ${JSON.stringify(errorResponse)}`);
-      mmLog('FREE_SPIRIT_FAIL', `${uid} error ${JSON.stringify(errorResponse)}`);
+      eLogger.fail(errorResponse);
       return;
     }
 
@@ -68,13 +78,11 @@ export const mainFreeSpirit = async (req1, res, next) => {
 
       if ('errorTitle' in errorResponse) {
         res.status(500).json(errorResponse);
-        logger.info(`FREE_SPIRIT_FAIL ${uid} error ${JSON.stringify(errorResponse)}`);
-        mmLog('FREE_SPIRIT_FAIL', `${uid} error ${JSON.stringify(errorResponse)}`);
+        eLogger.fail(errorResponse);
         return;
       }
 
-      logger.info(`FREE_SPIRIT_SUCCESS ${uid} Character ${characterId} free non existing spirit ${spiritId}`);
-      mmLog('FREE_SPIRIT_SUCCESS', `${uid} Character ${characterId} free non existing spirit ${spiritId}`);
+      eLogger.success(`free non existing spirit ${spiritId}`);
 
       res.status(200).json({
         status: 'success',
@@ -111,13 +119,11 @@ export const mainFreeSpirit = async (req1, res, next) => {
 
     if ('errorTitle' in errorResponse) {
       res.status(500).json(errorResponse);
-      logger.info(`FREE_SPIRIT_FAIL ${uid} error ${JSON.stringify(errorResponse)}`);
-      mmLog('FREE_SPIRIT_FAIL', `${uid} error ${JSON.stringify(errorResponse)}`);
+      eLogger.fail(errorResponse);
       return;
     }
 
-    logger.info(`FREE_SPIRIT_SUCCESS ${uid} Character ${characterId} free spirit ${spirit.id} ${spirit.name}`);
-    mmLog('FREE_SPIRIT_SUCCESS', `${uid} Character ${characterId} free spirit ${spirit.id} ${spirit.name}`);
+    eLogger.success(`free spirit ${spirit.id} ${spirit.name}`);
 
     res.status(200).json({
       status: 'success',
@@ -132,8 +138,7 @@ export const mainFreeSpirit = async (req1, res, next) => {
       errorSubtitle: message 
     };
     res.status(500).json(errorResponse);
-    logger.info(`FREE_SPIRIT_FAIL ${uid} error ${JSON.stringify(errorResponse)}`);
-    mmLog('FREE_SPIRIT_FAIL', `${uid} error ${JSON.stringify(errorResponse)}`);
+    eLogger.fail(errorResponse);
     return;
   }
 }

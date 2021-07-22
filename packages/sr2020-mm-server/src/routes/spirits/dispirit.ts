@@ -17,44 +17,39 @@ import {
   SpiritState
 } from 'sr2020-mm-event-engine';
 import { 
-  clinicalDeath,
-  clinicalDeathCombo,
   createLogger, 
   dispirit, 
   freeSpiritFromStorage, 
   getQrModelData, 
   InnerApiRequest, 
-  mmLog, 
   playerMessages, 
   putSpiritInStorage, 
   suitSpirit, 
   validateBodyStorageQrModelData, 
   validateSpiritJarQrModelData, 
-  wound
 } from 'sr2020-mm-server-event-engine';
-import shortid from 'shortid';
+import { EndpointLogger, EndpointId } from './logUtils';
 
 const logger = createLogger('dispirit.ts');
 
 export const mainDispirit = async (req1, res, next) => {
-  const uid = shortid.generate();
+  const eLogger = new EndpointLogger(logger, EndpointId.DISPIRIT);
   try {
     // logger.info('mainDispirit')
     const req = req1 as InnerApiRequest;
     const { body } = req;
 
-    logger.info(`DISPIRIT_ATTEMPT ${uid} data ${JSON.stringify(body)}`);
-    mmLog('DISPIRIT_ATTEMPT', `${uid} data ${JSON.stringify(body)}`);
+    eLogger.attempt(body);
 
     if (!validateDispiritInternalRequest(body)) {
       const errorResponse = invalidRequestBody(body, validateDispiritInternalRequest.errors);
       res.status(400).json(errorResponse);
-      logger.info(`DISPIRIT_FAIL ${uid} error ${JSON.stringify(errorResponse)}`);
-      mmLog('DISPIRIT_FAIL', `${uid} error ${JSON.stringify(errorResponse)}`);
+      eLogger.fail(errorResponse);
       return;
     }
 
     const { characterId, spiritJarId, bodyStorageId, messageBody } = body;
+    eLogger.setCharacterId(characterId);
 
     // // copied from player-server isSpiritJarValid
 
@@ -137,8 +132,7 @@ export const mainDispirit = async (req1, res, next) => {
         errorSubtitle: JSON.stringify(body)
       };
       res.status(400).json(errorResponse);
-      logger.info(`DISPIRIT_FAIL ${uid} error ${JSON.stringify(errorResponse)}`);
-      mmLog('DISPIRIT_FAIL', `${uid} error ${JSON.stringify(errorResponse)}`);
+      eLogger.fail(errorResponse);
       return;
     }
 
@@ -146,7 +140,7 @@ export const mainDispirit = async (req1, res, next) => {
 
     if (state.status !== 'Suited') {
       // should never happen
-      throw new Error(`${uid} Spirit state status is not Suited`);
+      throw new Error(`${eLogger.uid} Spirit state status is not Suited`);
     }
 
     const shouldSaveSpiritInJar = spiritJarId !== null && state.suitStatus === 'normal';
@@ -201,8 +195,7 @@ export const mainDispirit = async (req1, res, next) => {
       }));
     }
 
-    logger.info(`DISPIRIT_SUCCESS ${uid} Character ${characterId} dispirit ${spirit.id} ${spirit.name}, consequenceStatus ${consequenceStatus}`);
-    mmLog('DISPIRIT_SUCCESS', `${uid} Character ${characterId} dispirit ${spirit.id} ${spirit.name}, consequenceStatus ${consequenceStatus}`);
+    eLogger.success(`dispirit ${spirit.id} ${spirit.name}, consequenceStatus ${consequenceStatus}`);
 
     res.status(200).json(consequenceStatus);
   } catch(error) {
@@ -213,8 +206,7 @@ export const mainDispirit = async (req1, res, next) => {
       errorSubtitle: message 
     };
     res.status(500).json(errorResponse);
-    logger.info(`DISPIRIT_FAIL ${uid} error ${JSON.stringify(errorResponse)}`);
-    mmLog('DISPIRIT_FAIL', `${uid} error ${JSON.stringify(errorResponse)}`);
+    eLogger.fail(errorResponse);
     return;
   }
 }
