@@ -112,13 +112,19 @@ export class InnerBeaconLayer extends Component<
       id, label,
     });
     this.setIcon(beacon, beaconRecord);
-    beacon.on('mouseover', function (this: Beacon, e) {
-      beacon.bindTooltip(t('markerTooltip', { name: this.options.label }));
-      this.openTooltip();
+    beacon.bindTooltip(`${id}`, {
+      permanent: true,
     });
-    beacon.on('mouseout', function (this: Beacon, e) {
-      this.closeTooltip();
-    });
+    // beacon.bindTooltip(`${id} ${label}`, {
+    //   permanent: true,
+    // });
+    // beacon.on('mouseover', function (this: Beacon, e) {
+    //   beacon.bindTooltip(t('markerTooltip', { name: this.options.label }));
+    //   this.openTooltip();
+    // });
+    // beacon.on('mouseout', function (this: Beacon, e) {
+    //   this.closeTooltip();
+    // });
 
     beacon.on('click', onBeaconClick);
     beacon.on('pm:edit', onBeaconEdit);
