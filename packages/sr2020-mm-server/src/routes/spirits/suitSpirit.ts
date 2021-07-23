@@ -69,7 +69,7 @@ export const mainSuitSpirit = async (req1, res, next) => {
         errorSubtitle: '' 
       };
       res.status(400).json(errorResponse);
-      eLogger.fail(errorResponse);
+      eLogger.fail(errorResponse, errorResponse.errorTitle);
       return;
     }
 
@@ -86,7 +86,7 @@ export const mainSuitSpirit = async (req1, res, next) => {
         errorSubtitle: '' 
       };
       res.status(400).json(errorResponse);
-      eLogger.fail(errorResponse);
+      eLogger.fail(errorResponse, errorResponse.errorTitle);
       return;
     }
 
@@ -109,7 +109,7 @@ export const mainSuitSpirit = async (req1, res, next) => {
         errorSubtitle: '' 
       };
       res.status(400).json(errorResponse);
-      eLogger.fail(errorResponse);
+      eLogger.fail(errorResponse, errorResponse.errorTitle);
       return;
     }
 
@@ -150,7 +150,7 @@ export const mainSuitSpirit = async (req1, res, next) => {
     eLogger.success(`suit spirit ${spirit.id} ${spirit.name}, data ${JSON.stringify({
       suitStartTime,
       suitDuration
-    })}`);
+    })}`, `Дух ${spirit.id} ${spirit.name} надет на ${suitDuration / 60000} минут`);
 
     res.status(200).json(true);
   } catch(error) {
@@ -161,7 +161,7 @@ export const mainSuitSpirit = async (req1, res, next) => {
       errorSubtitle: message 
     };
     res.status(500).json(errorResponse);
-    eLogger.fail(errorResponse);
+    eLogger.fail(errorResponse, errorResponse.errorTitle);
     return;
   }
 }

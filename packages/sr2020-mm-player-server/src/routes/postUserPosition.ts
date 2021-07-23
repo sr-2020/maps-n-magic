@@ -26,7 +26,8 @@ router.post('/postUserPosition', async (req1, res, next) => {
       },
       body: JSON.stringify({
         characterId: req.userData.modelId,
-        ssid: item.ssid
+        ssid: item.ssid,
+        locationName: item.name
       })
     });
     res.sendStatus(200);

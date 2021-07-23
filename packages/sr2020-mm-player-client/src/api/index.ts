@@ -2,7 +2,7 @@ import {
   ErrorResponse, 
   SpiritJarQr, 
   validateErrorResponse, 
-  consequenceStatus,
+  ConsequenceStatus,
   // SpiritDataForQrValidation, 
   Spirit 
 } from "sr2020-mm-event-engine";
@@ -116,7 +116,7 @@ export async function dispirit(
   bodyStorageQrString: string, 
   spiritJarQrString: string | null,
   messageBody: string
-): Promise<ErrorResponse | consequenceStatus> {
+): Promise<ErrorResponse | ConsequenceStatus> {
   const res = await fetch('/api/dispirit', {
     method: 'POST',
     headers: {

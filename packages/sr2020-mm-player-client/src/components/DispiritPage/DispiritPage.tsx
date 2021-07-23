@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { CharacterModelData2, isErrorResponse } from 'sr2020-mm-event-engine';
+import { CharacterModelData2, isErrorResponse, consequenceTexts } from 'sr2020-mm-event-engine';
 import { dispirit, isBodyStorageValid, isSpiritJarValid } from '../../api';
 import { QrScannerWrapper } from '../QrScannerWrapper';
 import './DispiritPage.css';
@@ -29,12 +29,6 @@ type SpiritJarStatus2 = {
   message: string;
 } | {
   status: 'unknown';
-};
-
-const consequenceTexts = {
-  'noConsequences': 'Дух снят без негативных последствий',
-  'woundConsequence': 'При снятии духа вы были ранены. Вычтите 2 хита.',
-  'deathConsequence': 'Вы сняли духа слишком поздно и попали в клиническую смерть',
 };
 
 export function DispiritPage(props: DispiritPageProps) {

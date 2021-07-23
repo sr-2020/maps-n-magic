@@ -23,12 +23,12 @@ export const mainPostUserPosition = async (req1, res, next) => {
   const { body } = req;
   
   eLogger.attempt(body);
-  const { characterId, ssid } = body;
+  const { characterId, ssid, locationName } = body;
   eLogger.setCharacterId(characterId);
 
   try {
     await innerPostUserPosition2(characterId, ssid);
-    eLogger.success(`ssid ${ssid}`);
+    eLogger.success(`ssid ${ssid} locationName ${locationName}`, `Вы перешли в "${locationName}".`);
     res.sendStatus(200);
   } catch (error) {
     const message = `${error} ${JSON.stringify(error)}`;

@@ -55,7 +55,7 @@ export const mainFreeSpirit = async (req1, res, next) => {
         errorSubtitle: ``
       };
       res.status(400).json(errorResponse);
-      eLogger.fail(errorResponse);
+      eLogger.fail(errorResponse, errorResponse.errorTitle);
       return;
     }
 
@@ -82,7 +82,7 @@ export const mainFreeSpirit = async (req1, res, next) => {
         return;
       }
 
-      eLogger.success(`free non existing spirit ${spiritId}`);
+      eLogger.success(`free non existing spirit ${spiritId}`, `Не существующий дух ${spiritId} освобождён`);
 
       res.status(200).json({
         status: 'success',
@@ -123,7 +123,7 @@ export const mainFreeSpirit = async (req1, res, next) => {
       return;
     }
 
-    eLogger.success(`free spirit ${spirit.id} ${spirit.name}`);
+    eLogger.success(`free spirit ${spirit.id} ${spirit.name}`, `Дух ${spirit.id} ${spirit.name} освобожден`);
 
     res.status(200).json({
       status: 'success',
@@ -138,7 +138,7 @@ export const mainFreeSpirit = async (req1, res, next) => {
       errorSubtitle: message 
     };
     res.status(500).json(errorResponse);
-    eLogger.fail(errorResponse);
+    eLogger.fail(errorResponse, errorResponse.errorTitle);
     return;
   }
 }

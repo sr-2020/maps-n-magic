@@ -12,6 +12,7 @@ export * from './logger';
 export * from './characterWatcher';
 export * from './api/spirits/spirits';
 export * from './api/spirits/mmLog';
+export * from './api/spirits/mmUserLog';
 export * from './api/spirits/playerMessages';
 export * from './api/position';
 

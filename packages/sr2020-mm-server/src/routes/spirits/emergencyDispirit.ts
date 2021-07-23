@@ -41,7 +41,7 @@ export const mainEmergencyDispirit = async (req1, res, next) => {
         errorSubtitle: JSON.stringify(body)
       };
       res.status(400).json(errorResponse);
-      eLogger.fail(errorResponse);
+      eLogger.fail(errorResponse, errorResponse.errorTitle);
       return;
     }
 
@@ -52,7 +52,7 @@ export const mainEmergencyDispirit = async (req1, res, next) => {
         errorSubtitle: JSON.stringify(body)
       };
       res.status(400).json(errorResponse);
-      eLogger.fail(errorResponse);
+      eLogger.fail(errorResponse, errorResponse.errorTitle);
       return;
     }
 
@@ -70,7 +70,10 @@ export const mainEmergencyDispirit = async (req1, res, next) => {
       }
     });
 
-    eLogger.success(`has emergency dispirit ${spirit.id} ${spirit.name}`);
+    eLogger.success(
+      `has emergency dispirit ${spirit.id} ${spirit.name}`,
+      `Дух ${spirit.id} ${spirit.name} уничтожен`
+    );
 
     res.status(200).json(true);
   } catch(error) {
@@ -81,7 +84,7 @@ export const mainEmergencyDispirit = async (req1, res, next) => {
       errorSubtitle: message 
     };
     res.status(500).json(errorResponse);
-    eLogger.fail(errorResponse);
+    eLogger.fail(errorResponse, errorResponse.errorTitle);
     return;
   }
 }

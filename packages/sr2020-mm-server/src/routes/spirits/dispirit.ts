@@ -13,7 +13,8 @@ import {
   validateCatchSpiritInternalRequest, 
   validateDispiritInternalRequest, 
   validateSuitSpiritInternalRequest,
-  consequenceStatus,
+  ConsequenceStatus,
+  consequenceTexts,
   SpiritState
 } from 'sr2020-mm-event-engine';
 import { 
@@ -132,7 +133,7 @@ export const mainDispirit = async (req1, res, next) => {
         errorSubtitle: JSON.stringify(body)
       };
       res.status(400).json(errorResponse);
-      eLogger.fail(errorResponse);
+      eLogger.fail(errorResponse, errorResponse.errorTitle);
       return;
     }
 
@@ -176,7 +177,7 @@ export const mainDispirit = async (req1, res, next) => {
       }
     });
 
-    let consequenceStatus: consequenceStatus = 'noConsequences';
+    let consequenceStatus: ConsequenceStatus = 'noConsequences';
     if (state.suitStatus !== 'normal') {
       const dateNow = Date.now();
       const { suitStatusChangeTime } = state;
@@ -195,7 +196,10 @@ export const mainDispirit = async (req1, res, next) => {
       }));
     }
 
-    eLogger.success(`dispirit ${spirit.id} ${spirit.name}, consequenceStatus ${consequenceStatus}`);
+    eLogger.success(
+      `dispirit ${spirit.id} ${spirit.name}, consequenceStatus ${consequenceStatus}`,
+      `Дух ${spirit.id} ${spirit.name} снят, последствия "${consequenceTexts[consequenceStatus]}"`
+    );
 
     res.status(200).json(consequenceStatus);
   } catch(error) {
@@ -206,7 +210,7 @@ export const mainDispirit = async (req1, res, next) => {
       errorSubtitle: message 
     };
     res.status(500).json(errorResponse);
-    eLogger.fail(errorResponse);
+    eLogger.fail(errorResponse, errorResponse.errorTitle);
     return;
   }
 }

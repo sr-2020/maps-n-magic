@@ -52,7 +52,7 @@ export const mainCatchSpirit = async (req1, res, next) => {
         errorSubtitle: `Спелл spirit catcher для персонажа ${characterId} не активен`
       };
       res.status(400).json(errorResponse);
-      eLogger.fail(errorResponse);
+      eLogger.fail(errorResponse, errorResponse.errorTitle);
       return;
     }
 
@@ -73,7 +73,7 @@ export const mainCatchSpirit = async (req1, res, next) => {
         errorSubtitle: `Дух с id ${spiritId} не найден`
       };
       res.status(400).json(errorResponse);
-      eLogger.fail(errorResponse);
+      eLogger.fail(errorResponse, errorResponse.errorTitle);
       return;
     }
 
@@ -102,7 +102,7 @@ export const mainCatchSpirit = async (req1, res, next) => {
         errorSubtitle: `Персонаж с id ${characterId} не найден`
       };
       res.status(400).json(errorResponse);
-      eLogger.fail(errorResponse);
+      eLogger.fail(errorResponse, errorResponse.errorTitle);
       return;
     }
 
@@ -122,7 +122,7 @@ export const mainCatchSpirit = async (req1, res, next) => {
         errorSubtitle: `Маг с id ${userRecord.id} в неизвестной локации`
       };
       res.status(400).json(errorResponse);
-      eLogger.fail(errorResponse);
+      eLogger.fail(errorResponse, errorResponse.errorTitle);
       return;
     }
 
@@ -134,7 +134,7 @@ export const mainCatchSpirit = async (req1, res, next) => {
         errorSubtitle: `Дух с id ${spiritId} в неизвестной локации`
       };
       res.status(400).json(errorResponse);
-      eLogger.fail(errorResponse);
+      eLogger.fail(errorResponse, errorResponse.errorTitle);
       return;
     }
 
@@ -162,7 +162,7 @@ export const mainCatchSpirit = async (req1, res, next) => {
         errorSubtitle: `В тотеме уже находится дух`
       };
       res.status(400).json(errorResponse);
-      eLogger.fail(errorResponse);
+      eLogger.fail(errorResponse, errorResponse.errorTitle);
       return;
     }
 
@@ -181,11 +181,11 @@ export const mainCatchSpirit = async (req1, res, next) => {
 
     if (testValue > catchProbability) {
       const errorResponse: ErrorResponse = {
-        errorTitle: 'Попытка поймать духа не удалась',
+        errorTitle: 'Поймать духа не удалось',
         errorSubtitle: `Вероятность поимки ${catchProbability}%, выпавшее значение ${testValue.toFixed(1)}`
       };
       res.status(400).json(errorResponse);
-      eLogger.fail(errorResponse);
+      eLogger.fail(errorResponse, errorResponse.errorSubtitle);
       return;
     }
 
@@ -203,7 +203,10 @@ export const mainCatchSpirit = async (req1, res, next) => {
       }
     });
 
-    eLogger.success(`catch spirit ${spirit.id} ${spirit.name} in qr ${qrId}`);
+    eLogger.success(
+      `catch spirit ${spirit.id} ${spirit.name} in qr ${qrId}`, 
+      `Дух ${spirit.id} ${spirit.name} пойман в тотем ${qrId}`
+    );
 
     // res.status(200).json(body);
     res.status(200).json({
@@ -218,7 +221,7 @@ export const mainCatchSpirit = async (req1, res, next) => {
       errorSubtitle: message 
     };
     res.status(500).json(errorResponse);
-    eLogger.fail(errorResponse);
+    eLogger.fail(errorResponse, errorResponse.errorTitle);
     return;
   }
 }
