@@ -1,6 +1,6 @@
 import { GMLogger } from "sr2020-mm-event-engine";
 
-import { winstonLogger } from './gameModel/winstonLogger';
+import { winstonLogger } from '../gameModel/winstonLogger';
 
 const logger: GMLogger = winstonLogger;
 

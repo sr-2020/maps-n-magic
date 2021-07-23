@@ -16,9 +16,10 @@ import {
   getQrModelData, 
   InnerApiRequest, 
   putSpiritInStorage, 
+  EndpointId, 
+  EndpointLogger, 
   validateSpiritJarQrModelData 
 } from 'sr2020-mm-server-event-engine';
-import { EndpointLogger, EndpointId } from './logUtils';
 
 const logger = createLogger('catchSpirit.ts');
 

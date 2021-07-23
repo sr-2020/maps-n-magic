@@ -1,4 +1,4 @@
-import { createLogger } from "../../logger";
+import { createLogger } from "../../utils";
 import { pool } from "../pgPool";
 
 const logger = createLogger('mmUserLog.ts');

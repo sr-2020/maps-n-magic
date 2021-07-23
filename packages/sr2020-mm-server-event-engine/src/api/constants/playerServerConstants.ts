@@ -1,5 +1,5 @@
 import assert from "assert";
-import { createLogger } from "../../logger";
+import { createLogger } from "../../utils";
 import { getEnvVariables, getPrintObject, mergeEnvVariables } from "./envUtils";
 import { GenericServerConstants, getGenericEnvVariables, getGenericServerConstants } from "./genericServerConstants";
 

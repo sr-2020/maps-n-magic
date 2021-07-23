@@ -8,7 +8,7 @@ export * from './services/SpiritCatcherService';
 export * from './services/SpiritCatcherUpdateService';
 export * from './types';
 export * from './api';
-export * from './logger';
+export * from './utils';
 export * from './characterWatcher';
 export * from './api/spirits/spirits';
 export * from './api/spirits/mmLog';

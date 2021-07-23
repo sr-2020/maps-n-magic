@@ -1,7 +1,7 @@
 import Ajv, { JSONSchemaType } from "ajv";
 import * as R from 'ramda';
 import { BodyStorageQr, ErrorResponse, GameModel, GetFeature, GetSpiritFraction, Spirit, SpiritJarQr, validateBodyStorageQr, validateCommonQr, validateSpiritJarQr } from "sr2020-mm-event-engine";
-import { createLogger } from "../logger";
+import { createLogger } from "../utils";
 
 const logger = createLogger('server-ee/spirits.ts');
 

@@ -2,7 +2,7 @@ import { PubSub, Message } from '@google-cloud/pubsub';
 import Ajv, { JSONSchemaType } from "ajv";
 import { rescueServiceSubscriptionName } from "../constants";
 import { BodyConditionValues } from "sr2020-mm-event-engine";
-import { createLogger } from '../../logger';
+import { createLogger } from '../../utils';
 
 const logger = createLogger('listenHealthChanges.ts');
 

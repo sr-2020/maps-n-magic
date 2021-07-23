@@ -10,7 +10,7 @@ import {
   validateGenericRow, 
   validateGenericRows
 } from "./genericRowValidation";
-import { createLogger } from '../../logger';
+import { createLogger } from '../../utils';
 
 const logger = createLogger('spiritRoutes.ts');
 

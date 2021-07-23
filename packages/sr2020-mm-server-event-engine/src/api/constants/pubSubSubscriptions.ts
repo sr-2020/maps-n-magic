@@ -1,4 +1,4 @@
-import { createLogger } from "../../logger";
+import { createLogger } from "../../utils";
 
 const logger = createLogger('pubSubSubscriptions.ts');
 

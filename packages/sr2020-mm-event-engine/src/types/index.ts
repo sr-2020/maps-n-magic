@@ -116,7 +116,7 @@ export interface CharacterHealthStatesByLocation {
 }
 
 
-export interface SpellCast {
+export interface RawSpellCast {
   // timestamp: moment.utc().valueOf(), // Unix time в миллисекундах
   timestamp: number;
   // // id: 'stone-skin', // id спелла из сводной таблички
@@ -152,6 +152,10 @@ export interface SpellCast {
   // // целевой персонаж (если данная способность имеет целевого персонажа),
   // // иначе пусто
   // targetCharacterId: '10246',
+}
+
+export interface SpellCast extends RawSpellCast {
+  uid: string;
 }
 
 // export type RectLatLngs = L.LatLng[][] | L.LatLng[] | L.LatLng[][][];

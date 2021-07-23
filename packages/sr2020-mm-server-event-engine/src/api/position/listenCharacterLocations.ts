@@ -1,7 +1,7 @@
 // character_location_change
 import { PubSub, Message } from '@google-cloud/pubsub';
 import Ajv, { JSONSchemaType } from "ajv";
-import { createLogger } from '../../logger';
+import { createLogger } from '../../utils';
 import { charLocChangeSubscriptionName } from "../constants";
 
 const logger = createLogger('listenCharacterLocations.ts');

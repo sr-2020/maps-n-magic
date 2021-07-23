@@ -1,8 +1,8 @@
 import { PubSub, Message } from '@google-cloud/pubsub';
-import { SpellCast } from "sr2020-mm-event-engine";
+import { RawSpellCast, SpellCast } from "sr2020-mm-event-engine";
 import Ajv, { JSONSchemaType } from "ajv";
 import { manaOceanSpellCastSubscriptionName } from "../constants";
-import { createLogger } from '../../logger';
+import { createLogger } from '../../utils';
 
 const logger = createLogger('listenSpellCasts.ts');
 
@@ -52,7 +52,7 @@ const ajv = new Ajv({
 //   // targetCharacterId: '10246',
 // }
 
-const spellCastSchema: JSONSchemaType<SpellCast> = {
+const rawSpellCastSchema: JSONSchemaType<RawSpellCast> = {
   type: "object",
   properties: {
     timestamp: {type: "integer"},
@@ -82,14 +82,14 @@ const spellCastSchema: JSONSchemaType<SpellCast> = {
   // additionalProperties: false,
 };
 
-export const validateSpellCast = ajv.compile(spellCastSchema);
+export const validateRawSpellCast = ajv.compile(rawSpellCastSchema);
 
 
 // Creates a client; cache this for further use
 const pubSubClient = new PubSub();
 
 export function listenSpellCasts(
-  callback: (spellCast: SpellCast) => Promise<void>, 
+  callback: (spellCast: RawSpellCast) => Promise<void>, 
   simulateMessages: boolean = false
 ) {
 
@@ -102,7 +102,7 @@ export function listenSpellCasts(
   const messageHandler = (message: Message) => {
     // logger.info(`Received message ${message.id}:`);
     // logger.info(`\tData: ${message.data}`);
-    const parsedData: SpellCast = JSON.parse(message.data.toString());
+    const parsedData: RawSpellCast = JSON.parse(message.data.toString());
     // logger.info(`listenSpellCasts data: ${JSON.stringify(parsedData, null, '  ')}`);
     // logger.info(`\tAttributes: ${message.attributes}`);
     messageCount += 1;
@@ -110,8 +110,8 @@ export function listenSpellCasts(
     // "Ack" (acknowledge receipt of) the message
     message.ack();
 
-    if (!validateSpellCast(parsedData)) {
-      logger.error(`Received invalid listenSpellCasts. ${JSON.stringify(parsedData)} ${JSON.stringify(validateSpellCast.errors)}`);
+    if (!validateRawSpellCast(parsedData)) {
+      logger.error(`Received invalid listenSpellCasts. ${JSON.stringify(parsedData)} ${JSON.stringify(validateRawSpellCast.errors)}`);
     } else {
       // logger.info('listenSpellCasts validation OK');
     }

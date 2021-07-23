@@ -1,5 +1,5 @@
 import { Pool } from "pg";
-import { createLogger } from "../logger";
+import { createLogger } from "../utils";
 
 const logger = createLogger('pgPool.ts');
 

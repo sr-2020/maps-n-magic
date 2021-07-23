@@ -91,7 +91,7 @@ import {
   SpiritRouteProvider,
   SpiritPhraseProvider
 } from '../api/spirits';
-import { createLogger } from '../logger';
+import { createLogger } from '../utils';
 import { FeatureProvider } from '../api/features';
 import { ModelManagetLocInitializer } from '../services/ModelManagetLocInitializer';
 

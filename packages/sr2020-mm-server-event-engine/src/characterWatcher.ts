@@ -1,7 +1,7 @@
 import * as R from 'ramda';
 import { EventEmitter } from 'events';
 import { getCharacterModelData } from './api';
-import { createLogger } from './logger';
+import { createLogger } from './utils';
 import { CharacterModelData, validateCharacterModelData } from 'sr2020-mm-event-engine';
 
 // const CHARACTER_UPDATE_INTERVAL_MILLIS = 60000;

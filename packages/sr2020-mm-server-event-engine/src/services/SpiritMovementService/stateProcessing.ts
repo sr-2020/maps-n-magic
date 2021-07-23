@@ -13,7 +13,7 @@ import {
 } from 'sr2020-mm-event-engine';
 import { clinicalDeathCombo, zeroSpiritAbilities } from '../../api/characterModel';
 import { mmLog } from '../../api/spirits/mmLog';
-import { createLogger } from '../../logger';
+import { createLogger } from '../../utils';
 
 import { SpiritRouteContext, CurRouteSearchRes } from "./types";
 

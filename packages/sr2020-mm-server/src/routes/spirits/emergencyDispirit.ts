@@ -7,10 +7,11 @@ import {
 } from 'sr2020-mm-event-engine';
 import { 
   createLogger, 
+  EndpointId, 
+  EndpointLogger, 
   InnerApiRequest, 
   zeroSpiritAbilities
 } from 'sr2020-mm-server-event-engine';
-import { EndpointLogger, EndpointId } from './logUtils';
 
 const logger = createLogger('emergencyDispirit.ts');
 

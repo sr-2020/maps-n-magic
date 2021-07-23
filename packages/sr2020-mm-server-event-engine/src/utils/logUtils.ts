@@ -1,6 +1,8 @@
 import { ErrorResponse, GMLogger } from "sr2020-mm-event-engine";
-import { createLogger, mmLog, mmUserLog } from "sr2020-mm-server-event-engine";
 import shortid from 'shortid';
+import { createLogger } from "./logger";
+import { mmLog } from "../api/spirits/mmLog";
+import { mmUserLog } from "../api/spirits/mmUserLog";
 
 const logger = createLogger('logUtils.ts');
 

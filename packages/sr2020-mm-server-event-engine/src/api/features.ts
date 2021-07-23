@@ -1,6 +1,6 @@
 import fetch from 'isomorphic-fetch';
 
-import { createLogger } from "../logger";
+import { createLogger } from "../utils";
 
 import { 
   Feature,

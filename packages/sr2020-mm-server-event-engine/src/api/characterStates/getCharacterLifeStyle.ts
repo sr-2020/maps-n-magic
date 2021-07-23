@@ -6,7 +6,7 @@ import {
 } from 'sr2020-mm-event-engine';
 
 import { mainServerConstants } from '../constants';
-import { createLogger } from '../../logger';
+import { createLogger } from '../../utils';
 
 const logger = createLogger('getCharacterLifeStyle.ts');
 

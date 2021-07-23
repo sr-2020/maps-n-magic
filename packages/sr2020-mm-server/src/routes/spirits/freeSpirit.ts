@@ -11,10 +11,10 @@ import {
   freeSpiritFromStorage, 
   getQrModelData, 
   InnerApiRequest, 
-  validateSpiritJarQrModelData 
+  validateSpiritJarQrModelData,
+  EndpointId, 
+  EndpointLogger, 
 } from "sr2020-mm-server-event-engine";
-
-import { EndpointLogger, EndpointId } from './logUtils';
 
 const logger = createLogger('freeSpirit.ts');
 

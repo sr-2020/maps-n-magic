@@ -8,7 +8,7 @@ import { pool } from "../pgPool";
 import {
   validateGenericRows,
 } from "./genericRowValidation";
-import { createLogger } from '../../logger';
+import { createLogger } from '../../utils';
 
 const logger = createLogger('spiritFractions.ts');
 
