@@ -133,6 +133,8 @@ export const mainSuitSpirit = async (req1, res, next) => {
       props: {
         state: {
           status: 'Suited',
+          spiritId: spirit.id,
+          spiritName: spirit.name,
           characterId,
           suitStartTime,
           suitDuration,

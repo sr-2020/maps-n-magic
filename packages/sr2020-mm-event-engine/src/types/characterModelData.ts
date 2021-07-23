@@ -49,6 +49,7 @@ interface AddedPassiveAbility {
 
 export interface Sr2020Character {
   modelId: string;
+  name: string;
   currentBody: BodyType;
   healthState: HealthState;
   metarace: MetaRace;
@@ -121,6 +122,7 @@ const sr2020CharacterSchema: JSONSchemaType<Sr2020Character> = {
   type: 'object',
   properties: {
     'modelId': { type: 'string' },
+    'name': { type: 'string' },
     'currentBody': bodyTypeSchema,
     'healthState': healthStateSchema,
     'metarace': metaRaceSchema,
@@ -141,6 +143,7 @@ const sr2020CharacterSchema: JSONSchemaType<Sr2020Character> = {
     'currentBody', 
     'healthState', 
     'modelId', 
+    'name', 
     'metarace', 
     'activeAbilities', 
     'passiveAbilities',

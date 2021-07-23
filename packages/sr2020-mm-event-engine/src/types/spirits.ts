@@ -45,6 +45,8 @@ export interface InJarState {
 
 export interface SuitedState {
   status: typeof SpiritStatus.Suited;
+  spiritId: number;
+  spiritName: string;
   characterId: number;
   suitStartTime: number;
   suitDuration: number;

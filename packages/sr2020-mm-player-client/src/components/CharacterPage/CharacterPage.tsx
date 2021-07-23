@@ -67,10 +67,22 @@ export function CharacterPage(props: CharacterPageProps) {
         </div>
       }
       <div className="tw-mb-2">
-        <span className="tw-w-24 tw-inline-block">Тело</span><span>{bodyTypeLabel[characterData.workModel.currentBody]}</span>
+        <span className="tw-w-24 tw-inline-block">Имя</span>
+        <span>{characterData.workModel.name}</span>
       </div>
       <div className="tw-mb-2">
-        <span className="tw-w-24 tw-inline-block">Состояние</span><span>{healthStateLabel[characterData.workModel.healthState]}</span>
+        <span className="tw-w-24 tw-inline-block tw-align-top">Тело</span>
+        <div className="tw-inline-block">
+          <div>{bodyTypeLabel[characterData.workModel.currentBody]}</div>
+          {
+            characterData.spiritSuitState !== undefined &&
+            <div>дух {characterData.spiritSuitState.spiritId} {characterData.spiritSuitState.spiritName}</div>
+          }
+        </div>
+      </div>
+      <div className="tw-mb-2">
+        <span className="tw-w-24 tw-inline-block">Состояние</span>
+        <span>{healthStateLabel[characterData.workModel.healthState]}</span>
       </div>
     </div>
   );
