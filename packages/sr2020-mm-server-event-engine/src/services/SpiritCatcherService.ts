@@ -18,6 +18,7 @@ import {
 } from 'sr2020-mm-event-engine';
 import { getCharacterModelData } from '../api';
 import { mmLog } from '../api/spirits/mmLog';
+import { logCharacterAction } from '../utils';
 
 export type CatcherStatesArg = {
   catcherStates: CatcherStates
@@ -107,8 +108,7 @@ export class SpiritCatcherService extends AbstractService<SpiritCatcherServiceCo
     if (data.id !== Spell.SpiritCatcher) {
       return;
     }
-    this.logger.info('SPELL_CAST_SPIRIT_CATCHER', JSON.stringify(data));
-    mmLog('SPELL_CAST_SPIRIT_CATCHER', JSON.stringify(data));
+
     const { characterId, power } = data;
     
     const characterData = await getCharacterModelData(Number(characterId));
@@ -121,10 +121,12 @@ export class SpiritCatcherService extends AbstractService<SpiritCatcherServiceCo
     const durationMillis = power * 5 * 60000;
     const hasSpiritFeed = hasAbility(characterData, Ability.SpiritFeed);
     const hasSpiritKnown = hasAbility(characterData, Ability.SpiritKnown);
-    const catchProbability = power * 20
+    const catchProbability = Math.min(
+      power * 20
       + (hasSpiritFeed ? 20 : 0)
-      + (hasSpiritKnown ? 10 : 0)
-    ;
+      + (hasSpiritKnown ? 10 : 0),
+      100
+    );
 
     const catcherData: CatcherData = {
       startTime: Date.now(),
@@ -133,8 +135,16 @@ export class SpiritCatcherService extends AbstractService<SpiritCatcherServiceCo
       attemptNumber: 3
     };
     this.catcherStates[characterId] = catcherData;
-    this.logger.info(`SPIRIT_CATCHER_SPELL character ${characterId} applied spirit catcher. Data ${JSON.stringify(catcherData)}`);
-    mmLog('SPIRIT_CATCHER_SPELL', `character ${characterId} applied spirit catcher. Data ${JSON.stringify(catcherData)}`);
+    
+    logCharacterAction(
+      this.logger,
+      data.uid,
+      'SPELL_CAST_SPIRIT_CATCHER',
+      Number(data.characterId),
+      `applied spirit catcher. catcher data ${JSON.stringify(catcherData)}, spell data ${JSON.stringify(data)}`,
+      'Заклинание Spirit Catcher',
+      `Действует ${durationMillis / 60000} минут с вероятностью поимки ${catchProbability}%`
+    );
 
     this.emit2({
       type: 'catcherStatesChanged',

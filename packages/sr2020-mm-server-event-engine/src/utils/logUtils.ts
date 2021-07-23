@@ -24,6 +24,23 @@ const endpointDisplayName: Record<EndpointId, string> = {
   [EndpointId.POST_USER_POSITION]: 'Переход в локацию',
 };
 
+export function logCharacterAction(
+  logger: GMLogger,
+  uid: string,
+  type: string,
+  characterId: number,
+  message: string,
+  userTitle: string,
+  userMessage: string = '',
+  userOnly: boolean = false
+) {
+  if (!userOnly) {
+    logger.info(type, `${uid} Character ${characterId} ${message}`);
+    mmLog(type, `${uid} Character ${characterId} ${message}`);
+  }
+  mmUserLog(characterId, userTitle, userMessage);
+}
+
 export class EndpointLogger {
   characterId: number | null = null;
   uid: string;

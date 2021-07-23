@@ -47,6 +47,7 @@ import {
 
 import { EffectCollector } from "./EffectCollector";
 import { mmLog } from '../../api/spirits/mmLog';
+import { logCharacterAction } from '../../utils';
 
 // import { manaOceanEffectSettings } from '../api/constants';
 
@@ -191,8 +192,8 @@ export class ManaOceanService extends AbstractService<ManaOceanServiceContract> 
       return;
     }
 
-    this.logger.info('SPELL_CAST_MANA_OCEAN_STREAM', JSON.stringify(data));
-    mmLog('SPELL_CAST_MANA_OCEAN_STREAM', JSON.stringify(data));
+    // this.logger.info('SPELL_CAST_MANA_OCEAN_STREAM', JSON.stringify(data));
+    // mmLog('SPELL_CAST_MANA_OCEAN_STREAM', JSON.stringify(data));
 
     this.executeOnModel2({
       type: 'pushNotification',
@@ -203,14 +204,27 @@ export class ManaOceanService extends AbstractService<ManaOceanServiceContract> 
 
     const manaOceanEffectSettings: ManaOceanEffectSettingsData = this.getSettings<ManaOceanEffectSettingsData>('manaOceanEffects');
     const startTime = timestamp;
-    const endTime = startTime + power
-    * manaOceanEffectSettings.spellDurationPerPower
-    * manaOceanEffectSettings.spellDurationItem;
+    const duration = power
+      * manaOceanEffectSettings.spellDurationPerPower
+      * manaOceanEffectSettings.spellDurationItem;
+    const endTime = startTime + duration;
     const probability = Math.min(1, power * (manaOceanEffectSettings.spellProbabilityPerPower / 100));
     let range = R.range(0, power * manaOceanEffectSettings.spellDurationPerPower);
     if (probability < 1) {
       range = range.filter(() => Math.random() < probability);
     }
+
+    logCharacterAction(
+      this.logger,
+      data.uid,
+      'SPELL_CAST_MANA_OCEAN_STREAM',
+      Number(characterId),
+      JSON.stringify(data),
+      id == Spell.InputStream ? 'Заклинание Input Stream' : 'Заклинание Output Stream',
+      id == Spell.InputStream 
+        ? `увеличивает ману в локации ${locationRecord.label} с вероятностью ${(probability * 100).toFixed(0)}% в течение ${duration / 60000} минут` 
+        : `уменьшает ману в локации ${locationRecord.label} с вероятностью ${(probability * 100).toFixed(0)}% в течение ${duration / 60000} минут` 
+    );
 
     effectCollector.addEffect(locationRecord, {
       type: id === Spell.InputStream ? 'inputStream' : 'outputStream',

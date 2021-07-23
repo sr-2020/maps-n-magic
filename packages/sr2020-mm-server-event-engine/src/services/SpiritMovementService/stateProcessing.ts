@@ -13,7 +13,7 @@ import {
 } from 'sr2020-mm-event-engine';
 import { clinicalDeathCombo, zeroSpiritAbilities } from '../../api/characterModel';
 import { mmLog } from '../../api/spirits/mmLog';
-import { createLogger } from '../../utils';
+import { createLogger, logCharacterAction } from '../../utils';
 
 import { SpiritRouteContext, CurRouteSearchRes } from "./types";
 
@@ -101,18 +101,25 @@ function getUpdatedNonNormalSuitedState(
       id: characterId
     });
     clinicalDeathCombo(characterId, bodyStorageId, userRecord?.location_id || null).then(() => {
-      logger.info(`TIMEOUT_DISPIRIT applied clinicalDeath to character ${characterId}`);
-      mmLog('TIMEOUT_DISPIRIT', `applied clinicalDeath to character ${characterId}`);
+      logger.info(`TIMEOUT_DISPIRIT_2 applied clinicalDeath to character ${characterId}`);
+      mmLog('TIMEOUT_DISPIRIT_2', `applied clinicalDeath to character ${characterId}`);
     }).catch( err => {
-      logger.error(`TIMEOUT_DISPIRIT_ERROR applied clinicalDeath to character ${characterId}`, err);
-      mmLog('TIMEOUT_DISPIRIT_ERROR', `applied clinicalDeath to character ${characterId} ${JSON.stringify(err)}`);
+      logger.error(`TIMEOUT_DISPIRIT_2_ERROR applied clinicalDeath to character ${characterId}`, err);
+      mmLog('TIMEOUT_DISPIRIT_2_ERROR', `applied clinicalDeath to character ${characterId} ${JSON.stringify(err)}`);
     });
-    logger.info(`TIMEOUT_DISPIRIT spirit clinical death timeout ${spirit.id} ${spirit.name}. Data ${JSON.stringify({
-      state
-    })}`);
-    mmLog('TIMEOUT_DISPIRIT', `spirit clinical death timeout ${spirit.id} ${spirit.name}. Data ${JSON.stringify({
-      state
-    })}`);
+
+    logCharacterAction(
+      logger,
+      'N/A',
+      'TIMEOUT_DISPIRIT_2',
+      characterId,
+      `spirit clinical death timeout ${spirit.id} ${spirit.name}. Data ${JSON.stringify({
+        state
+      })}`,
+      'Превышено время возвращения в тело мага',
+      `Вы в состоянии клинической смерти`
+    );
+
     return newState;
   }
 
@@ -145,12 +152,18 @@ function getUpdatedNormalSuitedState(
       })}`);
     });
 
-    logger.info(`TIMEOUT_DISPIRIT suit spirit timeout ${spirit.id} ${spirit.name}. Data ${JSON.stringify({
-      state
-    })}`);
-    mmLog('TIMEOUT_DISPIRIT', `suit spirit timeout ${spirit.id} ${spirit.name}. Data ${JSON.stringify({
-      state
-    })}`);
+    logCharacterAction(
+      logger,
+      'N/A',
+      'TIMEOUT_DISPIRIT',
+      characterId,
+      `suit spirit timeout ${spirit.id} ${spirit.name}. Data ${JSON.stringify({
+        state
+      })}`,
+      'Превышено время ношения духа',
+      `Потеряны способности духа ${spirit.id} ${spirit.name}`
+    );
+
     return newState;
   }
   return undefined;
