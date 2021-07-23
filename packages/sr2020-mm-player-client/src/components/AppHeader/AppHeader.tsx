@@ -56,9 +56,12 @@ export function AppHeader(props: AppHeaderProps) {
           <LinkContainer to="/character">
             <Nav.Link>Персонаж</Nav.Link>
           </LinkContainer>
-          <LinkContainer to="/spirits">
-            <Nav.Link>Поймать духа</Nav.Link>
-          </LinkContainer>
+          {
+            characterData.spiritSuitState === undefined && 
+            <LinkContainer to="/spirits">
+              <Nav.Link>Поймать духа</Nav.Link>
+            </LinkContainer>
+          }
           <LinkContainer to="/scanSpirit">
             <Nav.Link>Осмотреть тотем</Nav.Link>
           </LinkContainer>

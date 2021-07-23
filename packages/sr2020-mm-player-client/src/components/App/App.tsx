@@ -97,13 +97,16 @@ export function App(props: AppProps) {
         {/* {JSON.stringify(locationData)} */}
         
           <Switch>
-            <Route path="/spirits">
-              <SpiritList 
-                setTitle={setTitle}
-                locationData={locationData}
-                characterData={characterData}
-              />
-            </Route>
+            {
+              characterData.spiritSuitState === undefined && 
+              <Route path="/spirits">
+                <SpiritList 
+                  setTitle={setTitle}
+                  locationData={locationData}
+                  characterData={characterData}
+                />
+              </Route>
+            }
             <Route path="/scanSpirit">
               <SpiritPage 
                 setTitle={setTitle}
