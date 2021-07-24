@@ -22,7 +22,8 @@ jobs:
     needs: [build]
     steps:
       - uses: actions/checkout@v2
-      - uses: GoogleCloudPlatform/github-actions/setup-gcloud@master
+      - name: Deploy
+        uses: GoogleCloudPlatform/github-actions/setup-gcloud@master
         with:
           service_account_email: ${{ secrets.SA_EMAIL }}
           service_account_key: ${{ secrets.SA_KEY }}
