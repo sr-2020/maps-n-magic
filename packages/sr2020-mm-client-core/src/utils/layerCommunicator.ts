@@ -31,6 +31,7 @@ export type SetLayersMetaEventHandlerFn = (event: SetLayersMetaEvent) => void;
 export type RemoveLayersMetaEventHandlerFn = (event: RemoveLayersMetaEvent) => void;
 export type OnCreateLayerEventHandlerFn = (event: OnCreateLayerEvent) => void;
 export type OnRemoveLayerEventHandlerFn = (event: OnRemoveLayerEvent) => void;
+export type LocateControlEventHandlerFn = (enable: boolean) => void;
 // export type ErrorEventHandlerFn = (event: ErrorEvent) => void;
 
 // on(type: string, fn: LeafletEventHandlerFn, context?: any): this;
@@ -63,12 +64,14 @@ interface EventHandler<
 //     EventHandler<'onCreateLayer', OnCreateLayerEventHandlerFn>,
 //     EventHandler<'onRemoveLayer', OnRemoveLayerEventHandlerFn>{}
 export type LayerCommunicator = 
-  EventHandler<'openPopup', OpenPopupEventHandlerFn> &
-  EventHandler<'closePopup', ClosePopupEventHandlerFn> &
-  EventHandler<'setLayersMeta', SetLayersMetaEventHandlerFn> &
-  EventHandler<'removeLayersMeta', RemoveLayersMetaEventHandlerFn> &
-  EventHandler<'onCreateLayer', OnCreateLayerEventHandlerFn> &
-  EventHandler<'onRemoveLayer', OnRemoveLayerEventHandlerFn>;
+  & EventHandler<'openPopup', OpenPopupEventHandlerFn>
+  & EventHandler<'closePopup', ClosePopupEventHandlerFn>
+  & EventHandler<'setLayersMeta', SetLayersMetaEventHandlerFn>
+  & EventHandler<'removeLayersMeta', RemoveLayersMetaEventHandlerFn>
+  & EventHandler<'onCreateLayer', OnCreateLayerEventHandlerFn>
+  & EventHandler<'onRemoveLayer', OnRemoveLayerEventHandlerFn>
+  & EventHandler<'locateControl', LocateControlEventHandlerFn>
+;
 
   // this.layerCommunicator[action]('removeLayersMeta', this.removeLayersMeta);
   // this.layerCommunicator[action]('addToMap', this.addToMap);

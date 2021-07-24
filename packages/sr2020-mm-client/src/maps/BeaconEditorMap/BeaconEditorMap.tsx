@@ -14,6 +14,7 @@ import { GoogleMapsExportedDataLayer } from '../../layers/GoogleMapsExportedData
 import { BeaconLayer4 } from '../../layers/BeaconLayer4';
 import { LocationLayer4 } from '../../layers/LocationLayer4';
 import { BeaconBindingsLayer } from '../../layers/BeaconBindingsLayer';
+import { LocateControlLayer } from '../../layers/LocateControlLayer';
 
 interface BeaconEditorMapProps {
   gameModel: GameModel;
@@ -59,6 +60,8 @@ export function BeaconEditorMap(props: BeaconEditorMapProps) {
       <BeaconBindingsLayer
         enableByDefault
       />
+      {/* @ts-ignore */}
+      <LocateControlLayer />
     </Map>
   );
 }

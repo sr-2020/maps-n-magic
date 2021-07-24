@@ -51,6 +51,8 @@ export class Map extends Component<MapProps, MapState> {
 
   mapEl: HTMLElement | null;
 
+  locateControl: any = undefined;
+
   constructor(props: MapProps) {
     super(props);
     this.state = {
@@ -60,6 +62,7 @@ export class Map extends Component<MapProps, MapState> {
     this.closePopup = this.closePopup.bind(this);
     this.setLayersMeta = this.setLayersMeta.bind(this);
     this.removeLayersMeta = this.removeLayersMeta.bind(this);
+    this.onLocateControl = this.onLocateControl.bind(this);
     // this.addToMap = this.addToMap.bind(this);
   }
 
@@ -161,7 +164,23 @@ export class Map extends Component<MapProps, MapState> {
     this.layerCommunicator[action]('closePopup', this.closePopup);
     this.layerCommunicator[action]('setLayersMeta', this.setLayersMeta);
     this.layerCommunicator[action]('removeLayersMeta', this.removeLayersMeta);
+    this.layerCommunicator[action]('locateControl', this.onLocateControl);
     // this.layerCommunicator[action]('addToMap', this.addToMap);
+  }
+
+  onLocateControl(enable: boolean) {
+    if (enable) {
+      if (this.locateControl === undefined) {
+        // @ts-ignore
+        this.locateControl = L.control.locate();
+      }
+      this.locateControl.addTo(this.map);
+    } else {
+      if (this.locateControl !== undefined) {
+        this.locateControl.remove();
+        delete this.locateControl;
+      }
+    }
   }
 
   openPopup({ popup }: OpenPopupEvent): void {
