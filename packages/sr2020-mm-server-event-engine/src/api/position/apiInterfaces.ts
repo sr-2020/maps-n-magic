@@ -5,7 +5,7 @@ import { typelessValidateEntityFunction } from "../types";
 
 const logger = createLogger('positionApiInterfaces.ts');
 
-const LIMIT = 500;
+const LIMIT = 700;
 
 export const gettable = (state: {
   url: string, 
