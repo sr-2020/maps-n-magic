@@ -36,22 +36,34 @@ import { WithTranslation } from "react-i18next";
 import { CreateBeaconPopover } from './CreateBeaconPopover';
 import { WithSortDataHOC } from "./SortDataHOC";
 import { BeaconLocationSelect } from './BeaconLocationSelect';
+import { Search } from '../EntityList/Search';
 
 interface BeaconRecordEditorProps extends WithTranslation, WithSortDataHOC {
   gameModel: GameModel;
 }
+interface BeaconRecordEditorState {
+  searchStr: string;
+}
 
-export class BeaconRecordEditor extends Component<BeaconRecordEditorProps> {
+export class BeaconRecordEditor extends Component<BeaconRecordEditorProps, BeaconRecordEditorState> {
   updateBeaconRecordTimeoutId: NodeJS.Timeout | undefined;
   
   constructor(props: BeaconRecordEditorProps) {
     super(props);
     this.state = {
+      searchStr: ''
     };
     this.createBeacon = this.createBeacon.bind(this);
     this.onLocationSelect = this.onLocationSelect.bind(this);
     this.handleInputChange = this.handleInputChange.bind(this);
     this.handleCoordChange = this.handleCoordChange.bind(this);
+    this.onSearchChange = this.onSearchChange.bind(this);
+  }
+
+  onSearchChange(searchStr: string) {
+    this.setState({
+      searchStr,
+    });
   }
 
   createBeacon(macAddress: string): void {
@@ -139,6 +151,22 @@ export class BeaconRecordEditor extends Component<BeaconRecordEditorProps> {
     }
   }
 
+  filterBeaconRecords(beaconRecords: BeaconRecord[]): BeaconRecord[] {
+    const { searchStr } = this.state; 
+    if (searchStr === '') {
+      return beaconRecords;
+    }
+    const lowerSearchStr = searchStr.toLowerCase();
+    return beaconRecords.filter(beaconRecord => {
+
+      return String(beaconRecord.id).includes(lowerSearchStr)
+        || beaconRecord.bssid.toLowerCase().includes(lowerSearchStr)
+        || beaconRecord.ssid.toLowerCase().includes(lowerSearchStr)
+        || beaconRecord.label.toLowerCase().includes(lowerSearchStr)
+      ;
+    });
+  }
+
   // eslint-disable-next-line max-lines-per-function
   render() {
     const { t, beaconRecords, sortedLocationList, gameModel } = this.props;
@@ -146,10 +174,21 @@ export class BeaconRecordEditor extends Component<BeaconRecordEditorProps> {
     if (!beaconRecords || !sortedLocationList) {
       return null;
     }
+    const filteredBeaconRecords = this.filterBeaconRecords(beaconRecords);
     // console.log(beaconRecords.length);
     return (
       <div className="BeaconRecordEditor tw-px-8 tw-py-4 tw-h-full tw-overflow-auto">
-        <CreateBeaconPopover createBeacon={this.createBeacon} />
+        <div className="tw-flex">
+          <div className="tw-mr-8">
+            <Search
+              onSearchChange={this.onSearchChange}
+            />
+          </div>
+          <div>
+            <CreateBeaconPopover createBeacon={this.createBeacon} />
+          </div>
+        </div>
+        
 
         <Table
           // bordered
@@ -173,7 +212,7 @@ export class BeaconRecordEditor extends Component<BeaconRecordEditorProps> {
 
             {
               // eslint-disable-next-line max-lines-per-function
-              beaconRecords.map((beacon) => (
+              filteredBeaconRecords.map((beacon) => (
                 <tr key={beacon.id}>
                   <td className="tw-text-right">{beacon.id}</td>
                   {/* <td>{beacon.bssid}</td> */}

@@ -8,9 +8,9 @@ import { WithTranslation } from "react-i18next";
 import classNames from 'classnames';
 
 interface SearchProps extends WithTranslation {
-  className: string;
-  placeholder: string;
-  onSearchChange: (value: string) => void
+  className?: string;
+  placeholder?: string;
+  onSearchChange?: (value: string) => void
 }
 interface SearchState {
   isInputFocused: boolean;
@@ -21,6 +21,7 @@ interface SearchState {
 // const { t, className, placeholder = 'Search' } = this.props;
 
 export class Search extends Component<SearchProps, SearchState> {
+  updateSearchTimeoutId: NodeJS.Timeout | undefined;
 
   constructor(props: SearchProps) {
     super(props);
@@ -77,8 +78,14 @@ export class Search extends Component<SearchProps, SearchState> {
     this.setState({
       searchStr: e.currentTarget.value,
     });
-    // eslint-disable-next-line react/destructuring-assignment
-    this.props.onSearchChange(e.currentTarget.value);
+    if (this.updateSearchTimeoutId !== undefined) {
+      clearTimeout(this.updateSearchTimeoutId);
+    }
+    const value = e.currentTarget.value;
+
+    this.updateSearchTimeoutId = setTimeout(() => {
+      if (this.props.onSearchChange) this.props.onSearchChange(value);
+    }, 500);
   }
 
 
@@ -86,8 +93,7 @@ export class Search extends Component<SearchProps, SearchState> {
     this.setState({
       searchStr: '',
     });
-    // eslint-disable-next-line react/destructuring-assignment
-    this.props.onSearchChange('');
+    if (this.props.onSearchChange) this.props.onSearchChange('');
   }
 
   render() {
