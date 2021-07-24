@@ -344,3 +344,13 @@ const putSpiritInJarRequestBodySchema: JSONSchemaType<PutSpiritInJarRequestBody>
 };
 
 export const validatePutSpiritInJarRequestBody = ajv.compile(putSpiritInJarRequestBodySchema);
+
+
+export interface HistoryItem {
+  timestamp: string;
+  characterId: number;
+  data: {
+    text: string;
+    title: string;
+  };
+}

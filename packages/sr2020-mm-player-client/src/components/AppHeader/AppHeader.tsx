@@ -88,6 +88,9 @@ export function AppHeader(props: AppHeaderProps) {
           {/* <LinkContainer to="/qrTest">
             <Nav.Link>QR тест</Nav.Link>
           </LinkContainer> */}
+          <LinkContainer to="/history">
+            <Nav.Link>История</Nav.Link>
+          </LinkContainer>
         </Nav>
       </Navbar.Collapse>
 

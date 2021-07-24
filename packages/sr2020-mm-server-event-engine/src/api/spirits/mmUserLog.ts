@@ -1,3 +1,4 @@
+import { HistoryItem } from "sr2020-mm-event-engine";
 import { createLogger } from "../../utils";
 import { pool } from "../pgPool";
 
@@ -16,4 +17,9 @@ export const mmUserLog = async function(
   } catch(err) {
     logger.info(`Error on posting user message ${characterId} ${title} ${text}`, err);
   }
+}
+
+export const mmGetUserLog = async function(characterId: number): Promise<HistoryItem[]> {
+  const { rows } = await pool.query('SELECT timestamp, "characterId", data FROM "mmUserLog" WHERE "characterId" = $1 ORDER BY timestamp DESC', [characterId]);
+  return rows;
 }

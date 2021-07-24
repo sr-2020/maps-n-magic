@@ -3,6 +3,7 @@ import {
   SpiritJarQr, 
   validateErrorResponse, 
   ConsequenceStatus,
+  HistoryItem,
   // SpiritDataForQrValidation, 
   Spirit 
 } from "sr2020-mm-event-engine";
@@ -109,6 +110,11 @@ export async function suitSpirit(
       spiritJarQrString
     }),
   });
+  return await res.json();
+}
+
+export async function loadHistory(): Promise<ErrorResponse | HistoryItem[]> {
+  const res = await fetch('/api/loadHistory');
   return await res.json();
 }
 

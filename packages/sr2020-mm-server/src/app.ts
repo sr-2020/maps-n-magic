@@ -33,6 +33,7 @@ import { spiritRouter } from './routes/spirits';
 import { innerApi2 } from './routes/innerApi2';
 import { getInnerApiGatekeeper, apiGatekeeper } from "./routes/gatekeepers";
 import { miscRouter } from "./routes/miscApi";
+import { mainLoadHistory } from './routes/loadHistory';
 
 const logger = createLogger('mainServer/app.ts');
 
@@ -65,8 +66,6 @@ app.use(cookieParser());
 // app.use('/users', usersRouter);
 app.get('/ping', pingRouter);
 
-
-
 // player server - main server API
 
 app.use('/innerApi', getInnerApiGatekeeper(gameModel));
@@ -79,7 +78,7 @@ app.get('/innerApi/playerDataSse', (req1, res, next) => {
   new SseDataSender(req, res, next, logger);
 });
 
-
+app.get('/innerApi/loadHistory/:characterId', mainLoadHistory);
 
 // external server - main server API
 //   At this moment only for shop
