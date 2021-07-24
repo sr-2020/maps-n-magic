@@ -51,6 +51,7 @@ export class BeaconRecordEditor extends Component<BeaconRecordEditorProps> {
     this.createBeacon = this.createBeacon.bind(this);
     this.onLocationSelect = this.onLocationSelect.bind(this);
     this.handleInputChange = this.handleInputChange.bind(this);
+    this.handleCoordChange = this.handleCoordChange.bind(this);
   }
 
   createBeacon(macAddress: string): void {
@@ -72,6 +73,22 @@ export class BeaconRecordEditor extends Component<BeaconRecordEditorProps> {
       throw new Error('Unexpected beacon record prop name: ' + name);
     }
     this.putBeaconRecord(Number(idStr), {prop: name, value});
+  }
+
+  handleCoordChange(event: ChangeEvent<HTMLInputElement>): void {
+    const { target } = event;
+    const { idStr } = event.target.dataset;
+    const { value } = target;
+    const name = target.name as 'lat' | 'lng';
+    if(!['lat','lng'].includes(name)) {
+      throw new Error('Unexpected beacon record prop name: ' + name);
+    }
+    const numberValue = Number(value);
+    if (Number.isNaN(numberValue)) {
+      console.error(`Coord value is not a number: ${value}`)
+      return;
+    }
+    this.putBeaconRecord(Number(idStr), {prop: name, value: numberValue});
   }
 
   onLocationSelect(event: ChangeEvent<HTMLSelectElement>): void {
@@ -147,6 +164,8 @@ export class BeaconRecordEditor extends Component<BeaconRecordEditorProps> {
               <th>{t('beaconMacAddress')}</th>
               <th>{t('beaconLabel')}</th>
               <th>{t('location')}</th>
+              <th>Широта</th>
+              <th>Долгота</th>
               {/* <th>{t('beaconPlacement')}</th> */}
             </tr>
           </thead>
@@ -187,6 +206,28 @@ export class BeaconRecordEditor extends Component<BeaconRecordEditorProps> {
                       onLocationSelect={(beaconId: number, locationId: number | null) => {
                         this.putBeaconRecord(beaconId, {prop: 'location_id', value: locationId});
                       }}
+                    />
+                  </td>
+                  <td>
+                    <Form.Control
+                      name="lat"
+                      type="text"
+                      style={{ width: '10rem' }}
+                      defaultValue={beacon.lat !== null ? beacon.lat : ''}
+                      data-id-str={beacon.id}
+                      disabled={beacon.lat === null}
+                      onChange={this.handleCoordChange}
+                    />
+                  </td>
+                  <td>
+                    <Form.Control
+                      name="lng"
+                      type="text"
+                      style={{ width: '10rem' }}
+                      defaultValue={beacon.lng !== null ? beacon.lng : ''}
+                      data-id-str={beacon.id}
+                      disabled={beacon.lng === null}
+                      onChange={this.handleCoordChange}
                     />
                   </td>
                   <td>
