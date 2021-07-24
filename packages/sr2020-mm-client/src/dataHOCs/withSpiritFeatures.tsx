@@ -35,8 +35,10 @@ reefwise
 surge-the-unclean
 ugly-is-pechi
 beautti-frutti
-black-matter
-grey-matter`.split('\n');
+barguzin-gift
+kultuk-gift
+sarma-gift
+i-feel-it-in-the-water`.split('\n');
 
 const spiritFeatureSet = new Set(spiritFeatureIds);
 
