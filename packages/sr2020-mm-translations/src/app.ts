@@ -12,6 +12,7 @@ export const appDictionary = {
   spiritRouteEditor: 'Редактор маршрутов духов',
   spiritPhraseEditor: 'Редактор фраз духов',
   spiritsOnMap: 'Духи на карте',
+  spiritConsistency: 'Согласованность духов',
   soundMapping: 'Сопоставление звука',
   trackAnalysisNav: 'Анализ мастерки',
   beaconRecordEditor: 'Словарь маяков',

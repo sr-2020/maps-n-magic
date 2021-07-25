@@ -1,5 +1,5 @@
 import { 
-  ErrorResponse, GetSpirits, isFullSpiritJar, 
+  ErrorResponse, GetSpirits, isFullSpiritJar, SpiritConsistencyResponse, 
 } from "sr2020-mm-event-engine";
 import { 
   createLogger, 
@@ -33,7 +33,7 @@ export const mainSpiritConsistencyReport = async (req1, res, next) => {
       const { qrId } = state;
       // getSpirit
 
-      return getQrModelData(qrId).then((qrModelData1): ErrorResponse | null => {
+      return getQrModelData(qrId).then((qrModelData1): SpiritConsistencyResponse | null => {
 
         const validationRes = validateSpiritJarQrModelData(qrModelData1);
     
@@ -41,8 +41,8 @@ export const mainSpiritConsistencyReport = async (req1, res, next) => {
           // res.status(500).json(validationRes);
           // mmLog('SPIRIT_SELL_FAIL', `${uid} error ${JSON.stringify(validationRes)}`);
           return {
-            errorTitle: `qrId ${qrId} is not spirit jar`,
-            errorSubtitle: ''
+            type: 'qrIsNotSpiritJar',
+            message: `qrId ${qrId} is not spirit jar`,
           };
         }
     
@@ -54,14 +54,14 @@ export const mainSpiritConsistencyReport = async (req1, res, next) => {
             return null;
           } else {
             return {
-              errorTitle: `qrId ${qrId} contains spirit ${spiritId} but expected ${spirit.id}`,
-              errorSubtitle: ''
+              type: 'spiritJarContainsOtherSpirit',
+              message: `qrId ${qrId} contains spirit ${spiritId} but expected ${spirit.id}`,
             };
           }
         } else {
           return {
-            errorTitle: `qrId ${qrId} is empty`,
-            errorSubtitle: ''
+            type: 'spiritJarIsEmpty',
+            message: `qrId ${qrId} is empty`,
           };
         }
         // qrModelData

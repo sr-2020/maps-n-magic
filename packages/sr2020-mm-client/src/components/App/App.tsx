@@ -306,6 +306,8 @@ export class App extends Component<AppProps, AppState> {
                   <Switch>
                     <Route path="/spiritNav">
                       <SpiritNav />
+                    </Route>,
+                    <Route path="/spiritConsistency">
                       <SpiritConsistency 
                         gameModel={gameModel}
                       />

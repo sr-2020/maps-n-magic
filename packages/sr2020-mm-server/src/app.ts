@@ -36,6 +36,7 @@ import { getInnerApiGatekeeper, apiGatekeeper } from "./routes/gatekeepers";
 import { miscRouter } from "./routes/miscApi";
 import { mainLoadHistory } from './routes/loadHistory';
 import { mainSpiritConsistencyReport } from './routes/spiritConsistencyReport';
+import { mainMoveSpiritsToAstral } from './routes/moveSpiritsToAstral';
 
 const logger = createLogger('mainServer/app.ts');
 
@@ -103,6 +104,8 @@ app.use('/api', (req1, res, next) => {
 app.use('/api', miscRouter);
 
 app.get('/api/spiritConsistencyReport', mainSpiritConsistencyReport);
+
+app.post('/api/moveSpiritsToAstral', mainMoveSpiritsToAstral);
 
 wsApp.app.ws('/api/ws', (ws, req, next) => {
   ws.on('message', (msgStr) => {

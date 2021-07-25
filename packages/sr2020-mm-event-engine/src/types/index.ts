@@ -203,6 +203,11 @@ export interface ErrorResponse {
   errorSubtitle: string;
 }
 
+export interface SpiritConsistencyResponse {
+  type: 'qrIsNotSpiritJar' | 'spiritJarContainsOtherSpirit' | 'spiritJarIsEmpty';
+  message: string;
+}
+
 // error: string;
 const errorResponseSchema: JSONSchemaType<ErrorResponse> = {
   type: "object",
