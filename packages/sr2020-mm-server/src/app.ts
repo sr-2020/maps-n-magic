@@ -37,6 +37,8 @@ import { miscRouter } from "./routes/miscApi";
 import { mainLoadHistory } from './routes/loadHistory';
 import { mainSpiritConsistencyReport } from './routes/spiritConsistencyReport';
 import { mainMoveSpiritsToAstral } from './routes/moveSpiritsToAstral';
+import { mainCheckQrById } from './routes/checkQrById';
+import { mainCheckBodyStorageBatch, mainCheckSpiritJarsBatch } from './routes/checkQrsBatch';
 
 const logger = createLogger('mainServer/app.ts');
 
@@ -106,6 +108,12 @@ app.use('/api', miscRouter);
 app.get('/api/spiritConsistencyReport', mainSpiritConsistencyReport);
 
 app.post('/api/moveSpiritsToAstral', mainMoveSpiritsToAstral);
+
+app.get('/api/checkQrById/:qrId', mainCheckQrById);
+
+app.get('/api/checkSpiritJarsBatch', mainCheckSpiritJarsBatch);
+
+app.get('/api/checkBodyStorageBatch', mainCheckBodyStorageBatch);
 
 wsApp.app.ws('/api/ws', (ws, req, next) => {
   ws.on('message', (msgStr) => {
