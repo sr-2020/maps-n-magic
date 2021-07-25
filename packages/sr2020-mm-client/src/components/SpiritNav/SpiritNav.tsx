@@ -4,6 +4,7 @@ import './SpiritNav.css';
 import { NavLinkData } from 'sr2020-mm-client-core';
 
 import { NavColumn } from "../NavColumn";
+import { SpiritConsistency } from '../SpiritConsistency';
 
 const navLinks: NavLinkData[] = [{
 //   to: '/backgroundEditorMap',

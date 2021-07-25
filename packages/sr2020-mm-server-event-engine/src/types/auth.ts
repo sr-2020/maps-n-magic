@@ -16,6 +16,7 @@ export type InnerApiRequest = Request & {
 };
 
 export type MainAuthorizedRequest = Request & {
+  gameModel: GameModel;
   userData: WeakTokenData;
 }
 

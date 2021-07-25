@@ -61,6 +61,7 @@ import { SoundStageGuard } from '../SoundStageGuard';
 import { SoundResumer } from '../SoundResumer';
 import { SpiritFractionEditor } from '../SpiritFractionEditor';
 import { SpiritPhraseEditor } from '../SpiritPhraseEditor';
+import { SpiritConsistency } from '../SpiritConsistency';
 
 const TEST_POSITION = {
   coords: {
@@ -305,6 +306,9 @@ export class App extends Component<AppProps, AppState> {
                   <Switch>
                     <Route path="/spiritNav">
                       <SpiritNav />
+                      <SpiritConsistency 
+                        gameModel={gameModel}
+                      />
                     </Route>,
                     <Route path="/spiritEditor">
                       <SpiritEditor gameModel={gameModel} />

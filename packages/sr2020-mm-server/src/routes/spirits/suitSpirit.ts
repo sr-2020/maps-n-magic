@@ -2,6 +2,7 @@ import * as R from 'ramda';
 import { 
   EPutSpiritRequested, 
   ErrorResponse, 
+  GameModel, 
   GetRandomSpiritPhrase, 
   GetSpirit, 
   getSpiritLocationId, 
@@ -25,8 +26,10 @@ import {
   validateBodyStorageQrModelData, 
   validateSpiritJarQrModelData,
   EndpointId, 
-  EndpointLogger, 
+  EndpointLogger,
+  getCharacterModelData, 
 } from 'sr2020-mm-server-event-engine';
+import { waitForSpiritSuited } from './utils';
 
 const logger = createLogger('suitSpirit.ts');
 
@@ -115,12 +118,7 @@ export const mainSuitSpirit = async (req1, res, next) => {
 
     const spirit2 = getSpiritWithFractionAbilities(req.gameModel, spirit);
     
-    const res2 = await suitSpirit(characterId, {
-      "name": spirit.name,
-      "hp": spirit.hitPoints,
-      // "abilityIds": ["fireball-keeper", "aurma"],
-      "abilityIds": spirit2.abilities,
-    }, bodyStorageId, spiritJarId);
+
 
     const message = req.gameModel.get2<GetRandomSpiritPhrase>({
       type: 'randomSpiritPhrase'
@@ -146,6 +144,20 @@ export const mainSuitSpirit = async (req1, res, next) => {
         },
       }
     });
+
+    const result = await waitForSpiritSuited('suitSpirit', req.gameModel, spiritId);
+
+    const res2 = await suitSpirit(characterId, {
+      "name": spirit.name,
+      "hp": spirit.hitPoints,
+      // "abilityIds": ["fireball-keeper", "aurma"],
+      "abilityIds": spirit2.abilities,
+    }, bodyStorageId, spiritJarId);
+
+    const characterData = await getCharacterModelData(characterId);
+
+    const isInEctoplasmBody = characterData.workModel.currentBody === 'ectoplasm';
+    logger.info(`Character ${characterId} isInEctoplasmBody ${isInEctoplasmBody}`);
 
     eLogger.success(`suit spirit ${spirit.id} ${spirit.name}, data ${JSON.stringify({
       suitStartTime,

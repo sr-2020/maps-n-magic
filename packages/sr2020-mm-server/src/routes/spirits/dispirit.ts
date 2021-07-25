@@ -29,8 +29,10 @@ import {
   validateBodyStorageQrModelData, 
   validateSpiritJarQrModelData, 
   EndpointId, 
-  EndpointLogger, 
+  EndpointLogger,
+  getCharacterModelData, 
 } from 'sr2020-mm-server-event-engine';
+import { waitForSpiritSuited } from './utils';
 
 const logger = createLogger('dispirit.ts');
 
@@ -170,6 +172,11 @@ export const mainDispirit = async (req1, res, next) => {
       }
     }
 
+    const characterData = await getCharacterModelData(characterId);
+
+    const isInEctoplasmBody = characterData.workModel.currentBody === 'physical';
+    logger.info(`Character ${characterId} isInPhysicalBody ${isInEctoplasmBody}`);
+
     req.gameModel.emit2<EPutSpiritRequested>({
       type: 'putSpiritRequested',
       id: spirit.id,
@@ -177,6 +184,8 @@ export const mainDispirit = async (req1, res, next) => {
         state: newSpiritState,
       }
     });
+
+    const result = await waitForSpiritSuited('dispirit', req.gameModel, spirit.id);
 
     let consequenceStatus: ConsequenceStatus = 'noConsequences';
     if (state.suitStatus !== 'normal') {

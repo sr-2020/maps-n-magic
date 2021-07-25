@@ -28,6 +28,7 @@ import { logoutRouter } from "./routes/logout";
 import { connectToMainServerSse } from './routes/playerDataSse';
 import { refreshCharacterModelRouter } from './routes/refreshCharacterModel';
 import { loadHistory } from './routes/loadHistory';
+import { testSuitDispirit } from './testSuitDispirit';
 
 const logger = createLogger('playerServer/app.ts');
 
@@ -161,3 +162,5 @@ app.use((err, req: Request, res, next) => {
 });
 
 connectToMainServerSse(gameModel);
+
+testSuitDispirit();

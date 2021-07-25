@@ -14,7 +14,8 @@ import {
   makeGameModel, 
   winstonLogger,
   createLogger,
-  InnerApiRequest
+  InnerApiRequest,
+  MainAuthorizedRequest
 } from 'sr2020-mm-server-event-engine';
 import { ErrorResponse, validateWebSocketInitClientConfig, WebSocketInitClientConfig } from 'sr2020-mm-event-engine';
 
@@ -34,6 +35,7 @@ import { innerApi2 } from './routes/innerApi2';
 import { getInnerApiGatekeeper, apiGatekeeper } from "./routes/gatekeepers";
 import { miscRouter } from "./routes/miscApi";
 import { mainLoadHistory } from './routes/loadHistory';
+import { mainSpiritConsistencyReport } from './routes/spiritConsistencyReport';
 
 const logger = createLogger('mainServer/app.ts');
 
@@ -92,7 +94,15 @@ app.use('/api', publicApi);
 
 app.use('/api', apiGatekeeper);
 
+app.use('/api', (req1, res, next) => {
+  const req = req1 as MainAuthorizedRequest;
+  req.gameModel = gameModel;
+  next();
+});
+
 app.use('/api', miscRouter);
+
+app.get('/api/spiritConsistencyReport', mainSpiritConsistencyReport);
 
 wsApp.app.ws('/api/ws', (ws, req, next) => {
   ws.on('message', (msgStr) => {
@@ -147,6 +157,3 @@ app.use((err, req, res, next) => {
   res.json({ error: err });
 });
 
-// export const app = app;
-
-// module.exports = app;

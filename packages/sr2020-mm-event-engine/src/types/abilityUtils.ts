@@ -1,10 +1,11 @@
 import { CharacterModelData } from "./characterModelData";
 
+// OwnSpirit = 'own-spirit', // способность видеть и ловить духов
+
 export enum Ability {
   ArchMage = 'arch-mage', // архетип маг
   NiceSuit = 'nice-suit', // +30 минут к ношению духа
   LeisureSuit = 'leisure-suit', // +30 минут к ношению духа, требует nice-suit
-  // OwnSpirit = 'own-spirit', // способность видеть и ловить духов
   SuitUp = 'suit-up', // способность надевать духа
   FineHearing = 'fine-hearing', // способность видеть абилки духов
   SpiritMaster1 = 'spirit-master-1', // способность захватывать духов 1 ранга
