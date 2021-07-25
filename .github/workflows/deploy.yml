@@ -6,7 +6,7 @@ jobs:
   build:
     runs-on: ubuntu-20.04
     steps:
-      - uses: actions/checkout@v1
+      - uses: actions/checkout@v2
       - name: Build & Push to dockerhub
         uses: elgohr/Publish-Docker-Github-Action@master
         with:
@@ -21,13 +21,14 @@ jobs:
     runs-on: ubuntu-20.04
     needs: [build]
     steps:
-      - uses: GoogleCloudPlatform/github-actions/setup-gcloud@master
+      - uses: actions/checkout@v2
+      - name: Deploy
+        uses: google-github-actions/setup-gcloud@master
         with:
           service_account_email: ${{ secrets.SA_EMAIL }}
           service_account_key: ${{ secrets.SA_KEY }}
       - run: gcloud components install kubectl
       - run: gcloud container clusters get-credentials prod --project imposing-elixir-249711 --zone europe-west3-b
-      - uses: actions/checkout@v1
       - run: |
           kubectl config set-context --current --namespace=production
           curl https://raw.githubusercontent.com/helm/helm/master/scripts/get-helm-3 | bash
