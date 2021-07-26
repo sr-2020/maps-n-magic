@@ -62,6 +62,15 @@ export function CharacterPage(props: CharacterPageProps) {
         </div>
       }
       {
+        characterData.messageData !== undefined &&
+        <div className="tw-m-4 tw-p-4 tw-bg-blue-200 tw-font-semibold">
+          {
+            moment(characterData.messageData.timestamp).format('HH:mm') + ' ' +
+            characterData.messageData.message
+          }
+        </div>
+      }
+      {
         characterData.spiritSuitState !== undefined &&
         characterData.spiritSuitState.suitStatus !== 'normal' &&
         <div className="tw-m-4 tw-p-4 tw-bg-red-200 tw-font-semibold">

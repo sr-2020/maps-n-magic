@@ -1,4 +1,6 @@
 import { 
+  ConsequenceStatus,
+  consequenceTexts,
   DispiritInternalRequest,
   ErrorResponse, 
   GetSpirit, 
@@ -18,6 +20,7 @@ import {
   validateSpiritJarQrModelData, 
   validateSuitSpiritRequestBody 
 } from "sr2020-mm-server-event-engine";
+import { PutCharacterMessage } from "../../gameModel/MessageService";
 import { decode, playerServerCookie } from "../../utils";
 import { qrIdIsNanError } from "./utils";
 
@@ -72,14 +75,23 @@ export const playerDispirit = async (req1, res, next) => {
       body: JSON.stringify(reqBody)
     });
 
-    const json = await dispiritRes.json();
+    const json: ConsequenceStatus = await dispiritRes.json();
+
+    req.gameModel.execute2<PutCharacterMessage>({
+      type: 'putCharacterMessage',
+      characterId: req.userData.modelId,
+      data: {
+        timestamp: Date.now(),
+        message: consequenceTexts[json]
+      }
+    });
 
     // logger.info('dispiritRes json', json);
 
     if (dispiritRes.status === 200) {
-      setTimeout(() => {
+      // setTimeout(() => {
         req.characterWatcher.forceUpdateCharacterModel(req.userData.modelId);
-      }, 5000);
+      // }, 5000);
     }
 
     res.status(dispiritRes.status).json(json);

@@ -125,7 +125,7 @@ export function DispiritPage(props: DispiritPageProps) {
       if (isErrorResponse(res)) {
         setDispiritStatus(res.errorTitle);
       } else {
-        setDispiritStatus(consequenceTexts[res]);
+        setDispiritStatus('');
       }
       setDoDispirit(null);
     }).catch(err => {

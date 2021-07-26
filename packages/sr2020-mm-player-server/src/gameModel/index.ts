@@ -17,6 +17,7 @@ import {
 
 import { LocationDataService } from "./LocationDataService";
 import { SuitedSpiritsService } from "./SuitedSpiritsService";
+import { MessageService } from "./MessageService";
 
 const services = [
   LocationRecordService,
@@ -27,6 +28,7 @@ const services = [
   SuitedSpiritsService,
   SpiritCatcherService,
   FeatureService,
+  MessageService,
   // SpiritPhraseService,
 ];
 

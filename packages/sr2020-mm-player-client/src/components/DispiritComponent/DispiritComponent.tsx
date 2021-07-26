@@ -54,7 +54,7 @@ export function DispiritComponent(props: DispiritComponentProps) {
       if (isErrorResponse(res)) {
         setDispiritStatus(res.errorTitle);
       } else {
-        setDispiritStatus(consequenceTexts[res]);
+        setDispiritStatus('');
       }
       setDoDispirit(null);
     }).catch(err => {

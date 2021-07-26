@@ -359,3 +359,8 @@ export interface HistoryItem {
     title: string;
   };
 }
+
+export interface MessageData {
+  timestamp: number;
+  message: string;
+}
