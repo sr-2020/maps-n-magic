@@ -29,3 +29,8 @@ export type LoginState =
   | ErrorState
   | LoadingState
 ;
+
+export interface LinkDef {
+  to: string;
+  label: string;
+}

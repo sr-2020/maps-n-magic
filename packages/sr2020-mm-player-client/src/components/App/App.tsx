@@ -16,7 +16,7 @@ import { QrTest } from "../QrTest";
 import { SpiritPage } from "../SpiritPage";
 import { SuitSpiritPage } from "../SuitSpiritPage";
 import { AudioContextWrapper, SoundStorage } from 'sr2020-mm-client-event-engine';
-import { AppHeader } from '../AppHeader';
+// import { AppHeader } from '../AppHeader';
 import { SoundStage } from '../SoundStage';
 import { SoundSettings, SoundStageState } from 'sr2020-mm-event-engine';
 import { CatchSpiritPage } from '../CatchSpiritPage';
@@ -25,6 +25,7 @@ import { DispiritPage } from '../DispiritPage';
 import { EmergencyDispiritPage } from '../EmergencyDispiritPage';
 import { LocationChangePage } from '../LocationChangePage';
 import { HistoryPage } from '../HistoryPage';
+import { AppHeader2 } from '../AppHeader2';
 
 interface AppProps extends WithLoginState, WithAggregatedLocationData {
   loginManager: LoginManager;
@@ -64,14 +65,23 @@ export function App(props: AppProps) {
     <DocumentTitle title={title}>
       <Router>
         <div className="App">
-          <AppHeader
+          <AppHeader2
             title={title}
             loginManager={loginManager}
             locationData={locationData}
             characterData={characterData}
             mute={mute}
             setMute={setMute}
+            links={[]}
           />
+          {/* <AppHeader
+            title={title}
+            loginManager={loginManager}
+            locationData={locationData}
+            characterData={characterData}
+            mute={mute}
+            setMute={setMute}
+          /> */}
           <CharacterPage 
             setTitle={setTitle}
             characterData={characterData}
@@ -86,13 +96,22 @@ export function App(props: AppProps) {
     <DocumentTitle title={title}>
       <Router>
         <div className="App">
-          <AppHeader
+          {/* <AppHeader
             title={title}
             loginManager={loginManager}
             locationData={locationData}
             characterData={characterData}
             mute={mute}
             setMute={setMute}
+          /> */}
+          <AppHeader2
+            title={title}
+            loginManager={loginManager}
+            locationData={locationData}
+            characterData={characterData}
+            mute={mute}
+            setMute={setMute}
+            links={[]}
           />
 
         {/* {JSON.stringify(locationData)} */}

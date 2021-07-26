@@ -20,6 +20,6 @@ export const mmUserLog = async function(
 }
 
 export const mmGetUserLog = async function(characterId: number): Promise<HistoryItem[]> {
-  const { rows } = await pool.query('SELECT timestamp, "characterId", data FROM "mmUserLog" WHERE "characterId" = $1 ORDER BY timestamp DESC', [characterId]);
+  const { rows } = await pool.query('SELECT timestamp, "characterId", data FROM "mmUserLog" WHERE "characterId" = $1 ORDER BY timestamp DESC LIMIT 100', [characterId]);
   return rows;
 }
