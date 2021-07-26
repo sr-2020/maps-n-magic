@@ -17,6 +17,7 @@ import {
   validateSpiritJarQrModelData, 
   validateSuitSpiritRequestBody 
 } from "sr2020-mm-server-event-engine";
+import { PutCharacterMessage } from "../../gameModel/MessageService";
 import { decode, playerServerCookie } from "../../utils";
 import { qrIdIsNanError } from "./utils";
 
@@ -77,6 +78,15 @@ export const suitSpirit = async (req1, res, next) => {
       req.characterWatcher.forceUpdateCharacterModel(req.userData.modelId);
       // }, 30000);
     }
+
+    req.gameModel.execute2<PutCharacterMessage>({
+      type: 'putCharacterMessage',
+      characterId: req.userData.modelId,
+      data: {
+        timestamp: Date.now(),
+        message: ''
+      }
+    });
 
     res.status(suitSpiritRes.status).json(json);
     // const message = req.gameModel.get2<GetRandomSpiritPhrase>({
