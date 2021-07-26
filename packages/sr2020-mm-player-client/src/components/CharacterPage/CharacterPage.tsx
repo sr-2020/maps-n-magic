@@ -63,6 +63,7 @@ export function CharacterPage(props: CharacterPageProps) {
       }
       {
         characterData.messageData !== undefined &&
+        characterData.messageData.message !== '' &&
         <div className="tw-m-4 tw-p-4 tw-bg-blue-200 tw-font-semibold">
           {
             moment(characterData.messageData.timestamp).format('HH:mm') + ' ' +

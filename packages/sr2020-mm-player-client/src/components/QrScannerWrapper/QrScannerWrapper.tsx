@@ -72,7 +72,7 @@ export function QrScannerWrapper(props: QrScannerWrapperProps) {
           </Button>
         )
       }
-      <Button 
+      {/* <Button 
         className="tw-absolute tw-right-0 tw-bg-green-900 tw-border-green-900 tw-opacity-70"
         style={{top: '6rem'}}
         onClick={() => setFacingMode(facingMode === 'user' ? 'environment' : 'user')}
@@ -81,7 +81,7 @@ export function QrScannerWrapper(props: QrScannerWrapperProps) {
         <FontAwesomeIcon
           icon={faSync}
         />
-      </Button>
+      </Button> */}
     </div>
   );
 }
