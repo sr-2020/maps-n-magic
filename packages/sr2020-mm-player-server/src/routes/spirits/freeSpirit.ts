@@ -1,5 +1,16 @@
-import { ErrorResponse, FreeSpiritInternalRequest, invalidRequestBody } from "sr2020-mm-event-engine";
-import { createLogger, freeSpiritFromStorage, PlayerAuthorizedRequest, playerServerConstants, validateFreeSpiritRequestBody, validateSpiritJarQrModelData } from "sr2020-mm-server-event-engine";
+import { 
+  ErrorResponse, 
+  FreeSpiritInternalRequest, 
+  invalidRequestBody 
+} from "sr2020-mm-event-engine";
+import { 
+  createLogger, 
+  freeSpiritFromStorage, 
+  PlayerAuthorizedRequest, 
+  playerServerConstants, 
+  validateFreeSpiritRequestBody, 
+  validateSpiritJarQrModelData 
+} from "sr2020-mm-server-event-engine";
 import { playerServerCookie } from "../../utils";
 
 const logger = createLogger('freeSpirit.ts');
@@ -11,13 +22,14 @@ export const freeSpirit = async (req1, res, next) => {
     res.status(400).json(invalidRequestBody(body, validateFreeSpiritRequestBody.errors));
     return;
   }
-  const { qrId, reason } = body;
+  const { qrId, reason, messageBody } = body;
 
   try {
     const reqBody: FreeSpiritInternalRequest = {
       qrId,
       reason,
-      characterId: req.userData.modelId
+      characterId: req.userData.modelId,
+      messageBody
     };
 
     const freeSpiritRes = await fetch(playerServerConstants().freeSpiritUrl, {

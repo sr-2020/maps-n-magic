@@ -305,6 +305,7 @@ export interface FreeSpiritInternalRequest {
   qrId: number;
   reason: string;
   characterId: number;
+  messageBody: string;
 }
 
 const freeSpiritInternalRequestSchema: JSONSchemaType<FreeSpiritInternalRequest> = {
@@ -319,8 +320,11 @@ const freeSpiritInternalRequestSchema: JSONSchemaType<FreeSpiritInternalRequest>
     characterId: {
       type: "number",
     },
+    messageBody: {
+      type: "string",
+    },
   },
-  required: ["qrId", "reason", "characterId"],
+  required: ["qrId", "reason", "characterId", "messageBody"],
   additionalProperties: false
 };
 

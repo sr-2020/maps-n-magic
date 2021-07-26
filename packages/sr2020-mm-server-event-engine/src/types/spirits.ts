@@ -14,6 +14,7 @@ const ajv = new Ajv({
 export interface FreeSpiritRequestBody {
   qrId: number;
   reason: string;
+  messageBody: string;
 }
 
 const freeSpiritRequestBodySchema: JSONSchemaType<FreeSpiritRequestBody> = {
@@ -21,8 +22,9 @@ const freeSpiritRequestBodySchema: JSONSchemaType<FreeSpiritRequestBody> = {
   properties: {
     qrId: { type: 'integer' },
     reason: { type: 'string' },
+    messageBody: { type: 'string' },
   },
-  required: ["qrId", "reason"],
+  required: ["qrId", "reason", "messageBody"],
 };
 
 export const validateFreeSpiritRequestBody = ajv.compile(freeSpiritRequestBodySchema);

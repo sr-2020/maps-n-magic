@@ -16,7 +16,8 @@ import {
   validateSpiritJarQrModelData,
   EndpointId, 
   EndpointLogger,
-  PutSpiritRequestedCall, 
+  PutSpiritRequestedCall,
+  playerMessages, 
 } from "sr2020-mm-server-event-engine";
 import { waitForSpiritSuited } from "./utils";
 
@@ -38,7 +39,7 @@ export const mainFreeSpirit = async (req1, res, next) => {
       return;
     }
 
-    const { qrId, reason, characterId } = body;
+    const { qrId, reason, characterId, messageBody } = body;
     eLogger.setCharacterId(characterId);
 
     const qrModelData1 = await getQrModelData(qrId);
@@ -115,16 +116,6 @@ export const mainFreeSpirit = async (req1, res, next) => {
           }
         })
 
-        // req.gameModel.emit2<EPutSpiritRequested>({
-        //   type: 'putSpiritRequested',
-        //   id: spirit.id,
-        //   props: {
-        //     state: {
-        //       status: 'RestInAstral'
-        //     },
-        //   }
-        // });
-
         const result = await waitForSpiritSuited('freeSpirit', req.gameModel, spirit.id);
       }
     }
@@ -142,10 +133,25 @@ export const mainFreeSpirit = async (req1, res, next) => {
     const qrModelData3 = await getQrModelData(qrId) as FullSpiritJarQr;
 
     const isJarEmpty = isEmptySpiritJar(qrModelData3);
-    // const isJarEmpty = qrModelData3.workModel.data == null;
+
     logger.info(`Spirit jar ${qrId} isJarEmpty ${isJarEmpty}, spiritId ${spiritId}`);
 
     eLogger.success(`free spirit ${spirit.id} ${spirit.name}`, `Дух ${spirit.id} ${spirit.name} освобожден`);
+
+    if (messageBody !== '') {
+      playerMessages(JSON.stringify({
+        characterId,
+        time: new Date(),
+        messageBody,
+        spiritId: spirit.id,
+        spiritFractionId: spirit.fraction
+      }));
+
+      eLogger.success(
+        `spirit ${spirit.id} ${spirit.name} got message "${messageBody}"`, 
+        `Дух ${spirit.id} ${spirit.name} получил мысль "${messageBody}"`
+      );
+    }
 
     res.status(200).json({
       status: 'success',

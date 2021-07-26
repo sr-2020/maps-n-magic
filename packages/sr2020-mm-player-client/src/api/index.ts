@@ -144,7 +144,11 @@ export async function emergencyDispirit(): Promise<ErrorResponse | true> {
   return await res.json();
 }
 
-export async function freeSpirit(qrId: number, reason: string): Promise<ErrorResponse | {
+export async function freeSpirit(
+  qrId: number, 
+  reason: string,
+  messageBody: string
+): Promise<ErrorResponse | {
   status: 'success',
   qrModelData: SpiritJarQr
 }> {
@@ -155,7 +159,8 @@ export async function freeSpirit(qrId: number, reason: string): Promise<ErrorRes
     },
     body: JSON.stringify({
       qrId,
-      reason
+      reason,
+      messageBody
     }),
   });
   return await res.json();

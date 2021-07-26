@@ -55,7 +55,7 @@ export function DispiritPage(props: DispiritPageProps) {
   const [scanBodyStorage, setScanBodyStorage] = useState<boolean>(false);
   const [bodyStorageStatus, setBodyStorageStatus] = useState<BodyStorageStatus2>({status: 'unknown'});
 
-  const [messageBody, setMessageBody] = useState<string>('');
+  // const [messageBody, setMessageBody] = useState<string>('');
 
   useEffect(() => {
     if (bodyStorageQrString === null) {
@@ -121,7 +121,8 @@ export function DispiritPage(props: DispiritPageProps) {
     if (doDispirit === null || bodyStorageQrString === null) {
       return;
     }
-    dispirit(bodyStorageQrString, doDispirit ? spiritJarQrString : null, messageBody).then(res => {
+    // messageBody
+    dispirit(bodyStorageQrString, doDispirit ? spiritJarQrString : null, '').then(res => {
       if (isErrorResponse(res)) {
         setDispiritStatus(res.errorTitle);
       } else {
@@ -231,7 +232,7 @@ export function DispiritPage(props: DispiritPageProps) {
           </Button>
         </div>
       }
-      <div>
+      {/* <div>
         <div className="tw-mb-2">Оставить сообщение</div>
         <div>
           <Form.Control
@@ -240,7 +241,7 @@ export function DispiritPage(props: DispiritPageProps) {
             onChange={(e) => setMessageBody(e.target.value)}
           />
         </div>
-      </div>
+      </div> */}
     </div>
   );
 }

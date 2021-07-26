@@ -12,8 +12,10 @@ import {
   validateEmptySpiritJarQr,
   validateFullSpiritJarQr
 } from "sr2020-mm-event-engine";
+
 import Alert from "react-bootstrap/Alert";
 import Button from "react-bootstrap/Button";
+import Form from 'react-bootstrap/Form';
 
 import { QrScannerWrapper } from "../QrScannerWrapper";
 import { getSpiritDataByQr, freeSpirit, catchSpirit } from "../../api";
@@ -45,6 +47,8 @@ export function SpiritPage(props: SpiritPageProps) {
     spiritJarQr: SpiritJarQr;
     spirit: Spirit | undefined;
   } | null>(null);
+
+  const [messageBody, setMessageBody] = useState<string>('');
 
   useEffect(() => {
     if (spiritJarQrString === null) {
@@ -78,7 +82,12 @@ export function SpiritPage(props: SpiritPageProps) {
     if (spiritJarQr === null) {
       return;
     }
-    freeSpirit(Number(spiritJarQr.spiritJarQr.workModel.modelId), 'Маг освободил духа').then(res => {
+    // messageBody
+    freeSpirit(
+      Number(spiritJarQr.spiritJarQr.workModel.modelId), 
+      'Маг освободил духа',
+      messageBody
+    ).then(res => {
     // freeSpirit(Number(123456789), 'Маг освободил духа').then(res => {
       if (isErrorResponse(res)) {
         setErrorResponse(res);
@@ -140,9 +149,21 @@ export function SpiritPage(props: SpiritPageProps) {
               characterData={characterData}
             />
           }
-          <Button variant="outline-secondary" onClick={onFreeSpiritClick}>
-            Освободить духа
-          </Button>
+          <div className="tw-mb-8">
+            <Button variant="outline-secondary" onClick={onFreeSpiritClick}>
+              Освободить духа
+            </Button>
+          </div>
+          <div>
+            <div className="tw-mb-2">Оставить сообщение</div>
+            <div>
+              <Form.Control
+                as="textarea" rows={3}
+                value={messageBody}
+                onChange={(e) => setMessageBody(e.target.value)}
+              />
+            </div>
+          </div>
         </>
       }
       {

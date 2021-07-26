@@ -206,20 +206,20 @@ export const mainDispirit = async (req1, res, next) => {
       }
     }
 
-    if (messageBody !== '') {
-      playerMessages(JSON.stringify({
-        characterId,
-        time: new Date(),
-        messageBody,
-        spiritId: spirit.id,
-        spiritFractionId: spirit.fraction
-      }));
+    // if (messageBody !== '') {
+    //   playerMessages(JSON.stringify({
+    //     characterId,
+    //     time: new Date(),
+    //     messageBody,
+    //     spiritId: spirit.id,
+    //     spiritFractionId: spirit.fraction
+    //   }));
 
-      eLogger.success(
-        `spirit ${spirit.id} ${spirit.name} got message "${messageBody}"`, 
-        `Дух ${spirit.id} ${spirit.name} получил мысль "${messageBody}"`
-      );
-    }
+    //   eLogger.success(
+    //     `spirit ${spirit.id} ${spirit.name} got message "${messageBody}"`, 
+    //     `Дух ${spirit.id} ${spirit.name} получил мысль "${messageBody}"`
+    //   );
+    // }
 
     eLogger.success(
       `dispirit ${spirit.id} ${spirit.name}, consequenceStatus ${consequenceStatus}`,

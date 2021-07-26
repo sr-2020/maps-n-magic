@@ -67,7 +67,8 @@ async function singleCharacterTest(
     const reqBody2: FreeSpiritInternalRequest = {
       qrId: spiritJarId,
       reason: '',
-      characterId
+      characterId,
+      messageBody: ''
     };
 
     const freeSpiritRes = await fetch(playerServerConstants().freeSpiritUrl, {
