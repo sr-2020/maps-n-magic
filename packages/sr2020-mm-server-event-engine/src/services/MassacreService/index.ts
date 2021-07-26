@@ -10,7 +10,10 @@ import {
   ECharacterHealthStateChanged,
   EMassacreTriggered,
   ServiceContract,
-  ServiceContractTypes
+  ServiceContractTypes,
+  ManaOceanEffectSettingsData,
+  SettingsKeys,
+  GetSettings
 } from 'sr2020-mm-event-engine';
 
 export type MassacreEmitEvents = EMassacreTriggered;
@@ -22,7 +25,7 @@ export interface MassacreServiceContract extends ServiceContract {
   EmitEvent: MassacreEmitEvents;
   ListenEvent: MassacreListenEvents;
   NeedAction: never;
-  NeedRequest: never;
+  NeedRequest: GetSettings;
 }
 
 const metadata: ServiceContractTypes<MassacreServiceContract> = {
@@ -32,7 +35,7 @@ const metadata: ServiceContractTypes<MassacreServiceContract> = {
   requests: [],
   emitEvents: ['massacreTriggered'],
   listenEvents: ['characterHealthStateChanged'],
-  needRequests: [],
+  needRequests: ['settings'],
   needActions: []
 };
 export class MassacreService extends AbstractService<MassacreServiceContract> {
@@ -78,8 +81,11 @@ export class MassacreService extends AbstractService<MassacreServiceContract> {
     locationList = locationList.filter((el) => el > windowStart);
     locationList.push(timestamp);
 
-    if (locationList.length >= 5) {
-      locationList = locationList.slice(5);
+    const manaOceanEffectSettings: ManaOceanEffectSettingsData = this.getSettings<ManaOceanEffectSettingsData>('manaOceanEffects');
+
+    const { massacrePeopleLimit } = manaOceanEffectSettings;
+    if (locationList.length >= massacrePeopleLimit) {
+      locationList = locationList.slice(massacrePeopleLimit);
       this.emit2({
         type: 'massacreTriggered',
         locationId,
@@ -104,5 +110,12 @@ export class MassacreService extends AbstractService<MassacreServiceContract> {
     //     personName: 'Мэрфи в группе Мастера и приложение'
     //   },
     // }
+  }
+
+  getSettings<T>(name: SettingsKeys): T {
+    return this.getFromModel<any, T>({
+      type: 'settings',
+      name,
+    });
   }
 }

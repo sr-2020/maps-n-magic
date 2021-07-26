@@ -71,6 +71,8 @@ export const validateManaOceanSettingsData = ajv.compile(manaOceanSettingsDataSc
 export interface ManaOceanEffectSettingsData extends SettingsData {
   massacreDelay: number;
   massacreDuration: number;
+  massacreManaChange: number;
+  massacrePeopleLimit: number;
   powerSpellBoundary: number;
   powerSpellDelay: number;
   powerSpellDuration: number;
@@ -107,6 +109,8 @@ const manaOceanEffectSettingsDataSchema: JSONSchemaType<ManaOceanEffectSettingsD
   properties: {
     massacreDelay: {type: "integer"},
     massacreDuration: {type: "integer"},
+    massacreManaChange: {type: "integer"},
+    massacrePeopleLimit: {type: "integer"},
     powerSpellBoundary: {type: "integer"},
     powerSpellDelay: {type: "integer"},
     powerSpellDuration: {type: "integer"},
@@ -119,6 +123,8 @@ const manaOceanEffectSettingsDataSchema: JSONSchemaType<ManaOceanEffectSettingsD
   required: [
     "massacreDelay", 
     "massacreDuration", 
+    "massacreManaChange",
+    "massacrePeopleLimit",
     "powerSpellBoundary", 
     "powerSpellDelay", 
     "powerSpellDuration", 

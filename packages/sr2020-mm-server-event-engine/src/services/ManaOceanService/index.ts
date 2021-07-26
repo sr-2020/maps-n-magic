@@ -353,16 +353,19 @@ export class ManaOceanService extends AbstractService<ManaOceanServiceContract> 
     }
     const manaOceanEffectSettings: ManaOceanEffectSettingsData = this.getSettings<ManaOceanEffectSettingsData>('manaOceanEffects');
     
-    this.pushEffect(locationRecord, {
-      type: 'massacre',
-      id: shortid.generate(),
-      start: timestamp + manaOceanEffectSettings.massacreDelay, // start after 15 minutes
-      end: timestamp
-      + manaOceanEffectSettings.massacreDelay
-      + manaOceanEffectSettings.massacreDuration, // end after 30 minutes
-      manaLevelChange: 1,
-      locationId,
-    } as MassacreEffect);
+    for (let i = 0; i < manaOceanEffectSettings.massacreManaChange; i++) {
+      this.pushEffect(locationRecord, {
+        type: 'massacre',
+        id: shortid.generate(),
+        start: timestamp + manaOceanEffectSettings.massacreDelay, // start after 15 minutes
+        end: timestamp
+        + manaOceanEffectSettings.massacreDelay
+        + manaOceanEffectSettings.massacreDuration, // end after 30 minutes
+        manaLevelChange: 1,
+        locationId,
+      } as MassacreEffect);
+    }
+
     // // this.logger.info('manaModifiers', this.manaModifiers, shortid.generate(), data, locationRecord);
   }
 

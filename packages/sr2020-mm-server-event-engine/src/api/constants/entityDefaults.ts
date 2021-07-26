@@ -51,6 +51,8 @@ export const defaultManaOceanSettings: ManaOceanSettingsData = {
 export const manaOceanEffectSettings: ManaOceanEffectSettingsData = {
   massacreDelay: 60000 * 15,
   massacreDuration: 60000 * 30,
+  massacreManaChange: 1,
+  massacrePeopleLimit: 5,
   // massacreDelay: 15000,
   // massacreDuration: 15000,
   // massacreDuration: 105000,

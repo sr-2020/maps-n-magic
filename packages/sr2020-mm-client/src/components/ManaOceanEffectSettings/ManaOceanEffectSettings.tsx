@@ -19,23 +19,13 @@ interface ManaOceanEffectSettingsProps extends WithTranslation, WithManaOceanEff
 }
 
 export class ManaOceanEffectSettings extends Component<ManaOceanEffectSettingsProps> {
+  changeTimeoutId: NodeJS.Timeout | undefined;
+  
   constructor(props: ManaOceanEffectSettingsProps) {
     super(props);
     this.state = {
     };
     this.onChange = this.onChange.bind(this);
-  }
-
-  componentDidMount() {
-    console.log('ManaOceanSettings mounted');
-  }
-
-  componentDidUpdate() {
-    console.log('ManaOceanSettings did update');
-  }
-
-  componentWillUnmount() {
-    console.log('ManaOceanSettings will unmount');
   }
 
   // eslint-disable-next-line class-methods-use-this
@@ -50,6 +40,8 @@ export class ManaOceanEffectSettings extends Component<ManaOceanEffectSettingsPr
 
     switch (propName) {
     case 'massacreDelay':
+    case 'massacreManaChange':
+    case 'massacrePeopleLimit':
     case 'powerSpellDelay':
     case 'ritualDelay':
       if (numberValue < 0) {
@@ -74,14 +66,21 @@ export class ManaOceanEffectSettings extends Component<ManaOceanEffectSettingsPr
     // console.log('propName', propName, value);
 
     const { manaOceanEffects, gameModel } = this.props;
-    gameModel.execute2<PostSettings>({
-      type: 'postSettings',
-      name: 'manaOceanEffects',
-      settings: {
-        ...manaOceanEffects,
-        [propName]: numberValue,
-      },
-    });
+
+    if (this.changeTimeoutId !== undefined) {
+      clearTimeout(this.changeTimeoutId);
+    }
+
+    this.changeTimeoutId = setTimeout(() => {
+      gameModel.execute2<PostSettings>({
+        type: 'postSettings',
+        name: 'manaOceanEffects',
+        settings: {
+          ...manaOceanEffects,
+          [propName]: numberValue,
+        },
+      });
+    }, 500);
   }
 
   // eslint-disable-next-line max-lines-per-function
@@ -95,6 +94,8 @@ export class ManaOceanEffectSettings extends Component<ManaOceanEffectSettingsPr
     const {
       massacreDelay,
       massacreDuration,
+      massacreManaChange,
+      massacrePeopleLimit,
       powerSpellBoundary,
       powerSpellDelay,
       powerSpellDuration,
@@ -135,6 +136,32 @@ export class ManaOceanEffectSettings extends Component<ManaOceanEffectSettingsPr
                 className="tw-w-24 tw-text-right"
                 data-prop-name="massacreDuration"
                 data-multiplier="60000"
+                onChange={this.onChange}
+              />
+            </Form.Group>
+            <Form.Group>
+              <Form.Label>Эффект на ману, от 1 до 5</Form.Label>
+              <Form.Control
+                type="number"
+                step={1}
+                min={1}
+                max={5}
+                value={massacreManaChange}
+                className="tw-w-24 tw-text-right"
+                data-prop-name="massacreManaChange"
+                onChange={this.onChange}
+              />
+            </Form.Group>
+            <Form.Group>
+              <Form.Label>Число людей, от 1 до 10</Form.Label>
+              <Form.Control
+                type="number"
+                step={1}
+                min={1}
+                max={10}
+                value={massacrePeopleLimit}
+                className="tw-w-24 tw-text-right"
+                data-prop-name="massacrePeopleLimit"
                 onChange={this.onChange}
               />
             </Form.Group>

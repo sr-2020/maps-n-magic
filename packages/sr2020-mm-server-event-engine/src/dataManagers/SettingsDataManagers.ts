@@ -106,7 +106,7 @@ export class SettingsDataManager<U extends SettingsData, T extends SettingsResou
     // }).then((el) => {
     let settings = await this.dataProvider.get();
     if (R.isNil(settings) || R.isEmpty(settings)) {
-      this.logger.info('settings_are_empty');
+      this.logger.info('settings_are_empty', this.defaultSettings);
       await this.dataProvider.post(R.clone(this.defaultSettings));
       settings = R.clone(this.defaultSettings);
     }
