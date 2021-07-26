@@ -1,6 +1,10 @@
 import React, { useEffect, useState } from 'react';
 import './SuitSpiritPage.css';
 
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faSpinner } from '@fortawesome/free-solid-svg-icons';
+import classNames from 'classnames';
+
 import Button from "react-bootstrap/Button";
 import { QrScannerWrapper } from '../QrScannerWrapper';
 import { isBodyStorageValid, isSpiritJarValid, refreshCharacterModel, suitSpirit } from '../../api';
@@ -237,7 +241,16 @@ export function SuitSpiritPage(props: SuitSpiritPageProps) {
         </>
       }
       <div className="tw-text-right">
-        <Button disabled={!isValid} onClick={() => setDoSuitSpirit(true)}>Надеть</Button>
+        <Button disabled={!isValid || doSuitSpirit} onClick={() => setDoSuitSpirit(true)}>
+          <FontAwesomeIcon
+            className={classNames("tw-mr-2 ", {
+              'tw-hidden': !doSuitSpirit,
+            })}
+            icon={faSpinner}
+            spin
+          />
+          Надеть
+        </Button>
       </div>
     </div>
   );

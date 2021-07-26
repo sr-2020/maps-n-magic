@@ -4,6 +4,10 @@ import { dispirit, isBodyStorageValid, isSpiritJarValid } from '../../api';
 import { QrScannerWrapper } from '../QrScannerWrapper';
 import './DispiritPage.css';
 
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faSpinner } from '@fortawesome/free-solid-svg-icons';
+import classNames from 'classnames';
+
 import Button from "react-bootstrap/Button";
 import Form from 'react-bootstrap/Form';
 import { StatusIcon } from '../StatusIcon';
@@ -199,16 +203,30 @@ export function DispiritPage(props: DispiritPageProps) {
       }
       <div className="tw-text-right tw-mb-8 tw-mt-12">
         <Button 
-          disabled={!(bodyStorageStatus.status === 'valid')} 
+          disabled={!(bodyStorageStatus.status === 'valid') || doDispirit !== null} 
           onClick={() => setDoDispirit(false)}
         >
+          <FontAwesomeIcon
+            className={classNames("tw-mr-2 ", {
+              'tw-hidden': doDispirit === null,
+            })}
+            icon={faSpinner}
+            spin
+          />
           Снять и отпустить духа
         </Button>
       </div>
       {
         isNormal &&
         <div className="tw-text-right">
-          <Button disabled={!isValid} onClick={() => setDoDispirit(true)}>
+          <Button disabled={!isValid || doDispirit !== null} onClick={() => setDoDispirit(true)}>
+            <FontAwesomeIcon
+              className={classNames("tw-mr-2 ", {
+                'tw-hidden': doDispirit === null,
+              })}
+              icon={faSpinner}
+              spin
+            />
             Снять
           </Button>
         </div>

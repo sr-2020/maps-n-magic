@@ -121,15 +121,6 @@ export function AppHeader2(props: AppHeader2Props) {
           >
             Выйти
           </Dropdown.Item>
-          <Dropdown.Item
-            as="button"
-            type="button"
-            onClick={onLogout}
-            title="Выйти"
-            className="tw-py-3 tw-text-lg"
-          >
-            Выйти
-          </Dropdown.Item>
         </Dropdown.Menu>
       </Dropdown>
     </nav>
