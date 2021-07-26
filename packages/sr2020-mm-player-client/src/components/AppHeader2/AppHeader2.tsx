@@ -45,41 +45,13 @@ export function AppHeader2(props: AppHeader2Props) {
           <FontAwesomeIcon icon={faBars} />
         </Dropdown.Toggle>
         <Dropdown.Menu style={{ zIndex: 2000 }}>
-          <LinkContainer to="/character">
-            <Nav.Link className="dropdown-item tw-py-3 tw-text-lg">Персонаж</Nav.Link>
-          </LinkContainer>
           {
-            characterData.spiritSuitState === undefined && 
-            <LinkContainer to="/spirits">
-              <Nav.Link className="dropdown-item tw-py-3 tw-text-lg">Поймать духа</Nav.Link>
-            </LinkContainer>
-          }
-          <LinkContainer to="/scanSpirit">
-            <Nav.Link className="dropdown-item tw-py-3 tw-text-lg">Осмотреть тотем</Nav.Link>
-          </LinkContainer>
-          <LinkContainer to="/locationChange">
-            <Nav.Link className="dropdown-item tw-py-3 tw-text-lg">Смена локации (отладка)</Nav.Link>
-          </LinkContainer>
-          {
-            characterData.spiritSuitState === undefined && 
-            <LinkContainer to="/suitSpirit">
-              <Nav.Link className="dropdown-item tw-py-3 tw-text-lg">Надеть духа</Nav.Link>
-            </LinkContainer>
-          }
-          {
-            characterData.spiritSuitState !== undefined && 
-            <>
-              <LinkContainer to="/dispirit">
-                <Nav.Link className="dropdown-item tw-py-3 tw-text-lg">Снять духа</Nav.Link>
+            links.map(linkDef => 
+              <LinkContainer to={linkDef.to}>
+                <Nav.Link className="dropdown-item tw-py-3 tw-text-lg">{linkDef.label}</Nav.Link>
               </LinkContainer>
-              <LinkContainer to="/emergencyDispirit">
-                <Nav.Link className="dropdown-item tw-py-3 tw-text-lg">Экстренно снять духа</Nav.Link>
-              </LinkContainer>
-            </>
+            )
           }
-          <LinkContainer to="/history">
-            <Nav.Link className="dropdown-item tw-py-3 tw-text-lg">История</Nav.Link>
-          </LinkContainer>
         </Dropdown.Menu>
       </Dropdown>
       
@@ -158,13 +130,6 @@ export function AppHeader2(props: AppHeader2Props) {
           >
             Выйти
           </Dropdown.Item>
-          {/* <Dropdown.Item href="#/history">История</Dropdown.Item>
-          <LinkContainer to="/dispirit">
-            <Nav.Link className="dropdown-item">Снять духа</Nav.Link>
-          </LinkContainer>
-          <LinkContainer to="/history">
-            <Nav.Link className="dropdown-item">История</Nav.Link>
-          </LinkContainer> */}
         </Dropdown.Menu>
       </Dropdown>
     </nav>

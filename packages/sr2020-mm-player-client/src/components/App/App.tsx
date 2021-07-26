@@ -8,7 +8,7 @@ import { ErrorBoundry } from "../ErrorBoundry";
 import { HashRouter as Router, Route, Switch, Redirect, NavLink } from 'react-router-dom';
 
 import { locationData2SoundStageState, LoginManager } from "../../utils";
-import { LoginState } from "../../types";
+import { LinkDef, LoginState } from "../../types";
 import { WithLoginState, WithAggregatedLocationData } from '../../hocs';
 import { LoginPage } from '../LoginPage';
 import { SpiritList } from "../SpiritList";
@@ -39,6 +39,56 @@ const SOUND_SETTINGS: SoundSettings = {
   backgroundVolume: 50,
   rotationVolume: 50,
 };
+
+const baseLinks: LinkDef[] = [{
+  to: '/character',
+  label: 'Персонаж'
+},{
+  to: '/history',
+  label: 'История'
+}];
+
+const badDispiritLinks: LinkDef[] = [{
+  to: '/character',
+  label: 'Персонаж'
+},{
+  to: '/history',
+  label: 'История'
+},{
+  to: '/dispirit',
+  label: 'Снять духа'
+}];
+
+const notInSpiritLinks: LinkDef[] = [{
+  to: '/character',
+  label: 'Персонаж'
+},{
+  to: '/spirits',
+  label: 'Поймать духа'
+},{
+  to: '/scanSpirit',
+  label: 'Осмотреть тотем'
+},{
+  to: '/suitSpirit',
+  label: 'Надеть духа'
+},{
+  to: '/history',
+  label: 'История'
+}];
+
+const inNormalSpiritLinks: LinkDef[] = [{
+  to: '/character',
+  label: 'Персонаж'
+},{
+  to: '/dispirit',
+  label: 'Снять духа'
+},{
+  to: '/emergencyDispirit',
+  label: 'Тело духа уничтожено'
+},{
+  to: '/history',
+  label: 'История'
+}];
 
 
 export function App(props: AppProps) {
@@ -72,16 +122,8 @@ export function App(props: AppProps) {
             characterData={characterData}
             mute={mute}
             setMute={setMute}
-            links={[]}
+            links={baseLinks}
           />
-          {/* <AppHeader
-            title={title}
-            loginManager={loginManager}
-            locationData={locationData}
-            characterData={characterData}
-            mute={mute}
-            setMute={setMute}
-          /> */}
           <CharacterPage 
             setTitle={setTitle}
             characterData={characterData}
@@ -92,18 +134,16 @@ export function App(props: AppProps) {
     );
   }
 
+  const links = characterData.spiritSuitState === undefined ?
+                  notInSpiritLinks : 
+                  characterData.spiritSuitState.suitStatus === 'normal' ?
+                    inNormalSpiritLinks :
+                    badDispiritLinks;
+
   return (
     <DocumentTitle title={title}>
       <Router>
         <div className="App">
-          {/* <AppHeader
-            title={title}
-            loginManager={loginManager}
-            locationData={locationData}
-            characterData={characterData}
-            mute={mute}
-            setMute={setMute}
-          /> */}
           <AppHeader2
             title={title}
             loginManager={loginManager}
@@ -111,11 +151,9 @@ export function App(props: AppProps) {
             characterData={characterData}
             mute={mute}
             setMute={setMute}
-            links={[]}
+            links={links}
           />
 
-        {/* {JSON.stringify(locationData)} */}
-        
           <Switch>
             {
               characterData.spiritSuitState === undefined && 
@@ -159,9 +197,6 @@ export function App(props: AppProps) {
                 />
               </Route>
             }
-            {/* <Route path="/qrTest">
-              <QrTest />
-            </Route> */}
             <Route path="/character">
               <CharacterPage 
                 setTitle={setTitle}
@@ -193,8 +228,6 @@ export function App(props: AppProps) {
               }}
             />
             <Route path="/">
-              {/* <Redirect to="/spirits" /> */}
-              {/* <Redirect to="/suitSpirit" /> */}
               <Redirect to="/character" />
             </Route>
           </Switch>
