@@ -114,4 +114,7 @@ export interface SpiritPhrase {
   startDate: number;
   endDate: number;
   message: string;
+  characterId: number | null;
+  spiritFractionId: number | null;
+  delivered: boolean;
 }

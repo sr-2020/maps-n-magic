@@ -14,6 +14,9 @@ const defaultSpiritPhrase: Omit<SpiritPhrase, "id"> = {
   startDate: new Date("Jul 28 2021 20:00").getTime(),
   endDate: new Date("Jul 31 2021 20:00").getTime(),
   message: '',
+  characterId: null,
+  spiritFractionId: null,
+  delivered: false,
 };
 
 const spiritPhraseSchema: JSONSchemaType<SpiritPhrase> = {
@@ -23,6 +26,9 @@ const spiritPhraseSchema: JSONSchemaType<SpiritPhrase> = {
     startDate: {type: "integer"},
     endDate: {type: "integer"},
     message: {type: "string"},
+    characterId: {type: "integer", nullable: true},
+    spiritFractionId: {type: "integer", nullable: true},
+    delivered: {type: "boolean"},
   },
   required: ["id", "startDate", "endDate", "message"],
   additionalProperties: false,
@@ -36,6 +42,9 @@ const newSpiritPhraseSchema: JSONSchemaType<Omit<SpiritPhrase, "id">> = {
     startDate: {type: "integer"},
     endDate: {type: "integer"},
     message: {type: "string"},
+    characterId: {type: "integer", nullable: true},
+    spiritFractionId: {type: "integer", nullable: true},
+    delivered: {type: "boolean"},
   },
   required: ["startDate", "endDate", "message"],
   additionalProperties: false,

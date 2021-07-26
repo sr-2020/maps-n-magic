@@ -11,6 +11,7 @@ import {
   validateGenericRows
 } from "./genericRowValidation";
 import { createLogger } from '../../utils';
+import { GenericRow } from './types';
 
 const logger = createLogger('spiritPhrases.ts');
 
@@ -29,17 +30,30 @@ export const getSpiritPhrase = async function(id: number): Promise<unknown> {
   }
 }
 
-
 export const getSpiritPhrases = async function(): Promise<unknown[]> {
   const { rows } = await pool.query('SELECT * FROM "spiritPhrase"');
   // logger.info('raw spiritPhrase', rows);
   if(!validateGenericRows(rows)) {
     throw new Error(`Generic row check got validation error. ${JSON.stringify(validateGenericRows.errors)}`);
   }
+  rows.forEach(migrateRow);
   return rows.map(row => ({
     ...row.data,
     id: row.id,
   }));
+}
+
+function migrateRow(row: GenericRow) {
+  const data = row.data as any;
+  if (data.characterId === undefined) {
+    data.characterId = null;
+  }
+  if (data.spiritFractionId === undefined) {
+    data.spiritFractionId = null;
+  }
+  if (data.delivered === undefined) {
+    data.delivered = false;
+  }
 }
 
 export const postSpiritPhrase = async function(entity: Omit<SpiritPhrase, "id">): Promise<SpiritPhrase> {

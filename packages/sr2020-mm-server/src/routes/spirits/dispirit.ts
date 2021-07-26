@@ -210,7 +210,9 @@ export const mainDispirit = async (req1, res, next) => {
       playerMessages(JSON.stringify({
         characterId,
         time: new Date(),
-        messageBody
+        messageBody,
+        spiritId: spirit.id,
+        spiritFractionId: spirit.fraction
       }));
     }
 

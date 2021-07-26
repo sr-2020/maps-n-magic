@@ -26,6 +26,33 @@ interface SpiritPhraseEditorProps extends WithTranslation, WithSpiritPhrases {
   gameModel: GameModel;
 }
 
+type PropChange = 
+  | {prop: 'message', value: string}
+  | {prop: 'characterId', value: number | null}
+  | {prop: 'spiritFractionId', value: number | null}
+;
+
+// const fractionNameObj: Record<number, string> = {
+//   1: "Без фракции",
+//   2: "Баргузин",
+//   3: "Култук",
+//   4: "Сарма",
+// };
+
+const spiritFractions = [{
+  id: -1,
+  name: 'Не выбрано'
+},{
+  id: 2,
+  name: 'Баргузин'
+},{
+  id: 3,
+  name: 'Култук'
+},{
+  id: 4,
+  name: 'Сарма'
+}]
+
 export class SpiritPhraseEditor extends Component<SpiritPhraseEditorProps> {
   updateSpiritPhraseTimeoutId: NodeJS.Timeout | undefined;
 
@@ -34,6 +61,8 @@ export class SpiritPhraseEditor extends Component<SpiritPhraseEditorProps> {
     this.createSpiritPhrase = this.createSpiritPhrase.bind(this);
     this.onDateTimeChange = this.onDateTimeChange.bind(this);
     this.handleInputChange = this.handleInputChange.bind(this);
+    this.handleCharacterIdChange = this.handleCharacterIdChange.bind(this);
+    this.handleFractionIdChange = this.handleFractionIdChange.bind(this);
   }
 
   createSpiritPhrase(): void {
@@ -66,7 +95,33 @@ export class SpiritPhraseEditor extends Component<SpiritPhraseEditorProps> {
     this.putBeaconRecord(Number(idStr), {prop: name, value});
   }
 
-  putBeaconRecord(id: number, propChange: {prop: 'message', value: string}): void {
+  handleCharacterIdChange(event: ChangeEvent<HTMLInputElement>): void {
+    const { target } = event;
+    const { idStr } = event.target.dataset;
+    const value = target.value;
+    const name = target.name as 'characterId';
+    if(!['characterId'].includes(name)) {
+      throw new Error('Unexpected spirit phrase prop name: ' + name);
+    }
+    if (value.trim() === '') {
+      this.putBeaconRecord(Number(idStr), {prop: name, value: null});
+    } else {
+      const number = Number(value);
+      if (!Number.isNaN(number)) {
+        this.putBeaconRecord(Number(idStr), {prop: name, value: number});
+      }
+    }
+  }
+
+  handleFractionIdChange(event: ChangeEvent<HTMLSelectElement>): void {
+    const { value } = event.target;
+    const { idStr } = event.target.dataset;
+    const newValue = Number(value) === -1 ? null : Number(value);
+    this.putBeaconRecord(Number(idStr), {prop: 'spiritFractionId', value: newValue});
+    // onLocationSelect(Number(idStr), newValue);
+  }
+
+  putBeaconRecord(id: number, propChange: PropChange): void {
     const { gameModel } = this.props;
 
     if (this.updateSpiritPhraseTimeoutId !== undefined) {
@@ -120,6 +175,9 @@ export class SpiritPhraseEditor extends Component<SpiritPhraseEditorProps> {
                 <th>Start date</th>
                 <th>End date</th>
                 <th>Message</th>
+                <th>Character id</th>
+                <th>Fraction id</th>
+                <th>Delivered</th>
               </tr>
             </thead>
             <tbody>
@@ -142,11 +200,47 @@ export class SpiritPhraseEditor extends Component<SpiritPhraseEditorProps> {
                       <Form.Control
                         name="message"
                         type="text"
-                        style={{ width: '48rem' }}
+                        style={{ width: '40rem' }}
                         defaultValue={phrase.message}
                         data-id-str={phrase.id}
                         onChange={this.handleInputChange}
                       />
+                    </td>
+                    <td className="tw-text-right">
+                      <Form.Control
+                        name="characterId"
+                        type="text"
+                        style={{ width: '8rem' }}
+                        defaultValue={phrase.characterId || ''}
+                        data-id-str={phrase.id}
+                        onChange={this.handleCharacterIdChange}
+                      />
+                      {/* {phrase.characterId} */}
+                    </td>
+                    <td className="tw-text-right">
+                      <Form.Control 
+                        as="select" 
+                        name="spiritFractionId"
+                        className=""
+                        value={phrase.spiritFractionId || 0}
+                        data-id-str={phrase.id}
+                        onChange={this.handleFractionIdChange}
+                      >
+                        {
+                          spiritFractions.map((fraction) => (
+                            <option
+                              key={fraction.id}
+                              value={fraction.id}
+                            >
+                              {fraction.name}
+                            </option>
+                          ))
+                        }
+                      </Form.Control>
+                      {/* {phrase.spiritFractionId} */}
+                    </td>
+                    <td className="tw-text-right">
+                      {phrase.characterId !== null && String(phrase.delivered)}
                     </td>
                     <td>
                       <div className="menu tw-float-right">
