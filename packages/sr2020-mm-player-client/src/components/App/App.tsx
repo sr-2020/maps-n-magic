@@ -54,9 +54,6 @@ const badDispiritLinks: LinkDef[] = [{
 },{
   to: '/history',
   label: 'История'
-},{
-  to: '/dispirit',
-  label: 'Снять духа'
 }];
 
 const notInSpiritLinks: LinkDef[] = [{

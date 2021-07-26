@@ -81,7 +81,7 @@ export function AppHeader(props: AppHeaderProps) {
                 <Nav.Link>Снять духа</Nav.Link>
               </LinkContainer>
               <LinkContainer to="/emergencyDispirit">
-                <Nav.Link>Экстренно снять духа</Nav.Link>
+                <Nav.Link>Тело духа уничтожено</Nav.Link>
               </LinkContainer>
             </>
           }

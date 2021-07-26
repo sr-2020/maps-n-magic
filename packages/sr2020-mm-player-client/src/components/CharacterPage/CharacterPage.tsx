@@ -4,6 +4,7 @@ import moment from 'moment';
 
 import { WithLoginState, WithCharacterDataOnly } from '../../hocs';
 import { BodyType, HealthState } from 'sr2020-mm-event-engine';
+import { DispiritComponent } from '../DispiritComponent';
 
 interface CharacterPageProps extends WithCharacterDataOnly {
   setTitle: (title: string) => void;
@@ -34,6 +35,11 @@ export function CharacterPage(props: CharacterPageProps) {
   if (characterData === null) {
     return <div>Данные персонажа загружаются</div>
   }
+
+  const isNotNormal = [
+    "emergencyDispirited", 
+    "suitTimeout"
+  ].includes(characterData.spiritSuitState?.suitStatus || '');
 
   return (
     <div className="CharacterPage tw-p-4">
@@ -84,6 +90,12 @@ export function CharacterPage(props: CharacterPageProps) {
         <span className="tw-w-24 tw-inline-block">Состояние</span>
         <span>{healthStateLabel[characterData.workModel.healthState]}</span>
       </div>
+      {
+        isNotNormal &&
+        <div>
+          <DispiritComponent />
+        </div>
+      }
     </div>
   );
 }

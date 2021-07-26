@@ -17,7 +17,7 @@ interface DispiritPageProps {
   characterData: CharacterModelData2;
 }
 
-type BodyStorageStatus2 = {
+export type BodyStorageStatus2 = {
   status: 'valid';
 } | {
   status: 'invalid';

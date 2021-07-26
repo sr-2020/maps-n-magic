@@ -13,7 +13,7 @@ export function EmergencyDispiritPage(props: EmergencyDispiritPageProps) {
   const { setTitle } = props;
 
   useEffect(() => {
-    setTitle(`Экстренно снять духа`);
+    setTitle(`Тело духа уничтожено`);
   }, []);
   
   const [doEmergencyDispirit, setDoEmergencyDispirit] = useState<boolean>(false);
