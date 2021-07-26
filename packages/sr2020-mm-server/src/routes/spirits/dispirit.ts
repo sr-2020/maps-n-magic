@@ -214,6 +214,11 @@ export const mainDispirit = async (req1, res, next) => {
         spiritId: spirit.id,
         spiritFractionId: spirit.fraction
       }));
+
+      eLogger.success(
+        `spirit ${spirit.id} ${spirit.name} got message "${messageBody}"`, 
+        `Дух ${spirit.id} ${spirit.name} получил мысль "${messageBody}"`
+      );
     }
 
     eLogger.success(

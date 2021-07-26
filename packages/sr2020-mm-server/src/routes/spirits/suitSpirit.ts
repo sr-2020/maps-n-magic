@@ -185,6 +185,13 @@ export const mainSuitSpirit = async (req1, res, next) => {
       suitDuration
     })}`, `Дух ${spirit.id} ${spirit.name} надет на ${suitDuration / 60000} минут`);
 
+    if (message !== null) {
+      eLogger.success(
+        `spirit ${spirit.id} ${spirit.name} says message "${message}"`, 
+        `Дух ${spirit.id} ${spirit.name} передал мысль "${message}"`
+      );
+    }
+
     res.status(200).json(true);
   } catch(error) {
     const message = `${error} ${JSON.stringify(error)}`;
