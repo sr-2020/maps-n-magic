@@ -122,7 +122,9 @@ export const mainSuitSpirit = async (req1, res, next) => {
 
 
     const message = req.gameModel.get2<GetRandomSpiritPhrase>({
-      type: 'randomSpiritPhrase'
+      type: 'randomSpiritPhrase',
+      characterId,
+      spiritFractionId: spirit.fraction
     });
 
     const suitStartTime = Date.now();

@@ -24,7 +24,8 @@ import {
   SpiritPhraseListenEvents,
   SpiritPhraseList,
   SpiritPhraseServiceContract,
-  GetRandomSpiritPhrase
+  GetRandomSpiritPhrase,
+  EPutSpiritPhraseRequested
 } from "./types";
 
 
@@ -77,9 +78,29 @@ export class SpiritPhraseService extends AbstractService<SpiritPhraseServiceCont
     return spiritPhrase !== undefined ? {...spiritPhrase} : undefined;
   }
 
-  getRandomSpiritPhrase (arg: Req<GetRandomSpiritPhrase>): Res<GetRandomSpiritPhrase> {
+  getRandomSpiritPhrase ({ characterId, spiritFractionId }: Req<GetRandomSpiritPhrase>): Res<GetRandomSpiritPhrase> {
+    const phrase = this.spiritPhrases.find(phrase => {
+      return phrase.characterId === characterId &&
+        phrase.spiritFractionId === spiritFractionId &&
+        phrase.delivered === false
+    });
+    if (phrase !== undefined) {
+      this.gameModel.emit2<EPutSpiritPhraseRequested>({
+        type: 'putSpiritPhraseRequested',
+        id: phrase.id,
+        props: {
+          'delivered': true
+        },
+      });
+      return phrase.message;
+    }
+
     const curTime = Date.now();
-    const phrases = this.spiritPhrases.filter((spiritPhrase) => spiritPhrase.startDate <= curTime && curTime < spiritPhrase.endDate);
+    const phrases = this.spiritPhrases.filter((spiritPhrase) => {
+      return spiritPhrase.startDate <= curTime && 
+        curTime < spiritPhrase.endDate &&
+        spiritPhrase.characterId === null
+    });
     const item = sample(phrases);
     return item !== null ? item.message : item;
   }

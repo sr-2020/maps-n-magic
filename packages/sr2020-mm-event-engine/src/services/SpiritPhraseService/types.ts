@@ -14,7 +14,10 @@ import {
 
 export type GetSpiritPhrases = (arg: Typed<'spiritPhrases'>) => SpiritPhrase[];
 export type GetSpiritPhrase = (arg: Typed<'spiritPhrase', {id: number}>) => SpiritPhrase | undefined;
-export type GetRandomSpiritPhrase = (arg: Typed<'randomSpiritPhrase', {}>) => string | null;
+export type GetRandomSpiritPhrase = (arg: Typed<'randomSpiritPhrase', {
+  characterId: number;
+  spiritFractionId: number;
+}>) => string | null;
 
 // emit events
 
