@@ -62,6 +62,10 @@ export class SpiritToQrConsistency extends Component<
 
 
   async getSpiritConsistencyReport() {
+    this.setState({
+      spiritConsistencyReport: null
+    });
+
     const res = await fetch('/api/spiritConsistencyReport', {
       method: 'GET',
     });
@@ -73,6 +77,9 @@ export class SpiritToQrConsistency extends Component<
   }
 
   async getBatchSpiritJarsReport() {
+    this.setState({
+      batchSpiritJarsReport: null
+    });
     const res = await fetch('/api/checkSpiritJarsBatch', {
       method: 'GET',
     });
@@ -84,6 +91,9 @@ export class SpiritToQrConsistency extends Component<
   }
 
   async getBatchBodyStorageReport() {
+    this.setState({
+      batchBodyStorageReport: null
+    });
     const res = await fetch('/api/checkBodyStorageBatch', {
       method: 'GET',
     });

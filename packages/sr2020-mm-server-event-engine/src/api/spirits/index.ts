@@ -12,9 +12,11 @@ import {
   putSpirit,
   putMultipleSpirits,
   deleteSpirit,
+  getSpirit,
 } from './spirits';
 
 import {
+  getSpiritFraction,
   getSpiritFractions,
   putSpiritFraction
 } from './spiritFractions';
@@ -23,14 +25,16 @@ import {
   getSpiritRoutes, 
   postSpiritRoute, 
   putSpiritRoute, 
-  deleteSpiritRoute 
+  deleteSpiritRoute, 
+  getSpiritRoute
 } from "./spiritRoutes";
 
 import { 
   getSpiritPhrases,
   postSpiritPhrase,
   putSpiritPhrase,
-  deleteSpiritPhrase
+  deleteSpiritPhrase,
+  getSpiritPhrase
 } from "./spiritPhrases";
 
 import {  
@@ -38,7 +42,8 @@ import {
   Postable2,
   Puttable2,
   Deletable2,
-  MultiPuttable2
+  MultiPuttable2,
+  SingleGettable2
 } from "../types";
 
 import { 
@@ -63,12 +68,14 @@ import { validateSpiritFraction } from "./spiritFractionValidation";
 
 export class SpiritProvider implements 
   Gettable2<Spirit>, 
+  SingleGettable2<Spirit>,
   Postable2<Spirit>, 
   Puttable2<Spirit>, 
   MultiPuttable2<Spirit>,
   Deletable2<Spirit>
 {
   get = getSpirits;
+  singleGet = getSpirit;
   post = postSpirit;
   put = putSpirit;
   putMultiple = putMultipleSpirits;
@@ -79,11 +86,13 @@ export class SpiritProvider implements
 }
 export class SpiritFractionProvider implements 
   Gettable2<SpiritFraction>, 
+  SingleGettable2<SpiritFraction>,
   Postable2<SpiritFraction>, 
   Puttable2<SpiritFraction>, 
   Deletable2<SpiritFraction>
 {
   get = getSpiritFractions;
+  singleGet = getSpiritFraction;
   put = putSpiritFraction;
   validateEntity = validateSpiritFraction;
   post(entity: Partial<Omit<SpiritFraction, 'id'>>): Promise<SpiritFraction> {
@@ -102,11 +111,13 @@ export class SpiritFractionProvider implements
 
 export class SpiritRouteProvider implements 
   Gettable2<SpiritRoute>, 
+  SingleGettable2<SpiritRoute>,
   Postable2<SpiritRoute>, 
   Puttable2<SpiritRoute>, 
   Deletable2<SpiritRoute>
 {
   get = getSpiritRoutes;
+  singleGet = getSpiritRoute;
   post = postSpiritRoute;
   put = putSpiritRoute;
   delete = deleteSpiritRoute;
@@ -117,11 +128,13 @@ export class SpiritRouteProvider implements
 
 export class SpiritPhraseProvider implements 
   Gettable2<SpiritPhrase>, 
+  SingleGettable2<SpiritPhrase>,
   Postable2<SpiritPhrase>, 
   Puttable2<SpiritPhrase>, 
   Deletable2<SpiritPhrase>
 {
   get = getSpiritPhrases;
+  singleGet = getSpiritPhrase;
   post = postSpiritPhrase;
   put = putSpiritPhrase;
   delete = deleteSpiritPhrase;

@@ -11,6 +11,7 @@ interface QrStatusProps extends WithTranslation {
   gameModel: GameModel;
 }
 interface QrStatusState {
+  qrId: number | null;
   report: any;
 }
 
@@ -21,12 +22,14 @@ export class QrStatus extends Component<
   constructor(props: QrStatusProps) {
     super(props);
     this.state = {
+      qrId: null,
       report: null
     };
     this.onSubmit = this.onSubmit.bind(this);
+    this.forceFreeSpirit = this.forceFreeSpirit.bind(this);
   }
 
-  async onSubmit(e: FormEvent<HTMLFormElement>) {
+  onSubmit(e: FormEvent<HTMLFormElement>) {
     const form = e.currentTarget;
     e.stopPropagation();
     e.preventDefault();
@@ -36,15 +39,35 @@ export class QrStatus extends Component<
     }
 
     this.setState({
-      report: null
+      report: null,
+      qrId: qrId2
     });
 
+    this.getQrData(qrId2);
+  }
+  
+  async getQrData(qrId2: number) {
     const res = await fetch('/api/checkQrById/' + qrId2);
     const json = await res.json();
     // console.log(json);
     this.setState({
       report: json
     });
+  }
+
+  async forceFreeSpirit() {
+    const { qrId } = this.state;
+    if (qrId === null) {
+      return;
+    }
+    const res = await fetch('/api/forceFreeSpirit', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({qrId})
+    });
+    this.getQrData(qrId);
   }
 
   render() {
@@ -69,9 +92,17 @@ export class QrStatus extends Component<
             </Button>
           </div>
         </Form>
-        <div>
+        <div className="tw-mb-8">
           {JSON.stringify(report)}
         </div>
+        {
+          report?.qrType === "spiritJar" &&
+          <div className="tw-mb-8" onClick={this.forceFreeSpirit}>
+            <Button variant="primary" >
+              Очистить куар от духа
+            </Button>
+          </div>
+        }
       </div>
     );
   }

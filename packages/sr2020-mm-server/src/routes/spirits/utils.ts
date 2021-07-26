@@ -8,12 +8,19 @@ export async function waitForSpiritSuited (
   gameModel: GameModel, 
   spiritId: string | number
 ) {
+  return 'finished';
+}
+
+export async function waitForSpiritSuited2 (
+  type: string, 
+  gameModel: GameModel, 
+  spiritId: string | number
+) {
   return new Promise<string>((resolve, reject) => {
     try {
       
       let checkTimeoutId: NodeJS.Timeout | null = null;
       let counter = 0;
-      
       checkTimeoutId = setInterval(() => {
         const spirit = gameModel.get2<GetSpirit>({
           type:'spirit',
@@ -36,7 +43,8 @@ export async function waitForSpiritSuited (
         // resolve('finished');
         counter++;
         // if (counter === 5) {
-        if (counter === 1) {
+        if (counter === 3) {
+        // if (counter === 1) {
           if ( checkTimeoutId !== null ) {
             clearInterval(checkTimeoutId);
           }

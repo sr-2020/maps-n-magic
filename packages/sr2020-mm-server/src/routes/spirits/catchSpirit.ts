@@ -2,11 +2,13 @@ import * as R from 'ramda';
 import { 
   EPutSpiritRequested, 
   ErrorResponse, 
+  FullSpiritJarQr, 
   GetSpirit, 
   getSpiritLocationId, 
   GetUserRecord, 
   invalidRequestBody, 
   isFullSpiritJar, 
+  SpiritJarQr, 
   validateCatchSpiritInternalRequest 
 } from 'sr2020-mm-event-engine';
 import { 
@@ -18,8 +20,10 @@ import {
   putSpiritInStorage, 
   EndpointId, 
   EndpointLogger, 
-  validateSpiritJarQrModelData 
+  validateSpiritJarQrModelData, 
+  PutSpiritRequestedCall
 } from 'sr2020-mm-server-event-engine';
+import { waitForSpiritSuited } from './utils';
 
 const logger = createLogger('catchSpirit.ts');
 
@@ -190,11 +194,7 @@ export const mainCatchSpirit = async (req1, res, next) => {
       return;
     }
 
-    const putResult = await putSpiritInStorage(qrId, spiritId);
-    // logger.info('put spirit success confirmation', putResult);
-
-    req.gameModel.emit2<EPutSpiritRequested>({
-      type: 'putSpiritRequested',
+    await (req.gameModel as unknown as PutSpiritRequestedCall).putSpiritRequested({
       id: spiritId,
       props: {
         state: {
@@ -202,7 +202,29 @@ export const mainCatchSpirit = async (req1, res, next) => {
           qrId
         },
       }
-    });
+    })
+
+    // req.gameModel.emit2<EPutSpiritRequested>({
+    //   type: 'putSpiritRequested',
+    //   id: spiritId,
+    //   props: {
+    //     state: {
+    //       status: 'InJar',
+    //       qrId
+    //     },
+    //   }
+    // });
+
+    const result = await waitForSpiritSuited('catchSpirit', req.gameModel, spirit.id);
+
+    const putResult = await putSpiritInStorage(qrId, spiritId);
+    // logger.info('put spirit success confirmation', putResult);
+
+    const qrModelData2 = await getQrModelData(qrId) as FullSpiritJarQr;
+
+    const isInJar = Number(qrModelData2.workModel.data.spiritId) === spiritId;
+    logger.info(`Spirit ${spiritId} isInJar ${isInJar} ${qrId}`);
+
 
     eLogger.success(
       `catch spirit ${spirit.id} ${spirit.name} in qr ${qrId}`, 

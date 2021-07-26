@@ -58,7 +58,7 @@ import { CrudDataManager } from '../dataManagers/CrudDataManager';
 import { LocationDataManager } from '../dataManagers/LocationDataManager';
 import { ReadDataManager } from '../dataManagers/ReadDataManager';
 import { ReadDataManager2 } from '../dataManagers/ReadDataManager2';
-import { CrudDataManager2, CrudDataManagerPlus2 } from '../dataManagers/CrudDataManager2';
+import { CrudDataManager2, CrudDataManagerPlus2, PutEntityArg } from '../dataManagers/CrudDataManager2';
 import { SettingsDataManager } from '../dataManagers/SettingsDataManagers';
 import { PollingReadStrategy } from '../dataManagers/PollingReadStrategy';
 // import { DataBinding } from '../dataManagers/DataBinding';
@@ -94,6 +94,9 @@ import {
 import { createLogger } from '../utils';
 import { FeatureProvider } from '../api/features';
 import { ModelManagetLocInitializer } from '../services/ModelManagetLocInitializer';
+import { PutSpiritRequestedCall } from '../types';
+
+
 
 type EventBindingList = 
   | StrictEventBinding<EPutCharHealthRequested, EPutCharHealthConfirmed>
@@ -172,6 +175,10 @@ export function makeGameModel(): {
   );
   spiritDataBinding.init();
   gameServer.addDataBinding(spiritDataBinding);
+
+  (gameModel as unknown as PutSpiritRequestedCall).putSpiritRequested = ({ id, props }: PutEntityArg<Spirit>): Promise<Spirit | null> => {
+    return spiritDataBinding.onPutEntityRequested({ id, props });
+  }
 
   const spiritFractionLogger = createLogger('spiritFractionDataBinding');
   const spiritFractionDataBinding = new CrudDataManager2<SpiritFraction, SpiritFractionProvider>(

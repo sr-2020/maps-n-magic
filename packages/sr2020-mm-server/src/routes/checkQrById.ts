@@ -71,10 +71,11 @@ export function analyzeBodyStorageQr(
   qrId: number, 
   qrModelData1: BodyStorageQr, 
   gameModel: GameModel
-): { qrId: number; type: string; message: string; } {
+): { qrId: number; qrType: string; type: string; message: string; } {
   if (isEmptyBodyStorage(qrModelData1)) {
     return {
       qrId,
+      qrType: 'bodyStorage',
       type: 'consistent',
       message: 'Телохранилище пусто'
     };
@@ -96,6 +97,7 @@ export function analyzeBodyStorageQr(
     if (suitedSpirits.length === 0) {
       return {
         qrId,
+        qrType: 'bodyStorage',
         type: 'bodyStorageIsNotEmpty_but_SpiritInNotSuited',
         message: `В телохранилище ${qrId} тело мага ${characterId}, но ни один дух на него не одет по версии океана`
       };
@@ -104,6 +106,7 @@ export function analyzeBodyStorageQr(
     if (suitedSpirits.length > 1) {
       return {
         qrId,
+        qrType: 'bodyStorage',
         type: 'bodyStorageIsNotEmpty_but_mageWearsMoreThanOneSpirit',
         message: `В телохранилище ${qrId} тело мага ${characterId}, и на мага надето более 1 духа ${JSON.stringify(suitedSpirits)}`
       };
@@ -114,6 +117,7 @@ export function analyzeBodyStorageQr(
     if (state.bodyStorageId !== qrId) {
       return {
         qrId,
+        qrType: 'bodyStorage',
         type: 'bodyStorageIsNotEmpty_but_wearedSpiritExpectsOtherBodyStorage',
         message: `В телохранилище ${qrId} тело мага ${characterId}, и на мага надет дух ${state.spiritId} но тело мага ожидается в ${state.bodyStorageId}. State ${JSON.stringify(state)}`
       };
@@ -121,6 +125,7 @@ export function analyzeBodyStorageQr(
 
     return {
       qrId,
+      qrType: 'bodyStorage',
       type: 'consistent',
       message: `В телохранилище ${qrId} тело мага ${characterId}, одевшего духа ${state.spiritId} ожидающего тело в ${state.bodyStorageId}`
     };
@@ -129,6 +134,7 @@ export function analyzeBodyStorageQr(
 
   return {
     qrId,
+    qrType: 'bodyStorage',
     type: 'shouldNeverHappenBodyStorage',
     message: ''
   };
@@ -139,10 +145,11 @@ export function analyzeSpiritJarQr(
   qrId: number, 
   qrModelData1: SpiritJarQr, 
   gameModel: GameModel
-): { qrId: number; type: string; message: string; } {
+): { qrId: number; qrType: string; type: string; message: string; } {
   if (isEmptySpiritJar(qrModelData1)) {
     return {
       qrId,
+      qrType: 'spiritJar',
       type: 'consistent',
       message: 'Духохранилище пусто'
     };
@@ -158,6 +165,7 @@ export function analyzeSpiritJarQr(
   if (spirit === undefined) {
     return {
       qrId,
+      qrType: 'spiritJar',
       type: 'spiritJarIsInconsistentWithOcean',
       message: `В куаре ${qrId} записан дух ${spiritId}, но такой дух не найден в океане`
     };
@@ -167,22 +175,25 @@ export function analyzeSpiritJarQr(
   if (state.status !== 'InJar') {
     return {
       qrId,
+      qrType: 'spiritJar',
       type: 'spiritJarIsInconsistentWithOcean',
-      message: `В куаре ${qrId} записан дух ${spiritId}, но по океану дух не в куаре. Состояние духа ${JSON.stringify(state)}`
+      message: `В куаре ${qrId} записан дух ${spiritId} ${spirit.name}, но по океану дух не в куаре. Состояние духа ${JSON.stringify(state)}`
     };
   }
 
   if (state.qrId !== qrId) {
     return {
       qrId,
+      qrType: 'spiritJar',
       type: 'spiritJarIsInconsistentWithOcean',
-      message: `В куаре ${qrId} записан дух ${spiritId}, но по океану дух в куаре ${state.qrId}`
+      message: `В куаре ${qrId} записан дух ${spiritId} ${spirit.name}, но по океану дух в куаре ${state.qrId}`
     };
   }
 
   return {
     qrId,
+    qrType: 'spiritJar',
     type: 'consistent',
-    message: `В куаре ${qrId} записан дух ${spiritId} и в океане те же данные`
+    message: `В куаре ${qrId} записан дух ${spiritId} ${spirit.name} и в океане те же данные`
   };
 }

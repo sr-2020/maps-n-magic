@@ -27,7 +27,8 @@ import {
   validateSpiritJarQrModelData,
   EndpointId, 
   EndpointLogger,
-  getCharacterModelData, 
+  getCharacterModelData,
+  PutSpiritRequestedCall, 
 } from 'sr2020-mm-server-event-engine';
 import { waitForSpiritSuited } from './utils';
 
@@ -125,8 +126,8 @@ export const mainSuitSpirit = async (req1, res, next) => {
     });
 
     const suitStartTime = Date.now();
-    req.gameModel.emit2<EPutSpiritRequested>({
-      type: 'putSpiritRequested',
+
+    await (req.gameModel as unknown as PutSpiritRequestedCall).putSpiritRequested({
       id: spirit.id,
       props: {
         state: {
@@ -143,7 +144,27 @@ export const mainSuitSpirit = async (req1, res, next) => {
           message
         },
       }
-    });
+    })
+
+    // req.gameModel.emit2<EPutSpiritRequested>({
+    //   type: 'putSpiritRequested',
+    //   id: spirit.id,
+    //   props: {
+    //     state: {
+    //       status: 'Suited',
+    //       spiritId: spirit.id,
+    //       spiritName: spirit.name,
+    //       characterId,
+    //       suitStartTime,
+    //       suitDuration,
+    //       // duration: 2 * 60 * 1000, // 2 min
+    //       suitStatus: 'normal',
+    //       suitStatusChangeTime: -1,
+    //       bodyStorageId,
+    //       message
+    //     },
+    //   }
+    // });
 
     const result = await waitForSpiritSuited('suitSpirit', req.gameModel, spiritId);
 

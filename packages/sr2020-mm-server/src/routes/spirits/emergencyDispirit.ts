@@ -10,6 +10,7 @@ import {
   EndpointId, 
   EndpointLogger, 
   InnerApiRequest, 
+  PutSpiritRequestedCall, 
   zeroSpiritAbilities
 } from 'sr2020-mm-server-event-engine';
 
@@ -59,8 +60,7 @@ export const mainEmergencyDispirit = async (req1, res, next) => {
 
     await zeroSpiritAbilities(characterId);
 
-    req.gameModel.emit2<EPutSpiritRequested>({
-      type: 'putSpiritRequested',
+    await (req.gameModel as unknown as PutSpiritRequestedCall).putSpiritRequested({
       id: spirit.id,
       props: {
         state: {
@@ -69,7 +69,19 @@ export const mainEmergencyDispirit = async (req1, res, next) => {
           suitStatusChangeTime: Date.now()
         },
       }
-    });
+    })
+
+    // req.gameModel.emit2<EPutSpiritRequested>({
+    //   type: 'putSpiritRequested',
+    //   id: spirit.id,
+    //   props: {
+    //     state: {
+    //       ...state,
+    //       suitStatus: 'emergencyDispirited',
+    //       suitStatusChangeTime: Date.now()
+    //     },
+    //   }
+    // });
 
     eLogger.success(
       `has emergency dispirit ${spirit.id} ${spirit.name}`,

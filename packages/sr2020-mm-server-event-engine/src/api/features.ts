@@ -9,14 +9,17 @@ import {
 } from 'sr2020-mm-event-engine';
 
 import {  
-  Gettable2,
+  Gettable2, SingleGettable2,
 } from "./types";
 import { mainServerConstants } from "./constants";
 
 const logger = createLogger('features.ts');
 
-export class FeatureProvider implements Gettable2<Feature>
+export class FeatureProvider implements Gettable2<Feature>, SingleGettable2<Feature>
 {
+  singleGet(id: string | number): Promise<unknown> {
+    throw new Error('Method not implemented.');
+  }
   async get(): Promise<Feature[]>  {
     const response = await fetch(mainServerConstants().featuresUrl);
     if (!response.ok) {

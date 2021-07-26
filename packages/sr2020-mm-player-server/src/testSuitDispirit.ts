@@ -8,6 +8,8 @@ export function testSuitDispirit() {
   // setTimeout(innerTestSuitDispirit, 10000);
 }
 
+
+// characterId, bodyStorageId, spiritJarId
 const items: [number, number, number][] = [
   [51935, 367, 359],
   [37231, 2001, 2000],
@@ -37,7 +39,6 @@ async function innerTestSuitDispirit() {
       })
     })
   );
-  // await singleCharacterTest(51935, 367, 359);
 }
 
 async function singleCharacterTest(
@@ -46,8 +47,8 @@ async function singleCharacterTest(
   spiritJarId: number,
 ) {
 
-  // for (let i = 0; i < 5; i++) {
-  for (let i = 0; i < 3; i++) {
+  for (let i = 0; i < 5; i++) {
+  // for (let i = 0; i < 3; i++) {
   // for (let i = 0; i < 1; i++) {
     const reqBody: SuitSpiritInternalRequest = {
       "characterId":characterId,
@@ -65,7 +66,7 @@ async function singleCharacterTest(
       body: JSON.stringify(reqBody)
     });
   
-    logger.info(`${i} suit up charcater ${reqBody.characterId} in jar ${reqBody.spiritJarId} bodyStorageId ${reqBody.bodyStorageId}`);
+    logger.info(`${i} suit up charcater ${characterId} in jar ${spiritJarId} bodyStorageId ${bodyStorageId}`);
   
     const reqBody2: DispiritInternalRequest = {
       "characterId":characterId,
@@ -83,6 +84,6 @@ async function singleCharacterTest(
       body: JSON.stringify(reqBody2)
     });
   
-    logger.info(`${i} dispirit charcater ${reqBody.characterId} in jar ${reqBody.spiritJarId} bodyStorageId ${reqBody.bodyStorageId}`);
+    logger.info(`${i} dispirit charcater ${characterId} in jar ${spiritJarId} bodyStorageId ${bodyStorageId}`);
   }
 }

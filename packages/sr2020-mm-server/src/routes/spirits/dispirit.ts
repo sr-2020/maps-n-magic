@@ -30,7 +30,8 @@ import {
   validateSpiritJarQrModelData, 
   EndpointId, 
   EndpointLogger,
-  getCharacterModelData, 
+  getCharacterModelData,
+  PutSpiritRequestedCall, 
 } from 'sr2020-mm-server-event-engine';
 import { waitForSpiritSuited } from './utils';
 
@@ -177,13 +178,20 @@ export const mainDispirit = async (req1, res, next) => {
     const isInEctoplasmBody = characterData.workModel.currentBody === 'physical';
     logger.info(`Character ${characterId} isInPhysicalBody ${isInEctoplasmBody}`);
 
-    req.gameModel.emit2<EPutSpiritRequested>({
-      type: 'putSpiritRequested',
+    await (req.gameModel as unknown as PutSpiritRequestedCall).putSpiritRequested({
       id: spirit.id,
       props: {
         state: newSpiritState,
       }
-    });
+    })
+
+    // req.gameModel.emit2<EPutSpiritRequested>({
+    //   type: 'putSpiritRequested',
+    //   id: spirit.id,
+    //   props: {
+    //     state: newSpiritState,
+    //   }
+    // });
 
     const result = await waitForSpiritSuited('dispirit', req.gameModel, spirit.id);
 

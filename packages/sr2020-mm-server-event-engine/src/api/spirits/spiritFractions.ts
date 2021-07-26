@@ -6,11 +6,27 @@ import * as R from 'ramda';
 import { pool } from "../pgPool";
 
 import {
+  validateGenericRow,
   validateGenericRows,
 } from "./genericRowValidation";
 import { createLogger } from '../../utils';
 
 const logger = createLogger('spiritFractions.ts');
+
+export const getSpiritFraction = async function(id: number): Promise<unknown> {
+  const { rows } = await pool.query('SELECT * FROM "spiritFraction" WHERE id = $1', [id]);
+  if (rows.length !== 1) {
+    throw new Error(`Single select return non 1 row. id ${id} rows ${JSON.stringify(rows)}`);
+  }
+  const row = rows[0];
+  if(!validateGenericRow(row)) {
+    throw new Error(`Generic row check got validation error. ${JSON.stringify(validateGenericRow.errors)}`);
+  }
+  return {
+    ...row.data,
+    id: row.id,
+  }
+}
 
 // very similar to getSpirits
 export const getSpiritFractions = async function(): Promise<unknown[]> {

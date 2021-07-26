@@ -14,6 +14,22 @@ import { createLogger } from '../../utils';
 
 const logger = createLogger('spiritPhrases.ts');
 
+export const getSpiritPhrase = async function(id: number): Promise<unknown> {
+  const { rows } = await pool.query('SELECT * FROM "spiritPhrase" WHERE id = $1', [id]);
+  if (rows.length !== 1) {
+    throw new Error(`Single select return non 1 row. id ${id} rows ${JSON.stringify(rows)}`);
+  }
+  const row = rows[0];
+  if(!validateGenericRow(row)) {
+    throw new Error(`Generic row check got validation error. ${JSON.stringify(validateGenericRow.errors)}`);
+  }
+  return {
+    ...row.data,
+    id: row.id,
+  }
+}
+
+
 export const getSpiritPhrases = async function(): Promise<unknown[]> {
   const { rows } = await pool.query('SELECT * FROM "spiritPhrase"');
   // logger.info('raw spiritPhrase', rows);

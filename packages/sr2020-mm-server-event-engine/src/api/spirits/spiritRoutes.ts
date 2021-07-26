@@ -14,6 +14,21 @@ import { createLogger } from '../../utils';
 
 const logger = createLogger('spiritRoutes.ts');
 
+export const getSpiritRoute = async function(id: number): Promise<unknown> {
+  const { rows } = await pool.query('SELECT * FROM "spiritRoute" WHERE id = $1', [id]);
+  if (rows.length !== 1) {
+    throw new Error(`Single select return non 1 row. id ${id} rows ${JSON.stringify(rows)}`);
+  }
+  const row = rows[0];
+  if(!validateGenericRow(row)) {
+    throw new Error(`Generic row check got validation error. ${JSON.stringify(validateGenericRow.errors)}`);
+  }
+  return {
+    ...row.data,
+    id: row.id,
+  }
+}
+
 export const getSpiritRoutes = async function(): Promise<unknown[]> {
   const { rows } = await pool.query('SELECT * FROM "spiritRoute"');
   // logger.info('raw spirits', rows);

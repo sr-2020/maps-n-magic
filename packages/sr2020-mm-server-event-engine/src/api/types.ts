@@ -38,6 +38,11 @@ export interface Gettable2<T extends Identifiable> {
   validateEntity: validateEntityFunction<T>;
 }
 
+export interface SingleGettable2<T extends Identifiable> {
+  singleGet(id: Identifiable["id"]): Promise<unknown>;
+  validateEntity: validateEntityFunction<T>;
+}
+
 export interface Postable2<T extends Identifiable> {
   post(entity: Omit<T, "id">): Promise<T>;
   validateNewEntity: validateEntityFunction<Omit<T, "id">>;
@@ -61,6 +66,7 @@ export interface Deletable2<T extends Identifiable> {
 
 export interface Manageable2<T extends Identifiable> extends 
   Gettable2<T>, 
+  SingleGettable2<T>,
   Postable2<T>, 
   Puttable2<T>, 
   Deletable2<T> 
@@ -68,6 +74,7 @@ export interface Manageable2<T extends Identifiable> extends
 
 export interface ManageablePlus2<T extends Identifiable> extends 
   Gettable2<T>, 
+  SingleGettable2<T>,
   Postable2<T>, 
   Puttable2<T>,
   MultiPuttable2<T>,

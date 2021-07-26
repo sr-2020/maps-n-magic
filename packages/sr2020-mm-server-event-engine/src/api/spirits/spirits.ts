@@ -9,8 +9,24 @@ import {
   validateGenericRows, 
 } from "./genericRowValidation";
 import { createLogger } from '../../utils';
+import { GenericRow } from './types';
 
 const logger = createLogger('spirits.ts');
+
+export const getSpirit = async function(id: number): Promise<unknown> {
+  const { rows } = await pool.query('SELECT * FROM spirit WHERE id = $1', [id]);
+  if (rows.length !== 1) {
+    throw new Error(`Single select return non 1 row. id ${id} rows ${JSON.stringify(rows)}`);
+  }
+  const row = rows[0];
+  if(!validateGenericRow(row)) {
+    throw new Error(`Generic row check got validation error. ${JSON.stringify(validateGenericRow.errors)}`);
+  }
+  return {
+    ...row.data,
+    id: row.id,
+  }
+}
 
 export const getSpirits = async function(): Promise<unknown[]> {
   const { rows } = await pool.query('SELECT * FROM spirit');
@@ -21,32 +37,34 @@ export const getSpirits = async function(): Promise<unknown[]> {
   // migration for spirits:
   //  remove maxHitPoints
   //  add hitPoints, level
-  rows.forEach((row) => {
-    const data = row.data as any;
-    if (data.maxHitPoints !== undefined) {
-      delete data.maxHitPoints;
-    }
-    if (data.hitPoints === undefined) {
-      data.hitPoints = 1;
-    }
-    if (data.level === undefined) {
-      data.level = 1;
-    }
-    if (data.state.status === 'Suited' && 
-      data.state.emergencyDispirited !== undefined
-    ) {
-      delete data.state.emergencyDispirited;
-    }
-    if (data.state.status === 'Suited' && 
-      data.state.suitStatus === undefined
-    ) {
-      data.state.suitStatus = 'normal';
-    }
-  });
+  rows.forEach(migrateRow);
   return rows.map(row => ({
     ...row.data,
     id: row.id,
   }));
+}
+
+function migrateRow(row: GenericRow) {
+  const data = row.data as any;
+  if (data.maxHitPoints !== undefined) {
+    delete data.maxHitPoints;
+  }
+  if (data.hitPoints === undefined) {
+    data.hitPoints = 1;
+  }
+  if (data.level === undefined) {
+    data.level = 1;
+  }
+  if (data.state.status === 'Suited' && 
+    data.state.emergencyDispirited !== undefined
+  ) {
+    delete data.state.emergencyDispirited;
+  }
+  if (data.state.status === 'Suited' && 
+    data.state.suitStatus === undefined
+  ) {
+    data.state.suitStatus = 'normal';
+  }
 }
 
 export const postSpirit = async function(entity: Omit<Spirit, "id">): Promise<Spirit> {

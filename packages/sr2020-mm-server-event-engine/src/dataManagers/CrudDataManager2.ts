@@ -12,9 +12,9 @@ import {
 
 import { Manageable2, ManageablePlus2 } from "../api/types";
 
-type EntityProps<Entity> = Partial<Omit<Entity, "id">>;
+export type EntityProps<Entity> = Partial<Omit<Entity, "id">>;
 
-type PutEntityArg<Entity> = {id: number, props: EntityProps<Entity>};
+export type PutEntityArg<Entity> = {id: number, props: EntityProps<Entity>};
 
 export class CrudDataManager2<
   Entity extends Identifiable, 
@@ -87,14 +87,17 @@ export class CrudDataManager2<
 
   // put entity should not be deferred
   // It is better to defer gameModel events emitting (mostly UI code).
-  onPutEntityRequested({ id, props }: PutEntityArg<Entity>): void {
+  async onPutEntityRequested({ id, props }: PutEntityArg<Entity>): Promise<null | Entity> {
     // this.logger.info('onPutEntityRequested', this.entityName, id);
     const index = this.entities.findIndex((br) => br.id === id);
     if (index === -1) {
       this.logger.warn(`Put entity not exists: id ${id}`);
-      return;
+      return Promise.resolve(null);
     }
-    const entity = {...this.entities[index], ...props};
+    // this.dataProvider.
+    const dbEntity = await this.dataProvider.singleGet(id) as Entity;
+    // const entity = {...this.entities[index], ...props};
+    const entity = {...dbEntity, ...props};
     if (!this.dataProvider.validateEntity(entity)) {
       throw new Error("Put entity is not valid " + 
         JSON.stringify(entity) + ", " + 
@@ -102,14 +105,16 @@ export class CrudDataManager2<
       );
     }
 
+
     this.logger.debug(`Put requested, entity: ${this.entityName}, id ${id}`);
-    this.entities[index] = entity;
-    this.gameModel.emit2({
-      type: `put${this.ccEntityName}Confirmed`,
-      [this.entityName]: entity,
-    });
-    this.dataProvider.put(entity).then((entity: Entity) => {
+    return this.dataProvider.put(entity).then((entity: Entity) => {
       this.logger.debug(`Put confirmed, entity: ${this.entityName}, id ${id}`);
+      this.entities[index] = entity;
+      this.gameModel.emit2({
+        type: `put${this.ccEntityName}Confirmed`,
+        [this.entityName]: entity,
+      });
+      return entity;
     }).catch(this.getErrorHandler(`Error on ${this.entityName} put`));
   }
 

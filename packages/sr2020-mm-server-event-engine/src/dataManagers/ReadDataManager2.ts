@@ -11,7 +11,7 @@ import {
   GettableResourceProvider
 } from '../api/position';
 
-import { Gettable2 } from "../api/types";
+import { Gettable2, SingleGettable2 } from "../api/types";
 
 export function capitalizeFirstLetter(string: string): string {
   return string.charAt(0).toUpperCase() + string.slice(1);
@@ -19,7 +19,7 @@ export function capitalizeFirstLetter(string: string): string {
 
 export class ReadDataManager2<
   Entity extends Identifiable, 
-  T extends Gettable2<Entity>
+  T extends Gettable2<Entity> & SingleGettable2<Entity>
 > extends AbstractEventProcessor {
   entities: Entity[];
 
@@ -94,6 +94,7 @@ export class ReadDataManager2<
         message: err.message || String(err),
         kind: 'error',
       });
+      return null;
     };
   }
 }

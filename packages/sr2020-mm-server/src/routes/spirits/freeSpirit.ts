@@ -1,6 +1,8 @@
 import { 
+  EmptySpiritJarQr,
   EPutSpiritRequested, 
   ErrorResponse, 
+  FullSpiritJarQr, 
   GetSpirit, 
   invalidRequestBody, 
   isEmptySpiritJar, 
@@ -13,8 +15,10 @@ import {
   InnerApiRequest, 
   validateSpiritJarQrModelData,
   EndpointId, 
-  EndpointLogger, 
+  EndpointLogger,
+  PutSpiritRequestedCall, 
 } from "sr2020-mm-server-event-engine";
+import { waitForSpiritSuited } from "./utils";
 
 const logger = createLogger('freeSpirit.ts');
 
@@ -101,15 +105,27 @@ export const mainFreeSpirit = async (req1, res, next) => {
           qrIdFromGameModel
         })}`);
       } else {
-        req.gameModel.emit2<EPutSpiritRequested>({
-          type: 'putSpiritRequested',
+
+        await (req.gameModel as unknown as PutSpiritRequestedCall).putSpiritRequested({
           id: spirit.id,
           props: {
             state: {
               status: 'RestInAstral'
             },
           }
-        });
+        })
+
+        // req.gameModel.emit2<EPutSpiritRequested>({
+        //   type: 'putSpiritRequested',
+        //   id: spirit.id,
+        //   props: {
+        //     state: {
+        //       status: 'RestInAstral'
+        //     },
+        //   }
+        // });
+
+        const result = await waitForSpiritSuited('freeSpirit', req.gameModel, spirit.id);
       }
     }
 
@@ -122,6 +138,12 @@ export const mainFreeSpirit = async (req1, res, next) => {
       eLogger.fail(errorResponse);
       return;
     }
+
+    const qrModelData3 = await getQrModelData(qrId) as FullSpiritJarQr;
+
+    const isJarEmpty = isEmptySpiritJar(qrModelData3);
+    // const isJarEmpty = qrModelData3.workModel.data == null;
+    logger.info(`Spirit jar ${qrId} isJarEmpty ${isJarEmpty}, spiritId ${spiritId}`);
 
     eLogger.success(`free spirit ${spirit.id} ${spirit.name}`, `Дух ${spirit.id} ${spirit.name} освобожден`);
 
