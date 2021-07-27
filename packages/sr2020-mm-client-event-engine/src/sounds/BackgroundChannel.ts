@@ -49,7 +49,7 @@ export class BackgroundChannel {
 
   run() {
     if (this.disposed) return;
-    console.log(`${this.uid} RotationChannel.run`);
+    // console.log(`${this.uid} BackgroundChannel.run`);
     const { backgroundSound } = this.context.soundStageState;
     const { soundSettings, soundStorage, audioContextWrapper } = this.context.props;
     if (backgroundSound === null) {
@@ -61,14 +61,14 @@ export class BackgroundChannel {
     } else {
       const sound = soundStorage.getSound(backgroundSound.name);
       if ( sound === undefined ) {
-        console.warn(`BackgroundChannel sound not found: ${backgroundSound.name}`);
+        // console.warn(`BackgroundChannel sound not found: ${backgroundSound.name}`);
         this.bgSilenceTimeoutId = setTimeout(() => this.run(), BG_SILENCE_DURATION_MILLIS);
         this.context.setCurBgSoundData(JSON.stringify({
           type: 'silence', 
           durationMillis: BG_SILENCE_DURATION_MILLIS
         }, null, '  '));
       } else {
-        console.log(`start bg sound ${JSON.stringify(backgroundSound)}`);
+        // console.log(`start bg sound ${JSON.stringify(backgroundSound)}`);
         const ctl = audioContextWrapper.createSource(sound.buffer);
         this.soundCtl = ctl;
         ctl.source.addEventListener('ended', this.run);
@@ -92,7 +92,7 @@ export class BackgroundChannel {
   }
 
   dispose() {
-    console.log(`${this.uid} BackgroundChannel.dispose`);
+    // console.log(`${this.uid} BackgroundChannel.dispose`);
     if (this.bgSilenceTimeoutId !== null) {
       clearTimeout(this.bgSilenceTimeoutId);
     }

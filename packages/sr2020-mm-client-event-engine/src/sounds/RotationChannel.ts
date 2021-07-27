@@ -55,7 +55,7 @@ export class RotationChannel {
 
   run() {
     if (this.disposed) return;
-    console.log(`${this.uid} RotationChannel.run`);
+    // console.log(`${this.uid} RotationChannel.run`);
     const { rotationSounds } = this.context.soundStageState;
     const { soundSettings } = this.context.props;
     if (rotationSounds === null || rotationSounds.tracks.length === 0) {
@@ -63,7 +63,7 @@ export class RotationChannel {
       return;
     }
     const soundSequence = R.intersperse(null, shuffle(rotationSounds.tracks));
-    console.log(this.uid, 'soundSequence', soundSequence);
+    // console.log(this.uid, 'soundSequence', soundSequence);
 
     this.playlist = soundSequence.map((el): PlaylistItem => {
       if (el === null) {
@@ -84,15 +84,15 @@ export class RotationChannel {
   }
 
   playSound() {
-    console.log(`${this.uid} RotationChannel.playSound`);
+    // console.log(`${this.uid} RotationChannel.playSound`);
     if (this.index >= this.playlist.length) {
-      console.log(`${this.uid} rotation ended, run again`);
+      // console.log(`${this.uid} rotation ended, run again`);
       this.run();
       return;
     }
     const playlistItem = this.playlist[this.index];
     if (playlistItem.type === 'silence') {
-      console.log(`${this.uid}: index ${this.index}, start rotation silence,  duration ${playlistItem.durationMillis}`);
+      // console.log(`${this.uid}: index ${this.index}, start rotation silence,  duration ${playlistItem.durationMillis}`);
       this.soundCtl = null;
       this.rotationSilenceTimeoutId = setTimeout(() => this.playSound(), playlistItem.durationMillis);
       this.context.setCurRotationSoundData(JSON.stringify({
@@ -107,7 +107,7 @@ export class RotationChannel {
     const { soundStorage, audioContextWrapper } = this.context.props;
     const sound = soundStorage.getSound(playlistItem.name);
     if ( sound === undefined ) {
-      console.warn(`${this.uid}: index ${this.index}, rotation sound not found: ${playlistItem.name}, use default silence ${ROTATION_SILENCE_DURATION_MILLIS}`);
+      // console.warn(`${this.uid}: index ${this.index}, rotation sound not found: ${playlistItem.name}, use default silence ${ROTATION_SILENCE_DURATION_MILLIS}`);
       this.soundCtl = null;
       this.rotationSilenceTimeoutId = setTimeout(() => this.playSound(), ROTATION_SILENCE_DURATION_MILLIS);
       this.context.setCurRotationSoundData(JSON.stringify({
@@ -117,7 +117,7 @@ export class RotationChannel {
         durationMillis: ROTATION_SILENCE_DURATION_MILLIS
       }, null, '  '));
     } else {
-      console.log(`${this.uid}: index ${this.index}, start rotation sound ${JSON.stringify(playlistItem)}`);
+      // console.log(`${this.uid}: index ${this.index}, start rotation sound ${JSON.stringify(playlistItem)}`);
       const ctl = audioContextWrapper.createSource(sound.buffer);
       this.soundCtl = ctl;
       ctl.source.addEventListener('ended', this.playSound);
@@ -151,7 +151,7 @@ export class RotationChannel {
   }
 
   dispose() {
-    console.log(`${this.uid} RotationChannel.dispose`);
+    // console.log(`${this.uid} RotationChannel.dispose`);
     if (this.rotationSilenceTimeoutId !== null) {
       clearTimeout(this.rotationSilenceTimeoutId);
     }
