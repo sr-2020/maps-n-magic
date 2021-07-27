@@ -47,7 +47,7 @@ function CustomTooltip(props: CustomTooltipProps) {
   return null;
 }
 
-function formatMinutes(minutes: number): string {
+export function formatMinutes(minutes: number): string {
   const hour = Math.floor(minutes / 60);
   const minute = (minutes % 60);
   const minuteStr = (minute < 10 ? '0' : '') + minute;
