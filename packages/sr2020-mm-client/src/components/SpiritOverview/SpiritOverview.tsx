@@ -170,7 +170,7 @@ export function SpiritTimetableComponent(props: SpiritTimetableProps) {
             >
               <div 
                 className={classNames('tw-relative tw-py-1 tw-px-2  tw-overflow-hidden ', {
-                  'tw-bg-green-800 tw-text-white': moscowMinutes > startMinutes && moscowMinutes < startMinutes + timeOnRoute,
+                  'tw-bg-green-800 tw-text-white': spirit.state.status === 'OnRoute' && moscowMinutes > startMinutes && moscowMinutes < startMinutes + timeOnRoute,
                   'tw-bg-gray-300 tw-text-black tw-outline-gray-600 tw-outline-2 tw-outline-solid': true,
                 })}
                 style={{
