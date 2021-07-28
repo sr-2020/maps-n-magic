@@ -5,7 +5,8 @@ import { createLogger } from './utils';
 import { CharacterModelData, validateCharacterModelData } from 'sr2020-mm-event-engine';
 
 // const CHARACTER_UPDATE_INTERVAL_MILLIS = 60000;
-const CHARACTER_UPDATE_INTERVAL_MILLIS = 10000;
+// const CHARACTER_UPDATE_INTERVAL_MILLIS = 10000;
+const CHARACTER_UPDATE_INTERVAL_MILLIS = 60000;
 
 interface CharacterCacheItem {
   lastUpdateTimestamp: number;

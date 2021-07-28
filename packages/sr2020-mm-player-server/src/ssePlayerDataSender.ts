@@ -66,7 +66,8 @@ export class SsePlayerDataSender {
       this.sendCurrentData();
       // this.send('Hi player! From ' + this.uid);
       // this.logger.info('Hi player! From ' + this.uid);
-    }, 5000);
+    // }, 5000);
+    }, 10000);
     // setTimeout(() => this.send('Hi player!'), 1000);
   }
 

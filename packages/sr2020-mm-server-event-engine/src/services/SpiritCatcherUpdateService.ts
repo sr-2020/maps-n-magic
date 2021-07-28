@@ -28,7 +28,8 @@ export const spiritCatcherUpdateMetadata: ServiceContractTypes<SpiritCatcherUpda
   needRequests: ['catcherStates'],
 };
 
-const SPIRIT_CATCHER_UPDATE_INTERVAL: number = 5000; // millis
+// const SPIRIT_CATCHER_UPDATE_INTERVAL: number = 5000; // millis
+const SPIRIT_CATCHER_UPDATE_INTERVAL: number = 60000; // millis
 
 export class SpiritCatcherUpdateService extends AbstractService<SpiritCatcherUpdateServiceContract> {
   updateTimerId: NodeJS.Timeout | null;

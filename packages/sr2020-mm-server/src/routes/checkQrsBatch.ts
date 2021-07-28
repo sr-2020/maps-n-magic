@@ -1,3 +1,4 @@
+import * as R from 'ramda';
 import { 
   ErrorResponse, 
   validateBodyStorageQr, 
@@ -41,7 +42,11 @@ export const mainCheckSpiritJarsBatch = async (req1, res, next) => {
 
     const processingData = await Promise.all(promises);
 
-    res.status(200).json(processingData);
+    const sorted = R.sortBy((el) => 'qrId' in el ? -el.qrId : -10000000 , processingData);
+    const sorted2 = R.sortBy((el) => el.type , sorted);
+    sorted2.reverse();
+
+    res.status(200).json(sorted2);
   } catch (error) {
     const message = `${error} ${JSON.stringify(error)}`;
     logger.error(message, error);
