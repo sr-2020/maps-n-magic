@@ -154,7 +154,7 @@ export function SpiritPage(props: SpiritPageProps) {
               Освободить духа
             </Button>
           </div>
-          <div>
+          <div style={{marginBottom: '20rem'}}>
             <div className="tw-mb-2">Оставить сообщение</div>
             <div>
               <Form.Control
