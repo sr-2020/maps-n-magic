@@ -9,7 +9,8 @@ import {
   GameModel, 
   EPostSpiritRequested,
   EDeleteSpiritRequested, 
-  ECloneSpiritRequested
+  ECloneSpiritRequested,
+  SpiritState
 } from "sr2020-mm-event-engine";
 
 import { WithSpirits, WithSpiritFractions } from '../../../dataHOCs';
@@ -17,6 +18,19 @@ import { WithSpirits, WithSpiritFractions } from '../../../dataHOCs';
 import { EntityList, EntitiyListItem, makeLinkGenerator } from "../../EntityList";
 
 const spiritLink = makeLinkGenerator('spiritEditor');
+
+export function spiritStateSuffix(state: SpiritState): string {
+  if (state.status === 'InJar') {
+    return ', jarId ' + state.qrId;
+  }
+  if (state.status === 'OnRoute') {
+    return ', routeId ' + state.route.id;
+  }
+  if (state.status === 'Suited') {
+    return ', charId ' + state.characterId;
+  }
+  return '';
+}
 
 interface SpiritListProps extends 
   WithTranslation, 
@@ -57,17 +71,20 @@ export class SpiritList extends Component<SpiritListProps> {
     });
   }
 
+
+
   spiritsToListItems(): EntitiyListItem[] {
     const { spirits, spiritFractions, t } = this.props;
     if (spirits === null || spiritFractions === null) {
       return [];
     }
+    
     const fractionIndex = R.indexBy(R.prop('id'), spiritFractions);
     const items: EntitiyListItem[] = spirits.map(spirit => ({
       id: spirit.id,
       title: spirit.name + ", id " + spirit.id,
       subtitle: (fractionIndex[spirit.fraction]?.name || '') + '. ' +
-        t(spirit.state.status)
+        t(spirit.state.status) + spiritStateSuffix(spirit.state)
     }));
     return items;
   }

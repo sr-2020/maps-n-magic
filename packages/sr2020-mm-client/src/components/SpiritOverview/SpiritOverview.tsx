@@ -13,6 +13,7 @@ import Button from 'react-bootstrap/Button';
 import Tooltip from 'react-bootstrap/Tooltip';
 import OverlayTrigger from 'react-bootstrap/OverlayTrigger';
 import { formatMinutes } from '../ManaOceanSettings/TideChart/TideChart';
+import { spiritStateSuffix } from '../SpiritEditor/SpiritList/SpiritList';
 
 interface SpiritOverviewProps extends 
   WithTranslation, 
@@ -57,7 +58,7 @@ export function SpiritOverview(props: SpiritOverviewProps) {
       id: spirit.id,
       title: spirit.name + ", id " + spirit.id,
       subtitle: (fractionIndex[spirit.fraction]?.name || '') + '. ' +
-        t(spirit.state.status)
+        t(spirit.state.status) + spiritStateSuffix(spirit.state)
     }));
     return items;
   }
