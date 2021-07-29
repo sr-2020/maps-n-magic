@@ -49,31 +49,34 @@ export function OverviewPage(props: OverviewPageProps) {
   const { gameModel } = props;
 
   return (
-    <div className="OverviewPage tw-h-full tw-flex tw-flex-col ">
+    <div className="OverviewPage tw-h-full tw-flex tw-flex-col tw-bg-gray-900">
       <MapDefaultsProvider value={overrideMapDefaults}>
       {/* <MapDefaultsProvider value={mapDefaults}> */}
         <div className="tw-flex-1  tw-flex">
-          <div className="tw-flex-1  tw-p-2">
+          <div className="tw-flex-1 ">
             {/* 1 */}
             <RescueServiceMap
               gameModel={gameModel}
             />
           </div>
-          <div className="tw-flex-1  tw-p-2">
+          <div className="tw-w-1 tw-h-1"></div>
+          <div className="tw-flex-1  ">
             {/* 2 */}
             <ManaOceanMap
               gameModel={gameModel}
             />
           </div>
         </div>
+        <div className="tw-w-1 tw-h-1"></div>
         <div className="tw-flex-1  tw-flex">
-          <div className="tw-flex-1  tw-p-2">
+          <div className="tw-flex-1 ">
             {/* 3 */}
             <SpiritMap
               gameModel={gameModel}
             />
           </div>
-          <div className="tw-flex-1  tw-p-2">
+          <div className="tw-w-1 tw-h-1"></div>
+          <div className="tw-flex-1 tw-bg-white ">
             {/* 4 */}
             <CharacterWatcher gameModel={gameModel}>
               <AudioEngineDemo

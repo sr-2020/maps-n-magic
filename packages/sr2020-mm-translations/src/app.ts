@@ -28,6 +28,8 @@ export const appDictionary = {
   beaconEditor2: 'Маяки',
   mapEditors: 'Редакторы карт',
   spiritEditors: 'Редакторы духов',
+  spiritViewers: 'Обзор и контроль',
+  spiritCatchers: 'Духоловы',
   manaOceanSettings: 'Настройки океана маны',
   manaOceanEffectSettings: 'Настройки эффектов океана маны',
   rescueService: 'МЧС - карта клинических смертей',

@@ -15,7 +15,8 @@ import {
   winstonLogger,
   createLogger,
   InnerApiRequest,
-  MainAuthorizedRequest
+  MainAuthorizedRequest,
+  GetCatcherStates
 } from 'sr2020-mm-server-event-engine';
 import { ErrorResponse, validateWebSocketInitClientConfig, WebSocketInitClientConfig } from 'sr2020-mm-event-engine';
 
@@ -117,6 +118,25 @@ app.get('/api/checkSpiritJarsBatch', mainCheckSpiritJarsBatch);
 app.get('/api/checkBodyStorageBatch', mainCheckBodyStorageBatch);
 
 app.post('/api/forceFreeSpirit', mainForceFreeSpirit);
+
+app.get('/api/catcherStates', async (req1, res, next) => {
+  const req = req1 as MainAuthorizedRequest;
+
+  try {
+    const catcherStates = req.gameModel.get2<GetCatcherStates>({
+      type: 'catcherStates'
+    });
+    res.status(200).json(catcherStates);
+  } catch (error) {
+    const message = `${error} ${JSON.stringify(error)}`;
+    logger.error(message, error);
+    const errorResponse: ErrorResponse = { 
+      errorTitle: 'Непредвиденная ошибка',
+      errorSubtitle: message 
+    };
+    res.status(500).json(errorResponse);
+  }
+});
 
 wsApp.app.ws('/api/ws', (ws, req, next) => {
   ws.on('message', (msgStr) => {

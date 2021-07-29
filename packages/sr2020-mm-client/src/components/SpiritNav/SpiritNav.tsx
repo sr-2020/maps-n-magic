@@ -7,12 +7,6 @@ import { NavColumn } from "../NavColumn";
 import { SpiritConsistency } from '../SpiritConsistency';
 
 const navLinks: NavLinkData[] = [{
-//   to: '/backgroundEditorMap',
-//   tKey: 'buildingPlansEditor',
-// }, {
-//   to: '/locationsEditor2',
-//   tKey: 'locationsEditor2',
-// }, {
   to: '/spiritEditor',
   tKey: 'spiritEditor',
 }, {
@@ -24,7 +18,9 @@ const navLinks: NavLinkData[] = [{
 }, {
   to: '/spiritPhraseEditor',
   tKey: 'spiritPhraseEditor',
-}, {
+}];
+
+const navLinks2: NavLinkData[] = [{
   to: '/spiritsOnMap',
   tKey: 'spiritsOnMap',
 }, {
@@ -36,12 +32,16 @@ const navLinks: NavLinkData[] = [{
 }, {
   to: '/playerMessages',
   tKey: 'playerMessages',
+}, {
+  to: '/spiritCatchers',
+  tKey: 'spiritCatchers',
 }];
 
 export function SpiritNav() {
   return (
     <div className="SpiritNav tw-flex">
       <NavColumn navLinks={navLinks} tKey="spiritEditors"/>
+      <NavColumn navLinks={navLinks2} tKey="spiritViewers"/>
     </div>
   );
 }

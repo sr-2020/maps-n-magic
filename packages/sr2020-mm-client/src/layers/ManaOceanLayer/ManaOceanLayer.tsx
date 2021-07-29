@@ -256,6 +256,7 @@ export class ManaOceanLayer extends Component<
     // type: "massacre"
     if (strings2.length > 0) {
       output = output.concat(['', ...strings2]);
+      // output = output.concat(['', ...strings2, JSON.stringify(effectList)]);
     }
     return output.join('<br/>');
   }
