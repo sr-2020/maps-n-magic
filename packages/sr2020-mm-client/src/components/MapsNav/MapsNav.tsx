@@ -31,6 +31,9 @@ const navLinks2: NavLinkData[] = [{
 }, {
   to: '/audioEngineDemo',
   tKey: 'audioEngineDemo',
+}, {
+  to: '/overviewPage',
+  tKey: 'overviewPage',
 }];
 
 const navLinks3: NavLinkData[] = [{

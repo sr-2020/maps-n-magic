@@ -28,6 +28,7 @@ import {
   beaconEditor2GeomanConfig,
 } from '../../configs';
 import { LocationEditorMap2 } from '../../maps/LocationEditorMap2';
+import { OverviewPage } from '../App/OverviewPage';
 
 interface MapRoutesProps {
   gameModel: GameModel;
@@ -85,6 +86,11 @@ export function MapRoutes(props: MapRoutesProps) {
     </Route>,
     <Route path="/spiritsOnMap" key="spiritsOnMap">
       <SpiritMap
+        gameModel={gameModel}
+      />
+    </Route>,
+    <Route path="/overviewPage" key="overviewPage">
+      <OverviewPage
         gameModel={gameModel}
       />
     </Route>,
