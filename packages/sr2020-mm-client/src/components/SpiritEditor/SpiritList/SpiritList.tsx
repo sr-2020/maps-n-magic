@@ -65,7 +65,7 @@ export class SpiritList extends Component<SpiritListProps> {
     const fractionIndex = R.indexBy(R.prop('id'), spiritFractions);
     const items: EntitiyListItem[] = spirits.map(spirit => ({
       id: spirit.id,
-      title: spirit.name,
+      title: spirit.name + ", id " + spirit.id,
       subtitle: (fractionIndex[spirit.fraction]?.name || '') + '. ' +
         t(spirit.state.status)
     }));
