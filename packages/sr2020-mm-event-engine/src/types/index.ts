@@ -17,6 +17,7 @@ export * from "./tokenData";
 export * from "./characterModelData";
 export * from "./abilityUtils";
 export * from "./spiritCatcher";
+export * from "./playerMessage";
 
 import { LifeStylesValues } from "./enums";
 

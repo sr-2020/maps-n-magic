@@ -93,6 +93,9 @@ import {
   GetFeatures,
   EFeaturesChanged,
   ESetFeatures,
+  GetPlayerMessages,
+  EPlayerMessagesChanged,
+  ESetPlayerMessages
 } from "sr2020-mm-event-engine";
 
 import { TrackedCharacterLocationChanged } from "../index";
@@ -122,6 +125,7 @@ type ForwardServer2ClientEvent =
   | ESetSettingsCatalog
   | EEnableSpiritMovementChanged
   | EFeaturesChanged
+  | EPlayerMessagesChanged
 ;
 
 // In reality this is event list, not actions.
@@ -146,6 +150,7 @@ const forwardServer2ClientActions: ForwardServer2ClientEvent["type"][] = [
   'enableSpiritMovementChanged',
   // 'characterHealthStateChanged',
   'featuresChanged',
+  'playerMessagesChanged'
 ];
 
 type WsEmitEvent = 
@@ -159,6 +164,7 @@ type WsEmitEvent =
   | EEnableManaOceanConfirmed
   | EEnableSpiritMovementConfirmed
   | ESetFeatures
+  | ESetPlayerMessages
 ;
 
 const wsEmitEvents: WsEmitEvent["type"][] = [
@@ -171,7 +177,8 @@ const wsEmitEvents: WsEmitEvent["type"][] = [
   "setSpiritFractions",
   "setSpiritRoutes",
   "setSpiritPhrases",
-  "setFeatures"
+  "setFeatures",
+  "setPlayerMessages",
 ];
 
 type ForwardClient2ServerEventTypes = (
@@ -273,6 +280,7 @@ type PayloadToEventBindings =
   | PayloadToEventBinding<GetSpiritPhrases, ESpiritPhrasesChanged>
   | PayloadToEventBinding<GetEnableSpiritMovement, EEnableSpiritMovementChanged>
   | PayloadToEventBinding<GetFeatures, EFeaturesChanged>
+  | PayloadToEventBinding<GetPlayerMessages, EPlayerMessagesChanged>
 ;
 
 export class WsDataBinding extends AbstractEventProcessor {
@@ -379,6 +387,9 @@ export class WsDataBinding extends AbstractEventProcessor {
       }, {
         type: 'featuresChanged',
         payload: 'features',
+      }, {
+        type: 'playerMessagesChanged',
+        payload: 'playerMessages',
       }],
       forwardActions: forwardServer2ClientActions,
       ignoreClientMessages: this.ignoreClientMessages
@@ -571,6 +582,14 @@ export class WsDataBinding extends AbstractEventProcessor {
       this.gameModel.emit2<WsEmitEvent>({
         ...data,
         type: 'setFeatures'
+      });
+      return;
+    }
+
+    if (data.type === 'playerMessagesChanged') {
+      this.gameModel.emit2<WsEmitEvent>({
+        ...data,
+        type: 'setPlayerMessages'
       });
       return;
     }

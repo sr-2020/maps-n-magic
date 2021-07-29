@@ -13,7 +13,7 @@ import {
   SpiritRouteService,
   FeatureService,
   SpiritPhraseService,
-  
+  PlayerMessagesService,
   // 
   EventEngine,
   AbstractService,
@@ -39,6 +39,7 @@ import {
   EEnableSpiritMovementRequested,
   EEnableSpiritMovementConfirmed,
   SpiritPhrase,
+  PlayerMessage,
 } from 'sr2020-mm-event-engine';
 
 import { ManaOceanService } from '../services/ManaOceanService';
@@ -89,7 +90,8 @@ import {
   SpiritProvider, 
   SpiritFractionProvider, 
   SpiritRouteProvider,
-  SpiritPhraseProvider
+  SpiritPhraseProvider,
+  PlayerMessageProvider
 } from '../api/spirits';
 import { createLogger } from '../utils';
 import { FeatureProvider } from '../api/features';
@@ -128,6 +130,7 @@ const services = [
   SpiritCatcherService,
   SpiritCatcherUpdateService,
   SpiritPhraseService,
+  PlayerMessagesService,
   // RescueServicePushService,
 ];
 
@@ -234,6 +237,17 @@ export function makeGameModel(): {
   );
   featureDataBinding.init();
   gameServer.addDataBinding(featureDataBinding);
+
+  const playerMessageLogger = createLogger('playerMessagesDataBinding');
+  const playerMessageDataBinding = new ReadDataManager2<PlayerMessage, PlayerMessageProvider>(
+    gameModel,
+    new PlayerMessageProvider(),
+    'playerMessage',
+    new PollingReadStrategy(gameModel, 15000, playerMessageLogger), // 1 minute
+    playerMessageLogger
+  );
+  playerMessageDataBinding.init();
+  gameServer.addDataBinding(playerMessageDataBinding);
 
   const manaOceanSettingsLogger = createLogger('manaOceanSettingsDB');
   const manaOceanSettingsDB = new SettingsDataManager<ManaOceanSettingsData, ManaOceanSettingsProvider>(

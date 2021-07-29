@@ -25,6 +25,8 @@ import {
   SoundSettings,
   EFeaturesChanged,
   Feature,
+  EPlayerMessagesChanged,
+  PlayerMessage,
 } from 'sr2020-mm-event-engine';
 
 import { 
@@ -102,6 +104,9 @@ export interface WithSoundSettings {
 }
 export interface WithFeatures {
   features: Feature[] | null;
+}
+export interface WithPlayerMessages {
+  playerMessages: PlayerMessage[] | null;
 }
 
 function sortBy(prop: string) {
@@ -225,6 +230,12 @@ export const withSoundSettings = basicDataHOC<null, ESoundSettingsChanged>(
 export const withFeatures = basicDataHOC<null, EFeaturesChanged>(
   'featuresChanged',
   'features',
+  null,
+);
+
+export const withPlayerMessages = basicDataHOC<null, EPlayerMessagesChanged>(
+  'playerMessagesChanged',
+  'playerMessages',
   null,
 );
 

@@ -6,6 +6,7 @@ import {
   GetSpirit, 
   invalidRequestBody, 
   isEmptySpiritJar, 
+  PlayerMessage, 
   validateFreeSpiritInternalRequest 
 } from "sr2020-mm-event-engine";
 import { 
@@ -139,13 +140,14 @@ export const mainFreeSpirit = async (req1, res, next) => {
     eLogger.success(`free spirit ${spirit.id} ${spirit.name}`, `Дух ${spirit.id} ${spirit.name} освобожден`);
 
     if (messageBody !== '') {
-      playerMessages(JSON.stringify({
+      const playerMessage: PlayerMessage = {
+        id: new Date().toString(),
         characterId,
-        time: new Date(),
         messageBody,
         spiritId: spirit.id,
         spiritFractionId: spirit.fraction
-      }));
+      };
+      playerMessages(playerMessage);
 
       eLogger.success(
         `spirit ${spirit.id} ${spirit.name} got message "${messageBody}"`, 

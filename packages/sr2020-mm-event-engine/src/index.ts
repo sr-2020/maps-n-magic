@@ -22,6 +22,7 @@ export * from './services/SpiritRouteService/types';
 export * from './services/SpiritPhraseService/index'; 
 export * from './services/SpiritPhraseService/types'; 
 export * from './services/FeatureService';
+export * from './services/PlayerMessagesService';
 export * from './services/SpiritMovementEnableService'; 
 
 export * from './utils';

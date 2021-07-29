@@ -1,5 +1,6 @@
 import { 
   Identifiable,
+  PlayerMessage,
   Spirit,
   SpiritFraction,
   SpiritPhrase,
@@ -43,7 +44,8 @@ import {
   Puttable2,
   Deletable2,
   MultiPuttable2,
-  SingleGettable2
+  SingleGettable2,
+  validateEntityFunction
 } from "../types";
 
 import { 
@@ -65,6 +67,7 @@ import {
 } from "./spiritPhraseValidation";
 
 import { validateSpiritFraction } from "./spiritFractionValidation";
+import { getPlayerMessages, validatePlayerMessage } from './playerMessages';
 
 export class SpiritProvider implements 
   Gettable2<Spirit>, 
@@ -142,3 +145,16 @@ export class SpiritPhraseProvider implements
   fillNewEntity = fillNewSpiritPhrase;
   validateEntity = validateSpiritPhrase;
 }
+
+export class PlayerMessageProvider implements 
+  Gettable2<PlayerMessage>,
+  SingleGettable2<PlayerMessage>
+{
+  get = getPlayerMessages;
+  validateEntity = validatePlayerMessage;
+  singleGet(id: string | number): Promise<unknown> {
+    throw new Error('Method not implemented.');
+  }
+}
+
+

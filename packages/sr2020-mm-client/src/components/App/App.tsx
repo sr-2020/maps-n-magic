@@ -63,6 +63,7 @@ import { SpiritFractionEditor } from '../SpiritFractionEditor';
 import { SpiritPhraseEditor } from '../SpiritPhraseEditor';
 import { SpiritConsistency } from '../SpiritConsistency';
 import { SpiritOverview } from '../SpiritOverview';
+import { PlayerMessages } from '../PlayerMessages';
 
 const TEST_POSITION = {
   coords: {
@@ -327,6 +328,9 @@ export class App extends Component<AppProps, AppState> {
                     </Route>
                     <Route path="/spiritOverview">
                       <SpiritOverview gameModel={gameModel} />
+                    </Route>
+                    <Route path="/playerMessages">
+                      <PlayerMessages gameModel={gameModel} />
                     </Route>
                     {/* <Route path="/soundManager2">
                       <SoundManager

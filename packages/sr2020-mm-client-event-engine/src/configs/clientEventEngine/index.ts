@@ -15,6 +15,7 @@ import {
   GameModel,
   FeatureService,
   SpiritPhraseService,
+  PlayerMessagesService,
 } from 'sr2020-mm-event-engine';
 
 // import { Migrator } from './Migrator';
@@ -67,7 +68,8 @@ const services = [
   // ManaOceanStubService,
   TrackedCharacterService,
   FeatureService,
-  SpiritPhraseService
+  SpiritPhraseService,
+  PlayerMessagesService
 ];
 
 export function makeGameModel(ignoreClientMessages: boolean = false): {

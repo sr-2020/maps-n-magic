@@ -32,7 +32,10 @@ const navLinks: NavLinkData[] = [{
   tKey: 'spiritConsistency',
 }, {
   to: '/spiritOverview',
-  tKey: 'spiritConsistency',
+  tKey: 'spiritOverview',
+}, {
+  to: '/playerMessages',
+  tKey: 'playerMessages',
 }];
 
 export function SpiritNav() {
