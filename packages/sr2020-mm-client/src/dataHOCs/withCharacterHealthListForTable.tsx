@@ -66,7 +66,7 @@ export const withCharacterHealthListForTable = (Wrapped: any) => (props: object 
       R.filter(_isRelevant),
       R.sortWith([
         // @ts-ignore
-        R.descend((el) => lifeStyleScore[el.lifeStyle]),
+        R.descend((el) => lifeStyleScore[el.lifeStyle] || -1),
         R.ascend(R.prop('timestamp')),
       ]),
       // R.sortBy((el) => -lifeStyleScore[el.lifeStyle]),
