@@ -10,7 +10,8 @@ import {
   Spirit, 
   SpiritJarQr,
   validateEmptySpiritJarQr,
-  validateFullSpiritJarQr
+  validateFullSpiritJarQr,
+  stringifyError
 } from "sr2020-mm-event-engine";
 
 import Alert from "react-bootstrap/Alert";
@@ -18,7 +19,7 @@ import Button from "react-bootstrap/Button";
 import Form from 'react-bootstrap/Form';
 
 import { QrScannerWrapper } from "../QrScannerWrapper";
-import { getSpiritDataByQr, freeSpirit, catchSpirit } from "../../api";
+import { getSpiritDataByQr, freeSpirit, catchSpirit, logClientError } from "../../api";
 import { SpiritCard } from '../SpiritCard';
 
 // import { WithTranslation } from "react-i18next";
@@ -61,10 +62,11 @@ export function SpiritPage(props: SpiritPageProps) {
         setSpiritJarQr(res);
       }
     }).catch(err => {
-      console.error(err);
+      console.error(stringifyError(err));
+      logClientError('CL Непредвиденная ошибка получения данных духа', err);
       setErrorResponse({
         errorTitle: 'CL Непредвиденная ошибка получения данных духа',
-        errorSubtitle: err
+        errorSubtitle: stringifyError(err)
       });
     });
   }, [spiritJarQrString]);
@@ -99,10 +101,11 @@ export function SpiritPage(props: SpiritPageProps) {
         // setSpiritJarQrString(null);
       }
     }).catch(err => {
-      console.error(err);
+      console.error(stringifyError(err));
+      logClientError('CL Непредвиденная ошибка освобождения духа', err);
       setErrorResponse({
         errorTitle: 'CL Непредвиденная ошибка освобождения духа',
-        errorSubtitle: err
+        errorSubtitle: stringifyError(err)
       });
     });
   }
@@ -191,6 +194,4 @@ export function SpiritPage(props: SpiritPageProps) {
     </div>
   );
 }
-
-
 

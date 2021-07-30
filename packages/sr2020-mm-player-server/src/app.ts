@@ -30,6 +30,7 @@ import { refreshCharacterModelRouter } from './routes/refreshCharacterModel';
 import { loadHistory } from './routes/loadHistory';
 import { testSuitDispirit } from './testSuitDispirit';
 import { testCatchFree } from './testCatchFree';
+import { ErrorResponse } from 'sr2020-mm-event-engine';
 
 const logger = createLogger('playerServer/app.ts');
 
@@ -116,6 +117,28 @@ app.use('/api', refreshCharacterModelRouter);
 app.use('/api', postUserPosition);
 
 app.get('/api/loadHistory', loadHistory);
+
+app.post('/api/logClientError', async (req1, res, next) => {
+  const req = req1 as PlayerAuthorizedRequest;
+
+  const { body } = req;
+
+  try {
+    logger.error(`Got client error from character ${req.userData.modelId}`, body);
+
+    res.status(200).json({});
+  } catch (error) {
+    const message = `${error} ${JSON.stringify(error)}`;
+    const errorResponse: ErrorResponse = { 
+      errorTitle: 'PS Непредвиденная ошибка загрузки истории',
+      errorSubtitle: message 
+    };
+    logger.error(errorResponse, error);
+    res.status(500).json(errorResponse);
+  }
+});
+
+
 
 app.get('/api/singlePlayerDataSse', (req, res, next) => {
   logger.info('Processing playerDataSse connection');

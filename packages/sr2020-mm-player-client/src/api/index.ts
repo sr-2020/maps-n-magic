@@ -5,7 +5,8 @@ import {
   ConsequenceStatus,
   HistoryItem,
   // SpiritDataForQrValidation, 
-  Spirit 
+  Spirit, 
+  stringifyError
 } from "sr2020-mm-event-engine";
 
 export const isLoggedIn = async () => fetch('/api/isLoggedIn');
@@ -116,6 +117,23 @@ export async function suitSpirit(
 export async function loadHistory(): Promise<ErrorResponse | HistoryItem[]> {
   const res = await fetch('/api/loadHistory');
   return await res.json();
+}
+
+export async function logClientError(title: string, err: unknown): Promise<void> {
+  try {
+    const res = await fetch('/api/logClientError', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json;charset=utf-8',
+      },
+      body: JSON.stringify({
+        title,
+        errorText: stringifyError(err)
+      }),
+    });
+  } catch(err1) {
+    console.error('Error on logging error', err1);
+  }
 }
 
 export async function dispirit(

@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react';
 import { useState } from 'react';
-import { consequenceTexts, isErrorResponse } from 'sr2020-mm-event-engine';
-import { dispirit, isBodyStorageValid } from '../../api';
+import { consequenceTexts, isErrorResponse, stringifyError } from 'sr2020-mm-event-engine';
+import { dispirit, isBodyStorageValid, logClientError } from '../../api';
 import { BodyStorageStatus2 } from '../DispiritPage/DispiritPage';
 import { QrScannerWrapper } from '../QrScannerWrapper';
 import { StatusIcon } from '../StatusIcon';
@@ -35,7 +35,8 @@ export function DispiritComponent(props: DispiritComponentProps) {
         setBodyStorageStatus({ status: 'valid' });
       }
     }).catch(err => {
-      console.error(err);
+      console.error(stringifyError(err));
+      logClientError('CL Непредвиденная ошибка проверки телохранилища', err);
       setBodyStorageStatus({
         status: 'invalid',
         message: 'CL Непредвиденная ошибка проверки телохранилища'
@@ -58,7 +59,8 @@ export function DispiritComponent(props: DispiritComponentProps) {
       }
       setDoDispirit(null);
     }).catch(err => {
-      console.error(err);
+      console.error(stringifyError(err));
+      logClientError('CL Непредвиденная ошибка снятия духа', err);
       setDispiritStatus('CL Непредвиденная ошибка снятия духа');
       setDoDispirit(null);
     });

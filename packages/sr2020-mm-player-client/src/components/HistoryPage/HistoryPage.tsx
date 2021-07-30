@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
-import { isErrorResponse, HistoryItem } from 'sr2020-mm-event-engine';
-import { loadHistory, suitSpirit } from '../../api';
+import { isErrorResponse, HistoryItem, stringifyError } from 'sr2020-mm-event-engine';
+import { loadHistory, logClientError, suitSpirit } from '../../api';
 import moment from 'moment';
 import './HistoryPage.css';
 
@@ -30,8 +30,9 @@ export function HistoryPage(props: HistoryPageProps) {
         setHistoryList(res);
       }
     }).catch(err => {
-      console.error(err);
+      console.error(stringifyError(err));
       setSuitSpiritStatus('CL Непредвиденная ошибка получения истории');
+      logClientError('CL Непредвиденная ошибка получения истории', err);
       setHistoryList([]);
     });
   }, [historyList]);

@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
-import { CharacterModelData2, isErrorResponse, consequenceTexts } from 'sr2020-mm-event-engine';
-import { dispirit, isBodyStorageValid, isSpiritJarValid } from '../../api';
+import { CharacterModelData2, isErrorResponse, consequenceTexts, stringifyError } from 'sr2020-mm-event-engine';
+import { dispirit, isBodyStorageValid, isSpiritJarValid, logClientError } from '../../api';
 import { QrScannerWrapper } from '../QrScannerWrapper';
 import './DispiritPage.css';
 
@@ -71,7 +71,8 @@ export function DispiritPage(props: DispiritPageProps) {
         setBodyStorageStatus({ status: 'valid' });
       }
     }).catch(err => {
-      console.error(err);
+      console.error(stringifyError(err));
+      logClientError('CL Непредвиденная ошибка проверки телохранилища', err);
       setBodyStorageStatus({
         status: 'invalid',
         message: 'CL Непредвиденная ошибка проверки телохранилища'
@@ -106,7 +107,8 @@ export function DispiritPage(props: DispiritPageProps) {
         setSpiritJarStatus({ status: 'valid' });
       }
     }).catch(err => {
-      console.error(err);
+      console.error(stringifyError(err));
+      logClientError('CL Непредвиденная ошибка проверки тотема', err);
       setBodyStorageStatus({
         status: 'invalid',
         message: 'CL Непредвиденная ошибка проверки тотема'
@@ -130,7 +132,8 @@ export function DispiritPage(props: DispiritPageProps) {
       }
       setDoDispirit(null);
     }).catch(err => {
-      console.error(err);
+      console.error(stringifyError(err));
+      logClientError('CL Непредвиденная ошибка снятия духа', err);
       setDispiritStatus('CL Непредвиденная ошибка снятия духа');
       setDoDispirit(null);
     });

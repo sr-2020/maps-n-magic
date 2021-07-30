@@ -7,13 +7,14 @@ import classNames from 'classnames';
 
 import Button from "react-bootstrap/Button";
 import { QrScannerWrapper } from '../QrScannerWrapper';
-import { isBodyStorageValid, isSpiritJarValid, refreshCharacterModel, suitSpirit } from '../../api';
+import { isBodyStorageValid, isSpiritJarValid, logClientError, refreshCharacterModel, suitSpirit } from '../../api';
 import { 
   CharacterModelData2,
   isErrorResponse, Spirit, 
   getSuitSpiritDurationItems,
   hasAbility,
-  Ability
+  Ability,
+  stringifyError
   // SpiritDataForQrValidation 
 } from 'sr2020-mm-event-engine';
 import { SpiritCard } from '../SpiritCard';
@@ -78,7 +79,8 @@ export function SuitSpiritPage(props: SuitSpiritPageProps) {
         setBodyStorageStatus({ status: 'valid' });
       }
     }).catch(err => {
-      console.error(err);
+      console.error(stringifyError(err));
+      logClientError('CL Непредвиденная ошибка проверки телохранилища', err);
       setBodyStorageStatus({
         status: 'invalid',
         message: 'CL Непредвиденная ошибка проверки телохранилища'
@@ -113,7 +115,8 @@ export function SuitSpiritPage(props: SuitSpiritPageProps) {
         setSpiritJarStatus({ status: 'valid', spirit: res });
       }
     }).catch(err => {
-      console.error(err);
+      console.error(stringifyError(err));
+      logClientError('CL Непредвиденная ошибка проверки тотема', err);
       setBodyStorageStatus({
         status: 'invalid',
         message: 'CL Непредвиденная ошибка проверки тотема'
@@ -140,7 +143,8 @@ export function SuitSpiritPage(props: SuitSpiritPageProps) {
       }
       setDoSuitSpirit(false);
     }).catch(err => {
-      console.error(err);
+      console.error(stringifyError(err));
+      logClientError('CL Непредвиденная ошибка надевания духа', err);
       setSuitSpiritStatus('CL Непредвиденная ошибка надевания духа');
       setDoSuitSpirit(false);
     });

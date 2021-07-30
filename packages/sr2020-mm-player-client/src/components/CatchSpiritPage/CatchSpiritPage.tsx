@@ -1,10 +1,10 @@
 import React, { useEffect, useState } from 'react';
 import { useHistory } from 'react-router-dom';
 
-import { ErrorResponse, isErrorResponse } from 'sr2020-mm-event-engine';
+import { ErrorResponse, isErrorResponse, stringifyError } from 'sr2020-mm-event-engine';
 import Button from "react-bootstrap/Button";
 
-import { catchSpirit, catchSpirit2 } from '../../api';
+import { catchSpirit, catchSpirit2, logClientError } from '../../api';
 import { ErrorAlert } from '../ErrorAlert';
 import { QrScannerWrapper } from '../QrScannerWrapper';
 import './CatchSpiritPage.css';
@@ -49,10 +49,11 @@ export function CatchSpiritPage(props: CatchSpiritPageProps) {
         setCatchResult(res);
       }
     }).catch(err => {
-      console.error(err);
+      console.error(stringifyError(err));
+      logClientError('CL Непредвиденная ошибка ловли духа', err);
       setErrorResponse({
         errorTitle: 'CL Непредвиденная ошибка ловли духа',
-        errorSubtitle: JSON.stringify(err)
+        errorSubtitle: stringifyError(err)
       });
 
       // Error: Objects are not valid as a React child (found: SyntaxError: Unexpected token R in JSON at position 0). If you meant to render a collection of children, use an array instead.

@@ -2,8 +2,8 @@ import React, { useEffect, useState } from 'react';
 import './EmergencyDispiritPage.css';
 
 import Button from "react-bootstrap/Button";
-import { emergencyDispirit } from '../../api';
-import { isErrorResponse } from 'sr2020-mm-event-engine';
+import { emergencyDispirit, logClientError } from '../../api';
+import { isErrorResponse, stringifyError } from 'sr2020-mm-event-engine';
 
 interface EmergencyDispiritPageProps {
   setTitle: (title: string) => void;
@@ -31,8 +31,9 @@ export function EmergencyDispiritPage(props: EmergencyDispiritPageProps) {
       }
       setDoEmergencyDispirit(false);
     }).catch(err => {
-      console.error(err);
+      console.error(stringifyError(err));
       setDispiritStatus('CL Непредвиденная ошибка снятия способностей');
+      logClientError('CL Непредвиденная ошибка снятия способностей', err);
       setDoEmergencyDispirit(false);
     });
   }, [doEmergencyDispirit]);

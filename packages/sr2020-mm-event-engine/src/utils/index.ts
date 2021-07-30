@@ -304,3 +304,9 @@ export function assert(condition: any, msg?: string): asserts condition {
     throw new Error(msg);
   }
 }
+
+export function stringifyError(err: unknown): string {
+  return err instanceof Error ?
+    JSON.stringify(err, Object.getOwnPropertyNames(err)) :
+    JSON.stringify(err)
+}
