@@ -81,7 +81,7 @@ export class SpiritPhraseService extends AbstractService<SpiritPhraseServiceCont
   getRandomSpiritPhrase ({ characterId, spiritFractionId }: Req<GetRandomSpiritPhrase>): Res<GetRandomSpiritPhrase> {
     const phrase = this.spiritPhrases.find(phrase => {
       return phrase.characterId === characterId &&
-        phrase.spiritFractionId === spiritFractionId &&
+        // phrase.spiritFractionId === spiritFractionId &&
         phrase.delivered === false
     });
     if (phrase !== undefined) {
