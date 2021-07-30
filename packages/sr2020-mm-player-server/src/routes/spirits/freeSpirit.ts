@@ -50,11 +50,11 @@ export const freeSpirit = async (req1, res, next) => {
     res.status(freeSpiritRes.status).json(json);
   } catch (error) {
     const message = `${error} ${JSON.stringify(error)}`;
-    logger.error(message, error);
     const errorResponse: ErrorResponse = { 
-      errorTitle: 'Непредвиденная ошибка',
+      errorTitle: 'PS Непредвиденная ошибка освобождения духа',
       errorSubtitle: message 
     };
+    logger.error(errorResponse, error);
     res.status(500).json(errorResponse);
   }
 }

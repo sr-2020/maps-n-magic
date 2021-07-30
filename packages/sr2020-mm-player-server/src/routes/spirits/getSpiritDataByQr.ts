@@ -77,11 +77,11 @@ export const getSpiritDataByQr = async (req1, res, next) => {
     // });
   } catch (error) {
     const message = `${error} ${JSON.stringify(error)}`;
-    logger.error(message, error);
     const errorResponse: ErrorResponse = { 
-      errorTitle: 'Непредвиденная ошибка',
+      errorTitle: 'PS Непредвиденная ошибка получения данных о духе',
       errorSubtitle: message 
     };
+    logger.error(errorResponse, error);
     res.status(500).json(errorResponse);
   }
 }

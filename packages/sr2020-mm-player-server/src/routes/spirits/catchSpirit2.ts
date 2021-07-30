@@ -106,11 +106,11 @@ export const catchSpirit2 = async (req1, res, next) => {
     // res.status(200).json({status: 'success'});
   } catch (error) {
     const message = `${error} ${JSON.stringify(error)}`;
-    logger.error(message, error);
     const errorResponse: ErrorResponse = { 
-      errorTitle: 'Непредвиденная ошибка',
+      errorTitle: 'PS Непредвиденная ошибка ловли духа',
       errorSubtitle: message 
     };
+    logger.error(errorResponse, error);
     res.status(500).json(errorResponse);
   }
 }

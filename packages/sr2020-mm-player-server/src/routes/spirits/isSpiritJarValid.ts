@@ -97,11 +97,11 @@ export const isSpiritJarValid = async (req1, res, next) => {
     }
   } catch (error) {
     const message = `${error} ${JSON.stringify(error)}`;
-    logger.error(message, error);
     const errorResponse: ErrorResponse = { 
-      errorTitle: 'Непредвиденная ошибка',
+      errorTitle: 'PS Непредвиденная ошибка проверки тотема',
       errorSubtitle: message 
     };
+    logger.error(errorResponse, error);
     res.status(500).json(errorResponse);
   }
 }

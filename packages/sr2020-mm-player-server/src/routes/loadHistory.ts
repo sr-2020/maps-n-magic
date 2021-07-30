@@ -23,11 +23,11 @@ export const loadHistory = async (req1, res, next) => {
     res.status(historyRes.status).json(json);
   } catch (error) {
     const message = `${error} ${JSON.stringify(error)}`;
-    logger.error(message, error);
     const errorResponse: ErrorResponse = { 
-      errorTitle: 'Непредвиденная ошибка',
+      errorTitle: 'PS Непредвиденная ошибка загрузки истории',
       errorSubtitle: message 
     };
+    logger.error(errorResponse, error);
     res.status(500).json(errorResponse);
   }
 }
