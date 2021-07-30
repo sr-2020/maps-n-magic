@@ -74,7 +74,7 @@ export function DispiritPage(props: DispiritPageProps) {
       console.error(err);
       setBodyStorageStatus({
         status: 'invalid',
-        message: 'Непредвиденная ошибка'
+        message: 'CL Непредвиденная ошибка проверки телохранилища'
       });
     });
   }, [bodyStorageQrString]);
@@ -109,7 +109,7 @@ export function DispiritPage(props: DispiritPageProps) {
       console.error(err);
       setBodyStorageStatus({
         status: 'invalid',
-        message: 'Непредвиденная ошибка'
+        message: 'CL Непредвиденная ошибка проверки тотема'
       });
     });
   }, [spiritJarQrString]);
@@ -131,7 +131,7 @@ export function DispiritPage(props: DispiritPageProps) {
       setDoDispirit(null);
     }).catch(err => {
       console.error(err);
-      setDispiritStatus('Непредвиденная ошибка');
+      setDispiritStatus('CL Непредвиденная ошибка снятия духа');
       setDoDispirit(null);
     });
   }, [doDispirit]);

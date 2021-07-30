@@ -51,7 +51,7 @@ export function CatchSpiritPage(props: CatchSpiritPageProps) {
     }).catch(err => {
       console.error(err);
       setErrorResponse({
-        errorTitle: 'Непредвиденная ошибка',
+        errorTitle: 'CL Непредвиденная ошибка ловли духа',
         errorSubtitle: JSON.stringify(err)
       });
 

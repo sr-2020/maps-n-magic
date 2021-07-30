@@ -38,7 +38,7 @@ export function DispiritComponent(props: DispiritComponentProps) {
       console.error(err);
       setBodyStorageStatus({
         status: 'invalid',
-        message: 'Непредвиденная ошибка'
+        message: 'CL Непредвиденная ошибка проверки телохранилища'
       });
     });
   }, [bodyStorageQrString]);
@@ -59,7 +59,7 @@ export function DispiritComponent(props: DispiritComponentProps) {
       setDoDispirit(null);
     }).catch(err => {
       console.error(err);
-      setDispiritStatus('Непредвиденная ошибка');
+      setDispiritStatus('CL Непредвиденная ошибка снятия духа');
       setDoDispirit(null);
     });
   }, [doDispirit]);

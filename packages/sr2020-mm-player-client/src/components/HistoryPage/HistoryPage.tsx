@@ -31,7 +31,7 @@ export function HistoryPage(props: HistoryPageProps) {
       }
     }).catch(err => {
       console.error(err);
-      setSuitSpiritStatus('Непредвиденная ошибка');
+      setSuitSpiritStatus('CL Непредвиденная ошибка получения истории');
       setHistoryList([]);
     });
   }, [historyList]);

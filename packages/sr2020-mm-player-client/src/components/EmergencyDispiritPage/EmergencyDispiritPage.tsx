@@ -32,7 +32,7 @@ export function EmergencyDispiritPage(props: EmergencyDispiritPageProps) {
       setDoEmergencyDispirit(false);
     }).catch(err => {
       console.error(err);
-      setDispiritStatus('Непредвиденная ошибка');
+      setDispiritStatus('CL Непредвиденная ошибка снятия способностей');
       setDoEmergencyDispirit(false);
     });
   }, [doEmergencyDispirit]);

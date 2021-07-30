@@ -63,7 +63,7 @@ export function SpiritPage(props: SpiritPageProps) {
     }).catch(err => {
       console.error(err);
       setErrorResponse({
-        errorTitle: 'Непредвиденная ошибка',
+        errorTitle: 'CL Непредвиденная ошибка получения данных духа',
         errorSubtitle: err
       });
     });
@@ -101,7 +101,7 @@ export function SpiritPage(props: SpiritPageProps) {
     }).catch(err => {
       console.error(err);
       setErrorResponse({
-        errorTitle: 'Непредвиденная ошибка',
+        errorTitle: 'CL Непредвиденная ошибка освобождения духа',
         errorSubtitle: err
       });
     });

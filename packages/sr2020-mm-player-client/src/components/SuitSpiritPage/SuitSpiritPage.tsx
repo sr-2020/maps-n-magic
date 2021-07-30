@@ -81,7 +81,7 @@ export function SuitSpiritPage(props: SuitSpiritPageProps) {
       console.error(err);
       setBodyStorageStatus({
         status: 'invalid',
-        message: 'Непредвиденная ошибка'
+        message: 'CL Непредвиденная ошибка проверки телохранилища'
       });
     });
   }, [bodyStorageQrString]);
@@ -116,7 +116,7 @@ export function SuitSpiritPage(props: SuitSpiritPageProps) {
       console.error(err);
       setBodyStorageStatus({
         status: 'invalid',
-        message: 'Непредвиденная ошибка'
+        message: 'CL Непредвиденная ошибка проверки тотема'
       });
     });
   }, [spiritJarQrString]);
@@ -141,7 +141,7 @@ export function SuitSpiritPage(props: SuitSpiritPageProps) {
       setDoSuitSpirit(false);
     }).catch(err => {
       console.error(err);
-      setSuitSpiritStatus('Непредвиденная ошибка');
+      setSuitSpiritStatus('CL Непредвиденная ошибка надевания духа');
       setDoSuitSpirit(false);
     });
   }, [doSuitSpirit]);
