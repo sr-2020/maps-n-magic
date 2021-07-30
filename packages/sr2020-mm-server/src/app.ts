@@ -16,7 +16,9 @@ import {
   createLogger,
   InnerApiRequest,
   MainAuthorizedRequest,
-  GetCatcherStates
+  GetCatcherStates,
+  mmGetLog,
+  mmGetUserLog
 } from 'sr2020-mm-server-event-engine';
 import { ErrorResponse, validateWebSocketInitClientConfig, WebSocketInitClientConfig } from 'sr2020-mm-event-engine';
 
@@ -121,6 +123,54 @@ app.get('/api/checkBodyStorageBatch', mainCheckBodyStorageBatch);
 app.post('/api/forceFreeSpirit', mainForceFreeSpirit);
 
 app.post('/api/directCatchSpirit', mainDirectCatchSpirit);
+
+app.get('/api/orgLogs/:characterId', async (req1, res, next) => {
+  const req = req1 as MainAuthorizedRequest;
+
+  try {
+
+    const characterId = Number(req.params.characterId);
+
+    if (Number.isNaN(characterId)) {
+      throw new Error(`characterId ${req.params.characterId} is NaN`);
+    }
+
+    const rows = await mmGetLog(characterId);
+    res.status(200).json(rows);
+  } catch (error) {
+    const message = `${error} ${JSON.stringify(error)}`;
+    logger.error(message, error);
+    const errorResponse: ErrorResponse = { 
+      errorTitle: 'Непредвиденная ошибка',
+      errorSubtitle: message 
+    };
+    res.status(500).json(errorResponse);
+  }
+});
+
+app.get('/api/userLogs/:characterId', async (req1, res, next) => {
+  const req = req1 as MainAuthorizedRequest;
+
+  try {
+
+    const characterId = Number(req.params.characterId);
+
+    if (Number.isNaN(characterId)) {
+      throw new Error(`characterId ${req.params.characterId} is NaN`);
+    }
+
+    const rows = await mmGetUserLog(characterId);
+    res.status(200).json(rows);
+  } catch (error) {
+    const message = `${error} ${JSON.stringify(error)}`;
+    logger.error(message, error);
+    const errorResponse: ErrorResponse = { 
+      errorTitle: 'Непредвиденная ошибка',
+      errorSubtitle: message 
+    };
+    res.status(500).json(errorResponse);
+  }
+});
 
 app.get('/api/catcherStates', async (req1, res, next) => {
   const req = req1 as MainAuthorizedRequest;

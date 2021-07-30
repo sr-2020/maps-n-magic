@@ -369,3 +369,9 @@ export interface MessageData {
   timestamp: number;
   message: string;
 }
+
+export interface OrgHistoryItem {
+  timestamp: number;
+  type: string;
+  message: string;
+}

@@ -66,6 +66,7 @@ import { SpiritOverview } from '../SpiritOverview';
 import { PlayerMessages } from '../PlayerMessages';
 import { SpiritCatchers } from '../SpiritCatchers';
 import { OrgSpiritCatch } from '../OrgSpiritCatch';
+import { CharacterLogs } from '../CharacterLogs';
 
 const TEST_POSITION = {
   coords: {
@@ -339,6 +340,9 @@ export class App extends Component<AppProps, AppState> {
                     </Route>
                     <Route path="/orgCatchSpirit">
                       <OrgSpiritCatch />
+                    </Route>
+                    <Route path="/characterLogs">
+                      <CharacterLogs />
                     </Route>
                     {/* <Route path="/soundManager2">
                       <SoundManager

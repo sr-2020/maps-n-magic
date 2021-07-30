@@ -1,3 +1,4 @@
+import { HistoryItem, OrgHistoryItem } from "sr2020-mm-event-engine";
 import { createLogger } from "../../utils";
 import { pool } from "../pgPool";
 
@@ -12,4 +13,9 @@ export const mmLog = async function(
   } catch(err) {
     logger.info(`Error on posting message ${type} ${message}`, err);
   }
+}
+
+export const mmGetLog = async function(characterId: number): Promise<OrgHistoryItem[]> {
+  const { rows } = await pool.query('SELECT * FROM "mmLog" WHERE message like \'%' + characterId + '%\' ORDER BY timestamp DESC');
+  return rows;
 }

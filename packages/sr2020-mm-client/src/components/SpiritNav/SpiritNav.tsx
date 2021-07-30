@@ -38,6 +38,9 @@ const navLinks2: NavLinkData[] = [{
 }, {
   to: '/orgCatchSpirit',
   tKey: 'orgCatchSpirit',
+}, {
+  to: '/characterLogs',
+  tKey: 'characterLogs',
 }];
 
 export function SpiritNav() {
