@@ -41,6 +41,7 @@ import { mainMoveSpiritsToAstral } from './routes/moveSpiritsToAstral';
 import { mainCheckQrById } from './routes/checkQrById';
 import { mainCheckBodyStorageBatch, mainCheckSpiritJarsBatch } from './routes/checkQrsBatch';
 import { mainForceFreeSpirit } from './routes/forceFreeSpirit';
+import { mainDirectCatchSpirit } from './routes/spirits/directCatchSpirit';
 
 const logger = createLogger('mainServer/app.ts');
 
@@ -118,6 +119,8 @@ app.get('/api/checkSpiritJarsBatch', mainCheckSpiritJarsBatch);
 app.get('/api/checkBodyStorageBatch', mainCheckBodyStorageBatch);
 
 app.post('/api/forceFreeSpirit', mainForceFreeSpirit);
+
+app.post('/api/directCatchSpirit', mainDirectCatchSpirit);
 
 app.get('/api/catcherStates', async (req1, res, next) => {
   const req = req1 as MainAuthorizedRequest;

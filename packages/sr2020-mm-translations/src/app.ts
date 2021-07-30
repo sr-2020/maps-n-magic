@@ -30,6 +30,7 @@ export const appDictionary = {
   spiritEditors: 'Редакторы духов',
   spiritViewers: 'Обзор и контроль',
   spiritCatchers: 'Духоловы',
+  orgCatchSpirit: 'Посадить духа в тотем',
   manaOceanSettings: 'Настройки океана маны',
   manaOceanEffectSettings: 'Настройки эффектов океана маны',
   rescueService: 'МЧС - карта клинических смертей',
