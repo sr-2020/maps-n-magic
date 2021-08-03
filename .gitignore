@@ -23,20 +23,43 @@
 .env.test.local
 .env.production.local
 
+**/.eslintcache
+
 shadowrun.code-workspace
 .vscode/launch.json
 
 npm-debug.log*
+lerna-debug.log*
 yarn-debug.log*
 yarn-error.log*
+
+packages/*/lib
+
 packages/sr2020-mm-client/public/images/nonIndexedImages/
 packages/sr2020-mm-client/build
 
-packages/sr2020-mm-server/settings-real.js
+packages/sr2020-mm-server/src/settings-real.ts
 packages/sr2020-mm-server/logs/*
+packages/sr2020-mm-server/static/
+packages/sr2020-mm-server/dist/
+packages/sr2020-mm-server/src/static
 
-packages/sr2020-mm-data/analysis/data/restOfAll/
-packages/sr2020-mm-data/analysis/data/kml/otherKml
+packages/sr2020-mm-player-server/src/settings-real.ts
+packages/sr2020-mm-player-server/logs/*
+packages/sr2020-mm-player-server/static/
+packages/sr2020-mm-player-server/dist/
+packages/sr2020-mm-player-server/src/static
+
+packages/sr2020-mm-player-client/build
+
+packages/sr2020-mm-data/src/analysis/data/restOfAll/
+packages/sr2020-mm-data/src/analysis/data/kml/otherKml
 
 packages/pubSubTest/
-packages/sr2020-mm-server/static/
+
+dist
+tsconfig.tsbuildinfo
+
+packages/outdated/sr2020-mm-ts-*
+
+packages/test/*

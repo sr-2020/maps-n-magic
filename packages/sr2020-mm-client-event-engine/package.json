@@ -1,0 +1,30 @@
+{
+  "name": "sr2020-mm-client-event-engine",
+  "description": "Client event engine",
+  "version": "1.0.0",
+  "peerDependencies": {},
+  "dependencies": {
+    "@types/leaflet": "^1.7.0",
+    "events": "^3.3.0",
+    "leaflet": "^1.7.1",
+    "ramda": "^0.27.1",
+    "sr2020-mm-data": "*",
+    "sr2020-mm-event-engine": "*"
+  },
+  "devDependencies": {
+    "@types/ramda": "^0.27.40",
+    "typescript": "^4.2.4"
+  },
+  "scripts": {
+    "ts:build": "tsc",
+    "ts:watch": "tsc --watch --preserveWatchOutput"
+  },
+  "main": "dist/index.js",
+  "typings": "dist/index.d.ts",
+  "directories": {
+    "lib": "dist"
+  },
+  "files": [
+    "dist"
+  ]
+}

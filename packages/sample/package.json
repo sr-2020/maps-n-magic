@@ -1,0 +1,21 @@
+{
+  "name": "sample",
+  "version": "0.0.0",
+  "description": "> TODO: description",
+  "author": "NtsDK <ghoul71@yandex.ru>",
+  "homepage": "https://github.com/sr-2020/maps-n-magic#readme",
+  "license": "Apache-2.0",
+  "main": "lib/sample.js",
+  "typings": "lib/sample.d.ts",
+  "directories": {
+    "lib": "lib",
+    "test": "__tests__"
+  },
+  "files": [
+    "lib"
+  ],
+  "scripts": {
+    "tsc": "tsc",
+    "test": "echo \"Error: run tests from root\" && exit 1"
+  }
+}

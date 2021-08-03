@@ -2,9 +2,24 @@
   "name": "sr2020-mm-translations",
   "description": "Localization files",
   "version": "1.0.0",
+  "scripts": {
+    "ts:build": "tsc",
+    "ts:watch": "tsc --watch --preserveWatchOutput"
+  },
+  "main": "dist/index.js",
+  "typings": "dist/index.d.ts",
+  "directories": {
+    "lib": "dist"
+  },
+  "files": [
+    "dist"
+  ],
   "peerDependencies": {
     "ramda": "^0.27.1"
   },
-  "dependencies": {
+  "dependencies": {},
+  "devDependencies": {
+    "@types/ramda": "^0.27.40",
+    "typescript": "^4.2.4"
   }
 }

@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import './LocationLayer2.css';
 
-import L from 'leaflet/dist/leaflet-src';
+import { L } from "sr2020-mm-client-core";
 import * as R from 'ramda';
 
 import { LocationsLayer } from './LocationsLayer';

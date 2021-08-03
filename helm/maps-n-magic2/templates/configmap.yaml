@@ -1,0 +1,16 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ .Release.Name }}-configmap
+data:
+  NODE_ENV: {{ .Values.app.env | quote }}
+  SKIP_PREFLIGHT_CHECK: {{ .Values.app.skipPreflightCheck | quote }}
+  PGHOST: {{ .Values.app.dbHost | quote }}
+  PGPORT: {{ .Values.app.dbPort | quote }}
+  PGDATABASE: {{ .Values.app.dbName | quote }}
+  GATEWAY_URL: {{ .Values.app.services.gateway | quote }}
+  POSITION_URL: {{ .Values.app.services.position | quote }}
+  BILLING_URL: {{ .Values.app.services.billing | quote }}
+  PUSH_URL: {{ .Values.app.services.push | quote }}
+  MODEL_ENGINE_URL: {{ .Values.app.services.modelEngine | quote }}
+  MODELS_MANAGER_URL: {{ .Values.app.services.modelsManager | quote }}

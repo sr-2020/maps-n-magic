@@ -1,10 +1,8 @@
 import React, { Component } from 'react';
 import './VoronoiPolygonsLayer2.css';
 
-import L from 'leaflet/dist/leaflet-src';
+import { L, COLOR_PALETTE } from "sr2020-mm-client-core";
 import * as R from 'ramda';
-
-import { COLOR_PALETTE } from 'sr2020-mm-client-core/utils/colorPalette';
 
 // import { VoronoiPolygonsLayer2PropTypes } from '../../types';
 

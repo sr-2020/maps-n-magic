@@ -1,0 +1,18 @@
+{
+  "extends": "../sr2020-mm-client/tsconfig.json",
+  "compilerOptions": {
+    // "traceResolution": true,
+    "baseUrl": "./",
+    "outDir": "./dist", /* Redirect output structure to the directory. */
+    "declaration": true,
+    "sourceMap": true,
+    // --extendedDiagnostics --listEmittedFiles 
+    // overrides
+    "noEmit": false
+  },
+  "include": [ "./src", "index.ts"  ],
+  "exclude": [
+    "dist",
+    "node_modules"
+  ]
+}
