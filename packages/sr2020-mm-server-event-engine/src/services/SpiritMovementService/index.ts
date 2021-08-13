@@ -21,8 +21,8 @@ import { getRouteIndex } from "./utils";
 import { getNewSpiritState } from "./stateProcessing";
 import { mmLog } from '../../api/spirits/mmLog';
 
-// const SPIRIT_UPDATE_INTERVAL: number = 5000; // millis
-const SPIRIT_UPDATE_INTERVAL: number = 60000; // millis
+const SPIRIT_UPDATE_INTERVAL: number = 5000; // millis
+// const SPIRIT_UPDATE_INTERVAL: number = 60000; // millis
 
 export interface SpiritMovementServiceContract extends ServiceContract {
   Request: never;

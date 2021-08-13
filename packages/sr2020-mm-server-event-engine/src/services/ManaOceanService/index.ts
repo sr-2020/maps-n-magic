@@ -51,8 +51,8 @@ import { logCharacterAction } from '../../utils';
 
 // import { manaOceanEffectSettings } from '../api/constants';
 
-// const TIDE_LEVEL_UPDATE_INTERVAL: number = 5000; // millis
-const TIDE_LEVEL_UPDATE_INTERVAL: number = 60000; // millis
+const TIDE_LEVEL_UPDATE_INTERVAL: number = 5000; // millis
+// const TIDE_LEVEL_UPDATE_INTERVAL: number = 60000; // millis
 
 const MANA_TIDE_UPDATE_INTERVAL: number = 10000; // millis
 // const MANA_TIDE_UPDATE_INTERVAL = 30000; // millis
