@@ -208,7 +208,7 @@ export class ManaOceanLayer extends Component<
     //   const firstEffect = effectGroups1[effectType][0];
     //   const str = t(`manaEffect_${effectType}`, { manaLevelChange: firstEffect.manaLevelChange });
     //   const { length } = effectGroups1[effectType];
-    //   return `${str} x${length}, мана ${firstEffect.manaLevelChange * length}`;
+    //   return `${str} x${length}, mana ${firstEffect.manaLevelChange * length}`;
     // });
 
     // if (strings.length > 0) {
@@ -235,7 +235,12 @@ export class ManaOceanLayer extends Component<
       const timeSubArr = R.take(3, timeArr);
       const timeStr = timeSubArr.join(', ') + (timeArr.length > timeSubArr.length ? ', ...' : '');
       const { length } = effectGroups[effectType];
-      return `${str}, x${length} (${timeStr}), мана ${firstEffect.manaLevelChange * length}`;
+      return t('manaEffectSummary', {
+        str,
+        length,
+        timeStr,
+        manaLevelSummary: firstEffect.manaLevelChange * length
+      });
     });
 
     // const strings2 = effectList.map(({
@@ -244,10 +249,10 @@ export class ManaOceanLayer extends Component<
     //   const str = t(`manaEffect_${type}`, { manaLevelChange });
     //   const startStr = moment(start).format('HH:mm');
     //   if (permanent) {
-    //     return `${str}, ${startStr}, мана ${manaLevelChange}`;
+    //     return `${str}, ${startStr}, mana ${manaLevelChange}`;
     //   }
     //   const endStr = moment(end).format('HH:mm');
-    //   return `${str}, ${startStr}-${endStr}, мана ${manaLevelChange}`;
+    //   return `${str}, ${startStr}-${endStr}, mana ${manaLevelChange}`;
     // });
     //     end: 1602289691729
     // id: "gRSQuMVdM"

@@ -320,7 +320,7 @@ export class SpiritContent extends Component<
                 </div>
               </div>
               <div className="tw-table-row">
-                <label htmlFor="levelInput" className="tw-table-cell">Уровень</label>
+                <label htmlFor="levelInput" className="tw-table-cell">{t('spiritLevel')}</label>
                 <div className="tw-table-cell">
                   <SpiritNumberSelect 
                     id="levelInput"
@@ -332,7 +332,7 @@ export class SpiritContent extends Component<
                 </div>
               </div>
               <div className="tw-table-row">
-                <label htmlFor="hitPointsInput" className="tw-table-cell">Хиты</label>
+                <label htmlFor="hitPointsInput" className="tw-table-cell">{t('spiritHitPoints')}</label>
                 <div className="tw-table-cell">
                   <SpiritNumberSelect 
                     id="hitPointsInput"
@@ -344,7 +344,7 @@ export class SpiritContent extends Component<
                 </div>
               </div>
               <div className="tw-table-row">
-                <label htmlFor="abilitiesInput" className="tw-table-cell">Абилки</label>
+                <label htmlFor="abilitiesInput" className="tw-table-cell">{t('spiritAbilities')}</label>
                 <div className="tw-table-cell">
                   <AbilitiesInput2
                     id="abilitiesInput"

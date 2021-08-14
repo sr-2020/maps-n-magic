@@ -234,7 +234,7 @@ export class CharacterPositions extends Component<CharacterPositionsProps, Chara
             >
               <Form.Group controlId="characterId">
                 <Form.Label>{t('characterId')}</Form.Label>
-                <CharacterInput users={users}/>
+                <CharacterInput users={users} t={t}/>
                 {/* <Form.Control list="characterIdList" />
                 <Form.Text className="text-muted">
                   We'll never share your email with anyone else.
@@ -320,10 +320,11 @@ export class CharacterPositions extends Component<CharacterPositionsProps, Chara
 
 interface CharacterInputProps {
   users: UserRecord[];
+  t: WithTranslation["t"]
 }
 
 function CharacterInput(props: CharacterInputProps) {
-  const { users } = props;
+  const { users, t } = props;
   const [charId, setCharId] = useState<number>(-1);
 
   function onChange(event: ChangeEvent<HTMLInputElement>) {
@@ -338,7 +339,7 @@ function CharacterInput(props: CharacterInputProps) {
     <>
       <Form.Control list="characterIdList" onChange={onChange}/>
       <Form.Text className="text-muted">
-        {user?.location?.label ? `Персонаж в ${user?.location.label}` : 'Локация неизвестна'}
+        {user?.location?.label ? t('characterInLocation', {label: user?.location.label}) : t('locationUnknown')}
       </Form.Text>
     </>
   );

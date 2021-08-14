@@ -9,13 +9,14 @@ import { ErrorResponse, isErrorResponse } from 'sr2020-mm-event-engine';
 
 import { ErrorAlert } from "../ErrorAlert";
 import { LoginManager } from '../../utils';
+import { WithTranslation } from 'react-i18next';
 
-interface LoginPageProps {
+interface LoginPageProps extends WithTranslation {
   loginManager: LoginManager;
 }
 
 export function LoginPage(props: LoginPageProps) {
-  const { loginManager } = props;
+  const { loginManager, t } = props;
   const { loginState } = loginManager;
   const [username, setUserName] = useState<string>('');
   const [password, setPassword] = useState<string>('');
@@ -41,28 +42,28 @@ export function LoginPage(props: LoginPageProps) {
 
         <Form onSubmit={handleSubmit}>
           <Form.Group controlId="formBasicLogin">
-            <Form.Label>Логин</Form.Label>
+            <Form.Label>{t('login')}</Form.Label>
             <Form.Control type="text" onChange={e => {
               setUserName(e.target.value);
               setErrorMsg(null);
             }}/>
             <Form.Text className="text-muted">
-              id профиля JoinRPG
+              {t('joinRpgId')}
             </Form.Text>
           </Form.Group>
 
           <Form.Group controlId="formBasicPassword">
-            <Form.Label>Пароль</Form.Label>
+            <Form.Label>{t('password')}</Form.Label>
             <Form.Control type="password" onChange={e => {
               setPassword(e.target.value);
               setErrorMsg(null);
             }}/>
             <Form.Text className="text-muted">
-              пин код из заявки / пароль мастера
+              {t('passwordAdvice')}
             </Form.Text>
           </Form.Group>
           <Button variant="primary" type="submit" className="tw-w-full">
-            Войти
+            {t('enter')}
           </Button>
         </Form>
       </div>
@@ -76,12 +77,6 @@ export function LoginPage(props: LoginPageProps) {
           <ErrorAlert className="tw-m-4" errorResponse={loginState.errorResponse} />
         )
       }
-
-      {/* <Button 
-        onClick={callSecureApi}
-      >
-        Запрос на защищенный эндпоинт
-      </Button> */}
     </div>
   );
 }

@@ -110,7 +110,7 @@ export class SpiritFractionContent extends Component<
     }
 
     return (
-      <DocumentTitle title={'Фракция духов ' + name}>
+      <DocumentTitle title={t('spiritFractionTitle', {name})}>
 
         <div className="SpiritFractionContent tw-flex-grow tw-px-16 tw-py-8 tw-overflow-auto">
           <div>
@@ -126,7 +126,7 @@ export class SpiritFractionContent extends Component<
 
             <div className="tw-table">
               <div className="tw-table-row">
-                <label htmlFor="abilitiesInput" className="tw-table-cell">Абилки</label>
+                <label htmlFor="abilitiesInput" className="tw-table-cell">{t('spiritAbilities')}</label>
                 <div className="tw-table-cell">
                   <AbilitiesInput2
                     id="abilitiesInput"

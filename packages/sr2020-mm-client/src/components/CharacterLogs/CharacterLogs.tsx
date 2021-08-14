@@ -15,6 +15,7 @@ interface CharacterLogsProps extends WithTranslation {
 }
 
 export function CharacterLogs(props: CharacterLogsProps) {
+  const { t } = props;
   const [characterId, setCharacterId] = useState<string>('');
   const [orgLog, setOrgLog] = useState<OrgHistoryItem[]>([]);
   const [userLog, setUserLog] = useState<HistoryItem[]>([]);
@@ -48,19 +49,19 @@ export function CharacterLogs(props: CharacterLogsProps) {
           onSubmit={onSubmit}
         >
           <Form.Group className="mb-3" controlId="formBasicEmail">
-            <Form.Label>Id персонажа</Form.Label>
+            <Form.Label>{t('characterId')}</Form.Label>
             <Form.Control value={characterId} onChange={(event: ChangeEvent<HTMLInputElement>) => {
               const { target: { value } } = event;
               setCharacterId(value);
             }}/>
           </Form.Group>
           <Button variant="primary" type="submit" disabled={!isValid}>
-            Показать логи
+            {t('showLogs')}
           </Button>
         </Form>
       </div>
       <div className="tw-mb-8">
-        <div className="tw-mb-4">Лог мастерский:</div>
+        <div className="tw-mb-4">{t('organizerLog')}</div>
         <div>
           <Table
             hover
@@ -88,7 +89,7 @@ export function CharacterLogs(props: CharacterLogsProps) {
         </div>
       </div>
       <div>
-        <div className="tw-mb-4">Лог игроцкий:</div>
+        <div className="tw-mb-4">{t('playerLog')}</div>
         <div>
           <Table
             hover

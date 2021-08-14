@@ -40,11 +40,13 @@ export function SpiritOverview(props: SpiritOverviewProps) {
     };
   }, []);
 
-  const { spirits, spiritFractions, spiritRoutes } = props;
+  const { spirits, spiritFractions, spiritRoutes, t } = props;
 
   if (spirits === null || spiritFractions === null || spiritRoutes === null) {
     return (
-      <div>Данные духов, фракций и маршрутов загружаются...</div>
+      <div>
+        {t('spiritOverviewDataLoading')}
+      </div>
     );
   }
 
@@ -120,6 +122,7 @@ export function SpiritOverview(props: SpiritOverviewProps) {
                   spiritRouteIndex={spiritRouteIndex}
                   timetable={spiritIndex.get(item.id)?.timetable}
                   moscowMinutes={moscowMinutes}
+                  t={t}
                 />
               }
             </div>
@@ -136,10 +139,17 @@ interface SpiritTimetableProps {
   timetable: SpiritTimetable | undefined;
   spiritRouteIndex: Map<number, SpiritRoute>;
   moscowMinutes: number;
+  t: WithTranslation["t"];
 }
 
 export function SpiritTimetableComponent(props: SpiritTimetableProps) {
-  const { spirit, timetable, spiritRouteIndex, moscowMinutes } = props;
+  const { 
+    spirit, 
+    timetable, 
+    spiritRouteIndex, 
+    moscowMinutes,
+    t
+  } = props;
 
   if (spirit === undefined || timetable === undefined) {
     return null;
@@ -163,9 +173,9 @@ export function SpiritTimetableComponent(props: SpiritTimetableProps) {
               delay={{ show: 250, hide: 400 }}
               overlay={(props) => (
                 <Tooltip id={"" + spirit.id + item.time + route.id} {...props}>
-                  Старт в {formatMinutes(startMinutes)}
+                  {t('startRouteAt', {minutes: formatMinutes(startMinutes)})}
                   <br/>
-                  Время в пути {timeOnRoute} мин.
+                  {t('timeOnRoute', { timeOnRoute })}
                 </Tooltip>
               )}
             >

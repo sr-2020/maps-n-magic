@@ -44,15 +44,17 @@ export class Emercom extends React.Component<EmercomProps, EmercomState> {
   }
   
   render() {
+    const { loginManager, t } = this.props;
+
     if (this.audioContext.state === 'suspended') {
       return (
         <div className="tw-flex tw-flex-col tw-h-screen tw-justify-center">
-          <Button className="tw-py-24 tw-mx-4" onClick={this.onClick}>Нажмите дважды для включения звука</Button>
+          <Button className="tw-py-24 tw-mx-4" onClick={this.onClick}>{t('clickTwiceToEnableSound')}</Button>
         </div>
       ); 
     }
 
-    const { loginManager } = this.props;
+    
     const { gameModel } = this.state;
 
     if (gameModel === null) {
@@ -70,7 +72,7 @@ export class Emercom extends React.Component<EmercomProps, EmercomState> {
     }
   
     return (
-      <DocumentTitle title="Карта МЧС">
+      <DocumentTitle title={t('emercomMap')}>
         <MapDefaultsProvider value={mapDefaults}>
           <div className="Emercom tw-flex tw-flex-col tw-h-screen">
             <main className="tw-flex-auto tw-h-full">
@@ -80,11 +82,11 @@ export class Emercom extends React.Component<EmercomProps, EmercomState> {
             </main>
             <Button
               onClick={onLogout}
-              title="Выйти"
+              title={t('logout')}
               className="tw-py-3 tw-text-lg tw-fixed tw-top-0" 
               style={{'right': '5rem', 'zIndex': 1000}}
             >
-              Выйти
+              {t('logout')}
             </Button>
           </div>
         </MapDefaultsProvider>

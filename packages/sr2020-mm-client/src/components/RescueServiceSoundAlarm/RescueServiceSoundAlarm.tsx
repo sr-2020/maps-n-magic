@@ -1,6 +1,7 @@
 import React, { useRef, useEffect, useState } from 'react';
 import './RescueServiceSoundAlarm.css';
 import * as R from 'ramda';
+import { WithTranslation } from 'react-i18next';
 
 import { GameModel, EPostNotification } from "sr2020-mm-event-engine";
 
@@ -10,7 +11,7 @@ import { WithCharacterIdHealthListForAudio } from '../../dataHOCs';
 let audioPromise: Promise<HTMLAudioElement> | null = null;
 let audioPromiseResolved: boolean = false;
 
-function playSound(gameModel: GameModel) {
+function playSound(gameModel: GameModel, t: WithTranslation["t"]) {
   if (!audioPromise) {
     audioPromise = new Promise((resolve, reject) => {
       // audio = new Audio('http://localhost:3000/sounds/274682__jppi-stu__sw-school-pa-alert.wav');
@@ -29,24 +30,24 @@ function playSound(gameModel: GameModel) {
       console.error('Some conditions are not meets', err);
       gameModel.emit2<EPostNotification>({
         type: 'postNotification',
-        title: 'Запрещено воспроизведение звука',
-        message: 'Действие 1. Попробуйте закрыть это сообщение (серьезно, это не шутка).',
+        title: t('soundProhibitedTitle'),
+        message: t('soundProhibitedMessage'),
         kind: 'error',
       });
     });
   }
 }
 
-interface RescueServiceSoundAlarmProps extends WithCharacterIdHealthListForAudio {
+interface RescueServiceSoundAlarmProps extends WithCharacterIdHealthListForAudio, WithTranslation {
   gameModel: GameModel;
 }
 
 export function RescueServiceSoundAlarm(props: RescueServiceSoundAlarmProps): null {
-  const { characterIdHealthList, gameModel } = props;
+  const { characterIdHealthList, gameModel, t } = props;
   // const [list, setList] = useState([]);
   const prevList = usePrevious(characterIdHealthList);
   if (R.difference(characterIdHealthList, prevList).length > 0) {
-    playSound(gameModel);
+    playSound(gameModel, t);
   }
   // console.log(characterIdHealthList);
   //

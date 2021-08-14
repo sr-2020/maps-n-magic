@@ -203,8 +203,8 @@ export class BeaconRecordEditor extends Component<BeaconRecordEditorProps, Beaco
               <th>{t('beaconMacAddress')}</th>
               <th>{t('beaconLabel')}</th>
               <th>{t('location')}</th>
-              <th>Широта</th>
-              <th>Долгота</th>
+              <th>{t('latitude')}</th>
+              <th>{t('longitude')}</th>
               {/* <th>{t('beaconPlacement')}</th> */}
             </tr>
           </thead>

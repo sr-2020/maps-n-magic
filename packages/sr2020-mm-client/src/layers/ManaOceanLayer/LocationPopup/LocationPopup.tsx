@@ -66,7 +66,11 @@ export class LocationPopup extends Component<
       const str = t(`manaEffect_${effect.type}` as const);
       const startStr = moment(effect.start).format('HH:mm');
       const endStr = 'end' in effect ? (`-${moment(effect.end).format('HH:mm')}`) : '';
-      return `${str}, ${startStr + endStr}, мана ${effect.manaLevelChange}`;
+      return t('locationManaSummary', {
+        str,
+        time: startStr + endStr,
+        manaLevelSummary: effect.manaLevelChange
+      });
     }
 
     function onButtonClick(event: MouseEvent<HTMLElement>) {

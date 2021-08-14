@@ -178,10 +178,10 @@ export function AppHeader(props: AppHeaderProps) {
               as="button"
               type="button"
               onClick={onLogout}
-              title="Выйти"
+              title={t('logout')}
               className="tw-py-3 tw-text-lg"
             >
-              Выйти
+              {t('logout')}
             </Dropdown.Item>
           </Dropdown.Menu>
         </Dropdown>

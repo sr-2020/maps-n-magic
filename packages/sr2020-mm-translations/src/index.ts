@@ -3,6 +3,7 @@ import { spiritDictionary } from './spirits';
 import { manaOceanDictionary } from './manaOcean';
 import { soundDictionary } from './sounds';
 import { gameConstantsDictionary } from './gameConstants';
+import { extraMainServerI18nDictionary } from './extraMainServerI18n';
 export * from './leaflet';
 
 export const translations = {
@@ -14,6 +15,7 @@ export const translations = {
       ...soundDictionary,
       ...manaOceanDictionary,
       ...gameConstantsDictionary,
+      ...extraMainServerI18nDictionary,
 
       // layers
       botTrackLayer: 'Треки движения духов',

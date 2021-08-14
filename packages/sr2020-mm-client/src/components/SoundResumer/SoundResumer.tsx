@@ -20,7 +20,7 @@ export function SoundResumer(props: SoundResumerProps) {
 
   if (visible) {
     return (
-      <Button onClick={onClick}>Нажмите дважды для включения звука</Button>
+      <Button onClick={onClick}>{t('clickTwiceToEnableSound')}</Button>
     );
   }
 

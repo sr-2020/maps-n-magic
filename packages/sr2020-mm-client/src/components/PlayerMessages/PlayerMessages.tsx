@@ -24,11 +24,11 @@ export function getFractionName(id: number): string {
 }
 
 export function PlayerMessages(props: PlayerMessagesProps) {
-  const { playerMessages } = props;
+  const { playerMessages, t } = props;
 
   if (playerMessages === null) {
     return (
-      <div>Сообщения игроков загружаются...</div>
+      <div>{t('playerMessagesLoading')}</div>
     );
   }
 
@@ -40,7 +40,14 @@ export function PlayerMessages(props: PlayerMessagesProps) {
           playerMessages.map(playerMessage => (
             <div key={playerMessage.id} className="tw-mb-8">
               <div className="tw-mb-4">
-                <span className="tw-inline-block tw-mr-16" style={{width: '25rem'}}>{`Игрок ${playerMessage.characterId} отпустил духа ${playerMessage.spiritId} из фракции ${playerMessage.spiritFractionId} ${getFractionName(playerMessage.spiritFractionId)}`}</span>
+                <span className="tw-inline-block tw-mr-16" style={{width: '25rem'}}>
+                  {t('playerMessageLabel', {
+                    characterId: playerMessage.characterId,
+                    spiritId: playerMessage.spiritId,
+                    spiritFractionId: playerMessage.spiritFractionId,
+                    fractionName: getFractionName(playerMessage.spiritFractionId),
+                  })}
+                </span>
                 <span>{moment(new Date(playerMessage.id)).format('D MMM YYYY HH:mm:ss')}</span>
               </div>
               <div className="tw-ml-8">

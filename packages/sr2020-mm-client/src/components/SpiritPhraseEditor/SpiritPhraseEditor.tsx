@@ -32,13 +32,6 @@ type PropChange =
   | {prop: 'spiritFractionId', value: number | null}
 ;
 
-// const fractionNameObj: Record<number, string> = {
-//   1: "Без фракции",
-//   2: "Баргузин",
-//   3: "Култук",
-//   4: "Сарма",
-// };
-
 const spiritFractions = [{
   id: -1,
   name: 'Не выбрано'
@@ -155,15 +148,13 @@ export class SpiritPhraseEditor extends Component<SpiritPhraseEditorProps> {
   
     if (spiritPhrases === null) {
       return (
-        <div>Фразы духов загружаются...</div>
+        <div>{t('spiritPhrasesLoading')}</div>
       );
     }
   
-  
-  
     return (
       <div className="SpiritPhraseEditor tw-px-8 tw-py-4 tw-h-full tw-overflow-auto">
-        <Button onClick={this.createSpiritPhrase}>Создать фразу</Button>
+        <Button onClick={this.createSpiritPhrase}>{t('createPhrase')}</Button>
   
           <Table
             hover

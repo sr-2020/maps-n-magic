@@ -31,15 +31,15 @@ export function SpiritStatusControl(props: SpiritStatusControlProps) {
       }
       {state.status === SpiritStatus.OnRoute && 
         <Button variant="outline-secondary" onClick={() => changeSpiritStatus("RestInAstral")}>
-          Снять с маршрута
+          {t('featuresAreLoading')}
         </Button>
       }
       {state.status === SpiritStatus.InJar && 
-        <div>Id тотема {state.qrId}</div>
+        <div>{t('spiritJarIdWithId', { qrId: state.qrId } )}</div>
       }
       <div>{JSON.stringify(state)}</div>
       <Button variant="outline-secondary" onClick={() => changeSpiritStatus("RestInAstral")}>
-        Сбросить состояние
+        {t('forceClearSpiritState')}
       </Button>
     </div>
   );

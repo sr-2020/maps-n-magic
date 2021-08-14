@@ -18,7 +18,7 @@ export function BeaconLocationSelect(props: BeaconLocationSelectProps) {
   const { t, beacon, geoLocationRecords, onLocationSelect } = props;
 
   if (geoLocationRecords.length === 0) {
-    return <div>Гео-локации не найдены</div>;
+    return <div>{t('geoLocationsNotFound')}</div>;
   }
 
   function onLocationSelect1(event: ChangeEvent<HTMLSelectElement>): void {

@@ -1,5 +1,6 @@
 import React, { Component, useEffect } from 'react';
 import './SoundStageEcho.css';
+import { useTranslation } from 'react-i18next';
 import { GameModel, SoundStageData, Rotation } from "sr2020-mm-event-engine";
 import { WithSoundSettings, WithSoundStageState } from '../../../dataHOCs';
 import { SetBackgroundSound, SetRotationSounds } from 'sr2020-mm-client-event-engine';
@@ -10,6 +11,7 @@ interface SoundStageEchoProps extends WithSoundSettings, WithSoundStageState {
 
 export function SoundStageEcho(props: SoundStageEchoProps) {
   const { soundSettings, soundStageState, gameModel } = props;
+  const { t } = useTranslation();
 
   useEffect(() => {
     let bgCounter = 0;
@@ -88,7 +90,7 @@ export function SoundStageEcho(props: SoundStageEchoProps) {
   if (soundSettings === null || soundStageState === null) {
     return (
       <div className="SoundStageEcho">
-        Загрузка звуковых данных...
+        {t('loadingSoundData')}
       </div>
     );
   }
