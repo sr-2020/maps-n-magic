@@ -171,7 +171,7 @@ export class SpiritService extends AbstractService<SpiritServiceContract> {
 
   private _makeSpiritName(name: string): string {
     const spiritMap = R.indexBy(R.prop('name'), this.spirits);
-    const base = `${name} клон`;
+    const base = `${name} clone`;
     let newName = base;
     let counter = 1;
     // eslint-disable-next-line eqeqeq

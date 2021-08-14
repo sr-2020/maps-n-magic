@@ -63,6 +63,8 @@ export const extraMainServerI18nDictionary = {
   barguzin: 'Баргузин',
   kultuk: 'Култук',
   sarma: 'Сарма',
+  unknownFraction: '',
+  fractionNotSelected: 'Не выбрано',
 
   playerMessagesLoading: 'Сообщения игроков загружаются...',
 

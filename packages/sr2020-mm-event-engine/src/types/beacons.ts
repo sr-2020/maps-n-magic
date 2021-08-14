@@ -11,7 +11,7 @@ export interface BeaconRecord {
   bssid: string;
   // id: 34
   id: number;
-  // label: "Нджин"
+  // label: "<label>"
   label: string;
   // lat: null
   lat: number | null;

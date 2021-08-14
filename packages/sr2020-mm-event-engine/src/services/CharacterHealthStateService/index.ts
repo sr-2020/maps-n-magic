@@ -48,11 +48,11 @@ export class CharacterHealthStateService extends AbstractService<
     // {
     //   "51935": {
     //     "locationId": 3217,
-    //     "locationLabel": "Мастерка",
+    //     "locationLabel": "<locationLabel>",
     //     "healthState": "healthy",
     //     "timestamp": 1606410304241,
     //     "lifeStyle": "Wood",
-    //     "personName": "Новый персонаж в группе Мастера и приложение !!!(Без страховки)!!!"
+    //     "personName": "<personName>"
     //   }
     // }
     this.characterHealthStates = {};

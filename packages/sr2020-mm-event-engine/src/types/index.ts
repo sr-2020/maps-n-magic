@@ -49,20 +49,6 @@ export interface TriangulationData {
   edgeSet: Set<EdgeId>;
 }
 
-// export interface RawCharacterHealthState {
-//   //   55817: {locationId: 3215, locationLabel: "Межрайонье 1", healthState: "clinically_dead",…}
-//   // healthState: "clinically_dead"
-//   // TODO add enum here
-//   healthState: string;
-//   // lifeStyle: "Страховка отсутствует"
-//   // locationId: 3215
-//   locationId: number;
-//   // locationLabel: "Межрайонье 1"
-//   // personName: "Blaze ноябрь"
-//   // timestamp: 1613673901135
-//   timestamp: number;
-// }
-
 export interface SettingsData {
 
 }
@@ -89,12 +75,12 @@ export interface RawCharacterHealthState {
   //   55817: {locationId: 3215, locationLabel: "Межрайонье 1", healthState: "clinically_dead",…}
   // healthState: "clinically_dead"
   healthState: string;
-  // lifeStyle: "Страховка отсутствует"
+  // lifeStyle: "<lifeStyle>"
   // lifeStyle: string;
   lifeStyle: LifeStylesValues;
   // locationId: 3215
   locationId: number | null;
-  // locationLabel: "Межрайонье 1"
+  // locationLabel: "<locationLabel>"
   locationLabel: string;
   // personName: "Blaze ноябрь"
   personName: string;

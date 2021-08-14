@@ -7,20 +7,21 @@ import { WithTranslation } from "react-i18next";
 import { GameModel } from 'sr2020-mm-event-engine';
 
 import { WithPlayerMessages } from '../../dataHOCs';
+import { SRTKey } from 'sr2020-mm-client-core';
 
 interface PlayerMessagesProps extends WithTranslation, WithPlayerMessages {
   gameModel: GameModel;
 }
 
-const fractionNameObj: Record<number, string> = {
-  1: "Без фракции",
-  2: "Баргузин",
-  3: "Култук",
-  4: "Сарма",
+const fractionNameObj: Record<number, SRTKey> = {
+  1: "noFraction",
+  2: "barguzin",
+  3: "kultuk",
+  4: "sarma",
 };
 
-export function getFractionName(id: number): string {
-  return fractionNameObj[id] || '';
+export function getFractionName(id: number): SRTKey {
+  return fractionNameObj[id] || 'unknownFraction';
 }
 
 export function PlayerMessages(props: PlayerMessagesProps) {
@@ -45,7 +46,7 @@ export function PlayerMessages(props: PlayerMessagesProps) {
                     characterId: playerMessage.characterId,
                     spiritId: playerMessage.spiritId,
                     spiritFractionId: playerMessage.spiritFractionId,
-                    fractionName: getFractionName(playerMessage.spiritFractionId),
+                    fractionName: t(getFractionName(playerMessage.spiritFractionId)),
                   })}
                 </span>
                 <span>{moment(new Date(playerMessage.id)).format('D MMM YYYY HH:mm:ss')}</span>

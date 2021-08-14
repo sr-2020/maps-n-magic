@@ -28,7 +28,7 @@ export async function loginUser(credentials: {
       return errorResponse;
     } else {
       return {
-        errorTitle: 'Неизвестная ошибка',
+        errorTitle: 'Unknown error',
         errorSubtitle: JSON.stringify(validateErrorResponse.errors)
       };
     }

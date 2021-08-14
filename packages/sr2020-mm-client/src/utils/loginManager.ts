@@ -53,7 +53,7 @@ export class LoginManager extends EventEmitter {
           this.loginState = {
             status: 'error',
             errorResponse: {
-              errorTitle: 'Неизвестная ошибка',
+              errorTitle: 'Unknown error',
               errorSubtitle: JSON.stringify(validateErrorResponse.errors)
             }
           };
@@ -64,7 +64,7 @@ export class LoginManager extends EventEmitter {
       this.loginState = {
         status: 'error',
         errorResponse: {
-          errorTitle: 'Неизвестная ошибка',
+          errorTitle: 'Unknown error',
           errorSubtitle: JSON.stringify(err)
         }
       };

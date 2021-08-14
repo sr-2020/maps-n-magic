@@ -21,6 +21,7 @@ import Dropdown from 'react-bootstrap/Dropdown';
 import { DropdownItemProps } from 'react-bootstrap/DropdownItem';
 import { WithTranslation } from "react-i18next";
 import Form from 'react-bootstrap/Form';
+import { SRTKey } from 'sr2020-mm-client-core';
 
 interface SpiritPhraseEditorProps extends WithTranslation, WithSpiritPhrases {
   gameModel: GameModel;
@@ -32,18 +33,21 @@ type PropChange =
   | {prop: 'spiritFractionId', value: number | null}
 ;
 
-const spiritFractions = [{
+const spiritFractions: {
+  id: number;
+  name: SRTKey;
+}[] = [{
   id: -1,
-  name: 'Не выбрано'
+  name: 'fractionNotSelected'
 },{
   id: 2,
-  name: 'Баргузин'
+  name: 'barguzin'
 },{
   id: 3,
-  name: 'Култук'
+  name: 'kultuk'
 },{
   id: 4,
-  name: 'Сарма'
+  name: 'sarma'
 }]
 
 export class SpiritPhraseEditor extends Component<SpiritPhraseEditorProps> {
@@ -223,7 +227,7 @@ export class SpiritPhraseEditor extends Component<SpiritPhraseEditorProps> {
                               key={fraction.id}
                               value={fraction.id}
                             >
-                              {fraction.name}
+                              {t(fraction.name)}
                             </option>
                           ))
                         }

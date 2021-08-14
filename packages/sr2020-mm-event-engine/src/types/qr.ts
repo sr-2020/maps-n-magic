@@ -37,7 +37,7 @@ export const validateCommonQr = ajv.compile(commonQrSchema);
 //   "baseModel": {
 //     "usesLeft": 9999,
 //     "type": "spirit_jar",
-//     "name": "Духохранилище",
+//     "name": "<name>",
 //     "description": "",
 //     "modelId": "359",
 //     "timestamp": 1624828389380,
@@ -51,7 +51,7 @@ export const validateCommonQr = ajv.compile(commonQrSchema);
 //   "workModel": {
 //     "usesLeft": 9999,
 //     "type": "spirit_jar",
-//     "name": "Духохранилище",
+//     "name": "<name>",
 //     "description": "",
 //     "modelId": "359",
 //     "timestamp": 1624828389380,
