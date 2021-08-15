@@ -159,7 +159,7 @@ export function DispiritPage(props: DispiritPageProps) {
           setSpiritJarQrString(qrData);
           setScanSpiritJar(false);
         }}
-        message="Отсканируйте тотем с духом"
+        message="Отсканируйте пустой тотем"
         onCancel={() => setScanSpiritJar(false)}
       />
     );
@@ -235,16 +235,6 @@ export function DispiritPage(props: DispiritPageProps) {
           </Button>
         </div>
       }
-      {/* <div>
-        <div className="tw-mb-2">Оставить сообщение</div>
-        <div>
-          <Form.Control
-            as="textarea" rows={3}
-            value={messageBody}
-            onChange={(e) => setMessageBody(e.target.value)}
-          />
-        </div>
-      </div> */}
     </div>
   );
 }

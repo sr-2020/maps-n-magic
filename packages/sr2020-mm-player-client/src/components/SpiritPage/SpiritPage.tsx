@@ -90,7 +90,6 @@ export function SpiritPage(props: SpiritPageProps) {
       'Маг освободил духа',
       messageBody
     ).then(res => {
-    // freeSpirit(Number(123456789), 'Маг освободил духа').then(res => {
       if (isErrorResponse(res)) {
         setErrorResponse(res);
       } else {
@@ -109,27 +108,6 @@ export function SpiritPage(props: SpiritPageProps) {
       });
     });
   }
-
-  // function onCatchSpiritClick() {
-  //   if (spiritJarQr === null) {
-  //     return;
-  //   }
-  //   catchSpirit(Number(spiritJarQr.workModel.modelId), 3434).then(res => {
-  //     if (isErrorResponse(res)) {
-  //       setErrorResponse(res);
-  //     } else {
-  //       setSpiritJarQr(res);
-  //       // setSpiritJarQr(null);
-  //       // setSpiritJarQrString(null);
-  //     }
-  //   }).catch(err => {
-  //     console.error(err);
-  //     setErrorResponse({
-  //       errorTitle: 'Непредвиденная ошибка',
-  //       errorSubtitle: err
-  //     });
-  //   });
-  // }
 
   return (
     <div className="SpiritPage tw-p-4">

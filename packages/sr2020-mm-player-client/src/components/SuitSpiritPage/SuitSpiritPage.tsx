@@ -135,11 +135,7 @@ export function SuitSpiritPage(props: SuitSpiritPageProps) {
       if (isErrorResponse(res)) {
         setSuitSpiritStatus(res.errorTitle);
       } else {
-        // if (res !== null) {
-        //   setSuitSpiritStatus("Дух надет. Вы прочитали мысль духа: " + res);
-        // } else {
         setSuitSpiritStatus("Дух надет");
-        // }
       }
       setDoSuitSpirit(false);
     }).catch(err => {

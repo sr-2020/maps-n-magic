@@ -5,35 +5,36 @@ import moment from 'moment';
 import { WithLoginState, WithCharacterDataOnly } from '../../hocs';
 import { BodyType, HealthState } from 'sr2020-mm-event-engine';
 import { DispiritComponent } from '../DispiritComponent';
+import { dictionary } from "../../utils";
 
 interface CharacterPageProps extends WithCharacterDataOnly {
   setTitle: (title: string) => void;
 }
 
 const bodyTypeLabel: Record<BodyType, string> = {
-  astral: 'Астральное',
-  physical: 'Мясное',
-  drone: 'Дрон',
-  ectoplasm: 'Эктоплазменное',
-  vr: 'VR',
+  astral: dictionary.astralBody,
+  physical: dictionary.physicalBody,
+  drone: dictionary.droneBody,
+  ectoplasm: dictionary.ectoplasmBody,
+  vr: dictionary.vrBody,
 }
 
 const healthStateLabel: Record<HealthState, string> = {
-  healthy: 'Здоров',
-  wounded: 'Тяжело ранен',
-  clinically_dead: 'КС',
-  biologically_dead: 'АС',
+  healthy: dictionary.healthy,
+  wounded: dictionary.wounded,
+  clinically_dead: dictionary.clinically_dead,
+  biologically_dead: dictionary.biologically_dead,
 }
 
 export function CharacterPage(props: CharacterPageProps) {
   const { characterData, setTitle } = props;
 
   useEffect(() => {
-    setTitle(`Персонаж`);
+    setTitle(dictionary.characterPageTitle);
   }, []);
 
   if (characterData === null) {
-    return <div>Данные персонажа загружаются</div>
+    return <div>{dictionary.characterDataLoading}</div>
   }
 
   const isNotNormal = [
@@ -47,7 +48,7 @@ export function CharacterPage(props: CharacterPageProps) {
         characterData.spiritSuitState !== undefined &&
         characterData.spiritSuitState.suitStatus === 'normal' &&
         <div className="tw-m-4 tw-p-4 tw-bg-yellow-300 tw-font-semibold">
-          Вы можете быть в теле духа до 
+          {dictionary.youCanWearSpiritTill}
           {
             ' ' + moment(characterData.spiritSuitState.suitStartTime + 
             characterData.spiritSuitState.suitDuration).format('HH:mm')
@@ -58,7 +59,7 @@ export function CharacterPage(props: CharacterPageProps) {
         characterData.spiritSuitState !== undefined &&
         characterData.spiritSuitState.message !== null &&
         <div className="tw-m-4 tw-p-4 tw-bg-blue-200 tw-font-semibold">
-          Вы прочитали мысль духа: {characterData.spiritSuitState.message}
+          {dictionary.youReadSpiritMessage}{characterData.spiritSuitState.message}
         </div>
       }
       {
@@ -75,29 +76,30 @@ export function CharacterPage(props: CharacterPageProps) {
         characterData.spiritSuitState !== undefined &&
         characterData.spiritSuitState.suitStatus !== 'normal' &&
         <div className="tw-m-4 tw-p-4 tw-bg-red-200 tw-font-semibold">
-          Верните свое тело до 
+          {dictionary.returnYourBodyInTimeStart}
           {
             ' ' + moment(characterData.spiritSuitState.suitStatusChangeTime + 
             10 * 60 * 1000).format('HH:mm')
-          }, чтобы не упасть в КС.
+          }
+          {dictionary.returnYourBodyInTimeEnd}
         </div>
       }
       <div className="tw-mb-2">
-        <span className="tw-w-24 tw-inline-block">Имя</span>
+        <span className="tw-w-24 tw-inline-block">{dictionary.name}</span>
         <span>{characterData.workModel.name}</span>
       </div>
       <div className="tw-mb-2">
-        <span className="tw-w-24 tw-inline-block tw-align-top">Тело</span>
+        <span className="tw-w-24 tw-inline-block tw-align-top">{dictionary.body}</span>
         <div className="tw-inline-block">
           <div>{bodyTypeLabel[characterData.workModel.currentBody]}</div>
           {
             characterData.spiritSuitState !== undefined &&
-            <div>дух {characterData.spiritSuitState.spiritId} {characterData.spiritSuitState.spiritName}</div>
+            <div>{dictionary.wearedSpirit} {characterData.spiritSuitState.spiritId} {characterData.spiritSuitState.spiritName}</div>
           }
         </div>
       </div>
       <div className="tw-mb-2">
-        <span className="tw-w-24 tw-inline-block">Состояние</span>
+        <span className="tw-w-24 tw-inline-block">{dictionary.healthState}</span>
         <span>{healthStateLabel[characterData.workModel.healthState]}</span>
       </div>
       {

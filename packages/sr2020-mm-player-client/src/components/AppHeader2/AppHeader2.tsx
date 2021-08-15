@@ -1,7 +1,7 @@
 import React from 'react';
 import { AggregatedLocationView, CharacterModelData2 } from 'sr2020-mm-event-engine';
 import { logoutUser, refreshCharacterModel } from '../../api';
-import { LoginManager } from '../../utils';
+import { LoginManager, dictionary } from '../../utils';
 import './AppHeader2.css';
 
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
@@ -59,7 +59,7 @@ export function AppHeader2(props: AppHeader2Props) {
         <span>{title}</span>
         <span className="tw-text-sm">
         {
-          locationData === null ? "Локация неизвестна" : (locationData.label)
+          locationData === null ? dictionary.locationIsUnknown : (locationData.label)
         }
         </span>
       </span>
@@ -79,47 +79,29 @@ export function AppHeader2(props: AppHeader2Props) {
             <Form.Check
               type="switch"
               id="soundSwitch"
-              label="Выключить звук"
+              label={dictionary.mute}
               checked={mute}
               className="tw-py-3 tw-text-lg"
             />
           </Dropdown.Item>
-          {/* <Dropdown.Item
-            as="button"
-            type="button"
-            onClick={() => loginManager.updateLoginState()}
-            title="Обновить данные персонажа"
-            className="tw-py-3 tw-text-lg"
-          >
-            Обновить данные персонажа
-          </Dropdown.Item> */}
-          {/* <Dropdown.Item
-            as="button"
-            type="button"
-            onClick={callSecureApi}
-            title="Запрос на защищенный эндпоинт"
-            className="tw-py-3 tw-text-lg"
-          >
-            Запрос на защищенный эндпоинт
-          </Dropdown.Item> */}
           <Dropdown.Item
             as="button"
             type="button"
             onClick={refreshCharacterModel}
-            title="Выйти"
+            title={dictionary.updateCharacterData}
             className="tw-py-3 tw-text-lg"
           >
-            Обновить данные персонажа
+            {dictionary.updateCharacterData}
           </Dropdown.Item>
           <Dropdown.Divider />
           <Dropdown.Item
             as="button"
             type="button"
             onClick={onLogout}
-            title="Выйти"
+            title={dictionary.logout}
             className="tw-py-3 tw-text-lg"
           >
-            Выйти
+            {dictionary.logout}
           </Dropdown.Item>
         </Dropdown.Menu>
       </Dropdown>

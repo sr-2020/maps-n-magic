@@ -77,12 +77,6 @@ export function LoginPage(props: LoginPageProps) {
           </Button>
         </Form>
       </div>
-
-      {/* <Button 
-        onClick={callSecureApi}
-      >
-        Запрос на защищенный эндпоинт
-      </Button> */}
     </div>
   );
 }

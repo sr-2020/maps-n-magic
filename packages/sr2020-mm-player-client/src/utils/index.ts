@@ -1,5 +1,6 @@
 export * from './loginManager';
 export * from './soundStageStateMaker';
+export * from './dictionary';
 
 const fractionNameObj: Record<number, string> = {
   1: "Без фракции",

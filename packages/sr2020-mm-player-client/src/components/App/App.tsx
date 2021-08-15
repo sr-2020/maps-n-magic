@@ -26,6 +26,7 @@ import { EmergencyDispiritPage } from '../EmergencyDispiritPage';
 import { LocationChangePage } from '../LocationChangePage';
 import { HistoryPage } from '../HistoryPage';
 import { AppHeader2 } from '../AppHeader2';
+import { dictionary } from "../../utils";
 
 interface AppProps extends WithLoginState, WithAggregatedLocationData {
   loginManager: LoginManager;
@@ -42,49 +43,49 @@ const SOUND_SETTINGS: SoundSettings = {
 
 const baseLinks: LinkDef[] = [{
   to: '/character',
-  label: 'Персонаж'
+  label: dictionary.characterPageTitle
 },{
   to: '/history',
-  label: 'История'
+  label: dictionary.historyPageTitle
 }];
 
 const badDispiritLinks: LinkDef[] = [{
   to: '/character',
-  label: 'Персонаж'
+  label: dictionary.characterPageTitle
 },{
   to: '/history',
-  label: 'История'
+  label: dictionary.historyPageTitle
 }];
 
 const notInSpiritLinks: LinkDef[] = [{
   to: '/character',
-  label: 'Персонаж'
+  label: dictionary.characterPageTitle
 },{
   to: '/spirits',
-  label: 'Поймать духа'
+  label: dictionary.catchSpiritPageTitle
 },{
   to: '/scanSpirit',
-  label: 'Осмотреть тотем'
+  label: dictionary.scanSpiritPageTitle
 },{
   to: '/suitSpirit',
-  label: 'Надеть духа'
+  label: dictionary.suitSpiritPageTitle
 },{
   to: '/history',
-  label: 'История'
+  label: dictionary.historyPageTitle
 }];
 
 const inNormalSpiritLinks: LinkDef[] = [{
   to: '/character',
-  label: 'Персонаж'
+  label: dictionary.characterPageTitle
 },{
   to: '/dispirit',
-  label: 'Снять духа'
+  label: dictionary.dispiritPageTitle
 },{
   to: '/emergencyDispirit',
-  label: 'Тело духа уничтожено'
+  label: dictionary.emergencyDispiritPageTitle
 },{
   to: '/history',
-  label: 'История'
+  label: dictionary.historyPageTitle
 }];
 
 
@@ -97,12 +98,12 @@ export function App(props: AppProps) {
     audioContextWrapper,
     soundStorage
   } = props;
-  const manageTitle = useState<string>('SR 2020 магия');
+  const manageTitle = useState<string>(dictionary.indexTitle);
   const [title, setTitle] = manageTitle;
   const [mute, setMute] = useState<boolean>(false);
 
   if (characterData === null) {
-    return <div>Загружаются данные персонажа...</div>
+    return <div>{dictionary.characterDataLoading}</div>
   }
 
   const soundStageState = locationData2SoundStageState(characterData, locationData);
