@@ -1,3 +1,5 @@
+import { translitRuEn } from "sr2020-mm-event-engine";
+
 export const dictionary = {
   // index.tsx
   indexTitle: 'SR 2020 Magic',
@@ -158,4 +160,8 @@ export function catchSpiritInfoText(
   catchProbability: number, 
 ) {
   return `You have ${attemptNumber} attempts till ${tillTime}, catch probability ${catchProbability}%`;
+}
+
+export function processForDisplay(str: string): string {
+  return translitRuEn(str);
 }

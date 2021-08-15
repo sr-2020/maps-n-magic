@@ -150,7 +150,7 @@ export function SuitSpiritPage(props: SuitSpiritPageProps) {
   if (!hasAbility(characterData, Ability.SuitUp)) {
     return (
       <div className="tw-m-4 tw-p-4 tw-bg-blue-200 tw-font-semibold">
-        {dictionary.missingSpiritCatcherSpell}
+        {dictionary.youHaveNoSuitUpAbility}
       </div>
     );
   }

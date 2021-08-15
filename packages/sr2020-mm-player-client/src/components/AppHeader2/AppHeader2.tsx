@@ -1,7 +1,7 @@
 import React from 'react';
 import { AggregatedLocationView, CharacterModelData2 } from 'sr2020-mm-event-engine';
 import { logoutUser, refreshCharacterModel } from '../../api';
-import { LoginManager, dictionary } from '../../utils';
+import { LoginManager, dictionary, processForDisplay } from '../../utils';
 import './AppHeader2.css';
 
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
@@ -59,7 +59,7 @@ export function AppHeader2(props: AppHeader2Props) {
         <span>{title}</span>
         <span className="tw-text-sm">
         {
-          locationData === null ? dictionary.locationIsUnknown : (locationData.label)
+          locationData === null ? dictionary.locationIsUnknown : (processForDisplay(locationData.label))
         }
         </span>
       </span>

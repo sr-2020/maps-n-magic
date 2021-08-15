@@ -2,7 +2,7 @@ import React from 'react';
 import { Ability, CharacterModelData2, hasAbility, Spirit } from 'sr2020-mm-event-engine';
 import classNames from 'classnames';
 
-import { getFractionName, dictionary } from '../../utils';
+import { getFractionName, dictionary, processForDisplay } from '../../utils';
 import './SpiritCard.css';
 
 interface SpiritCardProps {
@@ -17,7 +17,7 @@ export function SpiritCard(props: SpiritCardProps) {
   return (
     <div className={classNames("SpiritCard", className)}>
       <div className="tw-mb-4">
-        {spirit.name}
+        {processForDisplay(spirit.name)}
       </div>
       {/* <div>
         {getFractionName(spirit.fraction)}-{spirit.level}

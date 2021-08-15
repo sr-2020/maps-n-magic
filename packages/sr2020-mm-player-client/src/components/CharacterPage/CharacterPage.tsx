@@ -5,7 +5,7 @@ import moment from 'moment';
 import { WithLoginState, WithCharacterDataOnly } from '../../hocs';
 import { BodyType, HealthState } from 'sr2020-mm-event-engine';
 import { DispiritComponent } from '../DispiritComponent';
-import { dictionary } from "../../utils";
+import { dictionary, processForDisplay } from "../../utils";
 
 interface CharacterPageProps extends WithCharacterDataOnly {
   setTitle: (title: string) => void;
@@ -59,7 +59,7 @@ export function CharacterPage(props: CharacterPageProps) {
         characterData.spiritSuitState !== undefined &&
         characterData.spiritSuitState.message !== null &&
         <div className="tw-m-4 tw-p-4 tw-bg-blue-200 tw-font-semibold">
-          {dictionary.youReadSpiritMessage}{characterData.spiritSuitState.message}
+          {dictionary.youReadSpiritMessage}{processForDisplay(characterData.spiritSuitState.message)}
         </div>
       }
       {
@@ -68,7 +68,7 @@ export function CharacterPage(props: CharacterPageProps) {
         <div className="tw-m-4 tw-p-4 tw-bg-blue-200 tw-font-semibold">
           {
             moment(characterData.messageData.timestamp).format('HH:mm') + ' ' +
-            characterData.messageData.message
+            processForDisplay(characterData.messageData.message)
           }
         </div>
       }
@@ -86,7 +86,7 @@ export function CharacterPage(props: CharacterPageProps) {
       }
       <div className="tw-mb-2">
         <span className="tw-w-24 tw-inline-block">{dictionary.name}</span>
-        <span>{characterData.workModel.name}</span>
+        <span>{processForDisplay(characterData.workModel.name)}</span>
       </div>
       <div className="tw-mb-2">
         <span className="tw-w-24 tw-inline-block tw-align-top">{dictionary.body}</span>
@@ -94,7 +94,7 @@ export function CharacterPage(props: CharacterPageProps) {
           <div>{bodyTypeLabel[characterData.workModel.currentBody]}</div>
           {
             characterData.spiritSuitState !== undefined &&
-            <div>{dictionary.wearedSpirit} {characterData.spiritSuitState.spiritId} {characterData.spiritSuitState.spiritName}</div>
+            <div>{dictionary.wearedSpirit} {characterData.spiritSuitState.spiritId} {processForDisplay(characterData.spiritSuitState.spiritName)}</div>
           }
         </div>
       </div>

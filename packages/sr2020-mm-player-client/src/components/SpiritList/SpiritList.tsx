@@ -13,6 +13,7 @@ import {
   spiritListTitle,
   needAbilityToCatchSpirit,
   catchSpiritInfoText,
+  processForDisplay,
 } from '../../utils';
 import { SpiritCard } from "../SpiritCard";
 import { Ability, CharacterModelData2, hasAbility, hasSpell, Spell } from 'sr2020-mm-event-engine';
@@ -95,8 +96,8 @@ export function SpiritList(props: SpiritListProps) {
           sortedSpiritViews.map((spiritView, index) => 
             <Card key={spiritView.id}>
               <Accordion.Toggle as={Card.Header} eventKey={String(index)}>
-                <div>{spiritView.name}</div>
-                <div className="text-muted tw-text-sm">{getFractionName(spiritView.fraction)}</div>
+                <div>{processForDisplay(spiritView.name)}</div>
+                <div className="text-muted tw-text-sm">{processForDisplay(getFractionName(spiritView.fraction))}</div>
               </Accordion.Toggle>
               <Accordion.Collapse eventKey={String(index)}>
                 <Card.Body>

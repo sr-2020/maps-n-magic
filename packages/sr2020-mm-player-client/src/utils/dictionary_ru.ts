@@ -159,3 +159,7 @@ export function catchSpiritInfoText(
 ) {
   return `У вас ${attemptNumber} попытки до ${tillTime}, вероятность поимки ${catchProbability}%`;
 }
+
+export function processForDisplay(str: string): string {
+  return (str);
+}

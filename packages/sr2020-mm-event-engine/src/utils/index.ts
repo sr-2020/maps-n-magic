@@ -9,6 +9,7 @@ import clippingUtils from 'polygon-clipping';
 import AbortController from 'abort-controller';
 import fetch from 'isomorphic-fetch';
 export * from './tmpLocIndex';
+export * from './translit';
 
 import { 
   LocationRecord, 
