@@ -99,18 +99,18 @@ export const dictionary = {
   abilities: 'Абилки',
 
   // SpiritList.tsx
-  spiritListTitle: 'Духи ({{spiritNumber}})',
-  missingSpiritCactherSpell: 'Вы не овладели навыком Spirit Catcher, поэтому не видите духов вокруг и не можете их поймать',
+  // spiritListTitle: 'Духи ({{spiritNumber}})',
+  missingSpiritCatcherSpell: 'Вы не овладели навыком Spirit Catcher, поэтому не видите духов вокруг и не можете их поймать',
   noSpiritsInLocation: 'В локации нет духов',
-  catchSpiritInfoText: `У вас {characterData.catcherData.attemptNumber} попытки 
-    до {
-      moment(characterData.catcherData.startTime + 
-      characterData.catcherData.durationMillis).format('HH:mm')
-    } 
-    , вероятность поимки {characterData.catcherData.catchProbability}%`,
+  // catchSpiritInfoText: `У вас {characterData.catcherData.attemptNumber} попытки 
+  //   до {
+  //     moment(characterData.catcherData.startTime + 
+  //     characterData.catcherData.durationMillis).format('HH:mm')
+  //   } 
+  //   , вероятность поимки {characterData.catcherData.catchProbability}%`,
   castSpiritCatcherAdvice: 'Примените заклинание Spirit Catcher, чтобы ловить духов.',
   catch: 'Поймать',
-  needAbilityToCatchSpirit: 'Для ловли духа нужна способность {{spiritMasterName}}',
+  // needAbilityToCatchSpirit: 'Для ловли духа нужна способность {{spiritMasterName}}',
 
   // SpiritPage.tsx
   unexpectedSpiritViewError: 'CL Непредвиденная ошибка получения данных духа',
@@ -120,7 +120,7 @@ export const dictionary = {
   freeSpirit: 'Освободить духа',
   leaveMessage: 'Оставить сообщение',
   spiritJarIsEmpty: 'Тотем пуст',
-  emptinessReason: 'Причина: {{emptinessReason}}',
+  // emptinessReason: 'Причина: {{emptinessReason}}',
   scanOtherSpiritJar: 'Осмотреть другой тотем',
 
   // SuitSpiritPage.tsx
@@ -128,6 +128,34 @@ export const dictionary = {
   unexpectedSuitSpiritError: 'CL Непредвиденная ошибка надевания духа',
   youHaveNoSuitUpAbility: 'Вы не овладели навыком Suit Up (A), поэтому не можете надеть духа',
   scanSpiritJarWithSpirit: 'Отсканируйте тотем с духом',
-  spiritSuitTime: 'Время ношения духа {{timeInSpirit}} минут',
+  // spiritSuitTime: 'Время ношения духа {{timeInSpirit}} минут',
   suit: 'Надеть',
+}
+
+// SuitSpiritPage.tsx
+export function spiritSuitTime(timeInSpirit: number) {
+  return `Время ношения духа ${timeInSpirit} минут`;
+}
+
+// SpiritPage.tsx
+export function emptinessReason(emptinessReason: string | undefined) {
+  return `Причина: ${emptinessReason}`;
+}
+
+
+// SpiritList.tsx
+export function spiritListTitle(spiritNumber: number) {
+  return `Духи (${spiritNumber})`;
+}
+
+export function needAbilityToCatchSpirit(spiritMasterName: string) {
+  return `Для ловли духа нужна способность ${spiritMasterName}`;
+}
+
+export function catchSpiritInfoText(
+  attemptNumber: number, 
+  tillTime: string,
+  catchProbability: number, 
+) {
+  return `У вас ${attemptNumber} попытки до ${tillTime}, вероятность поимки ${catchProbability}%`;
 }

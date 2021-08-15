@@ -6,6 +6,7 @@ import { BodyStorageStatus2 } from '../DispiritPage/DispiritPage';
 import { QrScannerWrapper } from '../QrScannerWrapper';
 import { StatusIcon } from '../StatusIcon';
 import './DispiritComponent.css';
+import { dictionary } from "../../utils";
 
 import Button from "react-bootstrap/Button";
 
@@ -36,10 +37,10 @@ export function DispiritComponent(props: DispiritComponentProps) {
       }
     }).catch(err => {
       console.error(stringifyError(err));
-      logClientError('CL Непредвиденная ошибка проверки телохранилища', err);
+      logClientError(dictionary.unexpectedBodyStorageCheckError, err);
       setBodyStorageStatus({
         status: 'invalid',
-        message: 'CL Непредвиденная ошибка проверки телохранилища'
+        message: dictionary.unexpectedBodyStorageCheckError
       });
     });
   }, [bodyStorageQrString]);
@@ -60,8 +61,8 @@ export function DispiritComponent(props: DispiritComponentProps) {
       setDoDispirit(null);
     }).catch(err => {
       console.error(stringifyError(err));
-      logClientError('CL Непредвиденная ошибка снятия духа', err);
-      setDispiritStatus('CL Непредвиденная ошибка снятия духа');
+      logClientError(dictionary.unexpectedDispiritError, err);
+      setDispiritStatus(dictionary.unexpectedDispiritError);
       setDoDispirit(null);
     });
   }, [doDispirit]);
@@ -73,7 +74,7 @@ export function DispiritComponent(props: DispiritComponentProps) {
           setBodyStorageQrString(qrData);
           setScanBodyStorage(false);
         }}
-        message="Отсканируйте телохранилище"
+        message={dictionary.scanBodyStorage}
         onCancel={() => setScanBodyStorage(false)}
       />
     );
@@ -86,8 +87,8 @@ export function DispiritComponent(props: DispiritComponentProps) {
       <div className="tw-mb-8">
         <div className="tw-flex tw-mb-4">
           <StatusIcon status={bodyStorageStatus.status}/>
-          <div className="col-form-label tw-flex-1">Телохранилище</div>
-          <Button onClick={() => setScanBodyStorage(true)}>Сканировать</Button>
+          <div className="col-form-label tw-flex-1">{dictionary.bodyStorage}</div>
+          <Button onClick={() => setScanBodyStorage(true)}>{dictionary.scan}</Button>
         </div>
         {
           bodyStorageStatus.status === 'invalid' && 
@@ -111,7 +112,7 @@ export function DispiritComponent(props: DispiritComponentProps) {
               icon={faSpinner}
               spin
             />
-            Снять
+            {dictionary.dispirit}
           </Button>
         </div>
       </div>

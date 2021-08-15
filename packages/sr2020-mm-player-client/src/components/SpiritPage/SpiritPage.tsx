@@ -21,6 +21,7 @@ import Form from 'react-bootstrap/Form';
 import { QrScannerWrapper } from "../QrScannerWrapper";
 import { getSpiritDataByQr, freeSpirit, catchSpirit, logClientError } from "../../api";
 import { SpiritCard } from '../SpiritCard';
+import { dictionary, emptinessReason } from "../../utils";
 
 // import { WithTranslation } from "react-i18next";
 
@@ -33,7 +34,7 @@ export function SpiritPage(props: SpiritPageProps) {
   const { setTitle, characterData } = props;
 
   useEffect(() => {
-    setTitle(`Осмотреть тотем`);
+    setTitle(dictionary.scanSpiritPageTitle);
   }, []);
 
   const [spiritJarQrString, setSpiritJarQrString] = useState<string | null>(null);
@@ -63,9 +64,9 @@ export function SpiritPage(props: SpiritPageProps) {
       }
     }).catch(err => {
       console.error(stringifyError(err));
-      logClientError('CL Непредвиденная ошибка получения данных духа', err);
+      logClientError(dictionary.unexpectedSpiritViewError, err);
       setErrorResponse({
-        errorTitle: 'CL Непредвиденная ошибка получения данных духа',
+        errorTitle: dictionary.unexpectedSpiritViewError,
         errorSubtitle: stringifyError(err)
       });
     });
@@ -75,7 +76,7 @@ export function SpiritPage(props: SpiritPageProps) {
     return (
       <QrScannerWrapper
         onSuccess={setSpiritJarQrString}
-        message="Отсканируйте тотем"
+        message={dictionary.scanSpiritJar}
       />
     );
   }
@@ -87,7 +88,7 @@ export function SpiritPage(props: SpiritPageProps) {
     // messageBody
     freeSpirit(
       Number(spiritJarQr.spiritJarQr.workModel.modelId), 
-      'Маг освободил духа',
+      dictionary.mageFreedSpirit,
       messageBody
     ).then(res => {
       if (isErrorResponse(res)) {
@@ -101,9 +102,9 @@ export function SpiritPage(props: SpiritPageProps) {
       }
     }).catch(err => {
       console.error(stringifyError(err));
-      logClientError('CL Непредвиденная ошибка освобождения духа', err);
+      logClientError(dictionary.unexpectedFreeSpiritError, err);
       setErrorResponse({
-        errorTitle: 'CL Непредвиденная ошибка освобождения духа',
+        errorTitle: dictionary.unexpectedFreeSpiritError,
         errorSubtitle: stringifyError(err)
       });
     });
@@ -132,11 +133,13 @@ export function SpiritPage(props: SpiritPageProps) {
           }
           <div className="tw-mb-8">
             <Button variant="outline-secondary" onClick={onFreeSpiritClick}>
-              Освободить духа
+              {dictionary.freeSpirit}
             </Button>
           </div>
           <div style={{marginBottom: '20rem'}}>
-            <div className="tw-mb-2">Оставить сообщение</div>
+            <div className="tw-mb-2">
+              {dictionary.leaveMessage}
+            </div>
             <div>
               <Form.Control
                 as="textarea" rows={3}
@@ -151,8 +154,8 @@ export function SpiritPage(props: SpiritPageProps) {
         (spiritJarQr !== null && isEmptySpiritJar(spiritJarQr.spiritJarQr)) && 
         <>
           <div>
-            <div>Тотем пуст</div>
-            <div>Причина: {spiritJarQr.spiritJarQr.workModel.data.emptiness_reason}</div>
+            <div>{dictionary.spiritJarIsEmpty}</div>
+            <div>{emptinessReason(spiritJarQr.spiritJarQr.workModel.data.emptiness_reason)}</div>
           </div>
         </>
       }
@@ -166,7 +169,7 @@ export function SpiritPage(props: SpiritPageProps) {
             setErrorResponse(null);
           }}
         >
-          Осмотреть другой тотем
+          {dictionary.scanOtherSpiritJar}
         </Button>
       }
     </div>

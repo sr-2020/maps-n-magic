@@ -5,6 +5,7 @@ import classNames from 'classnames';
 
 import Button from "react-bootstrap/Button";
 import { postUserPosition } from '../../api';
+import { dictionary } from "../../utils";
 
 interface LocationChangePageProps {
   locationData: AggregatedLocationView | null;
@@ -15,12 +16,12 @@ export function LocationChangePage(props: LocationChangePageProps) {
   const { locationData, setTitle } = props;
 
   useEffect(() => {
-    setTitle(`Смена локации (отладка)`);
+    setTitle(dictionary.locationChangePage);
   }, []);
 
   if (locationData === null) {
     return <div>
-      Данные о локации загружаются...
+      {dictionary.locationDataLoading}
     </div>
   }
 

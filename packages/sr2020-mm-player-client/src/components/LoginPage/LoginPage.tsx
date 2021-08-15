@@ -8,7 +8,7 @@ import Form from "react-bootstrap/Form";
 import { ErrorResponse, isErrorResponse } from 'sr2020-mm-event-engine';
 
 import { ErrorAlert } from "../ErrorAlert";
-import { LoginManager } from '../../utils';
+import { LoginManager, dictionary } from '../../utils';
 
 interface LoginPageProps {
   loginManager: LoginManager;
@@ -42,24 +42,24 @@ export function LoginPage(props: LoginPageProps) {
 
         <Form onSubmit={handleSubmit}>
           <Form.Group controlId="formBasicLogin">
-            <Form.Label>Логин</Form.Label>
+            <Form.Label>{dictionary.loginTitle}</Form.Label>
             <Form.Control type="text" onChange={e => {
               setUserName(e.target.value);
               setErrorMsg(null);
             }}/>
             <Form.Text className="text-muted">
-              id профиля JoinRPG
+              {dictionary.loginText}
             </Form.Text>
           </Form.Group>
 
           <Form.Group controlId="formBasicPassword">
-            <Form.Label>Пароль</Form.Label>
+            <Form.Label>{dictionary.passwordTitle}</Form.Label>
             <Form.Control type="password" onChange={e => {
               setPassword(e.target.value);
               setErrorMsg(null);
             }}/>
             <Form.Text className="text-muted">
-              пин код из заявки / пароль мастера
+              {dictionary.passwordText}
             </Form.Text>
           </Form.Group>
           {
@@ -73,7 +73,7 @@ export function LoginPage(props: LoginPageProps) {
             )
           }
           <Button variant="primary" type="submit" className="tw-w-full">
-            Войти
+            {dictionary.login}
           </Button>
         </Form>
       </div>
