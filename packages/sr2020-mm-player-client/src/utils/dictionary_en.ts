@@ -165,3 +165,14 @@ export function catchSpiritInfoText(
 export function processForDisplay(str: string): string {
   return translitRuEn(str);
 }
+
+const fractionNameObj: Record<number, string> = {
+  1: "No fraction",
+  2: "Barguzin",
+  3: "Kultuk",
+  4: "Sarma",
+};
+
+export function getFractionName(id: number): string {
+  return fractionNameObj[id] || '';
+}
