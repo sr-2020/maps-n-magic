@@ -18,7 +18,7 @@ export const manaOceanDictionary = {
 
   statisticsByTime: 'Statistic by time',
   tideLevel: 'Tide level',
-  timeSum: 'Time summ, hour',
+  timeSum: 'Time sum, hour',
   timeSumTotal: 'Time sum total (reference), hour',
   moonParameters: 'Moon parameters',
   dailyBlackout: 'Daily blackout',

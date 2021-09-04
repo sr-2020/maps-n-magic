@@ -17,6 +17,8 @@ export function CharacterDataList(props: CharacterDataListProps) {
 
   const users2 = R.sortBy(R.prop('id'), users);
 
+  // return null;
+
   return (
     <datalist className="CharacterDataList" id="characterIdList">
       {

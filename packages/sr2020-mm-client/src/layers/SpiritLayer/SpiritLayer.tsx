@@ -19,6 +19,7 @@ import {
   LocationCentroid, 
   makeLocationCentroid 
 } from "../../types";
+import { processForDisplay } from 'sr2020-mm-translations';
 
 interface SpiritLayerProps extends 
   WithSpiritLocationData, 
@@ -103,7 +104,7 @@ export class SpiritLayer extends Component<
   updateMarkerTooltip(marker: LocationCentroid, spiritNames: string[]) {
     marker.unbindTooltip();
     // marker.bindTooltip(`${spiritNames.join(', ')}`, {
-    marker.bindTooltip(`${spiritNames.join('<br>')}`, {
+    marker.bindTooltip(processForDisplay(`${spiritNames.join('<br>')}`), {
       permanent: true,
     });
   }

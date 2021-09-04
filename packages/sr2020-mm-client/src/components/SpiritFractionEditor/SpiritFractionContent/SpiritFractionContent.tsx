@@ -7,6 +7,7 @@ import { EPutSpiritFractionRequested, GameModel, GetSpiritFraction, SpiritFracti
 import DocumentTitle from 'react-document-title';
 import Form from 'react-bootstrap/Form';
 import { AbilitiesInput2 } from '../../SpiritEditor/SpiritContent/AbilitiesInput2';
+import { processForDisplay } from 'sr2020-mm-translations';
 
 interface SpiritFractionContentProps extends WithTranslation {
   id: number;
@@ -119,7 +120,7 @@ export class SpiritFractionContent extends Component<
                 name="name"
                 type="text"
                 className="tw-text-3xl"
-                value={name}
+                value={processForDisplay(name)}
                 readOnly
               />
             </h2>

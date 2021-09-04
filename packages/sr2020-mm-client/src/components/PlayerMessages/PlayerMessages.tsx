@@ -8,6 +8,7 @@ import { GameModel } from 'sr2020-mm-event-engine';
 
 import { WithPlayerMessages } from '../../dataHOCs';
 import { SRTKey } from 'sr2020-mm-client-core';
+import { processForDisplay } from 'sr2020-mm-translations';
 
 interface PlayerMessagesProps extends WithTranslation, WithPlayerMessages {
   gameModel: GameModel;
@@ -52,7 +53,7 @@ export function PlayerMessages(props: PlayerMessagesProps) {
                 <span>{moment(new Date(playerMessage.id)).format('D MMM YYYY HH:mm:ss')}</span>
               </div>
               <div className="tw-ml-8">
-                {playerMessage.messageBody}
+                {processForDisplay(playerMessage.messageBody)}
               </div>
             </div>
           ))

@@ -24,6 +24,7 @@ import {
   ManaOceanLocation,
   manaOceanLocation
 } from "../../types";
+import { processForDisplay } from 'sr2020-mm-translations';
 
 // const manaFillColors = { // based on h202
 //   1: 'white', // hsla(202, 60%, 90%, 1)
@@ -199,7 +200,7 @@ export class ManaOceanLayer extends Component<
     const { t } = this.props;
     // const { effects = [] } = locOptions.manaLevelModifiers;
     const { effectList = [] } = locOptions;
-    let output = [`${label} (${locId})`, t('manaLevelNumber', { manaLevel: locOptions.manaLevel })];
+    let output = [`${processForDisplay(label)} (${locId})`, t('manaLevelNumber', { manaLevel: locOptions.manaLevel })];
     // const strings = effects.map(({ type, manaLevelChange }) => t(`manaEffect_${type}`, { manaLevelChange }));
 
     // const effectGroups1 = R.groupBy(R.prop('type'), effects);

@@ -19,6 +19,8 @@ import { miscDictionary as miscDictionary_en } from './misc_en';
 import { extraMainServerI18nDictionary as extraMainServerI18nDictionary_en } from './extraMainServerI18n_en';
 import * as leaflet_en from './leaflet_en';
 
+import { translitRuEn } from "./translit";
+
 export const leafletI18n = {
   ru: leaflet_ru,
   en: leaflet_en,
@@ -52,3 +54,7 @@ export const resources = {
   },
 } as const;
 
+
+export function processForDisplay(str: string): string {
+  return defaultLang as string === 'en' ? translitRuEn(str) : str;
+}

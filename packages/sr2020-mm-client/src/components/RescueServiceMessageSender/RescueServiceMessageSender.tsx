@@ -24,6 +24,7 @@ import {
 } from 'sr2020-mm-event-engine';
 
 import { WithTranslation } from "react-i18next";
+import { processForDisplay } from 'sr2020-mm-translations';
 
 type BodyConditionsTKeys = `physicalBodyCondition_${Lowercase<keyof typeof BodyConditions>}`;
 
@@ -240,7 +241,7 @@ export class RescueServiceMessageSender extends Component<RescueServiceMessageSe
                     key={location.id}
                     value={location.id}
                   >
-                    {`${location.label} (${location.id})`}
+                    {`${processForDisplay(location.label)} (${location.id})`}
                   </option>
                 ))
               }

@@ -78,7 +78,7 @@ export class LocationPopup3 extends Component<
     const selectedButton = 'tw-bg-blue-500 hover:tw-bg-blue-700 tw-text-white';
     const unselectedButton = 'tw-bg-gray-300 hover:tw-bg-gray-400 tw-text-gray-800';
     return (
-      <div className="LocationPopup">
+      <div className="LocationPopup3">
         <div className="tw-mb-4">
           <label
             className="tw-block tw-text-gray-700 tw-text-sm tw-font-bold tw-mb-2"

@@ -25,6 +25,7 @@ import { WithTranslation } from "react-i18next";
 
 import { CharacterDataList } from '../CharacterDataList';
 import { GeoLocationSelectMap } from '../../maps/GeoLocationSelectMap';
+import { processForDisplay } from 'sr2020-mm-translations';
 
 type BeaconIndex = {[location_id: string]: BeaconRecord};
 type LocationIndex = {[location_id: string]: LocationRecord};
@@ -223,7 +224,7 @@ export class CharacterPositions extends Component<CharacterPositionsProps, Chara
     const { hasBeacons = [], hasNoBeacons = [] } = groupByHasBeacons(sortedLocationList);
 
     return (
-      <div className="CharacterPositions  tw-mx-8 tw-my-4">
+      <div className="CharacterPositions  tw-px-8 tw-py-4 tw-h-full tw-overflow-auto">
         <div className="tw-flex tw-items-start">
 
           <div>
@@ -254,7 +255,7 @@ export class CharacterPositions extends Component<CharacterPositionsProps, Chara
                         key={location.id}
                         value={location.id}
                       >
-                        {`${location.label} (${location.id})`}
+                        {`${processForDisplay(location.label)} (${location.id})`}
                       </option>
                     ))
                   }
@@ -283,8 +284,8 @@ export class CharacterPositions extends Component<CharacterPositionsProps, Chara
                 {
                   users.map((user) => (
                     <tr>
-                      <td>{user.id + getUserNameStr(user)}</td>
-                      <td>{this.getLocationText(user.location_id)}</td>
+                      <td>{processForDisplay(user.id + getUserNameStr(user))}</td>
+                      <td>{processForDisplay(this.getLocationText(user.location_id))}</td>
                     </tr>
                   ))
                 }
@@ -299,7 +300,7 @@ export class CharacterPositions extends Component<CharacterPositionsProps, Chara
               {t('locationHasNoBeaconsError')}
               <ul className="tw-list-disc tw-pl-8">
                 {
-                  hasNoBeacons.map((loc) => <li key={loc.id}>{loc.label}</li>)
+                  hasNoBeacons.map((loc) => <li key={loc.id}>{processForDisplay(loc.label)}</li>)
                 }
               </ul>
             </Alert>

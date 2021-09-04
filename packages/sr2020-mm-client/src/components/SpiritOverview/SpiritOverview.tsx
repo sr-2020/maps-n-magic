@@ -14,6 +14,7 @@ import Tooltip from 'react-bootstrap/Tooltip';
 import OverlayTrigger from 'react-bootstrap/OverlayTrigger';
 import { formatMinutes } from '../ManaOceanSettings/TideChart/TideChart';
 import { spiritStateSuffix } from '../SpiritEditor/SpiritList/SpiritList';
+import { processForDisplay } from 'sr2020-mm-translations';
 
 interface SpiritOverviewProps extends 
   WithTranslation, 
@@ -88,10 +89,10 @@ export function SpiritOverview(props: SpiritOverviewProps) {
 
             <div className="body tw-bg-re_d-200 tw-w-64 tw-mb-4">
               <div className="spirit-name tw-font-bold tw-text-sm">
-                {item.title}
+                {processForDisplay(item.title)}
               </div>
               <div className="spirit-fraction tw-text-sm">
-                {item.subtitle}
+                {processForDisplay(item.subtitle)}
               </div>
             </div>
 
@@ -189,7 +190,7 @@ export function SpiritTimetableComponent(props: SpiritTimetableProps) {
                   width: `${timeOnRoute/14.40}%`,
                 }}
               >
-                {route.name}
+                {processForDisplay(route.name)}
               </div>
             </OverlayTrigger>
           );

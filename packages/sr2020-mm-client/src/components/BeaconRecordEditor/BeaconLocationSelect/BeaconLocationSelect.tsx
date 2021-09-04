@@ -7,6 +7,7 @@ import Form from 'react-bootstrap/Form';
 import { BeaconRecord, GameModel } from 'sr2020-mm-event-engine';
 
 import { WithGeoLocationRecords } from '../../../dataHOCs';
+import { processForDisplay } from 'sr2020-mm-translations';
 
 interface BeaconLocationSelectProps extends WithTranslation, WithGeoLocationRecords {
   gameModel: GameModel;
@@ -43,7 +44,7 @@ export function BeaconLocationSelect(props: BeaconLocationSelectProps) {
             key={location.id}
             value={location.id}
           >
-            {`${location.label} (${location.id})`}
+            {`${processForDisplay(location.label)} (${location.id})`}
           </option>
         ))
       }

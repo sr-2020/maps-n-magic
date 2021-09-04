@@ -14,6 +14,7 @@ import {
 import { WithSpiritRoutes } from '../../../dataHOCs';
 
 import { EntityList, EntitiyListItem, makeLinkGenerator } from "../../EntityList";
+import { processForDisplay } from 'sr2020-mm-translations';
 
 const spiritRouteLink = makeLinkGenerator('spiritRouteEditor');
 
@@ -62,7 +63,7 @@ export class SpiritRouteList extends Component<SpiritRouteListProps> {
     // const fractionIndex = R.indexBy(R.prop('id'), spiritFractions);
     const items: EntitiyListItem[] = spiritRoutes.map(route => ({
       id: route.id,
-      title: route.name,
+      title: processForDisplay(route.name),
       subtitle: ''
     }));
     return items;

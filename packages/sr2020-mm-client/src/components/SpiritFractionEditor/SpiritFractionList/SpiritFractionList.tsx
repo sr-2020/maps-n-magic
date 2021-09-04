@@ -6,6 +6,7 @@ import { WithTranslation } from "react-i18next";
 import { GameModel } from 'sr2020-mm-event-engine';
 import { WithSpiritFractions } from '../../../dataHOCs';
 import { EntitiyListItem, EntityList, makeLinkGenerator } from '../../EntityList';
+import { processForDisplay } from 'sr2020-mm-translations';
 
 const spiritFractionLink = makeLinkGenerator('spiritFractionEditor');
 
@@ -21,7 +22,7 @@ function spiritFractionsToListItems(props: SpiritFractionListProps): EntitiyList
   const fractionIndex = R.indexBy(R.prop('id'), spiritFractions);
   const items: EntitiyListItem[] = spiritFractions.map(spiritFraction => ({
     id: spiritFraction.id,
-    title: spiritFraction.name,
+    title: processForDisplay(spiritFraction.name),
     subtitle: ''
   }));
   return items;

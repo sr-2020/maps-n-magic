@@ -16,6 +16,7 @@ import {
 import { WithSpirits, WithSpiritFractions } from '../../../dataHOCs';
 
 import { EntityList, EntitiyListItem, makeLinkGenerator } from "../../EntityList";
+import { processForDisplay } from 'sr2020-mm-translations';
 
 const spiritLink = makeLinkGenerator('spiritEditor');
 
@@ -82,8 +83,8 @@ export class SpiritList extends Component<SpiritListProps> {
     const fractionIndex = R.indexBy(R.prop('id'), spiritFractions);
     const items: EntitiyListItem[] = spirits.map(spirit => ({
       id: spirit.id,
-      title: spirit.name + ", id " + spirit.id,
-      subtitle: (fractionIndex[spirit.fraction]?.name || '') + '. ' +
+      title: processForDisplay(spirit.name) + ", id " + spirit.id,
+      subtitle: (processForDisplay(fractionIndex[spirit.fraction]?.name || '')) + '. ' +
         t(spirit.state.status) + spiritStateSuffix(spirit.state)
     }));
     return items;

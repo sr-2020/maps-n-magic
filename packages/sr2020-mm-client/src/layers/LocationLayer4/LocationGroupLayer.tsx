@@ -14,6 +14,7 @@ import {
   locationTypesEnum,
   locationTypeToLayerTkey
 } from './LocationLayerTypes';
+import { processForDisplay } from 'sr2020-mm-translations';
 
 export interface LocationGroupLayerProps extends CommonLayerProps, WithTranslation, WithLocationRecords {
   enableByDefault: boolean;
@@ -138,7 +139,7 @@ export class LocationGroupLayer extends Component<
     });
     loc.on('mouseover', function (this: BasicLocation, e) {
 
-      loc.bindTooltip(t(getTooltipTemplate(layer_id), { name: this.options.label }));
+      loc.bindTooltip(t(getTooltipTemplate(layer_id), { name: processForDisplay(this.options.label) }));
       this.openTooltip();
     });
     loc.on('mouseout', function (this: BasicLocation, e) {
