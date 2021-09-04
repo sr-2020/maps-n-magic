@@ -736,7 +736,7 @@ export class ManaOceanService extends AbstractService<ManaOceanServiceContract> 
     if (options.manaLevel > minManaLevel) {
       if (effect.neighborId !== undefined) {
         const neighborOptions = optIndex[effect.neighborId];
-        if (neighborOptions.manaLevel < maxManaLevel) {
+        if (neighborOptions && neighborOptions.manaLevel < maxManaLevel) {
           options.manaLevel += effect.manaLevelChange;
           neighborOptions.manaLevel -= effect.manaLevelChange;
           // this.logger.info('onApplyRitualLocation: repeated ritual effect');

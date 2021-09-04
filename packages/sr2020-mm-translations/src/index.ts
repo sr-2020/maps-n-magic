@@ -1,152 +1,54 @@
-import { appDictionary } from './app';
-import { spiritDictionary } from './spirits';
-import { manaOceanDictionary } from './manaOcean';
-import { soundDictionary } from './sounds';
-import { gameConstantsDictionary } from './gameConstants';
-import { extraMainServerI18nDictionary } from './extraMainServerI18n';
-export * from './leaflet';
+// export * from './index_ru';
+// export * from './index_en';
 
-export const translations = {
+import { appDictionary as appDictionary_ru } from './app_ru';
+import { spiritDictionary as spiritDictionary_ru } from './spirits_ru';
+import { manaOceanDictionary as manaOceanDictionary_ru } from './manaOcean_ru';
+import { soundDictionary as soundDictionary_ru } from './sounds_ru';
+import { gameConstantsDictionary as gameConstantsDictionary_ru } from './gameConstants_ru';
+import { miscDictionary as miscDictionary_ru } from './misc_ru';
+import { extraMainServerI18nDictionary as extraMainServerI18nDictionary_ru } from './extraMainServerI18n_ru';
+import * as leaflet_ru from './leaflet_ru';
+
+import { appDictionary as appDictionary_en } from './app_en';
+import { spiritDictionary as spiritDictionary_en } from './spirits_en';
+import { manaOceanDictionary as manaOceanDictionary_en } from './manaOcean_en';
+import { soundDictionary as soundDictionary_en } from './sounds_en';
+import { gameConstantsDictionary as gameConstantsDictionary_en } from './gameConstants_en';
+import { miscDictionary as miscDictionary_en } from './misc_en';
+import { extraMainServerI18nDictionary as extraMainServerI18nDictionary_en } from './extraMainServerI18n_en';
+import * as leaflet_en from './leaflet_en';
+
+export const leafletI18n = {
+  ru: leaflet_ru,
+  en: leaflet_en,
+};
+
+export const defaultLang = 'ru';
+// export const defaultLang = 'en';
+
+export const resources = {
   ru: {
     translation: {
-
-      ...appDictionary,
-      ...spiritDictionary,
-      ...soundDictionary,
-      ...manaOceanDictionary,
-      ...gameConstantsDictionary,
-      ...extraMainServerI18nDictionary,
-
-      // layers
-      botTrackLayer: 'Треки движения духов',
-      botLayer: 'Духи',
-      userLayer: 'Пользователь',
-      imageGroupLayer: 'Здания',
-      rectangleGroupLayer: 'Области зданий',
-      titleGroupLayer: 'Подписи к зданиям',
-      geoJsonLayer: 'Данные из Google Maps',
-      geoJsonLayer_Polygon: 'Многоугольники из Google Maps',
-      geoJsonLayer_Point: 'Маркеры из Google Maps',
-      geoJsonLayer_LineString: 'Линии из Google Maps',
-
-      // common
-      cancel: 'Отмена',
-      clone: 'Клонировать',
-      delete: 'Удалить',
-      clearSearchInput: 'Очистить поиск',
-      notAvailable: 'Н/Д',
-
-      // beacon popup
-      selectBeaconId: 'Выберите Id маяка',
-      selectBeaconIdForReplacing: 'Выберите Id для замены маяка {{id}}',
-
-      // Map
-      baseContourLayer: 'Контуры базы',
-      beaconsLayer: 'Маяки',
-      massCentersLayer: 'Центры масс',
-      voronoiPolygonsLayer: 'Полигоны Вороного',
-      signalRadiusesLayer: 'Радиус сигналов маяков',
-      locationsLayer: 'Локации',
-      locationsLayer_region_static: 'Регионы (readonly)',
-      locationsLayer_geoLocation_static: 'Гео-локации (readonly)',
-      locationsLayer_gameLocation_static: 'Игровые локации (readonly)',
-      locationsLayer_region_editable: 'Регионы',
-      locationsLayer_geoLocation_editable: 'Гео-локации',
-      locationsLayer_gameLocation_editable: 'Игровые локации',
-      locationType_region: 'Регион',
-      locationType_geoLocation: 'Гео-локация',
-      locationType_gameLocation: 'Игровая локация',
-      locationType: 'Тип локации',
-      borderWidth: 'Ширина границы',
-      opacity: 'Прозрачность',
-      color: 'Цвет',
-
-      locationName: 'Название локации',
-      markers: 'Маяки локации',
-      markerTooltip: 'Маяк "{{name}}"',
-      locationTooltip: 'Локация "{{name}}"',
-
-      geoLocationTooltip: 'Геолокация "{{name}}"',
-      manaGeoLocationTooltip: '{{name}}<br/>Уровень маны <b>{{manaLevel}}</b>',
-      manaLevelNumber: 'Уровень маны <b>{{manaLevel}}</b>',
-      manaEffect_massacre: 'Массакр',
-      manaEffect_powerSpell: 'Мощное заклинание',
-      manaEffect_ritualLocation: 'Отлив от ритуала',
-      manaEffect_ritualNeighborLocation: 'Прилив от ритуала',
-      manaEffect_inputStream: 'Input Stream',
-      manaEffect_outputStream: 'Output Stream',
-      manaEffect_inputStreamStart: 'Input Stream прилив',
-      manaEffect_outputStreamStart: 'Output Stream отлив',
-      manaEffect_inputStreamNeighbor: 'Input Stream отлив',
-      manaEffect_outputStreamNeighbor: 'Output Stream прилив',
-      addMassacre: 'Добавить массакр, мана +1',
-      addCastRollback: 'Добавить откат заклинания, мана -1',
-      regionTooltip: 'Регион "{{name}}"',
-      gameLocationTooltip: 'Игровая локация "{{name}}"',
-      unknownLocationTypeTooltip: 'Локация неизвестного типа "{{name}}"',
-
-      noMarkers: 'Нет маяков',
-      addMarker: 'Добавить',
-      removeMarker: 'Удалить',
-      manaLevel: 'Уровень маны',
-      manalow: 'Низкий',
-      mananormal: 'Обычный',
-      manahigh: 'Высокий',
-      selectMusic: 'Выбор звуков',
-      noSound: 'Нет звука',
-
-      markerName: 'Название маркера',
-      latitude: 'Широта',
-      longitude: 'Долгота',
-
-      botTooltip: 'Дух "{{name}}"<br>Скорость {{speed}} м/с<br>Фракция {{fraction}}<br>Время остановки {{waitTime}}с',
-
-      defaultSatelliteLayer: 'Спутниковая карта',
-      locationCentroidLayer: 'Центроиды геолокаций',
-      locationNeighborLayer: 'Соседние локации',
-      beaconBindingsLayer: 'Привязки маяков',
-
-      // track analysis
-      trackDemo: 'Карта с треками пользователей',
-      realTrackStats: 'Статистика по позиционированию пользователей',
-      userTrackAnalysis: 'Анализ трека пользователя',
-
-      // Beacon record editor
-      newBeacon: 'Новый маяк',
-      createBeacon: 'Создать маяк',
-      // enterBeaconProperties: 'Введите свойства маяка',
-      enterBeaconProperties: 'Введите MAC адрес маяка',
-      beaconId: 'Id маяка',
-      beaconMacAddress: 'Mac адрес',
-      beaconLabel: 'Подпись',
-      beaconPlacement: 'Место установки',
-
-      backgroundImageName: 'Название изображения',
-      backgroundImageUrl: 'Изображение',
-      backgroundImagePreview: 'Превью',
-
-      // misc
-      location: 'Локация',
-      characterId: 'Id персонажа',
-      moveCharacterToLocation: 'Переместить персонажа в локацию',
-
-      beaconHasNoLocation: 'Нет привязки к локации',
-
-      locationHasNoBeaconsError: 'Перемещение игрока в следующие геолокации недоступно, потому что в них нет маяков.',
-
-      rescueServiceMessageSender: 'Отправка сообщений МЧС о КС',
-      warningRescueServiceSenderIsSimulator: 'Внимание! Данный инструмент симулирует сообщения об изменении состояния персонажей. Реального изменения состояния или локации персонажей не происходит.',
-
-      physicalBodyCondition: 'Состояние физического тела',
-      physicalBodyCondition_healthy: 'Здоров',
-      physicalBodyCondition_wounded: 'Ранен',
-      physicalBodyCondition_clinically_dead: 'Клиническая смерть',
-      physicalBodyCondition_biologically_dead: 'Биологическая смерть',
-      characterlifeStyle: 'Лайфстайл персонажа',
-
-      sendRescueServiceMessage: 'Отправить сообщение в МЧС',
-      unknownLocation: 'Неизвестная локация',
-
+      ...miscDictionary_ru,
+      ...appDictionary_ru,
+      ...spiritDictionary_ru,
+      ...soundDictionary_ru,
+      ...manaOceanDictionary_ru,
+      ...gameConstantsDictionary_ru,
+      ...extraMainServerI18nDictionary_ru,
     },
   },
-};
+  en: {
+    translation: {
+      ...miscDictionary_en,
+      ...appDictionary_en,
+      ...spiritDictionary_en,
+      ...soundDictionary_en,
+      ...manaOceanDictionary_en,
+      ...gameConstantsDictionary_en,
+      ...extraMainServerI18nDictionary_en,
+    },
+  },
+} as const;
+
