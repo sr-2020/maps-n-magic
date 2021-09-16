@@ -17,20 +17,20 @@ export function CharacterDataList(props: CharacterDataListProps) {
 
   const users2 = R.sortBy(R.prop('id'), users);
 
-  // return null;
+  return null;
 
-  return (
-    <datalist className="CharacterDataList" id="characterIdList">
-      {
-        users2.map((user) => (
-          <option
-            key={user.id}
-            value={user.id}
-          >
-            {user.id + getUserNameStr(user)}
-          </option>
-        ))
-      }
-    </datalist>
-  );
+  // return (
+  //   <datalist className="CharacterDataList" id="characterIdList">
+  //     {
+  //       users2.map((user) => (
+  //         <option
+  //           key={user.id}
+  //           value={user.id}
+  //         >
+  //           {user.id + getUserNameStr(user)}
+  //         </option>
+  //       ))
+  //     }
+  //   </datalist>
+  // );
 }

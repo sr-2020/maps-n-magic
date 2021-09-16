@@ -44,7 +44,33 @@ const manaFillColors: Record<number, string> = { // based on h202
   7: '#2ba6ee', // hsla(202, 85%, 55%, 1)
 };
 
+// const manaFillColors: Record<number, string> = { // based on h202
+//   1: '#ffffff', // hsla(352, 85%, 55%, 1)
+//   2: '#ffffff', // hsla(352, 70%, 70%, 1)
+//   3: '#ffffff', // hsla(352, 55%, 85%, 1)
+//   4: '#ffffff',
+//   5: '#ffffff', // hsla(202, 55%, 85%, 1)
+//   6: '#ffffff', // hsla(202, 70%, 70%, 1)
+//   7: '#ffffff', // hsla(202, 85%, 55%, 1)
+// };
+
 const defaultColor = 'black';
+
+function getFillColor(manaLevel: number | undefined, id: number) {
+  // if (id === 3398) {
+  //   return manaFillColors1[7];
+  // }
+  // if (id === 3384) {
+  //   return manaFillColors1[3];
+  // }
+  // if (id === 3391) {
+  //   return manaFillColors1[3];
+  // }
+  // if (id === 3392) {
+  //   return manaFillColors1[3];
+  // }
+  return (manaLevel !== undefined && manaFillColors[manaLevel]) || defaultColor;
+}
 
 function hasLocationDifference(item: LocationRecord, prevItem: LocationRecord) {
   // polygon, label, options.manaLevel
@@ -150,7 +176,7 @@ export class ManaOceanLayer extends Component<
     const loc = this.group.getLayers().find((loc2: ManaOceanLocation) => loc2.options.id === item.id) as ManaOceanLocation;
     loc.setLatLngs([item.polygon[0]]);
     const { manaLevel } = item.options;
-    loc.setStyle({ fillColor: (manaLevel !== undefined && manaFillColors[manaLevel]) || defaultColor });
+    loc.setStyle({ fillColor: getFillColor(manaLevel, item.id) });
     L.Util.setOptions(loc, { label: item.label, locOptions: item.options });
     const that = this;
     loc.on('mouseover', function (this: ManaOceanLocation, e) {
@@ -178,7 +204,7 @@ export class ManaOceanLayer extends Component<
       locOptions: options, 
       weight: 2, 
       dashArray: [7], 
-      fillColor:  (options.manaLevel !== undefined && manaFillColors[options.manaLevel]) || defaultColor, 
+      fillColor: getFillColor(options.manaLevel, id), 
       fillOpacity: 1,
     });
     const that = this;
