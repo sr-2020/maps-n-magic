@@ -85,6 +85,7 @@ import {
 import {  
   ManaOceanSettingsProvider,
   ManaOceanEffectSettingsProvider,
+  SettingsResourceProvider,
 } from "../api/settings";
 
 import { CharacterStatesListener } from '../api/characterStates/CharacterStatesListener';
@@ -102,7 +103,7 @@ import { createLogger } from '../utils';
 import { FeatureProvider } from '../api/features';
 import { ModelManagetLocInitializer } from '../services/ModelManagetLocInitializer';
 import { PutSpiritRequestedCall } from '../types';
-import { Gettable } from '../api/types';
+import { Gettable, Gettable2, Manageable2, ManageablePlus2, SingleGettable2 } from '../api/types';
 
 type EventBindingList = 
   | StrictEventBinding<EPutCharHealthRequested, EPutCharHealthConfirmed>
@@ -110,6 +111,8 @@ type EventBindingList =
   | StrictEventBinding<EEnableManaOceanRequested, EEnableManaOceanConfirmed>
   | StrictEventBinding<EEnableSpiritMovementRequested, EEnableSpiritMovementConfirmed>
 ;
+
+const mocked = false;
 
 const services = [
   // positioning and emercom
@@ -166,8 +169,7 @@ export function makeGameModel(): {
   const beaconRecordLogger = createLogger('beaconRecordDataBinding');
   const beaconRecordDataBinding = new CrudDataManager<BeaconRecord, ManageableResourceProvider<BeaconRecord>>(
     gameModel,
-    new BeaconRecordProvider(),
-    // new MockedBeaconRecordProvider(),
+    mocked ? new MockedBeaconRecordProvider() : new BeaconRecordProvider(),
     'beaconRecord',
     new PollingReadStrategy(gameModel, 15000, beaconRecordLogger),
     beaconRecordLogger
@@ -178,8 +180,7 @@ export function makeGameModel(): {
   const locationRecordLogger = createLogger('locationRecordDataBinding');
   const locationRecordDataBinding = new LocationDataManager<LocationRecord, ManageablePlusResourceProvider<LocationRecord>>(
     gameModel,
-    new LocationRecordProvider(),
-    // new MockedLocationRecordProvider(),
+    mocked ? new MockedLocationRecordProvider() : new LocationRecordProvider(),
     'locationRecord',
     new PollingReadStrategy(gameModel, 15000, locationRecordLogger),
     locationRecordLogger
@@ -188,7 +189,7 @@ export function makeGameModel(): {
   gameServer.addDataBinding(locationRecordDataBinding);
 
   const spiritLogger = createLogger('spiritDataBinding');
-  const spiritDataBinding = new CrudDataManagerPlus2<Spirit, SpiritProvider>(
+  const spiritDataBinding = new CrudDataManagerPlus2<Spirit, ManageablePlus2<Spirit>>(
     gameModel,
     new SpiritProvider(),
     'spirit',
@@ -203,7 +204,7 @@ export function makeGameModel(): {
   }
 
   const spiritFractionLogger = createLogger('spiritFractionDataBinding');
-  const spiritFractionDataBinding = new CrudDataManager2<SpiritFraction, SpiritFractionProvider>(
+  const spiritFractionDataBinding = new CrudDataManager2<SpiritFraction, Manageable2<SpiritFraction>>(
     gameModel,
     new SpiritFractionProvider(),
     'spiritFraction',
@@ -214,7 +215,7 @@ export function makeGameModel(): {
   gameServer.addDataBinding(spiritFractionDataBinding);
 
   const spiritRouteLogger = createLogger('spiritRouteDataBinding');
-  const spiritRouteDataBinding = new CrudDataManager2<SpiritRoute, SpiritRouteProvider>(
+  const spiritRouteDataBinding = new CrudDataManager2<SpiritRoute, Manageable2<SpiritRoute>>(
     gameModel,
     new SpiritRouteProvider(),
     'spiritRoute',
@@ -225,7 +226,7 @@ export function makeGameModel(): {
   gameServer.addDataBinding(spiritRouteDataBinding);
 
   const spiritPhraseLogger = createLogger('spiritPhraseDataBinding');
-  const spiritPhraseDataBinding = new CrudDataManager2<SpiritPhrase, SpiritPhraseProvider>(
+  const spiritPhraseDataBinding = new CrudDataManager2<SpiritPhrase, Manageable2<SpiritPhrase>>(
     gameModel,
     new SpiritPhraseProvider(),
     'spiritPhrase',
@@ -238,8 +239,7 @@ export function makeGameModel(): {
   const userRecordLogger = createLogger('userRecordDataBinding');
   const userRecordDataBinding = new ReadDataManager<RawUserRecord, Gettable<RawUserRecord>>(
     gameModel,
-    // new UserRecordProvider(),
-    new MockedUsersRecordProvider(),
+    mocked ? new MockedUsersRecordProvider() : new UserRecordProvider(),
     'userRecord',
     new PollingReadStrategy(gameModel, 15000, userRecordLogger, 'reloadUserRecords'),
     userRecordLogger
@@ -248,7 +248,7 @@ export function makeGameModel(): {
   gameServer.addDataBinding(userRecordDataBinding);
 
   const featureLogger = createLogger('featureDataBinding');
-  const featureDataBinding = new ReadDataManager2<Feature, FeatureProvider>(
+  const featureDataBinding = new ReadDataManager2<Feature, Gettable2<Feature> & SingleGettable2<Feature>>(
     gameModel,
     new FeatureProvider(),
     'feature',
@@ -259,7 +259,7 @@ export function makeGameModel(): {
   gameServer.addDataBinding(featureDataBinding);
 
   const playerMessageLogger = createLogger('playerMessagesDataBinding');
-  const playerMessageDataBinding = new ReadDataManager2<PlayerMessage, PlayerMessageProvider>(
+  const playerMessageDataBinding = new ReadDataManager2<PlayerMessage, Gettable2<PlayerMessage> & SingleGettable2<PlayerMessage>>(
     gameModel,
     new PlayerMessageProvider(),
     'playerMessage',
@@ -270,7 +270,7 @@ export function makeGameModel(): {
   gameServer.addDataBinding(playerMessageDataBinding);
 
   const manaOceanSettingsLogger = createLogger('manaOceanSettingsDB');
-  const manaOceanSettingsDB = new SettingsDataManager<ManaOceanSettingsData, ManaOceanSettingsProvider>(
+  const manaOceanSettingsDB = new SettingsDataManager<ManaOceanSettingsData, SettingsResourceProvider<ManaOceanSettingsData>>(
     gameModel,
     new ManaOceanSettingsProvider(),
     'manaOcean',
@@ -282,7 +282,7 @@ export function makeGameModel(): {
   gameServer.addDataBinding(manaOceanSettingsDB);
 
   const manaOceanEffectsSettingsLogger = createLogger('manaOceanEffectsSettingsDB');
-  const manaOceanEffectsSettingsDB = new SettingsDataManager<ManaOceanEffectSettingsData, ManaOceanEffectSettingsProvider>(
+  const manaOceanEffectsSettingsDB = new SettingsDataManager<ManaOceanEffectSettingsData, SettingsResourceProvider<ManaOceanEffectSettingsData>>(
     gameModel,
     new ManaOceanEffectSettingsProvider(),
     'manaOceanEffects',
