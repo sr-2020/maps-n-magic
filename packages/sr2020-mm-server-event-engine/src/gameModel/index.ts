@@ -97,7 +97,9 @@ import {
   SpiritFractionProvider, 
   SpiritRouteProvider,
   SpiritPhraseProvider,
-  PlayerMessageProvider
+  PlayerMessageProvider,
+  MockedPlayerMessageProvider,
+  MockedFeatureProvider
 } from '../api/spirits';
 import { createLogger } from '../utils';
 import { FeatureProvider } from '../api/features';
@@ -113,6 +115,7 @@ type EventBindingList =
 ;
 
 const mocked = false;
+// const mocked = true;
 
 const services = [
   // positioning and emercom
@@ -250,7 +253,7 @@ export function makeGameModel(): {
   const featureLogger = createLogger('featureDataBinding');
   const featureDataBinding = new ReadDataManager2<Feature, Gettable2<Feature> & SingleGettable2<Feature>>(
     gameModel,
-    new FeatureProvider(),
+    mocked ? new MockedFeatureProvider() : new FeatureProvider(),
     'feature',
     new PollingReadStrategy(gameModel, 60 * 60 * 1000, featureLogger), // 1 hour
     featureLogger
@@ -261,7 +264,7 @@ export function makeGameModel(): {
   const playerMessageLogger = createLogger('playerMessagesDataBinding');
   const playerMessageDataBinding = new ReadDataManager2<PlayerMessage, Gettable2<PlayerMessage> & SingleGettable2<PlayerMessage>>(
     gameModel,
-    new PlayerMessageProvider(),
+    mocked ? new MockedPlayerMessageProvider() : new PlayerMessageProvider(),
     'playerMessage',
     new PollingReadStrategy(gameModel, 15000, playerMessageLogger), // 1 minute
     playerMessageLogger

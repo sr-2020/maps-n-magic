@@ -69,6 +69,8 @@ import {
 import { validateSpiritFraction } from "./spiritFractionValidation";
 import { getPlayerMessages, validatePlayerMessage } from './playerMessages';
 
+export * from './mocks';
+
 export class SpiritProvider implements 
   Gettable2<Spirit>, 
   SingleGettable2<Spirit>,
