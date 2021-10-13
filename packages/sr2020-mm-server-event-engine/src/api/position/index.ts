@@ -40,6 +40,8 @@ import {
   defaultLocationRecord,
 } from '../constants';
 
+export * from './mocks';
+
 export class ManageableResourceProvider<T extends Identifiable> implements 
   Gettable<T>, 
   Postable<T>, 
@@ -128,7 +130,6 @@ export class RemoteBeaconRecordProvider extends ManageableResourceProvider<Beaco
       // (t: any): t is BeaconRecord => true
     );
   }
-
 }
 
 export class RemoteLocationRecordProvider extends ManageablePlusResourceProvider<LocationRecord> {
@@ -153,16 +154,6 @@ export class RemoteUsersRecordProvider extends GettableResourceProvider<RawUserR
     super(mainServerConstants().usersUrl, (t: any): t is RawUserRecord => true);
   }
 }
-
-// Test class to get frequently changed user data.
-// export class UsersRecordProviderMock {
-//   isEven = true;
-
-//   async get() {
-//     this.isEven = !this.isEven;
-//     return R.clone(this.isEven ? [users[1]] : users);
-//   }
-// }
 
 export async function innerPostUserPosition(characterId: number, beacon: BeaconRecord) {
   return fetchWithTimeout(mainServerConstants().positionUrl, {
@@ -197,14 +188,4 @@ export async function innerPostUserPosition2(characterId: number, ssid: string) 
     }),
   });
 }
-
-// function ReadWriteResourceProvider(url) {
-//   this.url = url;
-
-//   return Object.assign(
-//     this,
-//     gettable(this),
-//     postable(this),
-//   );
-// }
 

@@ -11,8 +11,8 @@ export const defaultBeaconRecord: Omit<BeaconRecord, 'id'> = {
   bssid: '',
   location_id: null,
   label: '',
-  lat: 0,
-  lng: 0,
+  lat: null,
+  lng: null,
 };
 
 // duplicated in LocationRecordService
@@ -20,7 +20,7 @@ const defaultLocationStyleOptions: LocationRecordOptions = {
   color: '#3388ff',
   weight: 3,
   fillOpacity: 0.2,
-  manaLevel: 0,
+  manaLevel: 4,
   effectList: []
 };
 

@@ -71,7 +71,7 @@ export class BeaconRecordEditor extends Component<BeaconRecordEditorProps, Beaco
     // console.log('createBeacon', this.state.beaconRecords.length);
     gameModel.execute2<PostBeaconRecord>({
       type: 'postBeaconRecord',
-      props: { bssid: macAddress },
+      props: { bssid: macAddress, ssid: macAddress },
     });
   }
 

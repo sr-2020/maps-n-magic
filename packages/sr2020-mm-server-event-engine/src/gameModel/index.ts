@@ -56,8 +56,10 @@ import { SpiritCatcherUpdateService } from '../services/SpiritCatcherUpdateServi
 // import { RescueServicePushService } from '../services/RescueServicePushService';
 
 import { CrudDataManager } from '../dataManagers/CrudDataManager';
+// import { MockedCrudDataManager } from '../dataManagers/MockedCrudDataManager';
 import { LocationDataManager } from '../dataManagers/LocationDataManager';
 import { ReadDataManager } from '../dataManagers/ReadDataManager';
+// import { MockedReadDataManager } from '../dataManagers/MockedReadDataManager';
 import { ReadDataManager2 } from '../dataManagers/ReadDataManager2';
 import { CrudDataManager2, CrudDataManagerPlus2, PutEntityArg } from '../dataManagers/CrudDataManager2';
 import { SettingsDataManager } from '../dataManagers/SettingsDataManagers';
@@ -73,6 +75,9 @@ import {
   RemoteLocationRecordProvider as LocationRecordProvider,
   RemoteBeaconRecordProvider as BeaconRecordProvider,
   RemoteUsersRecordProvider as UserRecordProvider,
+  MockedUsersRecordProvider,
+  MockedBeaconRecordProvider,
+  MockedLocationRecordProvider,
   ManageablePlusResourceProvider,
   ManageableResourceProvider
 } from '../api/position';
@@ -97,8 +102,7 @@ import { createLogger } from '../utils';
 import { FeatureProvider } from '../api/features';
 import { ModelManagetLocInitializer } from '../services/ModelManagetLocInitializer';
 import { PutSpiritRequestedCall } from '../types';
-
-
+import { Gettable } from '../api/types';
 
 type EventBindingList = 
   | StrictEventBinding<EPutCharHealthRequested, EPutCharHealthConfirmed>
@@ -108,30 +112,43 @@ type EventBindingList =
 ;
 
 const services = [
+  // positioning and emercom
   LocationRecordService,
   BeaconRecordService,
-  // NotificationService,
   CharacterHealthStateService,
   UserRecordService,
-  SettingsService,
+  CharacterLocationService,
+
+  // mana ocean
   ManaOceanService,
   ManaOceanEnableService,
-  SpiritMovementEnableService,
   MassacreService,
-  PushNotificationService,
-  AudioStageService,
-  CharacterLocationService,
+  // this service is generic in theory but there is 
+  // only mana ocean specific settings
+  SettingsService, 
+
+  // spirits
   SpiritService,
   SpiritFractionService,
   SpiritRouteService,
   SpiritMovementService,
-  FeatureService,
-  ModelManagetLocInitializer,
+  SpiritMovementEnableService,
   SpiritCatcherService,
   SpiritCatcherUpdateService,
   SpiritPhraseService,
   PlayerMessagesService,
+
+  // all features getter - abilities, spells, archetypes and other
+  FeatureService,
+  // push notification sender
+  PushNotificationService,
+  // auxilary service to init locations in model-engine (external server)
+  ModelManagetLocInitializer,
+
+  // don't remember service purpose
+  // AudioStageService,
   // RescueServicePushService,
+  // NotificationService,
 ];
 
 // eslint-disable-next-line max-lines-per-function
@@ -147,9 +164,10 @@ export function makeGameModel(): {
   // fillGameModelWithBots(gameModel);
 
   const beaconRecordLogger = createLogger('beaconRecordDataBinding');
-  const beaconRecordDataBinding = new CrudDataManager<BeaconRecord, BeaconRecordProvider>(
+  const beaconRecordDataBinding = new CrudDataManager<BeaconRecord, ManageableResourceProvider<BeaconRecord>>(
     gameModel,
     new BeaconRecordProvider(),
+    // new MockedBeaconRecordProvider(),
     'beaconRecord',
     new PollingReadStrategy(gameModel, 15000, beaconRecordLogger),
     beaconRecordLogger
@@ -158,9 +176,10 @@ export function makeGameModel(): {
   gameServer.addDataBinding(beaconRecordDataBinding);
 
   const locationRecordLogger = createLogger('locationRecordDataBinding');
-  const locationRecordDataBinding = new LocationDataManager<LocationRecord, LocationRecordProvider>(
+  const locationRecordDataBinding = new LocationDataManager<LocationRecord, ManageablePlusResourceProvider<LocationRecord>>(
     gameModel,
     new LocationRecordProvider(),
+    // new MockedLocationRecordProvider(),
     'locationRecord',
     new PollingReadStrategy(gameModel, 15000, locationRecordLogger),
     locationRecordLogger
@@ -217,9 +236,10 @@ export function makeGameModel(): {
   gameServer.addDataBinding(spiritPhraseDataBinding);
 
   const userRecordLogger = createLogger('userRecordDataBinding');
-  const userRecordDataBinding = new ReadDataManager<RawUserRecord, UserRecordProvider>(
+  const userRecordDataBinding = new ReadDataManager<RawUserRecord, Gettable<RawUserRecord>>(
     gameModel,
-    new UserRecordProvider(),
+    // new UserRecordProvider(),
+    new MockedUsersRecordProvider(),
     'userRecord',
     new PollingReadStrategy(gameModel, 15000, userRecordLogger, 'reloadUserRecords'),
     userRecordLogger
