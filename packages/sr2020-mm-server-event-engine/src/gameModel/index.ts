@@ -86,6 +86,8 @@ import {
   ManaOceanSettingsProvider,
   ManaOceanEffectSettingsProvider,
   SettingsResourceProvider,
+  MockedManaOceanSettingsProvider,
+  MockedManaOceanEffectSettingsProvider
 } from "../api/settings";
 
 import { CharacterStatesListener } from '../api/characterStates/CharacterStatesListener';
@@ -279,7 +281,7 @@ export function makeGameModel(): {
   const manaOceanSettingsLogger = createLogger('manaOceanSettingsDB');
   const manaOceanSettingsDB = new SettingsDataManager<ManaOceanSettingsData, SettingsResourceProvider<ManaOceanSettingsData>>(
     gameModel,
-    new ManaOceanSettingsProvider(),
+    mocked ? new MockedManaOceanSettingsProvider() : new ManaOceanSettingsProvider(),
     'manaOcean',
     new PollingReadStrategy(gameModel, 15000, manaOceanSettingsLogger),
     defaultManaOceanSettings,
@@ -291,7 +293,7 @@ export function makeGameModel(): {
   const manaOceanEffectsSettingsLogger = createLogger('manaOceanEffectsSettingsDB');
   const manaOceanEffectsSettingsDB = new SettingsDataManager<ManaOceanEffectSettingsData, SettingsResourceProvider<ManaOceanEffectSettingsData>>(
     gameModel,
-    new ManaOceanEffectSettingsProvider(),
+    mocked ? new MockedManaOceanEffectSettingsProvider() : new ManaOceanEffectSettingsProvider(),
     'manaOceanEffects',
     new PollingReadStrategy(gameModel, 15000, manaOceanEffectsSettingsLogger),
     manaOceanEffectSettings,

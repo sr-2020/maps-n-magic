@@ -7,3 +7,5 @@ export * from './spiritFractions';
 export * from './spiritPhrases';
 export * from './spiritRoutes';
 export * from './spirits';
+export * from './manaOceanSettings';
+export * from './manaOceanEffectsSettings';
