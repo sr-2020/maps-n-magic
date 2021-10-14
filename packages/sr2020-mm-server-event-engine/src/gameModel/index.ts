@@ -99,7 +99,11 @@ import {
   SpiritPhraseProvider,
   PlayerMessageProvider,
   MockedPlayerMessageProvider,
-  MockedFeatureProvider
+  MockedFeatureProvider,
+  MockedSpiritProvider,
+  MockedSpiritFractionProvider,
+  MockedSpiritRouteProvider,
+  MockedSpiritPhraseProvider
 } from '../api/spirits';
 import { createLogger } from '../utils';
 import { FeatureProvider } from '../api/features';
@@ -194,7 +198,7 @@ export function makeGameModel(): {
   const spiritLogger = createLogger('spiritDataBinding');
   const spiritDataBinding = new CrudDataManagerPlus2<Spirit, ManageablePlus2<Spirit>>(
     gameModel,
-    new SpiritProvider(),
+    mocked ? new MockedSpiritProvider() : new SpiritProvider(),
     'spirit',
     new PollingReadStrategy(gameModel, 15000, spiritLogger),
     spiritLogger
@@ -209,7 +213,7 @@ export function makeGameModel(): {
   const spiritFractionLogger = createLogger('spiritFractionDataBinding');
   const spiritFractionDataBinding = new CrudDataManager2<SpiritFraction, Manageable2<SpiritFraction>>(
     gameModel,
-    new SpiritFractionProvider(),
+    mocked ? new MockedSpiritFractionProvider() : new SpiritFractionProvider(),
     'spiritFraction',
     new PollingReadStrategy(gameModel, 15000, spiritFractionLogger),
     spiritFractionLogger
@@ -220,7 +224,7 @@ export function makeGameModel(): {
   const spiritRouteLogger = createLogger('spiritRouteDataBinding');
   const spiritRouteDataBinding = new CrudDataManager2<SpiritRoute, Manageable2<SpiritRoute>>(
     gameModel,
-    new SpiritRouteProvider(),
+    mocked ? new MockedSpiritRouteProvider() : new SpiritRouteProvider(),
     'spiritRoute',
     new PollingReadStrategy(gameModel, 15000, spiritRouteLogger),
     spiritRouteLogger
@@ -231,7 +235,7 @@ export function makeGameModel(): {
   const spiritPhraseLogger = createLogger('spiritPhraseDataBinding');
   const spiritPhraseDataBinding = new CrudDataManager2<SpiritPhrase, Manageable2<SpiritPhrase>>(
     gameModel,
-    new SpiritPhraseProvider(),
+    mocked ? new MockedSpiritPhraseProvider() : new SpiritPhraseProvider(),
     'spiritPhrase',
     new PollingReadStrategy(gameModel, 15000, spiritPhraseLogger),
     spiritPhraseLogger

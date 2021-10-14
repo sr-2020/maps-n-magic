@@ -43,20 +43,9 @@ import {
   beaconRecords,
   locationRecords
 } from '../../mockedData';
+import { generateIntegerId } from '../../utils';
 
-function generateIntegerId<T extends Identifiable>(entities: T[]): { id: number } {
-  const ids = R.pluck('id', entities) as number[];
-  if (ids.length === 0) {
-    return { id: 1 };
-  }
-  const maxId = ids.reduce((acc, id) => {
-    if (acc < id) {
-      return id;
-    }
-    return acc;
-  }, ids[0]);
-  return { id: maxId + 1 };
-}
+
 
 export class MockedManageableResourceProvider<T extends Identifiable> implements 
   Gettable<T>, 

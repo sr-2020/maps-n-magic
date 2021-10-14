@@ -3,3 +3,7 @@ export * from './beaconRecords';
 export * from './locationRecords';
 export * from './features';
 export * from './playerMessages';
+export * from './spiritFractions';
+export * from './spiritPhrases';
+export * from './spiritRoutes';
+export * from './spirits';
