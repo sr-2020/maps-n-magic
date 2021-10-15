@@ -5,10 +5,12 @@ enum GenericServerConstant {
   'GATEWAY_URL' = 'GATEWAY_URL',
   'MODELS_MANAGER_URL' = 'MODELS_MANAGER_URL',
   'JWT_SECRET' = 'JWT_SECRET',
+  'MOCKED' = 'MOCKED',
 }
 
 export interface GenericServerConstants {
   JWT_SECRET: string;
+  MOCKED: boolean;
   loginUrl: string;
   characterModelUrl: string;
   qrModelUrl: string;
@@ -19,8 +21,13 @@ export interface GenericServerConstants {
   modelsManagerToken: string;
 };
 
-export function getGenericEnvVariables() {
-  return getEnvVariables(Object.values(GenericServerConstant), ['JWT_SECRET']);
+export function getGenericEnvVariables(): EnvVariables {
+  const envVariables = getEnvVariables(Object.values(GenericServerConstant), ['JWT_SECRET']);
+  if (envVariables.missedValues.includes('MOCKED')) {
+    envVariables.missedValues = envVariables.missedValues.filter(el => el !== 'MOCKED');
+    envVariables.values.MOCKED = 'false';
+  }
+  return envVariables;
 }
 
 export function getGenericServerConstants(envVariables: EnvVariables): GenericServerConstants {
@@ -35,6 +42,7 @@ export function getGenericServerConstants(envVariables: EnvVariables): GenericSe
     putLocationToModelsManager: values[GenericServerConstant.MODELS_MANAGER_URL] + '/location/default',
     playerServerTokenPayload: 'player-server',
     modelsManagerToken: process.env.MODELS_MANAGER_TOKEN || '',
+    MOCKED: values[GenericServerConstant.MOCKED].trim().toLowerCase() === 'true' || false,
   }
 }
 
@@ -51,6 +59,7 @@ export function genericServerConstants2(): GenericServerConstants {
     putLocationToModelsManager: values[GenericServerConstant.MODELS_MANAGER_URL] + '/location/default',
     playerServerTokenPayload: 'player-server',
     modelsManagerToken: process.env.MODELS_MANAGER_TOKEN || '',
+    MOCKED: values[GenericServerConstant.MOCKED].trim().toLowerCase() === 'true' || false,
   }
 }
 

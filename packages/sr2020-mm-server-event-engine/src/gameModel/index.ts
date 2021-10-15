@@ -69,7 +69,11 @@ import { RedirectDataBinding } from '../dataManagers/RedirectDataBinding';
 import { RedirectDataBinding2, StrictEventBinding } from '../dataManagers/RedirectDataBinding2';
 import { CharacterLocDataManager } from '../dataManagers/CharacterLocDataManager';
 
-import { defaultManaOceanSettings, manaOceanEffectSettings } from '../api/constants';
+import { 
+  defaultManaOceanSettings, 
+  manaOceanEffectSettings,
+  mainServerConstants 
+} from '../api/constants';
 
 import {
   RemoteLocationRecordProvider as LocationRecordProvider,
@@ -120,8 +124,8 @@ type EventBindingList =
   | StrictEventBinding<EEnableSpiritMovementRequested, EEnableSpiritMovementConfirmed>
 ;
 
-const mocked = false;
-// const mocked = true;
+const mocked = mainServerConstants().MOCKED;
+// console.log('mocked', mocked);
 
 const services = [
   // positioning and emercom
@@ -245,10 +249,12 @@ export function makeGameModel(): {
   spiritPhraseDataBinding.init();
   gameServer.addDataBinding(spiritPhraseDataBinding);
 
+  const userRecordProvider = mocked ? new MockedUsersRecordProvider() : new UserRecordProvider();
+
   const userRecordLogger = createLogger('userRecordDataBinding');
   const userRecordDataBinding = new ReadDataManager<RawUserRecord, Gettable<RawUserRecord>>(
     gameModel,
-    mocked ? new MockedUsersRecordProvider() : new UserRecordProvider(),
+    userRecordProvider,
     'userRecord',
     new PollingReadStrategy(gameModel, 15000, userRecordLogger, 'reloadUserRecords'),
     userRecordLogger
@@ -304,6 +310,7 @@ export function makeGameModel(): {
 
   const charLocDM = new CharacterLocDataManager(
     gameModel,
+    userRecordProvider,
     createLogger('CharacterLocDataManager'),
   );
   charLocDM.init();
@@ -322,9 +329,11 @@ export function makeGameModel(): {
   gameServer.addDataBinding(new CharacterStatesListener(gameModel, createLogger('CharacterStatesListener')));
   gameServer.addDataBinding(new CharacterLocationListener(gameModel, createLogger('CharacterLocationListener')));
   gameServer.addDataBinding(new SpellCastsListener(gameModel, createLogger('SpellCastsListener')));
-  const pushNotificationEmitter = new PushNotificationEmitter(gameModel, createLogger('PushNotificationEmitter'));
-  pushNotificationEmitter.init();
-  gameServer.addDataBinding(pushNotificationEmitter);
+  if (!mocked) {
+    const pushNotificationEmitter = new PushNotificationEmitter(gameModel, createLogger('PushNotificationEmitter'));
+    pushNotificationEmitter.init();
+    gameServer.addDataBinding(pushNotificationEmitter);
+  }
   gameServer.addDataBinding(new StubEventProcessor(
     gameModel, 
     createLogger('StubEventProcessor'), {
