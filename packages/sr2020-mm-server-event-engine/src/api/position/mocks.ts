@@ -31,6 +31,7 @@ import {
   Deletable,
   MultiPuttable,
   validateEntityFunction,
+  SingleGettable,
 } from "../types";
 
 import {
@@ -165,11 +166,15 @@ export class MockedLocationRecordProvider extends MockedPlusManageableResourcePr
   }
 }
 
-export class MockedGettableResourceProvider<T> implements Gettable<T> {
+export class MockedGettableResourceProvider<T extends Identifiable> implements Gettable<T>, SingleGettable<T> {
   constructor(public entities: T[], public validateGetEntity: validateEntityFunction<T>) {
   }
   get(): Promise<T[]> {
     return Promise.resolve(this.entities);
+  }
+  singleGet({ id }: { id: number; }): Promise<T | undefined> {
+    const result = this.entities.find(el => el.id === id);
+    return Promise.resolve(result);
   }
 }
 

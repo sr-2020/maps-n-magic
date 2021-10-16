@@ -23,6 +23,7 @@ import {
   puttable, 
   deletable, 
   multiPuttable,
+  singleGettable,
 } from './apiInterfaces';
 
 import {  
@@ -32,6 +33,7 @@ import {
   Deletable,
   MultiPuttable,
   validateEntityFunction,
+  SingleGettable,
 } from "../types";
 
 import {
@@ -108,15 +110,17 @@ export class ManageablePlusResourceProvider<T extends Identifiable> implements
   putMultiple({ updates }: { updates: T[]; }): Promise<T[]> { throw new Error('Method not implemented.');}
 }
 
-export class GettableResourceProvider<T> implements Gettable<T> {
+export class GettableResourceProvider<T> implements Gettable<T>, SingleGettable<T> {
   constructor(public url: string, public validateGetEntity: validateEntityFunction<T>) {
     return Object.assign(
       this,
       gettable(this),
+      singleGettable(this)
     );
   }
   // all methods will be created by object assign
   get(): Promise<T[]> { throw new Error('Method not implemented.'); }
+  singleGet({ id }: { id: number; }): Promise<T | undefined> { throw new Error('Method not implemented.'); }
 }
 
 export class RemoteBeaconRecordProvider extends ManageableResourceProvider<BeaconRecord> {

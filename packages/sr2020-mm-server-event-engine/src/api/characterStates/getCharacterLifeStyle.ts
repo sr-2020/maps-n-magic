@@ -73,45 +73,48 @@ const characterLifeStyleMessageSchema: JSONSchemaType<CharacterLifeStyleMessage>
 
 export const validateCharacterLifeStyleMessage = ajv.compile(characterLifeStyleMessageSchema);
 
+const unknownLifeStyle = {
+  lifeStyle: LifeStyles.Unknown,
+  personName: 'N/A',
+};
+
 export async function getCharacterLifeStyle(characterId: number): Promise<{
   lifeStyle: LifeStylesValues,
   personName: string,
 }> {
-  const response = await fetch(`${mainServerConstants().billingInsurance}?characterid=${characterId}`);
-
-  if (!response.ok) {
-    try {
-      const text = await response.text();
-      // throw new Error(`getCharacterLifeStyle network response was not ok ${text}`);
-      throw new Error(`getCharacterLifeStyle network response was not ok ${response.ok} ${response.statusText}`);
-    } catch (err) {
-      logger.error(err);
+  try {
+    const response = await fetch(`${mainServerConstants().billingInsurance}?characterid=${characterId}`);
+  
+    if (!response.ok) {
+      try {
+        const text = await response.text();
+        // throw new Error(`getCharacterLifeStyle network response was not ok ${text}`);
+        throw new Error(`getCharacterLifeStyle network response was not ok ${response.ok} ${response.statusText}`);
+      } catch (err) {
+        logger.error(err);
+      }
+      return unknownLifeStyle;
     }
-    return {
-      lifeStyle: LifeStyles.Unknown,
-      personName: 'N/A',
-    };
+  
+    const result = await response.json();
+  
+    if (!validateCharacterLifeStyleMessage(result)) {
+      logger.error(`Received invalid getCharacterLifeStyle. ${JSON.stringify(result)} ${JSON.stringify(validateCharacterLifeStyleMessage.errors)}`);
+    } else {
+      // logger.info('getCharacterLifeStyle validation OK');
+    }
+    // logger.info('getCharacterLifeStyle ' + JSON.stringify(result));
+  
+    if (result.status) {
+      return {
+        lifeStyle: result.data.lifeStyle,
+        personName: result.data.personName,
+      };
+    }
+  } catch (err) {
+    logger.error(err);
   }
-
-  const result = await response.json();
-
-  if (!validateCharacterLifeStyleMessage(result)) {
-    logger.error(`Received invalid getCharacterLifeStyle. ${JSON.stringify(result)} ${JSON.stringify(validateCharacterLifeStyleMessage.errors)}`);
-  } else {
-    // logger.info('getCharacterLifeStyle validation OK');
-  }
-  // logger.info('getCharacterLifeStyle ' + JSON.stringify(result));
-
-  if (result.status) {
-    return {
-      lifeStyle: result.data.lifeStyle,
-      personName: result.data.personName,
-    };
-  }
-  return {
-    lifeStyle: LifeStyles.Unknown,
-    personName: 'N/A',
-  };
+  return unknownLifeStyle;
 }
 
 // request example

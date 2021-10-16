@@ -326,7 +326,7 @@ export function makeGameModel(): {
     ],
     createLogger('RedirectDataBinding2')
   ));
-  gameServer.addDataBinding(new CharacterStatesListener(gameModel, createLogger('CharacterStatesListener')));
+  gameServer.addDataBinding(new CharacterStatesListener(userRecordProvider, gameModel, createLogger('CharacterStatesListener')));
   gameServer.addDataBinding(new CharacterLocationListener(gameModel, createLogger('CharacterLocationListener')));
   gameServer.addDataBinding(new SpellCastsListener(gameModel, createLogger('SpellCastsListener')));
   if (!mocked) {

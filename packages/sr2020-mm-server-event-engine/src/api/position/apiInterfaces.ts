@@ -36,6 +36,38 @@ export const gettable = (state: {
   },
 });
 
+export const singleGettable = (state: {
+  url: string, 
+  validateGetEntity: typelessValidateEntityFunction
+}) => ({
+  async singleGet({ id }: {id: number}) {
+    // console.log('singleGettable');
+    const response = await fetch(`${state.url}/${id}`, {
+      // const response = await fetch(`${url}`, {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json;charset=utf-8',
+        'X-User-Id': "1",
+      },
+    });
+    // console.log('singleGettable2');
+    if (!response.ok) {
+      const text = await response.text();
+      // throw new Error(`Network response was not ok ${text}`);
+      throw new Error(`single gettable network response was not ok ${response.ok} ${response.statusText}`);
+    }
+    // console.log('singleGettable3');
+    const data: any = await response.json();
+    // console.log('singleGettable4');
+
+    if (!state.validateGetEntity(data)) {
+      logger.info('Single GET Validation not passed.', JSON.stringify(data), JSON.stringify(state.validateGetEntity.errors));
+    }
+    // console.log('singleGettable5');
+    return data;
+  },
+});
+
 export const postable = <T>(state: {
   url: string, 
   defaultObject: T,

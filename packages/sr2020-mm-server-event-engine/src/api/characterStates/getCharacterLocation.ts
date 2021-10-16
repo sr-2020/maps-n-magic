@@ -46,63 +46,11 @@ const logger = createLogger('getCharacterLocation.ts');
 // 	}
 // };
 
-export async function getCharacterLocation(characterId: number, simulateLocation = false): Promise<{
-  locationId: number | null,
-  locationLabel: string
-}> {
-  const response = await fetch(`${mainServerConstants().usersUrl}/${characterId}`, {
-  // const response = await fetch(`${url}`, {
-    method: 'GET',
-    headers: {
-      'Content-Type': 'application/json;charset=utf-8',
-      'X-User-Id': "1",
-    },
-  });
-
-  if (!response.ok) {
-    try {
-      const text = await response.text();
-      // throw new Error(`Network response was not ok ${text}`);
-      throw new Error(`getCharacterLocation network response was not ok ${characterId} ${response.ok} ${response.statusText}`);
-    } catch (err) {
-      // logger.error(err);
-      logger.error(err.message || err);
-    }
-    return {
-      locationId: null,
-      locationLabel: 'N/A',
-    };
-  }
-
-  const result: RawUserRecord = await response.json();
-
-  if (!validateRawUserRecord(result)) {
-    logger.error(`Received invalid getCharacterLocation. ${JSON.stringify(result)} ${JSON.stringify(validateRawUserRecord.errors)}`);
-  } else {
-    // logger.info('getCharacterLocation validation OK');
-  }
-
-  // logger.info('getCharacterLocation ' + JSON.stringify(result));
-  if (R.isNil(result.location_id)) {
-    return {
-      locationId: null,
-      locationLabel: 'N/A',
-    };
-    // if (!locations) {
-    //   const rawLocations = await getLocations();
-    //   locations = rawLocations.filter(isGeoLocation);
-    //   // logger.info(rawLocations.length, locations.length);
-    // }
-    // return locations[randomInteger(0, locations.length - 1)].id;
-  }
-
-  return {
-    locationId: result.location_id,
-    locationLabel: result.location?.label || 'N/A',
-  };
-}
-// async function getLocations() {
-//   const response = await fetch(`${locationsUrl}`, {
+// export async function getCharacterLocation(characterId: number, simulateLocation = false): Promise<{
+//   locationId: number | null,
+//   locationLabel: string
+// }> {
+//   const response = await fetch(`${mainServerConstants().usersUrl}/${characterId}`, {
 //   // const response = await fetch(`${url}`, {
 //     method: 'GET',
 //     headers: {
@@ -112,11 +60,45 @@ export async function getCharacterLocation(characterId: number, simulateLocation
 //   });
 
 //   if (!response.ok) {
-//     const text = await response.text();
-//     throw new Error(`Network response was not ok ${text}`);
+//     try {
+//       const text = await response.text();
+//       // throw new Error(`Network response was not ok ${text}`);
+//       throw new Error(`getCharacterLocation network response was not ok ${characterId} ${response.ok} ${response.statusText}`);
+//     } catch (err) {
+//       // logger.error(err);
+//       logger.error(err.message || err);
+//     }
+//     return {
+//       locationId: null,
+//       locationLabel: 'N/A',
+//     };
 //   }
 
-//   return response.json();
+//   const result: RawUserRecord = await response.json();
+
+//   if (!validateRawUserRecord(result)) {
+//     logger.error(`Received invalid getCharacterLocation. ${JSON.stringify(result)} ${JSON.stringify(validateRawUserRecord.errors)}`);
+//   } else {
+//     // logger.info('getCharacterLocation validation OK');
+//   }
+
+//   // logger.info('getCharacterLocation ' + JSON.stringify(result));
+//   if (R.isNil(result.location_id)) {
+//     return {
+//       locationId: null,
+//       locationLabel: 'N/A',
+//     };
+//     // if (!locations) {
+//     //   const rawLocations = await getLocations();
+//     //   locations = rawLocations.filter(isGeoLocation);
+//     //   // logger.info(rawLocations.length, locations.length);
+//     // }
+//     // return locations[randomInteger(0, locations.length - 1)].id;
+//   }
+
+//   return {
+//     locationId: result.location_id,
+//     locationLabel: result.location?.label || 'N/A',
+//   };
 // }
 
-// exports.getCharacterLocation = getCharacterLocation;

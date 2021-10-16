@@ -6,6 +6,10 @@ export interface Gettable<T> {
   get(): Promise<T[]>;
 }
 
+export interface SingleGettable<T> {
+  singleGet({id}: {id: number}): Promise<T | undefined>;
+}
+
 export interface Postable<T> {
   post({props}: {props: T}): Promise<T>;
 }

@@ -6,13 +6,15 @@ import {
   // PutCharHealth,
   EPutCharHealthRequested,
   GMLogger,
-  AbstractEventProcessor
+  AbstractEventProcessor,
+  RawUserRecord
 } from 'sr2020-mm-event-engine';
-import { getCharacterLocation } from './getCharacterLocation';
+// import { getCharacterLocation } from './getCharacterLocation';
 import { getCharacterLifeStyle } from './getCharacterLifeStyle';
 import { listenHealthChanges } from './listenHealthChanges';
 
 import { HealthChangeMessage } from "./listenHealthChanges";
+import { SingleGettable } from '../types';
 
 // const { listenHealthChanges } = require('./listenHealthChanges');
 // const { getCharacterLocation } = require('./getCharacterLocation');
@@ -27,7 +29,11 @@ import { HealthChangeMessage } from "./listenHealthChanges";
 // };
 
 export class CharacterStatesListener extends AbstractEventProcessor {
-  constructor(gameModel: GameModel, logger: GMLogger) {
+  constructor(
+    private characterLocationGetter: SingleGettable<RawUserRecord>,
+    gameModel: GameModel, 
+    logger: GMLogger
+  ) {
     super(gameModel, logger);
     this.onMessageRecieved = this.onMessageRecieved.bind(this);
     listenHealthChanges(this.onMessageRecieved, true);
@@ -37,12 +43,13 @@ export class CharacterStatesListener extends AbstractEventProcessor {
   }
 
   async onMessageRecieved(data: HealthChangeMessage) {
-    // this.logger.info('onMessageRecieved');
+    // this.logger.info('CharacterStatesListener onMessageRecieved');
     const {
       characterId, stateFrom, stateTo, timestamp,
     } = data;
     const [{ locationId, locationLabel }, { lifeStyle, personName }] = await Promise.all([
-      getCharacterLocation(characterId, true),
+      // getCharacterLocation(characterId, true),
+      this.getCharacterLocation(characterId),
       getCharacterLifeStyle(characterId),
     ]);
     // this.logger.info('lifeStyle', lifeStyle, 'personName', personName);
@@ -54,6 +61,25 @@ export class CharacterStatesListener extends AbstractEventProcessor {
       lifeStyle,
       personName,
     });
+  }
+
+  async getCharacterLocation(characterId: number): Promise<{
+    locationId: number | null,
+    locationLabel: string
+  }>  {
+    const result = await this.characterLocationGetter.singleGet({ id: characterId });
+
+    if (result == undefined || R.isNil(result.location_id)) {
+      return {
+        locationId: null,
+        locationLabel: 'N/A',
+      };
+    }
+  
+    return {
+      locationId: result.location_id,
+      locationLabel: result.location?.label || 'N/A',
+    };
   }
 
   updateState(characterId: number, characterHealthState: RawCharacterHealthState) {
