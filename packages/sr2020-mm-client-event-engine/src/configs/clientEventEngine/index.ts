@@ -20,20 +20,9 @@ import {
 
 // import { Migrator } from './Migrator';
 
-// import { UserService } from '../../services/UserService';
-// import { BotService } from '../../services/BotService/BotService';
-// import { TickerService } from '../../services/TickerService';
-// import { SpiritService } from '../../services/SpiritService';
-// import { SoundService2 } from '../../services/SoundService2';
 import { SoundStageService } from '../../services/SoundStageService';
 import { SoundSettingsService } from '../../services/SoundSettingsService';
-// import { BeaconService } from '../../services/BeaconService';
-// import { LocationService } from '../../services/LocationService';
-// import { SoundMappingService } from '../../services/SoundMappingService';
-// import { UserWatcher } from '../../services/UserWatcher';
-import { BaseVersion } from '../../services/BaseVersion';
 import { BackgroundImageService } from '../../services/BackgroundImageService';
-// import { ManaOceanStubService } from '../../services/ManaOceanStubService';
 import { TrackedCharacterService } from '../../services/TrackedCharacterService';
 
 // import { fillGameModelWithBots } from './GameModelFiller';
@@ -42,30 +31,19 @@ import { WsDataBinding } from '../../dataManagers/WsDataBinding';
 import { WSConnector } from '../../api/WSConnector';
 
 const services = [
-  // UserService,
-  // BotService,
-  // TickerService,
   SpiritService,
   SpiritFractionService,
   SpiritRouteService,
-  // SoundService2,
   SoundStageService,
   SoundSettingsService,
-  // BeaconService,
-  // LocationService,
   LocationRecordService,
-  // SoundMappingService,
-  // UserWatcher,
-  BaseVersion,
   BeaconRecordService,
-  // NotificationService,
   BackgroundImageService,
   CharacterHealthStateService,
   UserRecordService,
   SettingsService,
   ManaOceanEnableService,
   SpiritMovementEnableService,
-  // ManaOceanStubService,
   TrackedCharacterService,
   FeatureService,
   SpiritPhraseService,
