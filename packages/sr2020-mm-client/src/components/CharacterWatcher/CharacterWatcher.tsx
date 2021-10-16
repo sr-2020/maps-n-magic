@@ -1,5 +1,5 @@
 import * as R from 'ramda';
-import React, { FormEvent, MouseEvent } from 'react';
+import React, { FormEvent, MouseEvent, useEffect } from 'react';
 import './CharacterWatcher.css';
 import { WithCharacterId, WithCharacterPosition, WithUserRecords } from '../../dataHOCs';
 import Form from 'react-bootstrap/Form';
@@ -47,6 +47,12 @@ export function CharacterWatcher(props: CharacterWatcherProps) {
       trackedCharacterId: null,
     });
   }
+
+  useEffect(() => {
+    return () => {
+      onWatchCancel();
+    }
+  }, []);
 
   function onReselectCharacter(e: MouseEvent<HTMLElement>) {
     // eslint-disable-next-line no-shadow
