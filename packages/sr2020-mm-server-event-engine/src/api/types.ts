@@ -1,3 +1,5 @@
+import { ValidateFunction } from "ajv";
+
 import { 
   Identifiable
 } from 'sr2020-mm-event-engine';

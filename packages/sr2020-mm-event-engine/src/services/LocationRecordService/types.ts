@@ -7,12 +7,10 @@ import {
 } from '../../core';
 
 import { 
-  LocationRecord,
   TriangulationData,
+  LocationRecord,
   LocationUpdate
-} from "../../types";
-
-
+} from "../../domain";
 
 // requests
 

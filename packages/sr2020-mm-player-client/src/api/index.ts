@@ -4,7 +4,6 @@ import {
   validateErrorResponse, 
   ConsequenceStatus,
   HistoryItem,
-  // SpiritDataForQrValidation, 
   Spirit, 
   stringifyError
 } from "sr2020-mm-event-engine";

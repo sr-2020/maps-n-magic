@@ -9,14 +9,11 @@ import {
   Res,
 } from '../../core';
 
-import { GetLocationRecord } from "../../index";
-
 import { 
+  LocationRecord,
   CharacterHealthStates, 
   RawCharacterHealthState,
-  LocationRecord,
-  CharacterHealthState
-} from "../../types";
+} from "../../domain";
 
 import { 
   chssMetadata,

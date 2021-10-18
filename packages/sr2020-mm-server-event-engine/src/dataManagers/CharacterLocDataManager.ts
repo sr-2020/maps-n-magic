@@ -1,8 +1,6 @@
 // eslint-disable-next-line max-classes-per-file
 import * as R from 'ramda';
-import Ajv, { JSONSchemaType } from "ajv";
 
-import fetch from 'isomorphic-fetch';
 import { 
   GMLogger, 
   GameModel, 
@@ -12,47 +10,14 @@ import {
   EPostNotification,
   ESetAllCharacterLocations, 
   ESetCharacterLocation,
-  AbstractEventProcessor
+  AbstractEventProcessor,
+  validateCharLocChangeMessage
 } from "sr2020-mm-event-engine";
 
 import { mainServerConstants, charLocChange2SubscriptionName } from '../api/constants';
 
 import { PubSubWrapper } from "./PubSubWrapper";
 import { Gettable } from '../api/types';
-
-const ajv = new Ajv({
-  allErrors: true,
-  // removeAdditional: true,
-  // useDefaults: true
-});
-
-// {
-//   "id": 51935,
-//   "locationId": 3212,
-//   "prevLocationId": 3217,
-//   "timestamp": 1606094156924
-// }
-
-interface CharLocChangeMessage {
-  id: number;
-  locationId: number | null;
-  prevLocationId: number | null;
-  timestamp: number;
-}
-
-const charLocChangeMessageSchema: JSONSchemaType<CharLocChangeMessage> = {
-  type: "object",
-  properties: {
-    id: {type: "integer"},
-    locationId: {type: "integer", nullable: true},
-    prevLocationId: {type: "integer", nullable: true},
-    timestamp: {type: "integer"}
-  },
-  required: ["id", "locationId", "prevLocationId", "timestamp"],
-  // additionalProperties: false,
-};
-
-export const validateCharLocChangeMessage = ajv.compile(charLocChangeMessageSchema);
 
 const metadata = {
   actions: [],

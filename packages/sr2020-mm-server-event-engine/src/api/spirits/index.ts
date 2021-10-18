@@ -1,10 +1,21 @@
 import { 
+  fillNewSpirit,
+  fillNewSpiritPhrase,
+  fillNewSpiritRoute,
   Identifiable,
   PlayerMessage,
   Spirit,
   SpiritFraction,
   SpiritPhrase,
   SpiritRoute,
+  validateNewSpirit,
+  validateNewSpiritPhrase,
+  validateNewSpiritRoute,
+  validatePlayerMessage,
+  validateSpirit,
+  validateSpiritFraction,
+  validateSpiritPhrase,
+  validateSpiritRoute,
 } from 'sr2020-mm-event-engine';
 
 import {
@@ -45,29 +56,9 @@ import {
   Deletable2,
   MultiPuttable2,
   SingleGettable2,
-  validateEntityFunction
 } from "../types";
 
-import { 
-  validateNewSpirit, 
-  fillNewSpirit, 
-  validateSpirit 
-} from "./spiritValidation";
-
-import { 
-  fillNewSpiritRoute, 
-  validateNewSpiritRoute, 
-  validateSpiritRoute 
-} from "./spiritRouteValidation";
-
-import { 
-  fillNewSpiritPhrase,
-  validateNewSpiritPhrase,
-  validateSpiritPhrase
-} from "./spiritPhraseValidation";
-
-import { validateSpiritFraction } from "./spiritFractionValidation";
-import { getPlayerMessages, validatePlayerMessage } from './playerMessages';
+import { getPlayerMessages } from './playerMessages';
 
 export * from './mocks';
 

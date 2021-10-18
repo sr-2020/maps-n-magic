@@ -5,7 +5,6 @@ import {
   Metadata,
   GMLogger,
   GameModel,
-  RawCharacterHealthState,
   Typed,
   ECharacterHealthStateChanged,
   EMassacreTriggered,

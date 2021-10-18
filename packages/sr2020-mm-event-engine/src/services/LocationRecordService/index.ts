@@ -4,7 +4,7 @@ import {
   getArrDiff, isGeoLocation, sample,
 } from '../../utils';
 import { makeTriangulationData } from '../../utils/makeTriangulationData';
-import { LocationRecord, TriangulationData } from "../../types";
+import { TriangulationData, LocationRecord, defaultLocationStyleOptions } from "../../domain";
 
 import { 
   AbstractService, 
@@ -35,13 +35,6 @@ import {
   LocationRecordServiceContract
 } from "./types";
 
-// duplicated in LocationHolder
-const defaultStyleOptions = {
-  color: '#3388ff',
-  weight: 3,
-  fillOpacity: 0.2,
-};
-
 const extractPolygonData = (list: LocationRecord[]): Pick<LocationRecord, 'id'|'polygon'>[] => 
   list.filter(isGeoLocation).map(R.pick(['id', 'polygon']));
 
@@ -66,7 +59,7 @@ export class LocationRecordService extends AbstractService<LocationRecordService
     this.locationRecords = locationRecords;
     this.locationRecords.forEach((loc) => {
       loc.options = {
-        ...defaultStyleOptions,
+        ...defaultLocationStyleOptions,
         ...loc.options,
       };
     });

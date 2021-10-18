@@ -1,15 +1,13 @@
 import { 
   ErrorResponse, 
   FreeSpiritInternalRequest, 
-  invalidRequestBody 
+  invalidRequestBody, 
+  validateFreeSpiritRequestBody
 } from "sr2020-mm-event-engine";
 import { 
   createLogger, 
-  freeSpiritFromStorage, 
   PlayerAuthorizedRequest, 
   playerServerConstants, 
-  validateFreeSpiritRequestBody, 
-  validateSpiritJarQrModelData 
 } from "sr2020-mm-server-event-engine";
 import { playerServerCookie } from "../../utils";
 

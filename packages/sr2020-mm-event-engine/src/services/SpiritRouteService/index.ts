@@ -9,7 +9,7 @@ import {
   Res
 } from '../../core';
 
-import { SpiritRoute } from "../../types";
+import { SpiritRoute } from "../../domain";
 
 import { 
   spiritRouteMetadata,

@@ -9,7 +9,7 @@ import {
   Res
 } from '../../core';
 
-import { UserRecord, RawUserRecord } from "../../types";
+import { UserRecord, RawUserRecord } from "../../domain";
 
 import { 
   urMetadata,

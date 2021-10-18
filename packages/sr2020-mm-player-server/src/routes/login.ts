@@ -1,9 +1,7 @@
 import { Router } from 'express';
 import * as jwt from "jsonwebtoken";
-import { Ability, ErrorResponse, hasAbility, validateTokenData } from 'sr2020-mm-event-engine';
+import { Ability, ErrorResponse, hasAbility, validateAuthRequest, validateTokenData, validateTokenRequestBody } from 'sr2020-mm-event-engine';
 import { 
-  validateAuthRequest, 
-  validateTokenRequestBody,
   playerServerConstants,
   getUserTokenData,
   createLogger,

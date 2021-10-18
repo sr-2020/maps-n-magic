@@ -1,12 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import * as R from 'ramda';
 import { 
-  isClinicallyDead, 
   isDead,
   isRelevant,
   CharacterHealthStates, 
-  CharacterHealthState,
-  RawCharacterHealthState,
   GameModel
 } from 'sr2020-mm-event-engine';
 import * as moment from 'moment-timezone';

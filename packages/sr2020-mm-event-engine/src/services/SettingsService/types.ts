@@ -9,11 +9,10 @@ import {
 import { 
   SettingsCatalog,
   SettingsKeys,
-  SettingsData,
   SettingsValues,
   ManaOceanSettingsData,
   ManaOceanEffectSettingsData,
-} from "../../types";
+} from "../../domain";
 
 // requests
 

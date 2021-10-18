@@ -5,7 +5,6 @@ import {
   isFullBodyStorage, 
   isFullSpiritJar, 
   Spirit, 
-  // SpiritDataForQrValidation 
 } from "sr2020-mm-event-engine";
 import { 
   createLogger, 

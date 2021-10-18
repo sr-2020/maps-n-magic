@@ -13,16 +13,10 @@ import {
   validateLocationRecordPost,
   validateLocationRecordPut,
   validateLocationRecordPut2,
-  Identifiable
+  Identifiable,
+  defaultBeaconRecord,
+  defaultLocationRecord
 } from 'sr2020-mm-event-engine';
-
-import {
-  gettable, 
-  postable, 
-  puttable, 
-  deletable, 
-  multiPuttable,
-} from './apiInterfaces';
 
 import {  
   Gettable,
@@ -34,11 +28,6 @@ import {
   SingleGettable,
 } from "../types";
 
-import {
-  mainServerConstants,
-  defaultBeaconRecord,
-  defaultLocationRecord,
-} from '../constants';
 import { 
   userRecords, 
   beaconRecords,

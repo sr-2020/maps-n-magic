@@ -9,7 +9,7 @@ import {
   Res
 } from '../../core';
 
-import { SpiritFraction } from "../../types";
+import { SpiritFraction } from "../../domain";
 
 import { 
   spiritFractionMetadata,

@@ -1,5 +1,8 @@
 import { 
   Feature,
+  fillNewSpirit,
+  fillNewSpiritPhrase,
+  fillNewSpiritRoute,
   Identifiable,
   PlayerMessage,
   Spirit,
@@ -7,70 +10,23 @@ import {
   SpiritPhrase,
   SpiritRoute,
   validateFeature,
+  validateNewSpirit,
+  validateNewSpiritPhrase,
+  validateNewSpiritRoute,
+  validatePlayerMessage,
+  validateSpirit,
+  validateSpiritFraction,
+  validateSpiritPhrase,
+  validateSpiritRoute,
 } from 'sr2020-mm-event-engine';
-
-import {
-  getSpirits,
-  postSpirit,
-  putSpirit,
-  putMultipleSpirits,
-  deleteSpirit,
-  getSpirit,
-} from './spirits';
-
-import {
-  getSpiritFraction,
-  getSpiritFractions,
-  putSpiritFraction
-} from './spiritFractions';
-
-import { 
-  getSpiritRoutes, 
-  postSpiritRoute, 
-  putSpiritRoute, 
-  deleteSpiritRoute, 
-  getSpiritRoute
-} from "./spiritRoutes";
-
-import { 
-  getSpiritPhrases,
-  postSpiritPhrase,
-  putSpiritPhrase,
-  deleteSpiritPhrase,
-  getSpiritPhrase
-} from "./spiritPhrases";
 
 import {  
   Gettable2,
-  Postable2,
-  Puttable2,
-  Deletable2,
   MultiPuttable2,
   SingleGettable2,
   validateEntityFunction,
   Manageable2
 } from "../types";
-
-import { 
-  validateNewSpirit, 
-  fillNewSpirit, 
-  validateSpirit 
-} from "./spiritValidation";
-
-import { 
-  fillNewSpiritRoute, 
-  validateNewSpiritRoute, 
-  validateSpiritRoute 
-} from "./spiritRouteValidation";
-
-import { 
-  fillNewSpiritPhrase,
-  validateNewSpiritPhrase,
-  validateSpiritPhrase
-} from "./spiritPhraseValidation";
-
-import { validateSpiritFraction } from "./spiritFractionValidation";
-import { getPlayerMessages, validatePlayerMessage } from './playerMessages';
 
 import { 
   features,

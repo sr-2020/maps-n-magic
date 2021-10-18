@@ -9,7 +9,7 @@ import {
   Res
 } from '../../core';
 
-import { SpiritPhrase } from "../../types";
+import { SpiritPhrase } from "../../domain";
 import { sample } from '../../utils';
 
 import { 

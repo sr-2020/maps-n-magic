@@ -9,7 +9,7 @@ import {
 import { 
   CharacterHealthStates, 
   RawCharacterHealthState,
-} from "../../types";
+} from "../../domain";
 
 import { GetLocationRecord } from "../../index";
 

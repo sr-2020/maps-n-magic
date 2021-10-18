@@ -1,15 +1,11 @@
 import { 
-  Spirit,
+  GenericRow,
+  Spirit, validateGenericRow, validateGenericRows,
 } from 'sr2020-mm-event-engine';
 import * as R from 'ramda';
 
 import { pool } from "../pgPool";
-import { 
-  validateGenericRow, 
-  validateGenericRows, 
-} from "./genericRowValidation";
 import { createLogger } from '../../utils';
-import { GenericRow } from './types';
 
 const logger = createLogger('spirits.ts');
 

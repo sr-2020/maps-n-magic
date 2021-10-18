@@ -8,7 +8,7 @@ import {
 
 import { 
   BeaconRecord
-} from "../../types";
+} from "../../domain";
 
 // requests
 

@@ -9,9 +9,7 @@ import {
   Res
 } from '../../core';
 
-import { SettingsCatalog, SettingsKeys, SettingsValues } from "../../types";
-
-// import { defaultManaOceanSettings } from '../api/constants';
+import { SettingsCatalog } from "../../domain";
 
 import { 
   ssMetadata,

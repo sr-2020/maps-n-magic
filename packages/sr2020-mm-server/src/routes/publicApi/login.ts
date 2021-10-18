@@ -1,16 +1,13 @@
-import { Router } from 'express';
 import { Request, Response } from 'express-serve-static-core';
 import * as jwt from "jsonwebtoken";
 import { 
   ErrorResponse,
-  validateTokenData,
-  TokenData,
   WeakTokenData,
-  validateWeakTokenData
+  validateWeakTokenData,
+  validateAuthRequest,
+  validateTokenRequestBody
 } from 'sr2020-mm-event-engine';
 import { 
-  validateAuthRequest, 
-  validateTokenRequestBody,
   mainServerConstants,
   getUserTokenData,
   createLogger,

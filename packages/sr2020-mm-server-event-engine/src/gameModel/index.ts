@@ -40,6 +40,8 @@ import {
   EEnableSpiritMovementConfirmed,
   SpiritPhrase,
   PlayerMessage,
+  defaultManaOceanSettings,
+  manaOceanEffectSettings,
 } from 'sr2020-mm-event-engine';
 
 import { ManaOceanService } from '../services/ManaOceanService';
@@ -70,8 +72,6 @@ import { RedirectDataBinding2, StrictEventBinding } from '../dataManagers/Redire
 import { CharacterLocDataManager } from '../dataManagers/CharacterLocDataManager';
 
 import { 
-  defaultManaOceanSettings, 
-  manaOceanEffectSettings,
   mainServerConstants 
 } from '../api/constants';
 
@@ -124,9 +124,6 @@ type EventBindingList =
   | StrictEventBinding<EEnableSpiritMovementRequested, EEnableSpiritMovementConfirmed>
 ;
 
-const mocked = mainServerConstants().MOCKED;
-// console.log('mocked', mocked);
-
 const services = [
   // positioning and emercom
   LocationRecordService,
@@ -171,6 +168,9 @@ const services = [
 export function makeGameModel(): {
   gameModel: GameModel, gameServer: EventEngine
 } {
+  const mocked = mainServerConstants().MOCKED;
+  // console.log('mocked', mocked);
+
   // const gameServer = new EventEngine(services, console);
   // @ts-ignore
   const gameServer = new EventEngine(services, createLogger('eventEngine'));

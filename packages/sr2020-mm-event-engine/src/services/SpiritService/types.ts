@@ -8,7 +8,7 @@ import {
 
 import { 
   Spirit
-} from "../../types";
+} from "../../domain";
 
 
 

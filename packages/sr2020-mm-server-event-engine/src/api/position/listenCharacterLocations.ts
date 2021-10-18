@@ -1,6 +1,7 @@
 // character_location_change
 import { PubSub, Message } from '@google-cloud/pubsub';
-import Ajv, { JSONSchemaType } from "ajv";
+import { CharLocationMessage, validateCharLocationMessage } from 'sr2020-mm-event-engine';
+
 import { createLogger } from '../../utils';
 import { charLocChangeSubscriptionName } from "../constants";
 
@@ -10,32 +11,6 @@ const timeout = 60;
 
 // Creates a client; cache this for further use
 const pubSubClient = new PubSub();
-
-type CharLocationMessage = {
-  id: number,
-  locationId: number,
-  prevLocationId: number
-}
-
-const ajv = new Ajv({
-  allErrors: true,
-  // removeAdditional: true,
-  // useDefaults: true
-});
-
-const charLocationMessageSchema: JSONSchemaType<CharLocationMessage> = {
-  type: "object",
-  properties: {
-    id: {type: "integer"},
-    locationId: {type: "integer"},
-    prevLocationId: {type: "integer"},
-  },
-  required: ["id", "locationId", "prevLocationId"],
-  // additionalProperties: false,
-};
-
-export const validateCharLocationMessage = ajv.compile(charLocationMessageSchema);
-
 
 export function listenCharacterLocations(
   callback: (data: CharLocationMessage) => void, 

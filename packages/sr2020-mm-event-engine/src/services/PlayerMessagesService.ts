@@ -13,7 +13,7 @@ import {
   ServiceContractTypes
 } from '../core';
 
-import { PlayerMessage } from "../types";
+import { PlayerMessage } from "../domain";
 
 // requests
 

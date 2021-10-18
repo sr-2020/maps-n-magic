@@ -14,7 +14,9 @@ import {
   validateLocationRecordPost,
   validateLocationRecordPut,
   validateLocationRecordPut2,
-  Identifiable
+  Identifiable,
+  defaultBeaconRecord,
+  defaultLocationRecord
 } from 'sr2020-mm-event-engine';
 
 import {
@@ -38,8 +40,6 @@ import {
 
 import {
   mainServerConstants,
-  defaultBeaconRecord,
-  defaultLocationRecord,
 } from '../constants';
 
 export * from './mocks';

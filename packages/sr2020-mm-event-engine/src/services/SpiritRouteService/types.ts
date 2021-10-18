@@ -8,7 +8,7 @@ import {
 
 import { 
   SpiritRoute
-} from "../../types";
+} from "../../domain";
 
 // requests
 

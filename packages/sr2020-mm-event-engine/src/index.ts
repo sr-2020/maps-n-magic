@@ -28,5 +28,5 @@ export * from './services/SpiritMovementEnableService';
 export * from './utils';
 export * from './utils/moonActivityUtils';
 
-export * from './types';
+export * from './domain';
 export * from './serviceMetadata';

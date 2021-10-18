@@ -8,8 +8,7 @@ import {
   Req,
   Res
 } from '../../core';
-
-import { BeaconRecord } from "../../types";
+import { BeaconRecord } from '../../domain';
 
 import { 
   brsMetadata,
@@ -22,7 +21,7 @@ import {
   DeleteBeaconRecordConfirmed,
   SetBeaconRecords,
   BeaconRecordEvents,
-  BeaconRecordServiceContract
+  BeaconRecordServiceContract,
 } from "./types";
 
 type BeaconRecordsObj = { beaconRecords: BeaconRecord[] };

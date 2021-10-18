@@ -9,7 +9,7 @@ import {
 import { 
   UserRecord,
   RawUserRecord
-} from "../../types";
+} from "../../domain";
 
 // requests
 

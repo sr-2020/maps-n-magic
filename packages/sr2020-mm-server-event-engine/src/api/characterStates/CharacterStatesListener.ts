@@ -7,17 +7,14 @@ import {
   EPutCharHealthRequested,
   GMLogger,
   AbstractEventProcessor,
-  RawUserRecord
+  RawUserRecord,
+  HealthChangeMessage
 } from 'sr2020-mm-event-engine';
 // import { getCharacterLocation } from './getCharacterLocation';
 import { getCharacterLifeStyle } from './getCharacterLifeStyle';
 import { listenHealthChanges } from './listenHealthChanges';
 
-import { HealthChangeMessage } from "./listenHealthChanges";
 import { SingleGettable } from '../types';
-
-// const { listenHealthChanges } = require('./listenHealthChanges');
-// const { getCharacterLocation } = require('./getCharacterLocation');
 
 // const metadata = {
 //   actions: [],

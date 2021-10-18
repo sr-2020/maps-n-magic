@@ -15,7 +15,6 @@ import {
   hasAbility,
   Ability,
   stringifyError
-  // SpiritDataForQrValidation 
 } from 'sr2020-mm-event-engine';
 import { SpiritCard } from '../SpiritCard';
 

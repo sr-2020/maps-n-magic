@@ -9,7 +9,7 @@ import {
   Res
 } from '../../core';
 
-import { Spirit } from "../../types";
+import { Spirit } from "../../domain";
 
 import { 
   spiritMetadata,
