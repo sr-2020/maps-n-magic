@@ -1,4 +1,5 @@
 import { 
+  BackgroundImage,
   BeaconRecord, 
   Feature, 
   LocationRecord, 
@@ -23,8 +24,27 @@ import {
   RemoteLocationRecordProvider,
   RemoteUsersRecordProvider
 } from "../api/position";
-import { ManaOceanEffectSettingsProvider, ManaOceanSettingsProvider, MockedManaOceanEffectSettingsProvider, MockedManaOceanSettingsProvider, SettingsResourceProvider } from "../api/settings";
-import { MockedFeatureProvider, MockedPlayerMessageProvider, MockedSpiritFractionProvider, MockedSpiritPhraseProvider, MockedSpiritProvider, MockedSpiritRouteProvider, PlayerMessageProvider, SpiritFractionProvider, SpiritPhraseProvider, SpiritProvider, SpiritRouteProvider } from "../api/spirits";
+import { 
+  ManaOceanEffectSettingsProvider, 
+  ManaOceanSettingsProvider, 
+  MockedManaOceanEffectSettingsProvider, 
+  MockedManaOceanSettingsProvider, 
+  SettingsResourceProvider 
+} from "../api/settings";
+import { 
+  MockedBackgroundImageProvider,
+  MockedFeatureProvider, 
+  MockedPlayerMessageProvider, 
+  MockedSpiritFractionProvider, 
+  MockedSpiritPhraseProvider, 
+  MockedSpiritProvider, 
+  MockedSpiritRouteProvider, 
+  PlayerMessageProvider, 
+  SpiritFractionProvider, 
+  SpiritPhraseProvider, 
+  SpiritProvider, 
+  SpiritRouteProvider 
+} from "../api/spirits";
 import { 
   Gettable, 
   Gettable2, 
@@ -40,6 +60,7 @@ export interface MainServerDataProviders {
   beaconRecordProvider:             ManageableResourceProvider<BeaconRecord>;
   locationRecordProvider:           ManageablePlusResourceProvider<LocationRecord>;
   userRecordProvider:               Gettable<RawUserRecord> & SingleGettable<RawUserRecord>;
+  backgroundImageProvider:          Manageable2<BackgroundImage>;
 
   // mana ocean
   manaOceanSettingsProvider:        SettingsResourceProvider<ManaOceanSettingsData>;
@@ -64,6 +85,7 @@ export function getDataProviders(): MainServerDataProviders {
       beaconRecordProvider: new MockedBeaconRecordProvider(),
       locationRecordProvider: new MockedLocationRecordProvider(),
       userRecordProvider: new MockedUsersRecordProvider(),
+      backgroundImageProvider: new MockedBackgroundImageProvider(),
   
       manaOceanSettingsProvider: new MockedManaOceanSettingsProvider(),
       manaOceanEffectSettingsProvider: new MockedManaOceanEffectSettingsProvider(),
@@ -82,6 +104,8 @@ export function getDataProviders(): MainServerDataProviders {
     beaconRecordProvider: new RemoteBeaconRecordProvider(),
     locationRecordProvider: new RemoteLocationRecordProvider(),
     userRecordProvider: new RemoteUsersRecordProvider(),
+    // background images are mocked only
+    backgroundImageProvider: new MockedBackgroundImageProvider(),
 
     manaOceanSettingsProvider: new ManaOceanSettingsProvider(),
     manaOceanEffectSettingsProvider: new ManaOceanEffectSettingsProvider(),

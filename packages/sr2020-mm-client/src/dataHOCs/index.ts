@@ -27,14 +27,13 @@ import {
   Feature,
   EPlayerMessagesChanged,
   PlayerMessage,
+  EBackgroundImagesChanged,
 } from 'sr2020-mm-event-engine';
 
 import { 
-  EBackgroundImagesChange,
   ESoundSettingsChanged,
   ESoundStageStateChanged,
   ETrackedCharacterIdChanged,
-  GetBackgroundImages,
 } from "sr2020-mm-client-event-engine";
 
 import { basicDataHOC } from './basicDataHOC';
@@ -129,7 +128,7 @@ export const withManaOceanEffectSettings = settingsDataHOC(
   {},
 );
 
-export const withBackgroundImages = basicDataHOC<[], EBackgroundImagesChange>(
+export const withBackgroundImages = basicDataHOC<[], EBackgroundImagesChanged>(
   'backgroundImagesChanged',
   'backgroundImages',
   [],

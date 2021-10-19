@@ -1,5 +1,7 @@
 import { 
+  BackgroundImage,
   Feature,
+  fillNewBackgroundImage,
   fillNewSpirit,
   fillNewSpiritPhrase,
   fillNewSpiritRoute,
@@ -9,7 +11,9 @@ import {
   SpiritFraction,
   SpiritPhrase,
   SpiritRoute,
+  validateBackgroundImage,
   validateFeature,
+  validateNewBackgroundImage,
   validateNewSpirit,
   validateNewSpiritPhrase,
   validateNewSpiritRoute,
@@ -37,6 +41,7 @@ import {
   spirits
 } from '../../mockedData';
 import { generateIntegerId } from '../../utils';
+import { backgroundImages } from '../../mockedData/backgroundImages';
 
 export class MockedGettableResourceProvider2<T extends Identifiable> implements 
   Gettable2<T>,
@@ -189,4 +194,18 @@ export class MockedSpiritProvider extends
     );
   }
   fillNewEntity = fillNewSpirit;
+}
+
+export class MockedBackgroundImageProvider extends 
+  MockedManageableResourceProvider2<BackgroundImage>
+{
+  constructor() {
+    super(
+      backgroundImages,
+      validateBackgroundImage,
+      validateNewBackgroundImage,
+      generateIntegerId
+    );
+  }
+  fillNewEntity = fillNewBackgroundImage;
 }

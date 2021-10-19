@@ -78,7 +78,7 @@ import { BackgroundImage } from "sr2020-mm-event-engine";
 //   },
 // ];
 
-export const defaultBackgroundImages: BackgroundImage[] = [
+export const backgroundImages: BackgroundImage[] = [
   // {
   //   latlngs: [
   //     [

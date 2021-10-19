@@ -16,13 +16,13 @@ import {
   FeatureService,
   SpiritPhraseService,
   PlayerMessagesService,
+  BackgroundImageService,
 } from 'sr2020-mm-event-engine';
 
 // import { Migrator } from './Migrator';
 
 import { SoundStageService } from '../../services/SoundStageService';
 import { SoundSettingsService } from '../../services/SoundSettingsService';
-import { BackgroundImageService } from '../../services/BackgroundImageService';
 import { TrackedCharacterService } from '../../services/TrackedCharacterService';
 
 // import { fillGameModelWithBots } from './GameModelFiller';
@@ -98,6 +98,14 @@ export function makeGameModel(ignoreClientMessages: boolean = false): {
         "putSpiritRouteRequested",
         "deleteSpiritRouteRequested",
         "cloneSpiritRouteRequested",
+
+        // BackgroundImageService
+        "postBackgroundImageConfirmed",
+        "putBackgroundImageConfirmed",
+        "deleteBackgroundImageConfirmed",
+        "putBackgroundImageRequested",
+        "deleteBackgroundImageRequested",
+        "cloneBackgroundImageRequested",
         
         // SpiritPhraseService
         "postSpiritPhraseConfirmed",

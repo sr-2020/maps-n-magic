@@ -24,6 +24,7 @@ export * from './services/SpiritPhraseService/types';
 export * from './services/FeatureService';
 export * from './services/PlayerMessagesService';
 export * from './services/SpiritMovementEnableService'; 
+export * from './services/BackgroundImageService'; 
 
 export * from './utils';
 export * from './utils/moonActivityUtils';
