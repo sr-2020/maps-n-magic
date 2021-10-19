@@ -76,46 +76,23 @@ import {
 } from '../api/constants';
 
 import {
-  RemoteLocationRecordProvider as LocationRecordProvider,
-  RemoteBeaconRecordProvider as BeaconRecordProvider,
-  RemoteUsersRecordProvider as UserRecordProvider,
-  MockedUsersRecordProvider,
-  MockedBeaconRecordProvider,
-  MockedLocationRecordProvider,
   ManageablePlusResourceProvider,
   ManageableResourceProvider
 } from '../api/position';
 
 import {  
-  ManaOceanSettingsProvider,
-  ManaOceanEffectSettingsProvider,
   SettingsResourceProvider,
-  MockedManaOceanSettingsProvider,
-  MockedManaOceanEffectSettingsProvider
 } from "../api/settings";
 
 import { CharacterStatesListener } from '../api/characterStates/CharacterStatesListener';
 import { CharacterLocationListener } from '../api/position/CharacterLocationListener';
 import { SpellCastsListener } from '../api/spellCasts/SpellCastsListener';
 import { PushNotificationEmitter } from '../api/pushNotificationEmitter';
-import { 
-  SpiritProvider, 
-  SpiritFractionProvider, 
-  SpiritRouteProvider,
-  SpiritPhraseProvider,
-  PlayerMessageProvider,
-  MockedPlayerMessageProvider,
-  MockedFeatureProvider,
-  MockedSpiritProvider,
-  MockedSpiritFractionProvider,
-  MockedSpiritRouteProvider,
-  MockedSpiritPhraseProvider
-} from '../api/spirits';
 import { createLogger } from '../utils';
-import { FeatureProvider } from '../api/features';
 import { ModelManagetLocInitializer } from '../services/ModelManagetLocInitializer';
 import { PutSpiritRequestedCall } from '../types';
 import { Gettable, Gettable2, Manageable2, ManageablePlus2, SingleGettable2 } from '../api/types';
+import { getDataProviders } from './mainServerDataProviders';
 
 type EventBindingList = 
   | StrictEventBinding<EPutCharHealthRequested, EPutCharHealthConfirmed>
@@ -166,10 +143,12 @@ const services = [
 
 // eslint-disable-next-line max-lines-per-function
 export function makeGameModel(): {
-  gameModel: GameModel, gameServer: EventEngine
+  gameModel: GameModel, 
+  gameServer: EventEngine
 } {
   const mocked = mainServerConstants().MOCKED;
-  // console.log('mocked', mocked);
+  
+  const dataProviders = getDataProviders();
 
   // const gameServer = new EventEngine(services, console);
   // @ts-ignore
@@ -182,7 +161,7 @@ export function makeGameModel(): {
   const beaconRecordLogger = createLogger('beaconRecordDataBinding');
   const beaconRecordDataBinding = new CrudDataManager<BeaconRecord, ManageableResourceProvider<BeaconRecord>>(
     gameModel,
-    mocked ? new MockedBeaconRecordProvider() : new BeaconRecordProvider(),
+    dataProviders.beaconRecordProvider,
     'beaconRecord',
     new PollingReadStrategy(gameModel, 15000, beaconRecordLogger),
     beaconRecordLogger
@@ -193,7 +172,7 @@ export function makeGameModel(): {
   const locationRecordLogger = createLogger('locationRecordDataBinding');
   const locationRecordDataBinding = new LocationDataManager<LocationRecord, ManageablePlusResourceProvider<LocationRecord>>(
     gameModel,
-    mocked ? new MockedLocationRecordProvider() : new LocationRecordProvider(),
+    dataProviders.locationRecordProvider,
     'locationRecord',
     new PollingReadStrategy(gameModel, 15000, locationRecordLogger),
     locationRecordLogger
@@ -204,7 +183,7 @@ export function makeGameModel(): {
   const spiritLogger = createLogger('spiritDataBinding');
   const spiritDataBinding = new CrudDataManagerPlus2<Spirit, ManageablePlus2<Spirit>>(
     gameModel,
-    mocked ? new MockedSpiritProvider() : new SpiritProvider(),
+    dataProviders.spiritProvider,
     'spirit',
     new PollingReadStrategy(gameModel, 15000, spiritLogger),
     spiritLogger
@@ -219,7 +198,7 @@ export function makeGameModel(): {
   const spiritFractionLogger = createLogger('spiritFractionDataBinding');
   const spiritFractionDataBinding = new CrudDataManager2<SpiritFraction, Manageable2<SpiritFraction>>(
     gameModel,
-    mocked ? new MockedSpiritFractionProvider() : new SpiritFractionProvider(),
+    dataProviders.spiritFractionProvider,
     'spiritFraction',
     new PollingReadStrategy(gameModel, 15000, spiritFractionLogger),
     spiritFractionLogger
@@ -230,7 +209,7 @@ export function makeGameModel(): {
   const spiritRouteLogger = createLogger('spiritRouteDataBinding');
   const spiritRouteDataBinding = new CrudDataManager2<SpiritRoute, Manageable2<SpiritRoute>>(
     gameModel,
-    mocked ? new MockedSpiritRouteProvider() : new SpiritRouteProvider(),
+    dataProviders.spiritRouteProvider,
     'spiritRoute',
     new PollingReadStrategy(gameModel, 15000, spiritRouteLogger),
     spiritRouteLogger
@@ -241,7 +220,7 @@ export function makeGameModel(): {
   const spiritPhraseLogger = createLogger('spiritPhraseDataBinding');
   const spiritPhraseDataBinding = new CrudDataManager2<SpiritPhrase, Manageable2<SpiritPhrase>>(
     gameModel,
-    mocked ? new MockedSpiritPhraseProvider() : new SpiritPhraseProvider(),
+    dataProviders.spiritPhraseProvider,
     'spiritPhrase',
     new PollingReadStrategy(gameModel, 15000, spiritPhraseLogger),
     spiritPhraseLogger
@@ -249,7 +228,7 @@ export function makeGameModel(): {
   spiritPhraseDataBinding.init();
   gameServer.addDataBinding(spiritPhraseDataBinding);
 
-  const userRecordProvider = mocked ? new MockedUsersRecordProvider() : new UserRecordProvider();
+  const userRecordProvider = dataProviders.userRecordProvider;
 
   const userRecordLogger = createLogger('userRecordDataBinding');
   const userRecordDataBinding = new ReadDataManager<RawUserRecord, Gettable<RawUserRecord>>(
@@ -265,7 +244,7 @@ export function makeGameModel(): {
   const featureLogger = createLogger('featureDataBinding');
   const featureDataBinding = new ReadDataManager2<Feature, Gettable2<Feature> & SingleGettable2<Feature>>(
     gameModel,
-    mocked ? new MockedFeatureProvider() : new FeatureProvider(),
+    dataProviders.featureProvider,
     'feature',
     new PollingReadStrategy(gameModel, 60 * 60 * 1000, featureLogger), // 1 hour
     featureLogger
@@ -276,7 +255,7 @@ export function makeGameModel(): {
   const playerMessageLogger = createLogger('playerMessagesDataBinding');
   const playerMessageDataBinding = new ReadDataManager2<PlayerMessage, Gettable2<PlayerMessage> & SingleGettable2<PlayerMessage>>(
     gameModel,
-    mocked ? new MockedPlayerMessageProvider() : new PlayerMessageProvider(),
+    dataProviders.playerMessageProvider,
     'playerMessage',
     new PollingReadStrategy(gameModel, 15000, playerMessageLogger), // 1 minute
     playerMessageLogger
@@ -287,7 +266,7 @@ export function makeGameModel(): {
   const manaOceanSettingsLogger = createLogger('manaOceanSettingsDB');
   const manaOceanSettingsDB = new SettingsDataManager<ManaOceanSettingsData, SettingsResourceProvider<ManaOceanSettingsData>>(
     gameModel,
-    mocked ? new MockedManaOceanSettingsProvider() : new ManaOceanSettingsProvider(),
+    dataProviders.manaOceanSettingsProvider,
     'manaOcean',
     new PollingReadStrategy(gameModel, 15000, manaOceanSettingsLogger),
     defaultManaOceanSettings,
@@ -299,7 +278,7 @@ export function makeGameModel(): {
   const manaOceanEffectsSettingsLogger = createLogger('manaOceanEffectsSettingsDB');
   const manaOceanEffectsSettingsDB = new SettingsDataManager<ManaOceanEffectSettingsData, SettingsResourceProvider<ManaOceanEffectSettingsData>>(
     gameModel,
-    mocked ? new MockedManaOceanEffectSettingsProvider() : new ManaOceanEffectSettingsProvider(),
+    dataProviders.manaOceanEffectSettingsProvider,
     'manaOceanEffects',
     new PollingReadStrategy(gameModel, 15000, manaOceanEffectsSettingsLogger),
     manaOceanEffectSettings,
