@@ -169,7 +169,6 @@ export class MockedGettableResourceProvider<T extends Identifiable> implements G
 
 export class MockedUsersRecordProvider extends MockedGettableResourceProvider<RawUserRecord> {
   constructor() {
-    // super(usersUrl, validateRawUserRecord);
     super(userRecords, (t: any): t is RawUserRecord => true);
   }
 }
