@@ -1,5 +1,6 @@
 import { 
   BackgroundImage,
+  CharacterLifeStyle,
   Feature,
   fillNewBackgroundImage,
   fillNewSpirit,
@@ -11,6 +12,7 @@ import {
   SpiritFraction,
   SpiritPhrase,
   SpiritRoute,
+  unknownLifeStyle,
   validateBackgroundImage,
   validateFeature,
   validateNewBackgroundImage,
@@ -54,6 +56,18 @@ export class MockedGettableResourceProvider2<T extends Identifiable> implements
   }
   singleGet(id: string | number): Promise<unknown> {
     throw new Error('Method not implemented.');
+  }
+}
+
+export class MockedLifeStyleProvider implements 
+  SingleGettable2<CharacterLifeStyle>
+{
+  validateEntity = (entity: any): entity is CharacterLifeStyle => true;
+  singleGet(id: number): Promise<CharacterLifeStyle> {
+    return Promise.resolve({
+      ...unknownLifeStyle,
+      id
+    });
   }
 }
 

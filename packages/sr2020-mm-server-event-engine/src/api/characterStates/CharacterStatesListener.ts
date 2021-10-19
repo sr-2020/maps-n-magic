@@ -8,13 +8,12 @@ import {
   GMLogger,
   AbstractEventProcessor,
   RawUserRecord,
-  HealthChangeMessage
+  HealthChangeMessage,
+  CharacterLifeStyle
 } from 'sr2020-mm-event-engine';
-// import { getCharacterLocation } from './getCharacterLocation';
-import { getCharacterLifeStyle } from './getCharacterLifeStyle';
 import { listenHealthChanges } from './listenHealthChanges';
 
-import { SingleGettable } from '../types';
+import { SingleGettable, SingleGettable2 } from '../types';
 
 // const metadata = {
 //   actions: [],
@@ -28,6 +27,7 @@ import { SingleGettable } from '../types';
 export class CharacterStatesListener extends AbstractEventProcessor {
   constructor(
     private characterLocationGetter: SingleGettable<RawUserRecord>,
+    private lifeStyleGetter: SingleGettable2<CharacterLifeStyle>,
     gameModel: GameModel, 
     logger: GMLogger
   ) {
@@ -44,12 +44,21 @@ export class CharacterStatesListener extends AbstractEventProcessor {
     const {
       characterId, stateFrom, stateTo, timestamp,
     } = data;
-    const [{ locationId, locationLabel }, { lifeStyle, personName }] = await Promise.all([
-      // getCharacterLocation(characterId, true),
+    const [{ locationId, locationLabel }, characterLifeStyle] = await Promise.all([
       this.getCharacterLocation(characterId),
-      getCharacterLifeStyle(characterId),
+      this.lifeStyleGetter.singleGet(characterId),
     ]);
+    if (!this.lifeStyleGetter.validateEntity(characterLifeStyle)) {
+      this.logger.error('characterLifeStyle is not valid: ' + 
+        JSON.stringify(characterLifeStyle) + ", " + 
+        JSON.stringify(this.lifeStyleGetter.validateEntity.errors)
+      );
+      return;
+    }
+    const { lifeStyle, personName } = characterLifeStyle;
+    
     // this.logger.info('lifeStyle', lifeStyle, 'personName', personName);
+    // this.logger.info(characterLifeStyle);
     this.updateState(characterId, {
       locationId,
       locationLabel,

@@ -1,6 +1,7 @@
 import { 
   BackgroundImage,
   BeaconRecord, 
+  CharacterLifeStyle, 
   Feature, 
   LocationRecord, 
   ManaOceanEffectSettingsData, 
@@ -12,6 +13,7 @@ import {
   SpiritPhrase, 
   SpiritRoute 
 } from "sr2020-mm-event-engine";
+import { LifeStyleProvider } from "../api/characterStates/getCharacterLifeStyle";
 import { mainServerConstants } from "../api/constants";
 import { FeatureProvider } from "../api/features";
 import { 
@@ -34,6 +36,7 @@ import {
 import { 
   MockedBackgroundImageProvider,
   MockedFeatureProvider, 
+  MockedLifeStyleProvider, 
   MockedPlayerMessageProvider, 
   MockedSpiritFractionProvider, 
   MockedSpiritPhraseProvider, 
@@ -62,6 +65,9 @@ export interface MainServerDataProviders {
   userRecordProvider:               Gettable<RawUserRecord> & SingleGettable<RawUserRecord>;
   backgroundImageProvider:          Manageable2<BackgroundImage>;
 
+  // emercom
+  lifeStyleProvider:                SingleGettable2<CharacterLifeStyle>;
+
   // mana ocean
   manaOceanSettingsProvider:        SettingsResourceProvider<ManaOceanSettingsData>;
   manaOceanEffectSettingsProvider:  SettingsResourceProvider<ManaOceanEffectSettingsData>;
@@ -86,6 +92,8 @@ export function getDataProviders(): MainServerDataProviders {
       locationRecordProvider: new MockedLocationRecordProvider(),
       userRecordProvider: new MockedUsersRecordProvider(),
       backgroundImageProvider: new MockedBackgroundImageProvider(),
+
+      lifeStyleProvider: new MockedLifeStyleProvider(),
   
       manaOceanSettingsProvider: new MockedManaOceanSettingsProvider(),
       manaOceanEffectSettingsProvider: new MockedManaOceanEffectSettingsProvider(),
@@ -106,6 +114,8 @@ export function getDataProviders(): MainServerDataProviders {
     userRecordProvider: new RemoteUsersRecordProvider(),
     // background images are mocked only
     backgroundImageProvider: new MockedBackgroundImageProvider(),
+
+    lifeStyleProvider: new LifeStyleProvider(),
 
     manaOceanSettingsProvider: new ManaOceanSettingsProvider(),
     manaOceanEffectSettingsProvider: new ManaOceanEffectSettingsProvider(),

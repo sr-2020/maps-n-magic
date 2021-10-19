@@ -2,14 +2,10 @@ import * as R from 'ramda';
 import moment from 'moment-timezone';
 import { 
   GameModel,
-  PutCharLocationArgs,
-  // PutCharLocation,
   EPutCharLocationRequested,
   AbstractEventProcessor,
   GMLogger
 } from 'sr2020-mm-event-engine';
-// import { getCharacterLocation } from './getCharacterLocation';
-// import { getCharacterLifeStyle } from './getCharacterLifeStyle';
 import { listenCharacterLocations } from './listenCharacterLocations';
 
 // const { listenHealthChanges } = require('./listenHealthChanges');
@@ -43,11 +39,6 @@ export class CharacterLocationListener extends AbstractEventProcessor {
     const {
       id, locationId, prevLocationId,
     } = data;
-    // const [{ locationId, locationLabel }, { lifeStyle, personName }] = await Promise.all([
-    //   getCharacterLocation(characterId, true),
-    //   getCharacterLifeStyle(characterId),
-    // ]);
-    // this.logger.info('lifeStyle', lifeStyle, 'personName', personName);
     this.updateState(id, locationId, prevLocationId);
   }
 
