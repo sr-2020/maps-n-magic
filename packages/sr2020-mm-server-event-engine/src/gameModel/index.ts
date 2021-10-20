@@ -54,6 +54,7 @@ import { CharacterLocationService } from '../services/CharacterLocationService';
 import { SpiritMovementService } from '../services/SpiritMovementService';
 import { SpiritCatcherService } from '../services/SpiritCatcherService';
 import { SpiritCatcherUpdateService } from '../services/SpiritCatcherUpdateService';
+import { PostUserPositionService } from '../services/PostUserPositionService';
 // Push notifications delivery was unstable so decided to disable this feature
 // if we don't have better solution.
 // For details see https://trello.com/c/giDbdVGa/628-фантомные-кс-пуши-в-уведомлении
@@ -112,6 +113,7 @@ const services = [
   UserRecordService,
   CharacterLocationService,
   BackgroundImageService,
+  PostUserPositionService,
 
   // mana ocean
   ManaOceanService,

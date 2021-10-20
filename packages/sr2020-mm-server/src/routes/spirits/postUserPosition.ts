@@ -5,10 +5,10 @@ import {
 } from "sr2020-mm-event-engine";
 import { 
   createLogger, 
-  innerPostUserPosition2, 
   PlayerAuthorizedRequest, 
   EndpointId, 
-  EndpointLogger, 
+  EndpointLogger,
+  PostUserPosition, 
 } from "sr2020-mm-server-event-engine";
 
 const logger = createLogger('tmp/postUserPosition.ts');
@@ -16,14 +16,18 @@ const logger = createLogger('tmp/postUserPosition.ts');
 export const mainPostUserPosition = async (req1, res, next) => {
   const eLogger = new EndpointLogger(logger, EndpointId.POST_USER_POSITION);
   const req = req1 as PlayerAuthorizedRequest;
-  const { body } = req;
+  const { body, gameModel } = req;
   
   eLogger.attempt(body);
   const { characterId, ssid, locationName } = body;
   eLogger.setCharacterId(characterId);
 
   try {
-    await innerPostUserPosition2(characterId, ssid);
+    await gameModel.get2<PostUserPosition>({
+      type: 'postUserPosition',
+      characterId,
+      ssid
+    });
     eLogger.success(`ssid ${ssid} locationName ${locationName}`, `Вы перешли в "${locationName}".`);
     res.sendStatus(200);
   } catch (error) {

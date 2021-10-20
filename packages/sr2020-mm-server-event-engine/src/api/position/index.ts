@@ -157,38 +157,3 @@ export class RemoteUsersRecordProvider extends GettableResourceProvider<RawUserR
     super(mainServerConstants().usersUrl, (t: any): t is RawUserRecord => true);
   }
 }
-
-export async function innerPostUserPosition(characterId: number, beacon: BeaconRecord) {
-  return fetchWithTimeout(mainServerConstants().positionUrl, {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json;charset=utf-8',
-      'X-User-Id': String(characterId),
-    },
-    body: JSON.stringify({
-      beacons: [{
-        ssid: beacon.ssid,
-        bssid: beacon.bssid,
-        level: -10,
-      }],
-    }),
-  });
-}
-
-export async function innerPostUserPosition2(characterId: number, ssid: string) {
-  return fetchWithTimeout(mainServerConstants().positionUrl, {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json;charset=utf-8',
-      'X-User-Id': String(characterId),
-    },
-    body: JSON.stringify({
-      beacons: [{
-        ssid: ssid,
-        bssid: ssid,
-        level: -10,
-      }],
-    }),
-  });
-}
-

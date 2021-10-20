@@ -1,6 +1,6 @@
 import { Router } from 'express';
 import { tmpLocIndex } from 'sr2020-mm-event-engine';
-import { createLogger, innerPostUserPosition, innerPostUserPosition2, PlayerAuthorizedRequest, playerServerConstants } from 'sr2020-mm-server-event-engine';
+import { createLogger, PlayerAuthorizedRequest, playerServerConstants } from 'sr2020-mm-server-event-engine';
 import { playerServerCookie } from '../utils/playerServerAuth';
 
 const logger = createLogger('playerServer/postUserPosition.ts');
