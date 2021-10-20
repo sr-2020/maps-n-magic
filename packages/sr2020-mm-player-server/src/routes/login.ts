@@ -3,9 +3,9 @@ import * as jwt from "jsonwebtoken";
 import { Ability, ErrorResponse, hasAbility, validateAuthRequest, validateTokenData, validateTokenRequestBody } from 'sr2020-mm-event-engine';
 import { 
   playerServerConstants,
-  getUserTokenData,
   createLogger,
-  PlayerAuthorizedRequest
+  PlayerAuthorizedRequest,
+  GetUserToken
 } from 'sr2020-mm-server-event-engine';
 
 const logger = createLogger('login.ts');
@@ -17,6 +17,7 @@ router.post('/api/login', async (req1, res) => {
   // logger.info('/api/login', req.body);
 
   const authRequest = req.body;
+  const { gameModel } = req;
   if (!validateAuthRequest(authRequest)) {
     const errorResponse: ErrorResponse = {
       errorTitle: 'Формат данных запроса некорректен',
@@ -27,7 +28,11 @@ router.post('/api/login', async (req1, res) => {
     return;
   }
 
-  const res2 = await getUserTokenData(authRequest.username, authRequest.password);
+  const res2 = await gameModel.get2<GetUserToken>({
+    type: 'userToken',
+    login: authRequest.username,
+    password: authRequest.password,
+  });
   if (res2.status === 200) {
     const data = await res2.json();
     if (!validateTokenRequestBody(data)) {

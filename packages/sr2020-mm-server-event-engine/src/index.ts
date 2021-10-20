@@ -6,6 +6,7 @@ export * from './services/MassacreService';
 export * from './services/SpiritCatcherService';
 export * from './services/SpiritCatcherUpdateService';
 export * from './services/PostUserPositionService';
+export * from './services/AuthService';
 export * from './types';
 export * from './api';
 export * from './utils';

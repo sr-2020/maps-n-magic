@@ -98,15 +98,15 @@ app.use((req1, res, next) => {
   next();
 });
 
-app.use(loginRouter);
-
-app.use('/api', parseUserData);
-
 app.use((req1, res, next) => {
   const req = req1 as PlayerAuthorizedRequest;
   req.gameModel = gameModel;
   next();
 });
+
+app.use(loginRouter);
+
+app.use('/api', parseUserData);
 
 app.use('/api', spiritRouter);
 

@@ -56,6 +56,7 @@ import { SpiritCatcherService } from '../services/SpiritCatcherService';
 import { SpiritCatcherUpdateService } from '../services/SpiritCatcherUpdateService';
 import { PostUserPositionService } from '../services/PostUserPositionService';
 import { MockedPostUserPositionService } from '../services/MockedPostUserPositionService';
+import { AuthService } from '../services/AuthService';
 // Push notifications delivery was unstable so decided to disable this feature
 // if we don't have better solution.
 // For details see https://trello.com/c/giDbdVGa/628-фантомные-кс-пуши-в-уведомлении
@@ -149,7 +150,9 @@ export function makeGameModel(): {
     PushNotificationService,
     // auxilary service to init locations in model-engine (external server)
     ModelManagetLocInitializer,
-  
+
+    // misc
+    AuthService,
     // don't remember service purpose
     // AudioStageService,
     // RescueServicePushService,

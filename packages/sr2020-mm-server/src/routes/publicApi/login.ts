@@ -9,14 +9,18 @@ import {
 } from 'sr2020-mm-event-engine';
 import { 
   mainServerConstants,
-  getUserTokenData,
   createLogger,
+  MainAuthorizedRequest,
 } from 'sr2020-mm-server-event-engine';
+import { GetUserToken } from 'sr2020-mm-server-event-engine/src/services/AuthService';
 
 const logger = createLogger('login.ts');
 
-export const login = async (req: Request, res: Response) => {
+export const login = async (req1: Request, res: Response) => {
   // logger.info('/api/login', req.body);
+  const req = req1 as MainAuthorizedRequest;
+
+  const { gameModel } = req;
 
   const authRequest = req.body;
   if (!validateAuthRequest(authRequest)) {
@@ -55,7 +59,11 @@ export const login = async (req: Request, res: Response) => {
     }
   }
 
-  const res2 = await getUserTokenData(authRequest.username, authRequest.password);
+  const res2 = await gameModel.get2<GetUserToken>({
+    type: 'userToken',
+    login: authRequest.username,
+    password: authRequest.password,
+  });
   if (res2.status === 200) {
     const data = await res2.json();
     if (!validateTokenRequestBody(data)) {

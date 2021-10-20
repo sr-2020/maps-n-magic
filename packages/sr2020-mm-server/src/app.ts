@@ -98,15 +98,15 @@ app.use('/innerApi2', innerApi2);
 
 // client-server API
 
-app.use('/api', publicApi);
-
-app.use('/api', apiGatekeeper);
-
 app.use('/api', (req1, res, next) => {
   const req = req1 as MainAuthorizedRequest;
   req.gameModel = gameModel;
   next();
 });
+
+app.use('/api', publicApi);
+
+app.use('/api', apiGatekeeper);
 
 app.use('/api', miscRouter);
 
