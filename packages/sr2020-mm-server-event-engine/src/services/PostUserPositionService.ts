@@ -17,7 +17,7 @@ import { mainServerConstants } from '../api/constants';
 export type PostUserPosition = (arg: Typed<'postUserPosition', {
   characterId: number, 
   ssid: string
-}>) => Promise<Response>;
+}>) => Promise<unknown>;
 
 export interface PostUserPositionServiceContract extends ServiceContract {
   Request: PostUserPosition;
@@ -28,7 +28,7 @@ export interface PostUserPositionServiceContract extends ServiceContract {
   NeedRequest: never;
 }
 
-const metadata: ServiceContractTypes<PostUserPositionServiceContract> = {
+const pupMetadata: ServiceContractTypes<PostUserPositionServiceContract> = {
   requests: [
     'postUserPosition',
   ],
@@ -42,7 +42,7 @@ const metadata: ServiceContractTypes<PostUserPositionServiceContract> = {
 export class PostUserPositionService extends AbstractService<PostUserPositionServiceContract> {
   constructor(gameModel: GameModel, logger: GMLogger) {
     super(gameModel, logger);
-    this.setMetadata(metadata);
+    this.setMetadata(pupMetadata);
   }
 
   async getPostUserPosition(request: Req<PostUserPosition>): Res<PostUserPosition> {

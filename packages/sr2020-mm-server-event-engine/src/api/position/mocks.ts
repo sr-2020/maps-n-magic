@@ -15,7 +15,8 @@ import {
   validateLocationRecordPut2,
   Identifiable,
   defaultBeaconRecord,
-  defaultLocationRecord
+  defaultLocationRecord,
+  EntityUpdate
 } from 'sr2020-mm-event-engine';
 
 import {  
@@ -109,18 +110,18 @@ export class MockedPlusManageableResourceProvider<T extends Identifiable>
       generateId,
     );
   }
-  putMultiple({ updates }: { updates: T[]; }): Promise<T[]> {
+  putMultiple({ updates }: { updates: EntityUpdate<T>[]; }): Promise<T[]> {
     const updatesIndex = updates.reduce((acc, update) => {
       acc[update.id] = update;
       return acc;
-    }, {} as Record<T["id"], T>);
+    }, {} as Record<T["id"], EntityUpdate<T>>);
 
     const updatedItems = Object.keys(updatesIndex).map(id => {
-      const update = updatesIndex[id];
+      const update: EntityUpdate<T> = updatesIndex[id];
       const index = this.entities.findIndex(el => el.id === id);
       this.entities[index] = {
         ...this.entities[index],
-        ...update
+        ...update.body
       };
       return this.entities[index];
     });

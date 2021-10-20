@@ -44,11 +44,13 @@ export const basicDataHOC = function<
     const [data, setData] = useState<InitState | T[DataName]>(initState);
 
     function update(event: T) {
+      // console.log(changeEventName, event[dataName]);
       setData(transformer(event[dataName]));
     }
 
     useEffect(() => {
       gameModel.on(changeEventName, update);
+      // console.log(changeEventName, transformer(gameModel.get(dataName)));
       setData(transformer(gameModel.get(dataName)));
 
       return () => {

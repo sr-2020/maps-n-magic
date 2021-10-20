@@ -16,7 +16,8 @@ import {
   validateLocationRecordPut2,
   Identifiable,
   defaultBeaconRecord,
-  defaultLocationRecord
+  defaultLocationRecord,
+  EntityUpdate
 } from 'sr2020-mm-event-engine';
 
 import {
@@ -107,7 +108,9 @@ export class ManageablePlusResourceProvider<T extends Identifiable> implements
   }): Promise<T> { throw new Error('Method not implemented.'); }
   post({ props }: { props: Omit<T, 'id'>; }): Promise<T> { throw new Error('Method not implemented.'); }
   get(): Promise<T[]> { throw new Error('Method not implemented.'); }
-  putMultiple({ updates }: { updates: T[]; }): Promise<T[]> { throw new Error('Method not implemented.');}
+  putMultiple({ updates }: { updates: EntityUpdate<T>[]; }): Promise<T[]> {
+    throw new Error('Method not implemented.');
+  }
 }
 
 export class GettableResourceProvider<T> implements Gettable<T>, SingleGettable<T> {

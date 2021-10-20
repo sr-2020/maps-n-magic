@@ -4,6 +4,7 @@ import {
   manaOceanEffectSchema 
 } from "../mm-mana-ocean";
 import { 
+  Identifiable,
   SRLatLng, 
   SRPolygon, 
   SRPolygonOnObject, 
@@ -52,10 +53,12 @@ export type LocPolygonData = Pick<LocationRecord, "id" | "polygon"> & {
   centroid?: SRLatLng
 };
 
-export interface LocationUpdate {
+export interface EntityUpdate<T extends Identifiable> {
   id: number;
-  body: Partial<Omit<LocationRecord, 'id'>>
+  body: Partial<Omit<T, 'id'>>
 }
+
+export type LocationUpdate = EntityUpdate<LocationRecord>;
 
 const locationRecordOptionsSchema: JSONSchemaType<LocationRecordOptions> = {
   type: "object",

@@ -55,6 +55,7 @@ import { SpiritMovementService } from '../services/SpiritMovementService';
 import { SpiritCatcherService } from '../services/SpiritCatcherService';
 import { SpiritCatcherUpdateService } from '../services/SpiritCatcherUpdateService';
 import { PostUserPositionService } from '../services/PostUserPositionService';
+import { MockedPostUserPositionService } from '../services/MockedPostUserPositionService';
 // Push notifications delivery was unstable so decided to disable this feature
 // if we don't have better solution.
 // For details see https://trello.com/c/giDbdVGa/628-фантомные-кс-пуши-в-уведомлении
@@ -105,47 +106,6 @@ type EventBindingList =
   | StrictEventBinding<EEnableSpiritMovementRequested, EEnableSpiritMovementConfirmed>
 ;
 
-const services = [
-  // positioning and emercom
-  LocationRecordService,
-  BeaconRecordService,
-  CharacterHealthStateService,
-  UserRecordService,
-  CharacterLocationService,
-  BackgroundImageService,
-  PostUserPositionService,
-
-  // mana ocean
-  ManaOceanService,
-  ManaOceanEnableService,
-  MassacreService,
-  // this service is generic in theory but there is 
-  // only mana ocean specific settings
-  SettingsService, 
-
-  // spirits
-  SpiritService,
-  SpiritFractionService,
-  SpiritRouteService,
-  SpiritMovementService,
-  SpiritMovementEnableService,
-  SpiritCatcherService,
-  SpiritCatcherUpdateService,
-  SpiritPhraseService,
-  PlayerMessagesService,
-
-  // all features getter - abilities, spells, archetypes and other
-  FeatureService,
-  // push notification sender
-  PushNotificationService,
-  // auxilary service to init locations in model-engine (external server)
-  ModelManagetLocInitializer,
-
-  // don't remember service purpose
-  // AudioStageService,
-  // RescueServicePushService,
-  // NotificationService,
-];
 
 // eslint-disable-next-line max-lines-per-function
 export function makeGameModel(): {
@@ -153,6 +113,48 @@ export function makeGameModel(): {
   gameServer: EventEngine
 } {
   const mocked = mainServerConstants().MOCKED;
+
+  const services = [
+    // positioning and emercom
+    LocationRecordService,
+    BeaconRecordService,
+    CharacterHealthStateService,
+    UserRecordService,
+    CharacterLocationService,
+    BackgroundImageService,
+    mocked ? MockedPostUserPositionService : PostUserPositionService,
+  
+    // mana ocean
+    ManaOceanService,
+    ManaOceanEnableService,
+    MassacreService,
+    // this service is generic in theory but there is 
+    // only mana ocean specific settings
+    SettingsService, 
+  
+    // spirits
+    SpiritService,
+    SpiritFractionService,
+    SpiritRouteService,
+    SpiritMovementService,
+    SpiritMovementEnableService,
+    SpiritCatcherService,
+    SpiritCatcherUpdateService,
+    SpiritPhraseService,
+    PlayerMessagesService,
+  
+    // all features getter - abilities, spells, archetypes and other
+    FeatureService,
+    // push notification sender
+    PushNotificationService,
+    // auxilary service to init locations in model-engine (external server)
+    ModelManagetLocInitializer,
+  
+    // don't remember service purpose
+    // AudioStageService,
+    // RescueServicePushService,
+    // NotificationService,
+  ];
   
   const dataProviders = getDataProviders();
 
