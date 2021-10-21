@@ -18,7 +18,7 @@ export const postUserPosition = (req1: Request, res: Response, next: NextFunctio
       JSON.stringify(validateBeaconRecord.errors)
     );
   }
-  gameModel.get2<PostUserPosition>({
+  gameModel.execute2<PostUserPosition>({
     type: 'postUserPosition',
     characterId: Number(req.params.characterId),
     ssid: beacon.ssid

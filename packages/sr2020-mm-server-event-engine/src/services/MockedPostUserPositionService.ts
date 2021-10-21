@@ -18,8 +18,8 @@ import { mainServerConstants } from '../api/constants';
 import { PostUserPosition } from './PostUserPositionService';
 
 export interface MockedPostUserPositionServiceContract extends ServiceContract {
-  Request: PostUserPosition;
-  Action: never;
+  Request: never;
+  Action: PostUserPosition;
   EmitEvent: never;
   ListenEvent: never;
   NeedAction: SetUserRecords;
@@ -32,9 +32,10 @@ export interface MockedPostUserPositionServiceContract extends ServiceContract {
 
 export const pupMetadata: ServiceContractTypes<MockedPostUserPositionServiceContract> = {
   requests: [
+  ],
+  actions: [
     'postUserPosition',
   ],
-  actions: [],
   emitEvents: [],
   listenEvents: [],
   needActions: [
@@ -53,7 +54,7 @@ export class MockedPostUserPositionService extends AbstractService<MockedPostUse
     this.setMetadata(pupMetadata);
   }
 
-  async getPostUserPosition(request: Req<PostUserPosition>): Res<PostUserPosition> {
+  async postUserPosition(request: Req<PostUserPosition>): Res<PostUserPosition> {
     const { characterId, ssid } = request;
     const beaconRecords = this.getFromModel2({
       type: 'beaconRecords'

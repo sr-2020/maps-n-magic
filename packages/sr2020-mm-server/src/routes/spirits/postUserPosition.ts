@@ -23,7 +23,7 @@ export const mainPostUserPosition = async (req1, res, next) => {
   eLogger.setCharacterId(characterId);
 
   try {
-    await gameModel.get2<PostUserPosition>({
+    await gameModel.execute2<PostUserPosition>({
       type: 'postUserPosition',
       characterId,
       ssid

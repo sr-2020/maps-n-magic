@@ -20,8 +20,8 @@ export type PostUserPosition = (arg: Typed<'postUserPosition', {
 }>) => Promise<unknown>;
 
 export interface PostUserPositionServiceContract extends ServiceContract {
-  Request: PostUserPosition;
-  Action: never;
+  Request: never;
+  Action: PostUserPosition;
   EmitEvent: never;
   ListenEvent: never;
   NeedAction: never;
@@ -29,10 +29,10 @@ export interface PostUserPositionServiceContract extends ServiceContract {
 }
 
 const pupMetadata: ServiceContractTypes<PostUserPositionServiceContract> = {
-  requests: [
+  requests: [],
+  actions: [
     'postUserPosition',
   ],
-  actions: [],
   emitEvents: [],
   listenEvents: [],
   needActions: [],
@@ -45,7 +45,7 @@ export class PostUserPositionService extends AbstractService<PostUserPositionSer
     this.setMetadata(pupMetadata);
   }
 
-  async getPostUserPosition(request: Req<PostUserPosition>): Res<PostUserPosition> {
+  async postUserPosition(request: Req<PostUserPosition>): Res<PostUserPosition> {
     const { characterId, ssid } = request;
     return fetchWithTimeout(mainServerConstants().positionUrl, {
       method: 'POST',
