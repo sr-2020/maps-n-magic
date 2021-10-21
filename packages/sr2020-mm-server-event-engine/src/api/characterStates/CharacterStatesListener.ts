@@ -9,11 +9,11 @@ import {
   AbstractEventProcessor,
   RawUserRecord,
   HealthChangeMessage,
-  CharacterLifeStyle
+  CharacterLifeStyle,
 } from 'sr2020-mm-event-engine';
-import { listenHealthChanges } from './listenHealthChanges';
 
 import { SingleGettable, SingleGettable2 } from '../types';
+import { PubSubDataSource } from '../../dataManagers/types';
 
 // const metadata = {
 //   actions: [],
@@ -28,15 +28,20 @@ export class CharacterStatesListener extends AbstractEventProcessor {
   constructor(
     private characterLocationGetter: SingleGettable<RawUserRecord>,
     private lifeStyleGetter: SingleGettable2<CharacterLifeStyle>,
+    protected pubSubDataSource: PubSubDataSource<HealthChangeMessage>,
     gameModel: GameModel, 
     logger: GMLogger
   ) {
     super(gameModel, logger);
     this.onMessageRecieved = this.onMessageRecieved.bind(this);
-    listenHealthChanges(this.onMessageRecieved, true);
+    this.pubSubDataSource.on('message', this.onMessageRecieved);
     this.setMetadata({
       emitEvents: ["putCharHealthRequested"]
     });
+  }
+
+  dispose() {
+    this.pubSubDataSource.off('message', this.onMessageRecieved);
   }
 
   async onMessageRecieved(data: HealthChangeMessage) {

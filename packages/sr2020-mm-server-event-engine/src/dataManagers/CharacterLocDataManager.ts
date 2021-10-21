@@ -11,13 +11,11 @@ import {
   ESetAllCharacterLocations, 
   ESetCharacterLocation,
   AbstractEventProcessor,
-  validateCharLocChangeMessage
+  CharLocChangeMessage
 } from "sr2020-mm-event-engine";
 
-import { mainServerConstants, charLocChange2SubscriptionName } from '../api/constants';
-
-import { PubSubWrapper } from "./PubSubWrapper";
 import { Gettable } from '../api/types';
+import { PubSubDataSource } from './types';
 
 const metadata = {
   actions: [],
@@ -31,11 +29,10 @@ const metadata = {
 export class CharacterLocDataManager extends AbstractEventProcessor {
   logger: GMLogger;
 
-  pubSubWrapper: PubSubWrapper | null = null;
-
   constructor(
     protected gameModel: GameModel, 
     protected userRecordProvider: Gettable<RawUserRecord>,
+    protected pubSubDataSource: PubSubDataSource<CharLocChangeMessage>,
     logger: GMLogger,
   ) {
     super(gameModel, logger);
@@ -53,37 +50,24 @@ export class CharacterLocDataManager extends AbstractEventProcessor {
   async init() {
     try {
       await this.load();
-      this.pubSubWrapper = PubSubWrapper.makePubSubWrapper(
-        charLocChange2SubscriptionName,
-        this.logger,
-        this.onMessage
-      );
+      this.pubSubDataSource.on('message', this.onMessage);
     } catch (err) {
       this.getErrorHandler('Unexpected error')(err);
     }
   }
 
   dispose() {
-    if (this.pubSubWrapper !== null) {
-      this.pubSubWrapper.dispose();
-    }
+    this.pubSubDataSource.off('message', this.onMessage);
   }
 
-  onMessage(data: unknown) {
-    if (!validateCharLocChangeMessage(data)) {
-      this.logger.error(`Received invalid CharLocChangeMessage. ${JSON.stringify(data)} ${JSON.stringify(validateCharLocChangeMessage.errors)}`);
-      return;
-    // } else {
-    //   this.logger.info('CharLocChangeMessage validation OK');
-    }
-
+  onMessage(data: CharLocChangeMessage) {
     // {
     //   "id": 51935,
     //   "locationId": 3212,
     //   "prevLocationId": 3217,
     //   "timestamp": 1606094156924
     // }
-    this.logger.info(data);
+    // this.logger.info(data);
 
     this.gameModel.emit2<ESetCharacterLocation>({
       type: 'setCharacterLocation',

@@ -150,7 +150,6 @@ export function makeGameModel(): {
     // push notification sender
     PushNotificationService,
     // auxilary service to init locations in model-engine (external server)
-    ModelManagetLocInitializer,
 
     // misc
     mocked ? MockedAuthService : AuthService,
@@ -159,6 +158,10 @@ export function makeGameModel(): {
     // RescueServicePushService,
     // NotificationService,
   ];
+
+  if (!mocked) {
+    services.push(ModelManagetLocInitializer as any);
+  }
   
   const dataProviders = getDataProviders();
 
@@ -177,6 +180,7 @@ export function makeGameModel(): {
   const charLocDM = new CharacterLocDataManager(
     gameModel,
     dataProviders.userRecordProvider,
+    dataProviders.charLocation2PubSub,
     createLogger('CharacterLocDataManager'),
   );
   charLocDM.init();
@@ -196,12 +200,25 @@ export function makeGameModel(): {
     new CharacterStatesListener(
       dataProviders.userRecordProvider, 
       dataProviders.lifeStyleProvider,
+      dataProviders.healthChangePubSub,
       gameModel, 
       createLogger('CharacterStatesListener')
     )
   );
-  gameServer.addDataBinding(new CharacterLocationListener(gameModel, createLogger('CharacterLocationListener')));
-  gameServer.addDataBinding(new SpellCastsListener(gameModel, createLogger('SpellCastsListener')));
+  gameServer.addDataBinding(
+    new CharacterLocationListener(
+      gameModel, 
+      dataProviders.charLocationPubSub,
+      createLogger('CharacterLocationListener')
+    )
+  );
+  gameServer.addDataBinding(
+    new SpellCastsListener(
+      gameModel, 
+      dataProviders.spellPubSub,
+      createLogger('SpellCastsListener')
+    )
+  );
   if (!mocked) {
     const pushNotificationEmitter = new PushNotificationEmitter(gameModel, createLogger('PushNotificationEmitter'));
     pushNotificationEmitter.init();
@@ -249,6 +266,11 @@ export function makeGameModel(): {
 
   gameModel.verifyEvents();
   gameModel.finishVerification();
+
+  dataProviders.spellPubSub.start();
+  dataProviders.charLocationPubSub.start();
+  dataProviders.charLocation2PubSub.start();
+  dataProviders.healthChangePubSub.start();
 
   return { gameModel, gameServer };
 }
