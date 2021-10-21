@@ -1,4 +1,5 @@
 import * as R from 'ramda';
+import * as jwt from "jsonwebtoken";
 
 import { 
   AbstractService, 
@@ -13,13 +14,9 @@ import {
   Res
 } from 'sr2020-mm-event-engine';
 import { genericServerConstants2 } from '../api/constants';
+import { GetUserToken } from './AuthService';
 
-export type GetUserToken = (arg: Typed<'userToken', {
-  login: string, 
-  password: string
-}>) => Promise<Response>;
-
-export interface AuthServiceContract extends ServiceContract {
+export interface MockedAuthServiceContract extends ServiceContract {
   Request: GetUserToken;
   Action: never;
   EmitEvent: never;
@@ -28,7 +25,7 @@ export interface AuthServiceContract extends ServiceContract {
   NeedRequest: never;
 }
 
-const pupMetadata: ServiceContractTypes<AuthServiceContract> = {
+const pupMetadata: ServiceContractTypes<MockedAuthServiceContract> = {
   requests: [
     'userToken',
   ],
@@ -39,25 +36,29 @@ const pupMetadata: ServiceContractTypes<AuthServiceContract> = {
   needRequests: []
 };
 
-export class AuthService extends AbstractService<AuthServiceContract> {
+export class MockedAuthService extends AbstractService<MockedAuthServiceContract> {
   constructor(gameModel: GameModel, logger: GMLogger) {
     super(gameModel, logger);
     this.setMetadata(pupMetadata);
   }
 
   async getUserToken(request: Req<GetUserToken>): Res<GetUserToken> {
-    const { login, password } = request;
-    return await fetch(genericServerConstants2().loginUrl, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json;charset=utf-8'
-      },
-      body: JSON.stringify({
-        login,
-        password,
-        "rememberMe": false
+    const parsedToken = {
+      "sub": "51935",
+      "auth": "ROLE_MASTER,ROLE_PLAYER",
+      "modelId": 51935,
+      "characterId": 736,
+      "exp": 1677974839
+    };
+
+    const api_key = jwt.sign(parsedToken, genericServerConstants2().JWT_SECRET);
+    return {
+      status: 200,
+      json: () => Promise.resolve({
+        api_key,
+        "id": parsedToken.modelId
       })
-    });
+    } as Response;
   }
 }
 

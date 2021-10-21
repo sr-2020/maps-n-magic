@@ -21,6 +21,7 @@
     "@types/isomorphic-fetch": "0.0.35",
     "ajv": "^8.5.0",
     "isomorphic-fetch": "^3.0.0",
+    "jsonwebtoken": "^8.5.1",
     "moment": "^2.29.1",
     "moment-timezone": "^0.5.33",
     "pg": "^8.6.0",
