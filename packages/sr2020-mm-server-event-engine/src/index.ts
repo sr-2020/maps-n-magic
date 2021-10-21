@@ -8,13 +8,13 @@ export * from './services/SpiritCatcherUpdateService';
 export * from './services/PostUserPositionService';
 export * from './services/AuthService';
 export * from './services/MockedAuthService';
+export * from './services/UserLogService';
 export * from './types';
 export * from './api';
 export * from './utils';
 export * from './characterWatcher';
 export * from './api/spirits/spirits';
 export * from './api/spirits/mmLog';
-export * from './api/spirits/mmUserLog';
 export * from './api/spirits/playerMessages';
 export * from './api/position';
 

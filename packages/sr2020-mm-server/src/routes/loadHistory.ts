@@ -3,7 +3,7 @@ import {
 } from "sr2020-mm-event-engine";
 import { 
   createLogger, 
-  mmGetUserLog, 
+  GetUserLog, 
   PlayerAuthorizedRequest, 
 } from "sr2020-mm-server-event-engine";
 
@@ -13,7 +13,11 @@ export const mainLoadHistory = async (req1, res, next) => {
   const req = req1 as PlayerAuthorizedRequest;
 
   try {
-    const rows = await mmGetUserLog(Number(req.params.characterId));
+    const { gameModel } = req;
+    const rows = await gameModel.get2<GetUserLog>({
+      type: 'userLog',
+      characterId: Number(req.params.characterId)
+    });
     res.status(200).json(rows);
   } catch (error) {
     const message = `${error} ${JSON.stringify(error)}`;

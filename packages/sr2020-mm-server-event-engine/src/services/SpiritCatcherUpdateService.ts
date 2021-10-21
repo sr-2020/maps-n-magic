@@ -75,6 +75,7 @@ export class SpiritCatcherUpdateService extends AbstractService<SpiritCatcherUpd
       
       expiredStatesList.forEach(characterId => {
         logCharacterAction(
+          this.gameModel,
           this.logger,
           'n/a',
           'n/a',

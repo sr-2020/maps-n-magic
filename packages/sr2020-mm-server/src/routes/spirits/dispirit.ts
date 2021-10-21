@@ -38,12 +38,11 @@ import { waitForSpiritSuited } from './utils';
 const logger = createLogger('dispirit.ts');
 
 export const mainDispirit = async (req1, res, next) => {
-  const eLogger = new EndpointLogger(logger, EndpointId.DISPIRIT);
+  const req = req1 as InnerApiRequest;
+  const { gameModel, body } = req;
+  const eLogger = new EndpointLogger(gameModel, logger, EndpointId.DISPIRIT);
   try {
     // logger.info('mainDispirit')
-    const req = req1 as InnerApiRequest;
-    const { body } = req;
-
     eLogger.attempt(body);
 
     if (!validateDispiritInternalRequest(body)) {

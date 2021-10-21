@@ -216,6 +216,7 @@ export class ManaOceanService extends AbstractService<ManaOceanServiceContract> 
     }
 
     logCharacterAction(
+      this.gameModel,
       this.logger,
       data.uid,
       'SPELL_CAST_MANA_OCEAN_STREAM',

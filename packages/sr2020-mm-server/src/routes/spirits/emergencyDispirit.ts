@@ -17,12 +17,11 @@ import {
 const logger = createLogger('emergencyDispirit.ts');
 
 export const mainEmergencyDispirit = async (req1, res, next) => {
-  const eLogger = new EndpointLogger(logger, EndpointId.EMERGENCY_DISPIRIT);
+  const req = req1 as InnerApiRequest;
+  const { gameModel, body } = req;
+  const eLogger = new EndpointLogger(gameModel, logger, EndpointId.EMERGENCY_DISPIRIT);
   try {
     // logger.info('mainEmergencyDispirit')
-    const req = req1 as InnerApiRequest;
-    const { body } = req;
-
     eLogger.attempt(body);
 
     const { characterId } = body as { characterId: number };

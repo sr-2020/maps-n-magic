@@ -5,8 +5,6 @@ import {
   createLogger, 
   getQrModelData, 
   MainAuthorizedRequest, 
-  mmGetUserLog, 
-  PlayerAuthorizedRequest,
   validateSpiritJarQrModelData, 
 } from "sr2020-mm-server-event-engine";
 
@@ -75,7 +73,6 @@ export const mainSpiritConsistencyReport = async (req1, res, next) => {
       spirit: inJarSpirits[i]
     })).filter(item => item.errorResponse !== null);
 
-    // const rows = await mmGetUserLog(Number(req.params.characterId));
     res.status(200).json(result);
   } catch (error) {
     const message = `${error} ${JSON.stringify(error)}`;

@@ -18,7 +18,7 @@ import {
   MainAuthorizedRequest,
   GetCatcherStates,
   mmGetLog,
-  mmGetUserLog
+  GetUserLog
 } from 'sr2020-mm-server-event-engine';
 import { ErrorResponse, validateWebSocketInitClientConfig, WebSocketInitClientConfig } from 'sr2020-mm-event-engine';
 
@@ -153,13 +153,17 @@ app.get('/api/userLogs/:characterId', async (req1, res, next) => {
 
   try {
 
+    const { gameModel } = req;
     const characterId = Number(req.params.characterId);
 
     if (Number.isNaN(characterId)) {
       throw new Error(`characterId ${req.params.characterId} is NaN`);
     }
 
-    const rows = await mmGetUserLog(characterId);
+    const rows = await gameModel.get2<GetUserLog>({
+      type: 'userLog',
+      characterId: characterId
+    });
     res.status(200).json(rows);
   } catch (error) {
     const message = `${error} ${JSON.stringify(error)}`;

@@ -58,6 +58,7 @@ import { PostUserPositionService } from '../services/PostUserPositionService';
 import { MockedPostUserPositionService } from '../services/MockedPostUserPositionService';
 import { AuthService } from '../services/AuthService';
 import { MockedAuthService } from '../services/MockedAuthService';
+import { UserLogService } from '../services/UserLogService';
 // Push notifications delivery was unstable so decided to disable this feature
 // if we don't have better solution.
 // For details see https://trello.com/c/giDbdVGa/628-фантомные-кс-пуши-в-уведомлении
@@ -153,6 +154,7 @@ export function makeGameModel(): {
 
     // misc
     mocked ? MockedAuthService : AuthService,
+    UserLogService,
     // don't remember service purpose
     // AudioStageService,
     // RescueServicePushService,

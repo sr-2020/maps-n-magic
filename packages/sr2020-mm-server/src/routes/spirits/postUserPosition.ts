@@ -14,9 +14,9 @@ import {
 const logger = createLogger('tmp/postUserPosition.ts');
 
 export const mainPostUserPosition = async (req1, res, next) => {
-  const eLogger = new EndpointLogger(logger, EndpointId.POST_USER_POSITION);
   const req = req1 as PlayerAuthorizedRequest;
   const { body, gameModel } = req;
+  const eLogger = new EndpointLogger(gameModel, logger, EndpointId.POST_USER_POSITION);
   
   eLogger.attempt(body);
   const { characterId, ssid, locationName } = body;

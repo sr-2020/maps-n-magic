@@ -109,6 +109,7 @@ function getUpdatedNonNormalSuitedState(
     });
 
     logCharacterAction(
+      gameModel,
       logger,
       'N/A',
       'TIMEOUT_DISPIRIT_2',
@@ -131,7 +132,7 @@ function getUpdatedNormalSuitedState(
   spirit: Spirit, 
   context: SpiritRouteContext,
 ): SuitedState | undefined {
-  const { logger, moscowTimeInMinutes, dateNow } = context;
+  const { logger, moscowTimeInMinutes, dateNow, gameModel } = context;
   const { suitStatus, suitStartTime, suitDuration, characterId } = state;
   // if (suitStatus !== 'normal') {
   //   return undefined;
@@ -153,6 +154,7 @@ function getUpdatedNormalSuitedState(
     });
 
     logCharacterAction(
+      gameModel,
       logger,
       'N/A',
       'TIMEOUT_DISPIRIT',

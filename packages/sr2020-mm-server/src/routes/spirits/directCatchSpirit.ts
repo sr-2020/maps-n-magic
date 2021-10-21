@@ -28,12 +28,11 @@ import { waitForSpiritSuited } from './utils';
 const logger = createLogger('directCatchSpirit.ts');
 
 export const mainDirectCatchSpirit = async (req1, res, next) => {
-  const eLogger = new EndpointLogger(logger, EndpointId.CATCH_SPIRIT);
+  const req = req1 as InnerApiRequest;
+  const { gameModel, body } = req;
+  const eLogger = new EndpointLogger(gameModel, logger, EndpointId.CATCH_SPIRIT);
   try {
     // logger.info('mainCatchSpirit')
-    const req = req1 as InnerApiRequest;
-    const { body } = req;
-
     eLogger.attempt(body);
 
     if (!validateCatchSpiritInternalRequest(body)) {

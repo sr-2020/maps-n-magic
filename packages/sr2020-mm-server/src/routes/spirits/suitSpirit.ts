@@ -35,13 +35,11 @@ import { waitForSpiritSuited } from './utils';
 const logger = createLogger('suitSpirit.ts');
 
 export const mainSuitSpirit = async (req1, res, next) => {
-  const eLogger = new EndpointLogger(logger, EndpointId.SUIT_SPIRIT);
+  const req = req1 as InnerApiRequest;
+  const { gameModel, body } = req;
+  const eLogger = new EndpointLogger(gameModel, logger, EndpointId.SUIT_SPIRIT);
   try {
-    
     // logger.info('mainSuitSpirit')
-    const req = req1 as InnerApiRequest;
-    const { body } = req;
-
     eLogger.attempt(body);
 
     if (!validateSuitSpiritInternalRequest(body)) {

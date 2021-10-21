@@ -25,12 +25,11 @@ import { waitForSpiritSuited } from "./utils";
 const logger = createLogger('freeSpirit.ts');
 
 export const mainFreeSpirit = async (req1, res, next) => {
-  const eLogger = new EndpointLogger(logger, EndpointId.FREE_SPIRIT);
+  const req = req1 as InnerApiRequest;
+  const { gameModel, body } = req;
+  const eLogger = new EndpointLogger(gameModel, logger, EndpointId.FREE_SPIRIT);
   try {
     // logger.info('mainCatchSpirit')
-    const req = req1 as InnerApiRequest;
-    const { body } = req;
-
     eLogger.attempt(body);
 
     if (!validateFreeSpiritInternalRequest(body)) {

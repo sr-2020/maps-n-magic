@@ -137,6 +137,7 @@ export class SpiritCatcherService extends AbstractService<SpiritCatcherServiceCo
     this.catcherStates[characterId] = catcherData;
     
     logCharacterAction(
+      this.gameModel,
       this.logger,
       data.uid,
       'SPELL_CAST_SPIRIT_CATCHER',
