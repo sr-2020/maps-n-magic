@@ -53,7 +53,7 @@ export class BeaconRecordService extends AbstractService<BeaconRecordServiceCont
     return [...this.beaconRecords];
   }
 
-  setBeaconRecords({ beaconRecords }: SetBeaconRecords ): void {
+  setBeaconRecords({ beaconRecords }: Req<SetBeaconRecords> ): Res<SetBeaconRecords> {
     this.setData({ beaconRecords });
     // const hasChanges =
     // if (!hasChanges) {
@@ -69,7 +69,7 @@ export class BeaconRecordService extends AbstractService<BeaconRecordServiceCont
     });
   }
 
-  putBeaconRecord(action: PutBeaconRecord): void {
+  putBeaconRecord(action: Req<PutBeaconRecord>): Res<PutBeaconRecord> {
     // try to speedup put changes. It is still slow, so commented it out.
     // const { id, props } = action;
     // const index = this.beaconRecords.findIndex((br) => br.id === id);
@@ -85,21 +85,21 @@ export class BeaconRecordService extends AbstractService<BeaconRecordServiceCont
     });
   }
 
-  postBeaconRecord = (action: PostBeaconRecord): void => {
+  postBeaconRecord = (action: Req<PostBeaconRecord>): Res<PostBeaconRecord> => {
     this.emit2({
       ...action,
       type: 'postBeaconRecordRequested'
     });
   }
 
-  deleteBeaconRecord = (action: DeleteBeaconRecord): void => {
+  deleteBeaconRecord = (action: Req<DeleteBeaconRecord>): Res<PostBeaconRecord> => {
     this.emit2({
       ...action,
       type: 'deleteBeaconRecordRequested'
     });
   }
 
-  putBeaconRecordConfirmed({ beaconRecord }: PutBeaconRecordConfirmed): void {
+  putBeaconRecordConfirmed({ beaconRecord }: Req<PutBeaconRecordConfirmed>): Res<PutBeaconRecordConfirmed> {
     const index: number = this.beaconRecords.findIndex((br) => br.id === beaconRecord.id);
     this.beaconRecords = [...this.beaconRecords];
     this.beaconRecords[index] = beaconRecord;
@@ -113,7 +113,7 @@ export class BeaconRecordService extends AbstractService<BeaconRecordServiceCont
     });
   }
 
-  postBeaconRecordConfirmed({ beaconRecord }: PostBeaconRecordConfirmed): void {
+  postBeaconRecordConfirmed({ beaconRecord }: Req<PostBeaconRecordConfirmed>): Res<PostBeaconRecordConfirmed> {
     this.beaconRecords = [...this.beaconRecords, beaconRecord];
     // console.log('postBeaconRecord');
     this.emit2({ 
@@ -126,7 +126,7 @@ export class BeaconRecordService extends AbstractService<BeaconRecordServiceCont
     });
   }
   
-  deleteBeaconRecordConfirmed({ beaconRecord }: DeleteBeaconRecordConfirmed): void {
+  deleteBeaconRecordConfirmed({ beaconRecord }: Req<DeleteBeaconRecordConfirmed>): Res<DeleteBeaconRecordConfirmed> {
     this.beaconRecords = this.beaconRecords.filter((br) => br.id !== beaconRecord.id);
     this.emit2({ 
       type: 'deleteBeaconRecord',

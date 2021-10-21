@@ -22,13 +22,13 @@ export type GetTrackedCharacterLocationId = (arg: TypeOnly<'trackedCharacterLoca
 
 // actions
 
-export type SetTrackedCharacterId = Typed<'setTrackedCharacterId', {
+export type SetTrackedCharacterId = (arg: Typed<'setTrackedCharacterId', {
   trackedCharacterId: number | null;
-}>;
-export type TrackedCharacterLocationChanged = Typed<'trackedCharacterLocationChanged', {
+}>) => void;
+export type TrackedCharacterLocationChanged = (arg: Typed<'trackedCharacterLocationChanged', {
   trackedCharacterId: number | null;
   locationId: number | null;
-}>;
+}>) => void;
 
 // events
 

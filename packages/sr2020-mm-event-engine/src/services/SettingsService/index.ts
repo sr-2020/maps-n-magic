@@ -85,7 +85,7 @@ export class SettingsService extends AbstractService<SettingsServiceContract> {
     return R.clone(value);
   }
 
-  setSettings({ name, settings }: SetSettings): void {
+  setSettings({ name, settings }: Req<SetSettings>): Res<SetSettings> {
     // this.logger.info('setSettings', name, settings);
     const areEqual = R.equals(this.settingsCatalog[name], settings);
     this.setData({ settingsCatalog: { ...this.settingsCatalog, [name]: settings } });
@@ -99,14 +99,14 @@ export class SettingsService extends AbstractService<SettingsServiceContract> {
     }
   }
 
-  postSettings = (action: PostSettings): void => {
+  postSettings = (action: Req<PostSettings>): Res<PostSettings> => {
     this.emit2({
       ...action,
       type: 'postSettingsRequested'
     });
   }
 
-  postSettingsConfirmed(action: PostSettingsConfirmed): void {
+  postSettingsConfirmed(action: Req<PostSettingsConfirmed>): Res<PostSettings> {
     const { name, settings } = action;
     this.settingsCatalog = { ...this.settingsCatalog, [name]: settings };
     this.emit2({ 

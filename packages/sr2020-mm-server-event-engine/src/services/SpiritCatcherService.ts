@@ -32,13 +32,13 @@ export type GetCatcherState = (arg: Typed<'catcherState', {
 }>) => CatcherData | undefined;
 
 // export type SetCatcherStateUpdates = Typed<'setCatcherStateUpdates', CatcherStatesArg>;
-export type RemoveCatcherStates = Typed<'removeCatcherStates', {
+export type RemoveCatcherStates = (arg: Typed<'removeCatcherStates', {
   expiredStatesList: string[];
-}>;
-export type DecrementAttempt = Typed<'decrementAttempt', {
+}>) => void;
+export type DecrementAttempt = (arg: Typed<'decrementAttempt', {
   characterId: number;
-}>;
-export type SetCatcherStates = Typed<'setCatcherStates', CatcherStatesArg>;
+}>) => void;
+export type SetCatcherStates = (arg: Typed<'setCatcherStates', CatcherStatesArg>) => void;
 
 // emit events
 
@@ -152,7 +152,7 @@ export class SpiritCatcherService extends AbstractService<SpiritCatcherServiceCo
     });
   }
 
-  setCatcherStates({ catcherStates }: SetCatcherStates): void {
+  setCatcherStates({ catcherStates }: Req<SetCatcherStates>): Res<SetCatcherStates> {
     // this.logger.info('setCatcherStates');
     this.catcherStates = catcherStates;
     this.emit2({
@@ -161,7 +161,7 @@ export class SpiritCatcherService extends AbstractService<SpiritCatcherServiceCo
     });
   }
 
-  decrementAttempt({ characterId }: DecrementAttempt): void {
+  decrementAttempt({ characterId }: Req<DecrementAttempt>): Res<DecrementAttempt> {
     const catcherData: CatcherData | undefined = this.catcherStates[characterId];
     if (catcherData === undefined) {
       this.logger.info(`SPIRIT_CATCHER_FAIL Not found catcher state for character ${characterId} for decrement attempt`);
@@ -186,7 +186,7 @@ export class SpiritCatcherService extends AbstractService<SpiritCatcherServiceCo
     });
   }
 
-  removeCatcherStates({ expiredStatesList }: RemoveCatcherStates): void {
+  removeCatcherStates({ expiredStatesList }: Req<RemoveCatcherStates>): Res<RemoveCatcherStates> {
     expiredStatesList.forEach(characterId => {
       delete this.catcherStates[characterId];
     });

@@ -397,7 +397,7 @@ export class ManaOceanService extends AbstractService<ManaOceanServiceContract> 
   pushEffects(updates: LocationUpdate[]): void {
     // this.logger.info('pushEffects', updates);
     this.logUpdates(updates);
-    this.executeOnModel2<PutLocationRecords>({
+    this.executeOnModel2({
       type: 'putLocationRecords',
       updates,
     });

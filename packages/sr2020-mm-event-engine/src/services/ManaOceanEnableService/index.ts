@@ -18,7 +18,7 @@ export interface SetEnableManaOceanArgs {
   enableManaOcean: boolean
 }
 
-export type SetEnableManaOcean = Typed<'setEnableManaOcean', SetEnableManaOceanArgs>;
+export type SetEnableManaOcean = (arg: Typed<'setEnableManaOcean', SetEnableManaOceanArgs>) => void;
 // export type EnableManaOceanConfirmed = Typed<'enableManaOceanConfirmed', SetEnableManaOceanArgs>;
 export type EEnableManaOceanConfirmed = Typed<'enableManaOceanConfirmed', SetEnableManaOceanArgs>;
 // export type EnableManaOceanChanged = Typed<'enableManaOceanChanged', SetEnableManaOceanArgs>;
@@ -81,7 +81,7 @@ export class ManaOceanEnableService extends AbstractService<ManaOceanEnableServi
     return this.enableManaOcean;
   }
 
-  setEnableManaOcean(action: SetEnableManaOcean): void {
+  setEnableManaOcean(action: Req<SetEnableManaOcean>): Res<SetEnableManaOcean> {
     const { enableManaOcean } = action;
     if (this.enableManaOcean === enableManaOcean) {
       return;

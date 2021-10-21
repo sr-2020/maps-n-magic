@@ -31,9 +31,9 @@ export type PostSettingsArgs = {
   settings: ManaOceanEffectSettingsData;
 };
 
-export type PostSettings = Typed<'postSettings', PostSettingsArgs>;
-export type PostSettingsConfirmed = Typed<'postSettingsConfirmed', PostSettingsArgs>;
-export type SetSettings = Typed<'setSettings', PostSettingsArgs>;
+export type PostSettings = (arg: Typed<'postSettings', PostSettingsArgs>) => void;
+export type PostSettingsConfirmed = (arg: Typed<'postSettingsConfirmed', PostSettingsArgs>) => void;
+export type SetSettings = (arg: Typed<'setSettings', PostSettingsArgs>) => void;
 export type SetSettingsCatalog = Typed<'setSettingsCatalog', {
   settingsCatalog: SettingsCatalog
 }>;

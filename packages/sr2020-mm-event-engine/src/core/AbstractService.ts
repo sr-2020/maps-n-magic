@@ -201,10 +201,7 @@ export class AbstractService<
     return this.gameModel.get(request);
   }
 
-  /**
-   * @deprecated Use executeOnModel2 instead
-   */
-  executeOnModel<T extends GMAction, K>(rawAction: T | string): K {
+  executeOnModel2<T extends Req<F["NeedAction"]>>(rawAction: T): Res<Extract<F["NeedAction"], (arg: T) => any>> {
     if (this.gameModel === null) {
       throw new Error(`Service ${this.constructor.name} is not initialized`);
     }
@@ -215,21 +212,7 @@ export class AbstractService<
       throw new Error(`Action ${action.type} is not expected from ${this.constructor.name}`);
     }
 
-    return this.gameModel.execute(rawAction) as K;
-  }
-
-  executeOnModel2<T extends F["NeedAction"], K = never>(rawAction: T | string): K {
-    if (this.gameModel === null) {
-      throw new Error(`Service ${this.constructor.name} is not initialized`);
-    }
-    const action: T = stringToType<T>(rawAction);
-
-    const { needActions } = this.metadata;
-    if (needActions && !needActions.includes(action.type)) {
-      throw new Error(`Action ${action.type} is not expected from ${this.constructor.name}`);
-    }
-
-    return this.gameModel.execute(rawAction) as K;
+    return this.gameModel.execute(rawAction);
   }
 
   // setMetadata(metadata: Metadata): void {

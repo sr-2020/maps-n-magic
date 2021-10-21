@@ -39,12 +39,12 @@ export type PostLocationArgs = {
   props: Partial<Omit<LocationRecord, 'id'>>
 };
 
-export type PutLocationRecord = Typed<'putLocationRecord', PutLocationArgs>;
-export type PutLocationRecordConfirmed = Typed<'putLocationRecordConfirmed', SingleLocationRecord>;
-export type PostLocationRecord = Typed<'postLocationRecord', PostLocationArgs>;
-export type PostLocationRecordConfirmed = Typed<'postLocationRecordConfirmed', SingleLocationRecord>;
-export type DeleteLocationRecord = Typed<'deleteLocationRecord', SingleLocationRecord>;
-export type DeleteLocationRecordConfirmed = Typed<'deleteLocationRecordConfirmed', SingleLocationRecord>;
+export type PutLocationRecord = (arg: Typed<'putLocationRecord', PutLocationArgs>) => void;
+export type PutLocationRecordConfirmed = (arg: Typed<'putLocationRecordConfirmed', SingleLocationRecord>) => void;
+export type PostLocationRecord = (arg: Typed<'postLocationRecord', PostLocationArgs>) => void;
+export type PostLocationRecordConfirmed = (arg: Typed<'postLocationRecordConfirmed', SingleLocationRecord>) => void;
+export type DeleteLocationRecord = (arg: Typed<'deleteLocationRecord', SingleLocationRecord>) => void;
+export type DeleteLocationRecordConfirmed = (arg: Typed<'deleteLocationRecordConfirmed', SingleLocationRecord>) => void;
 
 export type LocationRecordList = {
   locationRecords: LocationRecord[]
@@ -53,9 +53,9 @@ export type UpdateLocationRecordList = {
   updates: LocationUpdate[]
 };
 
-export type SetLocationRecords = Typed<'setLocationRecords', LocationRecordList>;
-export type PutLocationRecords = Typed<'putLocationRecords', UpdateLocationRecordList>;
-export type PutLocationRecordsConfirmed = Typed<'putLocationRecordsConfirmed', LocationRecordList>;
+export type SetLocationRecords = (arg: Typed<'setLocationRecords', LocationRecordList>) => void;
+export type PutLocationRecords = (arg: Typed<'putLocationRecords', UpdateLocationRecordList>) => void;
+export type PutLocationRecordsConfirmed = (arg: Typed<'putLocationRecordsConfirmed', LocationRecordList>) => void;
 
 // events
 

@@ -94,7 +94,7 @@ export class TrackedCharacterService extends AbstractService<TrackedCharacterSer
       volumePercent: 50
     }));
   
-    this.executeOnModel2<SetRotationSounds>({
+    this.executeOnModel2({
       type: 'setRotationSounds',
       rotation: {
         key: locationId,
@@ -111,7 +111,7 @@ export class TrackedCharacterService extends AbstractService<TrackedCharacterSer
     return this.locationId;
   }
 
-  setTrackedCharacterId({ trackedCharacterId }: SetTrackedCharacterId) {
+  setTrackedCharacterId({ trackedCharacterId }: Req<SetTrackedCharacterId>): Res<SetTrackedCharacterId> {
     this.trackedCharacterId = trackedCharacterId;
     if (trackedCharacterId === null) {
       this.locationId = null;
@@ -144,7 +144,7 @@ export class TrackedCharacterService extends AbstractService<TrackedCharacterSer
     }
   }
 
-  trackedCharacterLocationChanged(data: TrackedCharacterLocationChanged) {
+  trackedCharacterLocationChanged(data: Req<TrackedCharacterLocationChanged>): Res<TrackedCharacterLocationChanged> {
     if (this.trackedCharacterId === null) {
       return;
     }
@@ -175,7 +175,7 @@ export class TrackedCharacterService extends AbstractService<TrackedCharacterSer
       console.error(`manaLevel out of bounds. manaLevel ${manaLevel}, locationId ${locationId}`);
       this.clearBgSound();
     } else {
-      this.executeOnModel2<SetBackgroundSound>({
+      this.executeOnModel2({
         type: 'setBackgroundSound',
         trackData: {
           key: soundName,
@@ -187,14 +187,14 @@ export class TrackedCharacterService extends AbstractService<TrackedCharacterSer
   }
 
   clearBgSound() {
-    this.executeOnModel2<SetBackgroundSound>({
+    this.executeOnModel2({
       type: 'setBackgroundSound',
       trackData: null,
     });
   }
 
   clearRotationSounds() {
-    this.executeOnModel2<SetRotationSounds>({
+    this.executeOnModel2({
       type: 'setRotationSounds',
       rotation: null
     });

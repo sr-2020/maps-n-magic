@@ -54,10 +54,10 @@ export interface Metadata {
 
 export interface ServiceContract {
   Request: RequestHandler;
-  Action: GMAction;
+  Action: ActionHandler;
   EmitEvent: GMEvent;
   ListenEvent: GMEvent;
-  NeedAction: GMAction;
+  NeedAction: ActionHandler;
   NeedRequest: RequestHandler;
 }
 export interface DefaultServiceContract {
@@ -71,10 +71,10 @@ export interface DefaultServiceContract {
 
 export type ServiceContractTypes<T extends ServiceContract> = {
   requests: Req<T["Request"]>["type"][],
-  actions: T["Action"]["type"][],
+  actions: Req<T["Action"]>["type"][],
   emitEvents: T["EmitEvent"]["type"][],
   listenEvents: T["ListenEvent"]["type"][],
-  needActions: T["NeedAction"]["type"][],
+  needActions: Req<T["NeedAction"]>["type"][],
   needRequests: Req<T["NeedRequest"]>["type"][],
 }
 
@@ -114,11 +114,12 @@ export type TypeObjectOnly<T extends string> = {type: T};
 // type Function = (...arg: any) => any;
 
 export type RequestHandler<T extends any[] = any[], K = any> = (...arg: T) => K;
+export type ActionHandler<T extends any[] = any[], K = any> = (...arg: T) => K;
 
 // Request
-export type Req<T extends RequestHandler> = Parameters<T>[0];
+export type Req<T extends RequestHandler | ActionHandler> = Parameters<T>[0];
 // Response
-export type Res<T extends RequestHandler> = ReturnType<T>;
+export type Res<T extends RequestHandler | ActionHandler> = ReturnType<T>;
 
 export interface WebSocketInitClientConfig {
   message: 'initClientConfig';
