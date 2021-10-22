@@ -11,13 +11,13 @@ import {
   fetchWithTimeout,
   Req,
   Res,
-  HistoryItem
+  MainHistoryItem
 } from 'sr2020-mm-event-engine';
 import { pool } from '../api/pgPool';
 
 export type GetMainLog = (arg: Typed<'mainLog', {
   characterId: number, 
-}>) => Promise<HistoryItem[]>;
+}>) => Promise<MainHistoryItem[]>;
 
 export type PutMainLogRecord = (arg: Typed<'putMainLogRecord', {
   recordType: string,
@@ -53,7 +53,7 @@ export class MainLogService extends AbstractService<MainLogServiceContract> {
   }
 
   async getMainLog({ characterId }: Req<GetMainLog>): Res<GetMainLog> {
-    this.logger.info('getMainLog');
+    // this.logger.info('getMainLog');
     const { rows } = await pool.query('SELECT * FROM "mmLog" WHERE message like \'%' + characterId + '%\' ORDER BY timestamp DESC');
     return rows;
   }
@@ -62,7 +62,7 @@ export class MainLogService extends AbstractService<MainLogServiceContract> {
     recordType,
     message,
   }: Req<PutMainLogRecord>): Res<PutMainLogRecord> {
-    this.logger.info('putMainLogRecord');
+    // this.logger.info('putMainLogRecord');
     try{
       await pool.query('INSERT INTO "mmLog"(timestamp, type, message) VALUES($1,$2,$3)', [new Date(), recordType, message]);
     } catch(err) {

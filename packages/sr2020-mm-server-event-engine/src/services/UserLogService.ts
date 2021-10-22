@@ -11,13 +11,13 @@ import {
   fetchWithTimeout,
   Req,
   Res,
-  HistoryItem
+  UserHistoryItem
 } from 'sr2020-mm-event-engine';
 import { pool } from '../api/pgPool';
 
 export type GetUserLog = (arg: Typed<'userLog', {
   characterId: number, 
-}>) => Promise<HistoryItem[]>;
+}>) => Promise<UserHistoryItem[]>;
 
 export type PutUserLogRecord = (arg: Typed<'putUserLogRecord', {
   characterId: number,

@@ -1,4 +1,4 @@
-export interface HistoryItem {
+export interface UserHistoryItem {
   timestamp: string;
   characterId: number;
   data: {
@@ -7,8 +7,8 @@ export interface HistoryItem {
   };
 }
 
-export interface OrgHistoryItem {
-  timestamp: number;
+export interface MainHistoryItem {
+  timestamp: string;
   type: string;
   message: string;
 }

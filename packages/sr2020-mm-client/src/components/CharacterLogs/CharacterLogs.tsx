@@ -9,7 +9,7 @@ import Form from 'react-bootstrap/Form';
 import Button from 'react-bootstrap/Button';
 import Table from 'react-bootstrap/Table';
 
-import { HistoryItem, OrgHistoryItem } from 'sr2020-mm-event-engine';
+import { UserHistoryItem, MainHistoryItem } from 'sr2020-mm-event-engine';
 import { processForDisplay } from 'sr2020-mm-translations';
 
 interface CharacterLogsProps extends WithTranslation {
@@ -18,8 +18,8 @@ interface CharacterLogsProps extends WithTranslation {
 export function CharacterLogs(props: CharacterLogsProps) {
   const { t } = props;
   const [characterId, setCharacterId] = useState<string>('');
-  const [orgLog, setOrgLog] = useState<OrgHistoryItem[]>([]);
-  const [userLog, setUserLog] = useState<HistoryItem[]>([]);
+  const [orgLog, setOrgLog] = useState<MainHistoryItem[]>([]);
+  const [userLog, setUserLog] = useState<UserHistoryItem[]>([]);
 
   const isValid = 
     characterId.trim() !== '' 

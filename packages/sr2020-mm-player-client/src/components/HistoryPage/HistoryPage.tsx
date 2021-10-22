@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { isErrorResponse, HistoryItem, stringifyError } from 'sr2020-mm-event-engine';
+import { isErrorResponse, UserHistoryItem, stringifyError } from 'sr2020-mm-event-engine';
 import { loadHistory, logClientError, suitSpirit } from '../../api';
 import moment from 'moment';
 import './HistoryPage.css';
@@ -16,7 +16,7 @@ export function HistoryPage(props: HistoryPageProps) {
     setTitle(dictionary.historyPageTitle);
   }, []);
 
-  const [historyList, setHistoryList] = useState<HistoryItem[] | null>(null);
+  const [historyList, setHistoryList] = useState<UserHistoryItem[] | null>(null);
   const [suitSpiritStatus, setSuitSpiritStatus] = useState<string>('');
   
   useEffect(() => {
