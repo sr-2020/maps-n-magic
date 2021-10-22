@@ -16,11 +16,8 @@ import {
 } from 'sr2020-mm-event-engine';
 import { 
   createLogger, 
-  freeSpiritFromStorage, 
-  getQrModelData, 
   getSpiritWithFractionAbilities, 
   InnerApiRequest, 
-  putSpiritInStorage, 
   suitSpirit, 
   translateAbilities, 
   validateBodyStorageQrModelData, 
@@ -28,7 +25,8 @@ import {
   EndpointId, 
   EndpointLogger,
   getCharacterModelData,
-  PutSpiritRequestedCall, 
+  PutSpiritRequestedCall,
+  GetQrModelData, 
 } from 'sr2020-mm-server-event-engine';
 import { waitForSpiritSuited } from './utils';
 
@@ -54,8 +52,10 @@ export const mainSuitSpirit = async (req1, res, next) => {
 
     // copied from player-server isSpiritJarValid
 
-    const qrModelData1 = await getQrModelData(spiritJarId);
-    // const qrModelData = await getQrModelData(qrId + 1000000);
+    const qrModelData1 = await gameModel.get2<GetQrModelData>({
+      type: 'qrModelData',
+      qrId: spiritJarId
+    });
 
     const validationRes1 = validateSpiritJarQrModelData(qrModelData1);
 
@@ -94,8 +94,10 @@ export const mainSuitSpirit = async (req1, res, next) => {
 
     // copied from player-server isBodyStorageValid
 
-    const qrModelData = await getQrModelData(bodyStorageId);
-    // const qrModelData = await getQrModelData(qrId + 1000000);
+    const qrModelData = await gameModel.get2<GetQrModelData>({
+      type: 'qrModelData',
+      qrId: bodyStorageId
+    });
 
     const validationRes = validateBodyStorageQrModelData(qrModelData);
 

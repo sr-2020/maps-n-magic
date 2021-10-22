@@ -11,14 +11,14 @@ import {
 } from "sr2020-mm-event-engine";
 import { 
   createLogger, 
-  freeSpiritFromStorage, 
-  getQrModelData, 
   InnerApiRequest, 
   validateSpiritJarQrModelData,
   EndpointId, 
   EndpointLogger,
   PutSpiritRequestedCall,
-  playerMessages, 
+  playerMessages,
+  GetQrModelData,
+  FreeSpiritFromStorage, 
 } from "sr2020-mm-server-event-engine";
 import { waitForSpiritSuited } from "./utils";
 
@@ -42,7 +42,10 @@ export const mainFreeSpirit = async (req1, res, next) => {
     const { qrId, reason, characterId, messageBody } = body;
     eLogger.setCharacterId(characterId);
 
-    const qrModelData1 = await getQrModelData(qrId);
+    const qrModelData1 = await gameModel.get2<GetQrModelData>({
+      type: 'qrModelData',
+      qrId
+    });
 
     const validationRes = validateSpiritJarQrModelData(qrModelData1);
 
@@ -77,7 +80,11 @@ export const mainFreeSpirit = async (req1, res, next) => {
         spiritId
       })}`);
 
-      const qrModelData = await freeSpiritFromStorage(Number(qrId), reason);
+      const qrModelData = await gameModel.execute2<FreeSpiritFromStorage>({
+        type: 'freeSpiritFromStorage',
+        spiritStorageId: Number(qrId),
+        reason
+      });
 
       const errorResponse = validateSpiritJarQrModelData(qrModelData);
 
@@ -120,7 +127,11 @@ export const mainFreeSpirit = async (req1, res, next) => {
       }
     }
 
-    const qrModelData2 = await freeSpiritFromStorage(Number(qrId), reason);
+    const qrModelData2 = await gameModel.execute2<FreeSpiritFromStorage>({
+      type: 'freeSpiritFromStorage',
+      spiritStorageId: Number(qrId),
+      reason
+    });
 
     const errorResponse = validateSpiritJarQrModelData(qrModelData2);
 
@@ -130,7 +141,10 @@ export const mainFreeSpirit = async (req1, res, next) => {
       return;
     }
 
-    const qrModelData3 = await getQrModelData(qrId) as FullSpiritJarQr;
+    const qrModelData3 = await gameModel.get2<GetQrModelData>({
+      type: 'qrModelData',
+      qrId
+    }) as FullSpiritJarQr;
 
     const isJarEmpty = isEmptySpiritJar(qrModelData3);
 

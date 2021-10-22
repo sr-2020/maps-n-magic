@@ -7,7 +7,7 @@ import {
 } from "sr2020-mm-event-engine";
 import { 
   createLogger, 
-  getQrModelData, 
+  GetQrModelData, 
   MainAuthorizedRequest, 
 } from "sr2020-mm-server-event-engine";
 import { analyzeSpiritJarQr, analyzeBodyStorageQr } from "./checkQrById";
@@ -22,7 +22,10 @@ export const mainCheckSpiritJarsBatch = async (req1, res, next) => {
   const { gameModel } = req;
 
   try {
-    const promises = spiritJarList.map((qrId) => getQrModelData(qrId).then(qrModelData1 => {
+    const promises = spiritJarList.map((qrId) => gameModel.get2<GetQrModelData>({
+      type: 'qrModelData',
+      qrId
+    }).then(qrModelData1 => {
       if (!validateCommonQr(qrModelData1)) {
         const message = `Данные QR не корректны. Данные модели ${JSON.stringify(qrModelData1)}, ошибки валидации ${JSON.stringify(validateCommonQr.errors)}`;
         return {
@@ -64,7 +67,10 @@ export const mainCheckBodyStorageBatch = async (req1, res, next) => {
   const { gameModel } = req;
 
   try {
-    const promises = bodyStorageList.map((qrId) => getQrModelData(qrId).then(qrModelData1 => {
+    const promises = bodyStorageList.map((qrId) => gameModel.get2<GetQrModelData>({
+      type: 'qrModelData',
+      qrId
+    }).then(qrModelData1 => {
       if (!validateCommonQr(qrModelData1)) {
         const message = `Данные QR не корректны. Данные модели ${JSON.stringify(qrModelData1)}, ошибки валидации ${JSON.stringify(validateCommonQr.errors)}`;
         return {

@@ -1,6 +1,5 @@
 import fetch from 'isomorphic-fetch';
 import { 
-  getQrModelData, 
   createLogger,
   validateSpiritJarQrModelData,
 } from 'sr2020-mm-server-event-engine';

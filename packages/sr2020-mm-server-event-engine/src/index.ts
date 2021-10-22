@@ -10,6 +10,7 @@ export * from './services/AuthService';
 export * from './services/MockedAuthService';
 export * from './services/UserLogService';
 export * from './services/MainLogService';
+export * from './services/QrModelService';
 export * from './types';
 export * from './api';
 export * from './utils';

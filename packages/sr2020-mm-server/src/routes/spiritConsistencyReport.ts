@@ -3,7 +3,7 @@ import {
 } from "sr2020-mm-event-engine";
 import { 
   createLogger, 
-  getQrModelData, 
+  GetQrModelData, 
   MainAuthorizedRequest, 
   validateSpiritJarQrModelData, 
 } from "sr2020-mm-server-event-engine";
@@ -31,7 +31,10 @@ export const mainSpiritConsistencyReport = async (req1, res, next) => {
       const { qrId } = state;
       // getSpirit
 
-      return getQrModelData(qrId).then((qrModelData1): SpiritConsistencyResponse | null => {
+      return gameModel.get2<GetQrModelData>({
+        type: 'qrModelData',
+        qrId
+      }).then((qrModelData1): SpiritConsistencyResponse | null => {
 
         const validationRes = validateSpiritJarQrModelData(qrModelData1);
     

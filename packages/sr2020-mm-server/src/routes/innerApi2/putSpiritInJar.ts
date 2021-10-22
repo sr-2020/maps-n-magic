@@ -11,7 +11,14 @@ import {
   isFullSpiritJar,
   Spirit
 } from 'sr2020-mm-event-engine';
-import { createLogger, getQrModelData, InnerApiRequest, mmLog, putSpiritInStorage, validateSpiritJarQrModelData } from 'sr2020-mm-server-event-engine';
+import { 
+  createLogger, 
+  GetQrModelData, 
+  InnerApiRequest, 
+  mmLog, 
+  PutSpiritInStorage, 
+  validateSpiritJarQrModelData 
+} from 'sr2020-mm-server-event-engine';
 import { NextFunction, Request, Response } from "express-serve-static-core";
 import shortid from 'shortid';
 import { postSpirit } from 'sr2020-mm-server-event-engine';
@@ -49,7 +56,10 @@ export const putSpiritInJar = async (req1: Request, res: Response, next: NextFun
     mmLog(gameModel, 'SPIRIT_SELL_ATTEMPT', `${uid} data ${JSON.stringify(body)}`);
 
     // 2. get qr model and check if it is SpiritJar
-    const qrModelData1 = await getQrModelData(qrId);
+    const qrModelData1 = await gameModel.get2<GetQrModelData>({
+      type: 'qrModelData',
+      qrId
+    });
 
     const validationRes = validateSpiritJarQrModelData(qrModelData1);
 
@@ -87,7 +97,11 @@ export const putSpiritInJar = async (req1: Request, res: Response, next: NextFun
 
     const spirit = await postSpirit(rawSpirit);
 
-    const putResult = await putSpiritInStorage(qrId, spirit.id);
+    const putResult = await gameModel.execute2<PutSpiritInStorage>({
+      type: 'putSpiritInStorage',
+      spiritStorageId: qrId,
+      spiritId: spirit.id
+    });
     logger.info(`SPIRIT_SELL_SUCCESS ${uid} ${spirit} ${putResult}`);
 
     mmLog(gameModel, 'SPIRIT_SELL_SUCCESS', `${uid} ${JSON.stringify(spirit)}`);

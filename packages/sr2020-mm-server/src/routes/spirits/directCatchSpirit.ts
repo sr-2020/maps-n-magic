@@ -15,13 +15,13 @@ import {
   createLogger, 
   DecrementAttempt, 
   GetCatcherState, 
-  getQrModelData, 
   InnerApiRequest, 
-  putSpiritInStorage, 
   EndpointId, 
   EndpointLogger, 
   validateSpiritJarQrModelData, 
-  PutSpiritRequestedCall
+  PutSpiritRequestedCall,
+  GetQrModelData,
+  PutSpiritInStorage
 } from 'sr2020-mm-server-event-engine';
 import { waitForSpiritSuited } from './utils';
 
@@ -82,7 +82,10 @@ export const mainDirectCatchSpirit = async (req1, res, next) => {
     }
 
     // 2. get qr model and check if it is SpiritJar
-    const qrModelData1 = await getQrModelData(qrId);
+    const qrModelData1 = await gameModel.get2<GetQrModelData>({
+      type: 'qrModelData',
+      qrId
+    });
 
     const validationRes = validateSpiritJarQrModelData(qrModelData1);
 
@@ -216,10 +219,17 @@ export const mainDirectCatchSpirit = async (req1, res, next) => {
 
     const result = await waitForSpiritSuited('catchSpirit', req.gameModel, spirit.id);
 
-    const putResult = await putSpiritInStorage(qrId, spiritId);
+    const putResult = await gameModel.execute2<PutSpiritInStorage>({
+      type: 'putSpiritInStorage',
+      spiritStorageId: qrId,
+      spiritId
+    });
     // logger.info('put spirit success confirmation', putResult);
 
-    const qrModelData2 = await getQrModelData(qrId) as FullSpiritJarQr;
+    const qrModelData2 = await gameModel.get2<GetQrModelData>({
+      type: 'qrModelData',
+      qrId
+    }) as FullSpiritJarQr;
 
     const isInJar = Number(qrModelData2.workModel.data.spiritId) === spiritId;
     logger.info(`Spirit ${spiritId} isInJar ${isInJar} ${qrId}`);

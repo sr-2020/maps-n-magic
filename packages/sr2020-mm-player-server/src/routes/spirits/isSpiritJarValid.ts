@@ -8,7 +8,7 @@ import {
 } from "sr2020-mm-event-engine";
 import { 
   createLogger, 
-  getQrModelData, 
+  GetQrModelData, 
   getSpiritWithFractionAbilities, 
   PlayerAuthorizedRequest, 
   translateAbilities, 
@@ -23,6 +23,7 @@ const logger = createLogger('isSpiritJarValid.ts');
 export const isSpiritJarValid = async (req1, res, next) => {
   const req = req1 as PlayerAuthorizedRequest;
   const { spiritJarQrString, shouldBeEmpty } = req.query;
+  const { gameModel } = req;
   if (typeof spiritJarQrString !== 'string' || 
     (shouldBeEmpty !== 'true' && shouldBeEmpty !== 'false')) {
     const errorResponse: ErrorResponse = {
@@ -43,8 +44,10 @@ export const isSpiritJarValid = async (req1, res, next) => {
       return;
     }
 
-    const qrModelData = await getQrModelData(qrId);
-    // const qrModelData = await getQrModelData(qrId + 1000000);
+    const qrModelData = await gameModel.get2<GetQrModelData>({
+      type: 'qrModelData',
+      qrId
+    });
 
     const validationRes = validateSpiritJarQrModelData(qrModelData);
 
