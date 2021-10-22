@@ -63,6 +63,7 @@ import { MainLogService } from '../services/MainLogService';
 import { MockedMainLogService } from '../services/MockedMainLogService';
 import { MockedUserLogService } from '../services/MockedUserLogService';
 import { QrModelService } from '../services/QrModelService';
+import { CharacterModelService } from '../services/CharacterModelService';
 // Push notifications delivery was unstable so decided to disable this feature
 // if we don't have better solution.
 // For details see https://trello.com/c/giDbdVGa/628-фантомные-кс-пуши-в-уведомлении
@@ -150,6 +151,7 @@ export function makeGameModel(): {
     SpiritPhraseService,
     PlayerMessagesService,
     QrModelService,
+    CharacterModelService,
   
     // all features getter - abilities, spells, archetypes and other
     FeatureService,

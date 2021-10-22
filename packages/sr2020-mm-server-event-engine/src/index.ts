@@ -11,6 +11,7 @@ export * from './services/MockedAuthService';
 export * from './services/UserLogService';
 export * from './services/MainLogService';
 export * from './services/QrModelService';
+export * from './services/CharacterModelService';
 export * from './types';
 export * from './api';
 export * from './utils';

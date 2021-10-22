@@ -11,7 +11,7 @@ import {
   EndpointLogger, 
   InnerApiRequest, 
   PutSpiritRequestedCall, 
-  zeroSpiritAbilities
+  ZeroSpiritAbilities, 
 } from 'sr2020-mm-server-event-engine';
 
 const logger = createLogger('emergencyDispirit.ts');
@@ -57,7 +57,10 @@ export const mainEmergencyDispirit = async (req1, res, next) => {
       return;
     }
 
-    await zeroSpiritAbilities(characterId);
+    await gameModel.execute2<ZeroSpiritAbilities>({
+      type: 'zeroSpiritAbilities',
+      characterId
+    });
 
     await (req.gameModel as unknown as PutSpiritRequestedCall).putSpiritRequested({
       id: spirit.id,

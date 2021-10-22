@@ -19,6 +19,7 @@ import {
 import { getCharacterModelData } from '../api';
 import { mmLog } from '../api/spirits/mmLog';
 import { logCharacterAction } from '../utils';
+import { GetCharacterModelData } from './CharacterModelService';
 
 export type CatcherStatesArg = {
   catcherStates: CatcherStates
@@ -111,7 +112,11 @@ export class SpiritCatcherService extends AbstractService<SpiritCatcherServiceCo
 
     const { characterId, power } = data;
     
-    const characterData = await getCharacterModelData(Number(characterId));
+    const characterData = await this.gameModel.get2<GetCharacterModelData>({
+      type: 'characterModelData',
+      modelId: Number(characterId)
+    });
+
     if (!validateCharacterModelData(characterData)) {
       this.logger.warn(`model ${characterId} is not valid. Model ${JSON.stringify(data)}, errors ${JSON.stringify(validateCharacterModelData.errors)}`);
     } else {

@@ -60,9 +60,6 @@ router.post('/api/login', async (req1, res) => {
         return;
       }
 
-      // const data = await getCharacterModelData(authRequest.username);
-      // logger.info(data);
-
       const data = await req.characterWatcher.getCharacterModel(parsedToken.modelId);
 
       if (!hasAbility(data, Ability.ArchMage)) {

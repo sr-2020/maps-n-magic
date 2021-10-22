@@ -11,9 +11,9 @@ import {
   DoHealState,
   GetUserRecord,
 } from 'sr2020-mm-event-engine';
-import { clinicalDeathCombo, zeroSpiritAbilities } from '../../api/characterModel';
 import { mmLog } from '../../api/spirits/mmLog';
 import { createLogger, logCharacterAction } from '../../utils';
+import { ClinicalDeathCombo, ZeroSpiritAbilities } from '../CharacterModelService';
 
 import { SpiritRouteContext, CurRouteSearchRes } from "./types";
 
@@ -100,7 +100,12 @@ function getUpdatedNonNormalSuitedState(
       type: 'userRecord',
       id: characterId
     });
-    clinicalDeathCombo(characterId, bodyStorageId, userRecord?.location_id || null).then(() => {
+    gameModel.execute2<ClinicalDeathCombo>({
+      type: 'clinicalDeathCombo',
+      characterId, 
+      bodyStorageId, 
+      locationId: userRecord?.location_id || null
+    }).then(() => {
       logger.info(`TIMEOUT_DISPIRIT_2 applied clinicalDeath to character ${characterId}`);
       mmLog(gameModel, 'TIMEOUT_DISPIRIT_2', `applied clinicalDeath to character ${characterId}`);
     }).catch( err => {
@@ -143,7 +148,10 @@ function getUpdatedNormalSuitedState(
       suitStatus: 'suitTimeout',
       suitStatusChangeTime: dateNow
     };
-    zeroSpiritAbilities(characterId).then(() => {
+    gameModel.execute2<ZeroSpiritAbilities>({
+      type: 'zeroSpiritAbilities',
+      characterId
+    }).then(() => {
       logger.info(`TIMEOUT_DISPIRIT zeroSpiritAbilities for character ${characterId}`);
       mmLog(gameModel, 'TIMEOUT_DISPIRIT', `zeroSpiritAbilities for character ${characterId}`);
     }).catch(err => {

@@ -107,9 +107,6 @@ export const login = async (req1: Request, res: Response) => {
         return;
       }
 
-      // const data = await getCharacterModelData(authRequest.username);
-      // logger.info(data);
-
       res.cookie('mm_token', api_key, { httpOnly: true });
       // logger.info(`SUCCESS login ${authRequest.username}`);
       res.json(parsedToken);
