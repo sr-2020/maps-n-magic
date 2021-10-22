@@ -50,7 +50,7 @@ function getUpdatedDoHealState(
   spirit: Spirit, 
   context: SpiritRouteContext,
 ): RestInAstralState | undefined {
-  const { dateNow } = context;
+  const { dateNow, gameModel } = context;
   const { healStartTime } = state;
   const healTimeout = 60 * 60 * 1000; // 1 hour
   if ((healStartTime + healTimeout) < dateNow ) {
@@ -60,7 +60,7 @@ function getUpdatedDoHealState(
     logger.info(`SPIRIT_HEALED ${spirit.id} ${spirit.name}. Data ${JSON.stringify({
       state
     })}`);
-    mmLog('SPIRIT_HEALED', `${spirit.id} ${spirit.name}. Data ${JSON.stringify({
+    mmLog(gameModel, 'SPIRIT_HEALED', `${spirit.id} ${spirit.name}. Data ${JSON.stringify({
       state
     })}`);
     return newState;
@@ -102,10 +102,10 @@ function getUpdatedNonNormalSuitedState(
     });
     clinicalDeathCombo(characterId, bodyStorageId, userRecord?.location_id || null).then(() => {
       logger.info(`TIMEOUT_DISPIRIT_2 applied clinicalDeath to character ${characterId}`);
-      mmLog('TIMEOUT_DISPIRIT_2', `applied clinicalDeath to character ${characterId}`);
+      mmLog(gameModel, 'TIMEOUT_DISPIRIT_2', `applied clinicalDeath to character ${characterId}`);
     }).catch( err => {
       logger.error(`TIMEOUT_DISPIRIT_2_ERROR applied clinicalDeath to character ${characterId}`, err);
-      mmLog('TIMEOUT_DISPIRIT_2_ERROR', `applied clinicalDeath to character ${characterId} ${JSON.stringify(err)}`);
+      mmLog(gameModel, 'TIMEOUT_DISPIRIT_2_ERROR', `applied clinicalDeath to character ${characterId} ${JSON.stringify(err)}`);
     });
 
     logCharacterAction(
@@ -145,10 +145,10 @@ function getUpdatedNormalSuitedState(
     };
     zeroSpiritAbilities(characterId).then(() => {
       logger.info(`TIMEOUT_DISPIRIT zeroSpiritAbilities for character ${characterId}`);
-      mmLog('TIMEOUT_DISPIRIT', `zeroSpiritAbilities for character ${characterId}`);
+      mmLog(gameModel, 'TIMEOUT_DISPIRIT', `zeroSpiritAbilities for character ${characterId}`);
     }).catch(err => {
       logger.error(`TIMEOUT_DISPIRIT_ERROR zeroSpiritAbilities for character ${characterId}`, err);
-      mmLog('TIMEOUT_DISPIRIT_ERROR', `zeroSpiritAbilities for character ${characterId}. err ${JSON.stringify({
+      mmLog(gameModel, 'TIMEOUT_DISPIRIT_ERROR', `zeroSpiritAbilities for character ${characterId}. err ${JSON.stringify({
         err
       })}`);
     });

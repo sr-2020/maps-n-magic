@@ -135,7 +135,7 @@ export class SpiritMovementService extends AbstractService<SpiritMovementService
     
     if (updates.length > 0) {
       this.logger.info('SPIRIT_UPDATES', JSON.stringify(spiritUpdatesLog));
-      mmLog('SPIRIT_UPDATES', JSON.stringify(spiritUpdatesLog));
+      mmLog(this.gameModel, 'SPIRIT_UPDATES', JSON.stringify(spiritUpdatesLog));
       this.emit2({
         type: 'putSpiritsRequested',
         updates

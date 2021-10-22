@@ -17,8 +17,8 @@ import {
   InnerApiRequest,
   MainAuthorizedRequest,
   GetCatcherStates,
-  mmGetLog,
-  GetUserLog
+  GetUserLog,
+  GetMainLog
 } from 'sr2020-mm-server-event-engine';
 import { ErrorResponse, validateWebSocketInitClientConfig, WebSocketInitClientConfig } from 'sr2020-mm-event-engine';
 
@@ -126,6 +126,7 @@ app.post('/api/directCatchSpirit', mainDirectCatchSpirit);
 
 app.get('/api/orgLogs/:characterId', async (req1, res, next) => {
   const req = req1 as MainAuthorizedRequest;
+  const { gameModel } = req;
 
   try {
 
@@ -135,7 +136,10 @@ app.get('/api/orgLogs/:characterId', async (req1, res, next) => {
       throw new Error(`characterId ${req.params.characterId} is NaN`);
     }
 
-    const rows = await mmGetLog(characterId);
+    const rows = await gameModel.get2<GetMainLog>({
+      type: 'mainLog',
+      characterId: characterId
+    });
     res.status(200).json(rows);
   } catch (error) {
     const message = `${error} ${JSON.stringify(error)}`;

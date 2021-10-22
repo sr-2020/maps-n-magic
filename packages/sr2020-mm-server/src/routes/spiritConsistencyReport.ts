@@ -36,8 +36,6 @@ export const mainSpiritConsistencyReport = async (req1, res, next) => {
         const validationRes = validateSpiritJarQrModelData(qrModelData1);
     
         if ('errorTitle' in validationRes) {
-          // res.status(500).json(validationRes);
-          // mmLog('SPIRIT_SELL_FAIL', `${uid} error ${JSON.stringify(validationRes)}`);
           return {
             type: 'qrIsNotSpiritJar',
             message: `qrId ${qrId} is not spirit jar`,

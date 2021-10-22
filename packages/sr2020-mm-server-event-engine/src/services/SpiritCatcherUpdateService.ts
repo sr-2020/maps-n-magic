@@ -71,7 +71,7 @@ export class SpiritCatcherUpdateService extends AbstractService<SpiritCatcherUpd
       }, []);
     if (expiredStatesList.length !== 0) {
       this.logger.info(`SPIRIT_CATCHER_EXPIRED expired list ${JSON.stringify(expiredStatesList)}`);
-      mmLog('SPIRIT_CATCHER_EXPIRED', `expired list ${JSON.stringify(expiredStatesList)}`);
+      mmLog(this.gameModel, 'SPIRIT_CATCHER_EXPIRED', `expired list ${JSON.stringify(expiredStatesList)}`);
       
       expiredStatesList.forEach(characterId => {
         logCharacterAction(

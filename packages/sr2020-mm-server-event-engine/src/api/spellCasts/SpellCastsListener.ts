@@ -49,6 +49,6 @@ export class SpellCastsListener extends AbstractEventProcessor {
         uid: shortid.generate()
       }
     });
-    // mmLog('SPELL_CAST', JSON.stringify(data));
+    // mmLog(his.gameModel, 'SPELL_CAST', JSON.stringify(data));
   }
 }

@@ -166,20 +166,20 @@ export class SpiritCatcherService extends AbstractService<SpiritCatcherServiceCo
     const catcherData: CatcherData | undefined = this.catcherStates[characterId];
     if (catcherData === undefined) {
       this.logger.info(`SPIRIT_CATCHER_FAIL Not found catcher state for character ${characterId} for decrement attempt`);
-      mmLog('SPIRIT_CATCHER_FAIL', `Not found catcher state for character ${characterId} for decrement attempt`);
+      mmLog(this.gameModel, 'SPIRIT_CATCHER_FAIL', `Not found catcher state for character ${characterId} for decrement attempt`);
       return;
     }
     if (catcherData.attemptNumber === 1) {
       delete this.catcherStates[characterId];
       this.logger.info(`SPIRIT_CATCHER_DECREMENT_ATTEMPT character ${characterId} attempts ended.`);
-      mmLog('SPIRIT_CATCHER_DECREMENT_ATTEMPT', `character ${characterId} attempts ended.`);
+      mmLog(this.gameModel, 'SPIRIT_CATCHER_DECREMENT_ATTEMPT', `character ${characterId} attempts ended.`);
     } else {
       this.catcherStates[characterId] = {
         ...catcherData,
         attemptNumber: catcherData.attemptNumber - 1
       };
       this.logger.info(`SPIRIT_CATCHER_DECREMENT_ATTEMPT character ${characterId} made catch attempt. New attempt ${catcherData.attemptNumber - 1}`);
-      mmLog('SPIRIT_CATCHER_DECREMENT_ATTEMPT', `character ${characterId} made catch attempt. New attempt ${catcherData.attemptNumber - 1}`);
+      mmLog(this.gameModel, 'SPIRIT_CATCHER_DECREMENT_ATTEMPT', `character ${characterId} made catch attempt. New attempt ${catcherData.attemptNumber - 1}`);
     }
     this.emit2({
       type: 'catcherStatesChanged',

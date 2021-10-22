@@ -194,7 +194,7 @@ export class ManaOceanService extends AbstractService<ManaOceanServiceContract> 
     }
 
     // this.logger.info('SPELL_CAST_MANA_OCEAN_STREAM', JSON.stringify(data));
-    // mmLog('SPELL_CAST_MANA_OCEAN_STREAM', JSON.stringify(data));
+    // mmLog(this.gameModel, 'SPELL_CAST_MANA_OCEAN_STREAM', JSON.stringify(data));
 
     this.executeOnModel2({
       type: 'pushNotification',
@@ -650,7 +650,7 @@ export class ManaOceanService extends AbstractService<ManaOceanServiceContract> 
       el.id,
       el.body.options?.manaLevel
     ])))}`);
-    mmLog('MANA_OCEAN_UPDATES', `[id, manaLevel] ${JSON.stringify(updates.map(el => ([
+    mmLog(this.gameModel, 'MANA_OCEAN_UPDATES', `[id, manaLevel] ${JSON.stringify(updates.map(el => ([
       el.id,
       el.body.options?.manaLevel
     ])))}`);

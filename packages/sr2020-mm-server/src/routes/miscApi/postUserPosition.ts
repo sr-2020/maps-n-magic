@@ -25,11 +25,11 @@ export const postUserPosition = (req1: Request, res: Response, next: NextFunctio
   }).then(() => {
     res.sendStatus(200);
     logger.info('POST_USER_POSITION_SUCCESS', `characterId ${req.params.characterId}, beacon ${JSON.stringify(beacon)}`);
-    mmLog('POST_USER_POSITION_SUCCESS', `characterId ${req.params.characterId}, beacon ${JSON.stringify(beacon)}`);
+    mmLog(gameModel, 'POST_USER_POSITION_SUCCESS', `characterId ${req.params.characterId}, beacon ${JSON.stringify(beacon)}`);
   }).catch((err) => {
     logger.error(err);
     logger.info('POST_USER_POSITION_FAIL', `characterId ${req.params.characterId}, beacon ${JSON.stringify(beacon)}, err ${JSON.stringify(err)}`);
-    mmLog('POST_USER_POSITION_FAIL', `characterId ${req.params.characterId}, beacon ${JSON.stringify(beacon)}, err ${JSON.stringify(err)}`);
+    mmLog(gameModel, 'POST_USER_POSITION_FAIL', `characterId ${req.params.characterId}, beacon ${JSON.stringify(beacon)}, err ${JSON.stringify(err)}`);
     next(err);
   });
 }

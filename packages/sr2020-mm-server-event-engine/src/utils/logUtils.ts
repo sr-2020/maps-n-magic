@@ -37,7 +37,7 @@ export function logCharacterAction(
 ) {
   if (!userOnly) {
     logger.info(type, `${uid} Character ${characterId} ${message}`);
-    mmLog(type, `${uid} Character ${characterId} ${message}`);
+    mmLog(gameModel, type, `${uid} Character ${characterId} ${message}`);
   }
   gameModel.execute2<PutUserLogRecord>({
     type: 'putUserLogRecord',
@@ -61,12 +61,12 @@ export class EndpointLogger {
   
   attempt ( body: unknown ) {
     this.logger.info(this.endpointId + '_ATTEMPT', `${this.uid} data ${JSON.stringify(body)}`);
-    mmLog(this.endpointId + '_ATTEMPT', `${this.uid} data ${JSON.stringify(body)}`);
+    mmLog(this.gameModel, this.endpointId + '_ATTEMPT', `${this.uid} data ${JSON.stringify(body)}`);
   }
   
   success ( message: string, userMessage: string = '' ) {
     this.logger.info(this.endpointId + '_SUCCESS', `${this.uid} Character ${this.characterId} ${message}`);
-    mmLog(this.endpointId + '_SUCCESS', `${this.uid} Character ${this.characterId} ${message}`);
+    mmLog(this.gameModel, this.endpointId + '_SUCCESS', `${this.uid} Character ${this.characterId} ${message}`);
     if (this.characterId !== null) {
       this.gameModel.execute2<PutUserLogRecord>({
         type: 'putUserLogRecord',
@@ -81,7 +81,7 @@ export class EndpointLogger {
   
   fail ( error: ErrorResponse, userMessage: string = '' ) {
     this.logger.info(this.endpointId + '_FAIL', `${this.uid} Character ${this.characterId} error ${JSON.stringify(error)}`);
-    mmLog(this.endpointId + '_FAIL', `${this.uid} Character ${this.characterId} error ${JSON.stringify(error)}`);
+    mmLog(this.gameModel, this.endpointId + '_FAIL', `${this.uid} Character ${this.characterId} error ${JSON.stringify(error)}`);
     if (this.characterId !== null) {
       this.gameModel.execute2<PutUserLogRecord>({
         type: 'putUserLogRecord',
