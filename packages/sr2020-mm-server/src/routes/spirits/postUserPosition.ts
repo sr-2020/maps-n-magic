@@ -5,16 +5,16 @@ import {
 } from "sr2020-mm-event-engine";
 import { 
   createLogger, 
-  PlayerAuthorizedRequest, 
   EndpointId, 
   EndpointLogger,
+  InnerApiRequest,
   PostUserPosition, 
 } from "sr2020-mm-server-event-engine";
 
 const logger = createLogger('tmp/postUserPosition.ts');
 
 export const mainPostUserPosition = async (req1, res, next) => {
-  const req = req1 as PlayerAuthorizedRequest;
+  const req = req1 as InnerApiRequest;
   const { body, gameModel } = req;
   const eLogger = new EndpointLogger(gameModel, logger, EndpointId.POST_USER_POSITION);
   

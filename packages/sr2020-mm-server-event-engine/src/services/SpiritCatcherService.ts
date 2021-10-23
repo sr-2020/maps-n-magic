@@ -16,7 +16,6 @@ import {
   CatcherData, 
   CatcherStates 
 } from 'sr2020-mm-event-engine';
-import { getCharacterModelData } from '../api';
 import { mmLog } from '../api/spirits/mmLog';
 import { logCharacterAction } from '../utils';
 import { GetCharacterModelData } from './CharacterModelService';

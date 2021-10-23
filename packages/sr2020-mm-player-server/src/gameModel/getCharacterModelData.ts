@@ -1,6 +1,7 @@
 import fetch from 'isomorphic-fetch';
 import { CharacterModelData } from 'sr2020-mm-event-engine';
-import { genericServerConstants2 } from './constants';
+import { genericServerConstants2 } from 'sr2020-mm-server-event-engine';
+// import { genericServerConstants2 } from './constants';
 
 // https://models-manager.evarun.ru/character/model/51935
 export async function getCharacterModelData(modelId: number): Promise<CharacterModelData> {

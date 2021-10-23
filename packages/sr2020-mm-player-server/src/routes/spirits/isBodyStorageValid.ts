@@ -2,10 +2,10 @@ import { ErrorResponse, isEmptyBodyStorage, isFullBodyStorage } from "sr2020-mm-
 import { 
   createLogger, 
   GetQrModelData, 
-  PlayerAuthorizedRequest, 
   validateBodyStorageQrModelData, 
   validateSpiritJarQrModelData 
 } from "sr2020-mm-server-event-engine";
+import { PlayerAuthorizedRequest } from "../../types";
 import { decode } from "../../utils";
 import { qrIdIsNanError } from "./utils";
 

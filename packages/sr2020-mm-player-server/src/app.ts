@@ -9,11 +9,9 @@ import cors from 'cors';
 import * as core from 'express-serve-static-core';
 
 import { 
-  PlayerAuthorizedRequest,
   winstonLogger,
   playerServerConstants,
   createLogger,
-  CharacterWatcher,
 } from 'sr2020-mm-server-event-engine';
 import { makeGameModel } from "./gameModel";
 
@@ -31,6 +29,8 @@ import { loadHistory } from './routes/loadHistory';
 import { testSuitDispirit } from './testSuitDispirit';
 import { testCatchFree } from './testCatchFree';
 import { ErrorResponse } from 'sr2020-mm-event-engine';
+import { CharacterWatcher } from './gameModel/characterWatcher';
+import { PlayerAuthorizedRequest } from './types';
 
 const logger = createLogger('playerServer/app.ts');
 

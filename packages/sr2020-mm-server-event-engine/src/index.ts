@@ -15,7 +15,6 @@ export * from './services/CharacterModelService';
 export * from './types';
 export * from './api';
 export * from './utils';
-export * from './characterWatcher';
 export * from './api/spirits/spirits';
 export * from './api/spirits/mmLog';
 export * from './api/spirits/playerMessages';

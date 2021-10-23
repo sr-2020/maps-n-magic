@@ -23,7 +23,6 @@ import {
   InnerApiRequest, 
   EndpointId, 
   EndpointLogger,
-  getCharacterModelData,
   PutSpiritRequestedCall,
   GetCharacterModelData,
   Dispirit, 

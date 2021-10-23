@@ -3,9 +3,9 @@ import {
 } from "sr2020-mm-event-engine";
 import { 
   createLogger, 
-  PlayerAuthorizedRequest, 
   playerServerConstants, 
 } from "sr2020-mm-server-event-engine";
+import { PlayerAuthorizedRequest } from "../../types";
 import { playerServerCookie } from "../../utils";
 
 const logger = createLogger('emergencyDispirit.ts');

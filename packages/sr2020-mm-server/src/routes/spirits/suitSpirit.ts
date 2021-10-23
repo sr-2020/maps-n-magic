@@ -24,7 +24,6 @@ import {
   validateSpiritJarQrModelData,
   EndpointId, 
   EndpointLogger,
-  getCharacterModelData,
   PutSpiritRequestedCall,
   GetQrModelData,
   GetCharacterModelData,

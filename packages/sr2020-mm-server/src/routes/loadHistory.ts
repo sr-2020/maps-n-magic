@@ -3,14 +3,14 @@ import {
 } from "sr2020-mm-event-engine";
 import { 
   createLogger, 
-  GetUserLog, 
-  PlayerAuthorizedRequest, 
+  GetUserLog,
+  MainAuthorizedRequest, 
 } from "sr2020-mm-server-event-engine";
 
 const logger = createLogger('main/loadHistory.ts');
 
 export const mainLoadHistory = async (req1, res, next) => {
-  const req = req1 as PlayerAuthorizedRequest;
+  const req = req1 as MainAuthorizedRequest;
 
   try {
     const { gameModel } = req;

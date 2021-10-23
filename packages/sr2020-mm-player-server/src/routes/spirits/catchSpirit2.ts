@@ -1,11 +1,11 @@
 import { CatchSpiritInternalRequest, ErrorResponse, GetSpirit, invalidRequestBody, validateCatchSpirit2RequestBody } from "sr2020-mm-event-engine";
 import { 
-  PlayerAuthorizedRequest, 
   createLogger, 
   playerServerConstants, 
   validateSpiritJarQrModelData, 
   GetQrModelData 
 } from "sr2020-mm-server-event-engine";
+import { PlayerAuthorizedRequest } from "../../types";
 import { decode, playerServerCookie } from "../../utils";
 import { qrIdIsNanError } from "./utils";
 

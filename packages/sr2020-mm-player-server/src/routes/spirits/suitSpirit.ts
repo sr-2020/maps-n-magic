@@ -7,10 +7,10 @@ import {
 } from "sr2020-mm-event-engine";
 import { 
   createLogger, 
-  PlayerAuthorizedRequest, 
   playerServerConstants, 
 } from "sr2020-mm-server-event-engine";
 import { PutCharacterMessage } from "../../gameModel/MessageService";
+import { PlayerAuthorizedRequest } from "../../types";
 import { decode, playerServerCookie } from "../../utils";
 import { qrIdIsNanError } from "./utils";
 

@@ -12,10 +12,10 @@ import {
   createLogger, 
   GetQrModelData, 
   getSpiritWithFractionAbilities, 
-  PlayerAuthorizedRequest, 
   translateAbilities, 
   validateSpiritJarQrModelData 
 } from "sr2020-mm-server-event-engine";
+import { PlayerAuthorizedRequest } from '../../types';
 import { decode } from "../../utils";
 import { qrIdIsNanError } from "./utils";
 
