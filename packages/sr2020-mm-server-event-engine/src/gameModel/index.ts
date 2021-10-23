@@ -63,6 +63,7 @@ import { MainLogService } from '../services/MainLogService';
 import { MockedMainLogService } from '../services/MockedMainLogService';
 import { MockedUserLogService } from '../services/MockedUserLogService';
 import { QrModelService } from '../services/QrModelService';
+import { MockedQrModelService } from '../services/MockedQrModelService';
 import { CharacterModelService } from '../services/CharacterModelService';
 // Push notifications delivery was unstable so decided to disable this feature
 // if we don't have better solution.
@@ -151,6 +152,7 @@ export function makeGameModel(): {
     SpiritPhraseService,
     PlayerMessagesService,
     QrModelService,
+    // MockedQrModelService,
     CharacterModelService,
   
     // all features getter - abilities, spells, archetypes and other

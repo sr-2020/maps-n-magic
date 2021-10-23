@@ -3,7 +3,10 @@ import {
   createLogger, 
   playerServerConstants, 
   validateSpiritJarQrModelData, 
-  GetQrModelData 
+  GetQrModelData, 
+  ExpectedQr,
+  refSpiritJarQrId,
+  refSpiritId
 } from "sr2020-mm-server-event-engine";
 import { PlayerAuthorizedRequest } from "../../types";
 import { decode, playerServerCookie } from "../../utils";
@@ -31,7 +34,8 @@ export const catchSpirit2 = async (req1, res, next) => {
 
     const qrModelData1 = await gameModel.get2<GetQrModelData>({
       type: 'qrModelData',
-      qrId
+      qrId,
+      expectedQr: ExpectedQr.anySpiritJar
     });
 
     const validationRes = validateSpiritJarQrModelData(qrModelData1);
@@ -80,9 +84,10 @@ export const catchSpirit2 = async (req1, res, next) => {
     //   }
     // }
 
+    const mocked = playerServerConstants().MOCKED;
     const reqBody: CatchSpiritInternalRequest = {
-      qrId,
-      spiritId,
+      qrId: mocked ? refSpiritJarQrId : qrId,
+      spiritId: mocked ? refSpiritId : spiritId,
       characterId: req.userData.modelId
     };
 

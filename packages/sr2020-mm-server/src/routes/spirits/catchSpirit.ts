@@ -21,7 +21,8 @@ import {
   validateSpiritJarQrModelData, 
   PutSpiritRequestedCall,
   GetQrModelData,
-  PutSpiritInStorage
+  PutSpiritInStorage,
+  ExpectedQr
 } from 'sr2020-mm-server-event-engine';
 import { waitForSpiritSuited } from './utils';
 
@@ -84,7 +85,8 @@ export const mainCatchSpirit = async (req1, res, next) => {
     // 2. get qr model and check if it is SpiritJar
     const qrModelData1 = await gameModel.get2<GetQrModelData>({
       type: 'qrModelData',
-      qrId
+      qrId,
+      expectedQr: ExpectedQr.emptySpiritJar
     });
 
     const validationRes = validateSpiritJarQrModelData(qrModelData1);
@@ -228,7 +230,8 @@ export const mainCatchSpirit = async (req1, res, next) => {
 
     const qrModelData2 = await gameModel.get2<GetQrModelData>({
       type: 'qrModelData',
-      qrId
+      qrId,
+      expectedQr: ExpectedQr.fullSpiritJar
     }) as FullSpiritJarQr;
 
     const isInJar = Number(qrModelData2.workModel.data.spiritId) === spiritId;

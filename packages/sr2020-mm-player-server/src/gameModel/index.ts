@@ -14,7 +14,8 @@ import {
   winstonLogger as rootLogger,
   SpiritCatcherService,
   AuthService,
-  QrModelService
+  QrModelService,
+  MockedQrModelService
 } from "sr2020-mm-server-event-engine";
 
 import { LocationDataService } from "./LocationDataService";
@@ -33,6 +34,7 @@ const services = [
   MessageService,
   AuthService,
   QrModelService,
+  // MockedQrModelService,  
   // SpiritPhraseService,
 ];
 

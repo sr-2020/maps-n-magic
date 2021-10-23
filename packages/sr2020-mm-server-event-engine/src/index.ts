@@ -11,6 +11,7 @@ export * from './services/MockedAuthService';
 export * from './services/UserLogService';
 export * from './services/MainLogService';
 export * from './services/QrModelService';
+export * from './services/MockedQrModelService';
 export * from './services/CharacterModelService';
 export * from './types';
 export * from './api';
@@ -19,5 +20,6 @@ export * from './api/spirits/spirits';
 export * from './api/spirits/mmLog';
 export * from './api/spirits/playerMessages';
 export * from './api/position';
+export * from './mockedData/qrModels';
 
 import "./processTerminationHandler";

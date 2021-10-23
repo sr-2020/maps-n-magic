@@ -18,7 +18,8 @@ import {
   PutSpiritRequestedCall,
   playerMessages,
   GetQrModelData,
-  FreeSpiritFromStorage, 
+  FreeSpiritFromStorage,
+  ExpectedQr, 
 } from "sr2020-mm-server-event-engine";
 import { waitForSpiritSuited } from "./utils";
 
@@ -44,7 +45,8 @@ export const mainFreeSpirit = async (req1, res, next) => {
 
     const qrModelData1 = await gameModel.get2<GetQrModelData>({
       type: 'qrModelData',
-      qrId
+      qrId,
+      expectedQr: ExpectedQr.fullSpiritJar
     });
 
     const validationRes = validateSpiritJarQrModelData(qrModelData1);
@@ -143,7 +145,8 @@ export const mainFreeSpirit = async (req1, res, next) => {
 
     const qrModelData3 = await gameModel.get2<GetQrModelData>({
       type: 'qrModelData',
-      qrId
+      qrId,
+      expectedQr: ExpectedQr.emptySpiritJar
     }) as FullSpiritJarQr;
 
     const isJarEmpty = isEmptySpiritJar(qrModelData3);

@@ -1,6 +1,7 @@
 import { ErrorResponse, isEmptyBodyStorage, isFullBodyStorage } from "sr2020-mm-event-engine";
 import { 
   createLogger, 
+  ExpectedQr, 
   GetQrModelData, 
   validateBodyStorageQrModelData, 
   validateSpiritJarQrModelData 
@@ -37,7 +38,8 @@ export const isBodyStorageValid = async (req1, res, next) => {
 
     const qrModelData = await gameModel.get2<GetQrModelData>({
       type: 'qrModelData',
-      qrId
+      qrId,
+      expectedQr: shouldBeEmpty2 ? ExpectedQr.emptyBodyStorage : ExpectedQr.fullBodyStorage
     });
 
     const validationRes = validateBodyStorageQrModelData(qrModelData);
@@ -47,7 +49,7 @@ export const isBodyStorageValid = async (req1, res, next) => {
       return;
     }
 
-    logger.info('shouldBeEmpty2', shouldBeEmpty2);
+    // logger.info('shouldBeEmpty2', shouldBeEmpty2);
 
     if (shouldBeEmpty2) {
       if (isFullBodyStorage(validationRes)) {

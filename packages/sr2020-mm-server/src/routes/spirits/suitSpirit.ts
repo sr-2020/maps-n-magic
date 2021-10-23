@@ -27,7 +27,8 @@ import {
   PutSpiritRequestedCall,
   GetQrModelData,
   GetCharacterModelData,
-  SuitSpirit, 
+  SuitSpirit,
+  ExpectedQr, 
 } from 'sr2020-mm-server-event-engine';
 import { waitForSpiritSuited } from './utils';
 
@@ -55,7 +56,8 @@ export const mainSuitSpirit = async (req1, res, next) => {
 
     const qrModelData1 = await gameModel.get2<GetQrModelData>({
       type: 'qrModelData',
-      qrId: spiritJarId
+      qrId: spiritJarId,
+      expectedQr: ExpectedQr.fullSpiritJar
     });
 
     const validationRes1 = validateSpiritJarQrModelData(qrModelData1);
@@ -97,7 +99,8 @@ export const mainSuitSpirit = async (req1, res, next) => {
 
     const qrModelData = await gameModel.get2<GetQrModelData>({
       type: 'qrModelData',
-      qrId: bodyStorageId
+      qrId: bodyStorageId,
+      expectedQr: ExpectedQr.emptyBodyStorage
     });
 
     const validationRes = validateBodyStorageQrModelData(qrModelData);

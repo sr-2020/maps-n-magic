@@ -14,8 +14,19 @@ import {
 } from 'sr2020-mm-event-engine';
 import { genericServerConstants2 } from '../api/constants';
 
+export enum ExpectedQr {
+  any               = 'any',
+  anySpiritJar      = 'anySpiritJar',
+  emptySpiritJar    = 'emptySpiritJar',
+  fullSpiritJar     = 'fullSpiritJar',
+  anyBodyStorage    = 'anyBodyStorage',
+  emptyBodyStorage  = 'emptyBodyStorage',
+  fullBodyStorage   = 'fullBodyStorage',
+}
+
 export type GetQrModelData = (arg: Typed<'qrModelData', {
-  qrId: number, 
+  qrId: number,
+  expectedQr: ExpectedQr
 }>) => Promise<unknown>;
 
 export type FreeSpiritFromStorage = (arg: Typed<'freeSpiritFromStorage', {
@@ -82,7 +93,7 @@ export class QrModelService extends AbstractService<QrModelServiceContract> {
     spiritStorageId, 
     reason
   }: Req<FreeSpiritFromStorage>): Res<FreeSpiritFromStorage> {
-    this.logger.info('freeSpiritFromStorage', spiritStorageId);
+    // this.logger.info('freeSpiritFromStorage', spiritStorageId);
     // await suitSpirit(51935, {
     //   "name": "Petya",
     //   "hp": 5,
@@ -114,7 +125,7 @@ export class QrModelService extends AbstractService<QrModelServiceContract> {
     spiritStorageId, 
     spiritId
   }: Req<PutSpiritInStorage>): Res<PutSpiritInStorage> {
-    this.logger.info('putSpiritInStorage', spiritStorageId);
+    // this.logger.info('putSpiritInStorage', spiritStorageId);
     // await dispirit(51935, 360, spiritStorageId);
     // return;
   

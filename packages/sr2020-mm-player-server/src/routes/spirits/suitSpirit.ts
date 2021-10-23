@@ -7,7 +7,9 @@ import {
 } from "sr2020-mm-event-engine";
 import { 
   createLogger, 
-  playerServerConstants, 
+  playerServerConstants,
+  refBodyStorageQrId,
+  refSpiritJarQrId, 
 } from "sr2020-mm-server-event-engine";
 import { PutCharacterMessage } from "../../gameModel/MessageService";
 import { PlayerAuthorizedRequest } from "../../types";
@@ -45,9 +47,10 @@ export const suitSpirit = async (req1, res, next) => {
       return;
     }
     
+    const mocked = playerServerConstants().MOCKED;
     const reqBody: SuitSpiritInternalRequest = {
-      spiritJarId,
-      bodyStorageId,
+      spiritJarId: mocked ? refSpiritJarQrId : spiritJarId,
+      bodyStorageId: mocked ? refBodyStorageQrId : bodyStorageId,
       characterId: req.userData.modelId,
       suitDuration: getSuitSpiritDurationItems(characterModelData) * basicSuitTime
       // suitDuration: 60000
@@ -64,7 +67,7 @@ export const suitSpirit = async (req1, res, next) => {
 
     const json = await suitSpiritRes.json();
 
-    logger.info('suitSpiritRes json', json);
+    // logger.info('suitSpiritRes json', json);
 
     if (suitSpiritRes.status === 200) {
       // setTimeout(() => {

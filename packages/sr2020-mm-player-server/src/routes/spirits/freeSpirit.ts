@@ -6,7 +6,9 @@ import {
 } from "sr2020-mm-event-engine";
 import { 
   createLogger, 
-  playerServerConstants, 
+  playerServerConstants,
+  refSpiritId,
+  refSpiritJarQrId, 
 } from "sr2020-mm-server-event-engine";
 import { PlayerAuthorizedRequest } from "../../types";
 import { playerServerCookie } from "../../utils";
@@ -23,8 +25,9 @@ export const freeSpirit = async (req1, res, next) => {
   const { qrId, reason, messageBody } = body;
 
   try {
+    const mocked = playerServerConstants().MOCKED;
     const reqBody: FreeSpiritInternalRequest = {
-      qrId,
+      qrId: mocked ? refSpiritJarQrId : qrId,
       reason,
       characterId: req.userData.modelId,
       messageBody

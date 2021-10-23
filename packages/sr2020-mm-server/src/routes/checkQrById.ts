@@ -16,6 +16,7 @@ import {
 } from "sr2020-mm-event-engine";
 import { 
   createLogger, 
+  ExpectedQr, 
   GetQrModelData, 
   MainAuthorizedRequest, 
 } from "sr2020-mm-server-event-engine";
@@ -37,7 +38,8 @@ export const mainCheckQrById = async (req1, res, next) => {
 
     const qrModelData1 = await gameModel.get2<GetQrModelData>({
       type: 'qrModelData',
-      qrId
+      qrId,
+      expectedQr: ExpectedQr.any
     });
 
     if (!validateCommonQr(qrModelData1)) {

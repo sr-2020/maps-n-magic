@@ -10,6 +10,7 @@ import {
 } from "sr2020-mm-event-engine";
 import { 
   createLogger, 
+  ExpectedQr, 
   GetQrModelData, 
   getSpiritWithFractionAbilities, 
   translateAbilities, 
@@ -44,7 +45,8 @@ export const getSpiritDataByQr = async (req1, res, next) => {
 
     const qrModelData = await gameModel.get2<GetQrModelData>({
       type: 'qrModelData',
-      qrId
+      qrId,
+      expectedQr: ExpectedQr.anySpiritJar
     });
 
     const validationRes = validateSpiritJarQrModelData(qrModelData);

@@ -8,7 +8,9 @@ import {
 } from "sr2020-mm-event-engine";
 import { 
   createLogger, 
-  playerServerConstants, 
+  playerServerConstants,
+  refBodyStorageQrId,
+  refSpiritJarQrId, 
 } from "sr2020-mm-server-event-engine";
 import { PutCharacterMessage } from "../../gameModel/MessageService";
 import { PlayerAuthorizedRequest } from "../../types";
@@ -50,9 +52,10 @@ export const playerDispirit = async (req1, res, next) => {
       return;
     }
 
+    const mocked = playerServerConstants().MOCKED;
     const reqBody: DispiritInternalRequest = {
-      spiritJarId,
-      bodyStorageId,
+      spiritJarId: mocked ? refSpiritJarQrId : spiritJarId,
+      bodyStorageId: mocked ? refBodyStorageQrId : bodyStorageId,
       characterId: req.userData.modelId,
       messageBody
     };
