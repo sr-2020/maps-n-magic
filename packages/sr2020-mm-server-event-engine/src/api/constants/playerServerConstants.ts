@@ -14,6 +14,7 @@ interface PlayerServerConstants extends GenericServerConstants {
   freeSpiritUrl: string;
   loadHistoryUrl: string;
   postUserPositionUrl: string;
+  innerCharacterModelUrl: string;
 };
 
 let constantsInstance: PlayerServerConstants | null = null;
@@ -40,14 +41,15 @@ export function playerServerConstants(): PlayerServerConstants {
     
     constantsInstance = {
       ...getGenericServerConstants(playerEnvVariables),
-      playerDataSseUrl: values[PlayerServerConstant.MM_MASTER_SERVER_URL] + '/innerApi/playerDataSse',
-      catchSpiritUrl: values[PlayerServerConstant.MM_MASTER_SERVER_URL] + '/innerApi/catchSpirit',
-      freeSpiritUrl: values[PlayerServerConstant.MM_MASTER_SERVER_URL] + '/innerApi/freeSpirit',
-      suitSpiritUrl: values[PlayerServerConstant.MM_MASTER_SERVER_URL] + '/innerApi/suitSpirit',
-      dispiritUrl: values[PlayerServerConstant.MM_MASTER_SERVER_URL] + '/innerApi/dispirit',
+      playerDataSseUrl:     values[PlayerServerConstant.MM_MASTER_SERVER_URL] + '/innerApi/playerDataSse',
+      catchSpiritUrl:       values[PlayerServerConstant.MM_MASTER_SERVER_URL] + '/innerApi/catchSpirit',
+      freeSpiritUrl:        values[PlayerServerConstant.MM_MASTER_SERVER_URL] + '/innerApi/freeSpirit',
+      suitSpiritUrl:        values[PlayerServerConstant.MM_MASTER_SERVER_URL] + '/innerApi/suitSpirit',
+      dispiritUrl:          values[PlayerServerConstant.MM_MASTER_SERVER_URL] + '/innerApi/dispirit',
       emergencyDispiritUrl: values[PlayerServerConstant.MM_MASTER_SERVER_URL] + '/innerApi/emergencyDispirit',
-      postUserPositionUrl: values[PlayerServerConstant.MM_MASTER_SERVER_URL] + '/innerApi/postUserPosition',
-      loadHistoryUrl: values[PlayerServerConstant.MM_MASTER_SERVER_URL] + '/innerApi/loadHistory',
+      postUserPositionUrl:  values[PlayerServerConstant.MM_MASTER_SERVER_URL] + '/innerApi/postUserPosition',
+      loadHistoryUrl:       values[PlayerServerConstant.MM_MASTER_SERVER_URL] + '/innerApi/loadHistory',
+      innerCharacterModelUrl: values[PlayerServerConstant.MM_MASTER_SERVER_URL] + '/innerApi/characterModel',
     };
   }
   assert(constantsInstance !== null);

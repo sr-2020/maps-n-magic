@@ -44,6 +44,7 @@ import { mainCheckQrById } from './routes/checkQrById';
 import { mainCheckBodyStorageBatch, mainCheckSpiritJarsBatch } from './routes/checkQrsBatch';
 import { mainForceFreeSpirit } from './routes/forceFreeSpirit';
 import { mainDirectCatchSpirit } from './routes/spirits/directCatchSpirit';
+import { getCharacterModelData } from './routes/getCharacterModelData';
 
 const logger = createLogger('mainServer/app.ts');
 
@@ -89,6 +90,7 @@ app.get('/innerApi/playerDataSse', (req1, res, next) => {
 });
 
 app.get('/innerApi/loadHistory/:characterId', mainLoadHistory);
+app.get('/innerApi/characterModel/:characterId', getCharacterModelData);
 
 // external server - main server API
 //   At this moment only for shop
