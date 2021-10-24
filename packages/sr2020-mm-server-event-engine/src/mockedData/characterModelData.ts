@@ -220,6 +220,20 @@ export const basicCharacter = {
 				"humanReadableName": "Spirit catcher (S)",
 				"hasTarget": false,
 				"sphere": "stats"
+			},
+			{
+				"id": "fireball",
+				"description": "У мага на Мощь*4 минуты появляется пассивная способность Fireball-Эффект, позволяющая кидать файерболы. Файербол должен выглядеть как обшитый мягким теннисный шар с красной лентой, его попадание обрабатывается согласно правилам по боевке (тяжелое магическое оружие). Количество доступных файерболов: Мощь/2 с округлением вверх",
+				"humanReadableName": "Fireball (S)",
+				"hasTarget": false,
+				"sphere": "fighting"
+			},
+			{
+				"id": "input-stream",
+				"description": "В течение Мощь*3 минут мана из соседних локаций периодически будет призываться в эту  (с некоторой вероятностью). Чем больше Мощь, тем больше срок и вероятность",
+				"humanReadableName": "InputStream (S)",
+				"hasTarget": false,
+				"sphere": "astral"
 			}
 		],
 		"activeAbilities": [],
@@ -313,6 +327,46 @@ export const basicCharacter = {
 				"humanReadableName": "Знакомый духов (P)",
 				"description": "Тебе легче ловить духов",
 				"modifierIds": []
+			},
+			{
+				"id": "magic-1",
+				"humanReadableName": "Магия 1 (P)",
+				"description": "Перманентно увеличивает твою характеристику Магия на 1",
+				"modifierIds": [
+					"ckv4jus3h000i01wd5agtaj31"
+				]
+			},
+			{
+				"id": "magic-2",
+				"humanReadableName": "Магия 2 (P)",
+				"description": "Перманентно увеличивает твою характеристику Магия на 1",
+				"modifierIds": [
+					"ckv4jutwp000j01wdc8fxax1m"
+				]
+			},
+			{
+				"id": "magic-3",
+				"humanReadableName": "Магия 3 (P)",
+				"description": "Перманентно увеличивает твою характеристику Магия на 1",
+				"modifierIds": [
+					"ckv4juvkw000k01wd5wlshdm8"
+				]
+			},
+			{
+				"id": "magic-4",
+				"humanReadableName": "Магия 4 (P)",
+				"description": "Перманентно увеличивает твою характеристику Магия на 1",
+				"modifierIds": [
+					"ckv4juy6e000l01wdgdtz34gr"
+				]
+			},
+			{
+				"id": "magic-5",
+				"humanReadableName": "Магия 5 (P)",
+				"description": "Перманентно увеличивает твою характеристику Магия на 1",
+				"modifierIds": [
+					"ckv4jv06u000m01wdarmi9ith"
+				]
 			}
 		],
 		"implants": [],
@@ -832,6 +886,20 @@ export const basicCharacter = {
 				// "humanReadableName": "Spirit catcher (S)",
 				// "hasTarget": false,
 				// "sphere": "stats"
+			},
+			{
+				"id": "fireball",
+				"description": "У мага на Мощь*4 минуты появляется пассивная способность Fireball-Эффект, позволяющая кидать файерболы. Файербол должен выглядеть как обшитый мягким теннисный шар с красной лентой, его попадание обрабатывается согласно правилам по боевке (тяжелое магическое оружие). Количество доступных файерболов: Мощь/2 с округлением вверх",
+				"humanReadableName": "Fireball (S)",
+				"hasTarget": false,
+				"sphere": "fighting"
+			},
+			{
+				"id": "input-stream",
+				"description": "В течение Мощь*3 минут мана из соседних локаций периодически будет призываться в эту  (с некоторой вероятностью). Чем больше Мощь, тем больше срок и вероятность",
+				"humanReadableName": "InputStream (S)",
+				"hasTarget": false,
+				"sphere": "astral"
 			}
 		],
 		"activeAbilities": [],
@@ -925,6 +993,46 @@ export const basicCharacter = {
 				"humanReadableName": "Знакомый духов (P)",
 				"description": "Тебе легче ловить духов",
 				"modifierIds": []
+			},
+			{
+				"id": "magic-1",
+				"humanReadableName": "Магия 1 (P)",
+				"description": "Перманентно увеличивает твою характеристику Магия на 1",
+				"modifierIds": [
+					"ckv4jus3h000i01wd5agtaj31"
+				]
+			},
+			{
+				"id": "magic-2",
+				"humanReadableName": "Магия 2 (P)",
+				"description": "Перманентно увеличивает твою характеристику Магия на 1",
+				"modifierIds": [
+					"ckv4jutwp000j01wdc8fxax1m"
+				]
+			},
+			{
+				"id": "magic-3",
+				"humanReadableName": "Магия 3 (P)",
+				"description": "Перманентно увеличивает твою характеристику Магия на 1",
+				"modifierIds": [
+					"ckv4juvkw000k01wd5wlshdm8"
+				]
+			},
+			{
+				"id": "magic-4",
+				"humanReadableName": "Магия 4 (P)",
+				"description": "Перманентно увеличивает твою характеристику Магия на 1",
+				"modifierIds": [
+					"ckv4juy6e000l01wdgdtz34gr"
+				]
+			},
+			{
+				"id": "magic-5",
+				"humanReadableName": "Магия 5 (P)",
+				"description": "Перманентно увеличивает твою характеристику Магия на 1",
+				"modifierIds": [
+					"ckv4jv06u000m01wdarmi9ith"
+				]
 			}
 		],
 		"implants": [],
@@ -1473,6 +1581,20 @@ export const suitedSpiritCharacter = {
 				"humanReadableName": "Spirit catcher (S)",
 				"hasTarget": false,
 				"sphere": "stats"
+			},
+			{
+				"id": "fireball",
+				"description": "У мага на Мощь*4 минуты появляется пассивная способность Fireball-Эффект, позволяющая кидать файерболы. Файербол должен выглядеть как обшитый мягким теннисный шар с красной лентой, его попадание обрабатывается согласно правилам по боевке (тяжелое магическое оружие). Количество доступных файерболов: Мощь/2 с округлением вверх",
+				"humanReadableName": "Fireball (S)",
+				"hasTarget": false,
+				"sphere": "fighting"
+			},
+			{
+				"id": "input-stream",
+				"description": "В течение Мощь*3 минут мана из соседних локаций периодически будет призываться в эту  (с некоторой вероятностью). Чем больше Мощь, тем больше срок и вероятность",
+				"humanReadableName": "InputStream (S)",
+				"hasTarget": false,
+				"sphere": "astral"
 			}
 		],
 		"activeAbilities": [
@@ -1582,6 +1704,46 @@ export const suitedSpiritCharacter = {
 				"humanReadableName": "ДУХ: Fireball - keeper",
 				"description": "Можешь кинуть 2 огненных шара. Затем эффект исчерпан до выхода из духа",
 				"modifierIds": []
+			},
+			{
+				"id": "magic-1",
+				"humanReadableName": "Магия 1 (P)",
+				"description": "Перманентно увеличивает твою характеристику Магия на 1",
+				"modifierIds": [
+					"ckv4jus3h000i01wd5agtaj31"
+				]
+			},
+			{
+				"id": "magic-2",
+				"humanReadableName": "Магия 2 (P)",
+				"description": "Перманентно увеличивает твою характеристику Магия на 1",
+				"modifierIds": [
+					"ckv4jutwp000j01wdc8fxax1m"
+				]
+			},
+			{
+				"id": "magic-3",
+				"humanReadableName": "Магия 3 (P)",
+				"description": "Перманентно увеличивает твою характеристику Магия на 1",
+				"modifierIds": [
+					"ckv4juvkw000k01wd5wlshdm8"
+				]
+			},
+			{
+				"id": "magic-4",
+				"humanReadableName": "Магия 4 (P)",
+				"description": "Перманентно увеличивает твою характеристику Магия на 1",
+				"modifierIds": [
+					"ckv4juy6e000l01wdgdtz34gr"
+				]
+			},
+			{
+				"id": "magic-5",
+				"humanReadableName": "Магия 5 (P)",
+				"description": "Перманентно увеличивает твою характеристику Магия на 1",
+				"modifierIds": [
+					"ckv4jv06u000m01wdarmi9ith"
+				]
 			}
 		],
 		"implants": [],
@@ -2131,6 +2293,20 @@ export const suitedSpiritCharacter = {
 				// "humanReadableName": "Spirit catcher (S)",
 				// "hasTarget": false,
 				// "sphere": "stats"
+			},
+			{
+				"id": "fireball",
+				"description": "У мага на Мощь*4 минуты появляется пассивная способность Fireball-Эффект, позволяющая кидать файерболы. Файербол должен выглядеть как обшитый мягким теннисный шар с красной лентой, его попадание обрабатывается согласно правилам по боевке (тяжелое магическое оружие). Количество доступных файерболов: Мощь/2 с округлением вверх",
+				"humanReadableName": "Fireball (S)",
+				"hasTarget": false,
+				"sphere": "fighting"
+			},
+			{
+				"id": "input-stream",
+				"description": "В течение Мощь*3 минут мана из соседних локаций периодически будет призываться в эту  (с некоторой вероятностью). Чем больше Мощь, тем больше срок и вероятность",
+				"humanReadableName": "InputStream (S)",
+				"hasTarget": false,
+				"sphere": "astral"
 			}
 		],
 		"activeAbilities": [
@@ -2240,6 +2416,46 @@ export const suitedSpiritCharacter = {
 				"humanReadableName": "ДУХ: Fireball - keeper",
 				"description": "Можешь кинуть 2 огненных шара. Затем эффект исчерпан до выхода из духа",
 				"modifierIds": []
+			},
+			{
+				"id": "magic-1",
+				"humanReadableName": "Магия 1 (P)",
+				"description": "Перманентно увеличивает твою характеристику Магия на 1",
+				"modifierIds": [
+					"ckv4jus3h000i01wd5agtaj31"
+				]
+			},
+			{
+				"id": "magic-2",
+				"humanReadableName": "Магия 2 (P)",
+				"description": "Перманентно увеличивает твою характеристику Магия на 1",
+				"modifierIds": [
+					"ckv4jutwp000j01wdc8fxax1m"
+				]
+			},
+			{
+				"id": "magic-3",
+				"humanReadableName": "Магия 3 (P)",
+				"description": "Перманентно увеличивает твою характеристику Магия на 1",
+				"modifierIds": [
+					"ckv4juvkw000k01wd5wlshdm8"
+				]
+			},
+			{
+				"id": "magic-4",
+				"humanReadableName": "Магия 4 (P)",
+				"description": "Перманентно увеличивает твою характеристику Магия на 1",
+				"modifierIds": [
+					"ckv4juy6e000l01wdgdtz34gr"
+				]
+			},
+			{
+				"id": "magic-5",
+				"humanReadableName": "Магия 5 (P)",
+				"description": "Перманентно увеличивает твою характеристику Магия на 1",
+				"modifierIds": [
+					"ckv4jv06u000m01wdarmi9ith"
+				]
 			}
 		],
 		"implants": [],
@@ -2811,6 +3027,20 @@ export const zeroSpiritAbilitiesCharacter = {
 				"humanReadableName": "Spirit catcher (S)",
 				"hasTarget": false,
 				"sphere": "stats"
+			},
+			{
+				"id": "fireball",
+				"description": "У мага на Мощь*4 минуты появляется пассивная способность Fireball-Эффект, позволяющая кидать файерболы. Файербол должен выглядеть как обшитый мягким теннисный шар с красной лентой, его попадание обрабатывается согласно правилам по боевке (тяжелое магическое оружие). Количество доступных файерболов: Мощь/2 с округлением вверх",
+				"humanReadableName": "Fireball (S)",
+				"hasTarget": false,
+				"sphere": "fighting"
+			},
+			{
+				"id": "input-stream",
+				"description": "В течение Мощь*3 минут мана из соседних локаций периодически будет призываться в эту  (с некоторой вероятностью). Чем больше Мощь, тем больше срок и вероятность",
+				"humanReadableName": "InputStream (S)",
+				"hasTarget": false,
+				"sphere": "astral"
 			}
 		],
 		"activeAbilities": [
@@ -2920,6 +3150,46 @@ export const zeroSpiritAbilitiesCharacter = {
 				"humanReadableName": "ДУХ: Fireball - keeper",
 				"description": "Можешь кинуть 2 огненных шара. Затем эффект исчерпан до выхода из духа",
 				"modifierIds": []
+			},
+			{
+				"id": "magic-1",
+				"humanReadableName": "Магия 1 (P)",
+				"description": "Перманентно увеличивает твою характеристику Магия на 1",
+				"modifierIds": [
+					"ckv4jus3h000i01wd5agtaj31"
+				]
+			},
+			{
+				"id": "magic-2",
+				"humanReadableName": "Магия 2 (P)",
+				"description": "Перманентно увеличивает твою характеристику Магия на 1",
+				"modifierIds": [
+					"ckv4jutwp000j01wdc8fxax1m"
+				]
+			},
+			{
+				"id": "magic-3",
+				"humanReadableName": "Магия 3 (P)",
+				"description": "Перманентно увеличивает твою характеристику Магия на 1",
+				"modifierIds": [
+					"ckv4juvkw000k01wd5wlshdm8"
+				]
+			},
+			{
+				"id": "magic-4",
+				"humanReadableName": "Магия 4 (P)",
+				"description": "Перманентно увеличивает твою характеристику Магия на 1",
+				"modifierIds": [
+					"ckv4juy6e000l01wdgdtz34gr"
+				]
+			},
+			{
+				"id": "magic-5",
+				"humanReadableName": "Магия 5 (P)",
+				"description": "Перманентно увеличивает твою характеристику Магия на 1",
+				"modifierIds": [
+					"ckv4jv06u000m01wdarmi9ith"
+				]
 			}
 		],
 		"implants": [],
@@ -3469,6 +3739,20 @@ export const zeroSpiritAbilitiesCharacter = {
 				// "humanReadableName": "Spirit catcher (S)",
 				// "hasTarget": false,
 				// "sphere": "stats"
+			},
+			{
+				"id": "fireball",
+				"description": "У мага на Мощь*4 минуты появляется пассивная способность Fireball-Эффект, позволяющая кидать файерболы. Файербол должен выглядеть как обшитый мягким теннисный шар с красной лентой, его попадание обрабатывается согласно правилам по боевке (тяжелое магическое оружие). Количество доступных файерболов: Мощь/2 с округлением вверх",
+				"humanReadableName": "Fireball (S)",
+				"hasTarget": false,
+				"sphere": "fighting"
+			},
+			{
+				"id": "input-stream",
+				"description": "В течение Мощь*3 минут мана из соседних локаций периодически будет призываться в эту  (с некоторой вероятностью). Чем больше Мощь, тем больше срок и вероятность",
+				"humanReadableName": "InputStream (S)",
+				"hasTarget": false,
+				"sphere": "astral"
 			}
 		],
 		"activeAbilities": [
@@ -3578,6 +3862,46 @@ export const zeroSpiritAbilitiesCharacter = {
 				"humanReadableName": "ДУХ: Fireball - keeper",
 				"description": "Можешь кинуть 2 огненных шара. Затем эффект исчерпан до выхода из духа",
 				"modifierIds": []
+			},
+			{
+				"id": "magic-1",
+				"humanReadableName": "Магия 1 (P)",
+				"description": "Перманентно увеличивает твою характеристику Магия на 1",
+				"modifierIds": [
+					"ckv4jus3h000i01wd5agtaj31"
+				]
+			},
+			{
+				"id": "magic-2",
+				"humanReadableName": "Магия 2 (P)",
+				"description": "Перманентно увеличивает твою характеристику Магия на 1",
+				"modifierIds": [
+					"ckv4jutwp000j01wdc8fxax1m"
+				]
+			},
+			{
+				"id": "magic-3",
+				"humanReadableName": "Магия 3 (P)",
+				"description": "Перманентно увеличивает твою характеристику Магия на 1",
+				"modifierIds": [
+					"ckv4juvkw000k01wd5wlshdm8"
+				]
+			},
+			{
+				"id": "magic-4",
+				"humanReadableName": "Магия 4 (P)",
+				"description": "Перманентно увеличивает твою характеристику Магия на 1",
+				"modifierIds": [
+					"ckv4juy6e000l01wdgdtz34gr"
+				]
+			},
+			{
+				"id": "magic-5",
+				"humanReadableName": "Магия 5 (P)",
+				"description": "Перманентно увеличивает твою характеристику Магия на 1",
+				"modifierIds": [
+					"ckv4jv06u000m01wdarmi9ith"
+				]
 			}
 		],
 		"implants": [],
@@ -4126,6 +4450,20 @@ export const dispiritCharacter = {
 				"humanReadableName": "Spirit catcher (S)",
 				"hasTarget": false,
 				"sphere": "stats"
+			},
+			{
+				"id": "fireball",
+				"description": "У мага на Мощь*4 минуты появляется пассивная способность Fireball-Эффект, позволяющая кидать файерболы. Файербол должен выглядеть как обшитый мягким теннисный шар с красной лентой, его попадание обрабатывается согласно правилам по боевке (тяжелое магическое оружие). Количество доступных файерболов: Мощь/2 с округлением вверх",
+				"humanReadableName": "Fireball (S)",
+				"hasTarget": false,
+				"sphere": "fighting"
+			},
+			{
+				"id": "input-stream",
+				"description": "В течение Мощь*3 минут мана из соседних локаций периодически будет призываться в эту  (с некоторой вероятностью). Чем больше Мощь, тем больше срок и вероятность",
+				"humanReadableName": "InputStream (S)",
+				"hasTarget": false,
+				"sphere": "astral"
 			}
 		],
 		"activeAbilities": [],
@@ -4219,6 +4557,46 @@ export const dispiritCharacter = {
 				"humanReadableName": "Знакомый духов (P)",
 				"description": "Тебе легче ловить духов",
 				"modifierIds": []
+			},
+			{
+				"id": "magic-1",
+				"humanReadableName": "Магия 1 (P)",
+				"description": "Перманентно увеличивает твою характеристику Магия на 1",
+				"modifierIds": [
+					"ckv4jus3h000i01wd5agtaj31"
+				]
+			},
+			{
+				"id": "magic-2",
+				"humanReadableName": "Магия 2 (P)",
+				"description": "Перманентно увеличивает твою характеристику Магия на 1",
+				"modifierIds": [
+					"ckv4jutwp000j01wdc8fxax1m"
+				]
+			},
+			{
+				"id": "magic-3",
+				"humanReadableName": "Магия 3 (P)",
+				"description": "Перманентно увеличивает твою характеристику Магия на 1",
+				"modifierIds": [
+					"ckv4juvkw000k01wd5wlshdm8"
+				]
+			},
+			{
+				"id": "magic-4",
+				"humanReadableName": "Магия 4 (P)",
+				"description": "Перманентно увеличивает твою характеристику Магия на 1",
+				"modifierIds": [
+					"ckv4juy6e000l01wdgdtz34gr"
+				]
+			},
+			{
+				"id": "magic-5",
+				"humanReadableName": "Магия 5 (P)",
+				"description": "Перманентно увеличивает твою характеристику Магия на 1",
+				"modifierIds": [
+					"ckv4jv06u000m01wdarmi9ith"
+				]
 			}
 		],
 		"implants": [],
@@ -4759,10 +5137,24 @@ export const dispiritCharacter = {
 				// "humanReadableName": "Spirit catcher (S)",
 				// "hasTarget": false,
 				// "sphere": "stats"
+			},
+			{
+				"id": "fireball",
+				"description": "У мага на Мощь*4 минуты появляется пассивная способность Fireball-Эффект, позволяющая кидать файерболы. Файербол должен выглядеть как обшитый мягким теннисный шар с красной лентой, его попадание обрабатывается согласно правилам по боевке (тяжелое магическое оружие). Количество доступных файерболов: Мощь/2 с округлением вверх",
+				"humanReadableName": "Fireball (S)",
+				"hasTarget": false,
+				"sphere": "fighting"
+			},
+			{
+				"id": "input-stream",
+				"description": "В течение Мощь*3 минут мана из соседних локаций периодически будет призываться в эту  (с некоторой вероятностью). Чем больше Мощь, тем больше срок и вероятность",
+				"humanReadableName": "InputStream (S)",
+				"hasTarget": false,
+				"sphere": "astral"
 			}
 		],
 		"activeAbilities": [],
-		"passiveAbilities": [
+    "passiveAbilities": [
 			{
 				"id": "meta-norm",
 				"humanReadableName": "Норм",
@@ -4852,6 +5244,46 @@ export const dispiritCharacter = {
 				"humanReadableName": "Знакомый духов (P)",
 				"description": "Тебе легче ловить духов",
 				"modifierIds": []
+			},
+			{
+				"id": "magic-1",
+				"humanReadableName": "Магия 1 (P)",
+				"description": "Перманентно увеличивает твою характеристику Магия на 1",
+				"modifierIds": [
+					"ckv4jus3h000i01wd5agtaj31"
+				]
+			},
+			{
+				"id": "magic-2",
+				"humanReadableName": "Магия 2 (P)",
+				"description": "Перманентно увеличивает твою характеристику Магия на 1",
+				"modifierIds": [
+					"ckv4jutwp000j01wdc8fxax1m"
+				]
+			},
+			{
+				"id": "magic-3",
+				"humanReadableName": "Магия 3 (P)",
+				"description": "Перманентно увеличивает твою характеристику Магия на 1",
+				"modifierIds": [
+					"ckv4juvkw000k01wd5wlshdm8"
+				]
+			},
+			{
+				"id": "magic-4",
+				"humanReadableName": "Магия 4 (P)",
+				"description": "Перманентно увеличивает твою характеристику Магия на 1",
+				"modifierIds": [
+					"ckv4juy6e000l01wdgdtz34gr"
+				]
+			},
+			{
+				"id": "magic-5",
+				"humanReadableName": "Магия 5 (P)",
+				"description": "Перманентно увеличивает твою характеристику Магия на 1",
+				"modifierIds": [
+					"ckv4jv06u000m01wdarmi9ith"
+				]
 			}
 		],
 		"implants": [],
