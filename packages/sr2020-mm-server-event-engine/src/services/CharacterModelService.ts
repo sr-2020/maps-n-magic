@@ -15,7 +15,7 @@ import {
 } from 'sr2020-mm-event-engine';
 import { genericServerConstants2 } from '../api/constants';
 
-interface SpiritProps {
+export interface SpiritProps {
   name: string;
   hp: number;
   abilityIds: string[];

@@ -65,6 +65,7 @@ import { MockedUserLogService } from '../services/MockedUserLogService';
 import { QrModelService } from '../services/QrModelService';
 import { MockedQrModelService } from '../services/MockedQrModelService';
 import { CharacterModelService } from '../services/CharacterModelService';
+import { MockedCharacterModelService } from '../services/MockedCharacterModelService';
 // Push notifications delivery was unstable so decided to disable this feature
 // if we don't have better solution.
 // For details see https://trello.com/c/giDbdVGa/628-фантомные-кс-пуши-в-уведомлении
@@ -154,6 +155,7 @@ export function makeGameModel(): {
     QrModelService,
     // MockedQrModelService,
     CharacterModelService,
+    // MockedCharacterModelService,
   
     // all features getter - abilities, spells, archetypes and other
     FeatureService,
