@@ -8,11 +8,12 @@
 
 let SOUND_URL: string;
 if (process.env.NODE_ENV === 'production') {
-  SOUND_URL = 'https://storage.googleapis.com/sr2020-maps-n-magic';
+  // SOUND_URL = 'https://storage.googleapis.com/sr2020-maps-n-magic';
   // WS_URL = 'ws://localhost:3001/api/ws';
+  SOUND_URL = '/sounds';
 } else {
-  SOUND_URL = 'https://storage.googleapis.com/sr2020-maps-n-magic';
-  // SOUND_URL = '/sounds';
+  // SOUND_URL = 'https://storage.googleapis.com/sr2020-maps-n-magic';
+  SOUND_URL = '/sounds';
 }
 
 export { SOUND_URL };
