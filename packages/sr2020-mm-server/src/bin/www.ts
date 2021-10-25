@@ -6,7 +6,10 @@
 
 // const debug = require('debug')('audio-retranslator:server');
 // const http = require('http');
+import { createLogger } from 'sr2020-mm-server-event-engine';
 import { app } from '../app';
+
+const logger = createLogger('mainServer/bin/www.ts');
 // const app = require('../app');
 
 /**
@@ -14,8 +17,9 @@ import { app } from '../app';
  */
 
 // var port = normalizePort(process.env.PORT || '3000');
-const port = normalizePort(process.env.PORT || '3001');
+const port = normalizePort(process.env.PORT || '3010');
 app.set('port', port);
+logger.info('main server port', port);
 
 app.listen(port);
 

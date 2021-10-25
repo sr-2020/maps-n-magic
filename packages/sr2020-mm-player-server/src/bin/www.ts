@@ -6,16 +6,19 @@
 
 // const debug = require('debug')('audio-retranslator:server');
 // const http = require('http');
+import { createLogger } from 'sr2020-mm-server-event-engine';
 import { app } from '../app';
 // const app = require('../app');
+const logger = createLogger('playerServer/bin/www.ts');
 
 /**
  * Get port from environment and store in Express.
  */
 
 // var port = normalizePort(process.env.PORT || '3000');
-const port = normalizePort(process.env.PORT || '3001');
+const port = normalizePort(process.env.PORT || '3030');
 app.set('port', port);
+logger.info('player server port', port);
 
 app.listen(port);
 

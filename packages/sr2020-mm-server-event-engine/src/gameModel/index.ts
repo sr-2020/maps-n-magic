@@ -86,7 +86,7 @@ import { RedirectDataBinding2, StrictEventBinding } from '../dataManagers/Redire
 import { CharacterLocDataManager } from '../dataManagers/CharacterLocDataManager';
 
 import { 
-  mainServerConstants 
+  genericServerConstants2
 } from '../api/constants';
 
 import {
@@ -122,7 +122,7 @@ export function makeGameModel(): {
   gameModel: GameModel, 
   gameServer: EventEngine
 } {
-  const mocked = mainServerConstants().MOCKED;
+  const mocked = genericServerConstants2().MOCKED;
 
   const services = [
     // positioning and emercom
@@ -152,10 +152,8 @@ export function makeGameModel(): {
     SpiritCatcherUpdateService,
     SpiritPhraseService,
     PlayerMessagesService,
-    QrModelService,
-    // MockedQrModelService,
-    CharacterModelService,
-    // MockedCharacterModelService,
+    mocked ? MockedQrModelService : QrModelService,
+    mocked ? MockedCharacterModelService : CharacterModelService,
   
     // all features getter - abilities, spells, archetypes and other
     FeatureService,
@@ -190,93 +188,8 @@ export function makeGameModel(): {
   addPositionDataBindings(gameModel, gameServer, dataProviders);
   addManaOceanDataBindings(gameModel, gameServer, dataProviders);
   addSpiritDataBindings(gameModel, gameServer, dataProviders);
-
-  const charLocDM = new CharacterLocDataManager(
-    gameModel,
-    dataProviders.userRecordProvider,
-    dataProviders.charLocation2PubSub,
-    createLogger('CharacterLocDataManager'),
-  );
-  charLocDM.init();
-  gameServer.addDataBinding(charLocDM);
-
-  gameServer.addDataBinding(new RedirectDataBinding2<EventBindingList>(
-    gameModel,
-    [
-      {from: 'putCharHealthRequested', to: 'putCharHealthConfirmed'},
-      {from: 'putCharLocationRequested', to: 'putCharLocationConfirmed'},
-      {from: 'enableManaOceanRequested', to: 'enableManaOceanConfirmed'},
-      {from: 'enableSpiritMovementRequested', to: 'enableSpiritMovementConfirmed'},
-    ],
-    createLogger('RedirectDataBinding2')
-  ));
-  gameServer.addDataBinding(
-    new CharacterStatesListener(
-      dataProviders.userRecordProvider, 
-      dataProviders.lifeStyleProvider,
-      dataProviders.healthChangePubSub,
-      gameModel, 
-      createLogger('CharacterStatesListener')
-    )
-  );
-  gameServer.addDataBinding(
-    new CharacterLocationListener(
-      gameModel, 
-      dataProviders.charLocationPubSub,
-      createLogger('CharacterLocationListener')
-    )
-  );
-  gameServer.addDataBinding(
-    new SpellCastsListener(
-      gameModel, 
-      dataProviders.spellPubSub,
-      createLogger('SpellCastsListener')
-    )
-  );
-  if (!mocked) {
-    const pushNotificationEmitter = new PushNotificationEmitter(gameModel, createLogger('PushNotificationEmitter'));
-    pushNotificationEmitter.init();
-    gameServer.addDataBinding(pushNotificationEmitter);
-  }
-  gameServer.addDataBinding(new StubEventProcessor(
-    gameModel, 
-    createLogger('StubEventProcessor'), {
-      emitEvents: [
-        // event from client to set character location
-        "emitCharacterLocationChanged",
-        // mana ocean control events
-        "addManaEffect",
-        "removeManaEffect",
-        "wipeManaOceanEffects",
-        // used to forward character health states from server to client
-        "setCharacterHealthStates",
-        // event from client to manage spirits
-        'postSpiritRequested',
-        'putSpiritRequested',
-        'deleteSpiritRequested',
-        'cloneSpiritRequested',
-        // temporary stubs for spirit fraction service
-        'postSpiritFractionRequested',
-        'putSpiritFractionRequested',
-        'deleteSpiritFractionRequested',
-        // event from client to manage spirit routes
-        'postSpiritRouteRequested',
-        'putSpiritRouteRequested',
-        'deleteSpiritRouteRequested',
-        'cloneSpiritRouteRequested',
-        // event from client to manage spirit phrases
-        'putSpiritPhraseRequested',
-        'deleteSpiritPhraseRequested',
-        // event from client to manage background image
-        'postBackgroundImageRequested',
-        'putBackgroundImageRequested',
-        'deleteBackgroundImageRequested',
-        'cloneBackgroundImageRequested',
-        // not used on main server
-        'setCatcherStates'
-      ]
-    }
-  ));
+  addMiscDataBindings(gameModel, gameServer, dataProviders, mocked);
+  addStubDataBindings(gameModel, gameServer);
 
   gameModel.verifyEvents();
   gameModel.finishVerification();
@@ -446,3 +359,104 @@ function addSpiritDataBindings(
   gameServer.addDataBinding(featureDataBinding);
 }
 
+function addMiscDataBindings(
+  gameModel: GameModel, 
+  gameServer: EventEngine,
+  dataProviders: MainServerDataProviders,
+  mocked: boolean
+) {
+  const charLocDM = new CharacterLocDataManager(
+    gameModel,
+    dataProviders.userRecordProvider,
+    dataProviders.charLocation2PubSub,
+    createLogger('CharacterLocDataManager'),
+  );
+  charLocDM.init();
+  gameServer.addDataBinding(charLocDM);
+
+
+  gameServer.addDataBinding(
+    new CharacterStatesListener(
+      dataProviders.userRecordProvider, 
+      dataProviders.lifeStyleProvider,
+      dataProviders.healthChangePubSub,
+      gameModel, 
+      createLogger('CharacterStatesListener')
+    )
+  );
+  gameServer.addDataBinding(
+    new CharacterLocationListener(
+      gameModel, 
+      dataProviders.charLocationPubSub,
+      createLogger('CharacterLocationListener')
+    )
+  );
+  gameServer.addDataBinding(
+    new SpellCastsListener(
+      gameModel, 
+      dataProviders.spellPubSub,
+      createLogger('SpellCastsListener')
+    )
+  );
+  if (!mocked) {
+    const pushNotificationEmitter = new PushNotificationEmitter(gameModel, createLogger('PushNotificationEmitter'));
+    pushNotificationEmitter.init();
+    gameServer.addDataBinding(pushNotificationEmitter);
+  }
+}
+
+function addStubDataBindings(
+  gameModel: GameModel, 
+  gameServer: EventEngine,
+) {
+  gameServer.addDataBinding(new RedirectDataBinding2<EventBindingList>(
+    gameModel,
+    [
+      {from: 'putCharHealthRequested', to: 'putCharHealthConfirmed'},
+      {from: 'putCharLocationRequested', to: 'putCharLocationConfirmed'},
+      {from: 'enableManaOceanRequested', to: 'enableManaOceanConfirmed'},
+      {from: 'enableSpiritMovementRequested', to: 'enableSpiritMovementConfirmed'},
+    ],
+    createLogger('RedirectDataBinding2')
+  ));
+
+  gameServer.addDataBinding(new StubEventProcessor(
+    gameModel, 
+    createLogger('StubEventProcessor'), {
+      emitEvents: [
+        // event from client to set character location
+        "emitCharacterLocationChanged",
+        // mana ocean control events
+        "addManaEffect",
+        "removeManaEffect",
+        "wipeManaOceanEffects",
+        // used to forward character health states from server to client
+        "setCharacterHealthStates",
+        // event from client to manage spirits
+        'postSpiritRequested',
+        'putSpiritRequested',
+        'deleteSpiritRequested',
+        'cloneSpiritRequested',
+        // temporary stubs for spirit fraction service
+        'postSpiritFractionRequested',
+        'putSpiritFractionRequested',
+        'deleteSpiritFractionRequested',
+        // event from client to manage spirit routes
+        'postSpiritRouteRequested',
+        'putSpiritRouteRequested',
+        'deleteSpiritRouteRequested',
+        'cloneSpiritRouteRequested',
+        // event from client to manage spirit phrases
+        'putSpiritPhraseRequested',
+        'deleteSpiritPhraseRequested',
+        // event from client to manage background image
+        'postBackgroundImageRequested',
+        'putBackgroundImageRequested',
+        'deleteBackgroundImageRequested',
+        'cloneBackgroundImageRequested',
+        // not used on main server
+        'setCatcherStates'
+      ]
+    }
+  ));
+}
