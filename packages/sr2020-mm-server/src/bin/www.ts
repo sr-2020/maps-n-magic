@@ -17,7 +17,8 @@ const logger = createLogger('mainServer/bin/www.ts');
  */
 
 // var port = normalizePort(process.env.PORT || '3000');
-const port = normalizePort(process.env.PORT || '3010');
+const port = normalizePort(process.env.PORT || '3001');
+// const port = normalizePort(process.env.PORT || '3010');
 app.set('port', port);
 logger.info('main server port', port);
 

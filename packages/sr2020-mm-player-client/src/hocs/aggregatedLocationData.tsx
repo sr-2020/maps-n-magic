@@ -17,7 +17,8 @@ let es: EventSource | undefined = undefined;
 
 const url = process.env.NODE_ENV === 'production' 
   ? '/api/singlePlayerDataSse' 
-  : 'http://localhost:3030/api/singlePlayerDataSse';
+  // : 'http://localhost:3030/api/singlePlayerDataSse';
+  : 'http://localhost:3002/api/singlePlayerDataSse';
   // : '/api/singlePlayerDataSse';
 
 function createEventSource(
