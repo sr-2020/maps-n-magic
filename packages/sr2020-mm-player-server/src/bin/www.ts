@@ -17,7 +17,8 @@ const logger = createLogger('playerServer/bin/www.ts');
 
 // var port = normalizePort(process.env.PORT || '3000');
 // const port = normalizePort(process.env.PORT || '3030');
-const port = normalizePort(process.env.PORT || '3002');
+// const port = normalizePort(process.env.PORT || '3002');
+const port = normalizePort(process.env.PORT || '3001');
 app.set('port', port);
 logger.info('player server port', port);
 
