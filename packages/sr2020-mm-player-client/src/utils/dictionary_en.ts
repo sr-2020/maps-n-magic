@@ -1,5 +1,3 @@
-import { translitRuEn } from "sr2020-mm-event-engine";
-
 export const dictionary = {
   // index.tsx
   indexTitle: 'SR 2020 Magic',
@@ -132,47 +130,4 @@ export const dictionary = {
   scanSpiritJarWithSpirit: 'Scan spirit jar with spirit',
   // spiritSuitTime: 'Время ношения духа {{timeInSpirit}} минут',
   suit: 'Suit',
-}
-
-// SuitSpiritPage.tsx
-export function spiritSuitTime(timeInSpirit: number) {
-  return `You can wear spirit ${timeInSpirit} minutes`;
-}
-
-// SpiritPage.tsx
-export function emptinessReason(emptinessReason: string | undefined) {
-  return `Reason: ${emptinessReason}`;
-}
-
-
-// SpiritList.tsx
-export function spiritListTitle(spiritNumber: number) {
-  return `Spirits (${spiritNumber})`;
-}
-
-export function needAbilityToCatchSpirit(spiritMasterName: string) {
-  return `You need ability ${spiritMasterName} to catch spirit`;
-}
-
-export function catchSpiritInfoText(
-  attemptNumber: number, 
-  tillTime: string,
-  catchProbability: number, 
-) {
-  return `You have ${attemptNumber} attempts till ${tillTime}, catch probability ${catchProbability}%`;
-}
-
-export function processForDisplay(str: string): string {
-  return translitRuEn(str);
-}
-
-const fractionNameObj: Record<number, string> = {
-  1: "No fraction",
-  2: "Barguzin",
-  3: "Kultuk",
-  4: "Sarma",
-};
-
-export function getFractionName(id: number): string {
-  return fractionNameObj[id] || '';
 }
