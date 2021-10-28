@@ -7,7 +7,7 @@ import { EPutSpiritFractionRequested, GameModel, GetSpiritFraction, SpiritFracti
 import DocumentTitle from 'react-document-title';
 import Form from 'react-bootstrap/Form';
 import { AbilitiesInput2 } from '../../SpiritEditor/SpiritContent/AbilitiesInput2';
-import { processForDisplay } from 'sr2020-mm-translations';
+import { processForDisplay } from '../../../i18n';
 
 interface SpiritFractionContentProps extends WithTranslation {
   id: number;

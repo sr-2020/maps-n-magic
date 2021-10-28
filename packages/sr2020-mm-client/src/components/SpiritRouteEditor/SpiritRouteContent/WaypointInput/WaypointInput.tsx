@@ -25,7 +25,7 @@ import { faTimes, faGripVertical } from '@fortawesome/free-solid-svg-icons';
 import * as R from 'ramda';
 
 import { WithLocationRecords } from '../../../../dataHOCs';
-import { processForDisplay } from 'sr2020-mm-translations';
+import { processForDisplay } from '../../../../i18n';
 
 // @ts-ignore
 const sort = R.sortBy(R.pipe(R.prop('label'), R.toLower)) as (locations: LocationRecord[]) => LocationRecord[];

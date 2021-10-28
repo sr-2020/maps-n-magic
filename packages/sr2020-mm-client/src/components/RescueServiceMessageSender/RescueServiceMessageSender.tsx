@@ -24,7 +24,7 @@ import {
 } from 'sr2020-mm-event-engine';
 
 import { WithTranslation } from "react-i18next";
-import { processForDisplay } from 'sr2020-mm-translations';
+import { processForDisplay } from '../../i18n';
 
 type BodyConditionsTKeys = `physicalBodyCondition_${Lowercase<keyof typeof BodyConditions>}`;
 

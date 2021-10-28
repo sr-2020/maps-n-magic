@@ -14,7 +14,7 @@ import {
   locationTypesEnum,
   locationTypeToLayerTkey
 } from './LocationLayerTypes';
-import { processForDisplay } from 'sr2020-mm-translations';
+import { processForDisplay } from '../../i18n';
 
 export interface LocationGroupLayerProps extends CommonLayerProps, WithTranslation, WithLocationRecords {
   enableByDefault: boolean;

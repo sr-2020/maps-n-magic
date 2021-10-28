@@ -17,7 +17,7 @@ import {
   bgImageOverlay,
   BgImageOverlay
 } from "../../types";
-import { processForDisplay } from 'sr2020-mm-translations';
+import { processForDisplay } from '../../i18n';
 
 function getTitleLatLngBounds(latlngs: L.LatLngLiteral[][]): L.LatLngBounds {
   const bounds = latLngsToBounds(latlngs[0]);

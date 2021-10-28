@@ -10,7 +10,7 @@ import Button from 'react-bootstrap/Button';
 import Table from 'react-bootstrap/Table';
 
 import { UserHistoryItem, MainHistoryItem } from 'sr2020-mm-event-engine';
-import { processForDisplay } from 'sr2020-mm-translations';
+import { processForDisplay } from '../../i18n';
 
 interface CharacterLogsProps extends WithTranslation {
 }

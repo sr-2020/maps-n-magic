@@ -7,7 +7,7 @@ import Form from 'react-bootstrap/Form';
 import { BeaconRecord, GameModel } from 'sr2020-mm-event-engine';
 
 import { WithGeoLocationRecords } from '../../../dataHOCs';
-import { processForDisplay } from 'sr2020-mm-translations';
+import { processForDisplay } from '../../../i18n';
 
 interface BeaconLocationSelectProps extends WithTranslation, WithGeoLocationRecords {
   gameModel: GameModel;

@@ -14,7 +14,7 @@ import Tooltip from 'react-bootstrap/Tooltip';
 import OverlayTrigger from 'react-bootstrap/OverlayTrigger';
 import { formatMinutes } from '../ManaOceanSettings/TideChart/TideChart';
 import { spiritStateSuffix } from '../SpiritEditor/SpiritList/SpiritList';
-import { processForDisplay } from 'sr2020-mm-translations';
+import { processForDisplay } from '../../i18n';
 
 interface SpiritOverviewProps extends 
   WithTranslation, 

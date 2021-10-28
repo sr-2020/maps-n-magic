@@ -8,7 +8,7 @@ import { GameModel } from 'sr2020-mm-event-engine';
 
 import { WithPlayerMessages } from '../../dataHOCs';
 import { SRTKey } from 'sr2020-mm-client-core';
-import { processForDisplay } from 'sr2020-mm-translations';
+import { processForDisplay } from '../../i18n';
 
 interface PlayerMessagesProps extends WithTranslation, WithPlayerMessages {
   gameModel: GameModel;

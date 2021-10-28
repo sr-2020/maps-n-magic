@@ -25,7 +25,7 @@ import { WithTranslation } from "react-i18next";
 
 import { CharacterDataList } from '../CharacterDataList';
 import { GeoLocationSelectMap } from '../../maps/GeoLocationSelectMap';
-import { processForDisplay } from 'sr2020-mm-translations';
+import { processForDisplay } from '../../i18n';
 
 type BeaconIndex = {[location_id: string]: BeaconRecord};
 type LocationIndex = {[location_id: string]: LocationRecord};

@@ -24,7 +24,7 @@ import {
   ManaOceanLocation,
   manaOceanLocation
 } from "../../types";
-import { processForDisplay } from 'sr2020-mm-translations';
+import { processForDisplay } from '../../i18n';
 
 // const manaFillColors = { // based on h202
 //   1: 'white', // hsla(202, 60%, 90%, 1)

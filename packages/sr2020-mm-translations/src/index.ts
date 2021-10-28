@@ -54,7 +54,8 @@ export const resources = {
   },
 } as const;
 
-
-export function processForDisplay(str: string): string {
-  return defaultLang as string === 'en' ? translitRuEn(str) : str;
+export function getProcessForDisplay(lang: string = defaultLang) {
+  return function processForDisplay(str: string): string {
+    return lang === 'en' ? translitRuEn(str) : str;
+  }
 }

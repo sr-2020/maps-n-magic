@@ -6,7 +6,7 @@ import { WithTranslation } from "react-i18next";
 import { GameModel } from 'sr2020-mm-event-engine';
 import { WithSpiritFractions } from '../../../dataHOCs';
 import { EntitiyListItem, EntityList, makeLinkGenerator } from '../../EntityList';
-import { processForDisplay } from 'sr2020-mm-translations';
+import { processForDisplay } from '../../../i18n';
 
 const spiritFractionLink = makeLinkGenerator('spiritFractionEditor');
 

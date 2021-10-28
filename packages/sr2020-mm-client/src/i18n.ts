@@ -1,12 +1,20 @@
 import i18n from 'i18next';
 import { DefaultNamespace, initReactI18next, TFuncKey, Resources } from 'react-i18next';
-import { resources, defaultLang } from 'sr2020-mm-translations';
+import { resources, defaultLang, getProcessForDisplay } from 'sr2020-mm-translations';
+
+const availableLangs = Object.keys(resources);
+
+const REACT_APP_LANG = (process.env.REACT_APP_LANG || '').toLowerCase();
+
+console.log('REACT_APP_LANG', REACT_APP_LANG)
+
+export const processForDisplay = getProcessForDisplay(REACT_APP_LANG);
 
 i18n
   .use(initReactI18next) // passes i18n down to react-i18next
   .init({
     resources,
-    lng: defaultLang,
+    lng: availableLangs.includes(REACT_APP_LANG) ? REACT_APP_LANG : defaultLang,
 
     keySeparator: false, // we do not use keys in form messages.welcome
 

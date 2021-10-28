@@ -16,7 +16,7 @@ import {
 import { WithSpirits, WithSpiritFractions } from '../../../dataHOCs';
 
 import { EntityList, EntitiyListItem, makeLinkGenerator } from "../../EntityList";
-import { processForDisplay } from 'sr2020-mm-translations';
+import { processForDisplay } from '../../../i18n';
 
 const spiritLink = makeLinkGenerator('spiritEditor');
 

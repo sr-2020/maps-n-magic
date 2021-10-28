@@ -19,7 +19,7 @@ import {
   LocationCentroid, 
   makeLocationCentroid 
 } from "../../types";
-import { processForDisplay } from 'sr2020-mm-translations';
+import { processForDisplay } from '../../i18n';
 
 interface SpiritLayerProps extends 
   WithSpiritLocationData, 

@@ -16,7 +16,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faTimes } from '@fortawesome/free-solid-svg-icons';
 
 import TimePicker, { TimePickerValue } from "react-time-picker";
-import { processForDisplay } from 'sr2020-mm-translations';
+import { processForDisplay } from '../../../../i18n';
 
 interface SpiritRouteTableRowProps extends WithTranslation {
   timetableItem: TimetableItem;
