@@ -1,7 +1,8 @@
 import React from 'react';
+import { useHistory } from 'react-router-dom';
 import { AggregatedLocationView, CharacterModelData2 } from 'sr2020-mm-event-engine';
 import { logoutUser, refreshCharacterModel } from '../../api';
-import { LoginManager, dictionary, processForDisplay } from '../../utils';
+import { LoginManager, processForDisplay, switchLanguage, t } from '../../utils';
 import './AppHeader2.css';
 
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
@@ -31,6 +32,7 @@ interface AppHeader2Props  {
 
 export function AppHeader2(props: AppHeader2Props) {
   const { loginManager, title, locationData, characterData, mute, setMute, links } = props;
+  const history = useHistory();
 
   const onLogout = async () => {
     await logoutUser();
@@ -59,7 +61,7 @@ export function AppHeader2(props: AppHeader2Props) {
         <span>{title}</span>
         <span className="tw-text-sm">
         {
-          locationData === null ? dictionary.locationIsUnknown : (processForDisplay(locationData.label))
+          locationData === null ? t('locationIsUnknown') : (processForDisplay(locationData.label))
         }
         </span>
       </span>
@@ -79,7 +81,7 @@ export function AppHeader2(props: AppHeader2Props) {
             <Form.Check
               type="switch"
               id="soundSwitch"
-              label={dictionary.mute}
+              label={t('mute')}
               checked={mute}
               className="tw-py-3 tw-text-lg"
             />
@@ -88,20 +90,32 @@ export function AppHeader2(props: AppHeader2Props) {
             as="button"
             type="button"
             onClick={refreshCharacterModel}
-            title={dictionary.updateCharacterData}
+            title={t('updateCharacterData')}
             className="tw-py-3 tw-text-lg"
           >
-            {dictionary.updateCharacterData}
+            {t('updateCharacterData')}
+          </Dropdown.Item>
+          <Dropdown.Item
+            as="button"
+            type="button"
+            onClick={() => {
+              switchLanguage();
+              history.push('/');
+            }}
+            title="Rus/Eng"
+            className="tw-py-3 tw-text-lg"
+          >
+            Rus/Eng
           </Dropdown.Item>
           <Dropdown.Divider />
           <Dropdown.Item
             as="button"
             type="button"
             onClick={onLogout}
-            title={dictionary.logout}
+            title={t('logout')}
             className="tw-py-3 tw-text-lg"
           >
-            {dictionary.logout}
+            {t('logout')}
           </Dropdown.Item>
         </Dropdown.Menu>
       </Dropdown>

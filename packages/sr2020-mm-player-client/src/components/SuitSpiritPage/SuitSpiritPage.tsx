@@ -19,7 +19,7 @@ import {
 import { SpiritCard } from '../SpiritCard';
 
 import { StatusIcon } from '../StatusIcon';
-import { dictionary, spiritSuitTime } from "../../utils";
+import { t, spiritSuitTime } from "../../utils";
 
 interface SuitSpiritPageProps {
   setTitle: (title: string) => void;
@@ -49,7 +49,7 @@ export function SuitSpiritPage(props: SuitSpiritPageProps) {
   const { setTitle, characterData } = props;
 
   useEffect(() => {
-    setTitle(dictionary.suitSpiritPageTitle);
+    setTitle(t('suitSpiritPageTitle'));
   }, []);
   
   // 366 non body storage
@@ -80,10 +80,10 @@ export function SuitSpiritPage(props: SuitSpiritPageProps) {
       }
     }).catch(err => {
       console.error(stringifyError(err));
-      logClientError(dictionary.unexpectedBodyStorageCheckError, err);
+      logClientError(t('unexpectedBodyStorageCheckError'), err);
       setBodyStorageStatus({
         status: 'invalid',
-        message: dictionary.unexpectedBodyStorageCheckError
+        message: t('unexpectedBodyStorageCheckError')
       });
     });
   }, [bodyStorageQrString]);
@@ -116,10 +116,10 @@ export function SuitSpiritPage(props: SuitSpiritPageProps) {
       }
     }).catch(err => {
       console.error(stringifyError(err));
-      logClientError(dictionary.unexpectedSpiritJarCheckError, err);
+      logClientError(t('unexpectedSpiritJarCheckError'), err);
       setBodyStorageStatus({
         status: 'invalid',
-        message: dictionary.unexpectedSpiritJarCheckError
+        message: t('unexpectedSpiritJarCheckError')
       });
     });
   }, [spiritJarQrString]);
@@ -135,13 +135,13 @@ export function SuitSpiritPage(props: SuitSpiritPageProps) {
       if (isErrorResponse(res)) {
         setSuitSpiritStatus(res.errorTitle);
       } else {
-        setSuitSpiritStatus(dictionary.spiritIsSuited);
+        setSuitSpiritStatus(t('spiritIsSuited'));
       }
       setDoSuitSpirit(false);
     }).catch(err => {
       console.error(stringifyError(err));
-      logClientError(dictionary.unexpectedSuitSpiritError, err);
-      setSuitSpiritStatus(dictionary.unexpectedSuitSpiritError);
+      logClientError(t('unexpectedSuitSpiritError'), err);
+      setSuitSpiritStatus(t('unexpectedSuitSpiritError'));
       setDoSuitSpirit(false);
     });
   }, [doSuitSpirit]);
@@ -149,7 +149,7 @@ export function SuitSpiritPage(props: SuitSpiritPageProps) {
   if (!hasAbility(characterData, Ability.SuitUp)) {
     return (
       <div className="tw-m-4 tw-p-4 tw-bg-blue-200 tw-font-semibold">
-        {dictionary.youHaveNoSuitUpAbility}
+        {t('youHaveNoSuitUpAbility')}
       </div>
     );
   }
@@ -161,7 +161,7 @@ export function SuitSpiritPage(props: SuitSpiritPageProps) {
           setBodyStorageQrString(qrData);
           setScanBodyStorage(false);
         }}
-        message={dictionary.scanBodyStorage}
+        message={t('scanBodyStorage')}
         onCancel={() => setScanBodyStorage(false)}
       />
     );
@@ -174,7 +174,7 @@ export function SuitSpiritPage(props: SuitSpiritPageProps) {
           setSpiritJarQrString(qrData);
           setScanSpiritJar(false);
         }}
-        message={dictionary.scanSpiritJarWithSpirit}
+        message={t('scanSpiritJarWithSpirit')}
         onCancel={() => setScanSpiritJar(false)}
       />
     );
@@ -191,8 +191,8 @@ export function SuitSpiritPage(props: SuitSpiritPageProps) {
       <div className="tw-mb-8">
         <div className="tw-flex tw-mb-4">
           <StatusIcon status={bodyStorageStatus.status}/>
-          <div className="col-form-label tw-flex-1">{dictionary.bodyStorage}</div>
-          <Button onClick={() => setScanBodyStorage(true)}>{dictionary.scan}</Button>
+          <div className="col-form-label tw-flex-1">{t('bodyStorage')}</div>
+          <Button onClick={() => setScanBodyStorage(true)}>{t('scan')}</Button>
         </div>
         {
           bodyStorageStatus.status === 'invalid' && 
@@ -204,8 +204,8 @@ export function SuitSpiritPage(props: SuitSpiritPageProps) {
       <div className="tw-mb-8">
         <div className="tw-flex tw-mb-4">
           <StatusIcon status={spiritJarStatus.status}/>
-          <div className="col-form-label tw-flex-1">{dictionary.spiritJar}</div>
-          <Button onClick={() => setScanSpiritJar(true)}>{dictionary.scan}</Button>
+          <div className="col-form-label tw-flex-1">{t('spiritJar')}</div>
+          <Button onClick={() => setScanSpiritJar(true)}>{t('scan')}</Button>
         </div>
         {
           spiritJarStatus.status === 'invalid' && 
@@ -236,7 +236,7 @@ export function SuitSpiritPage(props: SuitSpiritPageProps) {
             {suitSpiritStatus}
           </div>
           <div className="tw-text-right tw-mb-8">
-            <Button onClick={refreshCharacterModel}>{dictionary.updateCharacterData}</Button>
+            <Button onClick={refreshCharacterModel}>{t('updateCharacterData')}</Button>
           </div>
         </>
       }
@@ -249,7 +249,7 @@ export function SuitSpiritPage(props: SuitSpiritPageProps) {
             icon={faSpinner}
             spin
           />
-          {dictionary.suit}
+          {t('suit')}
         </Button>
       </div>
     </div>

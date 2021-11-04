@@ -4,7 +4,7 @@ import './EmergencyDispiritPage.css';
 import Button from "react-bootstrap/Button";
 import { emergencyDispirit, logClientError } from '../../api';
 import { isErrorResponse, stringifyError } from 'sr2020-mm-event-engine';
-import { dictionary } from "../../utils";
+import { t } from "../../utils";
 
 interface EmergencyDispiritPageProps {
   setTitle: (title: string) => void;
@@ -14,7 +14,7 @@ export function EmergencyDispiritPage(props: EmergencyDispiritPageProps) {
   const { setTitle } = props;
 
   useEffect(() => {
-    setTitle(dictionary.emergencyDispiritPageTitle);
+    setTitle(t('emergencyDispiritPageTitle'));
   }, []);
   
   const [doEmergencyDispirit, setDoEmergencyDispirit] = useState<boolean>(false);
@@ -28,13 +28,13 @@ export function EmergencyDispiritPage(props: EmergencyDispiritPageProps) {
       if (isErrorResponse(res)) {
         setDispiritStatus(res.errorTitle);
       } else {
-        setDispiritStatus(dictionary.emergencyDispiritDone);
+        setDispiritStatus(t('emergencyDispiritDone'));
       }
       setDoEmergencyDispirit(false);
     }).catch(err => {
       console.error(stringifyError(err));
-      setDispiritStatus(dictionary.unexpectedEmergencyDispiritError);
-      logClientError(dictionary.unexpectedEmergencyDispiritError, err);
+      setDispiritStatus(t('unexpectedEmergencyDispiritError'));
+      logClientError(t('unexpectedEmergencyDispiritError'), err);
       setDoEmergencyDispirit(false);
     });
   }, [doEmergencyDispirit]);
@@ -43,13 +43,13 @@ export function EmergencyDispiritPage(props: EmergencyDispiritPageProps) {
     <div className="EmergencyDispiritPage tw-p-4">
       <div className="tw-mb-8">
         <p className="tw-mb-4">
-          {dictionary.emergencyDispiritExplanation1}
+          {t('emergencyDispiritExplanation1')}
         </p>
         <p className="tw-mb-4">
-          {dictionary.emergencyDispiritExplanation2}
+          {t('emergencyDispiritExplanation2')}
         </p>
         <p>
-          {dictionary.emergencyDispiritExplanation3}
+          {t('emergencyDispiritExplanation3')}
         </p>
       </div>
       <div className="tw-text-center">
@@ -57,7 +57,7 @@ export function EmergencyDispiritPage(props: EmergencyDispiritPageProps) {
           variant="danger"
           onClick={() => setDoEmergencyDispirit(true)}
         >
-          {dictionary.confirmEmergencyDispirit}
+          {t('confirmEmergencyDispirit')}
         </Button>
       </div>
       {

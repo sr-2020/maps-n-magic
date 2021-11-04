@@ -26,7 +26,7 @@ import { EmergencyDispiritPage } from '../EmergencyDispiritPage';
 import { LocationChangePage } from '../LocationChangePage';
 import { HistoryPage } from '../HistoryPage';
 import { AppHeader2 } from '../AppHeader2';
-import { dictionary } from "../../utils";
+import { t } from "../../utils";
 
 interface AppProps extends WithLoginState, WithAggregatedLocationData {
   loginManager: LoginManager;
@@ -41,52 +41,52 @@ const SOUND_SETTINGS: SoundSettings = {
   rotationVolume: 50,
 };
 
-const baseLinks: LinkDef[] = [{
+const baseLinks = (): LinkDef[] => ([{
   to: '/character',
-  label: dictionary.characterPageTitle
+  label: t('characterPageTitle')
 },{
   to: '/history',
-  label: dictionary.historyPageTitle
-}];
+  label: t('historyPageTitle')
+}]);
 
-const badDispiritLinks: LinkDef[] = [{
+const badDispiritLinks = (): LinkDef[] => ([{
   to: '/character',
-  label: dictionary.characterPageTitle
+  label: t('characterPageTitle')
 },{
   to: '/history',
-  label: dictionary.historyPageTitle
-}];
+  label: t('historyPageTitle')
+}]);
 
-const notInSpiritLinks: LinkDef[] = [{
+const notInSpiritLinks = (): LinkDef[] => ([{
   to: '/character',
-  label: dictionary.characterPageTitle
+  label: t('characterPageTitle')
 },{
   to: '/spirits',
-  label: dictionary.catchSpiritPageTitle
+  label: t('catchSpiritPageTitle')
 },{
   to: '/scanSpirit',
-  label: dictionary.scanSpiritPageTitle
+  label: t('scanSpiritPageTitle')
 },{
   to: '/suitSpirit',
-  label: dictionary.suitSpiritPageTitle
+  label: t('suitSpiritPageTitle')
 },{
   to: '/history',
-  label: dictionary.historyPageTitle
-}];
+  label: t('historyPageTitle')
+}]);
 
-const inNormalSpiritLinks: LinkDef[] = [{
+const inNormalSpiritLinks = (): LinkDef[] => ([{
   to: '/character',
-  label: dictionary.characterPageTitle
+  label: t('characterPageTitle')
 },{
   to: '/dispirit',
-  label: dictionary.dispiritPageTitle
+  label: t('dispiritPageTitle')
 },{
   to: '/emergencyDispirit',
-  label: dictionary.emergencyDispiritPageTitle
+  label: t('emergencyDispiritPageTitle')
 },{
   to: '/history',
-  label: dictionary.historyPageTitle
-}];
+  label: t('historyPageTitle')
+}]);
 
 
 export function App(props: AppProps) {
@@ -98,12 +98,12 @@ export function App(props: AppProps) {
     audioContextWrapper,
     soundStorage
   } = props;
-  const manageTitle = useState<string>(dictionary.indexTitle);
+  const manageTitle = useState<string>(t('indexTitle'));
   const [title, setTitle] = manageTitle;
   const [mute, setMute] = useState<boolean>(false);
 
   if (characterData === null) {
-    return <div>{dictionary.characterDataLoading}</div>
+    return <div>{t('characterDataLoading')}</div>
   }
 
   const soundStageState = locationData2SoundStageState(characterData, locationData);
@@ -120,7 +120,7 @@ export function App(props: AppProps) {
             characterData={characterData}
             mute={mute}
             setMute={setMute}
-            links={baseLinks}
+            links={baseLinks()}
           />
           <CharacterPage 
             setTitle={setTitle}
@@ -149,7 +149,7 @@ export function App(props: AppProps) {
             characterData={characterData}
             mute={mute}
             setMute={setMute}
-            links={links}
+            links={links()}
           />
 
           <Switch>

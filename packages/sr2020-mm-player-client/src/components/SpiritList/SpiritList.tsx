@@ -9,7 +9,7 @@ import { useHistory } from 'react-router-dom';
 import { WithLocationDataOnly } from '../../hocs';
 import { 
   getFractionName, 
-  dictionary,
+  t,
   spiritListTitle,
   needAbilityToCatchSpirit,
   catchSpiritInfoText,
@@ -47,7 +47,7 @@ export function SpiritList(props: SpiritListProps) {
   if (!locationData) {
     return (
       <div className="tw-text-center">
-        <h2 className="tw-my-16 tw-text-2xl">{dictionary.locationIsUnknown}</h2>
+        <h2 className="tw-my-16 tw-text-2xl">{t('locationIsUnknown')}</h2>
       </div>
     );
   }
@@ -55,7 +55,7 @@ export function SpiritList(props: SpiritListProps) {
   if (!hasSpell(characterData, Spell.SpiritCatcher)) {
     return (
       <div className="tw-text-center">
-        <h2 className="tw-my-16">{dictionary.missingSpiritCatcherSpell}</h2>
+        <h2 className="tw-my-16">{t('missingSpiritCatcherSpell')}</h2>
       </div>
     );
   }
@@ -65,7 +65,7 @@ export function SpiritList(props: SpiritListProps) {
   if (spiritViews.length === 0) {
     return (
       <div className="tw-text-center">
-        <h2 className="tw-my-16 tw-text-2xl">{dictionary.noSpiritsInLocation}</h2>
+        <h2 className="tw-my-16 tw-text-2xl">{t('noSpiritsInLocation')}</h2>
       </div>
     );
   }
@@ -88,7 +88,7 @@ export function SpiritList(props: SpiritListProps) {
       {
         characterData.catcherData === undefined &&
         <div className="tw-m-4 tw-p-4 tw-bg-blue-200 tw-font-semibold">
-          {dictionary.castSpiritCatcherAdvice}
+          {t('castSpiritCatcherAdvice')}
         </div>
       }
       <Accordion>
@@ -113,7 +113,7 @@ export function SpiritList(props: SpiritListProps) {
                       className="tw-w-full tw-text-left tw-py-4 tw-mb-2"
                       onClick={() => history.push(`/catchSpirit/${spiritView.id}`)}
                     >
-                      {dictionary.catch}
+                      {t('catch')}
                     </Button>
                   }
                   {

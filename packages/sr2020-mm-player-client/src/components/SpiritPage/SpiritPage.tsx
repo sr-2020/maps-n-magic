@@ -21,7 +21,7 @@ import Form from 'react-bootstrap/Form';
 import { QrScannerWrapper } from "../QrScannerWrapper";
 import { getSpiritDataByQr, freeSpirit, catchSpirit, logClientError } from "../../api";
 import { SpiritCard } from '../SpiritCard';
-import { dictionary, emptinessReason } from "../../utils";
+import { t, emptinessReason } from "../../utils";
 
 // import { WithTranslation } from "react-i18next";
 
@@ -34,7 +34,7 @@ export function SpiritPage(props: SpiritPageProps) {
   const { setTitle, characterData } = props;
 
   useEffect(() => {
-    setTitle(dictionary.scanSpiritPageTitle);
+    setTitle(t('scanSpiritPageTitle'));
   }, []);
 
   const [spiritJarQrString, setSpiritJarQrString] = useState<string | null>(null);
@@ -64,9 +64,9 @@ export function SpiritPage(props: SpiritPageProps) {
       }
     }).catch(err => {
       console.error(stringifyError(err));
-      logClientError(dictionary.unexpectedSpiritViewError, err);
+      logClientError(t('unexpectedSpiritViewError'), err);
       setErrorResponse({
-        errorTitle: dictionary.unexpectedSpiritViewError,
+        errorTitle: t('unexpectedSpiritViewError'),
         errorSubtitle: stringifyError(err)
       });
     });
@@ -76,7 +76,7 @@ export function SpiritPage(props: SpiritPageProps) {
     return (
       <QrScannerWrapper
         onSuccess={setSpiritJarQrString}
-        message={dictionary.scanSpiritJar}
+        message={t('scanSpiritJar')}
       />
     );
   }
@@ -88,7 +88,7 @@ export function SpiritPage(props: SpiritPageProps) {
     // messageBody
     freeSpirit(
       Number(spiritJarQr.spiritJarQr.workModel.modelId), 
-      dictionary.mageFreedSpirit,
+      t('mageFreedSpirit'),
       messageBody
     ).then(res => {
       if (isErrorResponse(res)) {
@@ -102,9 +102,9 @@ export function SpiritPage(props: SpiritPageProps) {
       }
     }).catch(err => {
       console.error(stringifyError(err));
-      logClientError(dictionary.unexpectedFreeSpiritError, err);
+      logClientError(t('unexpectedFreeSpiritError'), err);
       setErrorResponse({
-        errorTitle: dictionary.unexpectedFreeSpiritError,
+        errorTitle: t('unexpectedFreeSpiritError'),
         errorSubtitle: stringifyError(err)
       });
     });
@@ -133,12 +133,12 @@ export function SpiritPage(props: SpiritPageProps) {
           }
           <div className="tw-mb-8">
             <Button variant="outline-secondary" onClick={onFreeSpiritClick}>
-              {dictionary.freeSpirit}
+              {t('freeSpirit')}
             </Button>
           </div>
           <div style={{marginBottom: '20rem'}}>
             <div className="tw-mb-2">
-              {dictionary.leaveMessage}
+              {t('leaveMessage')}
             </div>
             <div>
               <Form.Control
@@ -154,7 +154,7 @@ export function SpiritPage(props: SpiritPageProps) {
         (spiritJarQr !== null && isEmptySpiritJar(spiritJarQr.spiritJarQr)) && 
         <>
           <div>
-            <div>{dictionary.spiritJarIsEmpty}</div>
+            <div>{t('spiritJarIsEmpty')}</div>
             <div>{emptinessReason(spiritJarQr.spiritJarQr.workModel.data.emptiness_reason)}</div>
           </div>
         </>
@@ -169,7 +169,7 @@ export function SpiritPage(props: SpiritPageProps) {
             setErrorResponse(null);
           }}
         >
-          {dictionary.scanOtherSpiritJar}
+          {t('scanOtherSpiritJar')}
         </Button>
       }
     </div>

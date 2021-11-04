@@ -6,13 +6,19 @@ const REACT_APP_LANG = (process.env.REACT_APP_LANG || '').toLowerCase();
 
 console.log('REACT_APP_LANG', REACT_APP_LANG);
 
-const lang = ['ru', 'en'].includes(REACT_APP_LANG) ? REACT_APP_LANG : 'ru';
+let lang = ['ru', 'en'].includes(REACT_APP_LANG) ? REACT_APP_LANG : 'ru';
 
 function isRu() {
   return lang === 'ru';
 }
 
-export const dictionary = isRu() ? dictionary_ru : dictionary_en;
+export function switchLanguage() {
+  lang = lang === 'ru' ? 'en' : 'ru';
+}
+
+// export const dictionary = isRu() ? dictionary_ru : dictionary_en;
+
+export const t = (str: keyof typeof dictionary_en) => isRu() ? dictionary_ru[str] : dictionary_en[str];
 
 // SuitSpiritPage.tsx
 export function spiritSuitTime(timeInSpirit: number) {

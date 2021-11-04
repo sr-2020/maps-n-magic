@@ -8,7 +8,7 @@ import { catchSpirit, catchSpirit2, logClientError } from '../../api';
 import { ErrorAlert } from '../ErrorAlert';
 import { QrScannerWrapper } from '../QrScannerWrapper';
 import './CatchSpiritPage.css';
-import { dictionary } from "../../utils";
+import { t } from "../../utils";
 
 // import { WithTranslation } from "react-i18next";
 
@@ -51,9 +51,9 @@ export function CatchSpiritPage(props: CatchSpiritPageProps) {
       }
     }).catch(err => {
       console.error(stringifyError(err));
-      logClientError(dictionary.unexpectedCatchSpiritError, err);
+      logClientError(t('unexpectedCatchSpiritError'), err);
       setErrorResponse({
-        errorTitle: dictionary.unexpectedCatchSpiritError,
+        errorTitle: t('unexpectedCatchSpiritError'),
         errorSubtitle: stringifyError(err)
       });
 
@@ -65,7 +65,7 @@ export function CatchSpiritPage(props: CatchSpiritPageProps) {
     return (
       <QrScannerWrapper
         onSuccess={setSpiritJarQrString}
-        message={dictionary.scanEmptySpiritJar}
+        message={t('scanEmptySpiritJar')}
         onCancel={() => history.goBack()}
       />
     );
@@ -76,7 +76,7 @@ export function CatchSpiritPage(props: CatchSpiritPageProps) {
       {
         catchResult !== null &&
         <div className="tw-text-center">
-          <h2 className="tw-font-bold">{dictionary.spiritIsCatched}</h2>
+          <h2 className="tw-font-bold">{t('spiritIsCatched')}</h2>
         </div>
       }
       {
@@ -88,7 +88,7 @@ export function CatchSpiritPage(props: CatchSpiritPageProps) {
               className="tw-w-full tw-text-left tw-py-4 tw-mb-2"
               onClick={() => history.push(`/spirits`)}
             >
-              {dictionary.switchToSpiritList}
+              {t('switchToSpiritList')}
             </Button>
           </>
         )

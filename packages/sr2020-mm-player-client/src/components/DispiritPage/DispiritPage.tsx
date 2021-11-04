@@ -11,7 +11,7 @@ import classNames from 'classnames';
 import Button from "react-bootstrap/Button";
 import Form from 'react-bootstrap/Form';
 import { StatusIcon } from '../StatusIcon';
-import { dictionary } from "../../utils";
+import { t } from "../../utils";
 
 interface DispiritPageProps {
   setTitle: (title: string) => void;
@@ -40,7 +40,7 @@ export function DispiritPage(props: DispiritPageProps) {
   const { setTitle, characterData } = props;
 
   useEffect(() => {
-    setTitle(dictionary.dispiritPageTitle);
+    setTitle(t('dispiritPageTitle'));
   }, []);
 
   // 366 non body storage
@@ -73,10 +73,10 @@ export function DispiritPage(props: DispiritPageProps) {
       }
     }).catch(err => {
       console.error(stringifyError(err));
-      logClientError(dictionary.unexpectedBodyStorageCheckError, err);
+      logClientError(t('unexpectedBodyStorageCheckError'), err);
       setBodyStorageStatus({
         status: 'invalid',
-        message: dictionary.unexpectedBodyStorageCheckError
+        message: t('unexpectedBodyStorageCheckError')
       });
     });
   }, [bodyStorageQrString]);
@@ -109,10 +109,10 @@ export function DispiritPage(props: DispiritPageProps) {
       }
     }).catch(err => {
       console.error(stringifyError(err));
-      logClientError(dictionary.unexpectedSpiritJarCheckError, err);
+      logClientError(t('unexpectedSpiritJarCheckError'), err);
       setBodyStorageStatus({
         status: 'invalid',
-        message: dictionary.unexpectedSpiritJarCheckError
+        message: t('unexpectedSpiritJarCheckError')
       });
     });
   }, [spiritJarQrString]);
@@ -134,8 +134,8 @@ export function DispiritPage(props: DispiritPageProps) {
       setDoDispirit(null);
     }).catch(err => {
       console.error(stringifyError(err));
-      logClientError(dictionary.unexpectedDispiritError, err);
-      setDispiritStatus(dictionary.unexpectedDispiritError);
+      logClientError(t('unexpectedDispiritError'), err);
+      setDispiritStatus(t('unexpectedDispiritError'));
       setDoDispirit(null);
     });
   }, [doDispirit]);
@@ -147,7 +147,7 @@ export function DispiritPage(props: DispiritPageProps) {
           setBodyStorageQrString(qrData);
           setScanBodyStorage(false);
         }}
-        message={dictionary.scanBodyStorage}
+        message={t('scanBodyStorage')}
         onCancel={() => setScanBodyStorage(false)}
       />
     );
@@ -160,7 +160,7 @@ export function DispiritPage(props: DispiritPageProps) {
           setSpiritJarQrString(qrData);
           setScanSpiritJar(false);
         }}
-        message={dictionary.scanEmptySpiritJar}
+        message={t('scanEmptySpiritJar')}
         onCancel={() => setScanSpiritJar(false)}
       />
     );
@@ -176,8 +176,8 @@ export function DispiritPage(props: DispiritPageProps) {
       <div className="tw-mb-8">
         <div className="tw-flex tw-mb-4">
           <StatusIcon status={bodyStorageStatus.status}/>
-          <div className="col-form-label tw-flex-1">{dictionary.bodyStorage}</div>
-          <Button onClick={() => setScanBodyStorage(true)}>{dictionary.scan}</Button>
+          <div className="col-form-label tw-flex-1">{t('bodyStorage')}</div>
+          <Button onClick={() => setScanBodyStorage(true)}>{t('scan')}</Button>
         </div>
         {
           bodyStorageStatus.status === 'invalid' && 
@@ -191,8 +191,8 @@ export function DispiritPage(props: DispiritPageProps) {
         <div className="tw-mb-8">
           <div className="tw-flex tw-mb-4">
             <StatusIcon status={spiritJarStatus.status}/>
-            <div className="col-form-label tw-flex-1">{dictionary.spiritJar}</div>
-            <Button onClick={() => setScanSpiritJar(true)}>{dictionary.scan}</Button>
+            <div className="col-form-label tw-flex-1">{t('spiritJar')}</div>
+            <Button onClick={() => setScanSpiritJar(true)}>{t('scan')}</Button>
           </div>
           {
             spiritJarStatus.status === 'invalid' && 
@@ -218,7 +218,7 @@ export function DispiritPage(props: DispiritPageProps) {
             icon={faSpinner}
             spin
           />
-          {dictionary.dispiritAndFree}
+          {t('dispiritAndFree')}
         </Button>
       </div>
       {
@@ -232,7 +232,7 @@ export function DispiritPage(props: DispiritPageProps) {
               icon={faSpinner}
               spin
             />
-            {dictionary.dispirit}
+            {t('dispirit')}
           </Button>
         </div>
       }

@@ -8,7 +8,7 @@ import Form from "react-bootstrap/Form";
 import { ErrorResponse, isErrorResponse } from 'sr2020-mm-event-engine';
 
 import { ErrorAlert } from "../ErrorAlert";
-import { LoginManager, dictionary } from '../../utils';
+import { LoginManager, t } from '../../utils';
 
 interface LoginPageProps {
   loginManager: LoginManager;
@@ -42,24 +42,24 @@ export function LoginPage(props: LoginPageProps) {
 
         <Form onSubmit={handleSubmit}>
           <Form.Group controlId="formBasicLogin">
-            <Form.Label>{dictionary.loginTitle}</Form.Label>
+            <Form.Label>{t('loginTitle')}</Form.Label>
             <Form.Control type="text" onChange={e => {
               setUserName(e.target.value);
               setErrorMsg(null);
             }}/>
             <Form.Text className="text-muted">
-              {dictionary.loginText}
+              {t('loginText')}
             </Form.Text>
           </Form.Group>
 
           <Form.Group controlId="formBasicPassword">
-            <Form.Label>{dictionary.passwordTitle}</Form.Label>
+            <Form.Label>{t('passwordTitle')}</Form.Label>
             <Form.Control type="password" onChange={e => {
               setPassword(e.target.value);
               setErrorMsg(null);
             }}/>
             <Form.Text className="text-muted">
-              {dictionary.passwordText}
+              {t('passwordText')}
             </Form.Text>
           </Form.Group>
           {
@@ -73,7 +73,7 @@ export function LoginPage(props: LoginPageProps) {
             )
           }
           <Button variant="primary" type="submit" className="tw-w-full">
-            {dictionary.login}
+            {t('login')}
           </Button>
         </Form>
       </div>

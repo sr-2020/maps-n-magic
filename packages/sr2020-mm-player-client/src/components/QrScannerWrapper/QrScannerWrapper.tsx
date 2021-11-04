@@ -7,7 +7,7 @@ import Button from "react-bootstrap/Button";
 
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faSync, faLightbulb } from '@fortawesome/free-solid-svg-icons';
-import { dictionary } from "../../utils";
+import { t } from "../../utils";
 
 interface QrScannerWrapperProps {
   onSuccess: ((qrData: string) => void);
@@ -87,7 +87,7 @@ export function QrScannerWrapper(props: QrScannerWrapperProps) {
           </div>
         </div>
       }
-      <ErrorBoundary fallback={<>{dictionary.qrScanError}</>}>
+      <ErrorBoundary fallback={<>{t('qrScanError')}</>}>
         <QRScanner
           ref={qrScanner}
           // cursorResolution={600}
@@ -109,7 +109,7 @@ export function QrScannerWrapper(props: QrScannerWrapperProps) {
             className="tw-fixed tw-bottom-0 tw-w-40"
             onClick={onCancel}
           >
-            {dictionary.cancel}
+            {t('cancel')}
           </Button>
         )
       }
@@ -117,7 +117,7 @@ export function QrScannerWrapper(props: QrScannerWrapperProps) {
         className="tw-absolute tw-right-0 tw-bg-green-900 tw-border-green-900 tw-opacity-70"
         style={{top: '6rem'}}
         onClick={() => setFacingMode(facingMode === 'user' ? 'environment' : 'user')}
-        title={dictionary.changeCamera}
+        title={t('changeCamera')}
       >
         <FontAwesomeIcon
           icon={faSync}
@@ -127,7 +127,7 @@ export function QrScannerWrapper(props: QrScannerWrapperProps) {
         className="tw-absolute tw-right-0 tw-bg-green-900 tw-border-green-900 tw-opacity-70"
         style={{top: '6rem'}}
         onClick={() => setTorch(!torch)}
-        title={dictionary.onOffTorch}
+        title={t('onOffTorch')}
       >
         <FontAwesomeIcon
           // icon={torch ? faLightbulb : faSync}

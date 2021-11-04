@@ -3,7 +3,7 @@ import { isErrorResponse, UserHistoryItem, stringifyError } from 'sr2020-mm-even
 import { loadHistory, logClientError, suitSpirit } from '../../api';
 import moment from 'moment';
 import './HistoryPage.css';
-import { dictionary, processForDisplay } from "../../utils";
+import { t, processForDisplay } from "../../utils";
 
 interface HistoryPageProps {
   setTitle: (title: string) => void;
@@ -13,7 +13,7 @@ export function HistoryPage(props: HistoryPageProps) {
   const { setTitle } = props;
 
   useEffect(() => {
-    setTitle(dictionary.historyPageTitle);
+    setTitle(t('historyPageTitle'));
   }, []);
 
   const [historyList, setHistoryList] = useState<UserHistoryItem[] | null>(null);
@@ -32,8 +32,8 @@ export function HistoryPage(props: HistoryPageProps) {
       }
     }).catch(err => {
       console.error(stringifyError(err));
-      setSuitSpiritStatus(dictionary.unexpectedHistoryLoadingError);
-      logClientError(dictionary.unexpectedHistoryLoadingError, err);
+      setSuitSpiritStatus(t('unexpectedHistoryLoadingError'));
+      logClientError(t('unexpectedHistoryLoadingError'), err);
       setHistoryList([]);
     });
   }, [historyList]);

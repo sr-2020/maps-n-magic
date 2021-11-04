@@ -5,7 +5,7 @@ import classNames from 'classnames';
 
 import Button from "react-bootstrap/Button";
 import { postUserPosition } from '../../api';
-import { dictionary } from "../../utils";
+import { t } from "../../utils";
 
 interface LocationChangePageProps {
   locationData: AggregatedLocationView | null;
@@ -16,12 +16,12 @@ export function LocationChangePage(props: LocationChangePageProps) {
   const { locationData, setTitle } = props;
 
   useEffect(() => {
-    setTitle(dictionary.locationChangePage);
+    setTitle(t('locationChangePage'));
   }, []);
 
   if (locationData === null) {
     return <div>
-      {dictionary.locationDataLoading}
+      {t('locationDataLoading')}
     </div>
   }
 
