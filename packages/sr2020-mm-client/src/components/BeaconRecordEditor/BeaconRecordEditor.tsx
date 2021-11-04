@@ -9,12 +9,6 @@ import * as R from 'ramda';
 
 import Table from 'react-bootstrap/Table';
 
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faPlus, faEllipsisH } from '@fortawesome/free-solid-svg-icons';
-
-import Popover from 'react-bootstrap/Popover';
-import Button from 'react-bootstrap/Button';
-import OverlayTrigger from 'react-bootstrap/OverlayTrigger';
 import Form from 'react-bootstrap/Form';
 
 // declare type FormControlElement = HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement;

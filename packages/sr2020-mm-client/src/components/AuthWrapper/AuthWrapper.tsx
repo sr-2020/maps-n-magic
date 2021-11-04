@@ -7,7 +7,6 @@ import { LoginPage } from '../LoginPage';
 import './AuthWrapper.css';
 
 import Spinner from "react-bootstrap/Spinner";
-import Button from "react-bootstrap/Button";
 
 type AuthWrapperProps = PropsWithChildren<WithLoginState & WithTranslation & {
   loginManager: LoginManager;
