@@ -23,13 +23,14 @@ npm i
 npm run install-package-deps
 ```
 
-6. В проекте 4 компонента верхнего уровня: sr2020-mm-server, sr2020-mm-client, sr2020-mm-player-server, sr2020-mm-player-client. Каждый компонент требует настройки переменных среды, в том числе включая секреты. Самое простое скопировать файлы переменных по умолчанию. Этого достаточно для демо или разработки.
+6. В проекте 4 компонента верхнего уровня: sr2020-mm-server, sr2020-mm-client, sr2020-mm-player-server, sr2020-mm-player-client. Каждый компонент требует настройки переменных среды, в том числе секреты. Самое простое скопировать файлы переменных по умолчанию. Этого достаточно для демо или разработки.
 ```
 packages\sr2020-mm-server\.env.mocked => packages\sr2020-mm-server\.env
 packages\sr2020-mm-client\.env.mocked => packages\sr2020-mm-client\.env
 packages\sr2020-mm-player-server\.env.mocked => packages\sr2020-mm-player-server\.env
 packages\sr2020-mm-player-client\.env.mocked => packages\sr2020-mm-player-client\.env
 ```
+В файлах sr2020-mm-client\.env и sr2020-mm-player-client\.env можно указать язык клиента. Поддерживаются русский и английский. По умолчанию стоит русский язык. Язык можно переключить на лету прямо в клиенте. 
 
 ### Как собрать и запустить картомагию в демо режиме?
 
