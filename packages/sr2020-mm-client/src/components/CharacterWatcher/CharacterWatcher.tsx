@@ -1,9 +1,10 @@
 import * as R from 'ramda';
-import React, { FormEvent, MouseEvent } from 'react';
+import React, { FormEvent, MouseEvent, useEffect } from 'react';
 import './CharacterWatcher.css';
 import { WithCharacterId, WithCharacterPosition, WithUserRecords } from '../../dataHOCs';
 import Form from 'react-bootstrap/Form';
 import Button from 'react-bootstrap/Button';
+import { WithTranslation } from 'react-i18next';
 
 import { CharacterDataList } from '../CharacterDataList';
 import { UserRecord, GameModel } from "sr2020-mm-event-engine";
@@ -11,7 +12,11 @@ import { SetTrackedCharacterId } from "sr2020-mm-client-event-engine";
 
 const WATCH_CHARACTER_HISTORY_KEY = 'watchCharacterHistory';
 
-interface CharacterWatcherProps extends WithCharacterId, WithCharacterPosition, WithUserRecords {
+interface CharacterWatcherProps extends 
+  WithCharacterId, 
+  WithCharacterPosition, 
+  WithUserRecords,
+  WithTranslation {
   gameModel: GameModel;
   children: React.ReactNode;
 }
@@ -19,7 +24,12 @@ interface CharacterWatcherProps extends WithCharacterId, WithCharacterPosition, 
 // eslint-disable-next-line max-lines-per-function
 export function CharacterWatcher(props: CharacterWatcherProps) {
   const {
-    trackedCharacterId, userRecords, gameModel, children, trackedCharacterLocationId,
+    trackedCharacterId, 
+    userRecords, 
+    gameModel, 
+    children, 
+    trackedCharacterLocationId,
+    t
   } = props;
 
   const userIds = R.pluck('id', userRecords);
@@ -37,6 +47,12 @@ export function CharacterWatcher(props: CharacterWatcherProps) {
       trackedCharacterId: null,
     });
   }
+
+  useEffect(() => {
+    return () => {
+      onWatchCancel();
+    }
+  }, []);
 
   function onReselectCharacter(e: MouseEvent<HTMLElement>) {
     // eslint-disable-next-line no-shadow
@@ -85,12 +101,12 @@ export function CharacterWatcher(props: CharacterWatcherProps) {
               onSubmit={onSubmit}
             >
               <Form.Group controlId="characterId">
-                <Form.Label>Введите Id персонажа</Form.Label>
+                <Form.Label>{t('enterCharacterId')}</Form.Label>
                 <Form.Control list="characterIdList" />
               </Form.Group>
               <div className="tw-text-right">
                 <Button variant="primary" type="submit">
-                  Отслеживать локацию и звук
+                  {t('followCharacterLocationAndSound')}
                 </Button>
               </div>
             </Form>
@@ -102,7 +118,7 @@ export function CharacterWatcher(props: CharacterWatcherProps) {
                 className="tw-mx-auto"
                 style={{ width: '20rem' }}
               >
-                <Form.Label>Ранее выбранные персонажи</Form.Label>
+                <Form.Label>{t('prevSelectedCharacters')}</Form.Label>
                 <div>
                   {
                     watchCharacterHistory.map((el) => (
@@ -132,12 +148,13 @@ export function CharacterWatcher(props: CharacterWatcherProps) {
         <>
           {children}
           <div className="tw-fixed tw-bottom-0 tw-left-0" style={{ zIndex: 10000 }}>
-            {`Персонаж ${trackedCharacterId}`}
+            {t('characterIdLabel', {id: trackedCharacterId})}
             <br />
-            {`Локация ${trackedCharacterLocationId || 'N/A'}`}
+            {t('locationIdLabel', {id: trackedCharacterLocationId || 'N/A'})}
             <br />
+
             <Button variant="primary" onClick={onWatchCancel}>
-              Остановить отслеживание
+              {t('stopFollowing')}
             </Button>
           </div>
         </>

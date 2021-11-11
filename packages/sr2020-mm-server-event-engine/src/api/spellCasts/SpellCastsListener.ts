@@ -1,20 +1,17 @@
 import * as R from 'ramda';
 import moment from 'moment-timezone';
-// import { getCharacterLocation } from './getCharacterLocation';
-// import { getCharacterLifeStyle } from './getCharacterLifeStyle';
-// import { listenHealthChanges } from './listenHealthChanges';
 import { 
   GameModel, 
   SpellCast, 
   ESpellCast, 
   AbstractEventProcessor,
   GMLogger, 
-  RawSpellCast
+  RawSpellCast,
 } from "sr2020-mm-event-engine";
 import shortid from 'shortid';
 
-import { listenSpellCasts } from './listenSpellCasts';
 import { mmLog } from '../spirits/mmLog';
+import { PubSubDataSource } from '../../dataManagers/types';
 
 const metadata = {
   actions: [],
@@ -26,14 +23,21 @@ const metadata = {
 };
 
 export class SpellCastsListener extends AbstractEventProcessor {
-
-  constructor(protected gameModel: GameModel, logger: GMLogger) {
+  constructor(
+    protected gameModel: GameModel, 
+    protected pubSubDataSource: PubSubDataSource<RawSpellCast>,
+    logger: GMLogger
+  ) {
     super(gameModel, logger);
     this.onMessageRecieved = this.onMessageRecieved.bind(this);
-    listenSpellCasts(this.onMessageRecieved, true);
+    this.pubSubDataSource.on('message', this.onMessageRecieved);
     this.setMetadata({
       emitEvents: ["spellCast"],
     });
+  }
+
+  dispose() {
+    this.pubSubDataSource.off('message', this.onMessageRecieved);
   }
 
   async onMessageRecieved(data: RawSpellCast): Promise<void> {
@@ -45,6 +49,6 @@ export class SpellCastsListener extends AbstractEventProcessor {
         uid: shortid.generate()
       }
     });
-    // mmLog('SPELL_CAST', JSON.stringify(data));
+    // mmLog(his.gameModel, 'SPELL_CAST', JSON.stringify(data));
   }
 }

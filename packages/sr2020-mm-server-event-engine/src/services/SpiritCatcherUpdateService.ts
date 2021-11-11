@@ -28,8 +28,8 @@ export const spiritCatcherUpdateMetadata: ServiceContractTypes<SpiritCatcherUpda
   needRequests: ['catcherStates'],
 };
 
-// const SPIRIT_CATCHER_UPDATE_INTERVAL: number = 5000; // millis
-const SPIRIT_CATCHER_UPDATE_INTERVAL: number = 60000; // millis
+const SPIRIT_CATCHER_UPDATE_INTERVAL: number = 5000; // millis
+// const SPIRIT_CATCHER_UPDATE_INTERVAL: number = 60000; // millis
 
 export class SpiritCatcherUpdateService extends AbstractService<SpiritCatcherUpdateServiceContract> {
   updateTimerId: NodeJS.Timeout | null;
@@ -71,10 +71,11 @@ export class SpiritCatcherUpdateService extends AbstractService<SpiritCatcherUpd
       }, []);
     if (expiredStatesList.length !== 0) {
       this.logger.info(`SPIRIT_CATCHER_EXPIRED expired list ${JSON.stringify(expiredStatesList)}`);
-      mmLog('SPIRIT_CATCHER_EXPIRED', `expired list ${JSON.stringify(expiredStatesList)}`);
+      mmLog(this.gameModel, 'SPIRIT_CATCHER_EXPIRED', `expired list ${JSON.stringify(expiredStatesList)}`);
       
       expiredStatesList.forEach(characterId => {
         logCharacterAction(
+          this.gameModel,
           this.logger,
           'n/a',
           'n/a',

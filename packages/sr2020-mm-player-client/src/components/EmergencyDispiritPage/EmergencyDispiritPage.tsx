@@ -4,6 +4,7 @@ import './EmergencyDispiritPage.css';
 import Button from "react-bootstrap/Button";
 import { emergencyDispirit, logClientError } from '../../api';
 import { isErrorResponse, stringifyError } from 'sr2020-mm-event-engine';
+import { t } from "../../utils";
 
 interface EmergencyDispiritPageProps {
   setTitle: (title: string) => void;
@@ -13,7 +14,7 @@ export function EmergencyDispiritPage(props: EmergencyDispiritPageProps) {
   const { setTitle } = props;
 
   useEffect(() => {
-    setTitle(`Тело духа уничтожено`);
+    setTitle(t('emergencyDispiritPageTitle'));
   }, []);
   
   const [doEmergencyDispirit, setDoEmergencyDispirit] = useState<boolean>(false);
@@ -27,13 +28,13 @@ export function EmergencyDispiritPage(props: EmergencyDispiritPageProps) {
       if (isErrorResponse(res)) {
         setDispiritStatus(res.errorTitle);
       } else {
-        setDispiritStatus("Способности духа сняты. Надо быстрее вернуться в своё тело");
+        setDispiritStatus(t('emergencyDispiritDone'));
       }
       setDoEmergencyDispirit(false);
     }).catch(err => {
       console.error(stringifyError(err));
-      setDispiritStatus('CL Непредвиденная ошибка снятия способностей');
-      logClientError('CL Непредвиденная ошибка снятия способностей', err);
+      setDispiritStatus(t('unexpectedEmergencyDispiritError'));
+      logClientError(t('unexpectedEmergencyDispiritError'), err);
       setDoEmergencyDispirit(false);
     });
   }, [doEmergencyDispirit]);
@@ -42,14 +43,13 @@ export function EmergencyDispiritPage(props: EmergencyDispiritPageProps) {
     <div className="EmergencyDispiritPage tw-p-4">
       <div className="tw-mb-8">
         <p className="tw-mb-4">
-          Экстренное снятие духа происходит если хиты духа ушли в ноль.
+          {t('emergencyDispiritExplanation1')}
         </p>
         <p className="tw-mb-4">
-          Вы остаетесь в теле духа, но теряете все способности и 
-          идете надевать мясное тело. 
+          {t('emergencyDispiritExplanation2')}
         </p>
         <p>
-          Полноценное снятие тела духа выполняется как обычное снятие.
+          {t('emergencyDispiritExplanation3')}
         </p>
       </div>
       <div className="tw-text-center">
@@ -57,7 +57,7 @@ export function EmergencyDispiritPage(props: EmergencyDispiritPageProps) {
           variant="danger"
           onClick={() => setDoEmergencyDispirit(true)}
         >
-          Подтвердить экстренное снятие
+          {t('confirmEmergencyDispirit')}
         </Button>
       </div>
       {

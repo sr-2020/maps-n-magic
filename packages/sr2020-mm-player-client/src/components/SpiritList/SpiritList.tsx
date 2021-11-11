@@ -7,7 +7,14 @@ import Card from "react-bootstrap/Card";
 import { useHistory } from 'react-router-dom';
 
 import { WithLocationDataOnly } from '../../hocs';
-import { getFractionName } from '../../utils';
+import { 
+  getFractionName, 
+  t,
+  spiritListTitle,
+  needAbilityToCatchSpirit,
+  catchSpiritInfoText,
+  processForDisplay,
+} from '../../utils';
 import { SpiritCard } from "../SpiritCard";
 import { Ability, CharacterModelData2, hasAbility, hasSpell, Spell } from 'sr2020-mm-event-engine';
 import moment from 'moment';
@@ -34,13 +41,13 @@ export function SpiritList(props: SpiritListProps) {
   const history = useHistory();
   
   useEffect(() => {
-    setTitle(`Духи (${locationData?.spiritViews.length || 0})`)
+    setTitle(spiritListTitle(locationData?.spiritViews.length || 0))
   }, [locationData?.spiritViews.length]);
   
   if (!locationData) {
     return (
       <div className="tw-text-center">
-        <h2 className="tw-my-16 tw-text-2xl">Локация неизвестна</h2>
+        <h2 className="tw-my-16 tw-text-2xl">{t('locationIsUnknown')}</h2>
       </div>
     );
   }
@@ -48,7 +55,7 @@ export function SpiritList(props: SpiritListProps) {
   if (!hasSpell(characterData, Spell.SpiritCatcher)) {
     return (
       <div className="tw-text-center">
-        <h2 className="tw-my-16">Вы не овладели навыком Spirit Catcher, поэтому не видите духов вокруг и не можете их поймать</h2>
+        <h2 className="tw-my-16">{t('missingSpiritCatcherSpell')}</h2>
       </div>
     );
   }
@@ -58,7 +65,7 @@ export function SpiritList(props: SpiritListProps) {
   if (spiritViews.length === 0) {
     return (
       <div className="tw-text-center">
-        <h2 className="tw-my-16 tw-text-2xl">В локации нет духов</h2>
+        <h2 className="tw-my-16 tw-text-2xl">{t('noSpiritsInLocation')}</h2>
       </div>
     );
   }
@@ -70,18 +77,18 @@ export function SpiritList(props: SpiritListProps) {
       {
         characterData.catcherData !== undefined &&
         <div className="tw-m-4 tw-p-4 tw-bg-green-200 tw-font-semibold">
-          У вас {characterData.catcherData.attemptNumber} попытки 
-          до {
+          {catchSpiritInfoText(
+            characterData.catcherData.attemptNumber,
             moment(characterData.catcherData.startTime + 
-            characterData.catcherData.durationMillis).format('HH:mm')
-          } 
-          , вероятность поимки {characterData.catcherData.catchProbability}%
+              characterData.catcherData.durationMillis).format('HH:mm'),
+            characterData.catcherData.catchProbability
+          )}
         </div>
       }
       {
         characterData.catcherData === undefined &&
         <div className="tw-m-4 tw-p-4 tw-bg-blue-200 tw-font-semibold">
-          Примените заклинание Spirit Catcher, чтобы ловить духов.
+          {t('castSpiritCatcherAdvice')}
         </div>
       }
       <Accordion>
@@ -89,8 +96,8 @@ export function SpiritList(props: SpiritListProps) {
           sortedSpiritViews.map((spiritView, index) => 
             <Card key={spiritView.id}>
               <Accordion.Toggle as={Card.Header} eventKey={String(index)}>
-                <div>{spiritView.name}</div>
-                <div className="text-muted tw-text-sm">{getFractionName(spiritView.fraction)}</div>
+                <div>{processForDisplay(spiritView.name)}</div>
+                <div className="text-muted tw-text-sm">{processForDisplay(getFractionName(spiritView.fraction))}</div>
               </Accordion.Toggle>
               <Accordion.Collapse eventKey={String(index)}>
                 <Card.Body>
@@ -106,12 +113,14 @@ export function SpiritList(props: SpiritListProps) {
                       className="tw-w-full tw-text-left tw-py-4 tw-mb-2"
                       onClick={() => history.push(`/catchSpirit/${spiritView.id}`)}
                     >
-                      Поймать
+                      {t('catch')}
                     </Button>
                   }
                   {
                     !hasAbility(characterData, spiritMasterMap[spiritView.level]) &&
-                    <div>Для ловли духа нужна способность {spiritMasterNames[spiritView.level]}</div>
+                    <div>
+                      {needAbilityToCatchSpirit(spiritMasterNames[spiritView.level])}
+                    </div>
                   }
                 </Card.Body>
               </Accordion.Collapse>

@@ -11,10 +11,10 @@ import { union, difference } from './set';
 
 import { 
   TriangulationData, 
-  LocPolygonData, 
   SRLatLng, 
+  LocPolygonData, 
   EdgeId
-} from "../types";
+} from "../domain";
 
 interface TriangulationPrecalcData {
   locationId: number;

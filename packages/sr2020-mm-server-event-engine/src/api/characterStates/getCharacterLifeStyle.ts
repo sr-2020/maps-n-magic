@@ -1,117 +1,62 @@
 import * as R from 'ramda';
 import fetch from 'isomorphic-fetch';
-import Ajv, { JSONSchemaType } from "ajv";
 import { 
-  LifeStylesValues, LifeStyles
+  validateCharacterLifeStyleMessage,
+  CharacterLifeStyle,
+  unknownLifeStyle
 } from 'sr2020-mm-event-engine';
 
 import { mainServerConstants } from '../constants';
 import { createLogger } from '../../utils';
+import { SingleGettable2 } from '../types';
 
 const logger = createLogger('getCharacterLifeStyle.ts');
 
-// {
-//   "data": {
-//     "skuId": 0,
-//     "skuName": "Страховка отсутствует",
-//     "lifeStyle": "Страховка отсутствует",
-//     "shopName": "Страховка отсутствует",
-//     "buyTime": "0001-01-01T00:00:00",
-//     "personName": "ТестПер"
-//   },
-//   "status": true,
-//   "message": null
-// }
+export class LifeStyleProvider implements SingleGettable2<CharacterLifeStyle> {
+  validateEntity = (entity: any): entity is CharacterLifeStyle => true;
 
-interface CharacterLifeStyleMessage {
-  data: {
-    skuId: number;
-    skuName: string;
-    lifeStyle: string;
-    shopName: string;
-    buyTime: string;
-    personName: string;
-  };
-  status: boolean;
-  message?: string;
-}
-
-const ajv = new Ajv({
-  allErrors: true,
-  // removeAdditional: true,
-  // useDefaults: true
-});
-
-const characterLifeStyleMessageSchema: JSONSchemaType<CharacterLifeStyleMessage> = {
-  type: "object",
-  properties: {
-    data: {
-      type: "object",
-      properties: {
-        skuId: {type: "integer"},
-        skuName: {type: "string"},
-        lifeStyle: {type: "string"},
-        shopName: {type: "string"},
-        buyTime: {type: "string"},
-        personName: {type: "string"},
-      },
-      required: ["skuId", "skuName", "lifeStyle", "shopName", "buyTime", "personName"],
-    },
-    status: {type: "boolean"},
-    message: {type: "string", nullable: true},
-    // stateFrom: {type: "string", enum: [
-    //   "healthy", "wounded", "clinically_dead", "biologically_dead"
-    // ]},
-    // stateTo: {type: "string", enum: [
-    //   "healthy", "wounded", "clinically_dead", "biologically_dead"
-    // ]},
-    // timestamp: {type: "integer"}
-  },
-  required: ["data", "status"],
-  // additionalProperties: false,
-};
-
-export const validateCharacterLifeStyleMessage = ajv.compile(characterLifeStyleMessageSchema);
-
-export async function getCharacterLifeStyle(characterId: number): Promise<{
-  lifeStyle: LifeStylesValues,
-  personName: string,
-}> {
-  const response = await fetch(`${mainServerConstants().billingInsurance}?characterid=${characterId}`);
-
-  if (!response.ok) {
+  async singleGet(characterId: number): Promise<CharacterLifeStyle> {
     try {
-      const text = await response.text();
-      // throw new Error(`getCharacterLifeStyle network response was not ok ${text}`);
-      throw new Error(`getCharacterLifeStyle network response was not ok ${response.ok} ${response.statusText}`);
+      const response = await fetch(`${mainServerConstants().billingInsurance}?characterid=${characterId}`);
+    
+      if (!response.ok) {
+        try {
+          const text = await response.text();
+          // throw new Error(`getCharacterLifeStyle network response was not ok ${text}`);
+          throw new Error(`getCharacterLifeStyle network response was not ok ${response.ok} ${response.statusText}`);
+        } catch (err) {
+          logger.error(err);
+        }
+        return {
+          ...unknownLifeStyle,
+          id: characterId
+        };
+      }
+    
+      const result = await response.json();
+    
+      if (!validateCharacterLifeStyleMessage(result)) {
+        logger.error(`Received invalid getCharacterLifeStyle. ${JSON.stringify(result)} ${JSON.stringify(validateCharacterLifeStyleMessage.errors)}`);
+      } else {
+        // logger.info('getCharacterLifeStyle validation OK');
+      }
+      // logger.info('getCharacterLifeStyle ' + JSON.stringify(result));
+    
+      if (result.status) {
+        return {
+          id: characterId,
+          lifeStyle: result.data.lifeStyle,
+          personName: result.data.personName,
+        };
+      }
     } catch (err) {
       logger.error(err);
     }
     return {
-      lifeStyle: LifeStyles.Unknown,
-      personName: 'N/A',
+      ...unknownLifeStyle,
+      id: characterId
     };
   }
-
-  const result = await response.json();
-
-  if (!validateCharacterLifeStyleMessage(result)) {
-    logger.error(`Received invalid getCharacterLifeStyle. ${JSON.stringify(result)} ${JSON.stringify(validateCharacterLifeStyleMessage.errors)}`);
-  } else {
-    // logger.info('getCharacterLifeStyle validation OK');
-  }
-  // logger.info('getCharacterLifeStyle ' + JSON.stringify(result));
-
-  if (result.status) {
-    return {
-      lifeStyle: result.data.lifeStyle,
-      personName: result.data.personName,
-    };
-  }
-  return {
-    lifeStyle: LifeStyles.Unknown,
-    personName: 'N/A',
-  };
 }
 
 // request example

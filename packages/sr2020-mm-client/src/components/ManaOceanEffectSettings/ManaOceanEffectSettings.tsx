@@ -110,9 +110,9 @@ export class ManaOceanEffectSettings extends Component<ManaOceanEffectSettingsPr
       <div className="ManaOceanEffectSettings">
         <div className="tw-flex">
           <div className="tw-m-4">
-            <h3 className="tw-text-xl tw-font-semibold tw-mb-4">Массакр</h3>
+            <h3 className="tw-text-xl tw-font-semibold tw-mb-4">{t('massacre')}</h3>
             <Form.Group>
-              <Form.Label>Задержка, от 0 до 60 мин</Form.Label>
+              <Form.Label>{t('massacreDelay')}</Form.Label>
               <Form.Control
                 type="number"
                 step={1}
@@ -126,7 +126,7 @@ export class ManaOceanEffectSettings extends Component<ManaOceanEffectSettingsPr
               />
             </Form.Group>
             <Form.Group>
-              <Form.Label>Длительность, от 1 до 60 мин</Form.Label>
+              <Form.Label>{t('massacreDuration')}</Form.Label>
               <Form.Control
                 type="number"
                 step={1}
@@ -140,7 +140,7 @@ export class ManaOceanEffectSettings extends Component<ManaOceanEffectSettingsPr
               />
             </Form.Group>
             <Form.Group>
-              <Form.Label>Эффект на ману, от 1 до 5</Form.Label>
+              <Form.Label>{t('massacreManaChange')}</Form.Label>
               <Form.Control
                 type="number"
                 step={1}
@@ -153,7 +153,7 @@ export class ManaOceanEffectSettings extends Component<ManaOceanEffectSettingsPr
               />
             </Form.Group>
             <Form.Group>
-              <Form.Label>Число людей, от 1 до 10</Form.Label>
+              <Form.Label>{t('massacrePeopleLimit')}</Form.Label>
               <Form.Control
                 type="number"
                 step={1}
@@ -167,9 +167,9 @@ export class ManaOceanEffectSettings extends Component<ManaOceanEffectSettingsPr
             </Form.Group>
           </div>
           <div className="tw-m-4">
-            <h3 className="tw-text-xl tw-font-semibold tw-mb-4">Ритуал</h3>
+            <h3 className="tw-text-xl tw-font-semibold tw-mb-4">{t('ritual')}</h3>
             <Form.Group>
-              <Form.Label>Минимальное число участников, от 1 до 10</Form.Label>
+              <Form.Label>{t('ritualMembersBoundary')}</Form.Label>
               <Form.Control
                 type="number"
                 step={1}
@@ -182,7 +182,7 @@ export class ManaOceanEffectSettings extends Component<ManaOceanEffectSettingsPr
               />
             </Form.Group>
             <Form.Group>
-              <Form.Label>Задержка, от 0 до 60 мин</Form.Label>
+              <Form.Label>{t('ritualDelay')}</Form.Label>
               <Form.Control
                 type="number"
                 step={1}
@@ -197,9 +197,9 @@ export class ManaOceanEffectSettings extends Component<ManaOceanEffectSettingsPr
             </Form.Group>
           </div>
           <div className="tw-m-4">
-            <h3 className="tw-text-xl tw-font-semibold tw-mb-4">Откат мощного заклинания</h3>
+            <h3 className="tw-text-xl tw-font-semibold tw-mb-4">{t('powerSpell')}</h3>
             <Form.Group>
-              <Form.Label>Минимальная мощь закла, от 1 до 10</Form.Label>
+              <Form.Label>{t('powerSpellBoundary')}</Form.Label>
               <Form.Control
                 type="number"
                 step={1}
@@ -212,7 +212,7 @@ export class ManaOceanEffectSettings extends Component<ManaOceanEffectSettingsPr
               />
             </Form.Group>
             <Form.Group>
-              <Form.Label>Задержка, от 0 до 60 мин</Form.Label>
+              <Form.Label>{t('powerSpellDelay')}</Form.Label>
               <Form.Control
                 type="number"
                 step={1}
@@ -226,7 +226,7 @@ export class ManaOceanEffectSettings extends Component<ManaOceanEffectSettingsPr
               />
             </Form.Group>
             <Form.Group>
-              <Form.Label>Длительность, от 1 до 60 мин</Form.Label>
+              <Form.Label>{t('powerSpellDuration')}</Form.Label>
               <Form.Control
                 type="number"
                 step={1}
@@ -241,9 +241,9 @@ export class ManaOceanEffectSettings extends Component<ManaOceanEffectSettingsPr
             </Form.Group>
           </div>
           <div className="tw-m-4">
-            <h3 className="tw-text-xl tw-font-semibold tw-mb-4">Input/Output Stream</h3>
+            <h3 className="tw-text-xl tw-font-semibold tw-mb-4">{t('manaSpell')}</h3>
             <Form.Group>
-              <Form.Label>Длительность одной перекачки, от 1 до 10 мин</Form.Label>
+              <Form.Label>{t('spellDurationItem')}</Form.Label>
               <Form.Control
                 type="number"
                 step={1}
@@ -257,7 +257,7 @@ export class ManaOceanEffectSettings extends Component<ManaOceanEffectSettingsPr
               />
             </Form.Group>
             <Form.Group>
-              <Form.Label>Вероятность применения на единицу мощи заклинания, от 5 до 100 процентов</Form.Label>
+              <Form.Label>{t('spellProbabilityPerPower')}</Form.Label>
               <Form.Control
                 type="number"
                 step={5}
@@ -270,7 +270,7 @@ export class ManaOceanEffectSettings extends Component<ManaOceanEffectSettingsPr
               />
             </Form.Group>
             <Form.Group>
-              <Form.Label>Длительность заклинания на единицу мощи заклинания, от 1 до 10</Form.Label>
+              <Form.Label>{t('spellDurationPerPower')}</Form.Label>
               <Form.Control
                 type="number"
                 step={1}

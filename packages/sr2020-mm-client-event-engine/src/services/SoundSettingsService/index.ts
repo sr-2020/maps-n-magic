@@ -45,7 +45,7 @@ export class SoundSettingsService extends AbstractService<SoundSettingsServiceCo
     });
   }
 
-  setRotationTimeout({ rotationTimeout }: SetRotationTimeout) {
+  setRotationTimeout({ rotationTimeout }: Req<SetRotationTimeout>): Res<SetRotationTimeout> {
     if (!R.is(Number, rotationTimeout)) {
       return;
     }
@@ -59,7 +59,7 @@ export class SoundSettingsService extends AbstractService<SoundSettingsServiceCo
     this.emitSoundSettingsChanged();
   }
 
-  setRotationSoundTimeout({ rotationSoundTimeout }: SetRotationSoundTimeout) {
+  setRotationSoundTimeout({ rotationSoundTimeout }: Req<SetRotationSoundTimeout>): Res<SetRotationSoundTimeout> {
     if (!R.is(Number, rotationSoundTimeout)) {
       return;
     }
@@ -73,7 +73,7 @@ export class SoundSettingsService extends AbstractService<SoundSettingsServiceCo
     this.emitSoundSettingsChanged();
   }
 
-  setBackgroundVolume({ backgroundVolume }: SetBackgroundVolume) {
+  setBackgroundVolume({ backgroundVolume }: Req<SetBackgroundVolume>): Res<SetBackgroundVolume> {
     if (!R.is(Number, backgroundVolume)) {
       return;
     }
@@ -87,7 +87,7 @@ export class SoundSettingsService extends AbstractService<SoundSettingsServiceCo
     this.emitSoundSettingsChanged();
   }
 
-  setRotationVolume({ rotationVolume }: SetRotationVolume) {
+  setRotationVolume({ rotationVolume }: Req<SetRotationVolume>): Res<SetRotationVolume> {
     if (!R.is(Number, rotationVolume)) {
       return;
     }

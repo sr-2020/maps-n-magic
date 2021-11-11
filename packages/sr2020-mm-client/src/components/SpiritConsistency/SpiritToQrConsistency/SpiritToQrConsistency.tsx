@@ -110,20 +110,21 @@ export class SpiritToQrConsistency extends Component<
       batchSpiritJarsReport,
       batchBodyStorageReport
     } = this.state;
+    const { t } = this.props;
 
     return (
       <div className={classNames('SpiritToQrConsistency', this.props.className)}>
         <div className="tw-mb-8">
           <div className="tw-mb-8">
             <Button variant="primary" onClick={this.getSpiritConsistencyReport}>
-              Сформировать отчет о согласованности духов в океане
+              {t('makeSpiritConsistencyReport')}
             </Button>
           </div>
           <div className="tw-mb-8">
             {
               spiritConsistencyReport !== null && 
               spiritConsistencyReport.length == 0 &&
-              <div>Данные корректны</div>
+              <div>{t('spiritsAreConsistent')}</div>
             }
             {
               spiritConsistencyReport !== null &&
@@ -141,7 +142,7 @@ export class SpiritToQrConsistency extends Component<
               disabled={spiritConsistencyReport === null || spiritConsistencyReport.length == 0} 
               onClick={this.moveSpiritsToAstral}
             >
-              Перевести всех несогласованных духов в астрал
+              {t('moveInconsistentSpiritsToAstral')}
             </Button>
           </div>
         </div>
@@ -149,7 +150,7 @@ export class SpiritToQrConsistency extends Component<
         <div>
           <div className="tw-mb-8">
             <Button variant="primary" onClick={this.getBatchSpiritJarsReport}>
-              Массовая проверка тотемов
+              {t('batchSpiritJarCheck')}
             </Button>
           </div>
           <div className="tw-mb-8">
@@ -165,7 +166,7 @@ export class SpiritToQrConsistency extends Component<
         <div>
           <div className="tw-mb-8">
             <Button variant="primary" onClick={this.getBatchBodyStorageReport}>
-              Массовая проверка телохранилищ
+              {t('batchBodyStorageCheck')}
             </Button>
           </div>
           <div className="tw-mb-8">

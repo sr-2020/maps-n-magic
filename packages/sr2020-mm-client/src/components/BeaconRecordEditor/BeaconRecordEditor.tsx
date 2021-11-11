@@ -9,12 +9,6 @@ import * as R from 'ramda';
 
 import Table from 'react-bootstrap/Table';
 
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faPlus, faEllipsisH } from '@fortawesome/free-solid-svg-icons';
-
-import Popover from 'react-bootstrap/Popover';
-import Button from 'react-bootstrap/Button';
-import OverlayTrigger from 'react-bootstrap/OverlayTrigger';
 import Form from 'react-bootstrap/Form';
 
 // declare type FormControlElement = HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement;
@@ -71,7 +65,7 @@ export class BeaconRecordEditor extends Component<BeaconRecordEditorProps, Beaco
     // console.log('createBeacon', this.state.beaconRecords.length);
     gameModel.execute2<PostBeaconRecord>({
       type: 'postBeaconRecord',
-      props: { bssid: macAddress },
+      props: { bssid: macAddress, ssid: macAddress },
     });
   }
 
@@ -203,8 +197,8 @@ export class BeaconRecordEditor extends Component<BeaconRecordEditorProps, Beaco
               <th>{t('beaconMacAddress')}</th>
               <th>{t('beaconLabel')}</th>
               <th>{t('location')}</th>
-              <th>Широта</th>
-              <th>Долгота</th>
+              <th>{t('latitude')}</th>
+              <th>{t('longitude')}</th>
               {/* <th>{t('beaconPlacement')}</th> */}
             </tr>
           </thead>

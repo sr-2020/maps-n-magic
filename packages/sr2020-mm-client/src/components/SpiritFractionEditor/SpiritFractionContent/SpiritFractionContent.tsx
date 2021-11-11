@@ -7,6 +7,7 @@ import { EPutSpiritFractionRequested, GameModel, GetSpiritFraction, SpiritFracti
 import DocumentTitle from 'react-document-title';
 import Form from 'react-bootstrap/Form';
 import { AbilitiesInput2 } from '../../SpiritEditor/SpiritContent/AbilitiesInput2';
+import { processForDisplay } from '../../../i18n';
 
 interface SpiritFractionContentProps extends WithTranslation {
   id: number;
@@ -110,7 +111,7 @@ export class SpiritFractionContent extends Component<
     }
 
     return (
-      <DocumentTitle title={'Фракция духов ' + name}>
+      <DocumentTitle title={t('spiritFractionTitle', {name})}>
 
         <div className="SpiritFractionContent tw-flex-grow tw-px-16 tw-py-8 tw-overflow-auto">
           <div>
@@ -119,14 +120,14 @@ export class SpiritFractionContent extends Component<
                 name="name"
                 type="text"
                 className="tw-text-3xl"
-                value={name}
+                value={processForDisplay(name)}
                 readOnly
               />
             </h2>
 
             <div className="tw-table">
               <div className="tw-table-row">
-                <label htmlFor="abilitiesInput" className="tw-table-cell">Абилки</label>
+                <label htmlFor="abilitiesInput" className="tw-table-cell">{t('spiritAbilities')}</label>
                 <div className="tw-table-cell">
                   <AbilitiesInput2
                     id="abilitiesInput"

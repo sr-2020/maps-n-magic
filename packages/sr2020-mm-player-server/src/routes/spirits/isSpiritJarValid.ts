@@ -5,17 +5,17 @@ import {
   isFullBodyStorage, 
   isFullSpiritJar, 
   Spirit, 
-  // SpiritDataForQrValidation 
 } from "sr2020-mm-event-engine";
 import { 
   createLogger, 
-  getQrModelData, 
+  ExpectedQr, 
+  GetQrModelData, 
   getSpiritWithFractionAbilities, 
-  PlayerAuthorizedRequest, 
   translateAbilities, 
   validateBodyStorageQrModelData, 
   validateSpiritJarQrModelData 
 } from "sr2020-mm-server-event-engine";
+import { PlayerAuthorizedRequest } from "../../types";
 import { decode } from "../../utils";
 import { qrIdIsNanError } from "./utils";
 
@@ -24,6 +24,7 @@ const logger = createLogger('isSpiritJarValid.ts');
 export const isSpiritJarValid = async (req1, res, next) => {
   const req = req1 as PlayerAuthorizedRequest;
   const { spiritJarQrString, shouldBeEmpty } = req.query;
+  const { gameModel } = req;
   if (typeof spiritJarQrString !== 'string' || 
     (shouldBeEmpty !== 'true' && shouldBeEmpty !== 'false')) {
     const errorResponse: ErrorResponse = {
@@ -44,8 +45,11 @@ export const isSpiritJarValid = async (req1, res, next) => {
       return;
     }
 
-    const qrModelData = await getQrModelData(qrId);
-    // const qrModelData = await getQrModelData(qrId + 1000000);
+    const qrModelData = await gameModel.get2<GetQrModelData>({
+      type: 'qrModelData',
+      qrId,
+      expectedQr: shouldBeEmpty2 ? ExpectedQr.emptySpiritJar : ExpectedQr.fullSpiritJar
+    });
 
     const validationRes = validateSpiritJarQrModelData(qrModelData);
 

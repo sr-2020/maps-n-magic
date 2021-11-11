@@ -24,6 +24,7 @@ import {
   ManaOceanLocation,
   manaOceanLocation
 } from "../../types";
+import { processForDisplay } from '../../i18n';
 
 // const manaFillColors = { // based on h202
 //   1: 'white', // hsla(202, 60%, 90%, 1)
@@ -43,7 +44,33 @@ const manaFillColors: Record<number, string> = { // based on h202
   7: '#2ba6ee', // hsla(202, 85%, 55%, 1)
 };
 
+// const manaFillColors: Record<number, string> = { // based on h202
+//   1: '#ffffff', // hsla(352, 85%, 55%, 1)
+//   2: '#ffffff', // hsla(352, 70%, 70%, 1)
+//   3: '#ffffff', // hsla(352, 55%, 85%, 1)
+//   4: '#ffffff',
+//   5: '#ffffff', // hsla(202, 55%, 85%, 1)
+//   6: '#ffffff', // hsla(202, 70%, 70%, 1)
+//   7: '#ffffff', // hsla(202, 85%, 55%, 1)
+// };
+
 const defaultColor = 'black';
+
+function getFillColor(manaLevel: number | undefined, id: number) {
+  // if (id === 3398) {
+  //   return manaFillColors1[7];
+  // }
+  // if (id === 3384) {
+  //   return manaFillColors1[3];
+  // }
+  // if (id === 3391) {
+  //   return manaFillColors1[3];
+  // }
+  // if (id === 3392) {
+  //   return manaFillColors1[3];
+  // }
+  return (manaLevel !== undefined && manaFillColors[manaLevel]) || defaultColor;
+}
 
 function hasLocationDifference(item: LocationRecord, prevItem: LocationRecord) {
   // polygon, label, options.manaLevel
@@ -149,7 +176,7 @@ export class ManaOceanLayer extends Component<
     const loc = this.group.getLayers().find((loc2: ManaOceanLocation) => loc2.options.id === item.id) as ManaOceanLocation;
     loc.setLatLngs([item.polygon[0]]);
     const { manaLevel } = item.options;
-    loc.setStyle({ fillColor: (manaLevel !== undefined && manaFillColors[manaLevel]) || defaultColor });
+    loc.setStyle({ fillColor: getFillColor(manaLevel, item.id) });
     L.Util.setOptions(loc, { label: item.label, locOptions: item.options });
     const that = this;
     loc.on('mouseover', function (this: ManaOceanLocation, e) {
@@ -177,7 +204,7 @@ export class ManaOceanLayer extends Component<
       locOptions: options, 
       weight: 2, 
       dashArray: [7], 
-      fillColor:  (options.manaLevel !== undefined && manaFillColors[options.manaLevel]) || defaultColor, 
+      fillColor: getFillColor(options.manaLevel, id), 
       fillOpacity: 1,
     });
     const that = this;
@@ -199,7 +226,7 @@ export class ManaOceanLayer extends Component<
     const { t } = this.props;
     // const { effects = [] } = locOptions.manaLevelModifiers;
     const { effectList = [] } = locOptions;
-    let output = [`${label} (${locId})`, t('manaLevelNumber', { manaLevel: locOptions.manaLevel })];
+    let output = [`${processForDisplay(label)} (${locId})`, t('manaLevelNumber', { manaLevel: locOptions.manaLevel })];
     // const strings = effects.map(({ type, manaLevelChange }) => t(`manaEffect_${type}`, { manaLevelChange }));
 
     // const effectGroups1 = R.groupBy(R.prop('type'), effects);
@@ -208,7 +235,7 @@ export class ManaOceanLayer extends Component<
     //   const firstEffect = effectGroups1[effectType][0];
     //   const str = t(`manaEffect_${effectType}`, { manaLevelChange: firstEffect.manaLevelChange });
     //   const { length } = effectGroups1[effectType];
-    //   return `${str} x${length}, мана ${firstEffect.manaLevelChange * length}`;
+    //   return `${str} x${length}, mana ${firstEffect.manaLevelChange * length}`;
     // });
 
     // if (strings.length > 0) {
@@ -235,7 +262,12 @@ export class ManaOceanLayer extends Component<
       const timeSubArr = R.take(3, timeArr);
       const timeStr = timeSubArr.join(', ') + (timeArr.length > timeSubArr.length ? ', ...' : '');
       const { length } = effectGroups[effectType];
-      return `${str}, x${length} (${timeStr}), мана ${firstEffect.manaLevelChange * length}`;
+      return t('manaEffectSummary', {
+        str,
+        length,
+        timeStr,
+        manaLevelSummary: firstEffect.manaLevelChange * length
+      });
     });
 
     // const strings2 = effectList.map(({
@@ -244,10 +276,10 @@ export class ManaOceanLayer extends Component<
     //   const str = t(`manaEffect_${type}`, { manaLevelChange });
     //   const startStr = moment(start).format('HH:mm');
     //   if (permanent) {
-    //     return `${str}, ${startStr}, мана ${manaLevelChange}`;
+    //     return `${str}, ${startStr}, mana ${manaLevelChange}`;
     //   }
     //   const endStr = moment(end).format('HH:mm');
-    //   return `${str}, ${startStr}-${endStr}, мана ${manaLevelChange}`;
+    //   return `${str}, ${startStr}-${endStr}, mana ${manaLevelChange}`;
     // });
     //     end: 1602289691729
     // id: "gRSQuMVdM"

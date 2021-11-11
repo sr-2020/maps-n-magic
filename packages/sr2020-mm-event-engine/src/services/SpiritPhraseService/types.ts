@@ -8,7 +8,7 @@ import {
 
 import { 
   SpiritPhrase
-} from "../../types";
+} from "../../domain";
 
 // requests
 

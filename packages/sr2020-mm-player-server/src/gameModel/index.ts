@@ -12,29 +12,37 @@ import {
 
 import { 
   winstonLogger as rootLogger,
-  SpiritCatcherService
+  SpiritCatcherService,
+  AuthService,
+  QrModelService,
+  MockedQrModelService,
+  genericServerConstants2,
+  MockedAuthService
 } from "sr2020-mm-server-event-engine";
 
 import { LocationDataService } from "./LocationDataService";
 import { SuitedSpiritsService } from "./SuitedSpiritsService";
 import { MessageService } from "./MessageService";
 
-const services = [
-  LocationRecordService,
-  SpiritService,
-  SpiritFractionService,
-  UserRecordService,
-  LocationDataService,
-  SuitedSpiritsService,
-  SpiritCatcherService,
-  FeatureService,
-  MessageService,
-  // SpiritPhraseService,
-];
-
 export function makeGameModel(): {
   gameModel: GameModel, gameServer: EventEngine
 } {
+  const mocked = genericServerConstants2().MOCKED;
+
+  const services = [
+    LocationRecordService,
+    SpiritService,
+    SpiritFractionService,
+    UserRecordService,
+    LocationDataService,
+    SuitedSpiritsService,
+    SpiritCatcherService,
+    FeatureService,
+    MessageService,
+    mocked ? MockedAuthService : AuthService,
+    mocked ? MockedQrModelService : QrModelService,
+    // SpiritPhraseService,
+  ];
 
   // @ts-ignore
   const gameServer = new EventEngine(services, rootLogger);

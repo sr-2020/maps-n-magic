@@ -9,7 +9,9 @@ import {
   EPushNotification,
   PushNotification,
   ServiceContract,
-  ServiceContractTypes
+  ServiceContractTypes,
+  Req,
+  Res
 } from 'sr2020-mm-event-engine';
 
 
@@ -43,7 +45,7 @@ export class PushNotificationService extends AbstractService<PushNotificationSer
     this.setMetadata(metadata);
   }
 
-  pushNotification(data: PushNotification) {
+  pushNotification(data: Req<PushNotification>): Res<PushNotification> {
     // this.logger.info('pushNotification', data);
     this.emit2({
       ...data,

@@ -11,6 +11,7 @@ import classNames from 'classnames';
 import Button from "react-bootstrap/Button";
 import Form from 'react-bootstrap/Form';
 import { StatusIcon } from '../StatusIcon';
+import { t } from "../../utils";
 
 interface DispiritPageProps {
   setTitle: (title: string) => void;
@@ -39,7 +40,7 @@ export function DispiritPage(props: DispiritPageProps) {
   const { setTitle, characterData } = props;
 
   useEffect(() => {
-    setTitle(`Снять духа`);
+    setTitle(t('dispiritPageTitle'));
   }, []);
 
   // 366 non body storage
@@ -72,10 +73,10 @@ export function DispiritPage(props: DispiritPageProps) {
       }
     }).catch(err => {
       console.error(stringifyError(err));
-      logClientError('CL Непредвиденная ошибка проверки телохранилища', err);
+      logClientError(t('unexpectedBodyStorageCheckError'), err);
       setBodyStorageStatus({
         status: 'invalid',
-        message: 'CL Непредвиденная ошибка проверки телохранилища'
+        message: t('unexpectedBodyStorageCheckError')
       });
     });
   }, [bodyStorageQrString]);
@@ -108,10 +109,10 @@ export function DispiritPage(props: DispiritPageProps) {
       }
     }).catch(err => {
       console.error(stringifyError(err));
-      logClientError('CL Непредвиденная ошибка проверки тотема', err);
+      logClientError(t('unexpectedSpiritJarCheckError'), err);
       setBodyStorageStatus({
         status: 'invalid',
-        message: 'CL Непредвиденная ошибка проверки тотема'
+        message: t('unexpectedSpiritJarCheckError')
       });
     });
   }, [spiritJarQrString]);
@@ -133,8 +134,8 @@ export function DispiritPage(props: DispiritPageProps) {
       setDoDispirit(null);
     }).catch(err => {
       console.error(stringifyError(err));
-      logClientError('CL Непредвиденная ошибка снятия духа', err);
-      setDispiritStatus('CL Непредвиденная ошибка снятия духа');
+      logClientError(t('unexpectedDispiritError'), err);
+      setDispiritStatus(t('unexpectedDispiritError'));
       setDoDispirit(null);
     });
   }, [doDispirit]);
@@ -146,7 +147,7 @@ export function DispiritPage(props: DispiritPageProps) {
           setBodyStorageQrString(qrData);
           setScanBodyStorage(false);
         }}
-        message="Отсканируйте телохранилище"
+        message={t('scanBodyStorage')}
         onCancel={() => setScanBodyStorage(false)}
       />
     );
@@ -159,7 +160,7 @@ export function DispiritPage(props: DispiritPageProps) {
           setSpiritJarQrString(qrData);
           setScanSpiritJar(false);
         }}
-        message="Отсканируйте тотем с духом"
+        message={t('scanEmptySpiritJar')}
         onCancel={() => setScanSpiritJar(false)}
       />
     );
@@ -175,8 +176,8 @@ export function DispiritPage(props: DispiritPageProps) {
       <div className="tw-mb-8">
         <div className="tw-flex tw-mb-4">
           <StatusIcon status={bodyStorageStatus.status}/>
-          <div className="col-form-label tw-flex-1">Телохранилище</div>
-          <Button onClick={() => setScanBodyStorage(true)}>Сканировать</Button>
+          <div className="col-form-label tw-flex-1">{t('bodyStorage')}</div>
+          <Button onClick={() => setScanBodyStorage(true)}>{t('scan')}</Button>
         </div>
         {
           bodyStorageStatus.status === 'invalid' && 
@@ -190,8 +191,8 @@ export function DispiritPage(props: DispiritPageProps) {
         <div className="tw-mb-8">
           <div className="tw-flex tw-mb-4">
             <StatusIcon status={spiritJarStatus.status}/>
-            <div className="col-form-label tw-flex-1">Тотем</div>
-            <Button onClick={() => setScanSpiritJar(true)}>Сканировать</Button>
+            <div className="col-form-label tw-flex-1">{t('spiritJar')}</div>
+            <Button onClick={() => setScanSpiritJar(true)}>{t('scan')}</Button>
           </div>
           {
             spiritJarStatus.status === 'invalid' && 
@@ -217,7 +218,7 @@ export function DispiritPage(props: DispiritPageProps) {
             icon={faSpinner}
             spin
           />
-          Снять и отпустить духа
+          {t('dispiritAndFree')}
         </Button>
       </div>
       {
@@ -231,20 +232,10 @@ export function DispiritPage(props: DispiritPageProps) {
               icon={faSpinner}
               spin
             />
-            Снять
+            {t('dispirit')}
           </Button>
         </div>
       }
-      {/* <div>
-        <div className="tw-mb-2">Оставить сообщение</div>
-        <div>
-          <Form.Control
-            as="textarea" rows={3}
-            value={messageBody}
-            onChange={(e) => setMessageBody(e.target.value)}
-          />
-        </div>
-      </div> */}
     </div>
   );
 }

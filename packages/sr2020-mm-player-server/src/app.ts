@@ -9,11 +9,9 @@ import cors from 'cors';
 import * as core from 'express-serve-static-core';
 
 import { 
-  PlayerAuthorizedRequest,
   winstonLogger,
   playerServerConstants,
   createLogger,
-  CharacterWatcher,
 } from 'sr2020-mm-server-event-engine';
 import { makeGameModel } from "./gameModel";
 
@@ -31,6 +29,8 @@ import { loadHistory } from './routes/loadHistory';
 import { testSuitDispirit } from './testSuitDispirit';
 import { testCatchFree } from './testCatchFree';
 import { ErrorResponse } from 'sr2020-mm-event-engine';
+import { CharacterWatcher } from './gameModel/characterWatcher';
+import { PlayerAuthorizedRequest } from './types';
 
 const logger = createLogger('playerServer/app.ts');
 
@@ -50,6 +50,10 @@ const allowedOrigins = [
   'http://localhost:3000', 
   'http://localhost:3002',
   'http://localhost:3002/',
+  'http://localhost:3030',
+  'http://localhost:3030/',
+  'http://localhost:3040',
+  'http://localhost:3040/',
   'https://magic.evarun.ru'
 ];
 
@@ -98,15 +102,15 @@ app.use((req1, res, next) => {
   next();
 });
 
-app.use(loginRouter);
-
-app.use('/api', parseUserData);
-
 app.use((req1, res, next) => {
   const req = req1 as PlayerAuthorizedRequest;
   req.gameModel = gameModel;
   next();
 });
+
+app.use(loginRouter);
+
+app.use('/api', parseUserData);
 
 app.use('/api', spiritRouter);
 

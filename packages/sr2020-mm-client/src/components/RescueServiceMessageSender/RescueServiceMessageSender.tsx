@@ -24,6 +24,7 @@ import {
 } from 'sr2020-mm-event-engine';
 
 import { WithTranslation } from "react-i18next";
+import { processForDisplay } from '../../i18n';
 
 type BodyConditionsTKeys = `physicalBodyCondition_${Lowercase<keyof typeof BodyConditions>}`;
 
@@ -240,7 +241,7 @@ export class RescueServiceMessageSender extends Component<RescueServiceMessageSe
                     key={location.id}
                     value={location.id}
                   >
-                    {`${location.label} (${location.id})`}
+                    {`${processForDisplay(location.label)} (${location.id})`}
                   </option>
                 ))
               }
@@ -252,7 +253,7 @@ export class RescueServiceMessageSender extends Component<RescueServiceMessageSe
             </Button>
           </div>
         </Form>
-        <datalist className="CharacterIdList" id="characterIdList">
+        {/* <datalist className="CharacterIdList" id="characterIdList">
           {
             // eslint-disable-next-line jsx-a11y/control-has-associated-label
             users.map((user) => (
@@ -264,7 +265,7 @@ export class RescueServiceMessageSender extends Component<RescueServiceMessageSe
               </option>
             ))
           }
-        </datalist>
+        </datalist> */}
       </div>
     );
   }

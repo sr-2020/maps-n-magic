@@ -51,8 +51,8 @@ import { logCharacterAction } from '../../utils';
 
 // import { manaOceanEffectSettings } from '../api/constants';
 
-// const TIDE_LEVEL_UPDATE_INTERVAL: number = 5000; // millis
-const TIDE_LEVEL_UPDATE_INTERVAL: number = 60000; // millis
+const TIDE_LEVEL_UPDATE_INTERVAL: number = 5000; // millis
+// const TIDE_LEVEL_UPDATE_INTERVAL: number = 60000; // millis
 
 const MANA_TIDE_UPDATE_INTERVAL: number = 10000; // millis
 // const MANA_TIDE_UPDATE_INTERVAL = 30000; // millis
@@ -194,7 +194,7 @@ export class ManaOceanService extends AbstractService<ManaOceanServiceContract> 
     }
 
     // this.logger.info('SPELL_CAST_MANA_OCEAN_STREAM', JSON.stringify(data));
-    // mmLog('SPELL_CAST_MANA_OCEAN_STREAM', JSON.stringify(data));
+    // mmLog(this.gameModel, 'SPELL_CAST_MANA_OCEAN_STREAM', JSON.stringify(data));
 
     this.executeOnModel2({
       type: 'pushNotification',
@@ -216,6 +216,7 @@ export class ManaOceanService extends AbstractService<ManaOceanServiceContract> 
     }
 
     logCharacterAction(
+      this.gameModel,
       this.logger,
       data.uid,
       'SPELL_CAST_MANA_OCEAN_STREAM',
@@ -397,7 +398,7 @@ export class ManaOceanService extends AbstractService<ManaOceanServiceContract> 
   pushEffects(updates: LocationUpdate[]): void {
     // this.logger.info('pushEffects', updates);
     this.logUpdates(updates);
-    this.executeOnModel2<PutLocationRecords>({
+    this.executeOnModel2({
       type: 'putLocationRecords',
       updates,
     });
@@ -649,7 +650,7 @@ export class ManaOceanService extends AbstractService<ManaOceanServiceContract> 
       el.id,
       el.body.options?.manaLevel
     ])))}`);
-    mmLog('MANA_OCEAN_UPDATES', `[id, manaLevel] ${JSON.stringify(updates.map(el => ([
+    mmLog(this.gameModel, 'MANA_OCEAN_UPDATES', `[id, manaLevel] ${JSON.stringify(updates.map(el => ([
       el.id,
       el.body.options?.manaLevel
     ])))}`);
@@ -736,7 +737,7 @@ export class ManaOceanService extends AbstractService<ManaOceanServiceContract> 
     if (options.manaLevel > minManaLevel) {
       if (effect.neighborId !== undefined) {
         const neighborOptions = optIndex[effect.neighborId];
-        if (neighborOptions.manaLevel < maxManaLevel) {
+        if (neighborOptions && neighborOptions.manaLevel < maxManaLevel) {
           options.manaLevel += effect.manaLevelChange;
           neighborOptions.manaLevel -= effect.manaLevelChange;
           // this.logger.info('onApplyRitualLocation: repeated ritual effect');

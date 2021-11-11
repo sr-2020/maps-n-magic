@@ -7,7 +7,7 @@ export {};
 // import Card from 'react-bootstrap/Card';
 // import { WithTranslation } from "react-i18next";
 
-// import { SoundStageData, GameModel, TimeoutType } from "sr2020-mm-event-engine";
+// import { SoundStageData, GameModel } from "sr2020-mm-event-engine";
 
 // import { SoundStageEcho } from './SoundStageEcho';
 
@@ -17,6 +17,10 @@ export {};
 // import { SoundStage } from './../App/SoundStage';
 
 // import { Sound } from "../../types";
+// export enum TimeoutType {
+//   'rotationTimeout',
+//   'rotationSoundTimeout'
+// };
 
 // interface SoundManagerProps extends WithTranslation {
 //   gameModel: GameModel;

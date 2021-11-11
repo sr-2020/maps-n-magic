@@ -26,6 +26,7 @@ import { EmergencyDispiritPage } from '../EmergencyDispiritPage';
 import { LocationChangePage } from '../LocationChangePage';
 import { HistoryPage } from '../HistoryPage';
 import { AppHeader2 } from '../AppHeader2';
+import { t } from "../../utils";
 
 interface AppProps extends WithLoginState, WithAggregatedLocationData {
   loginManager: LoginManager;
@@ -40,52 +41,52 @@ const SOUND_SETTINGS: SoundSettings = {
   rotationVolume: 50,
 };
 
-const baseLinks: LinkDef[] = [{
+const baseLinks = (): LinkDef[] => ([{
   to: '/character',
-  label: 'Персонаж'
+  label: t('characterPageTitle')
 },{
   to: '/history',
-  label: 'История'
-}];
+  label: t('historyPageTitle')
+}]);
 
-const badDispiritLinks: LinkDef[] = [{
+const badDispiritLinks = (): LinkDef[] => ([{
   to: '/character',
-  label: 'Персонаж'
+  label: t('characterPageTitle')
 },{
   to: '/history',
-  label: 'История'
-}];
+  label: t('historyPageTitle')
+}]);
 
-const notInSpiritLinks: LinkDef[] = [{
+const notInSpiritLinks = (): LinkDef[] => ([{
   to: '/character',
-  label: 'Персонаж'
+  label: t('characterPageTitle')
 },{
   to: '/spirits',
-  label: 'Поймать духа'
+  label: t('catchSpiritPageTitle')
 },{
   to: '/scanSpirit',
-  label: 'Осмотреть тотем'
+  label: t('scanSpiritPageTitle')
 },{
   to: '/suitSpirit',
-  label: 'Надеть духа'
+  label: t('suitSpiritPageTitle')
 },{
   to: '/history',
-  label: 'История'
-}];
+  label: t('historyPageTitle')
+}]);
 
-const inNormalSpiritLinks: LinkDef[] = [{
+const inNormalSpiritLinks = (): LinkDef[] => ([{
   to: '/character',
-  label: 'Персонаж'
+  label: t('characterPageTitle')
 },{
   to: '/dispirit',
-  label: 'Снять духа'
+  label: t('dispiritPageTitle')
 },{
   to: '/emergencyDispirit',
-  label: 'Тело духа уничтожено'
+  label: t('emergencyDispiritPageTitle')
 },{
   to: '/history',
-  label: 'История'
-}];
+  label: t('historyPageTitle')
+}]);
 
 
 export function App(props: AppProps) {
@@ -97,12 +98,12 @@ export function App(props: AppProps) {
     audioContextWrapper,
     soundStorage
   } = props;
-  const manageTitle = useState<string>('SR 2020 магия');
+  const manageTitle = useState<string>(t('indexTitle'));
   const [title, setTitle] = manageTitle;
   const [mute, setMute] = useState<boolean>(false);
 
   if (characterData === null) {
-    return <div>Загружаются данные персонажа...</div>
+    return <div>{t('characterDataLoading')}</div>
   }
 
   const soundStageState = locationData2SoundStageState(characterData, locationData);
@@ -119,7 +120,7 @@ export function App(props: AppProps) {
             characterData={characterData}
             mute={mute}
             setMute={setMute}
-            links={baseLinks}
+            links={baseLinks()}
           />
           <CharacterPage 
             setTitle={setTitle}
@@ -148,7 +149,7 @@ export function App(props: AppProps) {
             characterData={characterData}
             mute={mute}
             setMute={setMute}
-            links={links}
+            links={links()}
           />
 
           <Switch>

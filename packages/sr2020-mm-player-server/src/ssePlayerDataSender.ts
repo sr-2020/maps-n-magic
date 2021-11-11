@@ -15,8 +15,9 @@ import {
   TokenData
 } from "sr2020-mm-event-engine";
 import shortid from 'shortid';
-import { CharacterWatcher, GetCatcherState } from "sr2020-mm-server-event-engine";
+import { GetCatcherState } from "sr2020-mm-server-event-engine";
 import { GetCharacterMessage } from "./gameModel/MessageService";
+import { CharacterWatcher } from "./gameModel/characterWatcher";
 
 export class SsePlayerDataSender {
   sse: SSE;

@@ -7,7 +7,7 @@ import './index.css';
 // import { App } from './components/App';
 import { App } from './components/App';
 import { AuthWrapper } from "./components/AuthWrapper";
-import { LoginManager } from './utils';
+import { LoginManager, t } from './utils';
 import { ErrorBoundry } from "./components/ErrorBoundry";
 import { AudioContextWrapper, SoundStorage } from 'sr2020-mm-client-event-engine';
 
@@ -31,7 +31,7 @@ class AudioContainer extends React.Component {
     if (this.audioContextWrapper.context.state === 'suspended') {
       return (
         <div className="tw-flex tw-flex-col tw-h-screen tw-justify-center">
-          <Button className="tw-py-24 tw-mx-4" onClick={onClick}>Нажмите дважды для включения звука</Button>
+          <Button className="tw-py-24 tw-mx-4" onClick={onClick}>{t('clickTwiceToEnableSound')}</Button>
         </div>
       ); 
     }
@@ -49,7 +49,7 @@ class AudioContainer extends React.Component {
 ReactDOM.render(
   <React.StrictMode>
     <ErrorBoundry>
-      <DocumentTitle title="SR 2020 Магия">
+      <DocumentTitle title={t('indexTitle')}>
         <AuthWrapper loginManager={loginManager}>
           <AudioContainer />
         </AuthWrapper>

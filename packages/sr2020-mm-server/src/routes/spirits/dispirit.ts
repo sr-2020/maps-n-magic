@@ -19,31 +19,24 @@ import {
 } from 'sr2020-mm-event-engine';
 import { 
   createLogger, 
-  dispirit, 
-  freeSpiritFromStorage, 
-  getQrModelData, 
+  // dispirit, 
   InnerApiRequest, 
-  playerMessages, 
-  putSpiritInStorage, 
-  suitSpirit, 
-  validateBodyStorageQrModelData, 
-  validateSpiritJarQrModelData, 
   EndpointId, 
   EndpointLogger,
-  getCharacterModelData,
-  PutSpiritRequestedCall, 
+  PutSpiritRequestedCall,
+  GetCharacterModelData,
+  Dispirit, 
 } from 'sr2020-mm-server-event-engine';
 import { waitForSpiritSuited } from './utils';
 
 const logger = createLogger('dispirit.ts');
 
 export const mainDispirit = async (req1, res, next) => {
-  const eLogger = new EndpointLogger(logger, EndpointId.DISPIRIT);
+  const req = req1 as InnerApiRequest;
+  const { gameModel, body } = req;
+  const eLogger = new EndpointLogger(gameModel, logger, EndpointId.DISPIRIT);
   try {
     // logger.info('mainDispirit')
-    const req = req1 as InnerApiRequest;
-    const { body } = req;
-
     eLogger.attempt(body);
 
     if (!validateDispiritInternalRequest(body)) {
@@ -153,14 +146,25 @@ export const mainDispirit = async (req1, res, next) => {
     let newSpiritState: SpiritState;
 
     if (shouldSaveSpiritInJar) {
-      const res2 = await dispirit(characterId, bodyStorageId, spiritJarId);
+      const res2 = await gameModel.execute2<Dispirit>({
+        type: 'dispirit',
+        characterId, 
+        bodyStorageId, 
+        spiritStorageId: spiritJarId
+      });
+      // const res2 = await dispirit(characterId, bodyStorageId, spiritJarId);
       newSpiritState = {
         status: 'InJar',
         // @ts-ignore
         qrId: spiritJarId
       };
     } else {
-      const res2 = await dispirit(characterId, bodyStorageId, null);
+      const res2 = await gameModel.execute2<Dispirit>({
+        type: 'dispirit',
+        characterId, 
+        bodyStorageId, 
+        spiritStorageId: null
+      });
       if (state.suitStatus === 'emergencyDispirited') {
         newSpiritState = {
           status: 'DoHeal',
@@ -173,7 +177,10 @@ export const mainDispirit = async (req1, res, next) => {
       }
     }
 
-    const characterData = await getCharacterModelData(characterId);
+    const characterData = await gameModel.get2<GetCharacterModelData>({
+      type: 'characterModelData',
+      modelId: characterId
+    });
 
     const isInEctoplasmBody = characterData.workModel.currentBody === 'physical';
     logger.info(`Character ${characterId} isInPhysicalBody ${isInEctoplasmBody}`);

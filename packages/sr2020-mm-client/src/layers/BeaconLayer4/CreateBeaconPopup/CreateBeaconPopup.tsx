@@ -56,7 +56,7 @@ export class CreateBeaconPopup extends Component<CreateBeaconPopupProp> {
                 className="tw-block tw-text-gray-700 tw-text-sm tw-font-bold tw-mb-2"
                 htmlFor="locationName"
               >
-                Подпись
+                {t('title')}
               </label>
               <Form.Control
                 name="label"
@@ -71,7 +71,7 @@ export class CreateBeaconPopup extends Component<CreateBeaconPopupProp> {
                 className="tw-block tw-text-gray-700 tw-text-sm tw-font-bold tw-mb-2"
                 htmlFor="locationName"
               >
-                Локация
+                {t('location')}
               </label>
               <BeaconLocationSelect
                 key={curBeacon.id}

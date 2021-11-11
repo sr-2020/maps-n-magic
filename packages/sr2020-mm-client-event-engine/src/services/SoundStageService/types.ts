@@ -18,13 +18,13 @@ export type GetSoundStageState = (arg: Typed<'soundStageState'>) => SoundStageSt
 
 // actions
 
-export type SetBackgroundSound = Typed<'setBackgroundSound', {
+export type SetBackgroundSound = (arg: Typed<'setBackgroundSound', {
   trackData: TrackData | null;
-}>;
-export type SetRotationSounds = Typed<'setRotationSounds', {
+}>) => void;
+export type SetRotationSounds = (arg: Typed<'setRotationSounds', {
   rotation: Rotation | null;
-}>;
-export type ClearSoundStage = Typed<'clearSoundStage'>;
+}>) => void;
+export type ClearSoundStage = (arg: Typed<'clearSoundStage'>) => void;
 
 // events
 

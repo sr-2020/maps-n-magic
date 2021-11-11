@@ -53,7 +53,6 @@ export class RescueServiceLayer2 extends Component<
     this.createMarker = this.createMarker.bind(this);
     this.updateMarker = this.updateMarker.bind(this);
     this.removeMarker = this.removeMarker.bind(this);
-    // this.onСharacterHealthStateChanged = this.onСharacterHealthStateChanged.bind(this);
   }
 
   componentDidMount() {
@@ -122,7 +121,6 @@ export class RescueServiceLayer2 extends Component<
     marker.unbindTooltip();
     // const deadCharacters = characters.filter(isClinicallyDead);
     const deadCharacters = characters.filter(isDead);
-    // marker.bindTooltip(`id персонажей: ${R.pluck('userName', deadCharacters).join(', ')}`, {
     // marker.bindTooltip(`${R.pluck('userName', deadCharacters).join(', ')}`, {
     const labels = deadCharacters.map(el => 
       el.personName + ' ' + healthStateShortNames[el.healthState]

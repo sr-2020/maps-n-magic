@@ -1,16 +1,21 @@
 import i18n from 'i18next';
 import { DefaultNamespace, initReactI18next, TFuncKey, Resources } from 'react-i18next';
-import { translations } from 'sr2020-mm-translations';
+import { translitRuEn } from 'sr2020-mm-event-engine';
+import { resources, defaultLang } from 'sr2020-mm-translations';
 
-const resources = {
-  ru: translations.ru
-} as const;
+const availableLangs = Object.keys(resources);
+
+const REACT_APP_LANG = (process.env.REACT_APP_LANG || '').toLowerCase();
+
+console.log('REACT_APP_LANG', REACT_APP_LANG);
+
+const lang = availableLangs.includes(REACT_APP_LANG) ? REACT_APP_LANG : defaultLang;
 
 i18n
   .use(initReactI18next) // passes i18n down to react-i18next
   .init({
     resources,
-    lng: 'ru',
+    lng: lang,
 
     keySeparator: false, // we do not use keys in form messages.welcome
 
@@ -23,7 +28,11 @@ export { i18n };
 
 // This stuff adds type checking of translation keys
 declare module 'react-i18next' {
-  type DefaultResources = typeof resources['ru'];
+  type DefaultResources = typeof resources[typeof defaultLang];
   interface Resources extends DefaultResources {}
 }
 // type SRTKeys = TFuncKey<DefaultNamespace, Resources>
+
+export function processForDisplay(str: string): string {
+  return i18n.language === 'en' ? translitRuEn(str) : str;
+}

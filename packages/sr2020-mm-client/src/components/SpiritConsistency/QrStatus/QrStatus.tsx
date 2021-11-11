@@ -71,24 +71,23 @@ export class QrStatus extends Component<
   }
 
   render() {
-    // const { t } = props;
+    const { t } = this.props;
     const { report } = this.state;
 
     return (
       <div className="QrStatus">
-        {/* <div> */}
         <Form
           className="tw-mx-auto tw-mb-8"
           // style={{ width: '20rem' }}
           onSubmit={this.onSubmit}
         >
           <Form.Group controlId="qrId">
-            <Form.Label>Введите Id куара</Form.Label>
+            <Form.Label>{t('enterQrId')}</Form.Label>
             <Form.Control />
           </Form.Group>
           <div className="tw-text-right">
             <Button variant="primary" type="submit">
-              Проверить
+              {t('check')}
             </Button>
           </div>
         </Form>
@@ -99,7 +98,7 @@ export class QrStatus extends Component<
           report?.qrType === "spiritJar" &&
           <div className="tw-mb-8" onClick={this.forceFreeSpirit}>
             <Button variant="primary" >
-              Очистить куар от духа
+              {t('freeJarFromQr')}
             </Button>
           </div>
         }

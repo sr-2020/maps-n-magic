@@ -3,8 +3,7 @@ import {
 } from "sr2020-mm-event-engine";
 import { 
   createLogger, 
-  freeSpiritFromStorage, 
-  getQrModelData, 
+  FreeSpiritFromStorage, 
   MainAuthorizedRequest, 
 } from "sr2020-mm-server-event-engine";
 
@@ -12,12 +11,17 @@ const logger = createLogger('main/forceFreeSpirit.ts');
 
 export const mainForceFreeSpirit = async (req1, res, next) => {
   const req = req1 as MainAuthorizedRequest;
+  const { gameModel } = req;
 
   try {
 
     const qrId = Number(req.body.qrId);
 
-    const qrModelData2 = await freeSpiritFromStorage(Number(qrId), '');
+    await gameModel.execute2<FreeSpiritFromStorage>({
+      type: 'freeSpiritFromStorage',
+      spiritStorageId: Number(qrId),
+      reason: ''
+    });
 
     res.status(200).json({});
   } catch (error) {

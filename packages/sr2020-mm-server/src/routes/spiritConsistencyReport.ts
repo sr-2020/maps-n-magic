@@ -3,10 +3,9 @@ import {
 } from "sr2020-mm-event-engine";
 import { 
   createLogger, 
-  getQrModelData, 
+  ExpectedQr, 
+  GetQrModelData, 
   MainAuthorizedRequest, 
-  mmGetUserLog, 
-  PlayerAuthorizedRequest,
   validateSpiritJarQrModelData, 
 } from "sr2020-mm-server-event-engine";
 
@@ -33,13 +32,15 @@ export const mainSpiritConsistencyReport = async (req1, res, next) => {
       const { qrId } = state;
       // getSpirit
 
-      return getQrModelData(qrId).then((qrModelData1): SpiritConsistencyResponse | null => {
+      return gameModel.get2<GetQrModelData>({
+        type: 'qrModelData',
+        qrId,
+        expectedQr: ExpectedQr.anySpiritJar
+      }).then((qrModelData1): SpiritConsistencyResponse | null => {
 
         const validationRes = validateSpiritJarQrModelData(qrModelData1);
     
         if ('errorTitle' in validationRes) {
-          // res.status(500).json(validationRes);
-          // mmLog('SPIRIT_SELL_FAIL', `${uid} error ${JSON.stringify(validationRes)}`);
           return {
             type: 'qrIsNotSpiritJar',
             message: `qrId ${qrId} is not spirit jar`,
@@ -75,7 +76,6 @@ export const mainSpiritConsistencyReport = async (req1, res, next) => {
       spirit: inJarSpirits[i]
     })).filter(item => item.errorResponse !== null);
 
-    // const rows = await mmGetUserLog(Number(req.params.characterId));
     res.status(200).json(result);
   } catch (error) {
     const message = `${error} ${JSON.stringify(error)}`;

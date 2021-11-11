@@ -13,6 +13,7 @@ interface SpiritCatchersProps extends WithTranslation {
 }
 
 export function SpiritCatchers(props: SpiritCatchersProps) {
+  const { t } = props;
   const [catcherStates, setCatcherStates] = useState<CatcherStates>({});
 
   useEffect(() => {
@@ -62,11 +63,11 @@ export function SpiritCatchers(props: SpiritCatchersProps) {
       >
         <thead>
           <tr>
-            <th>id персонажа</th>
-            <th className="tw-text-right">Начало заклинания</th>
-            <th className="tw-text-right">Окончание заклинания</th>
-            <th className="tw-text-right">Вероятность поимки, %</th>
-            <th className="tw-text-right">Число попыток</th>
+            <th>{t('idCharacter')}</th>
+            <th className="tw-text-right">{t('spiritCatcherStart')}</th>
+            <th className="tw-text-right">{t('spiritCatcherEnd')}</th>
+            <th className="tw-text-right">{t('catchProbability')}</th>
+            <th className="tw-text-right">{t('attemptsNumber')}</th>
           </tr>
         </thead>
         <tbody>

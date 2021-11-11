@@ -14,6 +14,7 @@ import Tooltip from 'react-bootstrap/Tooltip';
 import OverlayTrigger from 'react-bootstrap/OverlayTrigger';
 import { formatMinutes } from '../ManaOceanSettings/TideChart/TideChart';
 import { spiritStateSuffix } from '../SpiritEditor/SpiritList/SpiritList';
+import { processForDisplay } from '../../i18n';
 
 interface SpiritOverviewProps extends 
   WithTranslation, 
@@ -40,11 +41,13 @@ export function SpiritOverview(props: SpiritOverviewProps) {
     };
   }, []);
 
-  const { spirits, spiritFractions, spiritRoutes } = props;
+  const { spirits, spiritFractions, spiritRoutes, t } = props;
 
   if (spirits === null || spiritFractions === null || spiritRoutes === null) {
     return (
-      <div>Данные духов, фракций и маршрутов загружаются...</div>
+      <div>
+        {t('spiritOverviewDataLoading')}
+      </div>
     );
   }
 
@@ -86,10 +89,10 @@ export function SpiritOverview(props: SpiritOverviewProps) {
 
             <div className="body tw-bg-re_d-200 tw-w-64 tw-mb-4">
               <div className="spirit-name tw-font-bold tw-text-sm">
-                {item.title}
+                {processForDisplay(item.title)}
               </div>
               <div className="spirit-fraction tw-text-sm">
-                {item.subtitle}
+                {processForDisplay(item.subtitle)}
               </div>
             </div>
 
@@ -120,6 +123,7 @@ export function SpiritOverview(props: SpiritOverviewProps) {
                   spiritRouteIndex={spiritRouteIndex}
                   timetable={spiritIndex.get(item.id)?.timetable}
                   moscowMinutes={moscowMinutes}
+                  t={t}
                 />
               }
             </div>
@@ -136,10 +140,17 @@ interface SpiritTimetableProps {
   timetable: SpiritTimetable | undefined;
   spiritRouteIndex: Map<number, SpiritRoute>;
   moscowMinutes: number;
+  t: WithTranslation["t"];
 }
 
 export function SpiritTimetableComponent(props: SpiritTimetableProps) {
-  const { spirit, timetable, spiritRouteIndex, moscowMinutes } = props;
+  const { 
+    spirit, 
+    timetable, 
+    spiritRouteIndex, 
+    moscowMinutes,
+    t
+  } = props;
 
   if (spirit === undefined || timetable === undefined) {
     return null;
@@ -163,9 +174,9 @@ export function SpiritTimetableComponent(props: SpiritTimetableProps) {
               delay={{ show: 250, hide: 400 }}
               overlay={(props) => (
                 <Tooltip id={"" + spirit.id + item.time + route.id} {...props}>
-                  Старт в {formatMinutes(startMinutes)}
+                  {t('startRouteAt', {minutes: formatMinutes(startMinutes)})}
                   <br/>
-                  Время в пути {timeOnRoute} мин.
+                  {t('timeOnRoute', { timeOnRoute })}
                 </Tooltip>
               )}
             >
@@ -179,7 +190,7 @@ export function SpiritTimetableComponent(props: SpiritTimetableProps) {
                   width: `${timeOnRoute/14.40}%`,
                 }}
               >
-                {route.name}
+                {processForDisplay(route.name)}
               </div>
             </OverlayTrigger>
           );

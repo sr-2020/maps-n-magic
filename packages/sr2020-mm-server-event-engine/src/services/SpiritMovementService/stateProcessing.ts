@@ -11,9 +11,9 @@ import {
   DoHealState,
   GetUserRecord,
 } from 'sr2020-mm-event-engine';
-import { clinicalDeathCombo, zeroSpiritAbilities } from '../../api/characterModel';
 import { mmLog } from '../../api/spirits/mmLog';
 import { createLogger, logCharacterAction } from '../../utils';
+import { ClinicalDeathCombo, ZeroSpiritAbilities } from '../CharacterModelService';
 
 import { SpiritRouteContext, CurRouteSearchRes } from "./types";
 
@@ -50,7 +50,7 @@ function getUpdatedDoHealState(
   spirit: Spirit, 
   context: SpiritRouteContext,
 ): RestInAstralState | undefined {
-  const { dateNow } = context;
+  const { dateNow, gameModel } = context;
   const { healStartTime } = state;
   const healTimeout = 60 * 60 * 1000; // 1 hour
   if ((healStartTime + healTimeout) < dateNow ) {
@@ -60,7 +60,7 @@ function getUpdatedDoHealState(
     logger.info(`SPIRIT_HEALED ${spirit.id} ${spirit.name}. Data ${JSON.stringify({
       state
     })}`);
-    mmLog('SPIRIT_HEALED', `${spirit.id} ${spirit.name}. Data ${JSON.stringify({
+    mmLog(gameModel, 'SPIRIT_HEALED', `${spirit.id} ${spirit.name}. Data ${JSON.stringify({
       state
     })}`);
     return newState;
@@ -100,15 +100,21 @@ function getUpdatedNonNormalSuitedState(
       type: 'userRecord',
       id: characterId
     });
-    clinicalDeathCombo(characterId, bodyStorageId, userRecord?.location_id || null).then(() => {
+    gameModel.execute2<ClinicalDeathCombo>({
+      type: 'clinicalDeathCombo',
+      characterId, 
+      bodyStorageId, 
+      locationId: userRecord?.location_id || null
+    }).then(() => {
       logger.info(`TIMEOUT_DISPIRIT_2 applied clinicalDeath to character ${characterId}`);
-      mmLog('TIMEOUT_DISPIRIT_2', `applied clinicalDeath to character ${characterId}`);
+      mmLog(gameModel, 'TIMEOUT_DISPIRIT_2', `applied clinicalDeath to character ${characterId}`);
     }).catch( err => {
       logger.error(`TIMEOUT_DISPIRIT_2_ERROR applied clinicalDeath to character ${characterId}`, err);
-      mmLog('TIMEOUT_DISPIRIT_2_ERROR', `applied clinicalDeath to character ${characterId} ${JSON.stringify(err)}`);
+      mmLog(gameModel, 'TIMEOUT_DISPIRIT_2_ERROR', `applied clinicalDeath to character ${characterId} ${JSON.stringify(err)}`);
     });
 
     logCharacterAction(
+      gameModel,
       logger,
       'N/A',
       'TIMEOUT_DISPIRIT_2',
@@ -131,7 +137,7 @@ function getUpdatedNormalSuitedState(
   spirit: Spirit, 
   context: SpiritRouteContext,
 ): SuitedState | undefined {
-  const { logger, moscowTimeInMinutes, dateNow } = context;
+  const { logger, moscowTimeInMinutes, dateNow, gameModel } = context;
   const { suitStatus, suitStartTime, suitDuration, characterId } = state;
   // if (suitStatus !== 'normal') {
   //   return undefined;
@@ -142,17 +148,21 @@ function getUpdatedNormalSuitedState(
       suitStatus: 'suitTimeout',
       suitStatusChangeTime: dateNow
     };
-    zeroSpiritAbilities(characterId).then(() => {
+    gameModel.execute2<ZeroSpiritAbilities>({
+      type: 'zeroSpiritAbilities',
+      characterId
+    }).then(() => {
       logger.info(`TIMEOUT_DISPIRIT zeroSpiritAbilities for character ${characterId}`);
-      mmLog('TIMEOUT_DISPIRIT', `zeroSpiritAbilities for character ${characterId}`);
+      mmLog(gameModel, 'TIMEOUT_DISPIRIT', `zeroSpiritAbilities for character ${characterId}`);
     }).catch(err => {
       logger.error(`TIMEOUT_DISPIRIT_ERROR zeroSpiritAbilities for character ${characterId}`, err);
-      mmLog('TIMEOUT_DISPIRIT_ERROR', `zeroSpiritAbilities for character ${characterId}. err ${JSON.stringify({
+      mmLog(gameModel, 'TIMEOUT_DISPIRIT_ERROR', `zeroSpiritAbilities for character ${characterId}. err ${JSON.stringify({
         err
       })}`);
     });
 
     logCharacterAction(
+      gameModel,
       logger,
       'N/A',
       'TIMEOUT_DISPIRIT',

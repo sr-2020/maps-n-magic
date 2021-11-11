@@ -1,9 +1,16 @@
+import { ValidateFunction } from "ajv";
+
 import { 
+  EntityUpdate,
   Identifiable
 } from 'sr2020-mm-event-engine';
 
 export interface Gettable<T> {
   get(): Promise<T[]>;
+}
+
+export interface SingleGettable<T> {
+  singleGet({id}: {id: number}): Promise<T | undefined>;
 }
 
 export interface Postable<T> {
@@ -14,8 +21,8 @@ export interface Puttable<T> {
   put({id, props}: {id: number, props: T}): Promise<T>;
 }
 
-export interface MultiPuttable<T> {
-  putMultiple({updates}: {updates: T[]}): Promise<T[]>;
+export interface MultiPuttable<T extends Identifiable> {
+  putMultiple({updates}: {updates: EntityUpdate<T>[]}): Promise<T[]>;
 }
 
 export interface Deletable<T> {

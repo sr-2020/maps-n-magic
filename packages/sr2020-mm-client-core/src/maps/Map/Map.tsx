@@ -6,7 +6,7 @@ import * as R from 'ramda';
 // import '../../../utils/gpxConverter';
 import { EventEmitter } from 'events';
 
-import { applyLeafletGeomanTranslation, getZoomTranslation } from 'sr2020-mm-translations';
+import { leafletI18n, defaultLang } from 'sr2020-mm-translations';
 
 import { L } from "../../misc/leafletWrapper";
 
@@ -82,7 +82,7 @@ export class Map extends Component<MapProps, MapState> {
     });
 
     L.control.zoom({
-      ...getZoomTranslation(),
+      ...leafletI18n[defaultLang].getZoomTranslation(),
       position: 'topleft',
     }).addTo(this.map);
 
@@ -91,7 +91,7 @@ export class Map extends Component<MapProps, MapState> {
 
     if (geomanConfig) {
       this.map.pm.addControls(geomanConfig);
-      applyLeafletGeomanTranslation(this.map);
+      leafletI18n[defaultLang].applyLeafletGeomanTranslation(this.map);
       // applyZoomTranslation(this.map);
 
       this.map.on('pm:create', this.onCreateLayer);

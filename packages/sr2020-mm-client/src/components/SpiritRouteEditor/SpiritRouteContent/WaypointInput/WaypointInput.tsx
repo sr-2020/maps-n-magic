@@ -25,6 +25,7 @@ import { faTimes, faGripVertical } from '@fortawesome/free-solid-svg-icons';
 import * as R from 'ramda';
 
 import { WithLocationRecords } from '../../../../dataHOCs';
+import { processForDisplay } from '../../../../i18n';
 
 // @ts-ignore
 const sort = R.sortBy(R.pipe(R.prop('label'), R.toLower)) as (locations: LocationRecord[]) => LocationRecord[];
@@ -150,7 +151,7 @@ export class WaypointInput extends Component<WaypointInputProps> {
                             <FontAwesomeIcon className="tw-mx-2 tw-text-gray-700" icon={faGripVertical} />
                             <ButtonGroup className="tw-mr-2 tw-mb-2 tw-flex-grow-0">
                               <Button variant="secondary" className="tw-text-left">
-                                {`${geoLocationsIndex[waypointId]?.label || t('notAvailable')} (${waypointId})`}
+                                {processForDisplay(`${geoLocationsIndex[waypointId]?.label || t('notAvailable')} (${waypointId})`)}
                               </Button>
                               <Button 
                                 variant="secondary"
@@ -192,7 +193,11 @@ export class WaypointInput extends Component<WaypointInputProps> {
         <datalist id="waypoints-datalist">
           {
           // eslint-disable-next-line jsx-a11y/control-has-associated-label
-            geoLocations.map((location) => <option key={location.id} value={location.id}>{`${location.label} (${location.id})`}</ option>)
+            geoLocations.map((location) => 
+              <option key={location.id} value={location.id}>
+                {`${processForDisplay(location.label)} (${location.id})`}
+              </ option>
+            )
           }
         </datalist>
       </div>

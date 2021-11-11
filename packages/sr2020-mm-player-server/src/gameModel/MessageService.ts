@@ -15,10 +15,10 @@ import {
 } from 'sr2020-mm-event-engine';
 
 
-export type PutCharacterMessage = Typed<'putCharacterMessage', {
+export type PutCharacterMessage = (arg: Typed<'putCharacterMessage', {
   characterId: number;
   data: MessageData
-}>;
+}>) => void;
 
 export type GetCharacterMessage = (arg: Typed<'characterMessage', {characterId: number}>) => MessageData | undefined;
 
@@ -48,7 +48,7 @@ export class MessageService extends AbstractService<MessageServiceContract> {
     this.setMetadata(metadata);
   }
 
-  putCharacterMessage({ characterId, data } : PutCharacterMessage): void {
+  putCharacterMessage({ characterId, data } : Req<PutCharacterMessage>): Res<PutCharacterMessage> {
     this.characterMessages.set(characterId, data);
   }
 

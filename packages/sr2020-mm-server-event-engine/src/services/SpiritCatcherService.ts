@@ -16,9 +16,9 @@ import {
   CatcherData, 
   CatcherStates 
 } from 'sr2020-mm-event-engine';
-import { getCharacterModelData } from '../api';
 import { mmLog } from '../api/spirits/mmLog';
 import { logCharacterAction } from '../utils';
+import { GetCharacterModelData } from './CharacterModelService';
 
 export type CatcherStatesArg = {
   catcherStates: CatcherStates
@@ -32,13 +32,13 @@ export type GetCatcherState = (arg: Typed<'catcherState', {
 }>) => CatcherData | undefined;
 
 // export type SetCatcherStateUpdates = Typed<'setCatcherStateUpdates', CatcherStatesArg>;
-export type RemoveCatcherStates = Typed<'removeCatcherStates', {
+export type RemoveCatcherStates = (arg: Typed<'removeCatcherStates', {
   expiredStatesList: string[];
-}>;
-export type DecrementAttempt = Typed<'decrementAttempt', {
+}>) => void;
+export type DecrementAttempt = (arg: Typed<'decrementAttempt', {
   characterId: number;
-}>;
-export type SetCatcherStates = Typed<'setCatcherStates', CatcherStatesArg>;
+}>) => void;
+export type SetCatcherStates = (arg: Typed<'setCatcherStates', CatcherStatesArg>) => void;
 
 // emit events
 
@@ -111,7 +111,11 @@ export class SpiritCatcherService extends AbstractService<SpiritCatcherServiceCo
 
     const { characterId, power } = data;
     
-    const characterData = await getCharacterModelData(Number(characterId));
+    const characterData = await this.gameModel.get2<GetCharacterModelData>({
+      type: 'characterModelData',
+      modelId: Number(characterId)
+    });
+
     if (!validateCharacterModelData(characterData)) {
       this.logger.warn(`model ${characterId} is not valid. Model ${JSON.stringify(data)}, errors ${JSON.stringify(validateCharacterModelData.errors)}`);
     } else {
@@ -137,6 +141,7 @@ export class SpiritCatcherService extends AbstractService<SpiritCatcherServiceCo
     this.catcherStates[characterId] = catcherData;
     
     logCharacterAction(
+      this.gameModel,
       this.logger,
       data.uid,
       'SPELL_CAST_SPIRIT_CATCHER',
@@ -152,7 +157,7 @@ export class SpiritCatcherService extends AbstractService<SpiritCatcherServiceCo
     });
   }
 
-  setCatcherStates({ catcherStates }: SetCatcherStates): void {
+  setCatcherStates({ catcherStates }: Req<SetCatcherStates>): Res<SetCatcherStates> {
     // this.logger.info('setCatcherStates');
     this.catcherStates = catcherStates;
     this.emit2({
@@ -161,24 +166,24 @@ export class SpiritCatcherService extends AbstractService<SpiritCatcherServiceCo
     });
   }
 
-  decrementAttempt({ characterId }: DecrementAttempt): void {
+  decrementAttempt({ characterId }: Req<DecrementAttempt>): Res<DecrementAttempt> {
     const catcherData: CatcherData | undefined = this.catcherStates[characterId];
     if (catcherData === undefined) {
       this.logger.info(`SPIRIT_CATCHER_FAIL Not found catcher state for character ${characterId} for decrement attempt`);
-      mmLog('SPIRIT_CATCHER_FAIL', `Not found catcher state for character ${characterId} for decrement attempt`);
+      mmLog(this.gameModel, 'SPIRIT_CATCHER_FAIL', `Not found catcher state for character ${characterId} for decrement attempt`);
       return;
     }
     if (catcherData.attemptNumber === 1) {
       delete this.catcherStates[characterId];
       this.logger.info(`SPIRIT_CATCHER_DECREMENT_ATTEMPT character ${characterId} attempts ended.`);
-      mmLog('SPIRIT_CATCHER_DECREMENT_ATTEMPT', `character ${characterId} attempts ended.`);
+      mmLog(this.gameModel, 'SPIRIT_CATCHER_DECREMENT_ATTEMPT', `character ${characterId} attempts ended.`);
     } else {
       this.catcherStates[characterId] = {
         ...catcherData,
         attemptNumber: catcherData.attemptNumber - 1
       };
       this.logger.info(`SPIRIT_CATCHER_DECREMENT_ATTEMPT character ${characterId} made catch attempt. New attempt ${catcherData.attemptNumber - 1}`);
-      mmLog('SPIRIT_CATCHER_DECREMENT_ATTEMPT', `character ${characterId} made catch attempt. New attempt ${catcherData.attemptNumber - 1}`);
+      mmLog(this.gameModel, 'SPIRIT_CATCHER_DECREMENT_ATTEMPT', `character ${characterId} made catch attempt. New attempt ${catcherData.attemptNumber - 1}`);
     }
     this.emit2({
       type: 'catcherStatesChanged',
@@ -186,7 +191,7 @@ export class SpiritCatcherService extends AbstractService<SpiritCatcherServiceCo
     });
   }
 
-  removeCatcherStates({ expiredStatesList }: RemoveCatcherStates): void {
+  removeCatcherStates({ expiredStatesList }: Req<RemoveCatcherStates>): Res<RemoveCatcherStates> {
     expiredStatesList.forEach(characterId => {
       delete this.catcherStates[characterId];
     });

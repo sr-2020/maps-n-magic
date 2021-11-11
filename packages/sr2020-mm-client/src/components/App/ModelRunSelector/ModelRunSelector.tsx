@@ -3,7 +3,6 @@ import { useTranslation } from 'react-i18next';
 import './ModelRunSelector.css';
 
 import Dropdown from 'react-bootstrap/Dropdown';
-import Button from 'react-bootstrap/Button';
 
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import {

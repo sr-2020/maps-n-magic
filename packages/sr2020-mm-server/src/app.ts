@@ -17,8 +17,8 @@ import {
   InnerApiRequest,
   MainAuthorizedRequest,
   GetCatcherStates,
-  mmGetLog,
-  mmGetUserLog
+  GetUserLog,
+  GetMainLog
 } from 'sr2020-mm-server-event-engine';
 import { ErrorResponse, validateWebSocketInitClientConfig, WebSocketInitClientConfig } from 'sr2020-mm-event-engine';
 
@@ -44,6 +44,7 @@ import { mainCheckQrById } from './routes/checkQrById';
 import { mainCheckBodyStorageBatch, mainCheckSpiritJarsBatch } from './routes/checkQrsBatch';
 import { mainForceFreeSpirit } from './routes/forceFreeSpirit';
 import { mainDirectCatchSpirit } from './routes/spirits/directCatchSpirit';
+import { getCharacterModelData } from './routes/getCharacterModelData';
 
 const logger = createLogger('mainServer/app.ts');
 
@@ -89,6 +90,7 @@ app.get('/innerApi/playerDataSse', (req1, res, next) => {
 });
 
 app.get('/innerApi/loadHistory/:characterId', mainLoadHistory);
+app.get('/innerApi/characterModel/:characterId', getCharacterModelData);
 
 // external server - main server API
 //   At this moment only for shop
@@ -98,15 +100,15 @@ app.use('/innerApi2', innerApi2);
 
 // client-server API
 
-app.use('/api', publicApi);
-
-app.use('/api', apiGatekeeper);
-
 app.use('/api', (req1, res, next) => {
   const req = req1 as MainAuthorizedRequest;
   req.gameModel = gameModel;
   next();
 });
+
+app.use('/api', publicApi);
+
+app.use('/api', apiGatekeeper);
 
 app.use('/api', miscRouter);
 
@@ -126,6 +128,7 @@ app.post('/api/directCatchSpirit', mainDirectCatchSpirit);
 
 app.get('/api/orgLogs/:characterId', async (req1, res, next) => {
   const req = req1 as MainAuthorizedRequest;
+  const { gameModel } = req;
 
   try {
 
@@ -135,7 +138,10 @@ app.get('/api/orgLogs/:characterId', async (req1, res, next) => {
       throw new Error(`characterId ${req.params.characterId} is NaN`);
     }
 
-    const rows = await mmGetLog(characterId);
+    const rows = await gameModel.get2<GetMainLog>({
+      type: 'mainLog',
+      characterId: characterId
+    });
     res.status(200).json(rows);
   } catch (error) {
     const message = `${error} ${JSON.stringify(error)}`;
@@ -153,13 +159,17 @@ app.get('/api/userLogs/:characterId', async (req1, res, next) => {
 
   try {
 
+    const { gameModel } = req;
     const characterId = Number(req.params.characterId);
 
     if (Number.isNaN(characterId)) {
       throw new Error(`characterId ${req.params.characterId} is NaN`);
     }
 
-    const rows = await mmGetUserLog(characterId);
+    const rows = await gameModel.get2<GetUserLog>({
+      type: 'userLog',
+      characterId: characterId
+    });
     res.status(200).json(rows);
   } catch (error) {
     const message = `${error} ${JSON.stringify(error)}`;

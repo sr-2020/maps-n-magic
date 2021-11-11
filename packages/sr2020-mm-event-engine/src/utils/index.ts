@@ -9,17 +9,17 @@ import clippingUtils from 'polygon-clipping';
 import AbortController from 'abort-controller';
 import fetch from 'isomorphic-fetch';
 export * from './tmpLocIndex';
+export * from './translit';
 
 import { 
-  LocationRecord, 
   SRLatLng, 
   SRPolygon, 
   EdgeId,
   RawCharacterHealthState,
-  BodyConditions,
   SpiritRoute,
+  LocationRecord,
   Spirit
-} from "../types";
+} from "../domain";
 
 export function isGeoLocation(location: LocationRecord): boolean {
   return location.layer_id === 1 && !R.isEmpty(location.polygon);
@@ -120,23 +120,6 @@ export function getPolygonCentroid(polygon: SRPolygon): SRLatLng {
     lng: data.lng / data.area,
   };
 }
-
-export const isClinicallyDead = (charState: RawCharacterHealthState): boolean => 
-  charState.healthState === BodyConditions.Clinically_dead;
-
-export const isBiologicallyDead = (charState: RawCharacterHealthState): boolean => 
-  charState.healthState === BodyConditions.Biologically_dead;
-
-export const isDead = (charState: RawCharacterHealthState): boolean => 
-  isClinicallyDead(charState) || isBiologicallyDead(charState);
-
-export const healthStateShortNames: Record<string, string> = {
-  'healthy': 'ЗД',
-  'wounded': 'ТЯЖ',
-  'clinically_dead': 'КС',
-  'biologically_dead': 'АС',
-};
-
 
 // Check if it is necessary to show clinically dead character.
 // By rules if character is dead more then 30 minutes it is not necessary to show character.

@@ -1,8 +1,9 @@
 import React, { useEffect, useState } from 'react';
-import { isErrorResponse, HistoryItem, stringifyError } from 'sr2020-mm-event-engine';
+import { isErrorResponse, UserHistoryItem, stringifyError } from 'sr2020-mm-event-engine';
 import { loadHistory, logClientError, suitSpirit } from '../../api';
 import moment from 'moment';
 import './HistoryPage.css';
+import { t, processForDisplay } from "../../utils";
 
 interface HistoryPageProps {
   setTitle: (title: string) => void;
@@ -12,10 +13,10 @@ export function HistoryPage(props: HistoryPageProps) {
   const { setTitle } = props;
 
   useEffect(() => {
-    setTitle(`История`);
+    setTitle(t('historyPageTitle'));
   }, []);
 
-  const [historyList, setHistoryList] = useState<HistoryItem[] | null>(null);
+  const [historyList, setHistoryList] = useState<UserHistoryItem[] | null>(null);
   const [suitSpiritStatus, setSuitSpiritStatus] = useState<string>('');
   
   useEffect(() => {
@@ -31,8 +32,8 @@ export function HistoryPage(props: HistoryPageProps) {
       }
     }).catch(err => {
       console.error(stringifyError(err));
-      setSuitSpiritStatus('CL Непредвиденная ошибка получения истории');
-      logClientError('CL Непредвиденная ошибка получения истории', err);
+      setSuitSpiritStatus(t('unexpectedHistoryLoadingError'));
+      logClientError(t('unexpectedHistoryLoadingError'), err);
       setHistoryList([]);
     });
   }, [historyList]);
@@ -44,10 +45,10 @@ export function HistoryPage(props: HistoryPageProps) {
         historyList.map(item => 
           <div key={item.timestamp} className="tw-m-4">
             <div className="tw-flex tw-mb-2">
-              <div className="tw-flex-1 tw-font-bold">{item.data.title}</div>
+              <div className="tw-flex-1 tw-font-bold">{processForDisplay(item.data.title)}</div>
               <div className="tw-flex-0">{moment(item.timestamp).locale('ru-Ru').format('D MMM HH:mm')}</div>
             </div>
-            <div className="tw-ml-4">{item.data.text}</div>
+            <div className="tw-ml-4">{processForDisplay(item.data.text)}</div>
           </div>
         )
       }

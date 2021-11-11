@@ -3,7 +3,7 @@ import * as R from 'ramda';
 // import * as moment from 'moment-timezone'; // works in browser
 import moment from 'moment-timezone'; // works in node js
 
-import { ManaOceanSettingsData, MoonProps, TidePeriodProps } from "../types";
+import { ManaOceanSettingsData, MoonProps, TidePeriodProps } from "../domain";
 
 export const fullDay: number = 24 * 60; // minutes in full day
 

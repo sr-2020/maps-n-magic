@@ -1,7 +1,8 @@
 import React from 'react';
+import { useHistory } from 'react-router-dom';
 import { AggregatedLocationView, CharacterModelData2 } from 'sr2020-mm-event-engine';
 import { logoutUser, refreshCharacterModel } from '../../api';
-import { LoginManager } from '../../utils';
+import { LoginManager, processForDisplay, switchLanguage, t } from '../../utils';
 import './AppHeader2.css';
 
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
@@ -31,6 +32,7 @@ interface AppHeader2Props  {
 
 export function AppHeader2(props: AppHeader2Props) {
   const { loginManager, title, locationData, characterData, mute, setMute, links } = props;
+  const history = useHistory();
 
   const onLogout = async () => {
     await logoutUser();
@@ -59,7 +61,7 @@ export function AppHeader2(props: AppHeader2Props) {
         <span>{title}</span>
         <span className="tw-text-sm">
         {
-          locationData === null ? "Локация неизвестна" : (locationData.label)
+          locationData === null ? t('locationIsUnknown') : (processForDisplay(locationData.label))
         }
         </span>
       </span>
@@ -79,47 +81,41 @@ export function AppHeader2(props: AppHeader2Props) {
             <Form.Check
               type="switch"
               id="soundSwitch"
-              label="Выключить звук"
+              label={t('mute')}
               checked={mute}
               className="tw-py-3 tw-text-lg"
             />
           </Dropdown.Item>
-          {/* <Dropdown.Item
-            as="button"
-            type="button"
-            onClick={() => loginManager.updateLoginState()}
-            title="Обновить данные персонажа"
-            className="tw-py-3 tw-text-lg"
-          >
-            Обновить данные персонажа
-          </Dropdown.Item> */}
-          {/* <Dropdown.Item
-            as="button"
-            type="button"
-            onClick={callSecureApi}
-            title="Запрос на защищенный эндпоинт"
-            className="tw-py-3 tw-text-lg"
-          >
-            Запрос на защищенный эндпоинт
-          </Dropdown.Item> */}
           <Dropdown.Item
             as="button"
             type="button"
             onClick={refreshCharacterModel}
-            title="Выйти"
+            title={t('updateCharacterData')}
             className="tw-py-3 tw-text-lg"
           >
-            Обновить данные персонажа
+            {t('updateCharacterData')}
+          </Dropdown.Item>
+          <Dropdown.Item
+            as="button"
+            type="button"
+            onClick={() => {
+              switchLanguage();
+              history.push('/');
+            }}
+            title="Rus/Eng"
+            className="tw-py-3 tw-text-lg"
+          >
+            Rus/Eng
           </Dropdown.Item>
           <Dropdown.Divider />
           <Dropdown.Item
             as="button"
             type="button"
             onClick={onLogout}
-            title="Выйти"
+            title={t('logout')}
             className="tw-py-3 tw-text-lg"
           >
-            Выйти
+            {t('logout')}
           </Dropdown.Item>
         </Dropdown.Menu>
       </Dropdown>

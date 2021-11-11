@@ -15,25 +15,25 @@ import {
   createLogger, 
   DecrementAttempt, 
   GetCatcherState, 
-  getQrModelData, 
   InnerApiRequest, 
-  putSpiritInStorage, 
   EndpointId, 
   EndpointLogger, 
   validateSpiritJarQrModelData, 
-  PutSpiritRequestedCall
+  PutSpiritRequestedCall,
+  GetQrModelData,
+  PutSpiritInStorage,
+  ExpectedQr
 } from 'sr2020-mm-server-event-engine';
 import { waitForSpiritSuited } from './utils';
 
 const logger = createLogger('directCatchSpirit.ts');
 
 export const mainDirectCatchSpirit = async (req1, res, next) => {
-  const eLogger = new EndpointLogger(logger, EndpointId.CATCH_SPIRIT);
+  const req = req1 as InnerApiRequest;
+  const { gameModel, body } = req;
+  const eLogger = new EndpointLogger(gameModel, logger, EndpointId.CATCH_SPIRIT);
   try {
     // logger.info('mainCatchSpirit')
-    const req = req1 as InnerApiRequest;
-    const { body } = req;
-
     eLogger.attempt(body);
 
     if (!validateCatchSpiritInternalRequest(body)) {
@@ -83,7 +83,11 @@ export const mainDirectCatchSpirit = async (req1, res, next) => {
     }
 
     // 2. get qr model and check if it is SpiritJar
-    const qrModelData1 = await getQrModelData(qrId);
+    const qrModelData1 = await gameModel.get2<GetQrModelData>({
+      type: 'qrModelData',
+      qrId,
+      expectedQr: ExpectedQr.emptySpiritJar
+    });
 
     const validationRes = validateSpiritJarQrModelData(qrModelData1);
 
@@ -217,10 +221,18 @@ export const mainDirectCatchSpirit = async (req1, res, next) => {
 
     const result = await waitForSpiritSuited('catchSpirit', req.gameModel, spirit.id);
 
-    const putResult = await putSpiritInStorage(qrId, spiritId);
+    const putResult = await gameModel.execute2<PutSpiritInStorage>({
+      type: 'putSpiritInStorage',
+      spiritStorageId: qrId,
+      spiritId
+    });
     // logger.info('put spirit success confirmation', putResult);
 
-    const qrModelData2 = await getQrModelData(qrId) as FullSpiritJarQr;
+    const qrModelData2 = await gameModel.get2<GetQrModelData>({
+      type: 'qrModelData',
+      qrId,
+      expectedQr: ExpectedQr.fullSpiritJar
+    }) as FullSpiritJarQr;
 
     const isInJar = Number(qrModelData2.workModel.data.spiritId) === spiritId;
     logger.info(`Spirit ${spiritId} isInJar ${isInJar} ${qrId}`);

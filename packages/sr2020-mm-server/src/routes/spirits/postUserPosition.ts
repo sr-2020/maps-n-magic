@@ -5,29 +5,29 @@ import {
 } from "sr2020-mm-event-engine";
 import { 
   createLogger, 
-  freeSpiritFromStorage, 
-  innerPostUserPosition2, 
-  PlayerAuthorizedRequest, 
-  playerServerConstants, 
-  validateFreeSpiritRequestBody, 
-  validateSpiritJarQrModelData,
   EndpointId, 
-  EndpointLogger, 
+  EndpointLogger,
+  InnerApiRequest,
+  PostUserPosition, 
 } from "sr2020-mm-server-event-engine";
 
 const logger = createLogger('tmp/postUserPosition.ts');
 
 export const mainPostUserPosition = async (req1, res, next) => {
-  const eLogger = new EndpointLogger(logger, EndpointId.POST_USER_POSITION);
-  const req = req1 as PlayerAuthorizedRequest;
-  const { body } = req;
+  const req = req1 as InnerApiRequest;
+  const { body, gameModel } = req;
+  const eLogger = new EndpointLogger(gameModel, logger, EndpointId.POST_USER_POSITION);
   
   eLogger.attempt(body);
   const { characterId, ssid, locationName } = body;
   eLogger.setCharacterId(characterId);
 
   try {
-    await innerPostUserPosition2(characterId, ssid);
+    await gameModel.execute2<PostUserPosition>({
+      type: 'postUserPosition',
+      characterId,
+      ssid
+    });
     eLogger.success(`ssid ${ssid} locationName ${locationName}`, `Вы перешли в "${locationName}".`);
     res.sendStatus(200);
   } catch (error) {

@@ -1,23 +1,18 @@
 import { 
   ErrorResponse, 
-  GetRandomSpiritPhrase, 
-  GetSpirit, 
   getSuitSpiritDurationItems, 
   invalidRequestBody, 
-  isEmptySpiritJar, 
-  isFullBodyStorage, 
-  SuitSpiritInternalRequest
+  SuitSpiritInternalRequest,
+  validateSuitSpiritRequestBody
 } from "sr2020-mm-event-engine";
 import { 
   createLogger, 
-  getQrModelData, 
-  PlayerAuthorizedRequest, 
-  playerServerConstants, 
-  validateBodyStorageQrModelData, 
-  validateSpiritJarQrModelData, 
-  validateSuitSpiritRequestBody 
+  playerServerConstants,
+  refBodyStorageQrId,
+  refSpiritJarQrId, 
 } from "sr2020-mm-server-event-engine";
 import { PutCharacterMessage } from "../../gameModel/MessageService";
+import { PlayerAuthorizedRequest } from "../../types";
 import { decode, playerServerCookie } from "../../utils";
 import { qrIdIsNanError } from "./utils";
 
@@ -52,9 +47,10 @@ export const suitSpirit = async (req1, res, next) => {
       return;
     }
     
+    const mocked = playerServerConstants().MOCKED;
     const reqBody: SuitSpiritInternalRequest = {
-      spiritJarId,
-      bodyStorageId,
+      spiritJarId: mocked ? refSpiritJarQrId : spiritJarId,
+      bodyStorageId: mocked ? refBodyStorageQrId : bodyStorageId,
       characterId: req.userData.modelId,
       suitDuration: getSuitSpiritDurationItems(characterModelData) * basicSuitTime
       // suitDuration: 60000
@@ -71,7 +67,7 @@ export const suitSpirit = async (req1, res, next) => {
 
     const json = await suitSpiritRes.json();
 
-    logger.info('suitSpiritRes json', json);
+    // logger.info('suitSpiritRes json', json);
 
     if (suitSpiritRes.status === 200) {
       // setTimeout(() => {

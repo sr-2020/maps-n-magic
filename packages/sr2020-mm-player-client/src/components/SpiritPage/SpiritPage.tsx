@@ -21,6 +21,7 @@ import Form from 'react-bootstrap/Form';
 import { QrScannerWrapper } from "../QrScannerWrapper";
 import { getSpiritDataByQr, freeSpirit, catchSpirit, logClientError } from "../../api";
 import { SpiritCard } from '../SpiritCard';
+import { t, emptinessReason } from "../../utils";
 
 // import { WithTranslation } from "react-i18next";
 
@@ -33,7 +34,7 @@ export function SpiritPage(props: SpiritPageProps) {
   const { setTitle, characterData } = props;
 
   useEffect(() => {
-    setTitle(`Осмотреть тотем`);
+    setTitle(t('scanSpiritPageTitle'));
   }, []);
 
   const [spiritJarQrString, setSpiritJarQrString] = useState<string | null>(null);
@@ -63,9 +64,9 @@ export function SpiritPage(props: SpiritPageProps) {
       }
     }).catch(err => {
       console.error(stringifyError(err));
-      logClientError('CL Непредвиденная ошибка получения данных духа', err);
+      logClientError(t('unexpectedSpiritViewError'), err);
       setErrorResponse({
-        errorTitle: 'CL Непредвиденная ошибка получения данных духа',
+        errorTitle: t('unexpectedSpiritViewError'),
         errorSubtitle: stringifyError(err)
       });
     });
@@ -75,7 +76,7 @@ export function SpiritPage(props: SpiritPageProps) {
     return (
       <QrScannerWrapper
         onSuccess={setSpiritJarQrString}
-        message="Отсканируйте тотем"
+        message={t('scanSpiritJar')}
       />
     );
   }
@@ -87,10 +88,9 @@ export function SpiritPage(props: SpiritPageProps) {
     // messageBody
     freeSpirit(
       Number(spiritJarQr.spiritJarQr.workModel.modelId), 
-      'Маг освободил духа',
+      t('mageFreedSpirit'),
       messageBody
     ).then(res => {
-    // freeSpirit(Number(123456789), 'Маг освободил духа').then(res => {
       if (isErrorResponse(res)) {
         setErrorResponse(res);
       } else {
@@ -102,34 +102,13 @@ export function SpiritPage(props: SpiritPageProps) {
       }
     }).catch(err => {
       console.error(stringifyError(err));
-      logClientError('CL Непредвиденная ошибка освобождения духа', err);
+      logClientError(t('unexpectedFreeSpiritError'), err);
       setErrorResponse({
-        errorTitle: 'CL Непредвиденная ошибка освобождения духа',
+        errorTitle: t('unexpectedFreeSpiritError'),
         errorSubtitle: stringifyError(err)
       });
     });
   }
-
-  // function onCatchSpiritClick() {
-  //   if (spiritJarQr === null) {
-  //     return;
-  //   }
-  //   catchSpirit(Number(spiritJarQr.workModel.modelId), 3434).then(res => {
-  //     if (isErrorResponse(res)) {
-  //       setErrorResponse(res);
-  //     } else {
-  //       setSpiritJarQr(res);
-  //       // setSpiritJarQr(null);
-  //       // setSpiritJarQrString(null);
-  //     }
-  //   }).catch(err => {
-  //     console.error(err);
-  //     setErrorResponse({
-  //       errorTitle: 'Непредвиденная ошибка',
-  //       errorSubtitle: err
-  //     });
-  //   });
-  // }
 
   return (
     <div className="SpiritPage tw-p-4">
@@ -154,11 +133,13 @@ export function SpiritPage(props: SpiritPageProps) {
           }
           <div className="tw-mb-8">
             <Button variant="outline-secondary" onClick={onFreeSpiritClick}>
-              Освободить духа
+              {t('freeSpirit')}
             </Button>
           </div>
           <div style={{marginBottom: '20rem'}}>
-            <div className="tw-mb-2">Оставить сообщение</div>
+            <div className="tw-mb-2">
+              {t('leaveMessage')}
+            </div>
             <div>
               <Form.Control
                 as="textarea" rows={3}
@@ -173,8 +154,8 @@ export function SpiritPage(props: SpiritPageProps) {
         (spiritJarQr !== null && isEmptySpiritJar(spiritJarQr.spiritJarQr)) && 
         <>
           <div>
-            <div>Тотем пуст</div>
-            <div>Причина: {spiritJarQr.spiritJarQr.workModel.data.emptiness_reason}</div>
+            <div>{t('spiritJarIsEmpty')}</div>
+            <div>{emptinessReason(spiritJarQr.spiritJarQr.workModel.data.emptiness_reason)}</div>
           </div>
         </>
       }
@@ -188,7 +169,7 @@ export function SpiritPage(props: SpiritPageProps) {
             setErrorResponse(null);
           }}
         >
-          Осмотреть другой тотем
+          {t('scanOtherSpiritJar')}
         </Button>
       }
     </div>

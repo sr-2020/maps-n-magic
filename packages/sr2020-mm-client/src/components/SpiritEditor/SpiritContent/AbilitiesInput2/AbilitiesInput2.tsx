@@ -34,7 +34,7 @@ export function AbilitiesInput2(props: AbilitiesInput2Props) {
   if (spiritFeatures === null) {
     return (
       <div>
-        Фичи загружаются...
+        {t('featuresAreLoading')}
       </div>
     )
   }

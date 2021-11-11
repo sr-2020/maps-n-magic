@@ -9,7 +9,7 @@ import {
   Res
 } from '../../core';
 
-import { SpiritPhrase } from "../../types";
+import { SpiritPhrase } from "../../domain";
 import { sample } from '../../utils';
 
 import { 
@@ -174,7 +174,7 @@ export class SpiritPhraseService extends AbstractService<SpiritPhraseServiceCont
 
   // private _makeSpiritPhraseName(name: string): string {
   //   const spiritPhraseMap = R.indexBy(R.prop('name'), this.spiritPhrases);
-  //   const base = `${name} клон`;
+  //   const base = `${name} clone`;
   //   let newName = base;
   //   let counter = 1;
   //   // eslint-disable-next-line eqeqeq

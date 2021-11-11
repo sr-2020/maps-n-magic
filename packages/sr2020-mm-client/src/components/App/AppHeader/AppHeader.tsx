@@ -10,6 +10,7 @@ import Nav from 'react-bootstrap/Nav';
 // import NavDropdown from 'react-bootstrap/NavDropdown';
 
 import Dropdown from 'react-bootstrap/Dropdown';
+import Button from 'react-bootstrap/Button';
 import { WithTranslation } from 'react-i18next';
 import { GameModel } from "sr2020-mm-event-engine";
 import { NavLinkData } from "sr2020-mm-client-core";
@@ -27,6 +28,7 @@ import { SpiritMovementSwitch } from '../SpiritMovementSwitch';
 import { WipeManaOceanEffectsButton } from '../WipeManaOceanEffectsButton';
 import { LoginManager } from "../../../utils";
 import { logoutUser } from '../../../api';
+import { i18n } from "../../../i18n";
 
 // const oldNavLinks = [{
 //   to: '/mapEditor',
@@ -142,6 +144,16 @@ export function AppHeader(props: AppHeaderProps) {
                 }
               </Dropdown.Menu>
             </Dropdown> */}
+            <Nav.Item as="li">
+              <Button variant="primary" onClick={
+                () => {
+                  const { language } = i18n;
+                  i18n.changeLanguage(language === 'en' ? 'ru' : 'en');
+                }
+              }>
+                Rus/Eng
+              </Button>
+            </Nav.Item>
           </Nav>
         </Navbar.Collapse>
   
@@ -178,10 +190,10 @@ export function AppHeader(props: AppHeaderProps) {
               as="button"
               type="button"
               onClick={onLogout}
-              title="Выйти"
+              title={t('logout')}
               className="tw-py-3 tw-text-lg"
             >
-              Выйти
+              {t('logout')}
             </Dropdown.Item>
           </Dropdown.Menu>
         </Dropdown>

@@ -21,7 +21,12 @@ import {
 
 import { validateEntityFunction } from '../types';
 
-export class SettingsResourceProvider<T> implements PostSettings<T>, GetSettings<T> {
+export * from './mocks';
+
+export interface SettingsResourceProvider<T> extends PostSettings<T>, GetSettings<T> {
+}
+
+export class SettingsResourceProviderImpl<T> implements SettingsResourceProvider<T> {
   constructor(public url: string, public validateSettings: validateEntityFunction<T>) {
     return Object.assign(
       this,
@@ -34,13 +39,13 @@ export class SettingsResourceProvider<T> implements PostSettings<T>, GetSettings
   post(settings: T): Promise<T> {throw new Error('Method not implemented.');}
 }
 
-export class ManaOceanSettingsProvider extends SettingsResourceProvider<ManaOceanSettingsData> {
+export class ManaOceanSettingsProvider extends SettingsResourceProviderImpl<ManaOceanSettingsData> {
   constructor() {
     super(mainServerConstants().manaOceanConfigUrl, validateManaOceanSettingsData);
   }
 }
 
-export class ManaOceanEffectSettingsProvider extends SettingsResourceProvider<ManaOceanEffectSettingsData> {
+export class ManaOceanEffectSettingsProvider extends SettingsResourceProviderImpl<ManaOceanEffectSettingsData> {
   constructor() {
     super(mainServerConstants().manaOceanEffectConfigUrl, validateManaOceanEffectSettingsData);
   }

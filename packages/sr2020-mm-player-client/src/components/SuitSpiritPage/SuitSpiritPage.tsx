@@ -15,11 +15,11 @@ import {
   hasAbility,
   Ability,
   stringifyError
-  // SpiritDataForQrValidation 
 } from 'sr2020-mm-event-engine';
 import { SpiritCard } from '../SpiritCard';
 
 import { StatusIcon } from '../StatusIcon';
+import { t, spiritSuitTime } from "../../utils";
 
 interface SuitSpiritPageProps {
   setTitle: (title: string) => void;
@@ -49,7 +49,7 @@ export function SuitSpiritPage(props: SuitSpiritPageProps) {
   const { setTitle, characterData } = props;
 
   useEffect(() => {
-    setTitle(`Надеть духа`);
+    setTitle(t('suitSpiritPageTitle'));
   }, []);
   
   // 366 non body storage
@@ -80,10 +80,10 @@ export function SuitSpiritPage(props: SuitSpiritPageProps) {
       }
     }).catch(err => {
       console.error(stringifyError(err));
-      logClientError('CL Непредвиденная ошибка проверки телохранилища', err);
+      logClientError(t('unexpectedBodyStorageCheckError'), err);
       setBodyStorageStatus({
         status: 'invalid',
-        message: 'CL Непредвиденная ошибка проверки телохранилища'
+        message: t('unexpectedBodyStorageCheckError')
       });
     });
   }, [bodyStorageQrString]);
@@ -116,10 +116,10 @@ export function SuitSpiritPage(props: SuitSpiritPageProps) {
       }
     }).catch(err => {
       console.error(stringifyError(err));
-      logClientError('CL Непредвиденная ошибка проверки тотема', err);
+      logClientError(t('unexpectedSpiritJarCheckError'), err);
       setBodyStorageStatus({
         status: 'invalid',
-        message: 'CL Непредвиденная ошибка проверки тотема'
+        message: t('unexpectedSpiritJarCheckError')
       });
     });
   }, [spiritJarQrString]);
@@ -135,17 +135,13 @@ export function SuitSpiritPage(props: SuitSpiritPageProps) {
       if (isErrorResponse(res)) {
         setSuitSpiritStatus(res.errorTitle);
       } else {
-        // if (res !== null) {
-        //   setSuitSpiritStatus("Дух надет. Вы прочитали мысль духа: " + res);
-        // } else {
-        setSuitSpiritStatus("Дух надет");
-        // }
+        setSuitSpiritStatus(t('spiritIsSuited'));
       }
       setDoSuitSpirit(false);
     }).catch(err => {
       console.error(stringifyError(err));
-      logClientError('CL Непредвиденная ошибка надевания духа', err);
-      setSuitSpiritStatus('CL Непредвиденная ошибка надевания духа');
+      logClientError(t('unexpectedSuitSpiritError'), err);
+      setSuitSpiritStatus(t('unexpectedSuitSpiritError'));
       setDoSuitSpirit(false);
     });
   }, [doSuitSpirit]);
@@ -153,7 +149,7 @@ export function SuitSpiritPage(props: SuitSpiritPageProps) {
   if (!hasAbility(characterData, Ability.SuitUp)) {
     return (
       <div className="tw-m-4 tw-p-4 tw-bg-blue-200 tw-font-semibold">
-        Вы не овладели навыком Suit Up (A), поэтому не можете надеть духа
+        {t('youHaveNoSuitUpAbility')}
       </div>
     );
   }
@@ -165,7 +161,7 @@ export function SuitSpiritPage(props: SuitSpiritPageProps) {
           setBodyStorageQrString(qrData);
           setScanBodyStorage(false);
         }}
-        message="Отсканируйте телохранилище"
+        message={t('scanBodyStorage')}
         onCancel={() => setScanBodyStorage(false)}
       />
     );
@@ -178,7 +174,7 @@ export function SuitSpiritPage(props: SuitSpiritPageProps) {
           setSpiritJarQrString(qrData);
           setScanSpiritJar(false);
         }}
-        message="Отсканируйте тотем с духом"
+        message={t('scanSpiritJarWithSpirit')}
         onCancel={() => setScanSpiritJar(false)}
       />
     );
@@ -195,8 +191,8 @@ export function SuitSpiritPage(props: SuitSpiritPageProps) {
       <div className="tw-mb-8">
         <div className="tw-flex tw-mb-4">
           <StatusIcon status={bodyStorageStatus.status}/>
-          <div className="col-form-label tw-flex-1">Телохранилище</div>
-          <Button onClick={() => setScanBodyStorage(true)}>Сканировать</Button>
+          <div className="col-form-label tw-flex-1">{t('bodyStorage')}</div>
+          <Button onClick={() => setScanBodyStorage(true)}>{t('scan')}</Button>
         </div>
         {
           bodyStorageStatus.status === 'invalid' && 
@@ -208,8 +204,8 @@ export function SuitSpiritPage(props: SuitSpiritPageProps) {
       <div className="tw-mb-8">
         <div className="tw-flex tw-mb-4">
           <StatusIcon status={spiritJarStatus.status}/>
-          <div className="col-form-label tw-flex-1">Тотем</div>
-          <Button onClick={() => setScanSpiritJar(true)}>Сканировать</Button>
+          <div className="col-form-label tw-flex-1">{t('spiritJar')}</div>
+          <Button onClick={() => setScanSpiritJar(true)}>{t('scan')}</Button>
         </div>
         {
           spiritJarStatus.status === 'invalid' && 
@@ -230,7 +226,7 @@ export function SuitSpiritPage(props: SuitSpiritPageProps) {
       {
         isValid &&
         <div className="tw-m-4">
-          {`Время ношения духа ${timeInSpirit} минут`}
+          {spiritSuitTime(timeInSpirit)}
         </div>
       }
       {
@@ -240,7 +236,7 @@ export function SuitSpiritPage(props: SuitSpiritPageProps) {
             {suitSpiritStatus}
           </div>
           <div className="tw-text-right tw-mb-8">
-            <Button onClick={refreshCharacterModel}>Обновить данные персонажа</Button>
+            <Button onClick={refreshCharacterModel}>{t('updateCharacterData')}</Button>
           </div>
         </>
       }
@@ -253,7 +249,7 @@ export function SuitSpiritPage(props: SuitSpiritPageProps) {
             icon={faSpinner}
             spin
           />
-          Надеть
+          {t('suit')}
         </Button>
       </div>
     </div>

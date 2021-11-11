@@ -1,7 +1,8 @@
 import { Router } from 'express';
 import * as jwt from "jsonwebtoken";
 import { ErrorResponse, validateTokenData } from 'sr2020-mm-event-engine';
-import { PlayerAuthorizedRequest, createLogger, playerServerConstants } from 'sr2020-mm-server-event-engine';
+import { createLogger, playerServerConstants } from 'sr2020-mm-server-event-engine';
+import { PlayerAuthorizedRequest } from '../types';
 
 const logger = createLogger('parseUserData.ts');
 

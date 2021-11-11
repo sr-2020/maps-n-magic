@@ -58,7 +58,7 @@ export class BackgroundImagePopup extends Component<
     // const selectedButton = 'bg-blue-500 hover:bg-blue-700 text-white';
     // const unselectedButton = 'bg-gray-300 hover:bg-gray-400 text-gray-800';
     return (
-      <div className="LocationPopup">
+      <div className="BackgroundImagePopup">
         <div className="tw-mb-3">
           <label
             className="tw-block tw-text-gray-700 tw-text-sm tw-font-bold tw-mb-2"

@@ -13,7 +13,7 @@ import {
   ServiceContractTypes
 } from '../core';
 
-import { Feature } from "../types";
+import { Feature } from "../domain";
 
 // requests
 

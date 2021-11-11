@@ -8,11 +8,12 @@
 
 let SOUND_URL: string;
 if (process.env.NODE_ENV === 'production') {
-  SOUND_URL = 'https://storage.googleapis.com/sr2020-maps-n-magic';
+  // SOUND_URL = 'https://storage.googleapis.com/sr2020-maps-n-magic';
   // WS_URL = 'ws://localhost:3001/api/ws';
+  SOUND_URL = '/sounds';
 } else {
-  SOUND_URL = 'https://storage.googleapis.com/sr2020-maps-n-magic';
-  // SOUND_URL = '/sounds';
+  // SOUND_URL = 'https://storage.googleapis.com/sr2020-maps-n-magic';
+  SOUND_URL = '/sounds';
 }
 
 export { SOUND_URL };
@@ -32,6 +33,7 @@ if (process.env.NODE_ENV === 'production') {
   WS_URL = 'wss://maps-n-magic2.evarun.ru/api/ws';
   // WS_URL = 'ws://localhost:3001/api/ws';
 } else {
+  // WS_URL = 'ws://localhost:3010/api/ws';
   WS_URL = 'ws://localhost:3001/api/ws';
 }
 

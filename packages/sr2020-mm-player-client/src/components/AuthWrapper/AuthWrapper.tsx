@@ -1,6 +1,6 @@
 import React, { PropsWithChildren } from 'react';
 import { WithLoginState } from '../../hocs';
-import { LoginManager } from '../../utils';
+import { LoginManager, t } from '../../utils';
 import { LoginPage } from '../LoginPage';
 import './AuthWrapper.css';
 
@@ -18,7 +18,7 @@ export function AuthWrapper(props: AuthWrapperProps) {
     loginManager.updateLoginState(true);
     return (
       <Spinner animation="border" role="status">
-        <span className="sr-only">Загрузка...</span>
+        <span className="sr-only">{t('loading')}</span>
       </Spinner>
     );
   }
@@ -26,7 +26,7 @@ export function AuthWrapper(props: AuthWrapperProps) {
   if (loginState.status === 'loading') {
     return (
       <Spinner animation="border" role="status">
-        <span className="sr-only">Загрузка...</span>
+        <span className="sr-only">{t('loading')}</span>
       </Spinner>
     );
   }

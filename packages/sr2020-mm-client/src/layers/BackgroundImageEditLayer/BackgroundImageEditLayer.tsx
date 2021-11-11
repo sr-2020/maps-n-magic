@@ -12,13 +12,11 @@ import './BackgroundImageEditLayer.css';
 import { 
   getArrDiff, 
   GameModel, 
-  BackgroundImage 
+  BackgroundImage,
+  EPostBackgroundImageRequested,
+  EDeleteBackgroundImageRequested,
+  EPutBackgroundImageRequested,
 } from 'sr2020-mm-event-engine';
-import { 
-  PostBackgroundImage,
-  PutBackgroundImage,
-  DeleteBackgroundImage
-} from "sr2020-mm-client-event-engine";
 
 import { BackgroundImagePopup } from './BackgroundImagePopup';
 
@@ -104,8 +102,8 @@ export class BackgroundImageEditLayer extends Component<
       console.log('rectangle created');
       // const latlngs = translator.moveFrom(rect.getLatLngs()[0] as L.LatLng[]); // as L.LatLng[][]
       const latlngs = rect.getLatLngs(); // as L.LatLng[][]
-      gameModel.execute2<PostBackgroundImage>({
-        type: 'postBackgroundImage',
+      gameModel.emit2<EPostBackgroundImageRequested>({
+        type: 'postBackgroundImageRequested',
         // @ts-ignore
         props: { latlngs },
       });
@@ -123,8 +121,8 @@ export class BackgroundImageEditLayer extends Component<
       console.log('rectangle removed');
       // this.imageLayer.onRemoveImage(event.layer, gameModel);
       layerCommunicator.emit('closePopup');
-      gameModel.execute2<DeleteBackgroundImage>({
-        type: 'deleteBackgroundImage',
+      gameModel.emit2<EDeleteBackgroundImageRequested>({
+        type: 'deleteBackgroundImageRequested',
         id: rect.options.id,
       });
     }
@@ -152,8 +150,8 @@ export class BackgroundImageEditLayer extends Component<
       gameModel, layerCommunicator,
     } = this.props;
     const rectangle = e.target;
-    gameModel.execute2<PutBackgroundImage>({
-      type: 'putBackgroundImage',
+    gameModel.emit2<EPutBackgroundImageRequested>({
+      type: 'putBackgroundImageRequested',
       id: rectangle.options.id,
       props: {
         // ...translator.moveFrom({
@@ -179,8 +177,8 @@ export class BackgroundImageEditLayer extends Component<
 
     if (prop === 'name' || prop === 'image') {
       // rectangle.options[prop] = value;
-      gameModel.execute2<PutBackgroundImage>({
-        type: 'putBackgroundImage',
+      gameModel.emit2<EPutBackgroundImageRequested>({
+        type: 'putBackgroundImageRequested',
         id,
         props: {
           [prop]: value,

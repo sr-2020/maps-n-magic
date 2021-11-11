@@ -7,6 +7,7 @@ import Form from 'react-bootstrap/Form';
 import { BeaconRecord, GameModel } from 'sr2020-mm-event-engine';
 
 import { WithGeoLocationRecords } from '../../../dataHOCs';
+import { processForDisplay } from '../../../i18n';
 
 interface BeaconLocationSelectProps extends WithTranslation, WithGeoLocationRecords {
   gameModel: GameModel;
@@ -18,7 +19,7 @@ export function BeaconLocationSelect(props: BeaconLocationSelectProps) {
   const { t, beacon, geoLocationRecords, onLocationSelect } = props;
 
   if (geoLocationRecords.length === 0) {
-    return <div>Гео-локации не найдены</div>;
+    return <div>{t('geoLocationsNotFound')}</div>;
   }
 
   function onLocationSelect1(event: ChangeEvent<HTMLSelectElement>): void {
@@ -43,7 +44,7 @@ export function BeaconLocationSelect(props: BeaconLocationSelectProps) {
             key={location.id}
             value={location.id}
           >
-            {`${location.label} (${location.id})`}
+            {`${processForDisplay(location.label)} (${location.id})`}
           </option>
         ))
       }

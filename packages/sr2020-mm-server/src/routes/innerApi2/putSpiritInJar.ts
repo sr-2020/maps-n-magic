@@ -11,7 +11,15 @@ import {
   isFullSpiritJar,
   Spirit
 } from 'sr2020-mm-event-engine';
-import { createLogger, getQrModelData, InnerApiRequest, mmLog, putSpiritInStorage, validateSpiritJarQrModelData } from 'sr2020-mm-server-event-engine';
+import { 
+  createLogger, 
+  ExpectedQr, 
+  GetQrModelData, 
+  InnerApiRequest, 
+  mmLog, 
+  PutSpiritInStorage, 
+  validateSpiritJarQrModelData 
+} from 'sr2020-mm-server-event-engine';
 import { NextFunction, Request, Response } from "express-serve-static-core";
 import shortid from 'shortid';
 import { postSpirit } from 'sr2020-mm-server-event-engine';
@@ -33,12 +41,11 @@ const fractionIndex: Record<string, number> = {
 };
 
 export const putSpiritInJar = async (req1: Request, res: Response, next: NextFunction) => {
+  const req = req1 as InnerApiRequest;
+  const { body, gameModel } = req;
   const uid = shortid.generate();
   try {
     // logger.info('putSpiritInJar')
-    const req = req1 as InnerApiRequest;
-    const { body } = req;
-
     
     if (!validatePutSpiritInJarRequestBody(body)) {
       res.status(400).json(invalidRequestBody(body, validatePutSpiritInJarRequestBody.errors));
@@ -47,16 +54,20 @@ export const putSpiritInJar = async (req1: Request, res: Response, next: NextFun
     
     const { qrId, spiritType } = body;
 
-    mmLog('SPIRIT_SELL_ATTEMPT', `${uid} data ${JSON.stringify(body)}`);
+    mmLog(gameModel, 'SPIRIT_SELL_ATTEMPT', `${uid} data ${JSON.stringify(body)}`);
 
     // 2. get qr model and check if it is SpiritJar
-    const qrModelData1 = await getQrModelData(qrId);
+    const qrModelData1 = await gameModel.get2<GetQrModelData>({
+      type: 'qrModelData',
+      qrId,
+      expectedQr: ExpectedQr.emptySpiritJar
+    });
 
     const validationRes = validateSpiritJarQrModelData(qrModelData1);
 
     if ('errorTitle' in validationRes) {
       res.status(500).json(validationRes);
-      mmLog('SPIRIT_SELL_FAIL', `${uid} error ${JSON.stringify(validationRes)}`);
+      mmLog(gameModel, 'SPIRIT_SELL_FAIL', `${uid} error ${JSON.stringify(validationRes)}`);
       return;
     }
 
@@ -67,7 +78,7 @@ export const putSpiritInJar = async (req1: Request, res: Response, next: NextFun
         errorTitle: 'Тотем содержит духа',
         errorSubtitle: `В тотеме уже находится дух`
       };
-      mmLog('SPIRIT_SELL_FAIL', `${uid} error ${JSON.stringify(errorResponse)}`);
+      mmLog(gameModel, 'SPIRIT_SELL_FAIL', `${uid} error ${JSON.stringify(errorResponse)}`);
       res.status(400).json(errorResponse);
       return;
     }
@@ -88,10 +99,14 @@ export const putSpiritInJar = async (req1: Request, res: Response, next: NextFun
 
     const spirit = await postSpirit(rawSpirit);
 
-    const putResult = await putSpiritInStorage(qrId, spirit.id);
+    const putResult = await gameModel.execute2<PutSpiritInStorage>({
+      type: 'putSpiritInStorage',
+      spiritStorageId: qrId,
+      spiritId: spirit.id
+    });
     logger.info(`SPIRIT_SELL_SUCCESS ${uid} ${spirit} ${putResult}`);
 
-    mmLog('SPIRIT_SELL_SUCCESS', `${uid} ${JSON.stringify(spirit)}`);
+    mmLog(gameModel, 'SPIRIT_SELL_SUCCESS', `${uid} ${JSON.stringify(spirit)}`);
 
     res.status(200).json(spirit);
   } catch(error) {
@@ -102,7 +117,7 @@ export const putSpiritInJar = async (req1: Request, res: Response, next: NextFun
       errorSubtitle: message 
     };
     res.status(500).json(errorResponse);
-    mmLog('SPIRIT_SELL_FAIL', `${uid} error ${JSON.stringify(errorResponse)}`);
+    mmLog(gameModel, 'SPIRIT_SELL_FAIL', `${uid} error ${JSON.stringify(errorResponse)}`);
     return;
   }
 }

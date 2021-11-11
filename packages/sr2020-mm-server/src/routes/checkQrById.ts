@@ -16,7 +16,8 @@ import {
 } from "sr2020-mm-event-engine";
 import { 
   createLogger, 
-  getQrModelData, 
+  ExpectedQr, 
+  GetQrModelData, 
   MainAuthorizedRequest, 
 } from "sr2020-mm-server-event-engine";
 
@@ -35,7 +36,11 @@ export const mainCheckQrById = async (req1, res, next) => {
       throw new Error(`qrId ${req.params.qrId} is NaN`);
     }
 
-    const qrModelData1 = await getQrModelData(qrId);
+    const qrModelData1 = await gameModel.get2<GetQrModelData>({
+      type: 'qrModelData',
+      qrId,
+      expectedQr: ExpectedQr.any
+    });
 
     if (!validateCommonQr(qrModelData1)) {
       const message = `Данные QR не корректны. Данные модели ${JSON.stringify(qrModelData1)}, ошибки валидации ${JSON.stringify(validateCommonQr.errors)}`;

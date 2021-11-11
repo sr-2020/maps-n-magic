@@ -1,5 +1,6 @@
 import { Router } from 'express';
-import { createLogger, PlayerAuthorizedRequest } from 'sr2020-mm-server-event-engine';
+import { createLogger } from 'sr2020-mm-server-event-engine';
+import { PlayerAuthorizedRequest } from '../types';
 
 const logger = createLogger('refreshCharacterModel.ts');
 

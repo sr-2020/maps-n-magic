@@ -17,6 +17,7 @@ import {
   bgImageOverlay,
   BgImageOverlay
 } from "../../types";
+import { processForDisplay } from '../../i18n';
 
 function getTitleLatLngBounds(latlngs: L.LatLngLiteral[][]): L.LatLngBounds {
   const bounds = latLngsToBounds(latlngs[0]);
@@ -49,7 +50,7 @@ function createTitle(imageData: BackgroundImage) {
   const svgElementBounds = getTitleLatLngBounds(latlngs);
   // const titleRect = L.svgOverlay(svgElement, svgElementBounds, { id });
   const titleRect = bgTitleOverlay(svgElement, svgElementBounds, { id });
-  setTitleText(svgElement, name);
+  setTitleText(svgElement, processForDisplay(name));
   return titleRect;
 }
 
@@ -179,7 +180,7 @@ export class BackgroundImageDisplayLayer extends Component<BackgroundImageDispla
     imageLayer.setBounds(latLngsToBounds(latlngs[0]));
     imageLayer.setUrl(image);
     const title = this.titleGroup.getLayers().find((title2: BgTitleOverlay) => title2.options.id === id) as BgTitleOverlay;
-    setTitleText(title.getElement(), name);
+    setTitleText(title.getElement(), processForDisplay(name));
     title.setBounds(getTitleLatLngBounds(latlngs));
   }
 

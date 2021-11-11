@@ -14,7 +14,10 @@ import {
   validateLocationRecordPost,
   validateLocationRecordPut,
   validateLocationRecordPut2,
-  Identifiable
+  Identifiable,
+  defaultBeaconRecord,
+  defaultLocationRecord,
+  EntityUpdate
 } from 'sr2020-mm-event-engine';
 
 import {
@@ -23,6 +26,7 @@ import {
   puttable, 
   deletable, 
   multiPuttable,
+  singleGettable,
 } from './apiInterfaces';
 
 import {  
@@ -32,13 +36,14 @@ import {
   Deletable,
   MultiPuttable,
   validateEntityFunction,
+  SingleGettable,
 } from "../types";
 
 import {
   mainServerConstants,
-  defaultBeaconRecord,
-  defaultLocationRecord,
 } from '../constants';
+
+export * from './mocks';
 
 export class ManageableResourceProvider<T extends Identifiable> implements 
   Gettable<T>, 
@@ -103,18 +108,22 @@ export class ManageablePlusResourceProvider<T extends Identifiable> implements
   }): Promise<T> { throw new Error('Method not implemented.'); }
   post({ props }: { props: Omit<T, 'id'>; }): Promise<T> { throw new Error('Method not implemented.'); }
   get(): Promise<T[]> { throw new Error('Method not implemented.'); }
-  putMultiple({ updates }: { updates: T[]; }): Promise<T[]> { throw new Error('Method not implemented.');}
+  putMultiple({ updates }: { updates: EntityUpdate<T>[]; }): Promise<T[]> {
+    throw new Error('Method not implemented.');
+  }
 }
 
-export class GettableResourceProvider<T> implements Gettable<T> {
+export class GettableResourceProvider<T> implements Gettable<T>, SingleGettable<T> {
   constructor(public url: string, public validateGetEntity: validateEntityFunction<T>) {
     return Object.assign(
       this,
       gettable(this),
+      singleGettable(this)
     );
   }
   // all methods will be created by object assign
   get(): Promise<T[]> { throw new Error('Method not implemented.'); }
+  singleGet({ id }: { id: number; }): Promise<T | undefined> { throw new Error('Method not implemented.'); }
 }
 
 export class RemoteBeaconRecordProvider extends ManageableResourceProvider<BeaconRecord> {
@@ -128,7 +137,6 @@ export class RemoteBeaconRecordProvider extends ManageableResourceProvider<Beaco
       // (t: any): t is BeaconRecord => true
     );
   }
-
 }
 
 export class RemoteLocationRecordProvider extends ManageablePlusResourceProvider<LocationRecord> {
@@ -149,62 +157,6 @@ export class RemoteLocationRecordProvider extends ManageablePlusResourceProvider
 
 export class RemoteUsersRecordProvider extends GettableResourceProvider<RawUserRecord> {
   constructor() {
-    // super(usersUrl, validateRawUserRecord);
     super(mainServerConstants().usersUrl, (t: any): t is RawUserRecord => true);
   }
 }
-
-// Test class to get frequently changed user data.
-// export class UsersRecordProviderMock {
-//   isEven = true;
-
-//   async get() {
-//     this.isEven = !this.isEven;
-//     return R.clone(this.isEven ? [users[1]] : users);
-//   }
-// }
-
-export async function innerPostUserPosition(characterId: number, beacon: BeaconRecord) {
-  return fetchWithTimeout(mainServerConstants().positionUrl, {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json;charset=utf-8',
-      'X-User-Id': String(characterId),
-    },
-    body: JSON.stringify({
-      beacons: [{
-        ssid: beacon.ssid,
-        bssid: beacon.bssid,
-        level: -10,
-      }],
-    }),
-  });
-}
-
-export async function innerPostUserPosition2(characterId: number, ssid: string) {
-  return fetchWithTimeout(mainServerConstants().positionUrl, {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json;charset=utf-8',
-      'X-User-Id': String(characterId),
-    },
-    body: JSON.stringify({
-      beacons: [{
-        ssid: ssid,
-        bssid: ssid,
-        level: -10,
-      }],
-    }),
-  });
-}
-
-// function ReadWriteResourceProvider(url) {
-//   this.url = url;
-
-//   return Object.assign(
-//     this,
-//     gettable(this),
-//     postable(this),
-//   );
-// }
-

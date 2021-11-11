@@ -16,6 +16,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faTimes } from '@fortawesome/free-solid-svg-icons';
 
 import TimePicker, { TimePickerValue } from "react-time-picker";
+import { processForDisplay } from '../../../../i18n';
 
 interface SpiritRouteTableRowProps extends WithTranslation {
   timetableItem: TimetableItem;
@@ -67,7 +68,7 @@ export function SpiritRouteTableRow(props: SpiritRouteTableRowProps) {
           value={timeNumberToStr(timetableItem.time)}
         />
       </div>
-      <div className="tw-table-cell tw-px-2 tw-text-left">{route?.name || t('notAvailable')}</div>
+      <div className="tw-table-cell tw-px-2 tw-text-left">{route?.name ? processForDisplay(route?.name) : t('notAvailable')}</div>
       <div className="tw-table-cell tw-px-2 tw-text-right">
         <Form.Control 
           as="select" 

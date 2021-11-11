@@ -8,7 +8,7 @@ import {
 
 import { 
   BeaconRecord
-} from "../../types";
+} from "../../domain";
 
 // requests
 
@@ -30,18 +30,18 @@ export type DeleteBeaconArgs = {
   id: number;
 };
 
-export type PostBeaconRecord = Typed<'postBeaconRecord', PostBeaconArgs>;
-export type PostBeaconRecordConfirmed = Typed<'postBeaconRecordConfirmed', SingleBeaconRecord>;
-export type PutBeaconRecord = Typed<'putBeaconRecord', PutBeaconArgs>;
-export type PutBeaconRecordConfirmed = Typed<'putBeaconRecordConfirmed', SingleBeaconRecord>;
-export type DeleteBeaconRecord = Typed<'deleteBeaconRecord', DeleteBeaconArgs>;
-export type DeleteBeaconRecordConfirmed = Typed<'deleteBeaconRecordConfirmed', SingleBeaconRecord>;
+export type PostBeaconRecord = (arg: Typed<'postBeaconRecord', PostBeaconArgs>) => void;
+export type PostBeaconRecordConfirmed = (arg: Typed<'postBeaconRecordConfirmed', SingleBeaconRecord>) => void;
+export type PutBeaconRecord = (arg: Typed<'putBeaconRecord', PutBeaconArgs>) => void;
+export type PutBeaconRecordConfirmed = (arg: Typed<'putBeaconRecordConfirmed', SingleBeaconRecord>) => void;
+export type DeleteBeaconRecord = (arg: Typed<'deleteBeaconRecord', DeleteBeaconArgs>) => void;
+export type DeleteBeaconRecordConfirmed = (arg: Typed<'deleteBeaconRecordConfirmed', SingleBeaconRecord>) => void;
 
 export type BeaconRecordList = {
   beaconRecords: BeaconRecord[]
 };
 
-export type SetBeaconRecords = Typed<'setBeaconRecords', BeaconRecordList>;
+export type SetBeaconRecords = (arg: Typed<'setBeaconRecords', BeaconRecordList>) => void;
 
 // events
 

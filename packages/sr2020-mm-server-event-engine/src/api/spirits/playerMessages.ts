@@ -1,4 +1,3 @@
-import Ajv, { JSONSchemaType } from "ajv";
 import { PlayerMessage } from "sr2020-mm-event-engine";
 import { createLogger } from "../../utils";
 import { pool } from "../pgPool";
@@ -16,7 +15,6 @@ export const getPlayerMessages = async function(): Promise<unknown[]> {
   });
 }
 
-
 export const playerMessages = async function(
   playerMessage: PlayerMessage
 ): Promise<void> {
@@ -26,25 +24,3 @@ export const playerMessages = async function(
     logger.info(`Error on posting player message ${JSON.stringify(playerMessage)}`, err);
   }
 }
-
-
-const ajv = new Ajv({
-  allErrors: true,
-  removeAdditional: true,
-  // useDefaults: true
-});
-
-const playerMessageSchema: JSONSchemaType<PlayerMessage> = {
-  type: "object",
-  properties: {
-    id: {type: "string"},
-    characterId: {type: "integer"},
-    spiritFractionId: {type: "integer"},
-    spiritId: {type: "integer"},
-    messageBody: {type: "string"},
-  },
-  required: [ "id", "characterId", 'messageBody', 'spiritFractionId', 'spiritId'],
-  additionalProperties: false,
-}
-
-export const validatePlayerMessage = ajv.compile(playerMessageSchema);

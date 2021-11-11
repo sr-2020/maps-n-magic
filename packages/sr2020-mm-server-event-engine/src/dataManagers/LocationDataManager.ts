@@ -1,6 +1,6 @@
 import * as R from 'ramda';
 
-import { GameModel, Identifiable, GMLogger } from "sr2020-mm-event-engine";
+import { GameModel, Identifiable, GMLogger, EntityUpdate } from "sr2020-mm-event-engine";
 
 import { DataProvider, ReadStrategy } from "./types";
 
@@ -37,7 +37,7 @@ export class LocationDataManager<
     // gameModel[action](`delete${this.ccEntityName}Requested`, this.onDeleteEntityRequested);
   }
 
-  onPutEntitiesRequested({ updates }: { updates: Entity[]; }) {
+  onPutEntitiesRequested({ updates }: { updates: EntityUpdate<Entity>[]; }) {
     if (this.inputChangeTimeout2 !== null){
       clearTimeout(this.inputChangeTimeout2);
     }

@@ -18,7 +18,7 @@ export interface SetEnableSpiritMovementArgs {
   enableSpiritMovement: boolean
 }
 
-export type SetEnableSpiritMovement = Typed<'setEnableSpiritMovement', SetEnableSpiritMovementArgs>;
+export type SetEnableSpiritMovement = (arg: Typed<'setEnableSpiritMovement', SetEnableSpiritMovementArgs>) => void;
 // export type EnableSpiritMovementConfirmed = Typed<'enableSpiritMovementConfirmed', SetEnableSpiritMovementArgs>;
 export type EEnableSpiritMovementConfirmed = Typed<'enableSpiritMovementConfirmed', SetEnableSpiritMovementArgs>;
 // export type EnableSpiritMovementChanged = Typed<'enableSpiritMovementChanged', SetEnableSpiritMovementArgs>;
@@ -82,7 +82,7 @@ export class SpiritMovementEnableService extends AbstractService<SpiritMovementE
     return this.enableSpiritMovement;
   }
 
-  setEnableSpiritMovement(action: SetEnableSpiritMovement): void {
+  setEnableSpiritMovement(action: Req<SetEnableSpiritMovement>): Res<SetEnableSpiritMovement> {
     const { enableSpiritMovement } = action;
     if (this.enableSpiritMovement === enableSpiritMovement) {
       return;

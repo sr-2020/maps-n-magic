@@ -9,7 +9,7 @@ import {
 import { 
   UserRecord,
   RawUserRecord
-} from "../../types";
+} from "../../domain";
 
 // requests
 
@@ -20,9 +20,9 @@ export type GetUserRecord = (arg: Typed<'userRecord', {
 
 // actions
 
-export type SetUserRecords = Typed<'setUserRecords', {
+export type SetUserRecords = (arg: Typed<'setUserRecords', {
   userRecords: RawUserRecord[];
-}>;
+}>) => void;
 
 // events
 

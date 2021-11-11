@@ -1,0 +1,25 @@
+export const manaOceanDictionary = {
+  // mana settings
+  neutralManaLevel: 'Neutral mana level',
+  moonName: 'Moon name',
+  moonPeriod_min: 'Period, step 10 min',
+  newMoonTime_min: 'New moon time (cycle beginning), step 10 min',
+  manaTideHeight: 'Tide height',
+  visibleMoon: 'Visible moon',
+  invisibleMoon: 'Invisible moon',
+  tideTimetable: 'Tide timetable',
+  tideHeight: 'Tide height',
+  tLabel_tideHeight: 'Mana level change, level',
+  time_hour: 'Day time, hour',
+  time: 'Time',
+  minute: 'minutes',
+  intervalDuration: 'Interval duration',
+  moscowTime: 'Moscow time',
+
+  statisticsByTime: 'Statistic by time',
+  tideLevel: 'Tide level',
+  timeSum: 'Time sum, hour',
+  timeSumTotal: 'Time sum total (reference), hour',
+  moonParameters: 'Moon parameters',
+  dailyBlackout: 'Daily blackout',
+};

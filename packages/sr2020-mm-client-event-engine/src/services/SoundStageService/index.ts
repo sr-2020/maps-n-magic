@@ -40,17 +40,17 @@ export class SoundStageService extends AbstractService<SoundStageServiceContract
     });
   }
 
-  setBackgroundSound({ trackData }: SetBackgroundSound) {
+  setBackgroundSound({ trackData }: Req<SetBackgroundSound>): Res<SetBackgroundSound> {
     this.backgroundSound = R.clone(trackData);
     this.emitSoundStageChanged();
   }
 
-  setRotationSounds({ rotation }: SetRotationSounds) {
+  setRotationSounds({ rotation }: Req<SetRotationSounds>): Res<SetRotationSounds> {
     this.rotationSounds = R.clone(rotation);
     this.emitSoundStageChanged();
   }
 
-  clearSoundStage(arg: ClearSoundStage) {
+  clearSoundStage(arg: Req<ClearSoundStage>): Res<ClearSoundStage> {
     const hasBackgroundSound = !!this.backgroundSound;
     let hasChanges = false;
     if (hasBackgroundSound) {

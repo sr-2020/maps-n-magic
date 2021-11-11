@@ -1,15 +1,9 @@
 import { 
-  Spirit,
-  SpiritFraction,
-  SpiritRoute
+  SpiritRoute, validateGenericRow, validateGenericRows
 } from 'sr2020-mm-event-engine';
 import * as R from 'ramda';
 
 import { pool } from "../pgPool";
-import { 
-  validateGenericRow, 
-  validateGenericRows
-} from "./genericRowValidation";
 import { createLogger } from '../../utils';
 
 const logger = createLogger('spiritRoutes.ts');

@@ -9,15 +9,17 @@ import Form from 'react-bootstrap/Form';
 import Button from 'react-bootstrap/Button';
 import Table from 'react-bootstrap/Table';
 
-import { HistoryItem, OrgHistoryItem } from 'sr2020-mm-event-engine';
+import { UserHistoryItem, MainHistoryItem } from 'sr2020-mm-event-engine';
+import { processForDisplay } from '../../i18n';
 
 interface CharacterLogsProps extends WithTranslation {
 }
 
 export function CharacterLogs(props: CharacterLogsProps) {
+  const { t } = props;
   const [characterId, setCharacterId] = useState<string>('');
-  const [orgLog, setOrgLog] = useState<OrgHistoryItem[]>([]);
-  const [userLog, setUserLog] = useState<HistoryItem[]>([]);
+  const [orgLog, setOrgLog] = useState<MainHistoryItem[]>([]);
+  const [userLog, setUserLog] = useState<UserHistoryItem[]>([]);
 
   const isValid = 
     characterId.trim() !== '' 
@@ -48,19 +50,19 @@ export function CharacterLogs(props: CharacterLogsProps) {
           onSubmit={onSubmit}
         >
           <Form.Group className="mb-3" controlId="formBasicEmail">
-            <Form.Label>Id персонажа</Form.Label>
+            <Form.Label>{t('characterId')}</Form.Label>
             <Form.Control value={characterId} onChange={(event: ChangeEvent<HTMLInputElement>) => {
               const { target: { value } } = event;
               setCharacterId(value);
             }}/>
           </Form.Group>
           <Button variant="primary" type="submit" disabled={!isValid}>
-            Показать логи
+            {t('showLogs')}
           </Button>
         </Form>
       </div>
       <div className="tw-mb-8">
-        <div className="tw-mb-4">Лог мастерский:</div>
+        <div className="tw-mb-4">{t('organizerLog')}</div>
         <div>
           <Table
             hover
@@ -79,7 +81,7 @@ export function CharacterLogs(props: CharacterLogsProps) {
                   <tr key={el.timestamp}>
                     <td className="tw-text-right">{moment(new Date(el.timestamp)).format('D MMM YYYY HH:mm:ss')}</td>
                     <td>{el.type}</td>
-                    <td>{el.message}</td>
+                    <td>{processForDisplay(el.message)}</td>
                   </tr>
                 ))
               }
@@ -88,7 +90,7 @@ export function CharacterLogs(props: CharacterLogsProps) {
         </div>
       </div>
       <div>
-        <div className="tw-mb-4">Лог игроцкий:</div>
+        <div className="tw-mb-4">{t('playerLog')}</div>
         <div>
           <Table
             hover
@@ -106,8 +108,8 @@ export function CharacterLogs(props: CharacterLogsProps) {
                 userLog.map(el => (
                   <tr key={el.timestamp}>
                     <td className="tw-text-right">{moment(new Date(el.timestamp)).format('D MMM YYYY HH:mm:ss')}</td>
-                    <td>{el.data.title}</td>
-                    <td>{el.data.text}</td>
+                    <td>{processForDisplay(el.data.title)}</td>
+                    <td>{processForDisplay(el.data.text)}</td>
                   </tr>
                 ))
               }

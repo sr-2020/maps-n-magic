@@ -4,7 +4,7 @@ import {
   getArrDiff, isGeoLocation, sample,
 } from '../../utils';
 import { makeTriangulationData } from '../../utils/makeTriangulationData';
-import { LocationRecord, TriangulationData } from "../../types";
+import { TriangulationData, LocationRecord, defaultLocationStyleOptions } from "../../domain";
 
 import { 
   AbstractService, 
@@ -35,13 +35,6 @@ import {
   LocationRecordServiceContract
 } from "./types";
 
-// duplicated in LocationHolder
-const defaultStyleOptions = {
-  color: '#3388ff',
-  weight: 3,
-  fillOpacity: 0.2,
-};
-
 const extractPolygonData = (list: LocationRecord[]): Pick<LocationRecord, 'id'|'polygon'>[] => 
   list.filter(isGeoLocation).map(R.pick(['id', 'polygon']));
 
@@ -66,7 +59,7 @@ export class LocationRecordService extends AbstractService<LocationRecordService
     this.locationRecords = locationRecords;
     this.locationRecords.forEach((loc) => {
       loc.options = {
-        ...defaultStyleOptions,
+        ...defaultLocationStyleOptions,
         ...loc.options,
       };
     });
@@ -98,7 +91,7 @@ export class LocationRecordService extends AbstractService<LocationRecordService
     return R.clone(locationRecord);
   }
 
-  setLocationRecords({ locationRecords }: SetLocationRecords): void {
+  setLocationRecords({ locationRecords }: Req<SetLocationRecords>): Res<SetLocationRecords> {
     // this.logger.info('setLocationRecords');
     this.setData({ locationRecords });
     this.emit2({
@@ -181,14 +174,14 @@ export class LocationRecordService extends AbstractService<LocationRecordService
     });
   }
 
-  postLocationRecord = (action: PostLocationRecord): void => {
+  postLocationRecord = (action: Req<PostLocationRecord>): Res<PostLocationRecord> => {
     this.emit2({
       ...action,
       type: 'postLocationRecordRequested'
     });
   }
 
-  postLocationRecordConfirmed({ locationRecord }: PostLocationRecordConfirmed): void {
+  postLocationRecordConfirmed({ locationRecord }: Req<PostLocationRecordConfirmed>): Res<PostLocationRecordConfirmed> {
     // console.log('postBeaconRecord');
     const updatedLocationRecords = [...this.locationRecords, locationRecord];
     this.innerSetLocationRecords(updatedLocationRecords);
@@ -198,14 +191,14 @@ export class LocationRecordService extends AbstractService<LocationRecordService
     });
   }
 
-  putLocationRecord(action: PutLocationRecord): void {
+  putLocationRecord(action: Req<PutLocationRecord>): Res<PutLocationRecord> {
     this.emit2({
       ...action,
       type: 'putLocationRecordRequested'
     });
   }
 
-  putLocationRecordConfirmed({ locationRecord }: PutLocationRecordConfirmed): void {
+  putLocationRecordConfirmed({ locationRecord }: Req<PutLocationRecordConfirmed>): Res<PutLocationRecordConfirmed> {
     const index = this.locationRecords.findIndex((br) => br.id === locationRecord.id);
     const updatedLocationRecords = [...this.locationRecords];
     updatedLocationRecords[index] = locationRecord;
@@ -216,14 +209,14 @@ export class LocationRecordService extends AbstractService<LocationRecordService
     });
   }
 
-  deleteLocationRecord = (action: DeleteLocationRecord): void => {
+  deleteLocationRecord = (action: Req<DeleteLocationRecord>): Res<DeleteLocationRecord> => {
     this.emit2({
       ...action,
       type: 'deleteLocationRecordRequested'
     });
   }
 
-  deleteLocationRecordConfirmed({ locationRecord }: DeleteLocationRecordConfirmed): void {
+  deleteLocationRecordConfirmed({ locationRecord }: Req<DeleteLocationRecordConfirmed>): Res<DeleteLocationRecordConfirmed> {
     const updatedLocationRecords = this.locationRecords.filter((br) => br.id !== locationRecord.id);
     this.innerSetLocationRecords(updatedLocationRecords);
     this.emit2({ 
@@ -232,14 +225,14 @@ export class LocationRecordService extends AbstractService<LocationRecordService
     });
   }
 
-  putLocationRecords(action: PutLocationRecords): void {
+  putLocationRecords(action: Req<PutLocationRecords>): Res<PutLocationRecords> {
     this.emit2({
       ...action,
       type: 'putLocationRecordsRequested'
     });
   }
 
-  putLocationRecordsConfirmed({ locationRecords }: PutLocationRecordsConfirmed): void {
+  putLocationRecordsConfirmed({ locationRecords }: Req<PutLocationRecordsConfirmed>): Res<PutLocationRecordsConfirmed> {
     // console.log('locationRecords', locationRecords);
     const locationRecordsIndex = R.indexBy(R.prop('id'), locationRecords);
     const updatedLocationRecords = this.locationRecords.map((locationRecord) => {

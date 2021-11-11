@@ -62,6 +62,13 @@ import {
   ESetSpiritPhrases,
   ESpiritPhrasesChanged,
   GetSpiritPhrases,
+  // background image
+  EPostBackgroundImageRequested,
+  EPutBackgroundImageRequested,
+  EDeleteBackgroundImageRequested,
+  ESetBackgroundImages,
+  EBackgroundImagesChanged,
+  GetBackgroundImages,
   // misc
   EPostSettingsRequested,
   EPutCharHealthRequested,
@@ -126,6 +133,7 @@ type ForwardServer2ClientEvent =
   | EEnableSpiritMovementChanged
   | EFeaturesChanged
   | EPlayerMessagesChanged
+  | EBackgroundImagesChanged
 ;
 
 // In reality this is event list, not actions.
@@ -150,7 +158,8 @@ const forwardServer2ClientActions: ForwardServer2ClientEvent["type"][] = [
   'enableSpiritMovementChanged',
   // 'characterHealthStateChanged',
   'featuresChanged',
-  'playerMessagesChanged'
+  'playerMessagesChanged',
+  'backgroundImagesChanged'
 ];
 
 type WsEmitEvent = 
@@ -165,6 +174,7 @@ type WsEmitEvent =
   | EEnableSpiritMovementConfirmed
   | ESetFeatures
   | ESetPlayerMessages
+  | ESetBackgroundImages
 ;
 
 const wsEmitEvents: WsEmitEvent["type"][] = [
@@ -179,6 +189,7 @@ const wsEmitEvents: WsEmitEvent["type"][] = [
   "setSpiritPhrases",
   "setFeatures",
   "setPlayerMessages",
+  "setBackgroundImages"
 ];
 
 type ForwardClient2ServerEventTypes = (
@@ -206,6 +217,10 @@ type ForwardClient2ServerEventTypes = (
   | EPostSpiritPhraseRequested
   | EPutSpiritPhraseRequested
   | EDeleteSpiritPhraseRequested
+  // background image
+  | EPostBackgroundImageRequested
+  | EPutBackgroundImageRequested
+  | EDeleteBackgroundImageRequested
   // misc
   | EPutCharHealthRequested
   | EEnableManaOceanRequested
@@ -243,6 +258,10 @@ const forwardClient2ServerEvents: ForwardClient2ServerEventTypes[] = [
   'postSpiritPhraseRequested',
   'putSpiritPhraseRequested',
   'deleteSpiritPhraseRequested',
+  // background image
+  'postBackgroundImageRequested',
+  'putBackgroundImageRequested',
+  'deleteBackgroundImageRequested',
   // 'postManaOceanSettingsRequested',
   'postSettingsRequested',
   'putCharHealthRequested',
@@ -281,6 +300,7 @@ type PayloadToEventBindings =
   | PayloadToEventBinding<GetEnableSpiritMovement, EEnableSpiritMovementChanged>
   | PayloadToEventBinding<GetFeatures, EFeaturesChanged>
   | PayloadToEventBinding<GetPlayerMessages, EPlayerMessagesChanged>
+  | PayloadToEventBinding<GetBackgroundImages, ESetBackgroundImages>
 ;
 
 export class WsDataBinding extends AbstractEventProcessor {
@@ -390,6 +410,9 @@ export class WsDataBinding extends AbstractEventProcessor {
       }, {
         type: 'playerMessagesChanged',
         payload: 'playerMessages',
+      }, {
+        type: 'backgroundImagesChanged',
+        payload: 'backgroundImages',
       }],
       forwardActions: forwardServer2ClientActions,
       ignoreClientMessages: this.ignoreClientMessages
@@ -590,6 +613,14 @@ export class WsDataBinding extends AbstractEventProcessor {
       this.gameModel.emit2<WsEmitEvent>({
         ...data,
         type: 'setPlayerMessages'
+      });
+      return;
+    }
+
+    if (data.type === 'backgroundImagesChanged') {
+      this.gameModel.emit2<WsEmitEvent>({
+        ...data,
+        type: 'setBackgroundImages'
       });
       return;
     }

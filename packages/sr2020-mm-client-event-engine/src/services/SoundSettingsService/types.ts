@@ -17,18 +17,18 @@ export type GetSoundSettings = (arg: Typed<'soundSettings'>) => SoundSettings;
 
 // actions
 
-export type SetRotationTimeout = Typed<'setRotationTimeout', {
+export type SetRotationTimeout = (arg: Typed<'setRotationTimeout', {
   rotationTimeout: number;
-}>;
-export type SetRotationSoundTimeout = Typed<'setRotationSoundTimeout', {
+}>) => void;
+export type SetRotationSoundTimeout = (arg: Typed<'setRotationSoundTimeout', {
   rotationSoundTimeout: number;
-}>;
-export type SetBackgroundVolume = Typed<'setBackgroundVolume', {
+}>) => void;
+export type SetBackgroundVolume = (arg: Typed<'setBackgroundVolume', {
   backgroundVolume: number;
-}>;
-export type SetRotationVolume = Typed<'setRotationVolume', {
+}>) => void;
+export type SetRotationVolume = (arg: Typed<'setRotationVolume', {
   rotationVolume: number;
-}>;
+}>) => void;
 
 // events
 

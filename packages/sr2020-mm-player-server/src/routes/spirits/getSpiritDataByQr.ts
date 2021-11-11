@@ -10,12 +10,13 @@ import {
 } from "sr2020-mm-event-engine";
 import { 
   createLogger, 
-  getQrModelData, 
+  ExpectedQr, 
+  GetQrModelData, 
   getSpiritWithFractionAbilities, 
-  PlayerAuthorizedRequest, 
   translateAbilities, 
   validateSpiritJarQrModelData 
 } from "sr2020-mm-server-event-engine";
+import { PlayerAuthorizedRequest } from '../../types';
 import { decode } from "../../utils";
 import { qrIdIsNanError } from "./utils";
 
@@ -24,6 +25,7 @@ const logger = createLogger('getSpiritDataByQr.ts');
 export const getSpiritDataByQr = async (req1, res, next) => {
   const req = req1 as PlayerAuthorizedRequest;
   const { spiritJarQrString } = req.query;
+  const { gameModel } = req;
   if (typeof spiritJarQrString !== 'string') {
     const errorResponse: ErrorResponse = {
       errorTitle: 'Получен неправильный параметр запроса',
@@ -41,8 +43,11 @@ export const getSpiritDataByQr = async (req1, res, next) => {
       return;
     }
 
-    const qrModelData = await getQrModelData(qrId);
-    // const qrModelData = await getQrModelData(qrId + 1000000);
+    const qrModelData = await gameModel.get2<GetQrModelData>({
+      type: 'qrModelData',
+      qrId,
+      expectedQr: ExpectedQr.anySpiritJar
+    });
 
     const validationRes = validateSpiritJarQrModelData(qrModelData);
 

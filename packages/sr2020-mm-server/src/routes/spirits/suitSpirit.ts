@@ -16,32 +16,30 @@ import {
 } from 'sr2020-mm-event-engine';
 import { 
   createLogger, 
-  freeSpiritFromStorage, 
-  getQrModelData, 
   getSpiritWithFractionAbilities, 
   InnerApiRequest, 
-  putSpiritInStorage, 
-  suitSpirit, 
+  // suitSpirit, 
   translateAbilities, 
   validateBodyStorageQrModelData, 
   validateSpiritJarQrModelData,
   EndpointId, 
   EndpointLogger,
-  getCharacterModelData,
-  PutSpiritRequestedCall, 
+  PutSpiritRequestedCall,
+  GetQrModelData,
+  GetCharacterModelData,
+  SuitSpirit,
+  ExpectedQr, 
 } from 'sr2020-mm-server-event-engine';
 import { waitForSpiritSuited } from './utils';
 
 const logger = createLogger('suitSpirit.ts');
 
 export const mainSuitSpirit = async (req1, res, next) => {
-  const eLogger = new EndpointLogger(logger, EndpointId.SUIT_SPIRIT);
+  const req = req1 as InnerApiRequest;
+  const { gameModel, body } = req;
+  const eLogger = new EndpointLogger(gameModel, logger, EndpointId.SUIT_SPIRIT);
   try {
-    
     // logger.info('mainSuitSpirit')
-    const req = req1 as InnerApiRequest;
-    const { body } = req;
-
     eLogger.attempt(body);
 
     if (!validateSuitSpiritInternalRequest(body)) {
@@ -56,8 +54,11 @@ export const mainSuitSpirit = async (req1, res, next) => {
 
     // copied from player-server isSpiritJarValid
 
-    const qrModelData1 = await getQrModelData(spiritJarId);
-    // const qrModelData = await getQrModelData(qrId + 1000000);
+    const qrModelData1 = await gameModel.get2<GetQrModelData>({
+      type: 'qrModelData',
+      qrId: spiritJarId,
+      expectedQr: ExpectedQr.fullSpiritJar
+    });
 
     const validationRes1 = validateSpiritJarQrModelData(qrModelData1);
 
@@ -96,8 +97,11 @@ export const mainSuitSpirit = async (req1, res, next) => {
 
     // copied from player-server isBodyStorageValid
 
-    const qrModelData = await getQrModelData(bodyStorageId);
-    // const qrModelData = await getQrModelData(qrId + 1000000);
+    const qrModelData = await gameModel.get2<GetQrModelData>({
+      type: 'qrModelData',
+      qrId: bodyStorageId,
+      expectedQr: ExpectedQr.emptyBodyStorage
+    });
 
     const validationRes = validateBodyStorageQrModelData(qrModelData);
 
@@ -170,14 +174,23 @@ export const mainSuitSpirit = async (req1, res, next) => {
 
     const result = await waitForSpiritSuited('suitSpirit', req.gameModel, spiritId);
 
-    const res2 = await suitSpirit(characterId, {
-      "name": spirit.name,
-      "hp": spirit.hitPoints,
-      // "abilityIds": ["fireball-keeper", "aurma"],
-      "abilityIds": spirit2.abilities,
-    }, bodyStorageId, spiritJarId);
+    const res2 = await gameModel.execute2<SuitSpirit>({
+      type: 'suitSpirit',
+      characterId, 
+      spiritProps: {
+        "name": spirit.name,
+        "hp": spirit.hitPoints,
+        // "abilityIds": ["fireball-keeper", "aurma"],
+        "abilityIds": spirit2.abilities,
+      }, 
+      bodyStorageId, 
+      spiritStorageId: spiritJarId
+    });
 
-    const characterData = await getCharacterModelData(characterId);
+    const characterData = await gameModel.get2<GetCharacterModelData>({
+      type: 'characterModelData',
+      modelId: characterId
+    });
 
     const isInEctoplasmBody = characterData.workModel.currentBody === 'ectoplasm';
     logger.info(`Character ${characterId} isInEctoplasmBody ${isInEctoplasmBody}`);

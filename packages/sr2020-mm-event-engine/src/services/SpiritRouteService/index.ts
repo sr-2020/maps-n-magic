@@ -9,7 +9,7 @@ import {
   Res
 } from '../../core';
 
-import { SpiritRoute } from "../../types";
+import { SpiritRoute } from "../../domain";
 
 import { 
   spiritRouteMetadata,
@@ -144,7 +144,7 @@ export class SpiritRouteService extends AbstractService<SpiritRouteServiceContra
 
   private _makeSpiritRouteName(name: string): string {
     const spiritRouteMap = R.indexBy(R.prop('name'), this.spiritRoutes);
-    const base = `${name} клон`;
+    const base = `${name} clone`;
     let newName = base;
     let counter = 1;
     // eslint-disable-next-line eqeqeq

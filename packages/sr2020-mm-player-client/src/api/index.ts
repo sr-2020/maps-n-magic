@@ -3,8 +3,7 @@ import {
   SpiritJarQr, 
   validateErrorResponse, 
   ConsequenceStatus,
-  HistoryItem,
-  // SpiritDataForQrValidation, 
+  UserHistoryItem,
   Spirit, 
   stringifyError
 } from "sr2020-mm-event-engine";
@@ -28,7 +27,7 @@ export async function loginUser(credentials: {
       return errorResponse;
     } else {
       return {
-        errorTitle: 'Неизвестная ошибка',
+        errorTitle: 'Unknown error',
         errorSubtitle: JSON.stringify(validateErrorResponse.errors)
       };
     }
@@ -114,7 +113,7 @@ export async function suitSpirit(
   return await res.json();
 }
 
-export async function loadHistory(): Promise<ErrorResponse | HistoryItem[]> {
+export async function loadHistory(): Promise<ErrorResponse | UserHistoryItem[]> {
   const res = await fetch('/api/loadHistory');
   return await res.json();
 }

@@ -9,7 +9,7 @@ import {
   Res
 } from '../../core';
 
-import { UserRecord, RawUserRecord } from "../../types";
+import { UserRecord, RawUserRecord } from "../../domain";
 
 import { 
   urMetadata,
@@ -105,7 +105,7 @@ export class UserRecordService extends AbstractService<UserRecordServiceContract
     return R.clone(record);
   }
 
-  setUserRecords({ userRecords }: SetUserRecords): void {
+  setUserRecords({ userRecords }: Req<SetUserRecords>): Res<SetUserRecords> {
     this.setData({ userRecords });
     this.emit2({
       type: 'userRecordsChanged',
