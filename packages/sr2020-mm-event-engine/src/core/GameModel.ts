@@ -6,7 +6,7 @@ import { GameModelVerificator } from './GameModelVerificator';
 import { AbstractService } from './AbstractService';
 import { AbstractEventProcessor } from "./AbstractEventProcessor";
 
-import { GMAction, GMRequest, GMLogger, GMTyped, GMEvent, Req, Res, TypeOnly } from "./types";
+import { GMAction, GMRequest, GMLogger, GMTyped, GMEvent, Req, Res, TypeOnly, EventProcessorMetadata, DefaultServiceContract, ServiceContractTypes } from "./types";
 import { stringToType, getChildLogger } from "./utils";
 
 export interface ServiceIndex {
@@ -34,6 +34,24 @@ export class GameModelImpl extends EventEmitter {
     this.verificator = new GameModelVerificator();
     this.services = [];
     this.eventProcessors = [];
+  }
+
+  getMetadata(): { 
+    services: Record<string, ServiceContractTypes<DefaultServiceContract>>; 
+    eventProcessors: Record<string, EventProcessorMetadata>; 
+  } {
+    const services = this.services.reduce((acc, service) => {
+      acc[service.constructor.name] = service.metadata;
+      return acc;
+    }, {} as Record<string, ServiceContractTypes<DefaultServiceContract>>);
+    const eventProcessors = this.eventProcessors.reduce((acc, eventProcessor) => {
+      acc[eventProcessor.getName()] = eventProcessor.getMetadata();
+      return acc;
+    }, {} as Record<string, EventProcessorMetadata>);
+    return {
+      services,
+      eventProcessors
+    };
   }
 
   // init(serviceClasses: typeof AbstractService[]) {

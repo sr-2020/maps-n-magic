@@ -43,10 +43,9 @@ export class SettingsDataManager<U extends SettingsData, T extends SettingsResou
     private dataProvider: T, 
     private settingsName: string, 
     private readStrategy: ReadStrategy, 
-    // rest: {
     defaultSettings: U,
-    protected logger: GMLogger
-    // }
+    protected logger: GMLogger,
+    protected name: string,
   ) {
     super(gameModel, logger);
     // this.logger.info('SettingsDataManager rest', args);
@@ -65,6 +64,10 @@ export class SettingsDataManager<U extends SettingsData, T extends SettingsResou
     // this.dataProvider = dataProvider;
     // this.readStrategy = readStrategy;
     this.onPostSettingsRequested = this.onPostSettingsRequested.bind(this);
+    this.setMetadata({
+      emitEvents: ['postNotification'], // postSettingsConfirmed, setSettings
+      listenEvents: ['postSettingsRequested']
+    });
   }
 
   init() {
@@ -82,6 +85,10 @@ export class SettingsDataManager<U extends SettingsData, T extends SettingsResou
     this.readStrategy.dispose();
     // super.dispose();
     this.subscribe('off', this.gameModel);
+  }
+
+  getName() {
+    return this.name;
   }
 
   subscribe(action: 'on' | 'off', gameModel: GameModel): void {

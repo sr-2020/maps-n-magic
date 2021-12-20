@@ -5,7 +5,8 @@
   "private": true,
   "scripts": {
     "ts:build": "tsc",
-    "ts:watch": "tsc --watch --preserveWatchOutput"
+    "ts:watch": "tsc --watch --preserveWatchOutput",
+    "make-schema": "node .\\dist\\eventEngineSchema\\index.js"
   },
   "main": "dist/index.js",
   "typings": "dist/index.d.ts",

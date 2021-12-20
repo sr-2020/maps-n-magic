@@ -17,14 +17,14 @@ import {
 import { Gettable } from '../api/types';
 import { PubSubDataSource } from './types';
 
-const metadata = {
-  actions: [],
-  requests: [],
-  emitEvents: ['postNotification'],
-  listenEvents: [],
-  needRequests: [],
-  needActions: ['setCharacterLocation', 'setAllCharacterLocations']
-};
+// const metadata = {
+//   actions: [],
+//   requests: [],
+//   emitEvents: ['postNotification', 'setCharacterLocation', 'setAllCharacterLocations'],
+//   listenEvents: [],
+//   needRequests: [],
+//   needActions: []
+// };
 
 export class CharacterLocDataManager extends AbstractEventProcessor {
   logger: GMLogger;
@@ -43,7 +43,7 @@ export class CharacterLocDataManager extends AbstractEventProcessor {
     this.logger = childLogger;
     this.onMessage = this.onMessage.bind(this);
     this.setMetadata({
-      emitEvents: ["setCharacterLocation", "setAllCharacterLocations"]
+      emitEvents: ["setCharacterLocation", "setAllCharacterLocations",'postNotification']
     })
   }
 
@@ -52,6 +52,7 @@ export class CharacterLocDataManager extends AbstractEventProcessor {
       await this.load();
       this.pubSubDataSource.on('message', this.onMessage);
     } catch (err) {
+      // @ts-ignore
       this.getErrorHandler('Unexpected error')(err);
     }
   }

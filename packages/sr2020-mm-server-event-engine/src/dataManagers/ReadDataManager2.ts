@@ -35,6 +35,7 @@ export class ReadDataManager2<
     protected entityName: string, 
     private readStrategy: ReadStrategy,
     logger: GMLogger, 
+    protected name: string,
   ) {
     super(gameModel, logger);
     this.entities = [];
@@ -54,6 +55,10 @@ export class ReadDataManager2<
   // eslint-disable-next-line class-methods-use-this
   dispose() {
     this.readStrategy.dispose();
+  }
+
+  getName() {
+    return this.name;
   }
 
   async load() {
@@ -81,6 +86,7 @@ export class ReadDataManager2<
         [this.plural]: R.clone(this.entities),
       });
     } catch(err) {
+      // @ts-ignore
       this.getErrorHandler(`Error on ${this.entityName} loading`)(err);
     }
   }

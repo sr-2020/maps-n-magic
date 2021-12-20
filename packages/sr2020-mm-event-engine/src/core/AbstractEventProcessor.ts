@@ -1,3 +1,5 @@
+import * as R from 'ramda';
+
 import { 
   Metadata, 
   GMAction, 
@@ -20,13 +22,28 @@ export class AbstractEventProcessor<
   };
 
   public constructor(protected gameModel: GameModel, protected logger: GMLogger) {}
+
+  public getName() {
+    return this.constructor.name;
+  }
   
   public init() {}
 
   public dispose() {}
 
   public setMetadata(metadata: Partial<EventProcessorMetadata>): void {
-    this.metadata = { ...this.metadata, ...metadata };
+    if (metadata.emitEvents) {
+      this.metadata.emitEvents = R.uniq([
+        ...this.metadata.emitEvents, 
+        ...metadata.emitEvents
+      ]);
+    }
+    if (metadata.listenEvents) {
+      this.metadata.listenEvents = R.uniq([
+        ...this.metadata.listenEvents, 
+        ...metadata.listenEvents
+      ]);
+    }
   }
 
   public getMetadata(): EventProcessorMetadata {

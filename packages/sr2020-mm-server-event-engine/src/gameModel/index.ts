@@ -199,6 +199,8 @@ export function makeGameModel(): {
   dataProviders.charLocation2PubSub.start();
   dataProviders.healthChangePubSub.start();
 
+  createLogger('json').info(JSON.stringify(gameModel.getMetadata(), null, '  '));
+
   return { gameModel, gameServer };
 }
 
@@ -213,7 +215,8 @@ function addPositionDataBindings(
     dataProviders.beaconRecordProvider,
     'beaconRecord',
     new PollingReadStrategy(gameModel, 15000, beaconRecordLogger),
-    beaconRecordLogger
+    beaconRecordLogger,
+    'beaconRecordDataBinding'
   );
   beaconRecordDataBinding.init();
   gameServer.addDataBinding(beaconRecordDataBinding);
@@ -224,7 +227,8 @@ function addPositionDataBindings(
     dataProviders.locationRecordProvider,
     'locationRecord',
     new PollingReadStrategy(gameModel, 15000, locationRecordLogger),
-    locationRecordLogger
+    locationRecordLogger,
+    'locationRecordDataBinding'
   );
   locationRecordDataBinding.init();
   gameServer.addDataBinding(locationRecordDataBinding);
@@ -235,7 +239,8 @@ function addPositionDataBindings(
     dataProviders.userRecordProvider,
     'userRecord',
     new PollingReadStrategy(gameModel, 15000, userRecordLogger, 'reloadUserRecords'),
-    userRecordLogger
+    userRecordLogger,
+    'userRecordDataBinding'
   );
   userRecordDataBinding.init();
   gameServer.addDataBinding(userRecordDataBinding);
@@ -246,7 +251,8 @@ function addPositionDataBindings(
     dataProviders.backgroundImageProvider,
     'backgroundImage',
     new PollingReadStrategy(gameModel, 15000, backgroundImageLogger),
-    backgroundImageLogger
+    backgroundImageLogger,
+    'backgroundImageDataBinding',
   );
   backgroundImageDataBinding.init();
   gameServer.addDataBinding(backgroundImageDataBinding);
@@ -266,6 +272,7 @@ function addManaOceanDataBindings(
     new PollingReadStrategy(gameModel, 15000, manaOceanSettingsLogger),
     defaultManaOceanSettings,
     manaOceanSettingsLogger,
+    'manaOceanSettingsDB',
   );
   manaOceanSettingsDB.init();
   gameServer.addDataBinding(manaOceanSettingsDB);
@@ -278,6 +285,7 @@ function addManaOceanDataBindings(
     new PollingReadStrategy(gameModel, 15000, manaOceanEffectsSettingsLogger),
     manaOceanEffectSettings,
     manaOceanEffectsSettingsLogger,
+    'manaOceanEffectsSettingsDB',
   );
   manaOceanEffectsSettingsDB.init();
   gameServer.addDataBinding(manaOceanEffectsSettingsDB);
@@ -294,7 +302,8 @@ function addSpiritDataBindings(
     dataProviders.spiritProvider,
     'spirit',
     new PollingReadStrategy(gameModel, 15000, spiritLogger),
-    spiritLogger
+    spiritLogger,
+    'spiritDataBinding',
   );
   spiritDataBinding.init();
   gameServer.addDataBinding(spiritDataBinding);
@@ -309,7 +318,8 @@ function addSpiritDataBindings(
     dataProviders.spiritFractionProvider,
     'spiritFraction',
     new PollingReadStrategy(gameModel, 15000, spiritFractionLogger),
-    spiritFractionLogger
+    spiritFractionLogger,
+    'spiritFractionDataBinding'
   );
   spiritFractionDataBinding.init();
   gameServer.addDataBinding(spiritFractionDataBinding);
@@ -320,7 +330,8 @@ function addSpiritDataBindings(
     dataProviders.spiritRouteProvider,
     'spiritRoute',
     new PollingReadStrategy(gameModel, 15000, spiritRouteLogger),
-    spiritRouteLogger
+    spiritRouteLogger,
+    'spiritRouteDataBinding',
   );
   spiritRouteDataBinding.init();
   gameServer.addDataBinding(spiritRouteDataBinding);
@@ -331,7 +342,8 @@ function addSpiritDataBindings(
     dataProviders.spiritPhraseProvider,
     'spiritPhrase',
     new PollingReadStrategy(gameModel, 15000, spiritPhraseLogger),
-    spiritPhraseLogger
+    spiritPhraseLogger,
+    'spiritPhraseDataBinding',
   );
   spiritPhraseDataBinding.init();
   gameServer.addDataBinding(spiritPhraseDataBinding);
@@ -342,7 +354,8 @@ function addSpiritDataBindings(
     dataProviders.playerMessageProvider,
     'playerMessage',
     new PollingReadStrategy(gameModel, 15000, playerMessageLogger), // 1 minute
-    playerMessageLogger
+    playerMessageLogger,
+    'playerMessagesDataBinding',
   );
   playerMessageDataBinding.init();
   gameServer.addDataBinding(playerMessageDataBinding);
@@ -353,7 +366,8 @@ function addSpiritDataBindings(
     dataProviders.featureProvider,
     'feature',
     new PollingReadStrategy(gameModel, 60 * 60 * 1000, featureLogger), // 1 hour
-    featureLogger
+    featureLogger,
+    'featureDataBinding',
   );
   featureDataBinding.init();
   gameServer.addDataBinding(featureDataBinding);

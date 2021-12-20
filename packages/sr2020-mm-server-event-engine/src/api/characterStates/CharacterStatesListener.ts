@@ -18,10 +18,10 @@ import { PubSubDataSource } from '../../dataManagers/types';
 // const metadata = {
 //   actions: [],
 //   requests: [],
-//   emitEvents: [],
+//   emitEvents: ['putCharHealthRequested'],
 //   listenEvents: [],
 //   needRequests: [],
-//   needActions: ['putCharHealth']
+//   needActions: []
 // };
 
 export class CharacterStatesListener extends AbstractEventProcessor {

@@ -23,12 +23,23 @@ export class CrudDataManager<
     entityName: string, 
     readStrategy: ReadStrategy,
     logger: GMLogger, 
+    name: string
   ) {
-    super(gameModel, dataProvider, entityName, readStrategy, logger);
+    super(gameModel, dataProvider, entityName, readStrategy, logger, name);
     this.onPostEntityRequested = this.onPostEntityRequested.bind(this);
     this.onPutEntityRequested = this.onPutEntityRequested.bind(this);
     this.onDeleteEntityRequested = this.onDeleteEntityRequested.bind(this);
     this.putEntityTimeoutIndex = {};
+    this.setMetadata({
+      // `post${this.ccEntityName}Confirmed`
+      // `put${this.ccEntityName}Confirmed` 
+      // `delete${this.ccEntityName}Confirmed`
+      listenEvents: [
+        `post${this.ccEntityName}Requested`,
+        `put${this.ccEntityName}Requested`,
+        `delete${this.ccEntityName}Requested`
+      ]
+    });
   }
 
   init() {

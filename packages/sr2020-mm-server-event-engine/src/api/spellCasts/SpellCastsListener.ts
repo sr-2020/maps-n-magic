@@ -13,16 +13,16 @@ import shortid from 'shortid';
 import { mmLog } from '../spirits/mmLog';
 import { PubSubDataSource } from '../../dataManagers/types';
 
-const metadata = {
-  actions: [],
-  requests: [],
-  emitEvents: [],
-  listenEvents: [],
-  needRequests: [],
-  needActions: ['spellCast']
-};
+// const metadata = {
+//   actions: [],
+//   requests: [],
+//   emitEvents: ['spellCast'],
+//   listenEvents: [],
+//   needRequests: [],
+//   needActions: []
+// };
 
-export class SpellCastsListener extends AbstractEventProcessor {
+export class SpellCastsListener extends AbstractEventProcessor<ESpellCast> {
   constructor(
     protected gameModel: GameModel, 
     protected pubSubDataSource: PubSubDataSource<RawSpellCast>,

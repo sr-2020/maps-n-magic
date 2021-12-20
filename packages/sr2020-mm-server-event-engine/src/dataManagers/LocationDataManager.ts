@@ -21,12 +21,17 @@ export class LocationDataManager<
     dataProvider: T, 
     entityName: string, 
     readStrategy: ReadStrategy,
-    logger: GMLogger
+    logger: GMLogger,
+    name: string,
   ) {
-    super(gameModel, dataProvider, entityName, readStrategy, logger);
+    super(gameModel, dataProvider, entityName, readStrategy, logger, name);
     // this.onPostEntityRequested = this.onPostEntityRequested.bind(this);
     this.onPutEntitiesRequested = this.onPutEntitiesRequested.bind(this);
     // this.onDeleteEntityRequested = this.onDeleteEntityRequested.bind(this);
+    this.setMetadata({
+      // `put${this.ccEntityName}sConfirmed`
+      listenEvents: [`put${this.ccEntityName}sRequested`]
+    });
   }
 
   // eslint-disable-next-line react/sort-comp

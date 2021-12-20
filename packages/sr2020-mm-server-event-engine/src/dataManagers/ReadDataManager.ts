@@ -29,7 +29,8 @@ export class ReadDataManager<Entity, T extends Gettable<Entity>> extends Abstrac
     protected dataProvider: T, 
     protected entityName: string, 
     private readStrategy: ReadStrategy,
-    protected logger: GMLogger, 
+    protected logger: GMLogger,
+    protected name: string,
   ) {
     super(gameModel, logger);
     this.entities = [];
@@ -37,7 +38,7 @@ export class ReadDataManager<Entity, T extends Gettable<Entity>> extends Abstrac
     this.plural = `${entityName}s`;
     this.ccEntityName = capitalizeFirstLetter(entityName);
     this.setMetadata({
-      emitEvents: ['postNotification']
+      emitEvents: ['postNotification'] // `set${this.ccEntityName}s`
     });
   }
 
@@ -48,6 +49,10 @@ export class ReadDataManager<Entity, T extends Gettable<Entity>> extends Abstrac
   // eslint-disable-next-line class-methods-use-this
   dispose() {
     this.readStrategy.dispose();
+  }
+
+  getName() {
+    return this.name;
   }
 
   load() {

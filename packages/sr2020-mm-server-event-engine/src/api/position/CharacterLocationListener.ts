@@ -12,10 +12,10 @@ import { PubSubDataSource } from '../../dataManagers/types';
 // const metadata = {
 //   actions: [],
 //   requests: [],
-//   emitEvents: [],
+//   emitEvents: ['putCharLocationRequested'],
 //   listenEvents: [],
 //   needRequests: [],
-//   needActions: ['putCharLocation']
+//   needActions: []
 // };
 
 export class CharacterLocationListener extends AbstractEventProcessor {
