@@ -43,6 +43,7 @@ export interface FeatureServiceContract extends ServiceContract {
   ListenEvent: ESetFeatures;
 }
 
+// @ts-ignore
 const sort = R.sortBy(R.pipe(R.prop('humanReadableName'), R.toLower)) as (features: Feature[]) => Feature[];
 
 export const featureMetadata: ServiceContractTypes<FeatureServiceContract> = {

@@ -491,6 +491,7 @@ function connectClustersWithGreedyTree(clusterDists: ClusterDist[][]): Set<EdgeI
   const filterClusterDists: (clusterDists: ClusterDist[][]) => ClusterDist[] = R.pipe(
     // @ts-ignore
     R.flatten,
+    // @ts-ignore
     R.filter(({ locId1, locId2 }) => locId1 < locId2),
     R.sortBy(R.prop('minDist')),
   );

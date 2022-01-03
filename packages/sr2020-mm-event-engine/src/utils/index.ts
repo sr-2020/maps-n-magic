@@ -99,7 +99,7 @@ export function latLngsToBounds(latLngs: L.LatLngLiteral[]): L.LatLngBounds {
 // based on Leaflet implementation
 // https://github.com/Leaflet/Leaflet/blob/37d2fd15ad6518c254fae3e033177e96c48b5012/src/layer/vector/Polygon.js#L76
 export function getPolygonCentroid(polygon: SRPolygon): SRLatLng {
-  const pairs = R.aperture(2, [...polygon[0], polygon[0][0]]);
+  const pairs = R.aperture(2, [...polygon[0], polygon[0][0]]) as [SRLatLng, SRLatLng][];
   const data = pairs.reduce((acc, [p1, p2]) => {
     const f = p1.lat * p2.lng - p2.lat * p1.lng;
     acc.lat += (p1.lat + p2.lat) * f;
