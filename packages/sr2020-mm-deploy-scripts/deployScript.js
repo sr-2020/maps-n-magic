@@ -7,6 +7,12 @@ const pathToMainClientBuild = '../sr2020-mm-client/build';
 const pathToPlayerStatic =      '../sr2020-mm-player-server/dist/static';
 const pathToPlayerClientBuild = '../sr2020-mm-player-client/build';
 
+/**
+ * 1. Remove previous cra main client and player client
+ * builds from express server static directory.
+ * 2. Copy cra main client and player client
+ * builds to express server static directory.
+ */
 async function runDeploy() {
   try {
     // main client deploy
