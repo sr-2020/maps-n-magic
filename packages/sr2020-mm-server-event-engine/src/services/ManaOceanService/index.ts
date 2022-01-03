@@ -539,8 +539,10 @@ export class ManaOceanService extends AbstractService<ManaOceanServiceContract> 
     const tideHeight: number = this.getNextTideHeight(curTimestamp, manaOceanSettings);
     this.prevTideHeight = tideHeight;
 
+    // @ts-ignore
     const getEffectList = R.pipe<LocationRecord, LocationRecordOptions>(
       R.prop<string, LocationRecordOptions>('options'),
+      // @ts-ignore
       R.prop<string, ManaOceanEffect[]>('effectList'),
       // @ts-ignore
       R.defaultTo<ManaOceanEffect[]>([]),
