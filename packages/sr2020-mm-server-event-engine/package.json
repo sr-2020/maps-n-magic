@@ -17,7 +17,6 @@
   ],
   "peerDependencies": {},
   "dependencies": {
-    "@google-cloud/pubsub": "^2.18.4",
     "@types/isomorphic-fetch": "0.0.35",
     "ajv": "^8.8.2",
     "isomorphic-fetch": "^3.0.0",
