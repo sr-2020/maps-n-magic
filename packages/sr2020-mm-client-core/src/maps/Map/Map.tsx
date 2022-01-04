@@ -155,6 +155,7 @@ export class Map extends Component<MapProps, MapState> {
     Object.values(layersMeta).forEach((group) => group.remove());
     // }
     Object.entries(layersMeta).forEach(([nameKey, group]) => {
+      // @ts-ignore
       this.layerControl.removeLayer(group);
     });
   }
