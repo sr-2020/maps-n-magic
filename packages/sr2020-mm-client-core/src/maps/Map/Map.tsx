@@ -15,7 +15,8 @@ import {
   OnCreateLayerEvent,
   OnRemoveLayerEvent,
   SetLayersMetaEvent,
-  OpenPopupEvent
+  OpenPopupEvent,
+  RemoveLayersMetaEvent
 } from "../../../index";
 
 import { Translator } from "../../utils/Translator";
@@ -148,8 +149,8 @@ export class Map extends Component<MapProps, MapState> {
       this.layerControl.addOverlay(group, t(nameKey));
     });
   }
-
-  removeLayersMeta({ layersMeta }: {layersMeta: LayersMeta}): void {
+  removeLayersMeta(event: RemoveLayersMetaEvent): void {
+    const { layersMeta } = event;
     // const { t } = this.props;
     // if (enableByDefault) {
     Object.values(layersMeta).forEach((group) => group.remove());
