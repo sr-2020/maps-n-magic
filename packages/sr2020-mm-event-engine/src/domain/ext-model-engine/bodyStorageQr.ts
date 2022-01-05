@@ -93,7 +93,7 @@ const bodyStorageQrSchema: JSONSchemaType<BodyStorageQr> = {
   ]
 };
 
-export const validateBodyStorageQr = ajv.compile(bodyStorageQrSchema);
+export const validateBodyStorageQr = ajv.compile<BodyStorageQr>(bodyStorageQrSchema);
 
 export function isEmptyBodyStorage(qr: BodyStorageQr): qr is EmptyBodyStorageQr {
   return !('body' in qr.workModel.data);

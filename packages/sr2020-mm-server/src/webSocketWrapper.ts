@@ -56,7 +56,7 @@ export class WebSocketWrapper {
         this.logger.info(msg.type, msgStr);
         this.gameModel.emit(msg.type, msg);
       }
-    } catch(err) {
+    } catch(err: any) {
       this.logger.error(`Error on processing message: ${msgStr}, error ${err}`);
       this.gameModel.emit2<EPostNotification>({
         type: 'postNotification',

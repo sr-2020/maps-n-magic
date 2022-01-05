@@ -16,6 +16,6 @@
     "ts:clean-all": "tsc --build --clean               ../sr2020-mm-client-event-engine ../sr2020-mm-server ../sr2020-mm-player-server ../sr2020-mm-translations ../sr2020-mm-data"
   },
   "devDependencies": {
-    "typescript": "^4.2.4"
+    "typescript": "^4.5.4"
   }
 }
