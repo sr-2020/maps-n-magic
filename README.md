@@ -1,3 +1,7 @@
+[ENG](#eng) [RUS](#rus)
+
+# ENG
+
 ## I want to see or develop something with Shadowrun 2020 maps-n-magic. What should I do?
 
 Production maps-n-magic depends on 7 external systems but during postproduction all external dependencies were mocked or disabled. So you see maps-n-magic on real game data and 90% of functions will work.
@@ -78,7 +82,7 @@ npm run start
 It will open client page http://localhost:3040/. Use any login/password to login.
 Don't forget to decrease sound volume - mana ocean sound may be loud.
 
-
+# RUS
 
 ## Я хочу посмотреть или поразрабатывать что-то на основе картомагии Shadowrun 2020. Что мне делать?
 
