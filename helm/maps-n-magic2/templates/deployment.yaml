@@ -48,16 +48,6 @@ spec:
                 configMapKeyRef:
                   name: {{ .Release.Name }}-configmap
                   key: PGDATABASE
-            - name: PGUSER
-              valueFrom:
-                secretKeyRef:
-                  name: postgres
-                  key: user
-            - name: PGPASSWORD
-              valueFrom:
-                secretKeyRef:
-                  name: postgres
-                  key: password
             - name: JWT_SECRET
               valueFrom:
                 secretKeyRef:
