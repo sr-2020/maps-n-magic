@@ -82,6 +82,8 @@ npm run start
 It will open client page http://localhost:3040/. Use any login/password to login.
 Don't forget to decrease sound volume - mana ocean sound may be loud.
 
+[ENG](#eng) [RUS](#rus)
+
 # RUS
 
 ## Я хочу посмотреть или поразрабатывать что-то на основе картомагии Shadowrun 2020. Что мне делать?
