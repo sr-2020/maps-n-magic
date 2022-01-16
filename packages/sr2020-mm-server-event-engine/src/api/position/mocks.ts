@@ -116,9 +116,12 @@ export class MockedPlusManageableResourceProvider<T extends Identifiable>
       return acc;
     }, {} as Record<T["id"], EntityUpdate<T>>);
 
-    const updatedItems = Object.keys(updatesIndex).map(id => {
+    const updatedItems = Object.keys(updatesIndex).map((id, i) => {
       const update: EntityUpdate<T> = updatesIndex[id];
-      const index = this.entities.findIndex(el => el.id === id);
+      const index = this.entities.findIndex(el => String(el.id) === String(id));
+      if (index === -1) {
+        console.warn('putMultiple missed index', id, update);
+      }
       this.entities[index] = {
         ...this.entities[index],
         ...update.body
