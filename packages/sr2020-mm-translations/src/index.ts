@@ -19,15 +19,15 @@ import { miscDictionary as miscDictionary_en } from './misc_en';
 import { extraMainServerI18nDictionary as extraMainServerI18nDictionary_en } from './extraMainServerI18n_en';
 import * as leaflet_en from './leaflet_en';
 
-import { translitRuEn } from "./translit";
+// import { translitRuEn } from "./translit";
 
 export const leafletI18n = {
   ru: leaflet_ru,
   en: leaflet_en,
 };
 
-export const defaultLang = 'ru';
-// export const defaultLang = 'en';
+// export const defaultLang = 'ru';
+export const defaultLang = 'en';
 
 export const resources = {
   ru: {
@@ -54,8 +54,8 @@ export const resources = {
   },
 } as const;
 
-export function getProcessForDisplay(lang: string = defaultLang) {
-  return function processForDisplay(str: string): string {
-    return lang === 'en' ? translitRuEn(str) : str;
-  }
-}
+// export function getProcessForDisplay(lang: string = defaultLang) {
+//   return function processForDisplay(str: string): string {
+//     return lang === 'en' ? translitRuEn(str) : str;
+//   }
+// }
