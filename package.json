@@ -8,6 +8,7 @@
     "bootstrap": "lerna bootstrap",
     "install-local-deps": "lerna run install-local-deps",
     "install-package-deps": "npm run bootstrap && npm run install-local-deps && npm run bootstrap",
+    "default-install-n-configure": "npm i && npm run install-package-deps && lerna run initMockEnv",
     "bootstrap:server": "lerna bootstrap --scope sr2020-mm-server --include-dependencies",
     "start": "lerna run start --stream",
     "start:server": "lerna run start:server --stream",
