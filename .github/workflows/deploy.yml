@@ -17,23 +17,15 @@ jobs:
           password: ${{ secrets.DOCKER_PASSWORD }}
 
   deploy_production:
-    if: github.ref == 'refs/heads/typescript'
+#    if: github.ref == 'refs/heads/typescript'
     runs-on: ubuntu-20.04
     needs: [build]
     steps:
       - uses: actions/checkout@v2
-      - name: Deploy
-        uses: google-github-actions/setup-gcloud@master
-        with:
-          service_account_email: ${{ secrets.SA_EMAIL }}
-          service_account_key: ${{ secrets.SA_KEY }}
-      - run: gcloud components install kubectl
-      - run: gcloud container clusters get-credentials prod --project imposing-elixir-249711 --zone europe-west3-b
       - run: |
-          kubectl config set-context --current --namespace=production
+          echo ${{ secrets.KUBECONFIG }} | base64 -d > k8s_config.yaml
+          export KUBECONFIG=k8s_config.yaml
           curl https://raw.githubusercontent.com/helm/helm/master/scripts/get-helm-3 | bash
           helm version
           helm upgrade maps-n-magic2 helm/maps-n-magic2/ --wait \
-            --set image.tag=$GITHUB_SHA
-          helm upgrade magic helm/magic/ --wait \
             --set image.tag=$GITHUB_SHA
