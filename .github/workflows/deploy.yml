@@ -27,5 +27,5 @@ jobs:
           export KUBECONFIG=k8s_config.yaml
           curl https://raw.githubusercontent.com/helm/helm/master/scripts/get-helm-3 | bash
           helm version
-          helm upgrade maps-n-magic2 helm/maps-n-magic2/ --wait \
+          helm upgrade --namespace production maps-n-magic2 helm/maps-n-magic2/ --wait \
             --set image.tag=$GITHUB_SHA
