@@ -41,24 +41,6 @@ export class LocationPopup3 extends Component<
     this._handleKeyDown = this._handleKeyDown.bind(this);
   }
 
-  componentDidMount = () => {
-    // this.updateComponentState();
-  }
-
-  componentDidUpdate = () => {
-    // const {
-    //   label, allBeacons, attachedMarkers, manaLevel,
-    // } = this.props;
-    // if (label === prevProps.label
-    // // && manaLevel === prevProps.manaLevel
-    // // && R.equals(attachedMarkers, prevProps.attachedMarkers)
-    // // && R.equals(allBeacons, prevProps.allBeacons)
-    // ) {
-
-    // }
-    // this.updateComponentState();
-  }
-
   _handleKeyDown(e: KeyboardEvent<HTMLInputElement>) {
     if (e.key === 'Enter') {
       this.props.onClose();
